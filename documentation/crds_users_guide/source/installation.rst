@@ -52,7 +52,7 @@ HST or JWST calibration software you may also have CRDS.
 
 To check for CRDS try::
 
-   $ python -m crds.list --version
+   $ crds list --version
    7.0.5, master, c95d1cc
 
 If CRDS is not already installed,  it can be installed using in a variety of
@@ -174,7 +174,7 @@ CRDS bestrefs for HST
 CRDS provides the crds.bestrefs program for updating dataset headers for HST with the current
 best references.   Running bestrefs for HST is accomplished via::
 
-    % python -m crds.bestrefs --files dataset*.fits --update-bestrefs
+    % crds bestrefs --files dataset*.fits --update-bestrefs
 
 This command updates the files specified by dataset*.fits with the names of the latest best
 reference files.
@@ -304,10 +304,10 @@ Alternative servers for JWST I&T testing are::
 After syncing this will provide access to CRDS test files and rules in a local cache::
 
     # Fetch all the test rules
-    % python -m crds.sync --all
+    % crds sync --all
 
     # Fetch specifically listed test references
-    % python -m crds.sync --files <test_references_only_the_test_server_has...>
+    % crds sync --files <test_references_only_the_test_server_has...>
 
 Testing reference type changes (new keywords, new values or value restrictions,
 etc) may also require access to development versions of CRDS code.  In
@@ -334,7 +334,7 @@ care about::
 
 For **HST**, to fetch the references required to process some FITS datasets::
 
-    % python -m crds.bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
+    % crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
 
 For **JWST**, CRDS is directly integrated with the calibration step code and
 will automatically download rules and references as needed.
@@ -392,11 +392,11 @@ reference files are partitioned into instrument-specific sub-directories.
 
 To switch from flat to by-instrument::
 
-  python -m crds.sync --organize=instrument
+  crds sync --organize=instrument
 
 To switch from by-instrument to flat::
 
-  python -m crds.sync --organize=flat
+  crds sync --organize=flat
 
 JWST Context
 ++++++++++++

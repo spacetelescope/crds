@@ -18,12 +18,13 @@ import numpy as np
 # ============================================================================
 
 import crds
-from crds import pysh, log, config, utils, rmap, cmdline
-from crds import tables
-from crds import client
-from crds import data_file
-from crds import diff
-from crds.exceptions import (InvalidFormatError, TypeSetupError, ValidationError)
+
+from crds.core import pysh, log, config, utils, rmap, cmdline
+from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
+from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationError
+
+from crds import data_file, diff, tables
+from crds.client import api
 
 from . import mapping_parser
 from . import validator
@@ -314,7 +315,7 @@ class ReferenceCertifier(Certifier):
         # Note: this call works in both networked and non-networked modes of operation.
         # Non-networked mode requires access to /grp/crds/[hst|jwst] or a copy of it.
         try:
-            match_files = client.dump_references(reference_mapping.name, baserefs=[match_refname], ignore_cache=False)
+            match_files = api.dump_references(reference_mapping.name, baserefs=[match_refname], ignore_cache=False)
             match_file = match_files[match_refname]
             if not os.path.exists(match_file):   # For server-less mode in debug environments w/o Central Store
                 raise IOError("Comparison reference " + repr(match_refname) + " is defined but does not exist.")

@@ -10,5 +10,5 @@ then
     echo "usage:  cached_context [hst|jwst]"
 fi
 
-python -m crds.list --operational-context  --readonly-cache --${observatory} 2>/dev/null
+crds list --operational-context  --readonly-cache --${observatory} 2>/dev/null
 

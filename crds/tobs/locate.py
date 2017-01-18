@@ -14,7 +14,8 @@ import os.path
 import gzip
 import re
 
-from crds import (log, rmap, data_file, config)
+from crds.core import log, rmap, config
+from crds import data_file
 
 HERE = os.path.dirname(__file__) or "./"
 

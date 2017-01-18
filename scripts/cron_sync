@@ -80,7 +80,7 @@ export CRDS_DOWNLOAD_MODE=plugin
      export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
      # override pipeline global readonly setting.
      export CRDS_READONLY_CACHE=0
-     python -m crds.sync $* --stats # nominally --last 10 --fetch-references
+     crds sync $* --stats # nominally --last 10 --fetch-references
      exit $?
   fi
     

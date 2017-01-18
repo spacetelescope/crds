@@ -11,7 +11,9 @@ import sys
 from collections import OrderedDict
 
 import crds
-from crds import cmdline, rmap, log, config, heavy_client, python23, data_file
+from crds.core import config, log, python23, rmap, heavy_client, cmdline
+from crds import data_file
+
 from crds.client import api
 
 class ListScript(cmdline.ContextsScript):

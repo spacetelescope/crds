@@ -8,7 +8,9 @@ import os.path
 import sys
 import datetime
 
-from crds import cmdline, config, log, naming, data_file, CrdsError
+from crds.core import cmdline, config, log, naming
+from crds.core.exceptions import CrdsError
+from crds import data_file
 
 class UniqnameScript(cmdline.Script):
 
@@ -21,7 +23,7 @@ enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
 
 The CRDS uniqame is nominally run as follows:
 
-    % python -m crds.uniqname --files s7g1700gl_dead.fits --brief --standard
+    % python -m crds.misc.uniqname --files s7g1700gl_dead.fits --brief --standard
     CRDS - INFO - Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
 
 If -s or --standard is added then routinely used switches are added as a
@@ -161,8 +163,8 @@ def uniqname(old_path):
     Returns  new_cdbs_style_name : str
     """
     add_checksums = "--add-checksum" if checksum_exists(old_path) else ""
-    new_name = UniqnameScript("crds.uniqname --files {0} --standard --remove-original --fits-errors {1}".format(
-            old_path, add_checksums))()
+    new_name = UniqnameScript("crds.misc.uniqname --files {0} --standard --remove-original --fits-errors {1}".format(
+        old_path, add_checksums))()
     return new_name
 
 if __name__ == "__main__":

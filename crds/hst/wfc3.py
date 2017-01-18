@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import copy
 
-from crds import log, rmap
+from crds.core import log, rmap
 
 # =======================================================================
 

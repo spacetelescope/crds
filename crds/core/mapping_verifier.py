@@ -7,8 +7,8 @@ Mapping is loaded, and is non-recursive.
 import ast
 import sys
 
-from crds import exceptions as crexc
-from crds import selectors
+from crds.core import exceptions as crexc
+from crds.core import selectors
 
 # ===================================================================
 

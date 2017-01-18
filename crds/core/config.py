@@ -11,8 +11,8 @@ import re
 import glob
 import getpass 
 
-from crds import log, exceptions
-from crds import python23
+from crds.core import log, exceptions
+from crds.core import python23
 
 # ===========================================================================
 
@@ -467,7 +467,7 @@ def set_crds_ref_subdir_mode(mode, observatory):
     CRDS_REF_SUBDIR_MODE = mode
     mode_path = os.path.join(get_crds_cfgpath(observatory), CRDS_SUBDIR_TAG_FILE)
     if writable_cache_or_verbose("skipping subdir mode write."):
-        from crds import heavy_client as hv   #  yeah,  kinda gross
+        from crds.core import heavy_client as hv   #  yeah,  kinda gross
         hv.cache_atomic_write(mode_path, mode, "Couldn't save sub-directory mode config")
 
 def check_crds_ref_subdir_mode(mode):
@@ -807,7 +807,7 @@ def relocate_reference(ref, observatory):
     if get_crds_ref_subdir_mode(observatory) == "flat":
         return os.path.join(get_crds_refpath(observatory), os.path.basename(ref))
     else:
-        from crds import utils
+        from crds.core import utils
         return utils.get_locator_module(observatory).locate_file(ref)
 
 # -------------------------------------------------------------------------------------

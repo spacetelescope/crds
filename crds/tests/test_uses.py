@@ -10,7 +10,9 @@ from __future__ import print_function
 import os, os.path
 from pprint import pprint as pp
 
-from crds import log, config, uses, tests
+from crds.core import log, config
+from crds import uses
+from crds import tests
 from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true

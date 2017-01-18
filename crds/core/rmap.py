@@ -54,24 +54,31 @@ True
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
+# ===================================================================
+
 import os.path
 import glob
 import json
 
 from collections import namedtuple
 
+# ===================================================================
+
 import crds
-from . import (log, utils, selectors, data_file, config, substitutions)
+from crds.core import python23, log, utils, config, selectors, substitutions
 
 # XXX For backward compatability until refactored away.
-from .config import locate_file, locate_mapping, locate_reference
-from .config import mapping_exists, is_mapping
+from crds.core.config import locate_file, locate_mapping, locate_reference
+from crds.core.config import mapping_exists, is_mapping
 
-from crds import exceptions as crexc
-from crds import python23
-from crds.custom_dict import LazyFileDict
-from crds.mapping_verifier import MAPPING_VERIFIER
-from crds.log import srepr
+from crds.core import exceptions as crexc
+from crds.core import python23
+from crds.core.custom_dict import LazyFileDict
+from crds.core.mapping_verifier import MAPPING_VERIFIER
+from crds.core.log import srepr
+
+# from crds import data_file   (deferred to actual uses)
 
 # ===================================================================
 
@@ -415,6 +422,7 @@ class Mapping(object):
         used to determine file type when `dataset` is a temporary file with a
         useless name.
         """
+        from crds import data_file
         header = data_file.get_conditioned_header(dataset, original_name=original_name)
         return self.minimize_header(header)
 
@@ -735,6 +743,7 @@ class PipelineContext(ContextMapping):
         the current mode.  `dataset` can be a filename or a header dictionary.
         """
         if isinstance(dataset, python23.string_types):
+            from crds import data_file
             instrument = data_file.getval(dataset,  self.instrument_key)
         elif isinstance(dataset, dict):
             instrument = self.get_instrument(dataset)
@@ -1346,6 +1355,7 @@ class ReferenceMapping(Mapping):
         3. Maps from reference file keywords and values to dataset keywords and values rmaps match on.
         """
         # Since expansion rules may depend on keys not used in matching,  get entire header  
+        from crds import data_file
         header = data_file.get_header(reffile, observatory=self.observatory)
         needed_keys = tuple(self.get_reference_parkeys()) + tuple(extra_keys)
         header = data_file.ensure_keys_defined(header, needed_keys=needed_keys,
@@ -1728,7 +1738,7 @@ def get_best_references(context_file, header, include=None, condition=True):
 def test():
     """Run module doctests."""
     import doctest
-    from crds import rmap
+    from crds.core import rmap
     return doctest.testmod(rmap)
 
 if __name__ == "__main__":

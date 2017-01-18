@@ -12,9 +12,8 @@ import collections
 import glob
 import json
 
-from crds import rmap, log, utils, data_file
-from crds import python23
-# from crds.certify import TpnInfo
+from crds.core import python23, rmap, log, utils
+from crds import data_file
 
 # =============================================================================
 #  Global table loads used at operational runtime:

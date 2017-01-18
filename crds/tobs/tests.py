@@ -8,9 +8,9 @@ import sys
 import os
 import unittest
 
-from crds import rmap, log
-from crds.tests import test_config
 import crds
+from crds.core import rmap, log
+from crds.tests import test_config
 
 # =============================================================================
 

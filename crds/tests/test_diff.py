@@ -59,9 +59,11 @@ TEST CASES
 ----------
 """
 
-from crds import log, tests
-from crds.diff import DiffScript
+from crds.core import log
+from crds import tests
 from crds.tests import test_config
+
+from crds.diff import DiffScript
 
 def dt_diff_pmap_diffs():
     """

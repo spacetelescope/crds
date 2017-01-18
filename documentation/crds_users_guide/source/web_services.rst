@@ -122,7 +122,7 @@ Return a dictionary of CRDS catalog information about `filename`.  For instance:
   'change_level': 'severe',
   'comment': 'cdp-2 from fm testing',
   'creator_name': 'jwst build 3 team',
-  'deliverer_user': 'jmiller',
+  'deliverer_user': 'homer',
   'delivery_date': '2014-09-20 07:55:56',
   'derived_from': 'none',
   'description': 'all references from jwst build 3 delivery 2. update miri flats, fringes, straymasks, resets, lastframes, nirspec flat.',

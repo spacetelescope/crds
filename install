@@ -42,7 +42,7 @@ st=0
 if [ $dont_skip_types = 1 ]; then
     find . -name combined_specs.json | xargs rm
 
-    find crds/hst/specs crds/jwst/specs crds/tobs/specs -name '*.rmap' | xargs python -m crds.checksum
+    find crds/hst/specs crds/jwst/specs crds/tobs/specs -name '*.rmap' | xargs python -m crds.refactoring.checksum
     
     python -m crds.hst
     python -m crds.jwst
@@ -56,7 +56,7 @@ fi
 # release on GitHub.
 if (test -e save_version) 
 then 
-    ./save_version >crds/git_version.py;  
+    ./save_version >crds/core/git_version.py;  
 fi
 python setup.py install $* --force  >> install.log
 st=$st$?

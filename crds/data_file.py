@@ -61,7 +61,7 @@ import contextlib
 from astropy.io import fits as pyfits
 from astropy.utils.exceptions import AstropyUserWarning
 
-from crds import utils, log, config, python23, timestamp, exceptions
+from crds.core  import utils, log, config, python23, timestamp, exceptions
 
 # import asdf
 # import yaml

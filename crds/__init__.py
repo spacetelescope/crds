@@ -1,55 +1,112 @@
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-# The "crds" __version__ defined here should also reflect the behavior of 
-# crds.client
+
+# ============================================================================
+
+import os
+import os.path
+import sys
+import importlib
+
+# ============================================================================
+
 __version__ = "7.1.0"  
 __rationale__ = "JWST Build 7.1 Development"
 
 # ============================================================================
 
-import os
+from crds.core import config   # module
 
-from . import exceptions
+from crds.core.heavy_client import getreferences, getrecommendations
+from crds.core.heavy_client import get_symbolic_mapping, get_pickled_mapping
+from crds.core.rmap import get_cached_mapping, asmapping
+from crds.core.config import locate_mapping, locate_file
 
-__all__ = [ 
-           "get_default_context", 
-           "getreferences", 
-           "getrecommendations",
-           "get_cached_mapping",
-           "get_pickled_mapping",
-           "get_symbolic_mapping",
-           "locate_mapping",
-           "locate_file",
-           ] + exceptions.__all__
+from crds.core import exceptions
+from crds.core.exceptions import *
+from crds.core.constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
-# List of all the observatory package names
-ALL_OBSERVATORIES = ["hst", "jwst", "tobs"]
-
-# keywords used to identify instrument from headers
-INSTRUMENT_KEYWORDS = ["INSTRUME", "META.INSTRUMENT.NAME",  "META_INSTRUMENT_NAME", "INSTRUMENT", 
-                       "META.INSTRUMENT.TYPE", "META_INSTRUMENT_TYPE"]
+from crds.client import api
+from crds.client import get_default_context
 
 # ============================================================================
 
-from . import config   # module
-from .exceptions import *
+'''This code section supports moving modules from the root crds namespace into 
+sub-packages while still supporting the original CRDS package external interface.
+This allows the code to be partitioned without changing external imports.  This
+is made more difficult by the inapplicability of namespace packages because this
+__init__ is not empty.
 
-from crds.client import get_default_context
-from .heavy_client import getreferences, getrecommendations, get_symbolic_mapping, get_pickled_mapping
-from .rmap import get_cached_mapping, locate_mapping, locate_file, asmapping
+The strategy employed here is to implement core packages normally in crds.core,
+then alias them into the top level crds namespace using importlib.import_module()
+and sys.modules to make it appear as if each core package has already been imported
+and belongs to the top level namespace.
+'''
+def alias_subpackage_module(subpkg, modules):
+    """Alias each module from `modules` of `subpkg` to appear in this
+    namespace.
+    """
+    for module in modules:
+        globals()[module] = importlib.import_module(subpkg + "." + module)
+        sys.modules["crds." + module] = sys.modules[subpkg + "." + module]
+
+CORE_MODULES = [
+    "pysh",
+    "python23",
+    "exceptions",
+    "log",
+    "config",
+    "constants",
+    "utils",
+    "timestamp",
+    "custom_dict",
+    "selectors",
+    "mapping_verifier",
+    "reftypes",
+    "substitutions",
+    "rmap",
+    "heavy_client",
+    "cmdline",
+    "naming",
+    "git_version",
+]
+
+# e.g. make crds.rmap importable same as crds.core.rmap reorganized code
+alias_subpackage_module("crds.core", CORE_MODULES)
+
+# ============================================================================
+
+# e.g. python -m crds.newcontext now called as python -m crds.refactoring.newcontext
+
+REFACTORING_MODULES = [
+    "checksum",
+    "newcontext",
+    "refactor",
+    "refactor2",
+]
+
+# e.g. make crds.rmap importable same as crds.core.rmap reorganized code
+alias_subpackage_module("crds.refactoring", REFACTORING_MODULES)
+
+# ============================================================================
+
+# e.g. python -m crds.uniqname now called as -m crds.refactoring.uniqname
+
+MISC_MODULES = [
+    "datalvl",               # external interface with pipelines
+    "query_affected",        # external interface with pipelines
+    "uniqname",              # external interface with submitters
+
+    "check_archive",         # misc utility
+    "sql",                   # prototype convenience wrapper
+]
+
+# e.g. make crds.rmap importable same as crds.core.rmap reorganized code
+alias_subpackage_module("crds.misc", MISC_MODULES)
 
 # ============================================================================
 
 URL = os.environ.get("CRDS_SERVER_URL", "https://crds-serverless-mode.stsci.edu")
-from crds.client import api
 api.set_crds_server(URL)
 
-# ============================================================================
-
-def handle_version():
-    """Handles --version printing for scripts."""
-    import sys, crds
-    if '--version' in sys.argv :
-        print(crds.__version__)
-        sys.exit(0)

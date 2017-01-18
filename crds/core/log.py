@@ -2,7 +2,7 @@
 errors, warnings, and info.  Also error exception raising and
 tracebacks.
 
->>> from crds import log
+>>> from crds.core import log
 >>> log.set_test_mode()
 >>> log.reset()
 
@@ -459,7 +459,7 @@ def divider(name="", char="-", n=75, func=info, **keys):
 # ===================================================================
 
 def test():
-    from crds import log
+    from crds.core import log
     import doctest
     return doctest.testmod(log)
 

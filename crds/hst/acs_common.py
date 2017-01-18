@@ -5,10 +5,9 @@ from __future__ import division
 from __future__ import absolute_import
 
 import sys
-
-from crds import rmap, log, utils, timestamp
-
 from collections import defaultdict
+
+from crds.core import rmap, log, utils, timestamp
 
 # ===========================================================================    
 
