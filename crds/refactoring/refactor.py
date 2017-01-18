@@ -8,7 +8,8 @@ import os.path
 import sys
 
 import crds
-from crds.core import rmap, log, cmdline
+from crds.core import exceptions, rmap, log, cmdline
+from crds.core.log import srepr
 from crds import diff
 
 # ============================================================================
@@ -63,18 +64,32 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     Return new ReferenceMapping named `new_rmap`
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
+    inserted_cases = {}
+    exc = None
     for reference in inserted_references:
-        log.info("Inserting", os.path.basename(reference), "into", repr(new.name))
+        log.info("Inserting", os.path.basename(reference), "into",
+                 repr(new.name))
         new = new.insert_reference(reference)
+        baseref = os.path.basename(reference)
+        cases = []
+        with log.warn_on_exception("Failed capturing matching diagnostics for",
+                                   repr(baseref)):
+            cases = new.file_matches(baseref)
+        for fullcase in cases:
+            case = fullcase[1:]
+            if case not in inserted_cases:
+                inserted_cases[case] = baseref
+            else:
+                exc = exceptions.OverlappingMatchError(
+                    "Matching case for", srepr(baseref),
+                    "overlaps", srepr(inserted_cases[case]),
+                    "at case", repr(case))
+                log.error(str(exc))
+    if exc is not None:
+        raise exc
     new.header["derived_from"] = old.basename
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
-    formatted = new.format()
-    for reference in inserted_references:
-        reference = os.path.basename(reference)
-        assert reference in formatted, \
-            "Rules update failure. " + repr(reference) + " does not appear in new rmap." \
-            "  May be identical match with other submitted references."
     return new
 
 def rmap_delete_references(old_rmap, new_rmap, deleted_references):
