@@ -6,9 +6,8 @@ import re
 
 # import yaml
 
-from crds import config, log, utils
-from crds.log import srepr
-from crds import exceptions
+from crds.core import exceptions, config, log, utils
+from crds.core.log import srepr
 
 # from jwst.stpipe import cmdline
 

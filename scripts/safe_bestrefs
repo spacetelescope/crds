@@ -10,6 +10,9 @@
 #        CRDS_PATH        (cache directory)
 #        *not* CRDS_SERVER_URL  (safe_bestrefs clears this to be disconnected from CRDS servers)
 #
+#   recommended:
+#        CRDS_OBSERVATORY  (e.g. hst)
+#
 # This script is intended to be run in parallel with multiple pipeline bestrefs
 # and a concurrent cron_sync.  The "safe" aspect refers to not modifying the
 # CRDS cache itself, and to not stumbling into inconsistent cache states while
@@ -40,7 +43,5 @@ export CRDS_CLIENT_RETRY_COUNT=1
 # Seconds to wait between retries
 export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
 
-python -m crds.bestrefs --readonly-cache --update-bestrefs  $*
-
-
+crds bestrefs --readonly-cache --update-bestrefs  $*
 

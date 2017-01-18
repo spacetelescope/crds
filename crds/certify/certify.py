@@ -14,12 +14,14 @@ import copy
 import numpy as np
 
 import crds
-from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config, pysh
-from crds import tables
-from crds import client
-from crds import selectors
-from crds.exceptions import (MissingKeywordError, IllegalKeywordError, InvalidFormatError, TypeSetupError,
-                             ValidationError)
+
+from crds.core import rmap, log, pysh, utils, config, timestamp
+from crds.core import cmdline, selectors
+from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
+from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationError
+
+from crds import data_file, diff, tables
+from crds.client import api
 
 from . import mapping_parser
 
@@ -368,8 +370,8 @@ class JwstdateValidator(KeywordValidator):
             timestamp.Jwstdate.get_datetime(value)
         except Exception:
             raise ValueError(log.format(
-            "Invalid JWST date", repr(value), "for", repr(self.name),
-            "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
+                "Invalid JWST date", repr(value), "for", repr(self.name),
+                "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
             
 '''
         try:
@@ -734,7 +736,7 @@ class ReferenceCertifier(Certifier):
         # Note: this call works in both networked and non-networked modes of operation.
         # Non-networked mode requires access to /grp/crds/[hst|jwst] or a copy of it.
         try:
-            match_files = client.dump_references(reference_mapping.name, baserefs=[match_refname], ignore_cache=False)
+            match_files = api.dump_references(reference_mapping.name, baserefs=[match_refname], ignore_cache=False)
             match_file = match_files[match_refname]
             if not os.path.exists(match_file):   # For server-less mode in debug environments w/o Central Store
                 raise IOError("Comparison reference " + repr(match_refname) + " is defined but does not exist.")

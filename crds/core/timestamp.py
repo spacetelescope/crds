@@ -10,7 +10,7 @@ import datetime
 import re
 
 import crds
-from crds import python23, config, exceptions, log
+from crds.core import python23, config, exceptions, log
 
 # =======================================================================
 
@@ -497,7 +497,7 @@ def reformat_useafter(rmapping, header):
 def test():
     """Run module doctests."""
     import doctest
-    from crds import timestamp
+    from crds.core import timestamp
     return doctest.testmod(timestamp)
 
 if __name__ == "__main__":

@@ -7,7 +7,9 @@ from __future__ import absolute_import
 
 import os
 
-from crds import certify, utils, log, client
+from crds.core import utils, log
+from crds import client
+from crds import certify
 from crds.certify import CertifyScript
 
 from crds.tests import test_config

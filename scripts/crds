@@ -1,0 +1,91 @@
+#! /usr/bin/env python
+#-*- python -*-
+
+"""Defines 'smart' convenience wrapper for invoking CRDS tools that
+hides internal package structure.
+"""
+
+from __future__ import print_function
+
+import sys
+import os
+
+from crds.pysh import usage
+
+if len(sys.argv) > 2 and sys.argv[2] == "--help":
+    del sys.argv[2]
+    RESTORE_HELP = True
+else:
+    RESTORE_HELP = False
+
+usage("<command> <parameters...>", 1, help="""
+
+'crds' is a command line wrapper that is shorthand for the
+ normal "python -m" syntax for invoking package modules,
+with the simplification that knowledge of the internal
+package structure is not required.  
+
+For example:
+
+    crds list --status ...
+
+is equivalent to the native Python syntax:
+
+    python -m crds.list --status ...
+
+Available commands:
+
+list                -- print information about CRDS configuration, etc. 
+certify             -- check CRDS reference and rules files
+bestrefs            -- assign bestrefs to datasets, regressions, repro
+sync                -- manage local CRDS cache, download rules + references
+diff                -- difference CRDS rules and references
+rowdiff             -- difference reference tables
+matches             -- list matching criteria relative to particular rules
+checksum            -- update rmap checksum
+query_affected      -- download CRDS new reference files affected dataset IDs
+
+For more detail about individual commands use --help:
+
+e.g. crds list --help
+
+""")
+
+if RESTORE_HELP:
+    sys.argv.append("--help")
+
+REMAPPED_MODULES = {
+    "query_affected"  : "crds.misc.query_affected",
+    "sql" : "crds.misc.sql",
+    "check_archive" : "crds.misc.check_archive",
+    "datalvl": "crds.misc.datalvl",
+    "uniqname":  "crds.misc.uniqname",
+
+    "refactor" : "crds.refactoring.refactor",
+    "refactor2" : "crds.refactoring.refactor2",
+    "newcontext" : "crds.refactoring.newcontext",
+    "checksum" : "crds.refactoring.checksum",
+}
+
+basecmd = "python -m"
+remapped = REMAPPED_MODULES.get(sys.argv[1])
+
+def quote_strings(args):
+    result = ""
+    for arg in args:
+        if " " in arg:
+            arg = "'" + arg + "'"
+        result += arg + " "
+    return result.rstrip()
+
+if remapped:
+    command = " ".join([basecmd, remapped, quote_strings(sys.argv[2:])])
+else:
+    command = " ".join([basecmd, "crds." + quote_strings(sys.argv[1:])])
+
+# print("command:", command)
+
+status = os.system(command)
+sys.exit(status)
+
+

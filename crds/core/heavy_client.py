@@ -38,9 +38,9 @@ import fnmatch
 
 from . import rmap, log, utils, config
 from crds.client import api
-from crds.log import srepr
-from crds.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError
-from crds import python23
+from crds.core.log import srepr
+from crds.core.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError
+from crds.core import python23
 # import crds  forward
 
 __all__ = ["getreferences", "getrecommendations"]

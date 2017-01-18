@@ -33,8 +33,9 @@ import shutil
 import glob
 
 import crds
-from crds import (rmap, log, data_file, cmdline, utils, config, heavy_client)
-from crds.log import srepr
+from crds.core import log, config, utils, rmap, heavy_client, cmdline
+from crds import data_file
+from crds.core.log import srepr
 from crds.client import api
 
 # ============================================================================

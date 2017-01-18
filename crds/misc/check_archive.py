@@ -11,9 +11,8 @@ import sys
 
 import requests
 
-from crds import cmdline, log, config, utils
+from crds.core import python23, log, config, utils, cmdline
 from crds.client import api
-from crds import python23
 
 class CheckArchiveScript(cmdline.Script):
     """Command line script for for checking archive file availability."""
@@ -35,17 +34,17 @@ This captures the file list with respect to the CRDS OPS server which
 during the development period directly distributes files and is a
 complete "reference" copy.
 
-2. Run crds.check_archive to query the archive server with HTTP HEAD for each of the files:
+2. Run crds.misc.check_archive to query the archive server with HTTP HEAD for each of the files:
 
     % setenv CRDS_SERVER_URL https://jwst-crds-b6it.stsci.edu
     % setenv CRDS_PATH $HOME/crds_cache_b6it
-    % python -m crds.check_archive --files @files.b6 --dump-good-files --stats > all.b6it.archive
+    % python -m crds.misc.check_archive --files @files.b6 --dump-good-files --stats > all.b6it.archive
 
 This checks the file list in files.b6 against the CRDS B6 server
 database and whatever archive URL that server is configured to use,
 nominally the B6 archive server.
 
-crds.check_archive currently checks each file for availability and
+crds.misc.check_archive currently checks each file for availability and
 correct length with respect to the CRDS catalog.  A status line for
 each bad file, or all files, is printed to standard out, in this case
 captured to output file all.b6.archive.  e.g. status like:

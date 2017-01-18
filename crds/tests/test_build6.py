@@ -7,8 +7,9 @@ import doctest
 """
 """
 
-from crds import log, tests, client
-from crds.query_affected import QueryAffectedDatasetsScript
+from crds.core import log
+from crds.client import api
+from crds.misc.query_affected import QueryAffectedDatasetsScript
 
 from crds.tests import test_config
 
@@ -23,7 +24,7 @@ def dt_get_context_history():
     CRDS_SERVER_URL to point to the I&T CRDS cache and I&T CRDS Server respectively.
 
     >>> old_state = test_config.setup(url='https://jwst-crds.stsci.edu')
-    >>> history = client.get_context_history("jwst")
+    >>> history = api.get_context_history("jwst")
 
     >>> history[0]
     ('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings')

@@ -11,7 +11,9 @@ import sys
 from collections import OrderedDict
 
 import crds
-from crds import cmdline, rmap, log, config, heavy_client, python23, data_file
+from crds.core import config, log, python23, rmap, heavy_client, cmdline
+from crds import data_file
+
 from crds.client import api
 
 class ListScript(cmdline.ContextsScript):
@@ -535,10 +537,20 @@ and ids used for CRDS reprocessing recommendations.
 
     def list_required_parkeys(self):
         """Print out the parkeys required for matching using the specified contexts."""
+        
         for name in self.contexts:
             mapping = crds.get_cached_mapping(name)
-            log.divider(name="Parkeys required for " + repr(mapping.basename), func=log.write)
-            _print_dict("", mapping.get_required_parkeys())
+            if isinstance(mapping, rmap.InstrumentContext):
+                for name in mapping.selections:
+                    try:
+                        rmapping = mapping.get_rmap(name)
+                    except (crds.exceptions.IrrelevantReferenceTypeError,
+                            crds.exceptions.OmitReferenceTypeError):
+                        print(name +":", repr("N/A"))
+                    else:
+                        print(name + ":",  rmapping.get_required_parkeys())
+            else:
+                print(name + ":",  mapping.get_required_parkeys())
         
 def _get_python_info():
     """Collect and return information about the Python environment"""

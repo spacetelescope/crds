@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import absolute_import
 import os.path
 
-from crds import reftypes
+from crds.core import reftypes
 
 HERE  = os.path.dirname(__file__) or "."
 

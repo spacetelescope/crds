@@ -12,7 +12,8 @@ from __future__ import absolute_import
 import os.path
 import re
 
-from crds import (log, rmap, data_file, config, utils, timestamp)
+from crds.core import log, rmap, config, utils, timestamp
+from crds import data_file
 from . import tpn
 
 # =======================================================================
