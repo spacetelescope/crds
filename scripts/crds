@@ -8,8 +8,8 @@ hides internal package structure.
 from __future__ import print_function
 
 import sys
-import os
 import shlex
+import subprocess
 
 from crds.pysh import usage
 
@@ -68,23 +68,18 @@ REMAPPED_MODULES = {
     "checksum" : "crds.refactoring.checksum",
 }
 
-basecmd = sys.executable + " -m"
-remapped = REMAPPED_MODULES.get(sys.argv[1])
+remapped = REMAPPED_MODULES.get(sys.argv[1], "crds." + sys.argv[1])
 
 def quote_strings(args):
     """Re-quote the command line parameters to prevent losing required quoting
     when the modified command line is reissued.
     """
-    return " ".join([shlex.quote(arg) for arg in args])
+    return [shlex.quote(arg) for arg in args]
 
-if remapped:
-    command = " ".join([basecmd, remapped, quote_strings(sys.argv[2:])])
-else:
-    command = " ".join([basecmd, "crds." + quote_strings(sys.argv[1:])])
-
+command = [sys.executable, "-m", remapped] + quote_strings(sys.argv[2:])
 print("command:", command)
 
-status = os.system(command)
+status = subprocess.call(command)
 sys.exit(status)
 
 
