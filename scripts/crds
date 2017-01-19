@@ -77,7 +77,7 @@ def quote_strings(args):
     return [shlex.quote(arg) for arg in args]
 
 command = [sys.executable, "-m", remapped] + sys.argv[2:]
-print("command:", command)
+# print("command:", command)
 
 status = subprocess.call(command)
 sys.exit(status)
