@@ -1427,9 +1427,8 @@ class ReferenceMapping(Mapping):
         dataset_parkeys = self.get_required_parkeys()
         if "reference_to_dataset" in self.header:
             for reference, dataset in self.reference_to_dataset.items():
-                assert dataset in dataset_parkeys, \
-                    "reference_to_dataset dataset keyword not in parkey tuple."
-                dataset_parkeys.append(reference)
+                if dataset in dataset_parkeys:
+                    dataset_parkeys.append(reference)
         return tuple(sorted(set(dataset_parkeys)))
 
     def insert(self, header, value):
