@@ -9,10 +9,11 @@ from __future__ import print_function
 
 import sys
 import os
+import shlex
 
 from crds.pysh import usage
 
-if len(sys.argv) > 2 and sys.argv[2] == "--help":
+if len(sys.argv) > 2 and "--help" in sys.argv:
     del sys.argv[2]
     RESTORE_HELP = True
 else:
@@ -67,23 +68,21 @@ REMAPPED_MODULES = {
     "checksum" : "crds.refactoring.checksum",
 }
 
-basecmd = "python -m"
+basecmd = sys.executable + " -m"
 remapped = REMAPPED_MODULES.get(sys.argv[1])
 
 def quote_strings(args):
-    result = ""
-    for arg in args:
-        if " " in arg:
-            arg = "'" + arg + "'"
-        result += arg + " "
-    return result.rstrip()
+    """Re-quote the command line parameters to prevent losing required quoting
+    when the modified command line is reissued.
+    """
+    return " ".join([shlex.quote(arg) for arg in args])
 
 if remapped:
     command = " ".join([basecmd, remapped, quote_strings(sys.argv[2:])])
 else:
     command = " ".join([basecmd, "crds." + quote_strings(sys.argv[1:])])
 
-# print("command:", command)
+print("command:", command)
 
 status = os.system(command)
 sys.exit(status)
