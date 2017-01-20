@@ -12,7 +12,7 @@ import importlib
 # ============================================================================
 
 __version__ = "7.1.0"  
-__rationale__ = "JWST Build 7.1 Development"
+__rationale__ = "JWST Build 7.1 Development, bestrefs --sync-references fix"
 
 # ============================================================================
 
