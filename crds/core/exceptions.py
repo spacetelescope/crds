@@ -111,6 +111,12 @@ class BadValueError(CrdsError):
 class ModificationError(CrdsError):
     """Failed attempt to modify rmap, e.g. replacement vs. addition."""
 
+class OverlappingMatchError(ModificationError):
+    """At least two of the references being added to an rmap had exactly the
+    same matching criteria (for at least one of their applicable cases) causing
+    one of the two submissions to be omitted from the update.
+    """
+
 class MatchingError(CrdsLookupError):
     """Represents a MatchSelector lookup which failed."""
 
