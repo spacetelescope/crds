@@ -21,18 +21,20 @@ else:
 
 usage("<command> <parameters...>", 1, help="""
 
-'crds' is a command line wrapper that is shorthand for the
- normal "python -m" syntax for invoking package modules,
-with the simplification that knowledge of the internal
-package structure is not required.  
+'crds' is a command line wrapper that replaces the "python -m" syntax
+for invoking CRDS programs.
 
-For example:
+For example,  the new preferred syntax:
 
     crds list --status ...
 
-is equivalent to the native Python syntax:
+is equivalent to the legacy native Python syntax:
 
     python -m crds.list --status ...
+
+NOTE: For some commands the package path has changed so the legacy syntax can
+no longer supported.  The "crds" wrapper is aware of the new paths and should
+be used instead universally.
 
 Available commands:
 
