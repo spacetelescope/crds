@@ -540,7 +540,10 @@ and ids used for CRDS reprocessing recommendations.
         
         for name in self.contexts:
             mapping = crds.get_cached_mapping(name)
-            if isinstance(mapping, rmap.InstrumentContext):
+            if isinstance(mapping, rmap.PipelineContext):
+                log.divider(name="Parkeys required for " + repr(mapping.basename), func=log.write)
+                _print_dict("", mapping.get_required_parkeys())
+            elif isinstance(mapping, rmap.InstrumentContext):
                 for name in mapping.selections:
                     try:
                         rmapping = mapping.get_rmap(name)
