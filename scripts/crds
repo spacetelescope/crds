@@ -8,11 +8,12 @@ hides internal package structure.
 from __future__ import print_function
 
 import sys
-import os
+import shlex
+import subprocess
 
 from crds.pysh import usage
 
-if len(sys.argv) > 2 and sys.argv[2] == "--help":
+if len(sys.argv) > 2 and "--help" in sys.argv:
     del sys.argv[2]
     RESTORE_HELP = True
 else:
@@ -20,18 +21,20 @@ else:
 
 usage("<command> <parameters...>", 1, help="""
 
-'crds' is a command line wrapper that is shorthand for the
- normal "python -m" syntax for invoking package modules,
-with the simplification that knowledge of the internal
-package structure is not required.  
+'crds' is a command line wrapper that replaces the "python -m" syntax
+for invoking CRDS programs.
 
-For example:
+For example,  the new preferred syntax:
 
     crds list --status ...
 
-is equivalent to the native Python syntax:
+is equivalent to the legacy native Python syntax:
 
     python -m crds.list --status ...
+
+NOTE: For some commands the package path has changed so the legacy syntax can
+no longer supported.  The "crds" wrapper is aware of the new paths and should
+be used instead universally.
 
 Available commands:
 
@@ -67,25 +70,18 @@ REMAPPED_MODULES = {
     "checksum" : "crds.refactoring.checksum",
 }
 
-basecmd = "python -m"
-remapped = REMAPPED_MODULES.get(sys.argv[1])
+remapped = REMAPPED_MODULES.get(sys.argv[1], "crds." + sys.argv[1])
 
 def quote_strings(args):
-    result = ""
-    for arg in args:
-        if " " in arg:
-            arg = "'" + arg + "'"
-        result += arg + " "
-    return result.rstrip()
+    """Re-quote the command line parameters to prevent losing required quoting
+    when the modified command line is reissued.
+    """
+    return [shlex.quote(arg) for arg in args]
 
-if remapped:
-    command = " ".join([basecmd, remapped, quote_strings(sys.argv[2:])])
-else:
-    command = " ".join([basecmd, "crds." + quote_strings(sys.argv[1:])])
-
+command = [sys.executable, "-m", remapped] + sys.argv[2:]
 # print("command:", command)
 
-status = os.system(command)
+status = subprocess.call(command)
 sys.exit(status)
 
 
