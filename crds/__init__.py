@@ -11,8 +11,8 @@ import importlib
 
 # ============================================================================
 
-__version__ = "7.1.0"  
-__rationale__ = "JWST Build 7.1 Development"
+__version__ = "7.1.1"  
+__rationale__ = "JWST Build 7.1 on-going Development"
 
 # ============================================================================
 
