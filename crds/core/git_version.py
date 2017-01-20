@@ -1,6 +1,6 @@
-__version__ = '766d7d0'
+__version__ = 'c6fe845'
 
 __full_version_info__ = '''
-branch: partition-core
-sha1: 766d7d0
+branch: bump-version
+sha1: c6fe845
 '''
