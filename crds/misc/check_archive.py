@@ -9,10 +9,15 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-import requests
-
 from crds.core import python23, log, config, utils, cmdline
 from crds.client import api
+
+DISABLED = []
+try:
+    import requests
+except (ImportError, RuntimeError):
+    log.verbose_warning("Failed to import 'requests' module.  check_archive disabled.")
+    DISABLED.append("requests")
 
 class CheckArchiveScript(cmdline.Script):
     """Command line script for for checking archive file availability."""
@@ -68,6 +73,8 @@ the archive and appropriate CRDS server.
     """
 
     def __init__(self, *args, **keys):
+        if DISABLED:
+            log.fatal_error("Missing or broken dependencies:", DISABLED)
         super(CheckArchiveScript, self).__init__(*args, **keys)
         self.file_info = {}
         self.missing_files = []
