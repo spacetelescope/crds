@@ -2,13 +2,22 @@
 web server file submission system.
 """
 
-# from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
-import requests
-from lxml import html
-
 from crds.core import config, log, utils, exceptions
 from crds.core.python23 import *
 from . import background
+
+# from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
+try:
+    import requests
+    DISABLED = []
+except (ImportError, RuntimeError):
+    log.verbose_warning("Import of 'requests' failed.  submit disabled.")
+    DISABLED.append("requests")
+try:
+    from lxml import html
+except (ImportError, RuntimeError):
+    log.verbose_warning("Import of 'lxml' failed.  submit disabled.")
+    DISABLED.append("lxml")
 
 # ==================================================================================================
 
@@ -28,6 +37,8 @@ class CrdsDjangoConnection(object):
     """
 
     def __init__(self, locked_instrument="none", username=None, password=None, base_url=None):
+        if DISABLED:
+            log.fatal_error("Missing or broken depenencies:", DISABLED)
         self.locked_instrument = locked_instrument
         self.username = username
         self.password = password
