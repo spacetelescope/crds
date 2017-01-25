@@ -81,6 +81,8 @@ class Validator(object):
             return self.check_column(filename)
         elif self.info.keytype == "G":
             return self.check_group(filename)
+        elif self.info.keytype == "X":
+            return self.check_header(filename, header)
         else:
             raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) + 
                              " for " + repr(self.name))
@@ -415,6 +417,34 @@ class FilenameValidator(KeywordValidator):
 
 # ----------------------------------------------------------------------------
 
+class ExpressionValidator(Validator):
+    """Value is an expression on the reference header that must evaluate to True."""
+    
+    def check_header(self, filename, header=None):
+        """Evalutate the header expression associated with this validator (as its sole value)
+        with respect to the given `header`.  Read `header` from `filename` if `header` is None.
+        """
+        if header is None:
+            header = data_file.get_header(filename)
+        header = self._clean_dotted_paths(header)
+        expr = self.info.values[0]
+        log.verbose("Checking", repr(filename), "for condition", repr(expr))
+        is_true = True
+        with log.verbose_warning_on_exception("Failed evaluating condition expression", repr(expr)):
+            is_true = eval(expr, header, header)
+        if not is_true:
+            raise exceptions.RequiredConditionError("Required condition", repr(expr), "is not satisfied.")
+
+    def _clean_dotted_paths(self, header):
+        """Convert header dotted-path keys into valid Python identifiers for eval."""
+        cleaned = dict(header)
+        for key, val in header.items():
+            clean = re.sub("([A-Za-z][A-Za-z0-9_]*)\.", "\1_", key)
+            cleaned[clean] = val   # clean replaces any dotted path, otherwise unchanged
+        return cleaned
+            
+# ----------------------------------------------------------------------------
+
 def validator(info):
     """Given TpnInfo object `info`, construct and return a Validator for it."""
     if info.datatype == "C":
@@ -434,8 +464,10 @@ def validator(info):
         rval = IntValidator(info)
     elif info.datatype == "L":
         rval = LogicalValidator(info)
-    elif info.datatype == "X":
+    elif info.datatype == "Z":
         rval = RegexValidator(info)
+    elif info.datatype == "X":
+        rval = ExpressionValidator(info)
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
     return rval

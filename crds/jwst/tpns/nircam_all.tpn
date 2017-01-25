@@ -1,8 +1,8 @@
 # Template file used by certify to check reference files
 # Some fields may be abbreviated to their first character:
 #
-# keytype = (Header|Group|Column)
-# datatype = (Integer|Real|Logical|Double|Character)
+# keytype = (Header|Group|Column|Expression)
+# datatype = (Integer|Real|Logical|Double|Character|Expression)
 # presence = (Optional|Required)
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
@@ -31,3 +31,17 @@ META.SUBARRAY.XSIZE         H   I   O  1:2048
 META.SUBARRAY.YSIZE         H   I   O  1:2048
 META.SUBARRAY.FASTAXIS      H   I   O  1,-1,2,-2
 META.SUBARRAY.SLOWAXIS      H   I   O  1,-1,2,-2
+SUBARRAY_INBOUNDS_X         X   X   O  (META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE<=2048)
+SUBARRAY_INBOUNDS_Y         X   X   O  (META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE<=2048)
+
+# NRCA1 -1      2
+# NRCA2 1       -2
+# NRCA3 -1      2
+# NRCA4 1       -2
+# NRCALONG      -1      2
+# NRCB1 1       -2
+# NRCB2 -1      2
+# NRCB3 1       -2
+# NRCB4 -1      2
+# NRCBLONG      1       -2
+

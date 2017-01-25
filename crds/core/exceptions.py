@@ -182,6 +182,10 @@ class TypeSetupError(CertifyError):
 class MissingReferenceError(CertifyError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
+class RequiredConditionError(CertifyError):
+    """An ExpressionValidator evaluated to False with respect to a file header."""
+    
+
 # -------------------------------------------------------------------------------------------
 
 class NameComparisonError(CrdsError):
