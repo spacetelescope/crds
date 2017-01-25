@@ -28,14 +28,3 @@ USEAFTER_KEYWORDS = ("META.OBSERVATION.DATE", "META.OBSERVATION.TIME") # Dataset
 
 DEFAULT_SELECTORS = ("Match", "UseAfter")   # Normal selector hierarchy in rmap
 
-# When loading headers,  make sure each keyword in a tuple is represented with
-# the same value enabling any form to be used.  Case insensitive.
-CROSS_STRAPPED_KEYWORDS = {
-    "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE"],
-    "META.TELESCOPE" : ["TELESCOP","TELESCOPE"],
-    "META.REFFILE.AUTHOR" : ["AUTHOR"],
-    "META.REFFILE.PEDIGREE" : ["PEDIGREE"],
-    "META.REFFILE.USEAFTER" : ["USEAFTER"],
-    "META.REFFILE.DESCRIPTION" : ["DESCRIP","DESCRIPTION"],
-    "META.REFFILE.HISTORY" : ["HISTORY"],
-    }

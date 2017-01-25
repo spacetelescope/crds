@@ -44,6 +44,14 @@ from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_nam
 
 # =======================================================================
 
+# When loading headers,  make sure each keyword in a tuple is represented with
+# the same value enabling any form to be used.
+CROSS_STRAPPED_KEYWORDS = {
+    }
+
+
+# =======================================================================
+
 def header_to_reftypes(header):
     """Based on `header` return the default list of appropriate reference type names."""
     return []  # translates to everything.

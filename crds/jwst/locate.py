@@ -26,6 +26,45 @@ except Exception:
 
 # =======================================================================
 
+# When loading headers,  make sure each keyword in a tuple is represented with
+# the same value enabling any form to be used.  Case insensitive.
+CROSS_STRAPPED_KEYWORDS = {
+
+    # These include non-DM keywords
+    "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE"],
+    "META.TELESCOPE" : ["TELESCOP","TELESCOPE"],
+    "META.REFFILE.DESCRIPTION" : ["DESCRIP","DESCRIPTION"],
+
+    # These include non-core-DM DM fields
+    "META.REFFILE.AUTHOR" : ["AUTHOR"],
+    "META.REFFILE.PEDIGREE" : ["PEDIGREE"],
+    "META.REFFILE.USEAFTER" : ["USEAFTER"],
+    "META.REFFILE.HISTORY" : ["HISTORY"],
+
+    # These should all be stock DM:FITS,  automatic
+    # "META.INSTRUMENT.BAND" : ["BAND"],
+    # "META.INSTRUMENT.CHANNEL" : ["CHANNEL"],
+    # "META.INSTRUMENT.DETECTOR" : ["DETECTOR"],
+    # "META.INSTRUMENT.FILTER" : ["FILTER"],
+    # "META.INSTRUMENT.PUPIL" : ["PUPIL"],
+    # "META.INSTRUMENT.GRATING" : ["GRATING"],
+
+    # "META.SUBARRAY.NAME" : ["SUBARRAY"],
+    # "META.SUBARRAY.XSTART" : ["SUBSTRT1"],
+    # "META.SUBARRAY.YSTART" : ["SUBSTRT2"],
+    # "META.SUBARRAY.XSIZE" : ["SUBSIZE1"],
+    # "META.SUBARRAY.YSIZE" : ["SUBSIZE2"],
+    # "META.SUBARRAY.FASTAXIS" : ["FASTAXIS"],
+    # "META.SUBARRAY.SLOWAXIS" : ["SLOWAXIS"],
+    
+    # "META.EXPOSURE.TYPE" : ["EXP_TYPE"],
+    # "META.EXPOSURE.READPATT" : ["READPATT"],
+
+    # "META.APERTURE.NAME" : ["APERTURE"],
+}
+
+# =======================================================================
+
 HERE = os.path.dirname(__file__) or "./"
 
 # =======================================================================
@@ -356,3 +395,4 @@ def locate_dir(instrument, mode=None):
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
     tpn.get_tpninfos("miri_flat.tpn", "foo.fits")  # With core schema,  one type loads all
+
