@@ -1,3 +1,3 @@
 from .certify import *
-from .validator import *
+from .validators import *
 

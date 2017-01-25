@@ -27,7 +27,7 @@ from crds import data_file, diff, tables
 from crds.client import api
 
 from . import mapping_parser
-from . import validator
+from . import validators
 
 # ============================================================================
 
@@ -92,18 +92,18 @@ class Certifier(object):
         list of Validators used to check that reference file type.
         """
         # Get the cache key for this filetype.
-        validators = []
+        checkers = []
         for key in self.locator.reference_name_to_validator_key(self.filename):
-            validators.extend(validator.validators_by_typekey(key, self.observatory))
-        validators = self.set_rmap_parkeys_to_required(validators) 
-        # validators = [ val for val in validators if val.name in parkeys ]
-        return validators
+            checkers.extend(validators.validators_by_typekey(key, self.observatory))
+        checkers = self.set_rmap_parkeys_to_required(checkers) 
+        # checkers = [ val for val in checkers if val.name in parkeys ]
+        return checkers
     
-    def set_rmap_parkeys_to_required(self, validators):
-        """Mutate copies of `validators` so that any specified by the rmap parkey are required."""
+    def set_rmap_parkeys_to_required(self, checkers):
+        """Mutate copies of `checkers` so that any specified by the rmap parkey are required."""
         parkeys = set(self.get_rmap_parkeys())
         vlist = []
-        for valid in validators:
+        for valid in checkers:
             if not valid.optional:
                 vlist.append(valid)
             elif valid.name not in parkeys:
