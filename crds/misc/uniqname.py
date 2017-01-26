@@ -4,13 +4,19 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ==============================================================================================
+
 import os.path
 import sys
 import datetime
 
+# ==============================================================================================
+
 from crds.core import cmdline, config, log, naming
 from crds.core.exceptions import CrdsError
 from crds import data_file
+
+# ==============================================================================================
 
 class UniqnameScript(cmdline.Script):
 
@@ -136,6 +142,8 @@ MONTHS = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ]
 
+# ==============================================================================================
+
 def checksum_exists(filename):
     """Return True IFF `path` names a file which already has FITS checksums.  As a first guess,
     existing checksums should be maintained across file content updates required by the renaming.
@@ -166,6 +174,8 @@ def uniqname(old_path):
     new_name = UniqnameScript("crds.misc.uniqname --files {0} --standard --remove-original --fits-errors {1}".format(
         old_path, add_checksums))()
     return new_name
+
+# ==============================================================================================
 
 if __name__ == "__main__":
     UniqnameScript()()
