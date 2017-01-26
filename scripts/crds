@@ -47,6 +47,7 @@ rowdiff             -- difference reference tables
 matches             -- list matching criteria relative to particular rules
 checksum            -- update rmap checksum
 query_affected      -- download CRDS new reference files affected dataset IDs
+uniqname            -- rename HST files with new CDBS-style names
 
 For more detail about individual commands use --help:
 
@@ -78,10 +79,14 @@ def quote_strings(args):
     """
     return [shlex.quote(arg) for arg in args]
 
-command = [sys.executable, "-m", remapped] + sys.argv[2:]
+if "--debug-traps" in sys.argv or "--pdb" in sys.argv:
+    command = [sys.executable, "-i", "-m", remapped] + sys.argv[2:]
+else:
+    command = [sys.executable, "-m", remapped] + sys.argv[2:]
+
 # print("command:", command)
 
-status = subprocess.call(command)
+status = subprocess.call(command, stdin=sys.stdin)
 sys.exit(status)
 
 
