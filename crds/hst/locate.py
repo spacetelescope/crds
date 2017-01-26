@@ -174,9 +174,29 @@ def decompose_newstyle_name(filename):
 
     return path, observatory, instrument, filekind, serial, ext
 
+SYNPHOT_ENDINGS = ("tmc.fits","tmt.fits","tmg.fits")
+
+def decompose_synphot_name(filename):
+    """Return filename properties for a SYNPHOT file or raises an assertion error.
+
+    >>> decompose_synphot_name("some/path/11q0123nj_tmg.fits")
+    ('some/path', 'hst', 'synphot', 'tmg', None, '.fits')
+
+    """
+    assert filename.endswith(SYNPHOT_ENDINGS), \
+        "{} does not have one of the supported SYNPHOT endings " + repr(SYNPHOT_ENDINGS)
+    path = os.path.dirname(filename)
+    observatory = "hst"
+    instrument = "synphot"
+    ext = os.path.splitext(filename)[-1]
+    filekind = os.path.splitext(os.path.basename(filename).split("_")[-1])[0]
+    serial = None
+    assert filekind in ["tmt","tmg","tmc"], \
+        "Synphot name decomposition error for " + repr(filename)
+    return path, observatory, instrument, filekind, serial, ext
+
 def properties_inside_mapping(filename):
-    """Load `filename`s mapping header to discover and 
-    return (instrument, filekind).
+    """Load `filename`s mapping header to discover and return (instrument, filekind).
 
     >>> from crds.tests import test_config
     >>> old_config = test_config.setup()
@@ -229,7 +249,6 @@ CDBS_DIRS_TO_INSTR = {
    
    "/yref/" : "fos",
    "/zref/" : "hrs",
-   
 }
 
 def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=False):
@@ -303,6 +322,10 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
             
 def get_reference_properties(filename):
     """Figure out FITS (instrument, filekind, serial) based on `filename`."""
+    try:
+        return decompose_synphot_name(filename)
+    except AssertionError:
+        pass
     try:   # Hopefully it's a nice new standard filename, easy
         return decompose_newstyle_name(filename)
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
@@ -411,7 +434,7 @@ Character 4-5: UT Hour [00 - 23]
 Character 6-7: UT Minute [00 - 59]
 Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
-u=WFPC2, n=NICMOS]
+u=WFPC2, n=NICMOS, m=SYNPHOT]
     """
     path, _obs, instr, filekind, _serial, ext = get_reference_properties(filename)
 
@@ -431,14 +454,17 @@ Character 4-5: UT Hour [00 - 23]
 Character 6-7: UT Minute [00 - 59]
 Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
-u=WFPC2, n=NICMOS]
+u=WFPC2, n=NICMOS, m=MULTI, m=SYNPHOT]
     """
     if now is None:
         time.sleep(2)
 
-    suffix = "_" + filekind_to_suffix(instr, filekind)
-    
-    instr_char = siname.instrument_to_id_char(instr)
+    if instr == "synphot":
+        suffix = "_" + filekind
+        instr_char = "m"
+    else:
+        suffix = "_" + filekind_to_suffix(instr, filekind)
+        instr_char = siname.instrument_to_id_char(instr)
 
     timeid = generate_timestamp(now)
 
