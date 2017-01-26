@@ -47,6 +47,7 @@ rowdiff             -- difference reference tables
 matches             -- list matching criteria relative to particular rules
 checksum            -- update rmap checksum
 query_affected      -- download CRDS new reference files affected dataset IDs
+uniqname            -- rename HST files with new CDBS-style names
 
 For more detail about individual commands use --help:
 
