@@ -180,7 +180,7 @@ def decompose_synphot_name(filename):
     """Return filename properties for a SYNPHOT file or raises an assertion error.
 
     >>> decompose_synphot_name("some/path/11q0123nj_tmg.fits")
-    ('some/path', 'hst', 'synphot', 'tmg', '0000', '.fits')
+    ('some/path', 'hst', 'synphot', 'tmg', None, '.fits')
 
     """
     assert filename.endswith(SYNPHOT_ENDINGS), \
