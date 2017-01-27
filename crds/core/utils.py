@@ -925,7 +925,7 @@ def file_to_instrument(filename):
         if ("_" + instr + "_" in basename) or basename.startswith(instr + "_"):
             return instr.upper()
     from crds import data_file
-    header = data_file.get_unconditioned_header(filename, needed_keys=INSTRUMENT_KEYWORDS)
+    header = data_file.get_unconditioned_header(filename, needed_keys=tuple(INSTRUMENT_KEYWORDS))
     return header_to_instrument(header)
     
 def header_to_instrument(header, default=None):

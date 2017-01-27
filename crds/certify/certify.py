@@ -10,8 +10,7 @@ from __future__ import absolute_import
 
 import os
 from collections import defaultdict
-
-# ============================================================================
+import gc
 
 import numpy as np
 
@@ -631,6 +630,8 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     trap_exceptions:        if True, trapped exceptions issue ERROR messages. Otherwise reraised.
     original_name:          browser-side name of file if any, files 
     """
+    gc.collect()
+    
     try:
         old_flag = log.set_exception_trap(trap_exceptions)    #  XXX non-reentrant code,  no threading
         

@@ -190,7 +190,7 @@ def _get_dm_to_fits(schema=None):
     fits = {}
     flat = _schema_to_flat(schema)
     for key, val in flat.items():
-        if key.endswith(".fits_keyword"):
+        if key.lower().endswith(".fits_keyword"):
             fits[str(key[:-len(".fits_keyword")])] = str(val)
     return fits
 

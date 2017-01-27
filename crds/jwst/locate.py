@@ -15,6 +15,7 @@ import re
 from crds.core import log, rmap, config, utils, timestamp
 from crds import data_file
 from . import tpn
+from . import schema
 
 # =======================================================================
 
@@ -112,6 +113,7 @@ def mapping_validator_key(mapping):
 
 REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
 
+@utils.cached
 def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
     should be a mapping or FITS reference file.
@@ -260,7 +262,7 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    header = data_file.get_free_header(filename, observatory="jwst")
+    header = data_file.get_free_header(filename, (), None, "jwst")
     instrument = utils.header_to_instrument(header).lower()
     assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
     filekind = utils.get_any_of(header, ["REFTYPE", "TYPE", "META.TYPE", "META.REFFILE.TYPE"], "UNDEFINED").lower()

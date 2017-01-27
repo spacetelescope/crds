@@ -1,55 +1,10 @@
-"""This module defines limited facilities for reading and conditioning
-FITS and GEIS headers.
-
->>> is_geis("foo.r0h")
-True
->>> is_geis("bar.fits")
-False
-
->>> import io
->>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
-
->> import pprint
->> pprint.pprint(header)
-    {'ATODGAIN': '0.',
-     'BITPIX': '16',
-     'DATATYPE': 'INTEGER*2',
-     'DESCRIP': 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS',
-     'FILETYPE': 'MSK',
-     'FILTER1': '0',
-     'FILTER2': '0',
-     'FILTNAM1': '',
-     'FILTNAM2': '',
-     'GCOUNT': '4',
-     'GROUPS': 'T',
-     'HISTORY': 'This file was edited by Michael S. Wiggs, August 1995\n'
-                '\n'
-                'e2112084u.r0h was edited to include values of 256',
-     'INSTRUME': 'WFPC2',
-     'KSPOTS': 'OFF',
-     'NAXIS': '1',
-     'NAXIS1': '800',
-     'PCOUNT': '38',
-     'PDTYPE1': 'REAL*8',
-     'PDTYPE2': 'REAL*8',
-     'PEDIGREE': 'INFLIGHT 01/01/1994 - 15/05/1995',
-     'PSIZE': '1760',
-     'PSIZE1': '64',
-     'PSIZE2': '64',
-     'PTYPE1': 'CRVAL1',
-     'PTYPE2': 'CRVAL2',
-     'ROOTNAME': 'F8213081U',
-     'SHUTTER': '',
-     'SIMPLE': 'F',
-     'UBAY3TMP': '0.',
-     'UCH1CJTM': '0.',
-     'UCH2CJTM': '0.',
-     'UCH3CJTM': '0.',
-     'UCH4CJTM': '0.'}
+"""This module defines limited facilities for extracting information from 
+reference and datasets,  generally in the form of header dictionaries.
 """
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
 import os.path
 import re
 import json
@@ -144,9 +99,9 @@ def get_observatory(filepath, original_name=None):
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
     if condition:
-        header = get_conditioned_header(filepath, needed_keys=[key])
+        header = get_conditioned_header(filepath, (key,), None, None)
     else:
-        header = get_unconditioned_header(filepath, needed_keys=[key])
+        header = get_unconditioned_header(filepath, (key,), None, None)
     return header[key]
 
 @hijack_warnings
@@ -182,7 +137,7 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     and is not required to be readable,  whereas `filepath` must be readable
     and contain the desired header.
     """
-    header = get_header(filepath, needed_keys, original_name, observatory=observatory)
+    header = get_header(filepath, needed_keys, original_name, observatory)
     return utils.condition_header(header, needed_keys)
 
 @hijack_warnings
@@ -200,14 +155,23 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
 # A clearer name
 get_unconditioned_header = get_header
 
-@utils.gc_collected
+@utils.cached
+# @utils.gc_collected
 def get_free_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
 
-    Does not hijack warnings.
+    DOES NOT hijack warnings.
 
-    Original name is used to determine file type for web upload temporary files which
-    have no distinguishable extension.  Original name is browser-side name for file.
+    Original name is used to determine file type for web upload temporary files
+    which have no distinguishable extension.  Original name is browser-side
+    name for file.
+
+    get_free_header() is a cached function to prevent repeat file reads.  
+    Although parameters are given default values,  for caching to work correctly
+    even default parameters should be specified positionally.
+
+    Since get_free_header() is cached,  loading file updates requires first
+    clearing the function cache.
     """
     if original_name is None:
         original_name = os.path.basename(filepath)
@@ -334,6 +298,47 @@ def get_asdf_header(filepath, needed_keys=()):
 
 # ----------------------------------------------------------------------------------------------
 
+def convert_to_eval_header(header):
+    """To support using file headers in eval expressions,  two changes need to be made:
+    
+    1. JWST data model keywords, dotted paths, need to be translated to underscored paths.
+    This makes them valid identifiers instead of non-existent nested objects when evaled.
+
+    2. Numerial values that CRDS has conditioned into strings need to be converted back to
+    numerical values so they can be used in arithmetic expressions.
+    """
+    header = _destringize_numbers(header)
+    header = _convert_dotted_paths(header)
+    return header
+
+def _destringize_numbers(header):
+    """Convert string values in `header` that work as numbers back into 
+    ints and floats.
+    """
+    with_numbers = {}
+    for key, val in header.items():
+        try:
+            val = int(val)
+        except:
+            try:
+                val = float(val)
+            except:
+                pass
+        with_numbers[key] = val
+    return with_numbers    
+
+def _convert_dotted_paths(header):
+    """Convert header dotted-path keys into valid Python identifiers 
+    (for eval()) by using underscores instead of periods.
+    """
+    cleaned = {}
+    for key, val in header.items():
+        clean = re.sub(r"([A-Za-z][A-Za-z0-9_]*)\.", r"\1_", key)
+        cleaned[clean] = val
+    return cleaned
+
+# ----------------------------------------------------------------------------------------------
+
 def to_simple_types(tree):
     """Convert an ASDF tree structure to a flat dictionary of simple types with dotted path tree keys."""
     result = dict()
@@ -364,32 +369,30 @@ def simple_type(value):
 def cross_strap_header(header):
     """Foreach DM keyword in header,  add the corresponding FITS keyword,  and vice versa."""
     
-    crossed = dict(header)
-
     # Get dictionary of observatory-specific cross-strap relationships
     # augmenting DM
     try:
         locator = utils.header_to_locator(header)
     except Exception as exc:
         log.verbose_warning("Cannot identify observatory from header. Skipping keyword aliasing. :", str(exc))
-        return crossed
+        return header
     else:
         schema = locator.__dict__.get("schema")
         cross_strap_extensions = locator.__dict__.get("CROSS_STRAPPED_KEYWORDS")
 
+    crossed = dict(header)
+
     # Auto-cross-strap DM keyword and corresponding DM FITS/low-level keyword
     if schema is not None:
-        for key in header:
-            fitskey = schema.dm_to_fits(key)
+        for key in sorted(header):
+            # Only the opposite of `key` will be defined, e.g. fits(fits) is None
+            fitskey, dmkey  = schema.dm_to_fits(key) or key, schema.fits_to_dm(key) or key
             header_fitsval = header.get(fitskey, "UNDEFINED")
-            crossed_fitsval = crossed.get(fitskey, "UNDEFINED")
-            if crossed_fitsval == "UNDEFINED":
-                crossed[fitskey] = header_fitsval
-            dmkey = schema.fits_to_dm(key)
             header_dmval = header.get(dmkey, "UNDEFINED")
-            crossed_dmval = header.get(dmkey, "UNDEFINED")
-            if crossed_dmval == "UNDEFINED":
-                crossed[dmkey] = header_dmval
+            if header_fitsval == "UNDEFINED" and header_dmval != "UNDEFINED":
+                crossed[fitskey] = header_dmval
+            elif header_dmval == "UNDEFINED" and header_fitsval != "UNDEFINED":
+                crossed[dmkey] = header_fitsval
 
     # If the locator module defines additional non-DM keywords, cross strap those too.
     if cross_strap_extensions is not None:
@@ -590,6 +593,56 @@ HISTORY This file was edited by Michael S. Wiggs, August 1995
 HISTORY
 HISTORY e2112084u.r0h was edited to include values of 256
 END
+"""
+
+# ------ prevent string join
+
+"""
+>>> is_geis("foo.r0h")
+True
+>>> is_geis("bar.fits")
+False
+
+>>> import io
+>>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
+
+>> import pprint
+>> pprint.pprint(header)
+    {'ATODGAIN': '0.',
+     'BITPIX': '16',
+     'DATATYPE': 'INTEGER*2',
+     'DESCRIP': 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS',
+     'FILETYPE': 'MSK',
+     'FILTER1': '0',
+     'FILTER2': '0',
+     'FILTNAM1': '',
+     'FILTNAM2': '',
+     'GCOUNT': '4',
+     'GROUPS': 'T',
+     'HISTORY': 'This file was edited by Michael S. Wiggs, August 1995\n'
+                '\n'
+                'e2112084u.r0h was edited to include values of 256',
+     'INSTRUME': 'WFPC2',
+     'KSPOTS': 'OFF',
+     'NAXIS': '1',
+     'NAXIS1': '800',
+     'PCOUNT': '38',
+     'PDTYPE1': 'REAL*8',
+     'PDTYPE2': 'REAL*8',
+     'PEDIGREE': 'INFLIGHT 01/01/1994 - 15/05/1995',
+     'PSIZE': '1760',
+     'PSIZE1': '64',
+     'PSIZE2': '64',
+     'PTYPE1': 'CRVAL1',
+     'PTYPE2': 'CRVAL2',
+     'ROOTNAME': 'F8213081U',
+     'SHUTTER': '',
+     'SIMPLE': 'F',
+     'UBAY3TMP': '0.',
+     'UCH1CJTM': '0.',
+     'UCH2CJTM': '0.',
+     'UCH3CJTM': '0.',
+     'UCH4CJTM': '0.'}
 """
 
 def is_geis(name):

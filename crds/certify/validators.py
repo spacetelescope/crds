@@ -18,7 +18,8 @@ import copy
 from crds import log, config, utils, timestamp, selectors
 from crds import tables
 from crds import data_file
-from crds.exceptions import (MissingKeywordError, IllegalKeywordError)
+from crds.exceptions import MissingKeywordError, IllegalKeywordError
+from crds.exceptions import RequiredConditionError
 
 # ============================================================================
 
@@ -426,23 +427,17 @@ class ExpressionValidator(Validator):
         """
         if header is None:
             header = data_file.get_header(filename)
-        header = self._clean_dotted_paths(header)
+        header = data_file.convert_to_eval_header(header)
         expr = self.info.values[0]
         log.verbose("Checking", repr(filename), "for condition", repr(expr))
         is_true = True
-        with log.verbose_warning_on_exception("Failed evaluating condition expression", repr(expr)):
+        with log.verbose_warning_on_exception(
+                "Failed evaluating condition expression", repr(expr)):
             is_true = eval(expr, header, header)
         if not is_true:
-            raise exceptions.RequiredConditionError("Required condition", repr(expr), "is not satisfied.")
+            raise RequiredConditionError(
+                "Required condition", repr(expr), "is not satisfied.")
 
-    def _clean_dotted_paths(self, header):
-        """Convert header dotted-path keys into valid Python identifiers for eval."""
-        cleaned = dict(header)
-        for key, val in header.items():
-            clean = re.sub("([A-Za-z][A-Za-z0-9_]*)\.", "\1_", key)
-            cleaned[clean] = val   # clean replaces any dotted path, otherwise unchanged
-        return cleaned
-            
 # ----------------------------------------------------------------------------
 
 def validator(info):
