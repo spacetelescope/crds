@@ -298,6 +298,62 @@ def get_asdf_header(filepath, needed_keys=()):
 
 # ----------------------------------------------------------------------------------------------
 
+def cross_strap_header(header):
+    """Set up keyword equivalencies in a copy of `header`.  Ensure both FITS
+    and datamodel dotted path variants are defined for each keyword.
+    Also add variations defined by observatory locator module
+    CROSS_STRAPPED_KEYWORDS.
+    """
+    crossed = dict(header)
+    with log.verbose_warning_on_exception(
+        "Cannot identify observatory. Skipping keyword aliasing"):
+        locator = utils.header_to_locator(header)
+        equivalency_pairs = _get_fits_datamodel_pairs(locator, header)
+        equivalency_pairs.extend(_get_cross_strapped_pairs(locator))
+        for pair in equivalency_pairs:
+            _cross_strap_pair(crossed, pair)
+    return crossed
+
+def _get_fits_datamodel_pairs(locator, header):
+    """Return the (FITS, DM) and (DM, FITS) cross strap pairs associated with
+    every keyword in `header`.
+    """
+    pairs = []
+    schema = locator.__dict__.get("schema")
+    if schema is None:
+        return
+    for key in header:
+        with log.verbose_warning_on_exception("Failed translating keyword", repr(key)):
+            fitskey, dmkey  = schema.dm_to_fits(key) or key, schema.fits_to_dm(key) or key
+            pairs.append(fitskey, dmkey)
+            pairs.append(dmkey, fitskey)
+    return pairs
+
+def _get_cross_strapped_pairs(locator):
+    """Return the header keyword equivalency pairs defined by the 
+    observatory's locator module.
+    """
+    pairs = []
+    equivalencies = locator.__dict__.get("CROSS_STRAPPED_KEYORDS", [])
+    for master, slaves in equivalencies:
+        for slave in slaves:
+            pairs.append(master, slave)
+            pairs.append(slave, master)
+    return pairs    
+
+def _cross_strap_pair(header, keyword_pair):
+    """Mutate `header` using (master, slave) `keyword_pair` so that slave
+    duplicates master's value under slave's name IFF master is defined
+    in header and slave is not.
+    """
+    master_key, slave_key = keyword_pair
+    master_val = header.get(master_key, "UNDEFINED")
+    slave_val =  header.get(slave_key, "UNDEFINED")
+    if slave_val == "UNDEFINED" and master_val != "UNDEFINED":
+        header[slave_key] = master_val
+
+# ----------------------------------------------------------------------------------------------
+
 def convert_to_eval_header(header):
     """To support using file headers in eval expressions,  two changes need to be made:
     
@@ -365,56 +421,6 @@ def simple_type(value):
     else:
         rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
     return rval
-
-def cross_strap_header(header):
-    """Foreach DM keyword in header,  add the corresponding FITS keyword,  and vice versa."""
-    
-    # Get dictionary of observatory-specific cross-strap relationships
-    # augmenting DM
-    try:
-        locator = utils.header_to_locator(header)
-    except Exception as exc:
-        log.verbose_warning("Cannot identify observatory from header. Skipping keyword aliasing. :", str(exc))
-        return header
-    else:
-        schema = locator.__dict__.get("schema")
-        cross_strap_extensions = locator.__dict__.get("CROSS_STRAPPED_KEYWORDS")
-
-    crossed = dict(header)
-
-    # Auto-cross-strap DM keyword and corresponding DM FITS/low-level keyword
-    if schema is not None:
-        for key in sorted(header):
-            # Only the opposite of `key` will be defined, e.g. fits(fits) is None
-            fitskey, dmkey  = schema.dm_to_fits(key) or key, schema.fits_to_dm(key) or key
-            header_fitsval = header.get(fitskey, "UNDEFINED")
-            header_dmval = header.get(dmkey, "UNDEFINED")
-            if header_fitsval == "UNDEFINED" and header_dmval != "UNDEFINED":
-                crossed[fitskey] = header_dmval
-            elif header_dmval == "UNDEFINED" and header_fitsval != "UNDEFINED":
-                crossed[dmkey] = header_fitsval
-
-    # If the locator module defines additional non-DM keywords, cross strap those too.
-    if cross_strap_extensions is not None:
-        # Use any extension keywords that are defined to help define missing header keywords
-        for key in cross_strap_extensions:
-            current = crossed.get(key, "UNDEFINED")
-            if current == "UNDEFINED":
-                for key2 in cross_strap_extensions[key]:
-                    current2 = crossed.get(key2, "UNDEFINED")
-                    if current2 != "UNDEFINED":
-                        crossed[key] = current2
-                        break
-                else:
-                    crossed[key] = "UNDEFINED"
-        # Use existing header keywords to help define all extension keywords
-        for key in cross_strap_extensions:
-            for key2 in cross_strap_extensions[key]:
-                current2 = crossed.get(key2, "UNDEFINED")
-                if current2 == "UNDEFINED":
-                    crossed[key2] = crossed[key]
-
-    return crossed
 
 # ----------------------------------------------------------------------------------------------
 
@@ -731,4 +737,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-
