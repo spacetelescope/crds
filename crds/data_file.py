@@ -305,13 +305,16 @@ def cross_strap_header(header):
     CROSS_STRAPPED_KEYWORDS.
     """
     crossed = dict(header)
-    with log.verbose_warning_on_exception(
-        "Cannot identify observatory. Skipping keyword aliasing"):
+    try:
         locator = utils.header_to_locator(header)
-        equivalency_pairs = _get_fits_datamodel_pairs(locator, header)
-        equivalency_pairs.extend(_get_cross_strapped_pairs(locator))
-        for pair in equivalency_pairs:
-            _cross_strap_pair(crossed, pair)
+    except Exception:
+        log.verbose_warning(
+            "Cannot identify observatory from header. Skipping keyword aliasing")
+        return crossed
+    equivalency_pairs = _get_fits_datamodel_pairs(locator, header)
+    equivalency_pairs.extend(_get_cross_strapped_pairs(locator))
+    for pair in equivalency_pairs:
+        _cross_strap_pair(crossed, pair)
     return crossed
 
 def _get_fits_datamodel_pairs(locator, header):
@@ -323,10 +326,12 @@ def _get_fits_datamodel_pairs(locator, header):
     if schema is None:
         return
     for key in header:
-        with log.verbose_warning_on_exception("Failed translating keyword", repr(key)):
-            fitskey, dmkey  = schema.dm_to_fits(key) or key, schema.fits_to_dm(key) or key
-            pairs.append(fitskey, dmkey)
-            pairs.append(dmkey, fitskey)
+        with log.verbose_warning_on_exception(
+                "Failed cross strapping keyword", repr(key)):
+            fitskey = schema.dm_to_fits(key) or key
+            dmkey = schema.fits_to_dm(key) or key
+            pairs.append((fitskey, dmkey))
+            pairs.append((dmkey, fitskey))
     return pairs
 
 def _get_cross_strapped_pairs(locator):
@@ -334,11 +339,11 @@ def _get_cross_strapped_pairs(locator):
     observatory's locator module.
     """
     pairs = []
-    equivalencies = locator.__dict__.get("CROSS_STRAPPED_KEYORDS", [])
-    for master, slaves in equivalencies:
+    equivalencies = locator.__dict__.get("CROSS_STRAPPED_KEYWORDS", [])
+    for master, slaves in equivalencies.items():
         for slave in slaves:
-            pairs.append(master, slave)
-            pairs.append(slave, master)
+            pairs.append((master, slave))
+            pairs.append((slave, master))
     return pairs    
 
 def _cross_strap_pair(header, keyword_pair):
