@@ -95,10 +95,11 @@ def get_classic_tpninfos(*key):
     `filekind` from it's .tpn file.
     """
     where = os.path.join(HERE, "tpns", key[0])
-    with log.verbose_warning_on_exception(
-            "No TPN file exists for", repr(key[0]), verbosity=70):
+    try:
         return _load_tpn(where)
-    return []
+    except Exception as exc:
+        log.verbose_warning("No TPN file exists for", repr(key[0]), verbosity=70)
+        return []
 
 def get_tpninfos(*key):
     """Load the listof TPN info tuples corresponding to `key` from it's .tpn file.
