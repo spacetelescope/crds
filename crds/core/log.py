@@ -89,6 +89,14 @@ are carefully reraised so the original traceback is not destroyed.
 >>> _ = log.set_verbose(old_verbose)
 >>> _ = log.set_exception_trap(old_trap)
 
+>>> old_verbose = log.set_verbose()
+
+>>> with log.verbose_warning_on_exception("Testing expected verbose warning"):
+...     raise ValueError("Force verbose warning.")
+...     log.write("This code should not be exected.")
+CRDS - WARNING -  Testing expected verbose warning : Force verbose warning.
+
+>>> _ = log.set_verbose(old_verbose)
 """
 from __future__ import print_function
 from __future__ import division

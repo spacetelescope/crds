@@ -44,6 +44,14 @@ from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_nam
 
 # =======================================================================
 
+# When loading headers,  make sure each keyword in a tuple is represented with
+# the same value enabling any form to be used.
+CROSS_STRAPPED_KEYWORDS = {
+    }
+
+
+# =======================================================================
+
 def header_to_reftypes(header):
     """Based on `header` return the default list of appropriate reference type names."""
     return []  # translates to everything.
@@ -401,7 +409,7 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, _parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    header = data_file.get_free_header(filename)
+    header = data_file.get_free_header(filename, (), None, "hst")
     instrument = header["INSTRUME"].lower()
     if instrument in INSTRUMENT_FIXERS:
         instrument = INSTRUMENT_FIXERS[instrument]

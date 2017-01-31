@@ -1,55 +1,10 @@
-"""This module defines limited facilities for reading and conditioning
-FITS and GEIS headers.
-
->>> is_geis("foo.r0h")
-True
->>> is_geis("bar.fits")
-False
-
->>> import io
->>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
-
->> import pprint
->> pprint.pprint(header)
-    {'ATODGAIN': '0.',
-     'BITPIX': '16',
-     'DATATYPE': 'INTEGER*2',
-     'DESCRIP': 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS',
-     'FILETYPE': 'MSK',
-     'FILTER1': '0',
-     'FILTER2': '0',
-     'FILTNAM1': '',
-     'FILTNAM2': '',
-     'GCOUNT': '4',
-     'GROUPS': 'T',
-     'HISTORY': 'This file was edited by Michael S. Wiggs, August 1995\n'
-                '\n'
-                'e2112084u.r0h was edited to include values of 256',
-     'INSTRUME': 'WFPC2',
-     'KSPOTS': 'OFF',
-     'NAXIS': '1',
-     'NAXIS1': '800',
-     'PCOUNT': '38',
-     'PDTYPE1': 'REAL*8',
-     'PDTYPE2': 'REAL*8',
-     'PEDIGREE': 'INFLIGHT 01/01/1994 - 15/05/1995',
-     'PSIZE': '1760',
-     'PSIZE1': '64',
-     'PSIZE2': '64',
-     'PTYPE1': 'CRVAL1',
-     'PTYPE2': 'CRVAL2',
-     'ROOTNAME': 'F8213081U',
-     'SHUTTER': '',
-     'SIMPLE': 'F',
-     'UBAY3TMP': '0.',
-     'UCH1CJTM': '0.',
-     'UCH2CJTM': '0.',
-     'UCH3CJTM': '0.',
-     'UCH4CJTM': '0.'}
+"""This module defines limited facilities for extracting information from 
+reference and datasets,  generally in the form of header dictionaries.
 """
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
 import os.path
 import re
 import json
@@ -144,9 +99,9 @@ def get_observatory(filepath, original_name=None):
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
     if condition:
-        header = get_conditioned_header(filepath, needed_keys=[key])
+        header = get_conditioned_header(filepath, (key,), None, None)
     else:
-        header = get_unconditioned_header(filepath, needed_keys=[key])
+        header = get_unconditioned_header(filepath, (key,), None, None)
     return header[key]
 
 @hijack_warnings
@@ -182,7 +137,7 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     and is not required to be readable,  whereas `filepath` must be readable
     and contain the desired header.
     """
-    header = get_header(filepath, needed_keys, original_name, observatory=observatory)
+    header = get_header(filepath, needed_keys, original_name, observatory)
     return utils.condition_header(header, needed_keys)
 
 @hijack_warnings
@@ -200,14 +155,23 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
 # A clearer name
 get_unconditioned_header = get_header
 
-@utils.gc_collected
+@utils.cached
+# @utils.gc_collected
 def get_free_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
 
-    Does not hijack warnings.
+    DOES NOT hijack warnings.
 
-    Original name is used to determine file type for web upload temporary files which
-    have no distinguishable extension.  Original name is browser-side name for file.
+    Original name is used to determine file type for web upload temporary files
+    which have no distinguishable extension.  Original name is browser-side
+    name for file.
+
+    get_free_header() is a cached function to prevent repeat file reads.  
+    Although parameters are given default values,  for caching to work correctly
+    even default parameters should be specified positionally.
+
+    Since get_free_header() is cached,  loading file updates requires first
+    clearing the function cache.
     """
     if original_name is None:
         original_name = os.path.basename(filepath)
@@ -334,6 +298,108 @@ def get_asdf_header(filepath, needed_keys=()):
 
 # ----------------------------------------------------------------------------------------------
 
+def cross_strap_header(header):
+    """Set up keyword equivalencies in a copy of `header`.  Ensure both FITS
+    and datamodel dotted path variants are defined for each keyword.
+    Also add variations defined by observatory locator module
+    CROSS_STRAPPED_KEYWORDS.
+    """
+    crossed = dict(header)
+    try:
+        locator = utils.header_to_locator(header)
+    except Exception:
+        log.verbose_warning(
+            "Cannot identify observatory from header. Skipping keyword aliasing")
+        return crossed
+    equivalency_pairs = _get_fits_datamodel_pairs(locator, header)
+    equivalency_pairs.extend(_get_cross_strapped_pairs(locator))
+    for pair in equivalency_pairs:
+        _cross_strap_pair(crossed, pair)
+    return crossed
+
+def _get_fits_datamodel_pairs(locator, header):
+    """Return the (FITS, DM) and (DM, FITS) cross strap pairs associated with
+    every keyword in `header`.
+    """
+    pairs = []
+    schema = locator.__dict__.get("schema")
+    if schema is None:
+        return
+    for key in header:
+        with log.verbose_warning_on_exception(
+                "Failed cross strapping keyword", repr(key)):
+            fitskey = schema.dm_to_fits(key) or key
+            dmkey = schema.fits_to_dm(key) or key
+            pairs.append((fitskey, dmkey))
+            pairs.append((dmkey, fitskey))
+    return pairs
+
+def _get_cross_strapped_pairs(locator):
+    """Return the header keyword equivalency pairs defined by the 
+    observatory's locator module.
+    """
+    pairs = []
+    equivalencies = locator.__dict__.get("CROSS_STRAPPED_KEYWORDS", [])
+    for master, slaves in equivalencies.items():
+        for slave in slaves:
+            pairs.append((master, slave))
+            pairs.append((slave, master))
+    return pairs    
+
+def _cross_strap_pair(header, keyword_pair):
+    """Mutate `header` using (master, slave) `keyword_pair` so that slave
+    duplicates master's value under slave's name IFF master is defined
+    in header and slave is not.
+    """
+    master_key, slave_key = keyword_pair
+    master_val = header.get(master_key, "UNDEFINED")
+    slave_val =  header.get(slave_key, "UNDEFINED")
+    if slave_val == "UNDEFINED" and master_val != "UNDEFINED":
+        header[slave_key] = master_val
+
+# ----------------------------------------------------------------------------------------------
+
+def convert_to_eval_header(header):
+    """To support using file headers in eval expressions,  two changes need to be made:
+    
+    1. JWST data model keywords, dotted paths, need to be translated to underscored paths.
+    This makes them valid identifiers instead of non-existent nested objects when evaled.
+
+    2. Numerial values that CRDS has conditioned into strings need to be converted back to
+    numerical values so they can be used in arithmetic expressions.
+    """
+    header = _destringize_numbers(header)
+    header = _convert_dotted_paths(header)
+    return header
+
+def _destringize_numbers(header):
+    """Convert string values in `header` that work as numbers back into 
+    ints and floats.
+    """
+    with_numbers = {}
+    for key, val in header.items():
+        try:
+            val = int(val)
+        except:
+            try:
+                val = float(val)
+            except:
+                pass
+        with_numbers[key] = val
+    return with_numbers    
+
+def _convert_dotted_paths(header):
+    """Convert header dotted-path keys into valid Python identifiers 
+    (for eval()) by using underscores instead of periods.
+    """
+    cleaned = {}
+    for key, val in header.items():
+        clean = re.sub(r"([A-Za-z][A-Za-z0-9_]*)\.", r"\1_", key)
+        cleaned[clean] = val
+    return cleaned
+
+# ----------------------------------------------------------------------------------------------
+
 def to_simple_types(tree):
     """Convert an ASDF tree structure to a flat dictionary of simple types with dotted path tree keys."""
     result = dict()
@@ -360,30 +426,6 @@ def simple_type(value):
     else:
         rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
     return rval
-
-def cross_strap_header(header):
-    """Foreach DM keyword in header,  add the corresponding FITS keyword,  and vice versa."""
-    from crds.jwst import schema
-    crossed = dict(header)
-    for key, val in header.items():
-        if val is None:
-            val = "UNDEFINED"
-        fitskey = schema.dm_to_fits(key)
-        if fitskey is not None and fitskey not in crossed:
-            crossed[fitskey] = val
-        dmkey = schema.fits_to_dm(key)
-        if dmkey is not None and dmkey not in crossed:
-            crossed[dmkey] = val
-    from crds.jwst import CROSS_STRAPPED_KEYWORDS
-    for key in CROSS_STRAPPED_KEYWORDS:
-        if key not in crossed or crossed[key] == "UNDEFINED":
-            for key2 in CROSS_STRAPPED_KEYWORDS[key]:
-                if key2 in crossed and crossed[key2] != "UNDEFINED":
-                    crossed[key] = crossed[key2]
-                    break
-            else:
-                crossed[key] = "UNDEFINED"
-    return crossed
 
 # ----------------------------------------------------------------------------------------------
 
@@ -564,6 +606,56 @@ HISTORY e2112084u.r0h was edited to include values of 256
 END
 """
 
+# ------ prevent string join
+
+"""
+>>> is_geis("foo.r0h")
+True
+>>> is_geis("bar.fits")
+False
+
+>>> import io
+>>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
+
+>> import pprint
+>> pprint.pprint(header)
+    {'ATODGAIN': '0.',
+     'BITPIX': '16',
+     'DATATYPE': 'INTEGER*2',
+     'DESCRIP': 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS',
+     'FILETYPE': 'MSK',
+     'FILTER1': '0',
+     'FILTER2': '0',
+     'FILTNAM1': '',
+     'FILTNAM2': '',
+     'GCOUNT': '4',
+     'GROUPS': 'T',
+     'HISTORY': 'This file was edited by Michael S. Wiggs, August 1995\n'
+                '\n'
+                'e2112084u.r0h was edited to include values of 256',
+     'INSTRUME': 'WFPC2',
+     'KSPOTS': 'OFF',
+     'NAXIS': '1',
+     'NAXIS1': '800',
+     'PCOUNT': '38',
+     'PDTYPE1': 'REAL*8',
+     'PDTYPE2': 'REAL*8',
+     'PEDIGREE': 'INFLIGHT 01/01/1994 - 15/05/1995',
+     'PSIZE': '1760',
+     'PSIZE1': '64',
+     'PSIZE2': '64',
+     'PTYPE1': 'CRVAL1',
+     'PTYPE2': 'CRVAL2',
+     'ROOTNAME': 'F8213081U',
+     'SHUTTER': '',
+     'SIMPLE': 'F',
+     'UBAY3TMP': '0.',
+     'UCH1CJTM': '0.',
+     'UCH2CJTM': '0.',
+     'UCH3CJTM': '0.',
+     'UCH4CJTM': '0.'}
+"""
+
 def is_geis(name):
     """Return True IFF `name` identifies a GEIS header file."""
     name = os.path.basename(name)
@@ -650,4 +742,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-

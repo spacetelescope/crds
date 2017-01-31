@@ -15,6 +15,7 @@ import re
 from crds.core import log, rmap, config, utils, timestamp
 from crds import data_file
 from . import tpn
+from . import schema
 
 # =======================================================================
 
@@ -23,6 +24,45 @@ try:
     MODEL = DataModel()
 except Exception:
     MODEL = None
+
+# =======================================================================
+
+# When loading headers,  make sure each keyword in a tuple is represented with
+# the same value enabling any form to be used.  Case insensitive.
+CROSS_STRAPPED_KEYWORDS = {
+
+    # These include non-DM keywords
+    "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE"],
+    "META.TELESCOPE" : ["TELESCOP","TELESCOPE"],
+    "META.REFFILE.DESCRIPTION" : ["DESCRIP","DESCRIPTION"],
+
+    # These include non-core-DM DM fields
+    "META.REFFILE.AUTHOR" : ["AUTHOR"],
+    "META.REFFILE.PEDIGREE" : ["PEDIGREE"],
+    "META.REFFILE.USEAFTER" : ["USEAFTER"],
+    "META.REFFILE.HISTORY" : ["HISTORY"],
+
+    # These should all be stock DM:FITS,  automatic
+    # "META.INSTRUMENT.BAND" : ["BAND"],
+    # "META.INSTRUMENT.CHANNEL" : ["CHANNEL"],
+    # "META.INSTRUMENT.DETECTOR" : ["DETECTOR"],
+    # "META.INSTRUMENT.FILTER" : ["FILTER"],
+    # "META.INSTRUMENT.PUPIL" : ["PUPIL"],
+    # "META.INSTRUMENT.GRATING" : ["GRATING"],
+
+    # "META.SUBARRAY.NAME" : ["SUBARRAY"],
+    # "META.SUBARRAY.XSTART" : ["SUBSTRT1"],
+    # "META.SUBARRAY.YSTART" : ["SUBSTRT2"],
+    # "META.SUBARRAY.XSIZE" : ["SUBSIZE1"],
+    # "META.SUBARRAY.YSIZE" : ["SUBSIZE2"],
+    # "META.SUBARRAY.FASTAXIS" : ["FASTAXIS"],
+    # "META.SUBARRAY.SLOWAXIS" : ["SLOWAXIS"],
+    
+    # "META.EXPOSURE.TYPE" : ["EXP_TYPE"],
+    # "META.EXPOSURE.READPATT" : ["READPATT"],
+
+    # "META.APERTURE.NAME" : ["APERTURE"],
+}
 
 # =======================================================================
 
@@ -73,6 +113,7 @@ def mapping_validator_key(mapping):
 
 REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
 
+@utils.cached
 def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
     should be a mapping or FITS reference file.
@@ -221,7 +262,7 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    header = data_file.get_free_header(filename, observatory="jwst")
+    header = data_file.get_free_header(filename, (), None, "jwst")
     instrument = utils.header_to_instrument(header).lower()
     assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
     filekind = utils.get_any_of(header, ["REFTYPE", "TYPE", "META.TYPE", "META.REFFILE.TYPE"], "UNDEFINED").lower()
@@ -356,3 +397,4 @@ def locate_dir(instrument, mode=None):
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
     tpn.get_tpninfos("miri_flat.tpn", "foo.fits")  # With core schema,  one type loads all
+
