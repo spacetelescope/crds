@@ -104,6 +104,7 @@ from crds.core import log, utils, timestamp, config
 from crds.core.exceptions import (ValidationError, CrdsLookupError,
                                   AmbiguousMatchError, 
                                   MatchingError, UseAfterError,
+                                  InvalidDatetimeError,
                                   VersionAfterError)
 from crds.core import python23
 
@@ -1971,6 +1972,13 @@ Alternate date/time formats are accepted as header parameters.
     
     >>> choice = u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"01:28"})
     
+A common mistake is to omit one or more matching parameters from the dataset header.
+    
+    >>> choice = u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"UNDEFINED"})
+    Traceback (most recent call last):
+    ...
+    InvalidDatetimeError: UseAfter parameter 'TIME-OBS' is UNDEFINED.
+    
 Empty UseAfterSelectors always raise an exception on choose():
     
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), { })
@@ -2025,7 +2033,11 @@ Restore debug configuration.
         """Combine the values of self.parameters from `header` into a single raw date separated by spaces."""
         date = ""
         for par in self._parameters:
-            date += header[par] + " "
+            hval = header[par].strip()
+            if hval == "UNDEFINED":
+                raise InvalidDatetimeError(
+                    "UseAfter parameter", repr(par), "is UNDEFINED.")
+            date += hval + " "
         return date.strip()
 
     def match_item(self, key):

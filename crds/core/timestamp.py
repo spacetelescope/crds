@@ -56,10 +56,20 @@ def parse_date(date):
     >>> dtval = parse_date(datetime.datetime.now())
     >>> isinstance(dtval, datetime.datetime)
     True
+
+    >>> parse_date("2008-10-15T08:44:44.619 UNDEFINED")
+    Traceback (most recent call last):
+    ...
+    InvalidDatetimeError: One or more required date/time values is UNDEFINED
+
     """
     if isinstance(date, datetime.datetime):
         date = str(date)
 
+    if "UNDEFINED" in date:
+        raise exceptions.InvalidDatetimeError(
+            "One or more required date/time values is UNDEFINED")
+    
     if date.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
         date = date[:-3]
 

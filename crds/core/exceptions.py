@@ -128,7 +128,10 @@ class VersionAfterError(CrdsLookupError):
 
 # -------------------------------------------------------------------------------------------
 
-class InvalidUseAfterFormat(CrdsError):
+class InvalidDatetimeError(CrdsError):
+    """CRDS was unable to parse the value from date/time related keywords."""
+
+class InvalidUseAfterFormat(InvalidDatetimeError):
     """CRDS was unable to parse the value from a USEAFTER keyword or equivalent."""
 
 class InvalidVersionFormat(CrdsError):
