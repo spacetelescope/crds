@@ -1011,6 +1011,68 @@
                 "CENWAVE",
                 "SEGMENT"
             ]
+        },
+        "xwlkfile":{
+            "derived_from":"Initial hand made version 2017-02-02. Jira CRDS-98.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"XWLKFILE",
+            "filetype":"X WALK CORRECTION FILE",
+            "instrument":"COS",
+            "ld_tpn":"cos_xwalk_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_cos_xwlkfile_0000.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "OBSMODE"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"XWLKCORR",
+            "rmap_relevance":"((DETECTOR == \"FUV\") and (OBSMODE==\"TIME-TAG\") and (XWLKCORR != \"OMIT\"))",
+            "sha1sum":"3e2fd7a84112acc4b419bcdbc975a5cc94705847",
+            "suffix":"xwalk",
+            "text_descr":"X Walk Correction File",
+            "tpn":"cos_xwalk.tpn",
+            "unique_rowkeys":null
+        },
+        "ywlkfile":{
+            "derived_from":"Initial hand made version 2017-02-02. Jira CRDS-98.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"YWLKFILE",
+            "filetype":"Y WALK CORRECTION FILE",
+            "instrument":"COS",
+            "ld_tpn":"cos_ywalk_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_cos_ywlkfile_0000.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "OBSMODE"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"YWLKCORR",
+            "rmap_relevance":"((DETECTOR == \"FUV\") and (OBSMODE==\"TIME-TAG\") and (YWLKCORR != \"OMIT\"))",
+            "sha1sum":"e855aba8bc1be9c7d8f4ae1fde7f87be0aa1d635",
+            "suffix":"ywalk",
+            "text_descr":"Y Walk Correction File",
+            "tpn":"cos_ywalk.tpn",
+            "unique_rowkeys":null
         }
     },
     "nicmos":{
