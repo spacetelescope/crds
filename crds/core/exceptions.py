@@ -179,6 +179,9 @@ class IllegalKeywordError(CertifyError):
 class InvalidFormatError(CertifyError):
     """The given file was not loadable."""
 
+class TpnDefinitionError(CertifyError):
+    """Something was wrong with a .tpn constraint."""
+
 class TypeSetupError(CertifyError):
     """An error occured while trying to locate file constraints and row mode variables."""
     

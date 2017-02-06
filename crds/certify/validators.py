@@ -15,11 +15,11 @@ import copy
 
 # ============================================================================
 
-from crds import log, config, utils, timestamp, selectors
+from crds.core import log, config, utils, timestamp, selectors
+from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
+from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds import tables
 from crds import data_file
-from crds.exceptions import MissingKeywordError, IllegalKeywordError
-from crds.exceptions import RequiredConditionError
 
 # ============================================================================
 
@@ -41,8 +41,13 @@ class Validator(object):
     def __init__(self, info):
         self.info = info
         self.name = info.name
-        if self.info.presence not in ["R", "P", "E", "O", "W"]:
-            raise ValueError("Bad TPN presence field " + repr(self.info.presence))
+        self._presence_condition_code = None
+
+        if not (self.info.presence in ["R", "P", "E", "O", "W"] or
+                self.conditionally_required):
+            raise ValueError("Bad TPN presence field " +
+                             repr(self.info.presence))
+
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(
                 [val for val in info.values if not val.upper().startswith("NOT_")])
@@ -158,10 +163,13 @@ class Validator(object):
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         elif self.info.presence in ["W"]:
             log.warning("Missing suggested keyword " + repr(self.name))
-        else:
+        elif self.info.presence in ["O"]:
             # sys.exc_clear()
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
             return # missing value is None, so let's be explicit about the return value
+        else:
+            raise TpnDefinitionError("Unexpected validator 'presence' value:",
+                                     log.srepr(self.info.presence))
 
     def __handle_excluded(self, value):
         """If this Validator's key is excluded,  raise an exception.  Otherwise
@@ -175,7 +183,30 @@ class Validator(object):
     def optional(self):
         """Return True IFF this parameter is optional."""
         return self.info.presence in ["O","W"]
-    
+
+    @property
+    def conditionally_required(self):
+        """Return True IFF this validator has a header expression defining when it is valid
+        instead of the classic single character values.   If it has an expression, make sure
+        it compiles now.
+        """
+        has_condition = self.info.presence.startswith("(") and self.info.presence.endswith(")")
+        if has_condition and not self._presence_condition_code:
+            self._presence_condition_code = compile(self.info.presence, repr(self.info), "eval")
+            return True
+        else:
+            return False
+
+    def is_applicable(self, header):
+        """Return True IFF the conditional presence expression for this validator,  not always
+        defined,  returns False indicating that the validator is not applicable to the situation
+        defined by `header`.
+        """
+        if self._presence_condition_code:
+            return eval(self._presence_condition_code, header, header)
+        else:
+            return True
+
     def get_required_copy(self):
         """Return a copy of this validator with self.presence overridden to R/required."""
         required = copy.deepcopy(self)
@@ -183,6 +214,8 @@ class Validator(object):
         idict["presence"] = "R"
         required.info = TpnInfo(*idict.values())
         return required
+    
+# ----------------------------------------------------------------------------
 
 class KeywordValidator(Validator):
     """Checks that a value is one of the literal TpnInfo values."""
@@ -206,6 +239,8 @@ class KeywordValidator(Validator):
         """Do a literal match of `value` to the disallowed values of this tpninfo."""
         return value in self._not_values
     
+# ----------------------------------------------------------------------------
+
 class RegexValidator(KeywordValidator):
     """Checks that a value matches TpnInfo values treated as regexes."""
     def _match_value(self, value):
@@ -432,7 +467,7 @@ class ExpressionValidator(Validator):
         log.verbose("Checking", repr(filename), "for condition", repr(expr))
         is_true = True
         with log.verbose_warning_on_exception(
-                "Failed evaluating condition expression", repr(expr)):
+            "Failed evaluating condition expression", repr(expr)):
             is_true = eval(expr, header, header)
         if not is_true:
             raise RequiredConditionError(

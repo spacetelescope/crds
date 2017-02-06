@@ -62,14 +62,19 @@ class Certifier(object):
 
     @property
     def basename(self):
+        """Return the basename of the file being certified by this Certifier."""
         return os.path.basename(self.filename)
 
     @property
     def format_name(self):
+        """Return the quoted name of the file being checked,  using the `original_name` substitute
+        provided by web interfaces, or else the basename of the file or temporary file being certified.
+        """
         return repr(self.original_name) if self.original_name else repr(self.basename)
 
     @property
     def locator(self):
+        """Return the locator module for the observatory this Certifier corresponds to."""
         return utils.get_locator_module(self.observatory)
     
     def log_and_track_error(self, *args, **keys):
@@ -95,7 +100,6 @@ class Certifier(object):
         for key in self.locator.reference_name_to_validator_key(self.filename):
             checkers.extend(validators.validators_by_typekey(key, self.observatory))
         checkers = self.set_rmap_parkeys_to_required(checkers) 
-        # checkers = [ val for val in checkers if val.name in parkeys ]
         return checkers
     
     def set_rmap_parkeys_to_required(self, checkers):
@@ -140,16 +144,16 @@ class ReferenceCertifier(Certifier):
     def __init__(self, *args, **keys):
         super(ReferenceCertifier, self).__init__(*args, **keys)
         self.header = None
-        self.simple_validators = None
+        self.validators = None
         self.all_column_names = None
         self.all_simple_names = None
         self.mode_columns = None
         
     def complex_init(self):
         """Can't do this until we at least know the file is loadable."""
-        self.simple_validators = self.get_validators()
-        self.all_column_names = [ val.name for val in self.simple_validators if val.info.keytype == 'C' ]
-        self.all_simple_names = [ val.name for val in self.simple_validators if val.info.keytype != 'C' ]
+        self.validators = self.get_validators()
+        self.all_column_names = [ val.name for val in self.validators if val.info.keytype == 'C' ]
+        self.all_simple_names = [ val.name for val in self.validators if val.info.keytype != 'C' ]
         self.mode_columns = self.get_mode_column_names()
     
     def certify(self):
@@ -160,17 +164,21 @@ class ReferenceCertifier(Certifier):
             self.header = self.load()
         with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
             self.complex_init()
-        self.certify_simple_parameters()
+        self.run_validators()
         if self.mode_columns:
             self.certify_reference_modes()
         if self._dump_provenance_flag:
             self.dump_provenance()
     
-    def certify_simple_parameters(self):
-        """Check simple parameter values,  column and non-column."""
-        for checker in self.simple_validators:
+    def run_validators(self):
+        """Check parameter values,  column and non-column.
+
+        If a validator is conditionally required, only check it if is applicable to this header/file.
+        """
+        for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
-                checker.check(self.filename, self.header)
+                if checker.is_applicable(self.header):
+                    checker.check(self.filename, self.header)
                 
     def load(self):
         """Load and parse header from self.filename"""
@@ -180,7 +188,6 @@ class ReferenceCertifier(Certifier):
             with log.verbose_warning_on_exception("No corresponding rmap"):
                 r = self.get_corresponding_rmap()
             if r:
-                # header = r.map_irrelevant_parkeys_to_na(header)
                 with self.error_on_exception("Error mapping reference names and values to dataset names and values"):
                     header = r.locate.reference_keys_to_dataset_keys(r, header)
         instr = utils.header_to_instrument(header)
@@ -437,9 +444,6 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
         if len(modes[mode]) > 1:
             log.warning("Duplicate definitions in", generic_name, basename, "for mode:", mode, ":\n", 
                         "\n".join([repr(row) for row in modes[mode]]))
-            # log.warning("-"*80, "\n\nDuplicate definitions in", generic_name, basename, "for mode:", mode, 
-            #            "in rows", repr([row[0] for row in modes[mode]]), ":\n\n", 
-            #            "\n\n".join([repr(row) for row in modes[mode]]), "\n")
     # modes[mode][0] is first instance of multiply defined mode.
     return { mode:modes[mode][0] for mode in modes }, all_cols
 
