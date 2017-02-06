@@ -21,6 +21,19 @@ NRCB3_AXIS                  X   X   (DETECTOR=='NRCB3') ((FASTAXIS==1)and(SLOWAX
 NRCB4_AXIS                  X   X   (DETECTOR=='NRCB4') ((FASTAXIS==-1)and(SLOWAXIS==-))
 NRCBLONG_AXIS               X   X   (DETECTOR=='NRCBLONG') ((FASTAXIS==1)and(SLOWAXIS==-2))
 
+MIRIMAGE_AXIS               X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFULONG_AXIS             X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFUSHORT_AXIS            X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
+
+NRS1_AXIS                   X   X   (DETECTOR=='NRS1') ((FASTAXIS==2)and(SLOWAXIS==1))
+NRS2_AXIS                   X   X   (DETECTOR=='NRS2') ((FASTAXIS==-2)and(SLOWAXIS==-1))
+
+NIS_AXIS                    X   X   (DETECTOR=='NIS')  ((FASTAXIS==-2)and(SLOWAXIS==-1))
+
+GUIDER1_AXIS                X   X   (DETECTOR=='GUIDER1')  ((FASTAXIS==-2)and(SLOWAXIS==-1))
+GUIDER2_AXIS                X   X   (DETECTOR=='GUIDER2')  ((FASTAXIS==2)and(SLOWAXIS==-1))
+                                
+
 # NRCA1 -1      2
 # NRCA2 1       -2
 # NRCA3 -1      2
@@ -32,4 +45,17 @@ NRCBLONG_AXIS               X   X   (DETECTOR=='NRCBLONG') ((FASTAXIS==1)and(SLO
 # NRCB3 1       -2
 # NRCB4 -1      2
 # NRCBLONG      1       -2
+
+# MIRIMAGE      1       2
+# MIRIFULONG    1       2
+# MIRIFUSHORT   1       2
+
+
+# NRS1  2       1
+# NRS2  -2      -1
+
+# NIS   -2      -1
+
+# GUIDER1       -2      -1
+# GUIDER2       2       -1
 
