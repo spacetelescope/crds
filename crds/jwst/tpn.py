@@ -95,9 +95,14 @@ def _load_tpn(fname):
         else:
             name, keytype, datatype, presence, values = items
             values = values.split(",")
-            values = [v.upper() for v in values]
+            values = [v if is_expression(v) else v.upper() for v in values]
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
+
+def is_expression(v):
+    """Return True IFF .tpn value `v` defines a header expression."""
+    return v.startswith("(") and v.endswith(")")
+    
 
 def get_classic_tpninfos(*key):
     """Load the listof TPN info tuples corresponding to `instrument` and 

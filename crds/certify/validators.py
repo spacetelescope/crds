@@ -100,7 +100,7 @@ class Validator(object):
         if value is None: # missing optional or excluded keyword
             self.verbose(filename, value, "is optional or excluded.")
             return True
-        if self.condition is not None:
+        if self.condition is not None:  # verify type regardless of values.
             value = self.condition(value)
         if not (self._values or self._not_values):
             self.verbose(filename, value, "no .tpn values defined.")
@@ -108,7 +108,7 @@ class Validator(object):
         self._check_value(filename, value)
         # If no exception was raised, consider it validated successfully
         return True
-    
+
     def _check_value(self, filename, value):
         """_check_value is the core simple value checker."""
         raise NotImplementedError(
@@ -203,7 +203,12 @@ class Validator(object):
         defined by `header`.
         """
         if self._presence_condition_code:
-            return eval(self._presence_condition_code, header, header)
+            required = eval(self._presence_condition_code, header, header)
+            log.verbose("Validator", self.info, "is",
+                        "applicable" if required else "not applicable",
+                        "based on condition", self.info.presence,
+                        verbosity=70)
+            return required
         else:
             return True
 
@@ -283,14 +288,21 @@ class LogicalValidator(KeywordValidator):
 
 class NumericalValidator(KeywordValidator):
     """Check the value of a numerical keyword,  supporting range checking."""
-    def condition_values(self, values):
-        self.is_range = len(values) == 1 and ":" in values[0]
+
+    def __init__(self, info, *args, **keys):
+        self.is_range = (len(info.values) == 1) and (":" in info.values[0])
         if self.is_range:
-            smin, smax = values[0].split(":")
+            smin, smax = info.values[0].split(":")
             self.min, self.max = self.condition(smin), self.condition(smax)
+        else:
+            self.min = self.max = None
+        super(NumericalValidator, self).__init__(info, *args, **keys)
+
+    def condition_values(self, values):
+        if self.is_range:
             assert self.min != '*' and self.max != '*', \
                                "TPN error, range min/max conditioned to '*'"
-            values = None
+            values = [self.min, self.max]
         else:
             values = KeywordValidator.condition_values(self, values)
         return values
