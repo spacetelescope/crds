@@ -1,0 +1,34 @@
+SUBARRAY_INBOUNDS_X         X   X   R  (META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE<=2048)
+SUBARRAY_INBOUNDS_Y         X   X   R  (META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE<=2048)
+
+NRCA1_AXIS                  X   X   R  ((DETECTOR!='NRCA1')or((FASTAXIS==-1)and(SLOWAXIS==2)))
+NRCA2_AXIS                  X   X   R  ((DETECTOR!='NRCA2')or((FASTAXIS==1)and(SLOWAXIS==-2)))
+NRCA3_AXIS                  X   X   R  ((DETECTOR!='NRCA3')or((FASTAXIS==-1)and(SLOWAXIS==2)))
+NRCA4_AXIS                  X   X   R  ((DETECTOR!='NRCA4')or((FASTAXIS==1)and(SLOWAXIS==-2)))
+NRCALONG_AXIS               X   X   R  ((DETECTOR!='NRCALONG')or((FASTAXIS==-1)and(SLOWAXIS==2)))
+
+NRCB1_AXIS                  X   X   R  ((DETECTOR!='NRCB1')or((FASTAXIS==1)and(SLOWAXIS==-2)))
+NRCB2_AXIS                  X   X   R  ((DETECTOR!='NRCB2')or((FASTAXIS==-1)and(SLOWAXIS==2)))
+NRCB3_AXIS                  X   X   R  ((DETECTOR!='NRCB3')or((FASTAXIS==1)and(SLOWAXIS==-2)))
+NRCB4_AXIS                  X   X   R  ((DETECTOR!='NRCB4')or((FASTAXIS==-1)and(SLOWAXIS==-)))
+NRCBLONG_AXIS               X   X   R  ((DETECTOR!='NRCBLONG')or((FASTAXIS==1)and(SLOWAXIS==-2)))
+
+# NRCA1 -1      2
+# NRCA2 1       -2
+# NRCA3 -1      2
+# NRCA4 1       -2
+# NRCALONG      -1      2
+
+# NRCB1 1       -2
+# NRCB2 -1      2
+# NRCB3 1       -2
+# NRCB4 -1      2
+# NRCBLONG      1       -2
+
+META.SUBARRAY.NAME          H   C   R
+META.SUBARRAY.XSTART        H   I   R
+META.SUBARRAY.YSTART        H   I   R
+META.SUBARRAY.XSIZE         H   I   R
+META.SUBARRAY.YSIZE         H   I   R
+META.SUBARRAY.FASTAXIS      H   I   R
+META.SUBARRAY.SLOWAXIS      H   I   R

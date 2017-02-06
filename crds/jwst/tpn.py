@@ -12,7 +12,7 @@ from __future__ import absolute_import
 
 import os.path
 
-from crds.core import rmap, log, utils
+from crds.core import log, utils
 from crds.certify import TpnInfo
 from . import schema
 
@@ -36,14 +36,23 @@ def _evalfile_with_fail(filename):
 
 def _load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
-     and joining lines ending in \\.
+     and joining lines ending in \\.  If a line begins with "include",  the
+    second word should be a base filename that refers to a file in the same
+    directory as `fname`.  The lines of the include file are recursively included.
     """
+    log.verbose("Loading .tpn lines from", log.srepr(fname), verbosity=80)
     lines = []
     append = False
+    dirname = os.path.dirname(fname)
     with open(fname) as pfile:
         for line in pfile:
             line = line.strip()
             if line.startswith("#") or not line:
+                continue
+            if line.startswith("include"):
+                include = line.split(" ")[1]
+                fname2 = os.path.join(dirname, include)
+                lines += _load_tpn_lines(fname2)
                 continue
             if append:
                 lines[-1] = lines[-1][:-1].strip() + line
@@ -95,10 +104,13 @@ def get_classic_tpninfos(*key):
     `filekind` from it's .tpn file.
     """
     where = os.path.join(HERE, "tpns", key[0])
+    # Doesn't use verbose_warning_on_exception because --debug-traps would
+    # always trigger since trapped exceptions are expected here.
     try:
         return _load_tpn(where)
     except Exception as exc:
-        log.verbose_warning("No TPN file exists for", repr(key[0]), verbosity=70)
+        log.verbose_warning("Exception reading TPN", repr(where), ":", log.srepr(exc),
+                            verbosity=70)
         return []
 
 def get_tpninfos(*key):
@@ -114,8 +126,8 @@ def get_tpninfos(*key):
 # =============================================================================
 
 def main():
+    """Place holder function for running this module as cmd line program."""
     print("null tpn processing.")
 
 if __name__ == "__main__":
     main()
-
