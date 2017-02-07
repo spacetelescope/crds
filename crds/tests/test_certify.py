@@ -338,12 +338,72 @@ class TestCertify(test_config.CRDSTestCase):
         super(TestCertify, self).tearDown(*args, **keys)
         log.set_exception_trap(self._old_debug)
         
-    def test_character_validator(self):
+    # ------------------------------------------------------------------------------
+        
+    def test_character_validator_file_good(self):
         """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
         cval.check(self.data('acs_new_idc.fits'))
+
+    def test_character_validator_bad(self):
+        """Test the constructor with default argument values."""
+        tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_character_validator_missing_required(self):
+        """Test the constructor with default argument values."""
+        tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_character_validator_optional_bad(self):
+        """Test the constructor with default argument values."""
+        tinfo = certify.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_character_validator_optional_missing(self):
+        """Test the constructor with default argument values."""
+        tinfo = certify.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTR" : "WFC" }
+        cval.check("foo.fits", header)
+
+    # ------------------------------------------------------------------------------
+        
+    def test_logical_validator_good(self):
+        """Test the constructor with default argument values."""
+        tinfo = certify.TpnInfo('ROKIN','H','L','R',())
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.LogicalValidator))
+        header= {"ROKIN": "F"}
+        cval.check("foo.fits", header)
+        header= {"ROKIN": "T"}
+        cval.check("foo.fits", header)
+
+    def test_logical_validator_bad(self):
+        """Test the constructor with default argument values."""
+        tinfo = certify.TpnInfo('ROKIN','H','L','R',())
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.LogicalValidator))
+        header = {"ROKIN" : "True"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        header = {"ROKIN" : "False"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        header = {"ROKIN" : "1"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        header = {"ROKIN" : "0"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
 
     # ------------------------------------------------------------------------------
         
@@ -401,6 +461,112 @@ class TestCertify(test_config.CRDSTestCase):
         assert_true(isinstance(cval, certify.IntValidator))
         header = {"READPATT": "40.3"}
         assert_raises(ValueError, cval.check, "foo.fits", header)
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("x:40",))
+        assert_raises(ValueError, certify.validator, info)
+ 
+    # ------------------------------------------------------------------------------
+        
+    def test_real_validator_bad_format(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('FOO',))
+        assert_raises(ValueError, certify.validator, info)
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('x.0','2.0'))
+        assert_raises(ValueError, certify.validator, info)
+
+    def test_real_validator_bad_value(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('1.1','2.2','3.3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "3.2"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_real_validator_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('1.0','2.1','3.0'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "2.1"}
+        cval.check("foo.fits", header)
+
+    def test_real_validator_range_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+
+    def test_real_validator_range_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.21"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+ 
+    def test_real_validator_range_boundary_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.4:40.1",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+ 
+    def test_real_validator_range_format_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.x"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
+        assert_raises(ValueError, certify.validator, info)
+ 
+    # ------------------------------------------------------------------------------
+        
+    def test_double_validator_bad_format(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('FOO',))
+        assert_raises(ValueError, certify.validator, info)
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('x.0','2.0'))
+        assert_raises(ValueError, certify.validator, info)
+
+    def test_double_validator_bad_value(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('1.1','2.2','3.3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "3.2"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_double_validator_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('1.0','2.1','3.0'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "2.1"}
+        cval.check("foo.fits", header)
+
+    def test_double_validator_range_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+
+    def test_double_validator_range_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.21"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+ 
+    def test_double_validator_range_boundary_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.4:40.1",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+ 
+    def test_double_validator_range_format_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.x"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
+        assert_raises(ValueError, certify.validator, info)
  
     # ------------------------------------------------------------------------------
         
