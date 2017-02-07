@@ -82,22 +82,29 @@ def certify_dump_provenance_generic():
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst.pmap")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
-    CRDS - INFO - META.EXPOSURE.READPATT = 'any'
-    CRDS - INFO - META.INSTRUMENT.DETECTOR = 'mirifulong'
-    CRDS - INFO - META.INSTRUMENT.NAME = 'MIRI'
-    CRDS - INFO - META.OBSERVATION.DATE = '2015-01-25'
-    CRDS - INFO - META.REFFILE.AUTHOR = 'Todd Miller'
-    CRDS - INFO - META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
-    CRDS - INFO - META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
-    CRDS - INFO - META.REFFILE.PEDIGREE = 'dummy'
-    CRDS - INFO - META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
-    CRDS - INFO - META.TELESCOPE = 'jwst'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 13 infos
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
+    CRDS - INFO -  META.EXPOSURE.READPATT = 'any'
+    CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
+    CRDS - INFO -  META.INSTRUMENT.NAME = 'MIRI'
+    CRDS - INFO -  META.OBSERVATION.DATE = '2015-01-25'
+    CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
+    CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
+    CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
+    CRDS - INFO -  META.REFFILE.PEDIGREE = 'dummy'
+    CRDS - INFO -  META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
+    CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
+    CRDS - INFO -  META.SUBARRAY.NAME = 'MASK1550'
+    CRDS - INFO -  META.SUBARRAY.SLOWAXIS = '2'
+    CRDS - INFO -  META.SUBARRAY.XSIZE = '1032'
+    CRDS - INFO -  META.SUBARRAY.XSTART = '1'
+    CRDS - INFO -  META.SUBARRAY.YSIZE = '4'
+    CRDS - INFO -  META.SUBARRAY.YSTART = '1020'
+    CRDS - INFO -  META.TELESCOPE = 'jwst'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  20 infos
     0
 
     >>> test_config.cleanup(old_state)

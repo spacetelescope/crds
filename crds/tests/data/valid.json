@@ -7,6 +7,12 @@
            "exposure" : {
                       "readpatt" : "any"
            },
+           "subarray" : {
+                      "name" : "MASK1550",
+                      "xstart" : 1,
+                      "xsize" : 1032,
+                      "fastaxis" : 1
+           },
            "telescope" : "jwst"
     },
     "reftype" : "flat",
@@ -14,5 +20,8 @@
     "useafter" : "2015-01-25T12:00:00",
     "author" : "Todd Miller",
     "descrip" : "Brief notes on this reference.",
-    "history" : "How this reference came to be and changed over time."
+    "history" : "How this reference came to be and changed over time.",
+    "substrt2" : 1020,
+    "subsize2" : 4,
+    "slowaxis" : 2
 }

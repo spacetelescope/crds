@@ -1,8 +1,8 @@
 """uses.py defines functions which will list the files which use a given 
 reference or mapping file.
 
->>> from pprint import pprint as pp
->>> pp(_findall_mappings_using_reference("v2e20129l_flat.fits"))
+>> from pprint import pprint as pp
+>> pp(_findall_mappings_using_reference("v2e20129l_flat.fits"))
 ['hst.pmap',
  'hst_0001.pmap',
  'hst_0002.pmap',

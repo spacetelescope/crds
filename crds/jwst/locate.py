@@ -397,8 +397,7 @@ def locate_dir(instrument, mode=None):
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
     from crds.core import rmap, heavy_client
-    mode, context = heavy_client.get_processing_mode("jwst")
-    pmap = rmap.get_cached_mapping(context)
+    pmap = rmap.get_cached_mapping(heavy_client.load_server_info("jwst").operational_context)
     tpn.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
     for instr in pmap.selections:
         tpn.get_tpninfos(instr + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all

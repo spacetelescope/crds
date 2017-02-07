@@ -1,5 +1,6 @@
-"""This module contains doctests and unit tests which exercise some of the more
-complex features of the basic rmap infrastructure.
+"""This module contains doctests and unit tests that exercise the newcontext
+module responsible for automatically generating imaps and pmaps given a list
+of new rmaps.
 """
 
 from __future__ import division # confidence high
