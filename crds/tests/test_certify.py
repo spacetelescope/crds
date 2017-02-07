@@ -340,11 +340,122 @@ class TestCertify(test_config.CRDSTestCase):
         
     def test_character_validator(self):
         """Test the constructor with default argument values."""
-        tinfo = certify.TpnInfo('DETECTOR','H','C','R',('WFC','HRC','SBC'))
+        tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
         cval.check(self.data('acs_new_idc.fits'))
 
+    # ------------------------------------------------------------------------------
+        
+    def test_integer_validator_bad_format(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('FOO',))
+        assert_raises(ValueError, certify.validator, info)
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1.0','2.0'))
+        assert_raises(ValueError, certify.validator, info)
+
+    def test_integer_validator_bad_float(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "1.9"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_integer_validator_bad_value(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2','3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "4"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_integer_validator_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2','3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "2"}
+        cval.check("foo.fits", header)
+
+    def test_integer_validator_range_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "39"}
+        cval.check("foo.fits", header)
+
+    def test_integer_validator_range_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "41"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+ 
+    def test_integer_validator_range_boundary_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "40"}
+        cval.check("foo.fits", header)
+ 
+    def test_integer_validator_range_format_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "40.3"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+ 
+    # ------------------------------------------------------------------------------
+        
+    def test_expression_validator_passes(self):
+        """Test expression validator with passing expression."""
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.ExpressionValidator))
+        header = { "DETECTOR":"FOO", "SUBARRAY":"BAR" }
+        cval.check("foo.fits", header)
+
+    def test_expression_validator_fails(self):
+        """Test expression validator with failing expression."""
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.ExpressionValidator))
+        header = { "DETECTOR":"FOO", "SUBARRAY":"BA" }
+        assert_raises(certify.RequiredConditionError, cval.check, "foo.fits", header)
+
+    def test_expression_validator_bad_format(self):
+        """Test the constructor with default argument values."""
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR="FOO")and(SUBARRAY=="BAR"))',))
+        assert_raises(SyntaxError, certify.validator, tinfo)
+
+    # ------------------------------------------------------------------------------
+        
+    def test_conditionally_required_bad_format(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','X', 'X', '(SUBARRAY="BAR")', ("FOO","BAR","BAZ"))
+        assert_raises(SyntaxError, certify.validator, tinfo)
+
+    def test_conditionally_required_good(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','H', 'C', '(SUBARRAY=="BAR")', ("FOO","BAR","BAZ"))
+        cval = certify.validator(tinfo)
+        header = { "DETECTOR" : "FOO", "SUBARRAY":"BAR" }
+        cval.check("foo.fits", header)
+
+    def test_conditionally_required_bad(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','H', 'C', '(SUBARRAY=="BAR")', ("FOO","BAR","BAZ"))
+        checker = certify.validator(tinfo)
+        header = { "DETECTOR" : "FRODO", "SUBARRAY":"BAR" }
+        assert_raises(ValueError, checker.check, "foo.fits", header)
+
+    def test_conditionally_not_required(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','H', 'C', '(SUBARRAY=="BAR")', ("FOO","BAR","BAZ"))
+        checker = certify.validator(tinfo)
+        header = { "DETECTOR" : "FRODO", "SUBARRAY":"BAZ" }
+        checker.check("foo.fits", header)
+
+    # ------------------------------------------------------------------------------
+        
     def test_sybdate_validator(self):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
         cval = certify.validator(tinfo)

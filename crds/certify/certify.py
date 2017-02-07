@@ -177,9 +177,8 @@ class ReferenceCertifier(Certifier):
         """
         for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
-                if checker.is_applicable(self.header):
-                    log.verbose("Checking", checker.info, verbosity=70)
-                    checker.check(self.filename, self.header)
+                log.verbose("Checking", checker.info, verbosity=70)
+                checker.check(self.filename, self.header)
                 
     def load(self):
         """Load and parse header from self.filename"""

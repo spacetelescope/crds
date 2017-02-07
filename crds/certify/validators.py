@@ -81,12 +81,19 @@ class Validator(object):
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
         """
-        if self.info.keytype == "H":
-            return self.check_header(filename, header)
-        elif self.info.keytype == "C":
+        if self.info.keytype == "C":
             return self.check_column(filename)
         elif self.info.keytype == "G":
             return self.check_group(filename)
+
+        if header is None:
+            header = data_file.get_header(filename)
+
+        if not self.is_applicable(header):
+            return True
+
+        if self.info.keytype == "H":
+            return self.check_header(filename, header)
         elif self.info.keytype == "X":
             return self.check_header(filename, header)
         else:
@@ -118,8 +125,6 @@ class Validator(object):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
         """
-        if header is None:
-            header = data_file.get_header(filename)
         value = self._get_header_value(header)
         return self.check_value(filename, value)
 
@@ -467,23 +472,25 @@ class FilenameValidator(KeywordValidator):
 
 class ExpressionValidator(Validator):
     """Value is an expression on the reference header that must evaluate to True."""
-    
-    def check_header(self, filename, header=None):
+
+    def __init__(self, info, *args, **keys):
+        super(ExpressionValidator, self).__init__(info, *args, **keys)
+        self._expr = info.values[0]
+        self._expr_code = compile(self._expr, repr(self.info), "eval")
+
+    def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
-        if header is None:
-            header = data_file.get_header(filename)
         header = data_file.convert_to_eval_header(header)
-        expr = self.info.values[0]
-        log.verbose("Checking", repr(filename), "for condition", repr(expr))
-        is_true = True
+        log.verbose("Checking", repr(filename), "for condition", repr(self._expr))
+        is_true = False
         with log.verbose_warning_on_exception(
-            "Failed evaluating condition expression", repr(expr)):
-            is_true = eval(expr, header, header)
+            "Failed evaluating condition expression", repr(self._expr)):
+            is_true = eval(self._expr_code, header, header)
         if not is_true:
             raise RequiredConditionError(
-                "Required condition", repr(expr), "is not satisfied.")
+                "Required condition", repr(self._expr), "failed to evaluate or is not satisfied.")
 
 # ----------------------------------------------------------------------------
 
