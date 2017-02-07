@@ -341,14 +341,12 @@ class TestCertify(test_config.CRDSTestCase):
     # ------------------------------------------------------------------------------
         
     def test_character_validator_file_good(self):
-        """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
         cval.check(self.data('acs_new_idc.fits'))
 
     def test_character_validator_bad(self):
-        """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
@@ -356,7 +354,6 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
 
     def test_character_validator_missing_required(self):
-        """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
@@ -364,7 +361,6 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
 
     def test_character_validator_optional_bad(self):
-        """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
@@ -372,7 +368,6 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
 
     def test_character_validator_optional_missing(self):
-        """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
@@ -381,8 +376,22 @@ class TestCertify(test_config.CRDSTestCase):
 
     # ------------------------------------------------------------------------------
         
+    def test_regex_validator_good(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','Z','R', ('WFC|HRC|S.C',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.RegexValidator))
+        cval.check("foo.fits", {"DETECTOR":"SBC"})
+
+    def test_regex_validator_bad(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','Z','R', ('WFC|HRC|S.C',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.RegexValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    # ------------------------------------------------------------------------------
+        
     def test_logical_validator_good(self):
-        """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('ROKIN','H','L','R',())
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.LogicalValidator))
@@ -392,7 +401,6 @@ class TestCertify(test_config.CRDSTestCase):
         cval.check("foo.fits", header)
 
     def test_logical_validator_bad(self):
-        """Test the constructor with default argument values."""
         tinfo = certify.TpnInfo('ROKIN','H','L','R',())
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.LogicalValidator))
@@ -571,7 +579,6 @@ class TestCertify(test_config.CRDSTestCase):
     # ------------------------------------------------------------------------------
         
     def test_expression_validator_passes(self):
-        """Test expression validator with passing expression."""
         tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.ExpressionValidator))
@@ -579,7 +586,6 @@ class TestCertify(test_config.CRDSTestCase):
         cval.check("foo.fits", header)
 
     def test_expression_validator_fails(self):
-        """Test expression validator with failing expression."""
         tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.ExpressionValidator))
@@ -587,7 +593,6 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(certify.RequiredConditionError, cval.check, "foo.fits", header)
 
     def test_expression_validator_bad_format(self):
-        """Test the constructor with default argument values."""
         # typical subtle expression error, "=" vs. "=="
         tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR="FOO")and(SUBARRAY=="BAR"))',))
         assert_raises(SyntaxError, certify.validator, tinfo)
