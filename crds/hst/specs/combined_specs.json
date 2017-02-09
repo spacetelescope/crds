@@ -1850,16 +1850,7 @@
             "rmap_relevance":"ALWAYS",
             "suffix":"lfl",
             "text_descr":"Low-order Flat Field Image",
-            "tpn":[
-                [
-                    "OBSTYPE == 'IMAGING'",
-                    "stis_ilfl.tpn"
-                ],
-                [
-                    "OBSTYPE == 'SPECTROSCOPIC'",
-                    "stis_slfl.tpn"
-                ]
-            ],
+            "tpn":"stis_lfl.tpn",
             "unique_rowkeys":null
         },
         "mlintab":{
@@ -1948,16 +1939,7 @@
             "rmap_relevance":"ALWAYS",
             "suffix":"pfl",
             "text_descr":"Pixel To Pixel Flat Field Image",
-            "tpn":[
-                [
-                    "OBSTYPE == 'IMAGING'",
-                    "stis_ipfl.tpn"
-                ],
-                [
-                    "OBSTYPE == 'SPECTROSCOPIC'",
-                    "stis_spfl.tpn"
-                ]
-            ],
+            "tpn":"stis_pfl.tpn",
             "unique_rowkeys":null
         },
         "phottab":{

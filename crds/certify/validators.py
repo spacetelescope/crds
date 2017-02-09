@@ -10,7 +10,6 @@ from __future__ import absolute_import
 
 import os
 import re
-from collections import namedtuple
 import copy
 
 # ============================================================================
@@ -21,22 +20,11 @@ from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds import tables
 from crds import data_file
 
-# ============================================================================
-
-#
-# Only the first character of the field is stored, i.e. Header == H
-#
-# name = field identifier
-# keytype = (Header|Group|Column)
-# datatype = (Integer|Real|Logical|Double|Character)
-# presence = (Optional|Required)
-# values = [...]
-#
-TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
+from .generic_tpn import TpnInfo   # generic TpnInfo code
 
 # ----------------------------------------------------------------------------
 class Validator(object):
-    """Validator is an Abstract class which applies TpnInfo objects to reference files.
+    """Validator is an Abstract class that applies TpnInfo objects to reference files.
     """
     def __init__(self, info):
         self.info = info
@@ -45,8 +33,7 @@ class Validator(object):
 
         if not (self.info.presence in ["R", "P", "E", "O", "W"] or
                 self.conditionally_required):
-            raise ValueError("Bad TPN presence field " +
-                             repr(self.info.presence))
+            raise ValueError("Bad TPN presence field " + repr(self.info.presence))
 
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(
@@ -58,7 +45,7 @@ class Validator(object):
         """Prefix log.verbose() with standard info about this Validator.
         Unique message is in *args, **keys
         """
-        return log.verbose("File=" + repr(filename), 
+        return log.verbose("File=" + repr(os.path.basename(filename)),
                            "class=" + repr(self.__class__.__name__[:-len("Validator")]), 
                            "keyword=" + repr(self.name), 
                            "value=" + repr(value), 
@@ -74,7 +61,7 @@ class Validator(object):
 
     def __repr__(self):
         """Represent Validator instance as a string."""
-        return self.__class__.__name__ + "(" + repr(self.info) + ")"
+        return self.__class__.__name__ + repr(self.info) 
 
     def check(self, filename, header=None):
         """Pull the value(s) corresponding to this Validator out of it's
@@ -121,7 +108,7 @@ class Validator(object):
         raise NotImplementedError(
             "Validator is an abstract class.  Sub-class and define _check_value().")
     
-    def check_header(self, filename, header=None):
+    def check_header(self, filename, header):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
         """
@@ -478,6 +465,12 @@ class ExpressionValidator(Validator):
         self._expr = info.values[0]
         self._expr_code = compile(self._expr, repr(self.info), "eval")
 
+    def _check_value(self, *args, **keys):
+        """If this validator is inadvertantly executed... no point in failing.  Design
+        intent is to *only* execute check_header().
+        """
+        return True
+
     def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
@@ -520,6 +513,7 @@ def validator(info):
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
     return rval
+
 # ============================================================================
 
 def validators_by_typekey(key, observatory):

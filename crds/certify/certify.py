@@ -177,7 +177,7 @@ class ReferenceCertifier(Certifier):
         """
         for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
-                log.verbose("Checking", checker.info, verbosity=70)
+                log.verbose("Checking", checker, verbosity=70)
                 checker.check(self.filename, self.header)
                 
     def load(self):

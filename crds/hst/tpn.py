@@ -15,77 +15,18 @@ from __future__ import absolute_import
 import os.path
 
 from crds.core import rmap, utils
-from crds.certify import TpnInfo
+from crds.certify import generic_tpn
 from crds.hst import TYPES
 
 # =============================================================================
 
 HERE = os.path.dirname(__file__) or "./"
 
-# =============================================================================
-#  HST CDBS .tpn and _ld.tpn reader
-
-def _load_tpn_lines(fname):
-    """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
-     and joining lines ending in \\.
-    """
-    lines = []
-    append = False
-    with open(fname) as pfile:
-        for line in pfile:
-            line = line.strip()
-            if line.startswith("#") or not line:
-                continue
-            if append:
-                lines[-1] = lines[-1][:-1].strip() + line
-            else:
-                lines.append(line)
-            append = line.endswith("\\")
-    return lines
-
-
-def _fix_quoted_whitespace(line):
-    """Replace spaces and tabs which appear inside quotes in `line` with
-    underscores,  and return it.
-    """
-    i = 0
-    while i < len(line):
-        char = line[i]
-        i += 1
-        if char != '"':
-            continue
-        quote = char
-        while i < len(line):
-            char = line[i]
-            i += 1
-            if char == quote:
-                break
-            if char in " \t":
-                line = line[:i-1] + "_" + line[i:]
-    return line
-
-
-def _load_tpn(fname):
-    """Load a TPN file and return it as a list of TpnInfo objects
-    describing keyword requirements including acceptable values.
-    """
-    tpn = []
-    for line in _load_tpn_lines(fname):
-        line = _fix_quoted_whitespace(line)
-        items = line.split()
-        if len(items) == 4:
-            name, keytype, datatype, presence = items
-            values = []
-        else:
-            name, keytype, datatype, presence, values = items
-            values = values.split(",")
-            values = [v.upper() for v in values]
-        tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
-    return tpn
+def _tpn_path(args):
+    return os.path.join(HERE, "tpns", args[0])
 
 # =============================================================================
 # Plugin-functions for this observatory,  accessed via locator.py
-
 
 @utils.cached
 def get_tpninfos(*args):
@@ -94,7 +35,7 @@ def get_tpninfos(*args):
     handle *key for any key returned by reference_name_to_validator_key.   In particular,
     for some subtypes,  *args will be (tpn_filename,).
     """
-    return _load_tpn(os.path.join(HERE, "tpns", args[0]))
+    return generic_tpn.load_tpn(_tpn_path(args))
 
 @utils.cached
 def get_tpn_text(*args):
@@ -103,7 +44,7 @@ def get_tpn_text(*args):
     handle *key for any key returned by reference_name_to_validator_key.   In particular,
     for some subtypes,  *args will be (tpn_filename,).
     """
-    with open(os.path.join(HERE, "tpns", args[0])) as pfile:
+    with open(_tpn_path(args)) as pfile:
         text = pfile.read()
     return text
 

@@ -11,6 +11,6 @@
     'rmap_relevance': 'ALWAYS',
     'suffix': 'pfl',
     'text_descr': 'Pixel To Pixel Flat Field Image',
-    'tpn': [("OBSTYPE == 'IMAGING'", 'stis_ipfl.tpn'), ("OBSTYPE == 'SPECTROSCOPIC'", 'stis_spfl.tpn')],
+    'tpn': 'stis_pfl.tpn',
     'unique_rowkeys': None,
 }

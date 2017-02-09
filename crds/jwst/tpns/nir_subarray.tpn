@@ -18,7 +18,7 @@ NRCALONG_AXIS               X   X   (DETECTOR=='NRCALONG') ((FASTAXIS==-1)and(SL
 NRCB1_AXIS                  X   X   (DETECTOR=='NRCB1') ((FASTAXIS==1)and(SLOWAXIS==-2))
 NRCB2_AXIS                  X   X   (DETECTOR=='NRCB2') ((FASTAXIS==-1)and(SLOWAXIS==2))
 NRCB3_AXIS                  X   X   (DETECTOR=='NRCB3') ((FASTAXIS==1)and(SLOWAXIS==-2))
-NRCB4_AXIS                  X   X   (DETECTOR=='NRCB4') ((FASTAXIS==-1)and(SLOWAXIS==-))
+NRCB4_AXIS                  X   X   (DETECTOR=='NRCB4') ((FASTAXIS==-1)and(SLOWAXIS==2))
 NRCBLONG_AXIS               X   X   (DETECTOR=='NRCBLONG') ((FASTAXIS==1)and(SLOWAXIS==-2))
 
 MIRIMAGE_AXIS               X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
