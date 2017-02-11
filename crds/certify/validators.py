@@ -14,17 +14,20 @@ import copy
 
 # ============================================================================
 
-from crds.core import log, config, utils, timestamp, selectors
+from crds.core import log, config, utils, timestamp, selectors, reftypes
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds import tables
 from crds import data_file
 
+from . import generic_tpn
 from .generic_tpn import TpnInfo   # generic TpnInfo code
 
-# ----------------------------------------------------------------------------
+# ============================================================================
+
 class Validator(object):
-    """Validator is an Abstract class that applies TpnInfo objects to reference files.
+    """Validator is an Abstract class that applies TpnInfo objects to reference files.  Each
+    Validator handles a single constraint defined in a .tpn file.
     """
     def __init__(self, info):
         self.info = info
@@ -182,7 +185,7 @@ class Validator(object):
         instead of the classic single character values.   If it has an expression, make sure
         it compiles now.
         """
-        has_condition = self.info.presence.startswith("(") and self.info.presence.endswith(")")
+        has_condition = generic_tpn.is_expression(self.info.presence)
         if has_condition and not self._presence_condition_code:
             self._presence_condition_code = compile(self.info.presence, repr(self.info), "eval")
             return True
@@ -516,13 +519,17 @@ def validator(info):
 
 # ============================================================================
 
-def validators_by_typekey(key, observatory):
-    """Load and return the list of validators associated with reference type 
-    validator `key`.   Factored out because it is cached on parameters.
+def get_validators(observatory, refpath):
+    """Given `observatory` and a path to a reference file `refpath`,  load the
+    corresponding validators that define individual constraints that reference
+    should satisfy.
     """
+    types = reftypes.get_types_object(observatory)
     locator = utils.get_locator_module(observatory)
-    # Make and cache Validators for `filename`s reference file type.
-    validators = [validator(x) for x in locator.get_tpninfos(*key)]
-    log.verbose("Validators for", repr(key), ":\n", 
-                log.PP(validators), verbosity=60)
-    return validators
+    checkers = []
+    for key in types.reference_name_to_validator_keys(refpath):
+        validators_for_keys = [validator(x) for x in locator.get_tpninfos(*key)]
+        checkers.extend(validators_for_keys)
+    log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=60)
+    return checkers
+

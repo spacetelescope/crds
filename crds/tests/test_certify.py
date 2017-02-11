@@ -11,6 +11,7 @@ from crds.core import utils, log
 from crds import client
 from crds import certify
 from crds.certify import CertifyScript
+from crds.certify import generic_tpn
 
 from crds.tests import test_config
 
@@ -313,7 +314,7 @@ class TestHSTTpnInfoClass(test_config.CRDSTestCase):
     def setUp(self, *args, **keys):
         super(TestHSTTpnInfoClass, self).setUp(*args, **keys)
         hstlocator = utils.get_locator_module("hst")
-        self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn')
+        self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn', "foo.fits")
         self.validators = [certify.validator(info) for info in self.tpninfos]
         client.set_crds_server('https://crds-serverless-mode.stsci.edu')
         os.environ['CRDS_MAPPATH'] = self.hst_mappath
@@ -653,13 +654,11 @@ class TestCertify(test_config.CRDSTestCase):
         
     def test_loadall_type_constraints_hst(self):
         """Prove the HST constraint files are loadable."""
-        from crds.hst import locate
-        locate.load_all_type_constraints()
+        generic_tpn.load_all_type_constraints("hst")
 
     def test_loadall_type_constraints_jwst(self):
         """Prove the JWST constraint files are loadable."""
-        from crds.jwst import locate
-        locate.load_all_type_constraints()
+        generic_tpn.load_all_type_constraints("jwst")
 
     def test_JsonCertify_valid(self):
         certify.certify_file(

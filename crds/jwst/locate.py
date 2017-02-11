@@ -12,10 +12,26 @@ from __future__ import absolute_import
 import os.path
 import re
 
-from crds.core import log, rmap, config, utils, timestamp
+# =======================================================================
+
+from crds.core import rmap, config, utils, timestamp
+from crds.certify import generic_tpn
 from crds import data_file
-from . import tpn
 from . import schema
+
+# =======================================================================
+
+# These two functions decouple the generic reference file certifier program 
+# from observatory-unique ways of specifying and caching Validator parameters.
+
+from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
+
+get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
+get_item = TYPES.get_item
+suffix_to_filekind = TYPES.suffix_to_filekind
+filekind_to_suffix = TYPES.filekind_to_suffix
+
+from crds.jwst.pipeline import header_to_reftypes
 
 # =======================================================================
 
@@ -24,6 +40,29 @@ try:
     MODEL = DataModel()
 except Exception:
     MODEL = None
+
+# =============================================================================
+
+HERE = os.path.dirname(__file__) or "."
+
+def tpn_path(tpn_file):
+    """Return the full filepath of `tpn_file`."""
+    return os.path.join(HERE, "tpns", tpn_file)
+
+def get_tpninfos(tpn_name, refpath):
+    """Load the listof TPN info tuples corresponding to `key` from it's .tpn file.
+
+    Key's are typically of the form  ('miri_flat.tpn', refpath) or
+    ('miri_flat.ld_tpn', refpath).
+    """
+    return (generic_tpn.get_classic_tpninfos(tpn_path(tpn_name)) + 
+            schema.get_schema_tpninfos(tpn_name, refpath))
+
+# =======================================================================
+
+def mapping_validator_key(mapping):
+    """For now,  just use instrument based constraints."""
+    return (mapping.instrument + "_all_ld.tpn", mapping.name)
 
 # =======================================================================
 
@@ -66,48 +105,11 @@ CROSS_STRAPPED_KEYWORDS = {
 
 # =======================================================================
 
-HERE = os.path.dirname(__file__) or "./"
-
-# =======================================================================
-
-def test():
-    """Run the module doctests."""
-    import doctest
-    from . import locate
-    return doctest.testmod(locate)
-
-# =======================================================================
-
-# These two functions decouple the generic reference file certifier program 
-# from observatory-unique ways of specifying and caching Validator parameters.
-
-from crds.jwst.tpn import get_tpninfos   #  reference_name_to_validator_key, mapping_validator_key  defined here.
-from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS
-
-reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
-# mapping_validator_key = TYPES.mapping_validator_key
-get_row_keys = TYPES.get_row_keys
-get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
-get_item = TYPES.get_item
-suffix_to_filekind = TYPES.suffix_to_filekind
-
-# =======================================================================
-
-from crds.jwst.pipeline import header_to_reftypes
-
-# =======================================================================
-
 def match_context_key(key):
     """Set the case of a context key appropriately for this project, JWST
     always uses upper case.
     """
     return key.upper()
-
-# =======================================================================
-
-def mapping_validator_key(mapping):
-    """For now,  just use instrument based constraints."""
-    return (mapping.instrument + "_all_ld.tpn", mapping.name)
 
 # =======================================================================
 
@@ -227,22 +229,6 @@ def list_get(l, index, default):
         return l[index]
     except IndexError:
         return default
-
-CDBS_DIRS_TO_INSTR = {
-   "/jref/":"acs",
-   "/oref/":"stis",
-   "/iref/":"wfc3",
-   "/lref/":"cos",
-   "/nref/":"nicmos",
-   
-   "/upsf/":"wfpc2",
-   "/uref/":"wfpc2",
-   "/uref_linux/":"wfpc2",
-   
-   "/yref/" : "fos",
-   "/zref/" : "hrs",
-   
-}
 
 def get_reference_properties(filename):
     """Figure out FITS (instrument, filekind, serial) based on `filename`.
@@ -394,15 +380,10 @@ def locate_dir(instrument, mode=None):
     return rootdir
 
 # ============================================================================
-def load_all_type_constraints():
-    """Load all the JWST type constraint files."""
-    from crds.core import rmap, heavy_client
-    pmap = rmap.get_cached_mapping(heavy_client.load_server_info("jwst").operational_context)
-    tpn.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
-    for instr in pmap.selections:
-        tpn.get_tpninfos(instr + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
-        imap = pmap.get_imap(instr)
-        for filekind in imap.selections:
-            tpn.get_tpninfos("all" + "_" + filekind + ".tpn", "foo.fits")  # With core schema,  one type loads all
-            tpn.get_tpninfos(instr + "_" + filekind + ".tpn", "foo.fits")  # With core schema,  one type loads all
+
+def test():
+    """Run the module doctests."""
+    import doctest
+    from . import locate
+    return doctest.testmod(locate)
 

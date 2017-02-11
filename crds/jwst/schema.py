@@ -23,12 +23,13 @@ from crds.certify import TpnInfo
 
 # ====================================================================================
 
-def get_schema_tpninfos(*key):
+def get_schema_tpninfos(tpn_file, refpath):
     """Load the list of TPN info tuples corresponding to `instrument` and 
     `filekind` from it's .tpn file.
     """
+    key = (tpn_file, refpath)
     with log.warn_on_exception("Failed loading schema constraints for", repr(key)):
-        schema_name = reference_to_schema_name(key[1])
+        schema_name = reference_to_schema_name(refpath)
         tpns = get_schema_tpns(schema_name)
         parkeys = tpninfos_key_to_parkeys(key)
         return [ info for info in tpns if info.name in parkeys ]

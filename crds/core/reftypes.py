@@ -1,5 +1,5 @@
 """This module consolidates a number of aspects of reference type definition which were
-originally reverse engineered from CDBS and serveral different spec files.  It is 
+originally reverse engineered from CDBS and several different spec files.  It is 
 organized around loading type specs or prototype rmaps from the "specs" subdirectory of 
 an observatory/subsystem package.   For HST this reduces defining new types to adding 
 a prototype rmap and defining .tpn files in the observatory package.
@@ -13,7 +13,6 @@ import glob
 import json
 
 from crds.core import python23, rmap, log, utils
-from crds import data_file
 
 # =============================================================================
 #  Global table loads used at operational runtime:
@@ -124,19 +123,22 @@ def load_json_specs(combined_specs_path):
 
 # =============================================================================
 
-def from_package_file(pkg):
-    """Given the __file__ from a package,  load specs from the package's specs subdirectory."""
+def from_package_file(observatory, pkg):
+    """Given the __file__ from a package,  load specs from the package's specs subdirectory
+    and construct and return a TypeParameters object.
+    """
     here = (os.path.dirname(pkg) or ".")
     specs_path = os.path.join(here, "specs") 
     unified_defs = load_specs(specs_path)
-    return TypeParameters(unified_defs)
+    return TypeParameters(observatory, unified_defs)
 
 class TypeParameters(object):
     """Inialized from a dictionary of TypeSpec's from load_specs(), compute observatory enumerations
     and type field inter-relationships and cache them as attributes.
     """
-    def __init__(self, unified_defs):
+    def __init__(self, observatory, unified_defs):
 
+        self.observatory = observatory
         self.unified_defs = unified_defs
 
         sorted_udef_items = sorted(unified_defs.items())
@@ -227,74 +229,82 @@ class TypeParameters(object):
     def mapping_validator_key(self, mapping):
         """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
         mapping = rmap.asmapping(mapping)
-        return (self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"], mapping.filename)
+        tpnfile = self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"]
+        return (tpnfile, mapping.filename)
         # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")   # now has multiple values
 
     @utils.cached
-    def reference_name_to_validator_key(self, filename, field="tpn"):
+    def reference_name_to_validator_keys(self, filename, field="tpn"):
         """Return the sequence of validator keys associated with `filename`.   A validator key
         is nominally a .tpn filename and can vary by observatory, instrument, and type as well
         as by functions on the header of `filename`.
         """
-        header = data_file.get_free_header(filename)
-        observatory = utils.header_to_observatory(header)
-        instrument, filekind = utils.get_file_properties(observatory, filename)
+        locator = utils.file_to_locator(filename)
+        instrument, filekind = locator.get_file_properties(filename)
         results = []
         def append_tpn_level(results, instrument, filekind):
-            """Append the validator key for associated with one level of the `instrument`
-            and `filekind` to `results`.
+            """Append the validator key for one level of the `instrument`
+            and `filekind` mutating list `results`.
             """
             try:
-                validator_key = self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind)
+                tpnfile = self.unified_defs[instrument][filekind][field]
+                validator_key = (tpnfile, filename)
                 log.verbose("Adding validator key", repr(validator_key))
                 results.append(validator_key)
             except Exception as exc:
-                log.verbose_warning("Can't find TPN key for", (filename, instrument, filekind), ":", str(exc), verbosity=75)
+                log.verbose_warning("Can't find TPN key for", 
+                    (filename, instrument, filekind), ":", str(exc), verbosity=75)
         append_tpn_level(results, "all", "all")
         append_tpn_level(results, instrument, "all")
         append_tpn_level(results, "all", filekind)
         append_tpn_level(results, instrument, filekind)
         return results
 
-    def _reference_name_to_validator_key(self, filename, field, header, observatory, instrument, filekind):
-        """Given a reference filename `fitsname`,  return a dictionary key
-        suitable for caching the reference type's Validator.
-        
-        This revised version supports computing "subtype" .tpn files based
-        on the parameters of the reference.   Most references have unconditional
-        associations based on (instrument, filekind).   A select few have
-        conditional lookups which select between several .tpn's for the same
-        instrument and filetype.
-        
-        Returns (.tpn filename,)
-        """
-        try:
-            tpnfile = self.unified_defs[instrument][filekind][field]
-            if isinstance(tpnfile, python23.string_types):
-                key = (tpnfile, filename)  # tpn filename
-            else: # it's a list of conditional tpns
-                for (condition, tpn) in tpnfile:
-                    if eval(condition, header):
-                        key = (tpn, filename)  # tpn filename
-                        break
-                else:
-                    assert False
-        except (AssertionError, KeyError):
-            raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
-                    os.path.basename(filename), instrument, filekind))
-        log.verbose("Validator key for", field, "for", repr(filename), instrument, filekind, "=", key, verbosity=60)
-        return key
+# -----------------------------------------------------------------------------
 
-    reference_name_to_tpn_key = reference_name_to_validator_key
+    reference_name_to_tpn_keys = reference_name_to_validator_keys
 
-    def reference_name_to_ld_tpn_key(self, filename):
+    def reference_name_to_ld_tpn_keys(self, filename):
         """Return the _ld.tpn file key associated with reference `filename`.
         Strictly speaking this should be driven by mapping_validator_key...  but the interface
         for that is wrong so slave it to reference_name_to_tpn_key instead,  historically
         one-for-one.
         """
-        return self.reference_name_to_validator_key(filename, field="ld_tpn")
+        return self.reference_name_to_validator_keys(filename, field="ld_tpn")
 
+# -----------------------------------------------------------------------------
+
+    def reference_name_to_tpn_text(self, filename):
+        """Given reference `filename`,  return the text of the corresponding .tpn"""
+        path = rmap.locate_file(filename, self.observatory)
+        keys = self.reference_name_to_tpn_keys(path)
+        return self.get_tpn_text(keys)
+
+    def reference_name_to_ld_tpn_text(self, filename):
+        """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
+        path = rmap.locate_file(filename, self.observatory)
+        keys = self.reference_name_to_ld_tpn_keys(path)
+        return self.get_tpn_text(keys)
+
+    def get_tpn_text(self, tpn_keys):
+        """Given a list of `tpn_keys`,  concatenate the text of the constraint files
+        into a single string that can be used to expose the constraints on web sites, etc.
+        """
+        text = []
+        for key in tpn_keys:
+            text += ["="*20 + repr(key[0]) + "="*20]
+            text += [self._get_tpn_text(key)]
+            text += ["\n"]
+        return "\n".join(text)
+
+    utils.cached
+    def _get_tpn_text(self, tpn_key):
+        """Return the .tpn text corresponding to validator_keys.
+        """
+        with open(self.locator.tpn_path(tpn_key)) as pfile:
+            text = pfile.read()
+        return text
+    
 # =============================================================================
 
     def get_row_keys(self, instrument, filekind):
@@ -338,7 +348,7 @@ class TypeParameters(object):
             keyset |= set(self.row_keys[instrument][filekind] or [])
         return sorted([key.lower() for key in keyset])
 
-# =============================================================================
+    # =============================================================================
 
     def get_filekinds(self, instrument):
         """Return the sequence of filekind strings for `instrument`."""
@@ -350,4 +360,15 @@ class TypeParameters(object):
         instrument = instrument.lower()
         filekind = filekind.lower()
         return self.unified_defs[instrument][filekind][name]
+
+# =============================================================================
+
+def get_types_object(observatory):
+    """Each observatory package instantiates a types object from the observatory's 
+    type specs using generic code defined in this module;  any generic code related
+    to types is defined here,  but ultimately the instantiate TYPES object is bound
+    to a specific observatory and defined in that package.
+    """
+    pkg = utils.get_observatory_package(observatory)
+    return getattr(pkg, "TYPES")
 

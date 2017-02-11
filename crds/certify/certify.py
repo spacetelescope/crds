@@ -18,8 +18,7 @@ import numpy as np
 
 import crds
 
-from crds.core import pysh, log, config, utils, rmap, cmdline
-from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
+from crds.core import pysh, log, config, utils, rmap, cmdline, reftypes
 from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationError
 
 from crds import data_file, diff, tables
@@ -96,9 +95,7 @@ class Certifier(object):
         list of Validators used to check that reference file type.
         """
         # Get the cache key for this filetype.
-        checkers = []
-        for key in self.locator.reference_name_to_validator_key(self.filename):
-            checkers.extend(validators.validators_by_typekey(key, self.observatory))
+        checkers = validators.get_validators(self.observatory, self.filename)
         checkers = self.set_rmap_parkeys_to_required(checkers) 
         return checkers
     
@@ -135,6 +132,8 @@ class Certifier(object):
             log.verbose_warning("Failed retrieving required parkeys:", str(exc))
             return []
 
+# ============================================================================
+
 class ReferenceCertifier(Certifier):
     """Baseclass for most reference file certifier classes.    
     1. Check simple keywords against TPN files using the reftype's validators.
@@ -148,6 +147,7 @@ class ReferenceCertifier(Certifier):
         self.all_column_names = None
         self.all_simple_names = None
         self.mode_columns = None
+        self.types = reftypes.get_types_object(self.observatory)
         
     def complex_init(self):
         """Can't do this until we at least know the file is loadable."""
@@ -249,7 +249,7 @@ class ReferenceCertifier(Certifier):
         mode_columns = []
         with self.error_on_exception("Error finding unique row keys for", repr(self.basename)):
             instrument, filekind = utils.get_file_properties(self.observatory, self.filename)
-            mode_columns = self.locator.get_row_keys(instrument, filekind)
+            mode_columns = self.types.get_row_keys(instrument, filekind)
             if mode_columns:
                 log.info("Table unique row parameters defined as", repr(mode_columns))
             else:

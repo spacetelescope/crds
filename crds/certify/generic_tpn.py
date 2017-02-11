@@ -99,7 +99,7 @@ class TpnInfo(_TpnInfo):
 
     def _repr_presence(self):
         if is_expression(self.presence):
-            return "conditional="+self.presence
+            return "condition="+self.presence
         return {
             "E" : "EXCLUDED",
             "R" : "REQUIRED",
@@ -109,7 +109,10 @@ class TpnInfo(_TpnInfo):
             }.get(self.presence, self.presence)
 
     def _repr_values(self):
-        return "values=" + repr(self.values)
+        if self.values and is_expression(self.values[0]):
+            return "expression=" + repr(self.values[0])
+        else:
+            return "values=" + repr(self.values)
 
 # =============================================================================
 
@@ -117,18 +120,33 @@ HERE = os.path.dirname(__file__) or "./"
 
 # =============================================================================
 
-def _evalfile_with_fail(filename):
-    """Evaluate and return a dictionary file,  returning {} if the file
-    cannot be found.
+def load_tpn(fname):
+    """Load a TPN file and return it as a list of TpnInfo objects
+    describing keyword requirements including acceptable values.
     """
-    if os.path.exists(filename):
-        result = utils.evalfile(filename)
-    else:
-        result = {}
-    return result
+    tpn = []
+    for line in _load_tpn_lines(fname):
+        line = _fix_quoted_whitespace(line)
+        items = line.split()
+        if len(items) == 4:
+            name, keytype, datatype, presence = items
+            values = []
+        else:
+            name, keytype, datatype, presence, values = items
+            values = values.split(",")
+            values = [v if is_expression(v) else v.upper() for v in values]
+        tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
+    return tpn
 
-# =============================================================================
+def is_expression(tpn_field):
+    """Return True IFF .tpn value `tpn_field` defines a header expression.
 
+    Initially `tpn_field` is either a value from the TpnInfo "values" field or
+    it is the value of the "presence" field.  In both cases,  an expression
+    is signified by bracketing the value in parens.
+    """
+    return tpn_field.startswith("(") and tpn_field.endswith(")")
+    
 def _load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.  If a line begins with "include",  the
@@ -176,33 +194,6 @@ def _fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
-def load_tpn(fname):
-    """Load a TPN file and return it as a list of TpnInfo objects
-    describing keyword requirements including acceptable values.
-    """
-    tpn = []
-    for line in _load_tpn_lines(fname):
-        line = _fix_quoted_whitespace(line)
-        items = line.split()
-        if len(items) == 4:
-            name, keytype, datatype, presence = items
-            values = []
-        else:
-            name, keytype, datatype, presence, values = items
-            values = values.split(",")
-            values = [v if is_expression(v) else v.upper() for v in values]
-        tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
-    return tpn
-
-def is_expression(tpn_field):
-    """Return True IFF .tpn value `tpn_field` defines a header expression.
-
-    Initially `tpn_field` is either a value from the TpnInfo "values" field or
-    it is the value of the "presence" field.  In both cases,  an expression
-    is signified by bracketing the value in parens.
-    """
-    return tpn_field.startswith("(") and tpn_field.endswith(")")
-    
 def get_classic_tpninfos(filepath):
     """Load the list of TPN info tuples from .tpn file at `filepath`.  Unlike
     load_tpn(), this function is structured such that missing files are an
@@ -218,7 +209,26 @@ def get_classic_tpninfos(filepath):
         log.verbose_warning("Exception reading TPN", repr(filepath), ":",
                             log.srepr(exc), verbosity=70)
         return []
+    
+# =============================================================================
 
+def load_all_type_constraints(observatory):
+    """Load all the type constraint files from `observatory` package."""
+    from crds.core import rmap, heavy_client
+    pmap = rmap.get_cached_mapping(heavy_client.load_server_info(observatory).operational_context)
+    locator = utils.get_locator_module(observatory)
+    locator.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
+    for instr in pmap.selections:
+        locator.get_tpninfos(instr + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
+        imap = pmap.get_imap(instr)
+        for filekind in imap.selections:
+            try:
+                suffix  = locator.TYPES.filekind_to_suffix(instr, filekind)
+            except Exception as exc:
+                log.warning("Missing suffix coverage for", repr((instr, filekind)), ":", exc)
+            else:
+                locator.get_tpninfos("all" + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
+                locator.get_tpninfos(instr + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
 # =============================================================================
 
 def main():
