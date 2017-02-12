@@ -292,17 +292,18 @@ class TypeParameters(object):
         """
         text = []
         for key in tpn_keys:
-            text += ["="*20 + repr(key[0]) + "="*20]
-            text += [self._get_tpn_text(key)]
+            tpn_name, refname = key
+            text += ["="*20 + repr(tpn_name) + "="*20]
+            text += [self._get_tpn_text(tpn_name)]
             text += ["\n"]
         return "\n".join(text)
 
     utils.cached
-    def _get_tpn_text(self, tpn_key):
+    def _get_tpn_text(self, tpn_name):
         """Return the .tpn text corresponding to validator_keys.
         """
         locator = utils.get_locator_module(self.observatory)
-        with open(locator.tpn_path(tpn_key)) as pfile:
+        with open(locator.tpn_path(tpn_name)) as pfile:
             text = pfile.read()
         return text
     
