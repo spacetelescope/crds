@@ -40,7 +40,7 @@ individual .tpn constraints based on the reference file header.
 
 import os.path
 
-from crds.core import reftypes
+from crds.certify import reftypes
 
 TYPES = reftypes.from_package_file("hst", __file__)
 

@@ -18,7 +18,7 @@ import numpy as np
 
 import crds
 
-from crds.core import pysh, log, config, utils, rmap, cmdline, reftypes
+from crds.core import pysh, log, config, utils, rmap, cmdline
 from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationError
 
 from crds import data_file, diff, tables
@@ -26,6 +26,7 @@ from crds.client import api
 
 from . import mapping_parser
 from . import validators
+from . import reftypes
 
 # ============================================================================
 

@@ -239,7 +239,7 @@ class TypeParameters(object):
         is nominally a .tpn filename and can vary by observatory, instrument, and type as well
         as by functions on the header of `filename`.
         """
-        locator = utils.file_to_locator(filename)
+        locator = utils.get_locator_module(self.observatory)
         instrument, filekind = locator.get_file_properties(filename)
         results = []
         def append_tpn_level(results, instrument, filekind):
@@ -301,7 +301,8 @@ class TypeParameters(object):
     def _get_tpn_text(self, tpn_key):
         """Return the .tpn text corresponding to validator_keys.
         """
-        with open(self.locator.tpn_path(tpn_key)) as pfile:
+        locator = utils.get_locator_module(self.observatory)
+        with open(locator.tpn_path(tpn_key)) as pfile:
             text = pfile.read()
         return text
     
