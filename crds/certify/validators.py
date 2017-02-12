@@ -14,12 +14,13 @@ import copy
 
 # ============================================================================
 
-from crds.core import log, config, utils, timestamp, selectors, reftypes
+from crds.core import log, config, utils, timestamp, selectors
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds import tables
 from crds import data_file
 
+from . import reftypes
 from . import generic_tpn
 from .generic_tpn import TpnInfo   # generic TpnInfo code
 
