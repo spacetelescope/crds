@@ -125,7 +125,7 @@ def load_tpn(fname):
     describing keyword requirements including acceptable values.
     """
     tpn = []
-    for line in _load_tpn_lines(fname):
+    for line in load_tpn_lines(fname):
         line = _fix_quoted_whitespace(line)
         items = line.split()
         if len(items) == 4:
@@ -147,7 +147,7 @@ def is_expression(tpn_field):
     """
     return tpn_field.startswith("(") and tpn_field.endswith(")")
     
-def _load_tpn_lines(fname):
+def load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.  If a line begins with "include",  the
     second word should be a base filename that refers to a file in the same
@@ -165,7 +165,7 @@ def _load_tpn_lines(fname):
             if line.startswith("include"):
                 include = line.split(" ")[1]
                 fname2 = os.path.join(dirname, include)
-                lines += _load_tpn_lines(fname2)
+                lines += load_tpn_lines(fname2)
                 continue
             if append:
                 lines[-1] = lines[-1][:-1].strip() + line

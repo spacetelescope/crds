@@ -13,6 +13,7 @@ import glob
 import json
 
 from crds.core import python23, rmap, log, utils
+from . import generic_tpn
 
 # =============================================================================
 #  Global table loads used at operational runtime:
@@ -303,8 +304,9 @@ class TypeParameters(object):
         """Return the .tpn text corresponding to validator_keys.
         """
         locator = utils.get_locator_module(self.observatory)
-        with open(locator.tpn_path(tpn_name)) as pfile:
-            text = pfile.read()
+        text = "\n".join(generic_tpn.load_tpn_lines(locator.tpn_path(tpn_name)))
+        # with open(locator.tpn_path(tpn_name)) as pfile:
+        #    text = pfile.read()
         return text
     
 # =============================================================================
