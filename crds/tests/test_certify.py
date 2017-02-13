@@ -112,15 +112,14 @@ def certify_dump_provenance_generic():
 
 def certify_missing_keyword():
     """
-    >>> TestCertifyScript("crds.certify data/missing_keyword.fits --comparison-context hst.pmap")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/missing_keyword.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
-    CRDS - INFO - FITS file 'missing_keyword.fits' conforms to FITS standards.
-    CRDS - ERROR - instrument='COS' type='DEADTAB' data='data/missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 1 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 4 infos
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/missing_keyword.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
+    CRDS - INFO -  FITS file 'missing_keyword.fits' conforms to FITS standards.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
     1
     """
 

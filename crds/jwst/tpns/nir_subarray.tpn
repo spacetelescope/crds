@@ -1,37 +1,37 @@
-META.SUBARRAY.NAME          H   C   R
-META.SUBARRAY.XSTART        H   I   R
-META.SUBARRAY.YSTART        H   I   R
-META.SUBARRAY.XSIZE         H   I   R
-META.SUBARRAY.YSIZE         H   I   R
-META.SUBARRAY.FASTAXIS      H   I   R
-META.SUBARRAY.SLOWAXIS      H   I   R
+# META.SUBARRAY.NAME          H   C   R
+# META.SUBARRAY.XSTART        H   I   R
+# META.SUBARRAY.YSTART        H   I   R
+# META.SUBARRAY.XSIZE         H   I   R
+# META.SUBARRAY.YSIZE         H   I   R
+# META.SUBARRAY.FASTAXIS      H   I   R
+# META.SUBARRAY.SLOWAXIS      H   I   R
 
-SUBARRAY_INBOUNDS_X         X   X   R  (META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
-SUBARRAY_INBOUNDS_Y         X   X   R  (META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+# SUBARRAY_INBOUNDS_X         X   X   R  (META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+# SUBARRAY_INBOUNDS_Y         X   X   R  (META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
 
-NRCA1_AXIS                  X   X   (DETECTOR=='NRCA1') ((FASTAXIS==-1)and(SLOWAXIS==2))
-NRCA2_AXIS                  X   X   (DETECTOR=='NRCA2') ((FASTAXIS==1)and(SLOWAXIS==-2))
-NRCA3_AXIS                  X   X   (DETECTOR=='NRCA3') ((FASTAXIS==-1)and(SLOWAXIS==2))
-NRCA4_AXIS                  X   X   (DETECTOR=='NRCA4') ((FASTAXIS==1)and(SLOWAXIS==-2))
-NRCALONG_AXIS               X   X   (DETECTOR=='NRCALONG') ((FASTAXIS==-1)and(SLOWAXIS==2))
+# NRCA1_AXIS                  X   X   (DETECTOR=='NRCA1') ((FASTAXIS==-1)and(SLOWAXIS==2))
+# NRCA2_AXIS                  X   X   (DETECTOR=='NRCA2') ((FASTAXIS==1)and(SLOWAXIS==-2))
+# NRCA3_AXIS                  X   X   (DETECTOR=='NRCA3') ((FASTAXIS==-1)and(SLOWAXIS==2))
+# NRCA4_AXIS                  X   X   (DETECTOR=='NRCA4') ((FASTAXIS==1)and(SLOWAXIS==-2))
+# NRCALONG_AXIS               X   X   (DETECTOR=='NRCALONG') ((FASTAXIS==-1)and(SLOWAXIS==2))
 
-NRCB1_AXIS                  X   X   (DETECTOR=='NRCB1') ((FASTAXIS==1)and(SLOWAXIS==-2))
-NRCB2_AXIS                  X   X   (DETECTOR=='NRCB2') ((FASTAXIS==-1)and(SLOWAXIS==2))
-NRCB3_AXIS                  X   X   (DETECTOR=='NRCB3') ((FASTAXIS==1)and(SLOWAXIS==-2))
-NRCB4_AXIS                  X   X   (DETECTOR=='NRCB4') ((FASTAXIS==-1)and(SLOWAXIS==2))
-NRCBLONG_AXIS               X   X   (DETECTOR=='NRCBLONG') ((FASTAXIS==1)and(SLOWAXIS==-2))
+# NRCB1_AXIS                  X   X   (DETECTOR=='NRCB1') ((FASTAXIS==1)and(SLOWAXIS==-2))
+# NRCB2_AXIS                  X   X   (DETECTOR=='NRCB2') ((FASTAXIS==-1)and(SLOWAXIS==2))
+# NRCB3_AXIS                  X   X   (DETECTOR=='NRCB3') ((FASTAXIS==1)and(SLOWAXIS==-2))
+# NRCB4_AXIS                  X   X   (DETECTOR=='NRCB4') ((FASTAXIS==-1)and(SLOWAXIS==2))
+# NRCBLONG_AXIS               X   X   (DETECTOR=='NRCBLONG') ((FASTAXIS==1)and(SLOWAXIS==-2))
 
-MIRIMAGE_AXIS               X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
-MIRIFULONG_AXIS             X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
-MIRIFUSHORT_AXIS            X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
+# MIRIMAGE_AXIS               X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
+# MIRIFULONG_AXIS             X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
+# MIRIFUSHORT_AXIS            X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
 
-NRS1_AXIS                   X   X   (DETECTOR=='NRS1') ((FASTAXIS==2)and(SLOWAXIS==1))
-NRS2_AXIS                   X   X   (DETECTOR=='NRS2') ((FASTAXIS==-2)and(SLOWAXIS==-1))
+# NRS1_AXIS                   X   X   (DETECTOR=='NRS1') ((FASTAXIS==2)and(SLOWAXIS==1))
+# NRS2_AXIS                   X   X   (DETECTOR=='NRS2') ((FASTAXIS==-2)and(SLOWAXIS==-1))
 
-NIS_AXIS                    X   X   (DETECTOR=='NIS')  ((FASTAXIS==-2)and(SLOWAXIS==-1))
+# NIS_AXIS                    X   X   (DETECTOR=='NIS')  ((FASTAXIS==-2)and(SLOWAXIS==-1))
 
-GUIDER1_AXIS                X   X   (DETECTOR=='GUIDER1')  ((FASTAXIS==-2)and(SLOWAXIS==-1))
-GUIDER2_AXIS                X   X   (DETECTOR=='GUIDER2')  ((FASTAXIS==2)and(SLOWAXIS==-1))
+# GUIDER1_AXIS                X   X   (DETECTOR=='GUIDER1')  ((FASTAXIS==-2)and(SLOWAXIS==-1))
+# GUIDER2_AXIS                X   X   (DETECTOR=='GUIDER2')  ((FASTAXIS==2)and(SLOWAXIS==-1))
                                 
 
 # NRCA1 -1      2
