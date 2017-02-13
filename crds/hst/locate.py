@@ -19,28 +19,41 @@ import glob
 import datetime
 import time
 
-import crds
+# =======================================================================
+
 from crds.core import log, rmap, config, utils, timestamp
+from crds.certify import generic_tpn
 from crds import data_file
 from crds.core.exceptions import CrdsError
 from crds.hst import siname
 
 # =======================================================================
 
-# These two functions decouple the generic reference file certifier program 
-# from observatory-unique ways of specifying and caching Validator parameters.
+# This block imports functions and globals defined in other modules to become
+# part of the locator interface.
 
 from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
 
-reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
 mapping_validator_key = TYPES.mapping_validator_key
-get_row_keys = TYPES.get_row_keys
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
 suffix_to_filekind = TYPES.suffix_to_filekind
 filekind_to_suffix = TYPES.filekind_to_suffix
 
-from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
+# =======================================================================
+HERE = os.path.dirname(__file__) or "."
+
+def tpn_path(tpn_file):
+    return os.path.join(HERE, "tpns", tpn_file)
+
+@utils.cached
+def get_tpninfos(tpn_file, refpath):
+    """Load the list of TPN_info tuples corresponding to *args from it's .tpn file.
+    Nominally args are (instrument, filekind),  but *args should be supported to 
+    handle *key for any key returned by reference_name_to_validator_key.   In particular,
+    for some subtypes,  *args will be (tpn_filename,).
+    """
+    return generic_tpn.get_classic_tpninfos(tpn_path(tpn_file))
 
 # =======================================================================
 
@@ -79,11 +92,11 @@ def reference_keys_to_dataset_keys(rmapping, header):
     result = dict(header)
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_useafter(rmapping, header).split()
-        header["DATE-OBS"] = reformatted[0]
-        header["DATE_OBS"] = reformatted[0]
-        header["TIME-OBS"] = reformatted[1]
-        header["TIME_OBS"] = reformatted[1]
-    return header
+        result["DATE-OBS"] = reformatted[0]
+        result["DATE_OBS"] = reformatted[0]
+        result["TIME-OBS"] = reformatted[1]
+        result["TIME_OBS"] = reformatted[1]
+    return result
 
 # =======================================================================
 
@@ -301,8 +314,6 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
                           "for", repr(ref))
 
             for pmap_name in reversed(sorted(rmap.list_mappings("*.pmap", observatory="hst"))):
-
-                pmap = crds.get_cached_mapping(pmap_name)
 
                 r = certify.find_governing_rmap(pmap_name, ref)
 
@@ -577,28 +588,10 @@ def fits_to_parkeys(header):
 
 # ============================================================================
 
-HERE = os.path.dirname(__file__) or "."
-
-def load_all_type_constraints():
-    """Make sure that all HST .tpn files are loadable."""
-    from crds import certify
-    tpns = glob.glob(os.path.join(HERE, "tpns", "*.tpn"))
-    for tpn_path in tpns:
-        tpn_name = tpn_path.split("/")[-1]  # simply lost all patience with basename and path.split
-        log.verbose("Loading", repr(tpn_name))
-        certify.validators_by_typekey((tpn_name,), "hst")
-
-# ============================================================================
-
 __all__ = [
     "INSTRUMENTS",
 
-    "reference_name_to_validator_key",
-    "mapping_validator_key",
     "get_tpninfos",
-    "reference_name_to_tpn_text",
-    "reference_name_to_ld_tpn_text",
-    "load_all_type_constraints",
     "get_item",
 
     "get_env_prefix",
@@ -606,7 +599,6 @@ __all__ = [
     "locate_dir",
     "get_file_properties",
 
-    "get_row_keys",
     "get_row_keys_by_instrument",
     
     "fits_to_parkeys",

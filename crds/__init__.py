@@ -63,7 +63,6 @@ CORE_MODULES = [
     "custom_dict",
     "selectors",
     "mapping_verifier",
-    "reftypes",
     "substitutions",
     "rmap",
     "heavy_client",

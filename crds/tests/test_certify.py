@@ -11,6 +11,7 @@ from crds.core import utils, log
 from crds import client
 from crds import certify
 from crds.certify import CertifyScript
+from crds.certify import generic_tpn
 
 from crds.tests import test_config
 
@@ -43,11 +44,9 @@ def certify_truncated_file():
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  12 warnings
+    CRDS - INFO -  10 warnings
     CRDS - INFO -  4 infos
     0
     """
@@ -82,22 +81,29 @@ def certify_dump_provenance_generic():
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst.pmap")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
-    CRDS - INFO - META.EXPOSURE.READPATT = 'any'
-    CRDS - INFO - META.INSTRUMENT.DETECTOR = 'mirifulong'
-    CRDS - INFO - META.INSTRUMENT.NAME = 'MIRI'
-    CRDS - INFO - META.OBSERVATION.DATE = '2015-01-25'
-    CRDS - INFO - META.REFFILE.AUTHOR = 'Todd Miller'
-    CRDS - INFO - META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
-    CRDS - INFO - META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
-    CRDS - INFO - META.REFFILE.PEDIGREE = 'dummy'
-    CRDS - INFO - META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
-    CRDS - INFO - META.TELESCOPE = 'jwst'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 13 infos
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
+    CRDS - INFO -  META.EXPOSURE.READPATT = 'any'
+    CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
+    CRDS - INFO -  META.INSTRUMENT.NAME = 'MIRI'
+    CRDS - INFO -  META.OBSERVATION.DATE = '2015-01-25'
+    CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
+    CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
+    CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
+    CRDS - INFO -  META.REFFILE.PEDIGREE = 'dummy'
+    CRDS - INFO -  META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
+    CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
+    CRDS - INFO -  META.SUBARRAY.NAME = 'MASK1550'
+    CRDS - INFO -  META.SUBARRAY.SLOWAXIS = '2'
+    CRDS - INFO -  META.SUBARRAY.XSIZE = '1032'
+    CRDS - INFO -  META.SUBARRAY.XSTART = '1'
+    CRDS - INFO -  META.SUBARRAY.YSIZE = '4'
+    CRDS - INFO -  META.SUBARRAY.YSTART = '1020'
+    CRDS - INFO -  META.TELESCOPE = 'jwst'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  20 infos
     0
 
     >>> test_config.cleanup(old_state)
@@ -106,15 +112,14 @@ def certify_dump_provenance_generic():
 
 def certify_missing_keyword():
     """
-    >>> TestCertifyScript("crds.certify data/missing_keyword.fits --comparison-context hst.pmap")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/missing_keyword.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
-    CRDS - INFO - FITS file 'missing_keyword.fits' conforms to FITS standards.
-    CRDS - ERROR - instrument='COS' type='DEADTAB' data='data/missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 1 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 4 infos
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/missing_keyword.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
+    CRDS - INFO -  FITS file 'missing_keyword.fits' conforms to FITS standards.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
     1
     """
 
@@ -306,7 +311,7 @@ class TestHSTTpnInfoClass(test_config.CRDSTestCase):
     def setUp(self, *args, **keys):
         super(TestHSTTpnInfoClass, self).setUp(*args, **keys)
         hstlocator = utils.get_locator_module("hst")
-        self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn')
+        self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn', "foo.fits")
         self.validators = [certify.validator(info) for info in self.tpninfos]
         client.set_crds_server('https://crds-serverless-mode.stsci.edu')
         os.environ['CRDS_MAPPATH'] = self.hst_mappath
@@ -331,13 +336,295 @@ class TestCertify(test_config.CRDSTestCase):
         super(TestCertify, self).tearDown(*args, **keys)
         log.set_exception_trap(self._old_debug)
         
-    def test_character_validator(self):
-        """Test the constructor with default argument values."""
-        tinfo = certify.TpnInfo('DETECTOR','H','C','R',('WFC','HRC','SBC'))
+    # ------------------------------------------------------------------------------
+        
+    def test_character_validator_file_good(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
         cval.check(self.data('acs_new_idc.fits'))
 
+    def test_character_validator_bad(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_character_validator_missing_required(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_character_validator_optional_bad(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_character_validator_optional_missing(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.CharacterValidator))
+        header = {"DETECTR" : "WFC" }
+        cval.check("foo.fits", header)
+
+    # ------------------------------------------------------------------------------
+        
+    def test_regex_validator_good(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','Z','R', ('WFC|HRC|S.C',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.RegexValidator))
+        cval.check("foo.fits", {"DETECTOR":"SBC"})
+
+    def test_regex_validator_bad(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','Z','R', ('WFC|HRC|S.C',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.RegexValidator))
+        header = {"DETECTOR" : "WFD" }
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    # ------------------------------------------------------------------------------
+        
+    def test_logical_validator_good(self):
+        tinfo = certify.TpnInfo('ROKIN','H','L','R',())
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.LogicalValidator))
+        header= {"ROKIN": "F"}
+        cval.check("foo.fits", header)
+        header= {"ROKIN": "T"}
+        cval.check("foo.fits", header)
+
+    def test_logical_validator_bad(self):
+        tinfo = certify.TpnInfo('ROKIN','H','L','R',())
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.LogicalValidator))
+        header = {"ROKIN" : "True"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        header = {"ROKIN" : "False"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        header = {"ROKIN" : "1"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        header = {"ROKIN" : "0"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    # ------------------------------------------------------------------------------
+        
+    def test_integer_validator_bad_format(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('FOO',))
+        assert_raises(ValueError, certify.validator, info)
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1.0','2.0'))
+        assert_raises(ValueError, certify.validator, info)
+
+    def test_integer_validator_bad_float(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "1.9"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_integer_validator_bad_value(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2','3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "4"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_integer_validator_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2','3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "2"}
+        cval.check("foo.fits", header)
+
+    def test_integer_validator_range_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "39"}
+        cval.check("foo.fits", header)
+
+    def test_integer_validator_range_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "41"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+ 
+    def test_integer_validator_range_boundary_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "40"}
+        cval.check("foo.fits", header)
+ 
+    def test_integer_validator_range_format_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.IntValidator))
+        header = {"READPATT": "40.3"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("x:40",))
+        assert_raises(ValueError, certify.validator, info)
+ 
+    # ------------------------------------------------------------------------------
+        
+    def test_real_validator_bad_format(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('FOO',))
+        assert_raises(ValueError, certify.validator, info)
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('x.0','2.0'))
+        assert_raises(ValueError, certify.validator, info)
+
+    def test_real_validator_bad_value(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('1.1','2.2','3.3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "3.2"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_real_validator_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('1.0','2.1','3.0'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "2.1"}
+        cval.check("foo.fits", header)
+
+    def test_real_validator_range_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+
+    def test_real_validator_range_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.21"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+ 
+    def test_real_validator_range_boundary_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.4:40.1",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+ 
+    def test_real_validator_range_format_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "40.x"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
+        assert_raises(ValueError, certify.validator, info)
+ 
+    # ------------------------------------------------------------------------------
+        
+    def test_double_validator_bad_format(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('FOO',))
+        assert_raises(ValueError, certify.validator, info)
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('x.0','2.0'))
+        assert_raises(ValueError, certify.validator, info)
+
+    def test_double_validator_bad_value(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('1.1','2.2','3.3'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "3.2"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_double_validator_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('1.0','2.1','3.0'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "2.1"}
+        cval.check("foo.fits", header)
+
+    def test_double_validator_range_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+
+    def test_double_validator_range_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.21"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+ 
+    def test_double_validator_range_boundary_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.4:40.1",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.1"}
+        cval.check("foo.fits", header)
+ 
+    def test_double_validator_range_format_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "40.x"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
+        assert_raises(ValueError, certify.validator, info)
+ 
+    # ------------------------------------------------------------------------------
+        
+    def test_expression_validator_passes(self):
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.ExpressionValidator))
+        header = { "DETECTOR":"FOO", "SUBARRAY":"BAR" }
+        cval.check("foo.fits", header)
+
+    def test_expression_validator_fails(self):
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
+        cval = certify.validator(tinfo)
+        assert_true(isinstance(cval, certify.ExpressionValidator))
+        header = { "DETECTOR":"FOO", "SUBARRAY":"BA" }
+        assert_raises(certify.RequiredConditionError, cval.check, "foo.fits", header)
+
+    def test_expression_validator_bad_format(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR="FOO")and(SUBARRAY=="BAR"))',))
+        assert_raises(SyntaxError, certify.validator, tinfo)
+
+    # ------------------------------------------------------------------------------
+        
+    def test_conditionally_required_bad_format(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','X', 'X', '(SUBARRAY="BAR")', ("FOO","BAR","BAZ"))
+        assert_raises(SyntaxError, certify.validator, tinfo)
+
+    def test_conditionally_required_good(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','H', 'C', '(SUBARRAY=="BAR")', ("FOO","BAR","BAZ"))
+        cval = certify.validator(tinfo)
+        header = { "DETECTOR" : "FOO", "SUBARRAY":"BAR" }
+        cval.check("foo.fits", header)
+
+    def test_conditionally_required_bad(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','H', 'C', '(SUBARRAY=="BAR")', ("FOO","BAR","BAZ"))
+        checker = certify.validator(tinfo)
+        header = { "DETECTOR" : "FRODO", "SUBARRAY":"BAR" }
+        assert_raises(ValueError, checker.check, "foo.fits", header)
+
+    def test_conditionally_not_required(self):
+        # typical subtle expression error, "=" vs. "=="
+        tinfo = certify.TpnInfo('DETECTOR','H', 'C', '(SUBARRAY=="BAR")', ("FOO","BAR","BAZ"))
+        checker = certify.validator(tinfo)
+        header = { "DETECTOR" : "FRODO", "SUBARRAY":"BAZ" }
+        checker.check("foo.fits", header)
+
+    # ------------------------------------------------------------------------------
+        
     def test_sybdate_validator(self):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
         cval = certify.validator(tinfo)
@@ -364,13 +651,11 @@ class TestCertify(test_config.CRDSTestCase):
         
     def test_loadall_type_constraints_hst(self):
         """Prove the HST constraint files are loadable."""
-        from crds.hst import locate
-        locate.load_all_type_constraints()
+        generic_tpn.load_all_type_constraints("hst")
 
     def test_loadall_type_constraints_jwst(self):
         """Prove the JWST constraint files are loadable."""
-        from crds.jwst import locate
-        locate.load_all_type_constraints()
+        generic_tpn.load_all_type_constraints("jwst")
 
     def test_JsonCertify_valid(self):
         certify.certify_file(

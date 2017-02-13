@@ -16,30 +16,35 @@ from __future__ import absolute_import
 ['atodfile', 'biasfile', 'darkfile', 'dgeofile', 'flatfile', 'idctab', 'maskfile', 'offtab', 'shadfile', 'wf4tfile']
 
 >>> TYPES.mapping_validator_key("hst_acs_darkfile.rmap")
-('acs_drk_ld.tpn',)
+('acs_drk_ld.tpn', "hst_acs_darkfile.rmap")
 
 >>> from crds import config
 
->> TYPES.reference_name_to_ld_tpn_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
+Originally the CDBS .tpn files for STIS LFL and PFL varied by OBSMODE.  This design quirk
+was later simplified by the addition of "presence expressions" which activate or deactivate
+individual .tpn constraints based on the reference file header.
+
+>>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
 ('stis_lfl_ld.tpn',)
 
->> TYPES.reference_name_to_ld_tpn_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
+>>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
 ('stis_lfl_ld.tpn',)
 
->> TYPES.reference_name_to_validator_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
-('stis_slfl.tpn',)
+>>> TYPES.reference_name_to_validator_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
+('stis_lfl.tpn',)
 
->> TYPES.reference_name_to_validator_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
-('stis_ilfl.tpn',)
+>>> TYPES.reference_name_to_validator_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
+('stis_lfl.tpn',)
 
 """
 
 import os.path
 
-from crds.core import reftypes
+from crds.certify import reftypes
 
-TYPES = reftypes.from_package_file(__file__)
+TYPES = reftypes.from_package_file("hst", __file__)
 
+OBSERVATORY = TYPES.observatory
 INSTRUMENTS = TYPES.instruments
 EXTENSIONS = TYPES.extensions
 TEXT_DESCR = TYPES.text_descr

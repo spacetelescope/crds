@@ -1,5 +1,7 @@
-"""This module contains doctests and unit tests which exercise some of the more
-complex features of the basic rmap infrastructure.
+"""This module contains doctests and unit tests which exercise the crds.uses
+module that identifies mappings that reference a file.
+
+XXX IMPORTANT:  crds.uses tests are extremely time consuming, DISABLED
 
 """
 
@@ -21,10 +23,11 @@ from nose.tools import assert_raises, assert_true
 
 HERE = os.path.dirname(__file__) or "."
 
-def dt_uses_finaall_mappings_using_reference():
+def dt_disabled_uses_finaall_mappings_using_reference():
     """
     >>> old_state = test_config.setup()
-    >>> uses.UsesScript("crds.uses --files v2e20129l_flat.fits")()
+
+    >> uses.UsesScript("crds.uses --files v2e20129l_flat.fits")()
     hst.pmap
     hst_0001.pmap
     hst_0002.pmap
@@ -41,10 +44,11 @@ def dt_uses_finaall_mappings_using_reference():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_uses_rmaps():
+def dt_disabled_uses_rmaps():
     """
     >>> old_state = test_config.setup()
-    >>> uses.UsesScript("crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used")()
+
+    >> uses.UsesScript("crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used")()
     hst_cos_flatfile.rmap hst.pmap
     hst_cos_flatfile.rmap hst_0001.pmap
     hst_cos_flatfile.rmap hst_0002.pmap
@@ -67,13 +71,15 @@ def dt_uses_rmaps():
     hst_acs_darkfile.rmap hst_acs.imap
     hst_acs_darkfile.rmap hst_acs_0001.imap
     0
+
     >>> test_config.cleanup(old_state)
     """
     
-def dt_uses_imap():
+def dt_disabled_uses_imap():
     """
     >>> old_state = test_config.setup()
-    >>> uses.UsesScript("crds.uses --files hst_cos.imap")()
+
+    >> uses.UsesScript("crds.uses --files hst_cos.imap")()
     hst.pmap
     hst_0001.pmap
     hst_0002.pmap

@@ -10,39 +10,35 @@ from __future__ import absolute_import
 
 import os
 import re
-from collections import namedtuple
 import copy
 
 # ============================================================================
 
-from crds import log, config, utils, timestamp, selectors
+from crds.core import log, config, utils, timestamp, selectors
+from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
+from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds import tables
 from crds import data_file
-from crds.exceptions import MissingKeywordError, IllegalKeywordError
-from crds.exceptions import RequiredConditionError
+
+from . import reftypes
+from . import generic_tpn
+from .generic_tpn import TpnInfo   # generic TpnInfo code
 
 # ============================================================================
 
-#
-# Only the first character of the field is stored, i.e. Header == H
-#
-# name = field identifier
-# keytype = (Header|Group|Column)
-# datatype = (Integer|Real|Logical|Double|Character)
-# presence = (Optional|Required)
-# values = [...]
-#
-TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
-
-# ----------------------------------------------------------------------------
 class Validator(object):
-    """Validator is an Abstract class which applies TpnInfo objects to reference files.
+    """Validator is an Abstract class that applies TpnInfo objects to reference files.  Each
+    Validator handles a single constraint defined in a .tpn file.
     """
     def __init__(self, info):
         self.info = info
         self.name = info.name
-        if self.info.presence not in ["R", "P", "E", "O", "W"]:
+        self._presence_condition_code = None
+
+        if not (self.info.presence in ["R", "P", "E", "O", "W"] or
+                self.conditionally_required):
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
+
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(
                 [val for val in info.values if not val.upper().startswith("NOT_")])
@@ -53,7 +49,7 @@ class Validator(object):
         """Prefix log.verbose() with standard info about this Validator.
         Unique message is in *args, **keys
         """
-        return log.verbose("File=" + repr(filename), 
+        return log.verbose("File=" + repr(os.path.basename(filename)),
                            "class=" + repr(self.__class__.__name__[:-len("Validator")]), 
                            "keyword=" + repr(self.name), 
                            "value=" + repr(value), 
@@ -69,19 +65,26 @@ class Validator(object):
 
     def __repr__(self):
         """Represent Validator instance as a string."""
-        return self.__class__.__name__ + "(" + repr(self.info) + ")"
+        return self.__class__.__name__ + repr(self.info) 
 
     def check(self, filename, header=None):
         """Pull the value(s) corresponding to this Validator out of it's
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
         """
-        if self.info.keytype == "H":
-            return self.check_header(filename, header)
-        elif self.info.keytype == "C":
+        if self.info.keytype == "C":
             return self.check_column(filename)
         elif self.info.keytype == "G":
             return self.check_group(filename)
+
+        if header is None:
+            header = data_file.get_header(filename)
+
+        if not self.is_applicable(header):
+            return True
+
+        if self.info.keytype == "H":
+            return self.check_header(filename, header)
         elif self.info.keytype == "X":
             return self.check_header(filename, header)
         else:
@@ -93,9 +96,8 @@ class Validator(object):
         for this Validator.
         """
         if value is None: # missing optional or excluded keyword
-            self.verbose(filename, value, "is optional or excluded.")
             return True
-        if self.condition is not None:
+        if self.condition is not None:  # verify type regardless of values.
             value = self.condition(value)
         if not (self._values or self._not_values):
             self.verbose(filename, value, "no .tpn values defined.")
@@ -103,18 +105,16 @@ class Validator(object):
         self._check_value(filename, value)
         # If no exception was raised, consider it validated successfully
         return True
-    
+
     def _check_value(self, filename, value):
         """_check_value is the core simple value checker."""
         raise NotImplementedError(
             "Validator is an abstract class.  Sub-class and define _check_value().")
     
-    def check_header(self, filename, header=None):
+    def check_header(self, filename, header):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
         """
-        if header is None:
-            header = data_file.get_header(filename)
         value = self._get_header_value(header)
         return self.check_value(filename, value)
 
@@ -158,10 +158,13 @@ class Validator(object):
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         elif self.info.presence in ["W"]:
             log.warning("Missing suggested keyword " + repr(self.name))
-        else:
+        elif self.info.presence in ["O"]:
             # sys.exc_clear()
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
             return # missing value is None, so let's be explicit about the return value
+        else:
+            raise TpnDefinitionError("Unexpected validator 'presence' value:",
+                                     log.srepr(self.info.presence))
 
     def __handle_excluded(self, value):
         """If this Validator's key is excluded,  raise an exception.  Otherwise
@@ -175,7 +178,35 @@ class Validator(object):
     def optional(self):
         """Return True IFF this parameter is optional."""
         return self.info.presence in ["O","W"]
-    
+
+    @property
+    def conditionally_required(self):
+        """Return True IFF this validator has a header expression defining when it is valid
+        instead of the classic single character values.   If it has an expression, make sure
+        it compiles now.
+        """
+        has_condition = generic_tpn.is_expression(self.info.presence)
+        if has_condition and not self._presence_condition_code:
+            self._presence_condition_code = compile(self.info.presence, repr(self.info), "eval")
+            return True
+        else:
+            return False
+
+    def is_applicable(self, header):
+        """Return True IFF the conditional presence expression for this validator,  not always
+        defined,  returns False indicating that the validator is not applicable to the situation
+        defined by `header`.
+        """
+        if self._presence_condition_code:
+            required = eval(self._presence_condition_code, header, header)
+            log.verbose("Validator", self.info, "is",
+                        "applicable" if required else "not applicable",
+                        "based on condition", self.info.presence,
+                        verbosity=70)
+            return required
+        else:
+            return True
+
     def get_required_copy(self):
         """Return a copy of this validator with self.presence overridden to R/required."""
         required = copy.deepcopy(self)
@@ -183,6 +214,8 @@ class Validator(object):
         idict["presence"] = "R"
         required.info = TpnInfo(*idict.values())
         return required
+    
+# ----------------------------------------------------------------------------
 
 class KeywordValidator(Validator):
     """Checks that a value is one of the literal TpnInfo values."""
@@ -206,6 +239,8 @@ class KeywordValidator(Validator):
         """Do a literal match of `value` to the disallowed values of this tpninfo."""
         return value in self._not_values
     
+# ----------------------------------------------------------------------------
+
 class RegexValidator(KeywordValidator):
     """Checks that a value matches TpnInfo values treated as regexes."""
     def _match_value(self, value):
@@ -248,14 +283,21 @@ class LogicalValidator(KeywordValidator):
 
 class NumericalValidator(KeywordValidator):
     """Check the value of a numerical keyword,  supporting range checking."""
-    def condition_values(self, values):
-        self.is_range = len(values) == 1 and ":" in values[0]
+
+    def __init__(self, info, *args, **keys):
+        self.is_range = (len(info.values) == 1) and (":" in info.values[0])
         if self.is_range:
-            smin, smax = values[0].split(":")
+            smin, smax = info.values[0].split(":")
             self.min, self.max = self.condition(smin), self.condition(smax)
+        else:
+            self.min = self.max = None
+        super(NumericalValidator, self).__init__(info, *args, **keys)
+
+    def condition_values(self, values):
+        if self.is_range:
             assert self.min != '*' and self.max != '*', \
                                "TPN error, range min/max conditioned to '*'"
-            values = None
+            values = [self.min, self.max]
         else:
             values = KeywordValidator.condition_values(self, values)
         return values
@@ -420,23 +462,31 @@ class FilenameValidator(KeywordValidator):
 
 class ExpressionValidator(Validator):
     """Value is an expression on the reference header that must evaluate to True."""
-    
-    def check_header(self, filename, header=None):
+
+    def __init__(self, info, *args, **keys):
+        super(ExpressionValidator, self).__init__(info, *args, **keys)
+        self._expr = info.values[0]
+        self._expr_code = compile(self._expr, repr(self.info), "eval")
+
+    def _check_value(self, *args, **keys):
+        """If this validator is inadvertantly executed... no point in failing.  Design
+        intent is to *only* execute check_header().
+        """
+        return True
+
+    def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
-        if header is None:
-            header = data_file.get_header(filename)
         header = data_file.convert_to_eval_header(header)
-        expr = self.info.values[0]
-        log.verbose("Checking", repr(filename), "for condition", repr(expr))
-        is_true = True
+        log.verbose("Checking", repr(os.path.basename(filename)), "for condition", repr(self._expr))
+        is_true = False
         with log.verbose_warning_on_exception(
-                "Failed evaluating condition expression", repr(expr)):
-            is_true = eval(expr, header, header)
+            "Failed evaluating condition expression", repr(self._expr)):
+            is_true = eval(self._expr_code, header, header)
         if not is_true:
             raise RequiredConditionError(
-                "Required condition", repr(expr), "is not satisfied.")
+                "Required condition", repr(self._expr), "failed to evaluate or is not satisfied.")
 
 # ----------------------------------------------------------------------------
 
@@ -466,15 +516,20 @@ def validator(info):
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
     return rval
+
 # ============================================================================
 
-def validators_by_typekey(key, observatory):
-    """Load and return the list of validators associated with reference type 
-    validator `key`.   Factored out because it is cached on parameters.
+def get_validators(observatory, refpath):
+    """Given `observatory` and a path to a reference file `refpath`,  load the
+    corresponding validators that define individual constraints that reference
+    should satisfy.
     """
+    types = reftypes.get_types_object(observatory)
     locator = utils.get_locator_module(observatory)
-    # Make and cache Validators for `filename`s reference file type.
-    validators = [validator(x) for x in locator.get_tpninfos(*key)]
-    log.verbose("Validators for", repr(key), ":\n", 
-                log.PP(validators), verbosity=60)
-    return validators
+    checkers = []
+    for key in types.reference_name_to_validator_keys(refpath):
+        validators_for_keys = [validator(x) for x in locator.get_tpninfos(*key)]
+        checkers.extend(validators_for_keys)
+    log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=60)
+    return checkers
+

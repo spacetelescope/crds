@@ -11,6 +11,6 @@
     'rmap_relevance': 'ALWAYS',
     'suffix': 'lfl',
     'text_descr': 'Low-order Flat Field Image',
-    'tpn': [("OBSTYPE == 'IMAGING'", 'stis_ilfl.tpn'), ("OBSTYPE == 'SPECTROSCOPIC'", 'stis_slfl.tpn')],
+    'tpn': 'stis_lfl.tpn',
     'unique_rowkeys': None,
 }

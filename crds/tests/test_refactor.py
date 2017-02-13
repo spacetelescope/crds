@@ -1,5 +1,5 @@
-"""This module contains doctests and unit tests which exercise some of the more
-complex features of the basic rmap infrastructure.
+"""This module contains doctests and unit tests which exercise refactoring
+code,  modules used to automatically update mappings.
 
 """
 

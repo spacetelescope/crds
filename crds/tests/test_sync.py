@@ -1,5 +1,5 @@
-"""This module contains doctests and unit tests which exercise some of the more
-complex features of the basic rmap infrastructure.
+"""This module contains doctests that exercise the crds.sync module used to update and manage
+a CRDS cache of rules and references.
 """
 
 from __future__ import division # confidence high

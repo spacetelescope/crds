@@ -11,21 +11,44 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 import os.path
-import gzip
 import re
+import glob
 
-from crds.core import log, rmap, config
+from crds.core import log, rmap, config, utils, timestamp
+from crds.certify import generic_tpn, validators
 from crds import data_file
 
 HERE = os.path.dirname(__file__) or "./"
 
 # =======================================================================
 
-def test():
-    """Run the module doctest_config."""
-    import doctest
-    from . import locate
-    return doctest.testmod(locate)
+# These two functions decouple the generic reference file certifier program 
+# from observatory-unique ways of specifying and caching Validator parameters.
+
+from crds.tobs import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
+
+mapping_validator_key = TYPES.mapping_validator_key
+get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
+get_item = TYPES.get_item
+suffix_to_filekind = TYPES.suffix_to_filekind
+filekind_to_suffix = TYPES.filekind_to_suffix
+
+# =============================================================================
+# Plugin-functions for this observatory,  accessed via locator.py
+
+HERE = os.path.dirname(__file__) or "."
+
+def tpn_path(tpn_file):
+    return os.path.join(HERE, "tpns", tpn_file)
+
+@utils.cached
+def get_tpninfos(tpn_file, refpath):
+    """Load the list of TPN_info tuples corresponding to *args from it's .tpn file.
+    Nominally args are (instrument, filekind),  but *args should be supported to 
+    handle *key for any key returned by reference_name_to_validator_key.   In particular,
+    for some subtypes,  *args will be (tpn_filename,).
+    """
+    return generic_tpn.get_classic_tpninfos(tpn_path(tpn_file))
 
 # =======================================================================
 
@@ -119,13 +142,13 @@ def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and 
     return (instrument, filekind).
     """
-    map = rmap.fetch_mapping(filename)
-    if map.filekind == "PIPELINE":
+    mapping = rmap.fetch_mapping(filename)
+    if mapping.filekind == "PIPELINE":
         result = "", ""
-    elif map.filekind == "INSTRUMENT":
-        result = map.instrument, ""
+    elif mapping.filekind == "INSTRUMENT":
+        result = mapping.instrument, ""
     else:
-        result = map.instrument, map.filekind
+        result = mapping.instrument, mapping.filekind
     return result
 
 def _get_fields(filename):
@@ -164,10 +187,6 @@ def get_reference_properties(filename):
         return decompose_newstyle_name(filename)
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
         pass
-    try:   # or maybe a recognizable HST legacy path/filename, fast
-        return ref_properties_from_cdbs_path(filename)
-    except AssertionError:
-        pass
     # If not, dig inside the FITS file, slow
     return ref_properties_from_header(filename)
 
@@ -175,7 +194,7 @@ def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
     """
     # For legacy files,  just use the root filename as the unique id
-    path, parts, ext = _get_fields(filename)
+    path, _parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
@@ -185,22 +204,6 @@ def ref_properties_from_header(filename):
 
 
     
-# =======================================================================
-
-# These two functions decouple the generic reference file certifier program 
-# from observatory-unique ways of specifying and caching Validator parameters.
-
-from crds.tobs import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS
-
-reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
-mapping_validator_key = TYPES.mapping_validator_key
-get_row_keys = TYPES.get_row_keys
-get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
-get_item = TYPES.get_item
-
-from crds.tobs.tpn import reference_name_to_tpn_text, reference_name_to_ld_tpn_text
-from crds.tobs.tpn import get_tpninfos, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
-
 # =======================================================================
 
 def header_to_reftypes(header):
@@ -284,28 +287,11 @@ def fits_to_parkeys(header):
 
 # ============================================================================
 
-HERE = os.path.dirname(__file__) or "."
-
-def load_all_type_constraints():
-    """Make sure that all HST .tpn files are loadable."""
-    from crds import certify
-    tpns = glob.glob(os.path.join(HERE, "tpns", "*.tpn"))
-    for tpn_path in tpns:
-        tpn_name = tpn_path.split("/")[-1]  # simply lost all patience with basename and path.split
-        log.verbose("Loading", repr(tpn_name))
-        certify.validators_by_typekey((tpn_name,), "tobs")
-
-# ============================================================================
-
 __all__ = [
     "INSTRUMENTS",
 
-    "reference_name_to_validator_key",
     "mapping_validator_key",
     "get_tpninfos",
-    "reference_name_to_tpn_text",
-    "reference_name_to_ld_tpn_text",
-    "load_all_type_constraints",
     "get_item",
 
     "get_env_prefix",
@@ -313,7 +299,6 @@ __all__ = [
     "locate_dir",
     "get_file_properties",
 
-    "get_row_keys",
     "get_row_keys_by_instrument",
     
     "fits_to_parkeys",
@@ -324,4 +309,12 @@ __all__ = [
 for name in __all__:
     print("checking api for", name)
     assert name in dir()
+
+# =======================================================================
+
+def test():
+    """Run the module doctest_config."""
+    import doctest
+    from . import locate
+    return doctest.testmod(locate)
 

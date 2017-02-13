@@ -1,5 +1,9 @@
-"""This module contains doctests and unit tests which exercise some of the more
-complex features of the basic rmap infrastructure.
+"""This module contains doctests and unit tests which exercise the module that
+builds on the crds.client web api and enhances it with fully developed cache
+semantics.  crds.client is largely decoupled from the core CRDS modules and
+focuses on JSONRPC calls and file downloads.   The heavy_client extends those
+primitive functions to provide higher level APIs that are dependent on the 
+core library to implement.
 """
 
 from __future__ import division # confidence high

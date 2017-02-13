@@ -11,3 +11,4 @@ META.INSTRUMENT.NAME        H   C   R                   FGS
 META.INSTRUMENT.DETECTOR    H   C   O                   GUIDER1,GUIDER2,ANY,N/A
 # META.EXPOSURE.READPATT      H   C   O                   ID,ACQ1,ACQ2,TRACK,FINEGUIDE,FGS60,FGS840,FGS7850,FGSRAPID,FGS,ANY,N/A
 # META.EXPOSURE.TYPE          H   C   O                   FGS_IMAGE,FGS_FOCUS,FGS_SKYFLAT,FGS_INTFLAT,FGS_DARK,ANY,N/A
+include nir_subarray_baseline.tpn

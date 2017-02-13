@@ -15,3 +15,4 @@ META.EXPOSURE.READPATT      H   C   O                   NIS,NISRAPID,ANY,N/A
 META.EXPOSURE.TYPE          H   C   O
 #                   NIS_IMAGE,NIS_TACQ,NIS_TACONFIRM,NIS_WFSS,NIS_SOSS,NIS_AMI,NIS_FOCUS,NIS_DARK,NIS_LAMP,ANY,N/A
 META.INSTRUMENT.FILTER      H   C   O
+include nir_subarray_baseline.tpn

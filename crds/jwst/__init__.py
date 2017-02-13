@@ -3,12 +3,13 @@ from __future__ import division
 from __future__ import absolute_import
 import os.path
 
-from crds.core import reftypes
+from crds.certify import reftypes
 
 HERE  = os.path.dirname(__file__) or "."
 
-TYPES = reftypes.from_package_file(__file__)
+TYPES = reftypes.from_package_file("jwst", __file__)
 
+OBSERVATORY = TYPES.observatory
 INSTRUMENTS = TYPES.instruments
 EXTENSIONS = TYPES.extensions
 TEXT_DESCR = TYPES.text_descr
