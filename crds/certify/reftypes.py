@@ -250,11 +250,13 @@ class TypeParameters(object):
             try:
                 tpnfile = self.unified_defs[instrument][filekind][field]
                 validator_key = (tpnfile, filename)
-                log.verbose("Adding validator key", repr(validator_key))
+                log.verbose("Adding validator key", repr(validator_key),
+                            verbosity=70)
                 results.append(validator_key)
             except Exception as exc:
                 log.verbose_warning("Can't find TPN key for", 
-                    (filename, instrument, filekind), ":", str(exc), verbosity=75)
+                    (filename, instrument, filekind), ":", str(exc),
+                                    verbosity=75)
         append_tpn_level(results, "all", "all")
         append_tpn_level(results, instrument, "all")
         append_tpn_level(results, "all", filekind)

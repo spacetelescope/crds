@@ -96,7 +96,6 @@ class Validator(object):
         for this Validator.
         """
         if value is None: # missing optional or excluded keyword
-            self.verbose(filename, value, "is optional or excluded.")
             return True
         if self.condition is not None:  # verify type regardless of values.
             value = self.condition(value)
@@ -480,7 +479,7 @@ class ExpressionValidator(Validator):
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
         header = data_file.convert_to_eval_header(header)
-        log.verbose("Checking", repr(filename), "for condition", repr(self._expr))
+        log.verbose("Checking", repr(os.path.basename(filename)), "for condition", repr(self._expr))
         is_true = False
         with log.verbose_warning_on_exception(
             "Failed evaluating condition expression", repr(self._expr)):
