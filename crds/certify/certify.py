@@ -11,6 +11,7 @@ from __future__ import absolute_import
 import os
 from collections import defaultdict
 import gc
+import re
 
 import numpy as np
 
@@ -514,8 +515,11 @@ class FitsCertifier(ReferenceCertifier):
                 log.warning(">>", line)
             else:
                 log.info(">>", line)
-        if err:
-            log.error("Errors detected by fitsverify.")
+        m = re.match("(\d+)\s+error\(s\)", output)
+        if m and m.groups()[0] != "0":
+            log.error("Errors indicated by fitsverify log output.")
+        elif err:
+            log.warning("Errors or warnings indicated by fitsverify exit status.")
 
 # ============================================================================
 
