@@ -11,8 +11,9 @@ setup_pars = {
         'crds.certify',
         'crds.client',
         'crds.core',
+        'crds.io',
         'crds.submit',
-
+        
         'crds.misc',
         'crds.refactoring',
 
@@ -28,6 +29,7 @@ setup_pars = {
         'crds.certify' : 'crds/certify',
         'crds.client' : 'crds/client',
         'crds.core' : 'crds/core',
+        'crds.io' : 'crds/io',
         'crds.submit' : 'crds/submit',
 
         'crds.misc' : 'crds/misc', 
