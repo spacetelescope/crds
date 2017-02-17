@@ -515,7 +515,7 @@ class FitsCertifier(ReferenceCertifier):
                 log.warning(">>", line)
             else:
                 log.info(">>", line)
-        m = re.match("(\d+)\s+error\(s\)", output)
+        m = re.search(r"(\d+)\s+error\(s\)", output)
         if m and m.groups()[0] != "0":
             log.error("Errors indicated by fitsverify log output.")
         elif err:
