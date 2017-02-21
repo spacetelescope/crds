@@ -291,19 +291,6 @@ def certify_jwst_invalid():
     >>> test_config.cleanup(old_state)
     """
 
-def certify_jwst_missing_optional_parkey():
-    """
-    >>> TestCertifyScript("crds.certify data/niriss_ref_photom_missing_parkey.fits --comparison-context jwst_0125.pmap")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/niriss_ref_photom_missing_parkey.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
-    CRDS - ERROR - instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_missing_parkey.fits' ::  Validation error : Error loading : [Errno 2] No such file or directory: 'data/niriss_ref_photom_missing_parkey.fits'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 1 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 3 infos
-    1
-    """
-
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
