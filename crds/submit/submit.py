@@ -129,6 +129,7 @@ this command line interface must be members of the CRDS operators group
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
+        self.ensure_ingest_exists(destination, host, path)
         total_size = utils.total_size(self.files)
 
         ingest_info = self.get_ingested_files()
@@ -152,6 +153,16 @@ this command line interface must be members of the CRDS operators group
         log.divider(func=log.verbose)
         stats.report()
         log.divider(char="=")
+
+    def ensure_ingest_exists(self, ingest, host, path):
+        """Ensure the destination directory for submitted files on the CRDS server exist, or create it."""
+        if ingest.startswith(socket.gethostname()):
+            utils.ensure_dir_exists(path, 0o770)
+        else:
+            output = pysh.out_err("ssh   $host    mkdir -p $path", trace_commands=log.get_verbose() >= 65)
+            log.verbose(output, verbosity=65)
+            output = pysh.out_err("ssh   $host    chmod 770 $path", trace_commands=log.get_verbose() >= 65)
+            log.verbose(output, verbosity=65)
     
     #def upload_file(self, name, path, destination):
     #    self.connection.upload_file('/upload/alt_new/', file=name)
@@ -217,7 +228,7 @@ this command line interface must be members of the CRDS operators group
             return output
         except Exception as exc:
             log.fatal_error("File transfer failed for: " + repr(name), "-->", repr(destination))
-
+            
     def wipe_files(self):
         """Copy self.files into the user's ingest directory on the CRDS server."""
         destination = self.submission_info.ingest_dir
