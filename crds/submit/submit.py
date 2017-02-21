@@ -129,7 +129,7 @@ this command line interface must be members of the CRDS operators group
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
-        self.ensure_ingest_exists(destination, host, path)
+        self.ensure_ingest_exists(host, path)
         total_size = utils.total_size(self.files)
 
         ingest_info = self.get_ingested_files()
@@ -154,16 +154,20 @@ this command line interface must be members of the CRDS operators group
         stats.report()
         log.divider(char="=")
 
-    def ensure_ingest_exists(self, ingest, host, path):
+    def ensure_ingest_exists(self, host, path):
         """Ensure the destination directory for submitted files on the CRDS server exist, or create it."""
-        if ingest.startswith(socket.gethostname()):
-            utils.ensure_dir_exists(path, 0o770)
+        self.possibly_remote_command(host, "mkdir -p " + path)
+        self.possibly_remote_command(host, "chmod 770 " + path)
+            
+    def possibly_remote_command(self, host, cmd, verbosity=65):
+        """If `host` is the localhost,  excecute `cmd` in subshell.  Otherwise execute `cmd` by ssh."""
+        if host.startswith(socket.gethostname()):
+            output = pysh.out_err(cmd, trace_commands=log.get_verbose() >= verbosity)
         else:
-            output = pysh.out_err("ssh   $host    mkdir -p $path", trace_commands=log.get_verbose() >= 65)
-            log.verbose(output, verbosity=65)
-            output = pysh.out_err("ssh   $host    chmod 770 $path", trace_commands=log.get_verbose() >= 65)
-            log.verbose(output, verbosity=65)
-    
+            output = pysh.out_err("ssh   ${host}    ${cmd}", trace_commands=log.get_verbose() >= verbosity)
+        if output:
+            log.verbose(output, verbosity=verbosity)
+   
     #def upload_file(self, name, path, destination):
     #    self.connection.upload_file('/upload/alt_new/', file=name)
     #    # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
