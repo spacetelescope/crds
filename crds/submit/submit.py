@@ -320,7 +320,7 @@ this command line interface must be members of the CRDS operators group
         if "--log-time" in sys.argv:
             extra_params = "--log-time"
         submission_monitor = monitor.MonitorScript("crds.monitor --key {} --poll {} {}".format(
-            self.jpoll_key, 3, extra_params))
+            self.jpoll_key, 3, extra_params), reset_log=False)
         return submission_monitor()
 
     def monitor_complete(self, monitor_future):
@@ -332,6 +332,7 @@ this command line interface must be members of the CRDS operators group
     def login(self):
         """Log in to the CRDS server using server user credentials."""
         log.info("Logging in aquiring lock.")
+        self.connection.warn_existing_lock()
         self.connection.login()
 
     def logout(self):

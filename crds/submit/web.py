@@ -63,6 +63,7 @@ class CrdsDjangoConnection(object):
         log.divider(func=log.verbose)
 
     def response_complete(self, args):
+        """Wait for an aysnchronous web response, do debug logging,  check for errors."""
         response = background.background_complete(args)
         self.dump_response("Response: ", response)
         self.check_error(response)
@@ -77,6 +78,7 @@ class CrdsDjangoConnection(object):
     
     @background.background
     def get_start(self, relative_url):
+        """Initiate a GET running in the background, do debug logging."""
         url = self.abs_url(relative_url)
         log_section("GET:", url, divider_name="GET: " + url.split("&")[0])
         return self.session.get(url)
@@ -88,6 +90,7 @@ class CrdsDjangoConnection(object):
 
     @background.background
     def post_start(self, relative_url, *post_dicts, **post_vars):
+        """Initiate a POST running in the background, do debug logging."""
         url = self.abs_url(relative_url)
         vars = utils.combine_dicts(*post_dicts, **post_vars)
         log_section("POST:", vars, divider_name="POST: " + url)
@@ -115,6 +118,17 @@ class CrdsDjangoConnection(object):
             post_vars['csrfmiddlewaretoken'] = csrf_values[0]
         return self.post_start(relative_url, *post_dicts, **post_vars)
 
+    """
+    {'time_remaining': '3:57:58', 'user': 'jmiller_unpriv', 'created_on': '2017-02-23 16:12:55', 'type': 'instrument', 'is_expired': False, 'status': 'ok', 'name': 'miri'}
+    """
+    def warn_existing_lock(self):
+        """Issue a warning if self.locked_instrument is already locked."""
+        response = self.get("/lock_status/"+self.username+"/")
+        log.verbose("lock_status:", response)
+        json_dict = utils.Struct(response.json())
+        if (json_dict.name and (not json_dict.is_expired) and (json_dict.type == "instrument") and (json_dict.user == self.username)):
+            log.warning("User", repr(self.username), "has already locked", repr(json_dict.name), ".  Unlocking, may lead to collisions.")
+
     def login(self, next="/"):
         """Login to the CRDS website and proceed to relative url `next`."""
         response = self.repost(
@@ -136,10 +150,6 @@ class CrdsDjangoConnection(object):
                           "Error logging into CRDS server:", fatal=True)
         self._check_error(reseponse, '//div[@id="error_message"]',
                           "Error logging into CRDS server:", fatal=True)
-
-    """
-    CRDS - ERROR -  CRDS server error: User 'jmiller' has already locked instrument 'miri'.
-    """
 
     def _check_error(self, response, xpath_spec, error_prefix, fatal=False):
         """Extract the `xpath_spec` text from `response`,  if present call fatal_error() with
