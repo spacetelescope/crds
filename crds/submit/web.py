@@ -132,9 +132,16 @@ class CrdsDjangoConnection(object):
 
     def check_login(self, reseponse):
         """Call fatal_error() if response contains an error_login <div>."""
-        self._check_error(reseponse, '//div[@id="error_login"]', "Error logging into CRDS server:")
+        self._check_error(reseponse, '//div[@id="error_login"]',
+                          "Error logging into CRDS server:", fatal=True)
+        self._check_error(reseponse, '//div[@id="error_message"]',
+                          "Error logging into CRDS server:", fatal=True)
 
-    def _check_error(self, response, xpath_spec, error_prefix):
+    """
+    CRDS - ERROR -  CRDS server error: User 'jmiller' has already locked instrument 'miri'.
+    """
+
+    def _check_error(self, response, xpath_spec, error_prefix, fatal=False):
         """Extract the `xpath_spec` text from `response`,  if present call fatal_error() with
         `error_prefix` and the response `xpath_spec` text.
         """
@@ -143,7 +150,10 @@ class CrdsDjangoConnection(object):
         if error_message:
             if error_message.startswith("ERROR: "):
                 error_message = error_message[len("ERROR: "):]
-            log.error(error_prefix, error_message)
+            if fatal:
+                log.fatal_error(error_prefix, error_message)
+            else:
+                log.error(error_prefix, error_message)
 
     def logout(self):
         """Login to the CRDS website and proceed to relative url `next`."""
