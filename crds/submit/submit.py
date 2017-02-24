@@ -129,6 +129,7 @@ this command line interface must be members of the CRDS operators group
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
+        self.ensure_ingest_exists(host, path)
         total_size = utils.total_size(self.files)
 
         ingest_info = self.get_ingested_files()
@@ -152,7 +153,21 @@ this command line interface must be members of the CRDS operators group
         log.divider(func=log.verbose)
         stats.report()
         log.divider(char="=")
-    
+
+    def ensure_ingest_exists(self, host, path):
+        """Ensure the destination directory for submitted files on the CRDS server exist, or create it."""
+        self.possibly_remote_command(host, "mkdir -p " + path)
+        self.possibly_remote_command(host, "chmod 770 " + path)
+            
+    def possibly_remote_command(self, host, cmd, verbosity=65):
+        """If `host` is the localhost,  excecute `cmd` in subshell.  Otherwise execute `cmd` by ssh."""
+        if host.startswith(socket.gethostname()):
+            output = pysh.out_err(cmd, trace_commands=log.get_verbose() >= verbosity)
+        else:
+            output = pysh.out_err("ssh   ${host}    ${cmd}", trace_commands=log.get_verbose() >= verbosity)
+        if output:
+            log.verbose(output, verbosity=verbosity)
+   
     #def upload_file(self, name, path, destination):
     #    self.connection.upload_file('/upload/alt_new/', file=name)
     #    # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
@@ -217,7 +232,7 @@ this command line interface must be members of the CRDS operators group
             return output
         except Exception as exc:
             log.fatal_error("File transfer failed for: " + repr(name), "-->", repr(destination))
-
+            
     def wipe_files(self):
         """Copy self.files into the user's ingest directory on the CRDS server."""
         destination = self.submission_info.ingest_dir
@@ -305,7 +320,7 @@ this command line interface must be members of the CRDS operators group
         if "--log-time" in sys.argv:
             extra_params = "--log-time"
         submission_monitor = monitor.MonitorScript("crds.monitor --key {} --poll {} {}".format(
-            self.jpoll_key, 3, extra_params))
+            self.jpoll_key, 3, extra_params), reset_log=False)
         return submission_monitor()
 
     def monitor_complete(self, monitor_future):
@@ -317,6 +332,7 @@ this command line interface must be members of the CRDS operators group
     def login(self):
         """Log in to the CRDS server using server user credentials."""
         log.info("Logging in aquiring lock.")
+        self.connection.warn_existing_lock()
         self.connection.login()
 
     def logout(self):
