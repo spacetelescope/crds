@@ -56,22 +56,33 @@ def _request_id():
 
 class CheckingProxy(object):
     """CheckingProxy converts calls to undefined methods into JSON RPC service 
-    calls.   If the JSON rpc returns an error,  CheckingProxy raises a 
+    calls bindings.   If the JSON rpc returns an error,  CheckingProxy raises a 
     ServiceError exception containing the error's message.
     
     XXX NOTE: Always underscore new methods or you may hide a real JSONRPC method
     which also appears in the proxy object's namespace with the same name.
     
     """
+    def __init__(self, service_url, version='1.0'):
+        self.__version = str(version)
+        self.__service_url = service_url
+
+    def __getattr__(self, name):
+        """Return a callable corresponding to JSONRPC method `name`."""
+        return ServiceCallBinding(self.__service_url, name, self.__version)
+
+    def __repr__(self):
+        return self.__class__.__name__ + "(url='%s', version='%s')" % \
+            (self.__service_url, self.__version)
+        
+class ServiceCallBinding(object):
+    """When called,  ServiceCallBinding issues a JSONRPC call to the associated
+    service URL.
+    """
     def __init__(self, service_url, service_name=None, version='1.0'):
         self.__version = str(version)
         self.__service_url = service_url
         self.__service_name = service_name
-
-    def __getattr__(self, name):
-        if self.__service_name != None:
-            name = "%s.%s" % (self.__service_name, name)
-        return CheckingProxy(self.__service_url, name, self.__version)
 
     def __repr__(self):
         return self.__class__.__name__ + "(url='%s', method='%s')" % \
@@ -124,8 +135,6 @@ class CheckingProxy(object):
         if not isinstance(parameters, bytes):
             parameters = parameters.encode("utf-8")
         try:
-            # context = ssl.create_default_context()
-            # channel = urlopen(url, parameters, context=context)
             channel = python23.urlopen(url, parameters)
             return channel.read().decode("utf-8")
         except Exception as exc:
