@@ -136,7 +136,7 @@ def dt_diff_fits_diff():
      a: data/hst_acs_biasfile_0001.fits
      b: data/hst_acs_biasfile_0002.fits
      Maximum number of different data values to be reported: 10
-     Data comparison level: 0.0
+     Relative tolerance: 0.0, Absolute tolerance: 0.0
     <BLANKLINE>
     Primary HDU:
     <BLANKLINE>
@@ -169,7 +169,7 @@ def dt_diff_rmap_primitive_diffs():
      a: data/hst_acs_biasfile_0001.fits
      b: data/hst_acs_biasfile_0002.fits
      Maximum number of different data values to be reported: 10
-     Data comparison level: 0.0
+     Relative tolerance: 0.0, Absolute tolerance: 0.0
     <BLANKLINE>
     Primary HDU:
     <BLANKLINE>
@@ -196,6 +196,7 @@ def dt_diff_rmap_primitive_diffs():
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     1
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -238,22 +239,37 @@ def dt_diff_row_change():
     >>> DiffScript("crds.diff data/test-source.fits data/test-change-row1-valueLeft.fits")()  #doctest: +ELLIPSIS
     <BLANKLINE>
      fitsdiff: ...
-     a: data/hst_acs_biasfile_0001.fits
-     b: data/hst_acs_biasfile_0002.fits
+     a: data/test-source.fits
+     b: data/test-change-row1-valueLeft.fits
      Maximum number of different data values to be reported: 10
-     Data comparison level: 0.0
+     Relative tolerance: 0.0, Absolute tolerance: 0.0
     <BLANKLINE>
-    Primary HDU:
+    Extension HDU 1:
     <BLANKLINE>
-       Headers contain differences:
-         Extra keyword 'ADD_1'  in a: 'added to hst_acs_biasfile_0001.fits'
-         Extra keyword 'ADD_2'  in b: 'added to hst_acs_biasfile_0002.fits'
-         Keyword DIFF_12  has different values:
-            a> value in 1
-             ?          ^
-            b> value in 2
-             ?          ^
+       Data contains differences:
+         Column valueLeft data differs in row 1:
+            a> 5748
+            b> -1
+         1 different table data element(s) found (2.22% different).
     <BLANKLINE>
+     Row differences for HDU extension #1
+    <BLANKLINE>
+        Summary:
+            a rows 1-1 differ from b rows 1-1
+    <BLANKLINE>
+        Row difference, unified diff format:
+            --- Table A
+    <BLANKLINE>
+            +++ Table B
+    <BLANKLINE>
+            @@ -1,5 +1,5 @@
+    <BLANKLINE>
+             'yes', 'yes', 2988, -2779.0352, 'coquille'
+            -'yes', 'no', 5748, 6357.9727, 'ferly'
+            +'yes', 'no', -1, 6357.9727, 'ferly'
+             'yes', 'maybe', 9735, -9132.5322, 'misreliance'
+             'no', 'yes', 425, -2689.2646, 'ogeed'
+             'no', 'no', 8989, 9870.0254, 'readmittance'
     <BLANKLINE>
     1
 
@@ -274,7 +290,7 @@ def dt_diff_rmap_primitive_diffs():
      a: data/hst_acs_biasfile_0001.fits
      b: data/hst_acs_biasfile_0002.fits
      Maximum number of different data values to be reported: 10
-     Data comparison level: 0.0
+     Relative tolerance: 0.0, Absolute tolerance: 0.0
     <BLANKLINE>
     Primary HDU:
     <BLANKLINE>
@@ -301,6 +317,7 @@ def dt_diff_rmap_primitive_diffs():
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     1
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -345,7 +362,7 @@ def dt_diff_row_change():
      a: data/test-source.fits
      b: data/test-change-row1-valueLeft.fits
      Maximum number of different data values to be reported: 10
-     Data comparison level: 0.0
+     Relative tolerance: 0.0, Absolute tolerance: 0.0
     <BLANKLINE>
     Extension HDU 1:
     <BLANKLINE>
@@ -375,6 +392,7 @@ def dt_diff_row_change():
              'no', 'no', 8989, 9870.0254, 'readmittance'
     <BLANKLINE>
     1
+
     >>> test_config.cleanup(old_state)
     """
     
