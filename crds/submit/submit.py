@@ -182,7 +182,7 @@ this command line interface must be members of the CRDS operators group
             if ingested not in submitted_basenames:
                 log.fatal_error(
                     "Non-submitted file", log.srepr(ingested), 
-                    "is already in the CRDS server's ingest directory.  Delete it (--wipe-files?) or submit it.")
+                    "is already in the CRDS server's ingest directory.  Delete it (--wipe-existing-files?) or submit it.")
 
     def keep_existing_files(self, ingest_info, files):
         """Keep files which have already been copied and have the correct server side
