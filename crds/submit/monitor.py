@@ -13,7 +13,7 @@ import time
 
 import numpy as np
 
-from crds.core import exceptions, log, cmdline
+from crds.core import exceptions, python23, log, cmdline
 from crds.core.log import srepr
 from crds.client import api
 
@@ -75,7 +75,8 @@ polls the server for new messages at some periodic rate in seconds:
         """Format tuple of message `params` in a standardized way for messages 
         coming from the remote process being monitored.
         """
-        return log.format(">>", *params).strip()
+        text = python23.unescape(" ".join(params))
+        return log.format(">>", text).strip()
 
     def handle_log_message(self, message):
         """Early API has only one message format,  "log_message".  Issue message info
@@ -96,7 +97,7 @@ polls the server for new messages at some periodic rate in seconds:
         if status == 0:
             log.info(self.format_remote("COMPLETED:", result))
         elif status == 1:
-            log.error(self.format_remote("FAILED:", result))
+            log.fatal_error(self.format_remote("FAILED:", result))
         elif status == 2:
             log.error(self.format_remote("CANCELLED:", result))
         else:
