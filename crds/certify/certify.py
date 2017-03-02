@@ -515,11 +515,17 @@ class FitsCertifier(ReferenceCertifier):
                 log.warning(">>", line)
             else:
                 log.info(">>", line)
-        m = re.search(r"(\d+)\s+error\(s\)", output)
-        if m and m.groups()[0] != "0":
-            log.error("Errors indicated by fitsverify log output.")
-        elif err:
-            log.warning("Errors or warnings indicated by fitsverify exit status.")
+        grade_fitsverify_output(err, output)
+
+def grade_fitsverify_output(status, output):
+    """Issue log error or warning messages based on the exit status and output
+    returned by fitsverify.
+    """
+    m = re.search(r"(\d+)\s+error\(s\)", output)
+    if m and m.groups()[0] != "0" or "checksum is not" in output:
+        log.error("Errors or checksum warnings in fitsverify log output.")
+    elif status:
+        log.warning("Errors or warnings indicated by fitsverify exit status.")
 
 # ============================================================================
 

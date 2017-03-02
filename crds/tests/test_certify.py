@@ -51,6 +51,165 @@ def certify_truncated_file():
     0
     """
 
+def certify_bad_checksum():
+    """
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify")()
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    CRDS - INFO -  FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
+    CRDS - INFO -  Running fitsverify.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
+    CRDS - INFO -  >>               --------------------------------              
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> File: data/s7g1700gl_dead_bad_xsum.fits
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> 2 Header-Data Units in this file.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  23 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Null data array; NAXIS = 0 
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
+    CRDS - INFO -  >>  
+    CRDS - WARNING -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    CRDS - WARNING -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    CRDS - ERROR -  >> *** Error:   checking data fill: Data fill area invalid
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  31 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    (3 columns x 10 rows)
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Col# Name (Units)       Format
+    CRDS - INFO -  >>    1 SEGMENT              4A        
+    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
+    CRDS - INFO -  >>    3 LIVETIME             D         
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
+    CRDS - INFO -  >>  1                          Primary Array    0         0     
+    CRDS - INFO -  >>  2                          Binary Table     2         1     
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> **** Verification found 2 warning(s) and 1 error(s). ****
+    CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  2 errors
+    CRDS - INFO -  4 warnings
+    CRDS - INFO -  39 infos
+    2
+    """
+
+def certify_good_checksum():
+    """
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_good_xsum.fits --run-fitsverify")()
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    CRDS - INFO -  FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
+    CRDS - INFO -  Running fitsverify.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
+    CRDS - INFO -  >>               --------------------------------              
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> File: data/s7g1700gl_dead_good_xsum.fits
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> 2 Header-Data Units in this file.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  23 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Null data array; NAXIS = 0 
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  31 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    (3 columns x 10 rows)
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Col# Name (Units)       Format
+    CRDS - INFO -  >>    1 SEGMENT              4A        
+    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
+    CRDS - INFO -  >>    3 LIVETIME             D         
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
+    CRDS - INFO -  >>  1                          Primary Array    0         0     
+    CRDS - INFO -  >>  2                          Binary Table     0         0     
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  38 infos
+    0
+    """
+
+GRADE_FITSVERIFY = """
+    CRDS - INFO -  Running fitsverify.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
+    CRDS - INFO -  >>               --------------------------------              
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> File: ./s7g1700gl_dead_bad_xsum.fits
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> 2 Header-Data Units in this file.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  23 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Null data array; NAXIS = 0 
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
+    CRDS - INFO -  >>  
+    CRDS - WARNING -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    CRDS - WARNING -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  31 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    (3 columns x 10 rows)
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Col# Name (Units)       Format
+    CRDS - INFO -  >>    1 SEGMENT              4A        
+    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
+    CRDS - INFO -  >>    3 LIVETIME             D         
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
+    CRDS - INFO -  >>  1                          Primary Array    0         0     
+    CRDS - INFO -  >>  2                          Binary Table     2         1     
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> **** Verification found 2 warning(s) and 0 error(s). ****
+"""
+    
+def certify_grade_fitsverify():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+
+    >>> certify.grade_fitsverify_output(0, GRADE_FITSVERIFY)
+    CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
+
+    >>> certify.grade_fitsverify_output(1, GRADE_FITSVERIFY)
+    CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
+
+    >>> certify.grade_fitsverify_output(0, "")
+
+    >>> certify.grade_fitsverify_output(1, "")
+    CRDS - WARNING -  Errors or warnings indicated by fitsverify exit status.
+
+    >>> test_config.cleanup(old_state)
+    """
+
 def certify_dump_provenance_fits():
     """
     >>> TestCertifyScript("crds.certify data/s7g1700gl_dead.fits --dump-provenance --comparison-context hst.pmap")()

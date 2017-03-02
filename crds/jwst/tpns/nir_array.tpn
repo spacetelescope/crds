@@ -1,0 +1,4 @@
+SCI_ARRAY       A           A         R             ImageHDU,(2048;2048),float64
+ERR_ARRAY       A           A         R             ImageHDU,(2048;2048),float64
+DQ_ARRAY        A           A         R             ImageHDU,(2048;2048),uint8
+DQ_DEF_ARRAY    A           A         R             BinTableHDU,([1-9]+[01-9]+;4),[J;J;40A;80A]
