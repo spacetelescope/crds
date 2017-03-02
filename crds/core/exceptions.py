@@ -165,6 +165,9 @@ class JsonFormatError(FileFormatError):
 class YamlFormatError(FileFormatError):
     """What should be valid YAML didn't parse / load."""
 
+class UnsupportedFileOpError(CrdsError, NotImplementedError):
+    """In CRDS,  some function is not supported for a particular file format."""
+    
 # -------------------------------------------------------------------------------------------
 
 class CertifyError(CrdsError):

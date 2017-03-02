@@ -689,7 +689,7 @@ def get_certifier_class(original_name, filepath):
         "geis" : ReferenceCertifier,
         "unknown" : UnknownCertifier,
     }
-    filetype = data_file.get_filetype(original_name, filepath)
+    filetype = data_file.get_filetype(filepath, original_name)
     klass = klasses.get(filetype, UnknownCertifier)
     return filetype, klass
         
