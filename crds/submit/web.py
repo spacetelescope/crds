@@ -121,13 +121,14 @@ class CrdsDjangoConnection(object):
     """
     {'time_remaining': '3:57:58', 'user': 'jmiller_unpriv', 'created_on': '2017-02-23 16:12:55', 'type': 'instrument', 'is_expired': False, 'status': 'ok', 'name': 'miri'}
     """
-    def warn_existing_lock(self):
+    def fail_if_existing_lock(self):
         """Issue a warning if self.locked_instrument is already locked."""
         response = self.get("/lock_status/"+self.username+"/")
         log.verbose("lock_status:", response)
         json_dict = utils.Struct(response.json())
         if (json_dict.name and (not json_dict.is_expired) and (json_dict.type == "instrument") and (json_dict.user == self.username)):
-            log.warning("User", repr(self.username), "has already locked", repr(json_dict.name), ".  Unlocking, may lead to collisions.")
+            log.fatal_error("User", repr(self.username), "has already locked", repr(json_dict.name),
+                            ".  Failing to avert collisions.  User --logout or logout on the website to bypass.")
 
     def login(self, next="/"):
         """Login to the CRDS website and proceed to relative url `next`."""
