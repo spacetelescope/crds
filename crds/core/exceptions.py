@@ -183,10 +183,13 @@ class IllegalKeywordError(CertifyError):
     """A keyword which should not be defined was present."""
 
 class InvalidFormatError(CertifyError):
-    """The given file was not loadable."""
+    """The given file was not load-able."""
 
 class TpnDefinitionError(CertifyError):
     """Something was wrong with a .tpn constraint."""
+
+class MissingTpnIncludeError(CertifyError):
+    """Any .tpn include files must exist or it's an error.  This is in contrast to other speculative .tpn loads."""
 
 class TypeSetupError(CertifyError):
     """An error occured while trying to locate file constraints and row mode variables."""

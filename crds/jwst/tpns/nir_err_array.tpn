@@ -10,14 +10,14 @@
 # DQ        A           I         S             IMAGE,<=,(2048;2048),uint8
 # DQ_DE     A           T         R             TABLE,([1-9]+[01-9]+;4),[J;J;40A;80A]
 
-SCI       A           X         F             (META_SUBARRAY_XSTART==1)
-SCI       A           X         F             (META_SUBARRAY_YSTART==1)
-SCI       A           X         F             (SCI_ARRAY.SHAPE[0]==2048)
-SCI       A           X         F             (SCI_ARRAY.SHAPE[1]==2048)
+ERR       A           X         F             (META_SUBARRAY_XSTART==1)
+ERR       A           X         F             (META_SUBARRAY_YSTART==1)
+ERR       A           X         F             (ERR_ARRAY.SHAPE[0]==2048)
+ERR       A           X         F             (ERR_ARRAY.SHAPE[1]==2048)
 
-SCI       A           X         S             (SCI_ARRAY.SHAPE[0]<=2048)
-SCI       A           X         S             (SCI_ARRAY.SHAPE[1]<=2048)
-SCI       A           X         S             (SCI_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
-SCI       A           X         S             (SCI_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
+ERR       A           X         S             (ERR_ARRAY.SHAPE[0]<=2048)
+ERR       A           X         S             (ERR_ARRAY.SHAPE[1]<=2048)
+ERR       A           X         S             (ERR_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
+ERR       A           X         S             (ERR_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
 
 

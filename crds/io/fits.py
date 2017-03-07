@@ -109,9 +109,9 @@ class FitsFile(AbstractFile):
             "BINTABLEHDU" : "TABLE", 
         }.get(class_name.upper(), "UNKNOWN")
         return utils.Struct( 
-                    SHAPE = shape,
+                    SHAPE = shape if generic_class == "IMAGE" else shape.replace(" ",""),
                     KIND = generic_class,
-                    DATA_TYPE = typespec,
+                    DATA_TYPE = typespec if generic_class == "IMAGE" else typespec.replace(" ","").replace(",",";"),
                     EXTENSION = i,
                 )
     
@@ -121,5 +121,5 @@ class FitsFile(AbstractFile):
             for (i, hdu) in enumerate(hdulist):
                 if hdu.name == array_name:
                     return i, hdu
-        raise exceptions.MissingArrayError("Array", repr(array_name), "not found in", repr(self.filename))
+        raise exceptions.MissingArrayError("Array", repr(array_name), "not found in", repr(self.filepath))
 

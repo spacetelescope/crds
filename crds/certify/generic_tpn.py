@@ -54,7 +54,7 @@ import collections
 
 # ============================================================================
 
-from crds.core import log, utils
+from crds.core import log, utils, exceptions
 
 # ============================================================================
 
@@ -169,6 +169,8 @@ def load_tpn_lines(fname):
             if line.startswith("include"):
                 include = line.split(" ")[1]
                 fname2 = os.path.join(dirname, include)
+                if not os.path.exists(fname2):
+                    exceptions.MissingTpnIncludeError("Included .tpn file", repr(include), "cannot be found.")
                 lines += load_tpn_lines(fname2)
                 continue
             if append:

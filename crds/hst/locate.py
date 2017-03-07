@@ -430,7 +430,12 @@ def ref_properties_from_header(filename):
         try:
             filetype = header["CDBSFILE"].lower()
         except KeyError:
-            raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
+            observatory = header.get("TELESCOP", header.get("TELESCOPE", None))
+            if observatory and observatory.upper() != "HST":
+                raise CrdsError("CRDS is configured for 'HST' but file", repr(os.path.basename(filename)),
+                                "is for the", repr(observatory), "telescope.  Reconfigure CRDS_PATH or CRDS_SEVER_URL.")
+            else:
+                raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
     filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
     try:
         filekind = TYPES.filetype_to_filekind(instrument, filetype)
