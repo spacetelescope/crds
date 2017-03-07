@@ -98,9 +98,14 @@ class Certifier(object):
         """
         # Get the cache key for this filetype.
         checkers = validators.get_validators(self.observatory, self.filename)
-        checkers = self.set_rmap_parkeys_to_required(checkers) 
+        checkers = self.set_rmap_parkeys_to_required(checkers)
         return checkers
-    
+
+    @property
+    def array_validators(self):
+        """Return the list of Validator objects that apply to arrays."""
+        return [checker for checker in self.validators if checker.info.keytype == "A"]
+
     def set_rmap_parkeys_to_required(self, checkers):
         """Mutate copies of `checkers` so that any specified by the rmap parkey are required."""
         parkeys = set(self.get_rmap_parkeys())
@@ -162,39 +167,57 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
-        with log.augment_exception("Error loading", exception_class=InvalidFormatError):
-            self.header = self.load()
         with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
             self.complex_init()
-        self.run_validators()
+        with log.augment_exception("Error loading", exception_class=InvalidFormatError):
+            self.header = self.load()
+        for checker in self.validators:
+            with self.error_on_exception("Checking", repr(checker.info.name)):
+                log.verbose("Checking", checker, verbosity=70)
+                checker.check(self.filename, self.header)                
         if self.mode_columns:
             self.certify_reference_modes()
         if self._dump_provenance_flag:
             self.dump_provenance()
     
-    def run_validators(self):
-        """Check parameter values,  column and non-column.
-
-        If a validator is conditionally required, only check it if is applicable to this header/file.
-        """
-        for checker in self.validators:
-            with self.error_on_exception("Checking", repr(checker.info.name)):
-                log.verbose("Checking", checker, verbosity=70)
-                checker.check(self.filename, self.header)
-                
     def load(self):
-        """Load and parse header from self.filename"""
+        """Load and parse header from self.filename."""
         header = data_file.get_header(self.filename, observatory=self.observatory, original_name=self.original_name)
+        header = self.map_reference_keywords_to_dataset_keywords(header)
+        self.cross_strap_instrument_keywords(header)
+        self.add_array_keywords(header)
+        return header
+    
+    def map_reference_keywords_to_dataset_keywords(self, header):
+        """Based on the rmap corresponding to this reference filename a`header`,  map keywords
+        in `header` from the names used in reference files to the corresponding names matched in
+        datasets.   Returnes new `header`.
+        """
         if self.context:
-            r = None
+            rmapping = None
             with log.verbose_warning_on_exception("No corresponding rmap"):
-                r = self.get_corresponding_rmap()
-            if r:
+                rmapping = self.get_corresponding_rmap()
+            if rmapping:
                 with self.error_on_exception("Error mapping reference names and values to dataset names and values"):
-                    header = r.locate.reference_keys_to_dataset_keys(r, header)
+                    header = rmapping.locate.reference_keys_to_dataset_keys(rmapping, header)
+        return header
+    
+    def cross_strap_instrument_keywords(self, header):
+        """Add all variations of the instrument keyword to `header` based on some variation of
+        instrument name defined in `header`.   Mutates `header`.
+        """
         instr = utils.header_to_instrument(header)
         for key in crds.INSTRUMENT_KEYWORDS:
             header[key] = instr
+
+    def add_array_keywords(self, header):
+        """Add synthetic array keywords based on properties of the arrays mentioned in
+        array validators to header.   Muates `header`.
+        """
+        for checker in self.array_validators:
+            array_name = checker.name + "_ARRAY"
+            if array_name not in header:
+                header[array_name] = data_file.get_array_properties(self.filename, checker.name)
         return header
 
     def dump_provenance(self):
@@ -470,7 +493,7 @@ class FitsCertifier(ReferenceCertifier):
             if status == 0:
                 log.verbose("fitsverify enabled and installled at", repr(out))
             else:
-                log.warning("External fitsverify program (cfitsio) is enabled but not found on PATH.")
+                log.warning("External fitsverify program is enabled but not found on PATH.")
                 self.run_fitsverify = False
 
     def load(self):

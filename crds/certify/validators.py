@@ -35,7 +35,7 @@ class Validator(object):
         self.name = info.name
         self._presence_condition_code = None
 
-        if not (self.info.presence in ["R", "P", "E", "O", "W"] or
+        if not (self.info.presence in ["R", "P", "E", "O", "W", "F", "S"] or
                 self.conditionally_required):
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
 
@@ -72,20 +72,17 @@ class Validator(object):
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
         """
-        if self.info.keytype == "C":
-            return self.check_column(filename)
-        elif self.info.keytype == "G":
-            return self.check_group(filename)
-
         if header is None:
             header = data_file.get_header(filename)
 
         if not self.is_applicable(header):
             return True
 
-        if self.info.keytype == "H":
-            return self.check_header(filename, header)
-        elif self.info.keytype == "X":
+        if self.info.keytype == "C":
+            return self.check_column(filename)
+        elif self.info.keytype == "G":
+            return self.check_group(filename)
+        elif self.info.keytype in ["H","X","A"]:
             return self.check_header(filename, header)
         else:
             raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) + 
@@ -204,7 +201,11 @@ class Validator(object):
                         "based on condition", self.info.presence,
                         verbosity=70)
             return required
-        else:
+        elif self.info.presence == "F": # IF_FULL_FRAME
+            return header.get("SUBARRAY", "UNDEFINED") in ["FULL","GENERIC"]
+        elif self.info.presence == "S": # IF_SUBARRAY        
+            return header.get("SUBARRAY", "UNDEFINED") not in ["FULL", "GENERIC", "N/A", "UNDEFINED"]
+        else:    
             return True
 
     def get_required_copy(self):
@@ -480,13 +481,12 @@ class ExpressionValidator(Validator):
         """
         header = data_file.convert_to_eval_header(header)
         log.verbose("Checking", repr(os.path.basename(filename)), "for condition", repr(self._expr))
-        is_true = False
+        is_true = True
         with log.verbose_warning_on_exception(
             "Failed evaluating condition expression", repr(self._expr)):
             is_true = eval(self._expr_code, header, header)
         if not is_true:
-            raise RequiredConditionError(
-                "Required condition", repr(self._expr), "failed to evaluate or is not satisfied.")
+            raise RequiredConditionError("Condition", repr(self.info), "is not satisfied.")
 
 # ----------------------------------------------------------------------------
 
@@ -524,10 +524,12 @@ def get_validators(observatory, refpath):
     corresponding validators that define individual constraints that reference
     should satisfy.
     """
-    types = reftypes.get_types_object(observatory)
-    locator = utils.get_locator_module(observatory)
+    types = reftypes.get_types_object(observatory)   # pluggable by observatory
+    locator = utils.get_locator_module(observatory)  # pluggable by observatory
     checkers = []
+    # Loosely, validator keys are something like (tpn_file, refpath)
     for key in types.reference_name_to_validator_keys(refpath):
+        # Loosely this produces a Validator subclass instance for every TpnInfo corresponding to `key`
         validators_for_keys = [validator(x) for x in locator.get_tpninfos(*key)]
         checkers.extend(validators_for_keys)
     log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=60)

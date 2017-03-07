@@ -24,7 +24,7 @@ from crds.core import config, utils, constants
 def file_factory(filepath, original_name=None, observatory=None):
     """Based on parameters,  construct a file object of the appropriate
     class.  Unspecified parameters determined from `filepath` as possible.
-    
+
     Where possible file extension will be used to determine file type.
     
     filepath        must be a viable path to an existing reference

@@ -1,1 +1,5 @@
 include nir_subarray.tpn
+include nir_sci_array.tpn
+
+SCI    A      X    R   (SCI_ARRAY.DATA_TYPE=='float32')
+

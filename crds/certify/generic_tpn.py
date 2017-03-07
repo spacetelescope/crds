@@ -84,6 +84,8 @@ class TpnInfo(_TpnInfo):
             "H" : "HEADER",
             "C" : "COLUMN",
             "G" : "GROUP",
+            "A" : "ARRAY",
+            "X" : "EXPRESSION",
             }.get(self.keytype, self.keytype)
 
     def _repr_datatype(self):
@@ -106,6 +108,8 @@ class TpnInfo(_TpnInfo):
             "P" : "REQUIRED",
             "W" : "WARN",
             "O" : "OPTIONAL",
+            "F" : "IF_FULL_FRAME",
+            "S" : "IF_SUBARRAY",
             }.get(self.presence, self.presence)
 
     def _repr_values(self):

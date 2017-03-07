@@ -21,10 +21,6 @@ from crds.core import exceptions, python23, config, log, utils, timestamp
 
 # ================================================================================================
 
-ArrayFormat = namedtuple("ArrayInfo","name,array_id_info,array_class,shape,typespec")
-
-# ================================================================================================
-
 DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
 APPEND_KEYS = ["COMMENT", "HISTORY"]
     
@@ -237,6 +233,7 @@ class AbstractFile(object):
         self.filepath = filepath
         self.original_name = original_name
         self.observatory = observatory
+        self.array_formats = {}
 
     def _unsupported_file_op_error(self, method):
         return exceptions.UnsupportedFileOpError(
@@ -248,11 +245,11 @@ class AbstractFile(object):
         """
         raise self._unsupported_file_op_error("get_format")
 
-    def get_info(self, array_id_info):
-        """Return the ArrayInfo tuple corresponding to array selected by `array_id_info`."""
-        raise self._unsupported_file_op_error("get_info")
+    def get_array_properties(self, array_name):
+        """Return a basic properties dictionary for array named `array_name`."""
+        raise self._unsupported_file_op_error("get_array_properties")
 
-    def get_array(self, array_id_info):
+    def get_array(self, array_name):
         """Return the array object corresponding to array selected by `array_id_info`."""
         raise self._unsupported_file_op_error("get_array")
     

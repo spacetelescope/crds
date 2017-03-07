@@ -82,6 +82,9 @@ class MissingHeaderKeyError(MappingError):
 
 class InconsistentParkeyError(MappingError):
     """The parkey tuple was inconsistent with the rest of the .rmap in some way."""
+    
+class MissingArrayError(CrdsError):
+    """A specified (named?) array was not found in a reference file."""
 
 # -------------------------------------------------------------------------------------------
 

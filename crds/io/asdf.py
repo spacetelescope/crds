@@ -15,7 +15,7 @@ from __future__ import absolute_import
 
 from crds.core import timestamp
 
-from .abstract import AbstractFile, ArrayFormat, hijack_warnings
+from .abstract import AbstractFile
 
 # ============================================================================
 
