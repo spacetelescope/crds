@@ -87,7 +87,7 @@ class Certifier(object):
             
     def certify(self):
         """Certify `self.filename`,  either reporting using log.error() or raising
-        ValidationError exceptions.
+        exceptions.
         """
         raise NotImplementedError("Certify is an abstract class.")
 
@@ -167,8 +167,12 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
-        with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
+        try:
             self.complex_init()
+        except TypeSetupError as exc:
+            log.verbose_warning("Error locating constraints for", repr(self.format_name), ":", str(exc))
+        except Exception as exc:
+            raise
         with log.augment_exception("Error loading", exception_class=InvalidFormatError):
             self.header = self.load()
         for checker in self.validators:

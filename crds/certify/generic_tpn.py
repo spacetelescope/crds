@@ -55,6 +55,7 @@ import collections
 # ============================================================================
 
 from crds.core import log, utils, exceptions
+from crds.client import api
 
 # ============================================================================
 
@@ -221,7 +222,9 @@ def get_classic_tpninfos(filepath):
 def load_all_type_constraints(observatory):
     """Load all the type constraint files from `observatory` package."""
     from crds.core import rmap, heavy_client
-    pmap = rmap.get_cached_mapping(heavy_client.load_server_info(observatory).operational_context)
+    pmap_name = heavy_client.load_server_info(observatory).operational_context
+    api.dump_mappings(pmap_name)
+    pmap = rmap.get_cached_mapping(pmap_name)
     locator = utils.get_locator_module(observatory)
     locator.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
     for instr in pmap.selections:

@@ -35,9 +35,9 @@ def certify_truncated_file():
     CRDS - INFO -  Certifying 'data/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - INFO -  FITS file 'truncated.fits' conforms to FITS standards.
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
@@ -53,9 +53,9 @@ def certify_truncated_file():
 
 def certify_bad_checksum():
     """
-    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify")()
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_508.pmap")()
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_508.pmap'
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
@@ -107,7 +107,7 @@ def certify_bad_checksum():
 
 def certify_good_checksum():
     """
-    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_good_xsum.fits --run-fitsverify")()
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_good_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     CRDS - INFO -  FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
@@ -336,75 +336,74 @@ def certify_table_comparison_context():
     >>> old_state = test_config.setup()
 
     >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
-    CRDS - INFO - FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - INFO - Table unique row parameters defined as ['DATE']
-    CRDS - INFO - Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
-    CRDS - WARNING - Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING - Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING - Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING - Table mode (('DATE', 56921.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56924.041700000002),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56924.208400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56959.458400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56959.666700000002),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56961.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56962.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 15 warnings
-    CRDS - INFO - 6 infos
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying '/Users/jmiller/crds-cache-default-test/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
+    CRDS - INFO -  Table unique row parameters defined as ['DATE']
+    CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS - INFO -  Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
+    CRDS - WARNING -  Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56921.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.041700000002),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.208400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56959.458400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56959.666700000002),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56961.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56962.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  15 warnings
+    CRDS - INFO -  6 infos
     0
-
     >>> test_config.cleanup(old_state)
     """
 
 def certify_table_comparison_reference():
     """
     >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-reference data/y9j16159l_hv.fits")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
-    CRDS - INFO - FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - INFO - Table unique row parameters defined as ['DATE']
-    CRDS - WARNING - Table mode (('DATE', 56923.583400000003),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING - Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING - Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.041700000002),) :
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
+    CRDS - INFO -  Table unique row parameters defined as ['DATE']
+    CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS - WARNING -  Table mode (('DATE', 56923.583400000003),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.041700000002),) :
      (129, (('DATE', 56924.041700000002), ('HVLEVELB', 169)))
     (131, (('DATE', 56924.041700000002), ('HVLEVELB', 169)))
-    CRDS - WARNING - Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
+    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
      (132, (('DATE', 56925.0), ('HVLEVELB', 175)))
     (134, (('DATE', 56925.0), ('HVLEVELB', 175)))
-    CRDS - WARNING - Table mode (('DATE', 56921.833400000003),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56924.041700000002),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING - Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 10 warnings
-    CRDS - INFO - 5 infos
+    CRDS - WARNING -  Table mode (('DATE', 56921.833400000003),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.041700000002),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  10 warnings
+    CRDS - INFO -  5 infos
     0
     """
 
 def certify_comparison_context_none_all_references():
     """
     >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-context None")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
-    CRDS - INFO - FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - INFO - Table unique row parameters defined as ['DATE']
-    CRDS - WARNING - No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
-    CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 1 warnings
-    CRDS - INFO - 5 infos
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
+    CRDS - INFO -  Table unique row parameters defined as ['DATE']
+    CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS - WARNING -  No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  1 warnings
+    CRDS - INFO -  5 infos
     0
     """
 
@@ -452,17 +451,85 @@ def certify_jwst_invalid():
 
 def certify_jwst_missing_optional_parkey():
     """
-    >>> TestCertifyScript("crds.certify data/niriss_ref_photom_missing_parkey.fits --comparison-context jwst_0125.pmap")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/niriss_ref_photom_missing_parkey.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
-    CRDS - ERROR - instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_missing_parkey.fits' ::  Validation error : Error loading : [Errno 2] No such file or directory: 'data/niriss_ref_photom_missing_parkey.fits'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 1 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 3 infos
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> TestCertifyScript("crds.certify data/niriss_ref_photom_missing_detector.fits --comparison-context jwst_0125.pmap")()
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/niriss_ref_photom_missing_detector.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    CRDS - INFO -  FITS file 'niriss_ref_photom_missing_detector.fits' conforms to FITS standards.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.REFFILE.USEAFTER' : Invalid JWST date 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' format should be 'YYYY-MM-DDTHH:MM:SS'
+    <BLANKLINE>
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Missing required keyword 'META.INSTRUMENT.DETECTOR'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  2 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
+    2
+    >>> test_config.cleanup(old_state)
+    """
+    
+def certify_jwst_invalid_asdf():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> TestCertifyScript("crds.certify data/invalid.asdf  --comparison-context jwst.pmap")()
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : Does not appear to be a ASDF file.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  3 infos
     1
+    >>> test_config.cleanup(old_state)
     """
 
+def certify_jwst_invalid_json():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> TestCertifyScript("crds.certify data/invalid.json  --comparison-context jwst.pmap")()
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/invalid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.json' ::  Validation error : JSON wouldn't load from 'data/invalid.json' : Expecting ',' delimiter: line 5 column 1 (char 77)
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  3 infos
+    1
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_jwst_invalid_yaml():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> TestCertifyScript("crds.certify data/invalid.yaml  --comparison-context jwst.pmap")()
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/invalid.yaml' (1/1) as 'YAML' relative to context 'jwst.pmap'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.yaml' ::  Validation error : while scanning a tag
+      in "data/invalid.yaml", line 1, column 5
+    expected ' ', but found '^'
+      in "data/invalid.yaml", line 1, column 21
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  3 infos
+    1
+    >>> test_config.cleanup(old_state)
+    """
+ 
+def certify_test_jwst_load_all_type_constraints():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> generic_tpn.load_all_type_constraints("jwst")
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_test_hst_load_all_type_constraints():
+    """
+    >>> old_state = test_config.setup(url="https://hst-serverless-mode.stsci.edu")
+    >>> generic_tpn.load_all_type_constraints("hst")
+    >>> test_config.cleanup(old_state)
+    """
+
+    
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
@@ -820,28 +887,14 @@ class TestCertify(test_config.CRDSTestCase):
         certify.certify_file(
             self.data("valid.json"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)
             
-    # still raises due to augment_exception but raises with standard InvalidFormatError
-    def test_JsonCertify_invalid(self):
-        assert_raises(certify.InvalidFormatError, certify.certify_file,  
-            self.data("invalid.json"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
-        
     def test_YamlCertify_valid(self):
         certify.certify_file(
             self.data("valid.yaml"), observatory="jwst", context="jwst.pmap", trap_exceptions=False)
-
-    # still raises due to augment_exception but raises with standard InvalidFormatError            
-    def test_YamlCertify_invalid(self):
-        assert_raises(certify.InvalidFormatError, certify.certify_file,
-            self.data("invalid.yaml"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
 
     def test_AsdfCertify_valid(self):
         certify.certify_file(
             self.data("valid.asdf"), observatory="jwst",context="jwst_0082.pmap", trap_exceptions=False)
             
-    def test_AsdfCertify_invalid(self):
-        assert_raises(certify.InvalidFormatError, certify.certify_file,
-            self.data("invalid.asdf"), observatory="jwst",context="jwst.pmap", trap_exceptions="test")                  
-
     def test_UnknownCertifier_missing(self):
         assert_raises(certify.InvalidFormatError, certify.certify_file, 
             self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
