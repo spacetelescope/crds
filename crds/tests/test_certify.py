@@ -485,10 +485,10 @@ def certify_jwst_invalid_asdf():
 def certify_jwst_invalid_json():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/invalid.json  --comparison-context jwst.pmap")()
+    >>> TestCertifyScript("crds.certify data/invalid.json  --comparison-context jwst.pmap")()   # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/invalid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.json' ::  Validation error : JSON wouldn't load from 'data/invalid.json' : Expecting , delimiter: line 5 column 1 (char 77)
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.json' ::  Validation error : JSON wouldn't load from 'data/invalid.json' : Expecting ... delimiter: line 5 column 1 (char 77)
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
     CRDS - INFO -  0 warnings

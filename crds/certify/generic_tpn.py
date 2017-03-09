@@ -81,16 +81,16 @@ class TpnInfo(_TpnInfo):
                 + self._repr_values() + ")")
 
     def _repr_keytype(self):
-        return {
+        return repr({
             "H" : "HEADER",
             "C" : "COLUMN",
             "G" : "GROUP",
             "A" : "ARRAY",
             "X" : "EXPRESSION",
-            }.get(self.keytype[0], self.keytype[0])
+            }.get(self.keytype[0], self.keytype[0]))
 
     def _repr_datatype(self):
-        return {
+        return repr({
             "C" : "CHARACTER",
             "I" : "INTEGER",
             "L" : "LOGICAL",
@@ -98,12 +98,12 @@ class TpnInfo(_TpnInfo):
             "D" : "DOUBLE",
             "Z" : "REGEX",
             "X" : "EXPRESSION",
-            }.get(self.datatype[0], self.datatype[0])
+            }.get(self.datatype[0], self.datatype[0]))
 
     def _repr_presence(self):
         if is_expression(self.presence):
-            return "condition="+self.presence
-        return {
+            return "condition="+repr(self.presence)
+        return repr({
             "E" : "EXCLUDED",
             "R" : "REQUIRED",
             "P" : "REQUIRED",
@@ -111,7 +111,7 @@ class TpnInfo(_TpnInfo):
             "O" : "OPTIONAL",
             "F" : "IF_FULL_FRAME",
             "S" : "IF_SUBARRAY",
-            }.get(self.presence[0], self.presence[0])
+            }.get(self.presence[0], self.presence[0]))
 
     def _repr_values(self):
         if self.values and is_expression(self.values[0]):

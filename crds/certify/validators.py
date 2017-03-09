@@ -77,7 +77,7 @@ class Validator(object):
 
         if not self.is_applicable(header):
             return True
-
+        
         if self.info.keytype == "C":
             return self.check_column(filename)
         elif self.info.keytype == "G":
@@ -195,11 +195,15 @@ class Validator(object):
         defined by `header`.
         """
         if self._presence_condition_code:
-            required = eval(self._presence_condition_code, header, header)
-            log.verbose("Validator", self.info, "is",
-                        "applicable" if required else "not applicable",
-                        "based on condition", self.info.presence,
-                        verbosity=70)
+            try:
+                required = eval(self._presence_condition_code, header, header)
+                log.verbose("Validator", self.info, "is",
+                            "applicable" if required else "not applicable",
+                            "based on condition", self.info.presence,
+                            verbosity=70)
+            except Exception as exc:
+                log.warning("Failed checking applicability of", repr(self.info),"skipping check : ", str(exc))
+                required = False
             return required
         elif self.info.presence == "F": # IF_FULL_FRAME
             return header.get("SUBARRAY", "UNDEFINED") in ["FULL","GENERIC"]
