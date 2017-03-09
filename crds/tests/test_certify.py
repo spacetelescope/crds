@@ -488,7 +488,7 @@ def certify_jwst_invalid_json():
     >>> TestCertifyScript("crds.certify data/invalid.json  --comparison-context jwst.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/invalid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.json' ::  Validation error : JSON wouldn't load from 'data/invalid.json' : Expecting ',' delimiter: line 5 column 1 (char 77)
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.json' ::  Validation error : JSON wouldn't load from 'data/invalid.json' : Expecting , delimiter: line 5 column 1 (char 77)
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
     CRDS - INFO -  0 warnings
@@ -517,14 +517,14 @@ def certify_jwst_invalid_yaml():
  
 def certify_test_jwst_load_all_type_constraints():
     """
-    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> old_state = test_config.setup(url="https://jwst-crds.stsci.edu")
     >>> generic_tpn.load_all_type_constraints("jwst")
     >>> test_config.cleanup(old_state)
     """
 
 def certify_test_hst_load_all_type_constraints():
     """
-    >>> old_state = test_config.setup(url="https://hst-serverless-mode.stsci.edu")
+    >>> old_state = test_config.setup(url="https://hst-crds.stsci.edu")
     >>> generic_tpn.load_all_type_constraints("hst")
     >>> test_config.cleanup(old_state)
     """
@@ -875,14 +875,6 @@ class TestCertify(test_config.CRDSTestCase):
         certify.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst", 
                               context="hst.pmap", compare_old_reference=True)
         
-    def test_loadall_type_constraints_hst(self):
-        """Prove the HST constraint files are loadable."""
-        generic_tpn.load_all_type_constraints("hst")
-
-    def test_loadall_type_constraints_jwst(self):
-        """Prove the JWST constraint files are loadable."""
-        generic_tpn.load_all_type_constraints("jwst")
-
     def test_JsonCertify_valid(self):
         certify.certify_file(
             self.data("valid.json"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)

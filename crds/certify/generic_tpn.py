@@ -87,7 +87,7 @@ class TpnInfo(_TpnInfo):
             "G" : "GROUP",
             "A" : "ARRAY",
             "X" : "EXPRESSION",
-            }.get(self.keytype, self.keytype)
+            }.get(self.keytype[0], self.keytype[0])
 
     def _repr_datatype(self):
         return {
@@ -98,7 +98,7 @@ class TpnInfo(_TpnInfo):
             "D" : "DOUBLE",
             "Z" : "REGEX",
             "X" : "EXPRESSION",
-            }.get(self.datatype, self.datatype)
+            }.get(self.datatype[0], self.datatype[0])
 
     def _repr_presence(self):
         if is_expression(self.presence):
@@ -111,7 +111,7 @@ class TpnInfo(_TpnInfo):
             "O" : "OPTIONAL",
             "F" : "IF_FULL_FRAME",
             "S" : "IF_SUBARRAY",
-            }.get(self.presence, self.presence)
+            }.get(self.presence[0], self.presence[0])
 
     def _repr_values(self):
         if self.values and is_expression(self.values[0]):
@@ -226,11 +226,13 @@ def load_all_type_constraints(observatory):
     api.dump_mappings(pmap_name)
     pmap = rmap.get_cached_mapping(pmap_name)
     locator = utils.get_locator_module(observatory)
-    locator.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
+    locator.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")
     for instr in pmap.selections:
-        locator.get_tpninfos(instr + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
+        locator.get_tpninfos(instr + "_" + "all" + ".tpn", "foo.fits")
         imap = pmap.get_imap(instr)
         for filekind in imap.selections:
+            if imap.selections[filekind] == "N/A":
+                continue
             try:
                 suffix  = locator.TYPES.filekind_to_suffix(instr, filekind)
             except Exception as exc:
@@ -238,6 +240,7 @@ def load_all_type_constraints(observatory):
             else:
                 locator.get_tpninfos("all" + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
                 locator.get_tpninfos(instr + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
+
 # =============================================================================
 
 def main():
