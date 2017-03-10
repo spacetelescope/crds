@@ -199,6 +199,9 @@ class MissingReferenceError(CertifyError):
 
 class RequiredConditionError(CertifyError):
     """An ExpressionValidator evaluated to False with respect to a file header."""
+
+class BadKernelSumError(CertifyError):
+    """A convolution kernel array had a sum too far from 1.0, or similar."""
     
 
 # -------------------------------------------------------------------------------------------

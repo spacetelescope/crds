@@ -85,7 +85,8 @@ class TpnInfo(_TpnInfo):
             "H" : "HEADER",
             "C" : "COLUMN",
             "G" : "GROUP",
-            "A" : "ARRAY",
+            "A" : "ARRAY_FORMAT",
+            "D" : "ARRAY_DATA",
             "X" : "EXPRESSION",
             }.get(self.keytype[0], self.keytype[0]))
 
@@ -138,7 +139,7 @@ def load_tpn(fname):
             values = []
         else:
             name, keytype, datatype, presence, values = items
-            values = values.split(",")
+            values = values.split(",") if datatype != "X" else [values]
             values = [v if is_expression(v) else v.upper() for v in values]
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn

@@ -1,0 +1,4 @@
+SCI    A       X      R     (len(SCI_ARRAY.SHAPE)>=2)
+SCI    A       X      R     ((SCI_ARRAY.SHAPE[-2]%2)==1)
+SCI    A       X      R     ((SCI_ARRAY.SHAPE[-1]%2)==1)
+SCI    D       X      R     &KernelUnity

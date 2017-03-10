@@ -91,11 +91,17 @@ def setval(filepath, key, value):
 
 # ================================================================================================================
 
-def get_array_properties(filename, array_name):
-    """Return the dictionary defining basic properties of `array_name` of `filename`."""
-    file_obj = file_factory(filename)
-    return file_obj.get_array_properties(array_name)
+def get_array_properties(filename, array_name, keytype="A"):
+    """Return the dictionary defining basic properties of `array_name` of `filename`.
     
+    Keytype == "A" for "array" means lightweight format only checks with no data included.
+    Keytype == "D" for "data" means heavy data oriented checks with data arrays returned as well.
+    """
+    file_obj = file_factory(filename)
+    props = file_obj.get_array_properties(array_name, keytype)
+    log.verbose("Array properties for",repr(filename) + "[" +repr(array_name) +"] =", log.PP(props), verbosity=60)
+    return props
+
 # ================================================================================================================
 
 def test():

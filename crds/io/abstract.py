@@ -245,7 +245,7 @@ class AbstractFile(object):
         """
         raise self._unsupported_file_op_error("get_format")
 
-    def get_array_properties(self, array_name):
+    def get_array_properties(self, array_name, keytype="A"):
         """Return a basic properties dictionary for array named `array_name`."""
         raise self._unsupported_file_op_error("get_array_properties")
 

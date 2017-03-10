@@ -96,30 +96,28 @@ class FitsFile(AbstractFile):
     def setval(self, key, value):
         fits.setval(self.filepath, key, value=value)
 
-    def get_array_properties(self, array_name):
+    def get_array_properties(self, array_name, keytype="A"):
         """Return a Struct defining the properties of the FITS array in extension named `array_name`."""
-        i, hdu = self._get_ith_named_hdu(array_name)
-        summary = hdu._summary()  # XXX uses private _summary
-        if len(summary) == 6:  # Image
-            name, class_name, _header_len, shape, typespec, _unknown = summary
-        else: # Table
-            name, class_name, _header_len, shape, typespec = summary                    
-        generic_class = {
-            "IMAGEHDU" : "IMAGE",
-            "BINTABLEHDU" : "TABLE", 
-        }.get(class_name.upper(), "UNKNOWN")
-        return utils.Struct( 
-                    SHAPE = shape if generic_class == "IMAGE" else shape.replace(" ",""),
-                    KIND = generic_class,
-                    DATA_TYPE = typespec if generic_class == "IMAGE" else typespec.replace(" ","").replace(",",";"),
-                    EXTENSION = i,
-                )
-    
-    def _get_ith_named_hdu(self, array_name):
-        """Return the extension numnber and HDU associated with `array_name`."""
         with fits_open(self.filepath) as hdulist:
             for (i, hdu) in enumerate(hdulist):
                 if hdu.name == array_name:
-                    return i, hdu
-        raise exceptions.MissingArrayError("Array", repr(array_name), "not found in", repr(self.filepath))
+                    break
+            else:
+                raise exceptions.MissingArrayError("Array", repr(array_name), "not found in", repr(self.filepath))
+            summary = hdu._summary()  # XXX uses private _summary
+            if len(summary) == 6:  # Image
+                name, class_name, _header_len, shape, typespec, _unknown = summary
+            else: # Table
+                name, class_name, _header_len, shape, typespec = summary                    
+            generic_class = {
+                "IMAGEHDU" : "IMAGE",
+                "BINTABLEHDU" : "TABLE", 
+            }.get(class_name.upper(), "UNKNOWN")
+            return utils.Struct( 
+                        SHAPE = shape if generic_class == "IMAGE" else shape.replace(" ",""),
+                        KIND = generic_class,
+                        DATA_TYPE = typespec if generic_class == "IMAGE" else typespec.replace(" ","").replace(",",";"),
+                        EXTENSION = i,
+                        DATA = hdu.data if (keytype == "D") else None
+                    )
 

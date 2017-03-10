@@ -14,9 +14,14 @@ import copy
 
 # ============================================================================
 
-from crds.core import log, config, utils, timestamp, selectors
+import numpy as np
+
+# ============================================================================
+
+from crds.core import log, config, utils, timestamp, selectors, python23
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
+from crds.core.exceptions import BadKernelSumError
 from crds import tables
 from crds import data_file
 
@@ -82,7 +87,7 @@ class Validator(object):
             return self.check_column(filename)
         elif self.info.keytype == "G":
             return self.check_group(filename)
-        elif self.info.keytype in ["H","X","A"]:
+        elif self.info.keytype in ["H","X","A","D"]:
             return self.check_header(filename, header)
         else:
             raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) + 
@@ -473,11 +478,7 @@ class ExpressionValidator(Validator):
         self._expr = info.values[0]
         self._expr_code = compile(self._expr, repr(self.info), "eval")
 
-    def _check_value(self, *args, **keys):
-        """If this validator is inadvertantly executed... no point in failing.  Design
-        intent is to *only* execute check_header().
-        """
-        return True
+    def _check_value(self, *args, **keys):   return True
 
     def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
@@ -488,23 +489,44 @@ class ExpressionValidator(Validator):
         is_true = True
         with log.verbose_warning_on_exception(
             "Failed evaluating condition expression", repr(self._expr)):
-            is_true = eval(self._expr_code, header, header)
+            is_true = eval(self._expr_code, header, dict(python23.builtins.__dict__))
         if not is_true:
             raise RequiredConditionError("Condition", repr(self.info), "is not satisfied.")
+        
+# ---------------------------------------------------------------------------
 
+class KernelunityValidator(Validator):
+    """Ensure that every image in the specified array as a sum() near 1.0"""    
+    def _check_value(self, *args, **keys):  return True
+
+    def check_header(self, filename, header):
+        """Evalutate the header expression associated with this validator (as its sole value)
+        with respect to the given `header`.  Read `header` from `filename` if `header` is None.
+        """
+        array_name = self.name + "_ARRAY"
+        all_data = header[array_name].DATA.transpose()
+        images = int(np.product(all_data.shape[:-2]))
+        images_shape = (images,) + all_data.shape[-2:]
+        images_data = np.reshape(all_data, images_shape)
+        log.verbose("Checking", len(images_data), repr(array_name), "kernel(s) of size", 
+                    images_data[0].shape, "for individual sums of 1+-1e-6.")
+        for (i, image) in enumerate(images_data):
+            if abs(image.sum()-1.0) > 1.0e-6:
+                # raise BadKernelSumError(
+                log.error("Kernel sum", image.sum(),
+                          "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
 # ----------------------------------------------------------------------------
 
 def validator(info):
     """Given TpnInfo object `info`, construct and return a Validator for it."""
-    if info.datatype == "C":
-        if len(info.values) == 1 and len(info.values[0]) and \
-            info.values[0][0] == "&":
-            # This block handles &-types like &PEDIGREE and &SYBDATE
-            # only called on static TPN infos.
-            func = eval(info.values[0][1:].capitalize() + "Validator")
-            rval = func(info)
-        else:
-            rval = CharacterValidator(info)
+    if len(info.values) == 1 and len(info.values[0]) and \
+        info.values[0][0] == "&":
+        # This block handles &-types like &PEDIGREE and &SYBDATE
+        # only called on static TPN infos.
+        class_name = info.values[0][1:].capitalize() + "Validator"
+        rval = eval(class_name)(info)
+    elif info.datatype == "C":
+        rval = CharacterValidator(info)
     elif info.datatype == "R":
         rval = RealValidator(info)
     elif info.datatype == "D":

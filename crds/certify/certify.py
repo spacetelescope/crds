@@ -104,7 +104,7 @@ class Certifier(object):
     @property
     def array_validators(self):
         """Return the list of Validator objects that apply to arrays."""
-        return [checker for checker in self.validators if checker.info.keytype == "A"]
+        return [checker for checker in self.validators if checker.info.keytype in ["A","D"]]
 
     def set_rmap_parkeys_to_required(self, checkers):
         """Mutate copies of `checkers` so that any specified by the rmap parkey are required."""
@@ -220,8 +220,9 @@ class ReferenceCertifier(Certifier):
         """
         for checker in self.array_validators:
             array_name = checker.name + "_ARRAY"
-            if array_name not in header:
-                header[array_name] = data_file.get_array_properties(self.filename, checker.name)
+            if ((array_name not in header) or 
+                (checker.info.keytype=="D" and header[array_name]["DATA"] is None)):
+                header[array_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
         return header
 
     def dump_provenance(self):

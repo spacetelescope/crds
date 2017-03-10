@@ -23,6 +23,19 @@
             "text_descr":"Dark files for all instruments.",
             "tpn":"all_dark.tpn",
             "unique_rowkeys":null
+        },
+        "ipc":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"IPC",
+            "filetype":"IPC",
+            "instrument":"ALL",
+            "ld_tpn":"all_ipc_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"IPC",
+            "text_descr":"Interpixel Capacitance",
+            "tpn":"all_ipc.tpn",
+            "unique_rowkeys":null
         }
     },
     "fgs":{
