@@ -2,6 +2,10 @@
 This module defines the generic functions and abstract class used to manage
 file access in CRDS.
 '''
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+
 from collections import namedtuple
 import functools
 import warnings
