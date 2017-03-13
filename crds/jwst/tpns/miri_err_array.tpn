@@ -7,10 +7,10 @@ ERR       H           X         F             (META_SUBARRAY_YSTART==1)
 ERR       A           X         F             (ERR_ARRAY.SHAPE[0]==1032)
 ERR       A           X         F             (ERR_ARRAY.SHAPE[1]==1024)
 
-ERR       A           X         S             (META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[0]-1<=1032)
-ERR       A           X         S             (META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[1]-1<=1024)
+ERR       A           X         R             (META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[0]-1<=1032)
+ERR       A           X         R             (META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[1]-1<=1024)
 ERR       A           X         S             (ERR_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
 ERR       A           X         S             (ERR_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
 
-ERR       A           X         O             (SCI_ARRAY.DATA_TYPE=='float64')
+ERR       A           X         R             ((ERR_ARRAY.DATA_TYPE)in['float32','float64'])
 

@@ -3,15 +3,16 @@
 # This file pertains to array properties and their relationships to header keywords.
 
 META.EXPOSURE.READPATT    H           C         O
-DQ       A           X         R             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[0]-1<=1032)
-DQ       A           X         R             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[1]-1<=1024)
 
 DQ       H           X         F             (META_SUBARRAY_XSTART==1)
 DQ       H           X         F             (META_SUBARRAY_YSTART==1)
-DQ       A           X         F             (DQ_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
-DQ       A           X         F             (DQ_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
+DQ       A           X         F             (DQ_ARRAY.SHAPE[0]==1032)
+DQ       A           X         F             (DQ_ARRAY.SHAPE[1]==1024)
+
+DQ       A           X         R             (META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[0]-1<=1032)
+DQ       A           X         R             (META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[1]-1<=1024)
 DQ       A           X         S             (DQ_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
 DQ       A           X         S             (DQ_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
-DQ       A           X         R             (DQ_ARRAY.DATA_TYPE=='uint8')
 
+DQ       A           X         R             ((DQ_ARRAY.DATA_TYPE)in['uint8'])
 

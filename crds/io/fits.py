@@ -10,7 +10,6 @@ from __future__ import absolute_import
 # ============================================================================
 
 import contextlib
-import ast
 
 from astropy.io import fits
 
@@ -103,20 +102,23 @@ class FitsFile(AbstractFile):
                 if hdu.name == array_name:
                     break
             else:
-                raise exceptions.MissingArrayError("Array", repr(array_name), "not found in", repr(self.filepath))
-            summary = hdu._summary()  # XXX uses private _summary
-            if len(summary) == 6:  # Image
-                name, class_name, _header_len, shape, typespec, _unknown = summary
-            else: # Table
-                name, class_name, _header_len, shape, typespec = summary                    
+                raise exceptions.MissingArrayError("Array", repr(array_name), "not found.")
             generic_class = {
                 "IMAGEHDU" : "IMAGE",
                 "BINTABLEHDU" : "TABLE", 
-            }.get(class_name.upper(), "UNKNOWN")
+            }.get(hdu.__class__.__name__.upper(), "UNKNOWN")
+            if generic_class == "IMAGE":
+                typespec = str(hdu.data.dtype)
+                column_names = None
+            else:
+                dtype = hdu.data.dtype
+                typespec = ";".join([str(dtype.fields[name][0]) for name in dtype.names])
+                column_names = ";".join(hdu.data.dtype.names)
             return utils.Struct( 
-                        SHAPE = shape if generic_class == "IMAGE" else shape.replace(" ",""),
+                        SHAPE = hdu.data.shape,
                         KIND = generic_class,
-                        DATA_TYPE = typespec if generic_class == "IMAGE" else typespec.replace(" ","").replace(",",";"),
+                        DATA_TYPE = typespec,
+                        COLUMN_NAMES = column_names,
                         EXTENSION = i,
                         DATA = hdu.data if (keytype == "D") else None
                     )

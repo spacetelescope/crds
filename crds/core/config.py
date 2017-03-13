@@ -240,7 +240,7 @@ class BooleanConfigItem(ConfigItem):
 FITS_IGNORE_MISSING_END = BooleanConfigItem("CRDS_FITS_IGNORE_MISSING_END", False,
     "When True, ignore missing END records in the FITS primary header.  Otherwise fail.")
 
-FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", False,
+FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", True,
     "When True, verify that FITS header CHECKSUM and DATASUM values are correct.  Otherwise fail.")
 
 ADD_LOG_MSG_COUNTER = BooleanConfigItem(

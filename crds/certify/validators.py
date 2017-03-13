@@ -487,11 +487,10 @@ class ExpressionValidator(Validator):
         header = data_file.convert_to_eval_header(header)
         log.verbose("Checking", repr(os.path.basename(filename)), "for condition", repr(self._expr))
         is_true = True
-        with log.verbose_warning_on_exception(
-            "Failed evaluating condition expression", repr(self._expr)):
+        with log.verbose_warning_on_exception("Failed checking condition", repr(self._expr)):
             is_true = eval(self._expr_code, header, dict(python23.builtins.__dict__))
         if not is_true:
-            raise RequiredConditionError("Condition", repr(self.info), "is not satisfied.")
+            raise RequiredConditionError("Condition", repr(self._expr), "is not satisfied.")
         
 # ---------------------------------------------------------------------------
 

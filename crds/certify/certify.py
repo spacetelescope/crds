@@ -173,8 +173,10 @@ class ReferenceCertifier(Certifier):
             log.verbose_warning("Error locating constraints for", repr(self.format_name), ":", str(exc))
         except Exception as exc:
             raise
-        with log.augment_exception("Error loading", exception_class=InvalidFormatError):
+        with self.error_on_exception("Error loading"):
             self.header = self.load()
+        if not self.header:
+            return
         for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
                 log.verbose("Checking", checker, verbosity=70)
@@ -506,7 +508,7 @@ class FitsCertifier(ReferenceCertifier):
         if not self.filename.endswith(".fits"):
             log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
-        with data_file.fits_open_trapped(self.filename, checksum=True) as pfile:
+        with data_file.fits_open_trapped(self.filename, checksum=bool(config.FITS_VERIFY_CHECKSUM)) as pfile:
             pfile.verify(option='exception') # validates all keywords
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
