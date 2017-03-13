@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import absolute_import
 
 import json
+import gc
 
 import crds
 from crds.core import log, utils, python23, heavy_client
@@ -193,6 +194,7 @@ class FileHeaderGenerator(HeaderGenerator):
 
     def _header(self, filename):
         """Get the best references recommendations recorded in the header of file `dataset`."""
+        gc.collect()
         if filename not in self.headers:
             self.headers[filename] = data_file.get_free_header(filename, (), None, self.observatory)
         return self.headers[filename]

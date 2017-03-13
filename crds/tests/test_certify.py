@@ -529,7 +529,6 @@ def certify_test_hst_load_all_type_constraints():
     >>> test_config.cleanup(old_state)
     """
 
-    
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
