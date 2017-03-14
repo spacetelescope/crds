@@ -1,0 +1,4 @@
+IRS2   A     X     R    (IRS2_ARRAY.KIND=='TABLE')
+IRS2   A     X     R    (IRS2_ARRAY.COLUMN_NAMES==['ALPHA_0','ALPHA_1','ALPHA_2','ALPHA_3','BETA_0','BETA_1','BETA_2','BETA_3'])
+IRS2   A     X     R    (IRS2_ARRAY.DATA_TYPE==['>c8','>c8','>c8','>c8','>c8','>c8','>c8','>c8'])
+READPATT H   C     R    (('IRS2')in(READPATT))

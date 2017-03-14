@@ -112,8 +112,8 @@ class FitsFile(AbstractFile):
                 column_names = None
             else:
                 dtype = hdu.data.dtype
-                typespec = ";".join([str(dtype.fields[name][0]) for name in dtype.names])
-                column_names = ";".join(hdu.data.dtype.names)
+                typespec = [str(dtype.fields[name][0]) for name in dtype.names]
+                column_names = list(hdu.data.dtype.names)
             return utils.Struct( 
                         SHAPE = hdu.data.shape,
                         KIND = generic_class,
