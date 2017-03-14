@@ -102,13 +102,13 @@ class FitsFile(AbstractFile):
                 if hdu.name == array_name:
                     break
             else:
-                raise exceptions.MissingArrayError("Array", repr(array_name), "not found.")
+                return 'UNDEFINED'
             generic_class = {
                 "IMAGEHDU" : "IMAGE",
                 "BINTABLEHDU" : "TABLE", 
             }.get(hdu.__class__.__name__.upper(), "UNKNOWN")
             if generic_class == "IMAGE":
-                typespec = str(hdu.data.dtype)
+                typespec = hdu.data.dtype.name
                 column_names = None
             else:
                 dtype = hdu.data.dtype

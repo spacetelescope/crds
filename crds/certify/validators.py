@@ -511,9 +511,8 @@ class KernelunityValidator(Validator):
                     images_data[0].shape, "for individual sums of 1+-1e-6.")
         for (i, image) in enumerate(images_data):
             if abs(image.sum()-1.0) > 1.0e-6:
-                # raise BadKernelSumError(
-                log.error("Kernel sum", image.sum(),
-                          "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
+                raise BadKernelSumError("Kernel sum", image.sum(),
+                    "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
 # ----------------------------------------------------------------------------
 
 def validator(info):

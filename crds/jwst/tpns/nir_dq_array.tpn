@@ -7,9 +7,9 @@ DQ       H           X         F             (META_SUBARRAY_YSTART==1)
 DQ       A           X         F             (DQ_ARRAY.SHAPE[0]==((3200)if('IRS2')in(READPATT)else(2048)))
 DQ       A           X         F             (DQ_ARRAY.SHAPE[1]==2048)
 
-DQ       A           X         (not(('IRS2')in(READPATT)))   (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[0]-1<=2048)
-DQ       A           X         (('IRS2')in(READPATT))        (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[0]-1<=3200)
-DQ       A           X         R                             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[1]-1<=2048)
+DQ       A           X         (not(('IRS2')in(READPATT)))   (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[0]-1<=2048)
+DQ       A           X         (('IRS2')in(READPATT))        (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[0]-1<=3200)
+DQ       A           X         R                             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[1]-1<=2048)
 
 DQ       A           X         S             (DQ_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
 DQ       A           X         S             (DQ_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)

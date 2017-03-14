@@ -1,0 +1,5 @@
+include miri_sci_array.tpn
+include miri_err_array.tpn
+include miri_dq_array.tpn
+include miri_dq_def_array.tpn
+

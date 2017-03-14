@@ -1,1 +1,26 @@
 include miri_subarray.tpn
+
+COEFFS       H           X         F             (META_SUBARRAY_XSTART==1)
+COEFFS       H           X         F             (META_SUBARRAY_YSTART==1)
+COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE==(1032,1024))
+
+COEFFS       A           X         R             (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[0]-1<=1032)
+COEFFS       A           X         R             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[1]-1<=1024)
+
+COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
+COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
+
+COEFFS       A           X         R            ((COEFFS_ARRAY.DATA_TYPE)in(['float32','float64']))
+
+ERR       H           X         F             (META_SUBARRAY_XSTART==1)
+ERR       H           X         F             (META_SUBARRAY_YSTART==1)
+ERR       A           X         F             (ERR_ARRAY.SHAPE==(1032,1024))
+
+ERR       A           X         O             (1<=META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[0]-1<=1032)
+ERR       A           X         O             (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[1]-1<=1024)
+
+ERR       A           X         S             (ERR_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
+ERR       A           X         S             (ERR_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
+
+ERR       A           X         O            ((ERR_ARRAY.DATA_TYPE)in(['float32','float64']))
+
