@@ -1,35 +1,11 @@
 include nir_subarray.tpn
 
-# include nir_sci_array.tpn  inlined with different type
-SCI       A           X         F             (META_SUBARRAY_XSTART==1)
-SCI       A           X         F             (META_SUBARRAY_YSTART==1)
-SCI       A           X         F             (SCI_ARRAY.SHAPE[0]==2048)
-SCI       A           X         F             (SCI_ARRAY.SHAPE[1]==2048)
-
-SCI       A           X         S             (META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[0]<=2048)
-SCI       A           X         S             (META_SUBARRAY_YSTSART+SCI_ARRAY.SHAPE[1]<=2048)
-SCI       A           X         S             (SCI_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
-SCI       A           X         S             (SCI_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
-
-# !!!! float32 ->  < 6G
-SCI       A           X         O             (SCI_ARRAY.DATA_TYPE=='float32')
-
-# include nir_err_array.tpn   inclined with different type
-
-ERR       A           X         F             (META_SUBARRAY_XSTART==1)
-ERR       A           X         F             (META_SUBARRAY_YSTART==1)
-ERR       A           X         F             (ERR_ARRAY.SHAPE[0]==2048)
-ERR       A           X         F             (ERR_ARRAY.SHAPE[1]==2048)
-
-ERR       A           X         S             (META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[0]<=2048)
-ERR       A           X         S             (META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[1]<=2048)
-ERR       A           X         S             (ERR_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
-ERR       A           X         S             (ERR_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
-
-# !!!! float32 ->  < 6G
-ERR       A           X         O             (SCI_ARRAY.DATA_TYPE=='float32')
-
+include nir_sci_array.tpn
+include nir_err_array.tpn
 include nir_dq_array.tpn
-
 include nir_dq_def_array.tpn
+
+# !!!! float32 ->  < 6G  ;  these further restrict .tpns above
+SCI       A           X         O             (SCI_ARRAY.DATA_TYPE=='float32')
+ERR       A           X         O             (SCI_ARRAY.DATA_TYPE=='float32')
 

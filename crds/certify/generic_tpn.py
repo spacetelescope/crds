@@ -153,6 +153,7 @@ def is_expression(tpn_field):
     """
     return tpn_field.startswith("(") and tpn_field.endswith(")")
     
+@utils.cached
 def load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.  If a line begins with "include",  the
@@ -202,6 +203,7 @@ def _fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
+@utils.cached
 def get_classic_tpninfos(filepath):
     """Load the list of TPN info tuples from .tpn file at `filepath`.  Unlike
     load_tpn(), this function is structured such that missing files are an
