@@ -1,0 +1,34 @@
+REFTYPE H       C      RESET
+
+SCI     A       X      F   ((SCI_ARRAY.SHAPE==(1032,1024,5,30))
+SCI     H       X      F   (META_SUBARRAY_XSTART==1)
+SCI     H       X      F   (META_SUBARRAY_YSTART==1)
+SCI     A       X      S   (1<=SCI_ARRAY.SHAPE[0]+META.SUBARRAY.XSIZE-1<=1032)
+SCI     A       X      S   (1<=SCI_ARRAY.SHAPE[1]+META.SUBARRAY.YSIZE-1<=1024)
+SCI     A       X      R   (SCI_ARRAY.SHAPE[2:]==(30,5))
+SCI     A       X      S   (SCI_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
+SCI     A       X      S   (SCI_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
+SCI     A       X      R   ((SCI_ARRAY.DATA_TYPE)in['float32','float64'])
+
+ERR     A       X      F   ((ERR_ARRAY.SHAPE==(1032,1024,5,30))
+ERR     H       X      F   (META_SUBARRAY_XSTART==1)
+ERR     H       X      F   (META_SUBARRAY_YSTART==1)
+ERR     A       X      S   (1<=ERR_ARRAY.SHAPE[0]+META.SUBARRAY.XSIZE-1<=1032)
+ERR     A       X      S   (1<=ERR_ARRAY.SHAPE[1]+META.SUBARRAY.YSIZE-1<=1024)
+ERR     A       X      R   (ERR_ARRAY.SHAPE[2:]==(30,5))
+ERR     A       X      S   (ERR_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
+ERR     A       X      S   (ERR_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
+ERR     A       X      R   ((ERR_ARRAY.DATA_TYPE)in['float32','float64'])
+
+DQ     A       X      F   (DQ_ARRAY.SHAPE==(1032,1024))
+DQ     H       X      F   (META_SUBARRAY_XSTART==1)
+DQ     H       X      F   (META_SUBARRAY_YSTART==1)
+DQ     A       X      S   (1<=DQ_ARRAY.SHAPE[0]+META.SUBARRAY.XSIZE-1<=1032)
+DQ     A       X      S   (1<=DQ_ARRAY.SHAPE[1]+META.SUBARRAY.YSIZE-1<=1024)
+DQ     A       X      S   (DQ_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
+DQ     A       X      S   (DQ_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
+DQ     A       X      R   (('int')in(DQ_ARRAY.DATA_TYPE))
+
+DQ_DEF       A           X         R             (DQ_DEF_ARRAY.DATA_TYPE=='>i4;>i4;|S40;|S80')
+DQ_DEF       A           X         R             (DQ_DEF_ARRAY.KIND=='TABLE')
+ 

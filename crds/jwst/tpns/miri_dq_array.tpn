@@ -14,5 +14,5 @@ DQ       A           X         R             (META_SUBARRAY_YSTART+DQ_ARRAY.SHAP
 DQ       A           X         S             (DQ_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
 DQ       A           X         S             (DQ_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
 
-DQ       A           X         R             ((DQ_ARRAY.DATA_TYPE)in['uint8'])
+DQ       A           X         R             (('int')in(DQ_ARRAY.DATA_TYPE))
 
