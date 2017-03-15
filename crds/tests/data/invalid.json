@@ -3,7 +3,7 @@
            "instrument" : {
                 "name" : "miri"
 kl;jlk;$$           },
-           "filetype" : "flat",
+           "filetype" : "distortion",
            "pedigree" : "dummy",
            "useafter" : "Mar 21 2001 12:00:00",
            "detector" : "mirifulong"

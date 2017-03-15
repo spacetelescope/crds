@@ -86,6 +86,9 @@ class InconsistentParkeyError(MappingError):
 class MissingArrayError(CrdsError):
     """A specified (named?) array was not found in a reference file."""
 
+class MissingColumnError(CrdsError):
+    """A specified (named?) column was not found in a reference file."""
+
 # -------------------------------------------------------------------------------------------
 
 class ValidationError(CrdsError):

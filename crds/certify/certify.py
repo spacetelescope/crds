@@ -177,6 +177,7 @@ class ReferenceCertifier(Certifier):
             self.header = self.load()
         if not self.header:
             return
+        log.verbose("Header:", log.PP(self.header), verbosity=55)
         for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
                 log.verbose("Checking", checker, verbosity=70)
@@ -221,7 +222,7 @@ class ReferenceCertifier(Certifier):
         array validators to header.   Muates `header`.
         """
         for checker in self.array_validators:
-            array_name = checker.name + "_ARRAY"
+            array_name = checker.complex_name
             if ((array_name not in header) or 
                 (checker.info.keytype=="D" and header[array_name]["DATA"] is None)):
                 header[array_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
@@ -674,9 +675,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     script:                 command line Script instance
     trap_exceptions:        if True, trapped exceptions issue ERROR messages. Otherwise reraised.
     original_name:          browser-side name of file if any, files 
-    """
-    gc.collect()
-    
+    """    
     try:
         old_flag = log.set_exception_trap(trap_exceptions)    #  XXX non-reentrant code,  no threading
         
@@ -711,6 +710,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
 
     finally:
         log.set_exception_trap(old_flag)
+        gc.collect()
 
 def get_certifier_class(original_name, filepath):
     """Given a reference file name with a valid extension, return the filetype and 

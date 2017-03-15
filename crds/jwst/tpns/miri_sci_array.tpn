@@ -7,8 +7,8 @@ SCI       H           X         F             (META_SUBARRAY_YSTART==1)
 SCI       A           X         F             (SCI_ARRAY.SHAPE[0]==1032)
 SCI       A           X         F             (SCI_ARRAY.SHAPE[1]==1024)
 
-SCI       A           X         R             (META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[0]-1<=1032)
-SCI       A           X         R             (META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[1]-1<=1024)
+SCI       A           X         R             (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[0]-1<=1032)
+SCI       A           X         R             (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[1]-1<=1024)
 SCI       A           X         S             (SCI_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
 SCI       A           X         S             (SCI_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
 

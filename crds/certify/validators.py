@@ -21,7 +21,7 @@ import numpy as np
 from crds.core import log, config, utils, timestamp, selectors, python23
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
-from crds.core.exceptions import BadKernelSumError
+from crds.core.exceptions import BadKernelSumError, MissingColumnError
 from crds import tables
 from crds import data_file
 
@@ -29,6 +29,27 @@ from . import reftypes
 from . import generic_tpn
 from .generic_tpn import TpnInfo   # generic TpnInfo code
 
+# ============================================================================
+
+def array_name(rootname):
+    """Given the `rootname` for an array,  return the name of the array used
+    in Validator expressions.  
+    
+    >>> array_name('SCI')
+    'SCI_ARRAY'
+    >>> array_name(1)
+    'ARRAY_1'
+    >>> array_name('1')
+    'ARRAY_1'
+    
+    """
+    if isinstance(rootname,int) or re.match(r"\d+", rootname):
+        return "ARRAY_" + str(rootname)
+    elif isinstance(rootname, str):
+        return rootname.upper() + "_ARRAY"
+    else:
+        raise TypeError("Invalid array rootname type for: " + repr(rootname))
+    
 # ============================================================================
 
 class Validator(object):
@@ -49,7 +70,17 @@ class Validator(object):
                 [val for val in info.values if not val.upper().startswith("NOT_")])
             self._not_values = self.condition_values(
                 [val[4:] for val in info.values if val.upper().startswith("NOT_")])
-
+            
+    @property
+    def complex_name(self):
+        """If this is an array validator,  return name of array as it appears in expressions,
+        otherwise return self.name.
+        """
+        if self.info.keytype == "A":
+            return array_name(self.name)
+        else:
+            return self.name
+        
     def verbose(self, filename, value, *args, **keys):
         """Prefix log.verbose() with standard info about this Validator.
         Unique message is in *args, **keys
@@ -97,7 +128,7 @@ class Validator(object):
         """Check a single header or column value against the legal values
         for this Validator.
         """
-        if value is None: # missing optional or excluded keyword
+        if value in [None, "UNDEFINED"]: # missing optional or excluded keyword
             return True
         if self.condition is not None:  # verify type regardless of values.
             value = self.condition(value)
@@ -117,7 +148,7 @@ class Validator(object):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
         """
-        value = self._get_header_value(header)
+        value = self.get_header_value(header)
         return self.check_value(filename, value)
 
     def check_column(self, filename):
@@ -132,27 +163,25 @@ class Validator(object):
                 for i, value in enumerate(tab.columns[self.name]): # compare to TPN values
                     self.check_value(filename + "[" + str(i) +"]", value)
         if not column_seen:
-            self.__handle_missing()
-        else:
-            self.__handle_excluded(None)
+            self._handle_missing()
         return True
         
     def check_group(self, _filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
         log.warning("Group keys are not currently supported by CRDS.")
 
-    def _get_header_value(self, header):
+    def get_header_value(self, header):
         """Pull this Validator's value out of `header` and return it.
         Handle the cases where the value is missing or excluded.
         """
-        try:
-            value = header[self.name]
-            assert value != "UNDEFINED", "Undefined keyword " + repr(self.name)
-        except (KeyError, AssertionError):
-            return self.__handle_missing()
-        return self.__handle_excluded(value)
-
-    def __handle_missing(self):
+        value = header.get(self.complex_name, "UNDEFINED")
+        if value in [None, "UNDEFINED"]:
+            return self._handle_missing()
+        elif self.info.presence == "E":
+            raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
+        return value
+    
+    def _handle_missing(self):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
@@ -160,21 +189,13 @@ class Validator(object):
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         elif self.info.presence in ["W"]:
             log.warning("Missing suggested keyword " + repr(self.name))
+            return "UNDEFINED"
         elif self.info.presence in ["O"]:
-            # sys.exc_clear()
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
-            return # missing value is None, so let's be explicit about the return value
+            return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      log.srepr(self.info.presence))
-
-    def __handle_excluded(self, value):
-        """If this Validator's key is excluded,  raise an exception.  Otherwise
-        return `value`.
-        """
-        if self.info.presence == "E":
-            raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
-        return value
 
     @property
     def optional(self):
@@ -376,13 +397,13 @@ class PedigreeValidator(KeywordValidator):
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
     _not_values = []
 
-    def _get_header_value(self, header):
+    def get_header_value(self, header):
         """Extract the PEDIGREE value from header,  checking any
         start/stop dates.   Return only the PEDIGREE classification.
         Ignore missing start/stop dates.
         """
-        value = super(PedigreeValidator, self)._get_header_value(header)
-        if value is None:
+        value = super(PedigreeValidator, self).get_header_value(header)
+        if value == "UNDEFINED":
             return
         try:
             pedigree, start, stop = value.split()
@@ -470,6 +491,73 @@ class FilenameValidator(KeywordValidator):
 
 # ----------------------------------------------------------------------------
 
+# Table check expression helper functions
+
+def has_columns(array_info, col_names):
+    """Return True IFF CRDS `array_info` object defines `col_names` columns in any order."""
+    return set(getattr(array_info,"COLUMN_NAMES")) == set(col_names)
+
+def has_type(array_info, typestr):
+    """Return True IFF CRDS `array_info` object has a data array of type `typestr`."""
+    typestr = _image_type(typestr)
+    data_type = getattr(array_info, "DATA_TYPE")
+    for dtype in typestr:
+        if dtype in data_type:
+            return True
+    else:
+        return False
+
+def _image_type(typestr):
+    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
+    If CRDS has no definition for `typestr`,  return it unchanged.
+    """
+    return {
+        'COMPLEX':'complex',
+        'INT' : 'int',
+        'INTEGER' : 'int',
+        'FLOAT' : 'float',
+    }.get(typestr, typestr)
+
+def has_column_type(array_info, col_name, typestr):
+    """Return True IFF column `col_name` of CRDS `array_info` object has a 
+    data array of type `typestr`.
+    """
+    typestr = _table_type(typestr)
+    data_types = getattr(array_info, "DATA_TYPE")
+    try:
+        return data_types[col_name].startswith(typestr)
+    except KeyError:
+        raise MissingColumnError("Data type not defined for column", repr(col_name))
+        
+def _table_type(typestr):
+    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
+    If CRDS has no definition for `typestr`,  return it unchanged.
+    """
+    return {
+        'COMPLEX':'>c',
+        'COMPLEX_ARRAY':"('>c",
+        'INT' : '>i',
+        'INTEGER' : '>i',
+        'INT_ARRAY' : "('>i",
+        'INTEGER_ARRAY' : "('>i",
+        'FLOAT' : '>f',
+        'FLOAT_ARRAY' : "('>f",
+        'STR' : '|S',
+        'STRING' : '|S',
+        'STR_ARRAY' : "('|S",
+        'STRING_ARRAY' : "('|S",
+    }.get(typestr, typestr)
+
+def is_table(array_info):
+    """Return True IFF CRDS `array_info` object corresponds to a table."""
+    return getattr(array_info,"KIND") == "TABLE"
+    
+def is_image(array_info):
+    """Return True IFF CRDS `array_info` object corresponds to an image."""
+    return getattr(array_info,"KIND") == "IMAGE"
+    
+# ----------------------------------------------------------------------------
+
 class ExpressionValidator(Validator):
     """Value is an expression on the reference header that must evaluate to True."""
 
@@ -478,17 +566,19 @@ class ExpressionValidator(Validator):
         self._expr = info.values[0]
         self._expr_code = compile(self._expr, repr(self.info), "eval")
 
-    def _check_value(self, *args, **keys):   return True
+    def _check_value(self, *args, **keys):   
+        return True
 
     def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
+        super(ExpressionValidator, self).check_header(filename, header)
         header = data_file.convert_to_eval_header(header)
         log.verbose("Checking", repr(os.path.basename(filename)), "for condition", repr(self._expr))
         is_true = True
         with log.verbose_warning_on_exception("Failed checking condition", repr(self._expr)):
-            is_true = eval(self._expr_code, header, dict(python23.builtins.__dict__))
+            is_true = eval(self._expr_code, header, dict(globals()))
         if not is_true:
             raise RequiredConditionError("Condition", repr(self._expr), "is not satisfied.")
         
@@ -496,13 +586,15 @@ class ExpressionValidator(Validator):
 
 class KernelunityValidator(Validator):
     """Ensure that every image in the specified array as a sum() near 1.0"""    
-    def _check_value(self, *args, **keys):  return True
+    def _check_value(self, *args, **keys):  
+        return True
 
     def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
-        array_name = self.name + "_ARRAY"
+        super(ExpressionValidator, self).check_header(filename, header)
+        array_name = self.complex_name
         all_data = header[array_name].DATA.transpose()
         images = int(np.product(all_data.shape[:-2]))
         images_shape = (images,) + all_data.shape[-2:]
@@ -513,6 +605,7 @@ class KernelunityValidator(Validator):
             if abs(image.sum()-1.0) > 1.0e-6:
                 raise BadKernelSumError("Kernel sum", image.sum(),
                     "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
+
 # ----------------------------------------------------------------------------
 
 def validator(info):

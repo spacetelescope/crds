@@ -1,0 +1,7 @@
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_columns(PHOTOM_ARRAY,['FILTER','SUBARRAY','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'SUBARRAY','STRING'))
+
+PHOTOM     A      X      (('IFU')in(DETECTOR))    (has_columns(PHOTOM_ARRAY,['BAND','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
+PHOTOM     A      X      (('IFU')in(DETECTOR))    (has_column_type(PHOTOM_ARRAY,'BAND','STRING'))
+

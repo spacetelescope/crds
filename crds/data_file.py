@@ -99,7 +99,6 @@ def get_array_properties(filename, array_name, keytype="A"):
     """
     file_obj = file_factory(filename)
     props = file_obj.get_array_properties(array_name, keytype)
-    log.verbose("Array properties for",repr(filename) + "[" +repr(array_name) +"] =", log.PP(props), verbosity=60)
     return props
 
 # ================================================================================================================

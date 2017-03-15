@@ -5,4 +5,6 @@ include miri_dq_def_array.tpn
 
 SCI     A       X      F   ((SCI_ARRAY.SHAPE==(1032,1024,5,30))
 ERR     A       X      F   ((ERR_ARRAY.SHAPE==(1032,1024,5,30))
- 
+
+SCI     A       X      R   ((SCI_ARRAY.SHAPE==(SUBSIZE1,SUBSIZE2,NGROUPS,NINTS))
+ERR     A       X      R   ((ERR_ARRAY.SHAPE==(SUBSIZE1,SUBSIZE2,NGROUPS,NINTS))
