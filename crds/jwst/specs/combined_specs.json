@@ -803,7 +803,11 @@
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"miri_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "SUBARRAY",
+                "BAND"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
@@ -1343,7 +1347,10 @@
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"nircam_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
@@ -1766,7 +1773,11 @@
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"niriss_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL",
+                "ORDER"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
@@ -2606,11 +2617,15 @@
                     "META.EXPOSURE.TYPE"
                 ]
             ],
-            "sha1sum":"245afb7ea97b599dba7cd1460650074d141e1b22",
+            "sha1sum":"7de3339c05deafd41e227aff105fbf8d97033fcc",
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"nirspec_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "GRATING",
+                "SLIT"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",

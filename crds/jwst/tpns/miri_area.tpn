@@ -1,0 +1,13 @@
+include miri_subarray.tpn
+
+SCI       H           X         F             (META_SUBARRAY_XSTART==1)
+SCI       H           X         F             (META_SUBARRAY_YSTART==1)
+SCI       A           X         F             (SCI_ARRAY.SHAPE==(1024,1024))
+
+SCI       A           X         R             (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[0]-1<=1024)
+SCI       A           X         R             (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[1]-1<=1024)
+SCI       A           X         S             (SCI_ARRAY.SHAPE==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+SCI       A           X         R             (is_image(SCI_ARRAY))
+SCI       A           X         R             (has_type(SCI_ARRAY,'FLOAT'))
+

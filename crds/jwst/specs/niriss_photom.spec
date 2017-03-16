@@ -11,4 +11,5 @@
     'sha1sum' : 'cabd72cf325dc5bc2a52ff480de22090e0f35730',
     'suffix' : 'photom',
     'text_descr' : 'Absolute Calibration',
+    'unique_rowkeys': ('FILTER', 'PUPIL', 'ORDER'),
 }

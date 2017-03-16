@@ -76,7 +76,7 @@ class Validator(object):
         """If this is an array validator,  return name of array as it appears in expressions,
         otherwise return self.name.
         """
-        if self.info.keytype == "A":
+        if self.info.keytype in ["A","D"]:
             return array_name(self.name)
         else:
             return self.name
@@ -192,6 +192,9 @@ class Validator(object):
             return "UNDEFINED"
         elif self.info.presence in ["O"]:
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
+            return "UNDEFINED"
+        elif self.info.presence in ["S","F"]:
+            log.verbose("Conditional SUBARRAY parameter is not defined.")
             return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
@@ -495,17 +498,17 @@ class FilenameValidator(KeywordValidator):
 
 def has_columns(array_info, col_names):
     """Return True IFF CRDS `array_info` object defines `col_names` columns in any order."""
-    return set(getattr(array_info,"COLUMN_NAMES")) == set(col_names)
+    if array_info == "UNDEFINED":
+        return False
+    for col in col_names:
+        if col not in array_info.COLUMN_NAMES:
+            return False
+    return True
 
 def has_type(array_info, typestr):
     """Return True IFF CRDS `array_info` object has a data array of type `typestr`."""
     typestr = _image_type(typestr)
-    data_type = getattr(array_info, "DATA_TYPE")
-    for dtype in typestr:
-        if dtype in data_type:
-            return True
-    else:
-        return False
+    return array_info != "UNDEFINED" and typestr in array_info.DATA_TYPE
 
 def _image_type(typestr):
     """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
@@ -522,10 +525,11 @@ def has_column_type(array_info, col_name, typestr):
     """Return True IFF column `col_name` of CRDS `array_info` object has a 
     data array of type `typestr`.
     """
+    if array_info == "UNDEFINED":
+        return False
     typestr = _table_type(typestr)
-    data_types = getattr(array_info, "DATA_TYPE")
     try:
-        return data_types[col_name].startswith(typestr)
+        return array_info.DATA_TYPE[col_name.upper()].startswith(typestr)
     except KeyError:
         raise MissingColumnError("Data type not defined for column", repr(col_name))
         
@@ -550,11 +554,11 @@ def _table_type(typestr):
 
 def is_table(array_info):
     """Return True IFF CRDS `array_info` object corresponds to a table."""
-    return getattr(array_info,"KIND") == "TABLE"
+    return array_info!="UNDEFINED" and array_info.KIND=="TABLE"
     
 def is_image(array_info):
     """Return True IFF CRDS `array_info` object corresponds to an image."""
-    return getattr(array_info,"KIND") == "IMAGE"
+    return array_info!="UNDEFINED" and array_info.KIND=="IMAGE"
     
 # ----------------------------------------------------------------------------
 
@@ -573,14 +577,14 @@ class ExpressionValidator(Validator):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
-        super(ExpressionValidator, self).check_header(filename, header)
+        # super(ExpressionValidator, self).check_header(filename, header)
         header = data_file.convert_to_eval_header(header)
-        log.verbose("Checking", repr(os.path.basename(filename)), "for condition", repr(self._expr))
+        log.verbose("File=" + repr(os.path.basename(filename)), "Checking for condition", str(self._expr))
         is_true = True
         with log.verbose_warning_on_exception("Failed checking condition", repr(self._expr)):
             is_true = eval(self._expr_code, header, dict(globals()))
         if not is_true:
-            raise RequiredConditionError("Condition", repr(self._expr), "is not satisfied.")
+            raise RequiredConditionError("Condition", str(self._expr), "is not satisfied.")
         
 # ---------------------------------------------------------------------------
 
@@ -599,7 +603,8 @@ class KernelunityValidator(Validator):
         images = int(np.product(all_data.shape[:-2]))
         images_shape = (images,) + all_data.shape[-2:]
         images_data = np.reshape(all_data, images_shape)
-        log.verbose("Checking", len(images_data), repr(array_name), "kernel(s) of size", 
+        log.verbose("File=" + repr(os.path.basename(filename)),
+                   "Checking", len(images_data), repr(array_name), "kernel(s) of size", 
                     images_data[0].shape, "for individual sums of 1+-1e-6.")
         for (i, image) in enumerate(images_data):
             if abs(image.sum()-1.0) > 1.0e-6:
@@ -649,6 +654,6 @@ def get_validators(observatory, refpath):
         # Loosely this produces a Validator subclass instance for every TpnInfo corresponding to `key`
         validators_for_keys = [validator(x) for x in locator.get_tpninfos(*key)]
         checkers.extend(validators_for_keys)
-    log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=60)
+    log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=65)
     return checkers
 

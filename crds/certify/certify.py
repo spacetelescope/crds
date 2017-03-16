@@ -223,6 +223,9 @@ class ReferenceCertifier(Certifier):
         """
         for checker in self.array_validators:
             array_name = checker.complex_name
+            # None is untried,  UNDEFINED is tried and failed.
+            if header.get(array_name, None) == "UNDEFINED":
+                continue
             if ((array_name not in header) or 
                 (checker.info.keytype=="D" and header[array_name]["DATA"] is None)):
                 header[array_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
@@ -884,9 +887,14 @@ For more information on the checks being performed,  use --verbose or --verbosit
             log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
             self.args.comparison_context = None
             
+        if self.args.comparison_reference:
+            comparison_reference = config.locate_reference(self.args.comparison_reference, self.observatory)
+        else:
+            comparison_reference = None
+            
         certify_files(sorted(all_files), 
                       context=self.resolve_context(self.args.comparison_context),
-                      comparison_reference=self.args.comparison_reference,
+                      comparison_reference=comparison_reference,
                       compare_old_reference=self.args.comparison_context or self.args.comparison_reference,
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
