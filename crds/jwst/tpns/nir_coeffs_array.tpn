@@ -2,19 +2,15 @@
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
 
-COEFFS       A           X         R             (len(COEFFS_ARRAY.SHAPE)==3)
-
 COEFFS       H           X         F             (META_SUBARRAY_XSTART==1)
 COEFFS       H           X         F             (META_SUBARRAY_YSTART==1)
-COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[0]==((3200)if('IRS2')in(READPATT)else(2048)))
-COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[1]==2048)
+COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[-2:]==(2048,2048))
 
-COEFFS       A           X         (not(('IRS2')in(READPATT)))   (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[0]-1<=2048)
-COEFFS       A           X         (('IRS2')in(READPATT))        (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[0]-1<=3200)
-COEFFS       A           X         R                             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[1]-1<=2048)
+COEFFS       A           X         R             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[-2]-1<=2048)
+COEFFS       A           X         R             (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[-1]-1<=2048)
+COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
-COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[0]==META_SUBARRAY_XSIZE)
-COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[1]==META_SUBARRAY_YSIZE)
-
-COEFFS       A           X         R            ((COEFFS_ARRAY.DATA_TYPE)in(['float32','float64']))
+COEFFS       A           X         R             (len(COEFFS_ARRAY.SHAPE)==3)
+COEFFS       A           X         R             (is_image(COEFFS_ARRAY))
+COEFFS       A           X         R             (has_type(COEFFS_ARRAY,'FLOAT'))
 
