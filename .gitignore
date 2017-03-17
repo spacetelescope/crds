@@ -1,0 +1,6 @@
+coverage
+.coverage
+.pydevproject
+.project
+*.pyc
+*~
