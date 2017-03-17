@@ -23,7 +23,7 @@ class AsdfFile(AbstractFile):
     
     format = "ASDF"
 
-    @utils.gccollected
+    @utils.gc_collected
     def get_raw_header(self, needed_keys=()):
         """Return the flattened header associated with an ASDF file."""
         import asdf
