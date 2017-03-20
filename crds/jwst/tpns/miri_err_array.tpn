@@ -4,6 +4,8 @@
 
 ERR       H           X         F             (META_SUBARRAY_XSTART==1)
 ERR       H           X         F             (META_SUBARRAY_YSTART==1)
+ERR       H           X         F             (META_SUBARRAY_XSIZE==1032)
+ERR       H           X         F             (META_SUBARRAY_YSIZE==1024)
 ERR       A           X         F             (ERR_ARRAY.SHAPE[-2:]==(1024,1032))
 
 ERR       A           X         R             (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[-2]-1<=1024)
