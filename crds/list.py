@@ -10,6 +10,8 @@ import os.path
 import sys
 from collections import OrderedDict
 
+from astropy.io import fits
+
 import crds
 from crds.core import config, log, python23, rmap, heavy_client, cmdline
 from crds import data_file
@@ -379,20 +381,21 @@ and ids used for CRDS reprocessing recommendations.
 
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
-            path = self.locate_file(name)
-            path = self._cat_banner(path)
+            path = os.path.abspath(self.locate_file(name))
+            self._cat_banner("File:", path)
             if config.is_reference(path):
                 self._cat_header(path)
+                if path.endswith(".fits"):
+                    self._cat_banner("Info:")
+                    fits.info(path)
             else:
                 self._cat_text(path)
 
-    def _cat_banner(self, name):
+    def _cat_banner(self, *args, delim="#"):
         """Print a banner for --cat for `name` and return the filepath of `name`."""
-        print("#"*120)
-        path = os.path.abspath(name)
-        print("File: ", repr(path))
-        print("#"*120)
-        return path
+        print(delim*80)
+        print(*args)
+        print(delim*80)
 
     def _cat_text(self, path):
         """Dump out the contexts of a text file."""

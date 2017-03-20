@@ -233,9 +233,9 @@ class Validator(object):
                 required = False
             return required
         elif self.info.presence == "F": # IF_FULL_FRAME
-            return header.get("SUBARRAY", "UNDEFINED") in ["FULL","GENERIC","N/A","ANY","*"]
+            return is_full_frame(header.get("SUBARRAY", "UNDEFINED"))
         elif self.info.presence == "S": # IF_SUBARRAY        
-            return header.get("SUBARRAY", "UNDEFINED") not in ["FULL","GENERIC","N/A","ANY","*","UNDEFINED"]
+            return is_subarray(header.get("SUBARRAY", "UNDEFINED"))
         else:    
             return True
 
@@ -612,13 +612,15 @@ def  array_exists(array_info):
 
 def is_full_frame(subarray):
     """Return True IFF `subarray` is defined and has a full frame subarray value."""
-    return subarray in ["FULL","GENERIC","N/A"]
+    return subarray in ["FULL","GENERIC","N/A","ANY","*"]
+
 
 def is_subarray(subarray):
     """Return True IFF `subarray` is defined and is not a full frame value."""
-    return (not is_full_frame(subarray)) and (subarray != "UNDEFINED")
+    return  subarray != "UNDEFINED" and not is_full_frame(subarray)
 
 def is_irs2(readpatt):
+    """Return True IFF `readpatt` is one of the IRS2 READPATTs."""
     return readpatt != 'UNDEFINED' and 'IRS2' in readpatt
 
 # ----------------------------------------------------------------------------
