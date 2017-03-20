@@ -36,6 +36,19 @@
             "text_descr":"Interpixel Capacitance",
             "tpn":"all_ipc.tpn",
             "unique_rowkeys":null
+        },
+        "photom":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PHOTOM",
+            "filetype":"PHOTOM",
+            "instrument":"ALL",
+            "ld_tpn":"all_photom_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"PHOTOM",
+            "text_descr":"Dark files for all instruments.",
+            "tpn":"all_photom.tpn",
+            "unique_rowkeys":null
         }
     },
     "fgs":{

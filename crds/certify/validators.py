@@ -124,6 +124,13 @@ class Validator(object):
             raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) + 
                              " for " + repr(self.name))
 
+    def check_header(self, filename, header):
+        """Extract the value for this Validator's keyname,  either from `header`
+        or from `filename`'s header if header is None.   Check the value.
+        """
+        value = self.get_header_value(header)
+        return self.check_value(filename, value)
+
     def check_value(self, filename, value):
         """Check a single header or column value against the legal values
         for this Validator.
@@ -144,13 +151,6 @@ class Validator(object):
         raise NotImplementedError(
             "Validator is an abstract class.  Sub-class and define _check_value().")
     
-    def check_header(self, filename, header):
-        """Extract the value for this Validator's keyname,  either from `header`
-        or from `filename`'s header if header is None.   Check the value.
-        """
-        value = self.get_header_value(header)
-        return self.check_value(filename, value)
-
     def check_column(self, filename):
         """Extract a column of new_values from `filename` and check them all against
         the legal values for this Validator.   This checks a single column,  not a row/mode.
@@ -225,19 +225,17 @@ class Validator(object):
         """
         if self._presence_condition_code:
             try:
-                required = eval(self._presence_condition_code, header, header)
+                required = eval(self._presence_condition_code, header, dict(globals()))
                 log.verbose("Validator", self.info, "is",
-                            "applicable" if required else "not applicable",
-                            "based on condition", self.info.presence,
-                            verbosity=70)
+                            "applicable." if required else "not applicable.", verbosity=70)
             except Exception as exc:
                 log.warning("Failed checking applicability of", repr(self.info),"skipping check : ", str(exc))
                 required = False
             return required
         elif self.info.presence == "F": # IF_FULL_FRAME
-            return header.get("SUBARRAY", "UNDEFINED") in ["FULL","GENERIC"]
+            return header.get("SUBARRAY", "UNDEFINED") in ["FULL","GENERIC","N/A","ANY","*"]
         elif self.info.presence == "S": # IF_SUBARRAY        
-            return header.get("SUBARRAY", "UNDEFINED") not in ["FULL", "GENERIC", "N/A", "UNDEFINED"]
+            return header.get("SUBARRAY", "UNDEFINED") not in ["FULL","GENERIC","N/A","ANY","*","UNDEFINED"]
         else:    
             return True
 
@@ -445,14 +443,12 @@ class JwstdateValidator(KeywordValidator):
     """Check &JWSTDATE date fields."""
     def _check_value(self, filename, value):
         self.verbose(filename, value)
-        try:
-            timestamp.Jwstdate.get_datetime(value)
-        except Exception:
-            raise ValueError(log.format(
-                "Invalid JWST date", repr(value), "for", repr(self.name),
-                "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
-            
-'''
+#         try:
+#             timestamp.Jwstdate.get_datetime(value)
+#         except Exception:
+#             raise ValueError(log.format(
+#                 "Invalid JWST date", repr(value), "for", repr(self.name),
+#                 "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
         try:
             timestamp.Jwstdate.get_datetime(value)
         except ValueError:
@@ -462,10 +458,9 @@ class JwstdateValidator(KeywordValidator):
                 try:
                     timestamp.Jwstdate.get_datetime(value.replace(" ","T"))
                 except ValueError:
-                    timestamp.Jwstdate.get_datetime(value)                    
+                    timestamp.Jwstdate.get_datetime(value)   # re-execute to replace exception raised                 
             log.warning("Non-compliant date format", repr(value), "for", repr(self.name),
                         "should be", repr("YYYY-MM-DDTHH:MM:SS"),)
-'''
 
 # ----------------------------------------------------------------------------
 
@@ -492,74 +487,6 @@ class FilenameValidator(KeywordValidator):
         result = (value == "(initial)") or not os.path.dirname(value)
         return result
 
-# ----------------------------------------------------------------------------
-
-# Table check expression helper functions
-
-def has_columns(array_info, col_names):
-    """Return True IFF CRDS `array_info` object defines `col_names` columns in any order."""
-    if array_info == "UNDEFINED":
-        return False
-    for col in col_names:
-        if col not in array_info.COLUMN_NAMES:
-            return False
-    return True
-
-def has_type(array_info, typestr):
-    """Return True IFF CRDS `array_info` object has a data array of type `typestr`."""
-    typestr = _image_type(typestr)
-    return array_info != "UNDEFINED" and typestr in array_info.DATA_TYPE
-
-def _image_type(typestr):
-    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
-    If CRDS has no definition for `typestr`,  return it unchanged.
-    """
-    return {
-        'COMPLEX':'complex',
-        'INT' : 'int',
-        'INTEGER' : 'int',
-        'FLOAT' : 'float',
-    }.get(typestr, typestr)
-
-def has_column_type(array_info, col_name, typestr):
-    """Return True IFF column `col_name` of CRDS `array_info` object has a 
-    data array of type `typestr`.
-    """
-    if array_info == "UNDEFINED":
-        return False
-    typestr = _table_type(typestr)
-    try:
-        return array_info.DATA_TYPE[col_name.upper()].startswith(typestr)
-    except KeyError:
-        raise MissingColumnError("Data type not defined for column", repr(col_name))
-        
-def _table_type(typestr):
-    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
-    If CRDS has no definition for `typestr`,  return it unchanged.
-    """
-    return {
-        'COMPLEX':'>c',
-        'COMPLEX_ARRAY':"('>c",
-        'INT' : '>i',
-        'INTEGER' : '>i',
-        'INT_ARRAY' : "('>i",
-        'INTEGER_ARRAY' : "('>i",
-        'FLOAT' : '>f',
-        'FLOAT_ARRAY' : "('>f",
-        'STR' : '|S',
-        'STRING' : '|S',
-        'STR_ARRAY' : "('|S",
-        'STRING_ARRAY' : "('|S",
-    }.get(typestr, typestr)
-
-def is_table(array_info):
-    """Return True IFF CRDS `array_info` object corresponds to a table."""
-    return array_info!="UNDEFINED" and array_info.KIND=="TABLE"
-    
-def is_image(array_info):
-    """Return True IFF CRDS `array_info` object corresponds to an image."""
-    return array_info!="UNDEFINED" and array_info.KIND=="IMAGE"
-    
 # ----------------------------------------------------------------------------
 
 class ExpressionValidator(Validator):
@@ -597,7 +524,7 @@ class KernelunityValidator(Validator):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
-        super(ExpressionValidator, self).check_header(filename, header)
+        # super(KernelunityValidator, self).check_header(filename, header)
         array_name = self.complex_name
         all_data = header[array_name].DATA.transpose()
         images = int(np.product(all_data.shape[:-2]))
@@ -610,6 +537,89 @@ class KernelunityValidator(Validator):
             if abs(image.sum()-1.0) > 1.0e-6:
                 raise BadKernelSumError("Kernel sum", image.sum(),
                     "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
+
+# ----------------------------------------------------------------------------
+
+# Table check expression helper functions
+
+def has_columns(array_info, col_names):
+    """Return True IFF CRDS `array_info` object defines `col_names` columns in any order."""
+    if not array_exists(array_info):
+        return False
+    for col in col_names:
+        if col not in array_info.COLUMN_NAMES:
+            return False
+    return True
+
+def has_type(array_info, typestr):
+    """Return True IFF CRDS `array_info` object has a data array of type `typestr`."""
+    typestr = _image_type(typestr)
+    return array_exists(array_info) and typestr in array_info.DATA_TYPE
+
+def _image_type(typestr):
+    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
+    If CRDS has no definition for `typestr`,  return it unchanged.
+    """
+    return {
+        'COMPLEX':'complex',
+        'INT' : 'int',
+        'INTEGER' : 'int',
+        'FLOAT' : 'float',
+    }.get(typestr, typestr)
+
+def has_column_type(array_info, col_name, typestr):
+    """Return True IFF column `col_name` of CRDS `array_info` object has a 
+    data array of type `typestr`.
+    """
+    if not array_exists(array_info):
+        return False
+    typestr = _table_type(typestr)
+    try:
+        return array_info.DATA_TYPE[col_name.upper()].startswith(typestr)
+    except KeyError:
+        raise MissingColumnError("Data type not defined for column", repr(col_name))
+        
+def _table_type(typestr):
+    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
+    If CRDS has no definition for `typestr`,  return it unchanged.
+    """
+    return {
+        'COMPLEX':'>c',
+        'COMPLEX_ARRAY':"('>c",
+        'INT' : '>i',
+        'INTEGER' : '>i',
+        'INT_ARRAY' : "('>i",
+        'INTEGER_ARRAY' : "('>i",
+        'FLOAT' : '>f',
+        'FLOAT_ARRAY' : "('>f",
+        'STR' : '|S',
+        'STRING' : '|S',
+        'STR_ARRAY' : "('|S",
+        'STRING_ARRAY' : "('|S",
+    }.get(typestr, typestr)
+
+def is_table(array_info):
+    """Return True IFF CRDS `array_info` object corresponds to a table."""
+    return array_exists(array_info) and array_info.KIND=="TABLE"
+    
+def is_image(array_info):
+    """Return True IFF CRDS `array_info` object corresponds to an image."""
+    return array_exists(array_info) and array_info.KIND=="IMAGE"
+
+def  array_exists(array_info):
+    """Return True IFF array_info is not UNDEFINED."""
+    return array_info != "UNDEFINED" 
+
+def is_full_frame(subarray):
+    """Return True IFF `subarray` is defined and has a full frame subarray value."""
+    return subarray in ["FULL","GENERIC","N/A"]
+
+def is_subarray(subarray):
+    """Return True IFF `subarray` is defined and is not a full frame value."""
+    return (not is_full_frame(subarray)) and (subarray != "UNDEFINED")
+
+def is_irs2(readpatt):
+    return readpatt != 'UNDEFINED' and 'IRS2' in readpatt
 
 # ----------------------------------------------------------------------------
 

@@ -24,6 +24,7 @@ from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationE
 
 from crds import data_file, diff, tables
 from crds.client import api
+from crds.io import abstract
 
 from . import mapping_parser
 from . import validators
@@ -191,8 +192,9 @@ class ReferenceCertifier(Certifier):
         """Load and parse header from self.filename."""
         header = data_file.get_header(self.filename, observatory=self.observatory, original_name=self.original_name)
         header = self.map_reference_keywords_to_dataset_keywords(header)
-        self.cross_strap_instrument_keywords(header)
-        self.add_array_keywords(header)
+        header = self.cross_strap_instrument_keywords(header)
+        header = self.add_array_keywords(header)
+        header = abstract.ensure_keys_defined(header, needed_keys=[checker.complex_name for checker in self.validators])
         return header
     
     def map_reference_keywords_to_dataset_keywords(self, header):
@@ -213,14 +215,17 @@ class ReferenceCertifier(Certifier):
         """Add all variations of the instrument keyword to `header` based on some variation of
         instrument name defined in `header`.   Mutates `header`.
         """
+        header = dict(header)
         instr = utils.header_to_instrument(header)
         for key in crds.INSTRUMENT_KEYWORDS:
             header[key] = instr
+        return header
 
     def add_array_keywords(self, header):
         """Add synthetic array keywords based on properties of the arrays mentioned in
         array validators to header.   Muates `header`.
         """
+        header = dict(header)
         for checker in self.array_validators:
             array_name = checker.complex_name
             # None is untried,  UNDEFINED is tried and failed.
