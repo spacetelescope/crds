@@ -507,10 +507,10 @@ class ExpressionValidator(Validator):
         # super(ExpressionValidator, self).check_header(filename, header)
         header = data_file.convert_to_eval_header(header)
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking for condition", str(self._expr))
-        is_true = True
+        satisfied = True
         with log.verbose_warning_on_exception("Failed checking condition", repr(self._expr)):
-            is_true = eval(self._expr_code, header, dict(globals()))
-        if not is_true:
+            satisfied = eval(self._expr_code, header, dict(globals()))
+        if not satisfied:
             raise RequiredConditionError("Condition", str(self._expr), "is not satisfied.")
         
 # ---------------------------------------------------------------------------
@@ -573,9 +573,12 @@ def has_column_type(array_info, col_name, typestr):
     """
     if not array_exists(array_info):
         return False
-    typestr = _table_type(typestr)
+    typestrs = _table_type(typestr)
     try:
-        return array_info.DATA_TYPE[col_name.upper()].startswith(typestr)
+        for typestr in typestrs:
+            if typestr in array_info.DATA_TYPE[col_name.upper()]:
+                return True
+        return False
     except KeyError:
         raise MissingColumnError("Data type not defined for column", repr(col_name))
         
@@ -583,20 +586,30 @@ def _table_type(typestr):
     """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
     If CRDS has no definition for `typestr`,  return it unchanged.
     """
-    return {
-        'COMPLEX':'>c',
-        'COMPLEX_ARRAY':"('>c",
-        'INT' : '>i',
-        'INTEGER' : '>i',
-        'INT_ARRAY' : "('>i",
-        'INTEGER_ARRAY' : "('>i",
-        'FLOAT' : '>f',
-        'FLOAT_ARRAY' : "('>f",
-        'STR' : '|S',
-        'STRING' : '|S',
-        'STR_ARRAY' : "('|S",
-        'STRING_ARRAY' : "('|S",
+    int_types = [">i","<i","uint","int"]
+    float_types = [">f","<f","float","float"]
+    complex_types = [">c","<c","complex","complex"]
+    string_types = ["|S"]
+    
+    def _array_types(types):
+        return ["('" + typestr for typestr in types]
+    
+    trans = {
+        'COMPLEX': complex_types,
+        'COMPLEX_ARRAY': _array_types(complex_types),
+        'INT' : int_types,
+        'INTEGER' : int_types,
+        'INT_ARRAY' : _array_types(int_types),
+        'INTEGER_ARRAY' : _array_types(int_types),
+        'FLOAT' : float_types,
+        'FLOAT_ARRAY' : _array_types(float_types),
+        'STR' : string_types,
+        'STRING' : string_types,
+        'STR_ARRAY' : _array_types(string_types),
+        'STRING_ARRAY' : _array_types(string_types),
     }.get(typestr, typestr)
+
+    return trans
 
 def is_table(array_info):
     """Return True IFF CRDS `array_info` object corresponds to a table."""

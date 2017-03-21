@@ -183,10 +183,11 @@ class ReferenceCertifier(Certifier):
             with self.error_on_exception("Checking", repr(checker.info.name)):
                 log.verbose("Checking", checker, verbosity=70)
                 checker.check(self.filename, self.header)                
-        if self.mode_columns:
-            self.certify_reference_modes()
-        if self._dump_provenance_flag:
-            self.dump_provenance()
+        with self.error_on_exception("Checking", repr(checker.info.name)):
+            if self.mode_columns:
+                self.certify_reference_modes()
+            if self._dump_provenance_flag:
+                self.dump_provenance()
     
     def load(self):
         """Load and parse header from self.filename."""

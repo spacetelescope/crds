@@ -4,6 +4,8 @@ meta:
     instrument:
         name: miri
         detector : mirifulong
+        channel: 34
+        band: medium
     telescope: jwst
     subarray:
         name: MASK1550

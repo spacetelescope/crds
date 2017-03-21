@@ -386,8 +386,9 @@ and ids used for CRDS reprocessing recommendations.
             if config.is_reference(path):
                 self._cat_header(path)
                 if path.endswith(".fits"):
-                    self._cat_banner("Info:")
+                    self._cat_banner("Fits Info:")
                     fits.info(path)
+                    self._cat_array_properties(path)
             else:
                 self._cat_text(path)
 
@@ -396,6 +397,20 @@ and ids used for CRDS reprocessing recommendations.
         print(delim*80)
         print(*args)
         print(delim*80)
+        
+    def _cat_array_properties(self, path):
+        """Print out the CRDS interpretation of every array in `path`,  currently FITS only."""
+        i = 0
+        with data_file.fits_open(path) as hdulist:
+            for hdu in hdulist:
+                with log.warn_on_exception("Can't load array properties for HDU[" + str(i) +"]"):
+                    if i > 0:
+                        extname = hdu.header["EXTNAME"]
+                        self._cat_banner("CRDS Array Info [" + repr(extname) + "]:", delim="-")
+                        props = data_file.get_array_properties(path, hdu.header["EXTNAME"])
+                        props = { prop:value for (prop,value) in props.items() if value is not None }
+                        print(log.PP(props))
+                i += 1
 
     def _cat_text(self, path):
         """Dump out the contexts of a text file."""
@@ -520,10 +535,7 @@ and ids used for CRDS reprocessing recommendations.
     def list_status(self):
         """Print out *basic* configuration info about the current environment and server."""
         info = config.get_crds_env_vars()
-        real_paths = config.get_crds_actual_paths(self.observatory)
         server = self.server_info
-        current_server_url = api.get_crds_server()
-        cache_subdir_mode = config.get_crds_ref_subdir_mode(self.observatory)
         pyinfo = _get_python_info()
         status = OrderedDict(
             [("CRDS_PATH", info.get("CRDS_PATH", "undefined")),

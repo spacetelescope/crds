@@ -59,6 +59,12 @@ def certify_bad_checksum():
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
     CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
@@ -100,7 +106,7 @@ def certify_bad_checksum():
     CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
     CRDS - INFO -  ########################################
     CRDS - INFO -  2 errors
-    CRDS - INFO -  4 warnings
+    CRDS - INFO -  10 warnings
     CRDS - INFO -  39 infos
     2
     """
@@ -238,18 +244,21 @@ def certify_dump_provenance_fits():
 def certify_dump_provenance_generic():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    
-    >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst.pmap")()
+    >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
+    CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
     CRDS - INFO -  META.EXPOSURE.READPATT = 'any'
+    CRDS - INFO -  META.EXPOSURE.TYPE = 'mir_image'
+    CRDS - INFO -  META.INSTRUMENT.BAND = 'medium'
+    CRDS - INFO -  META.INSTRUMENT.CHANNEL = '34'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
+    CRDS - INFO -  META.INSTRUMENT.FILTER = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.NAME = 'MIRI'
-    CRDS - INFO -  META.OBSERVATION.DATE = '2015-01-25'
     CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
     CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
     CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.REFFILE.PEDIGREE = 'dummy'
+    CRDS - INFO -  META.REFFILE.TYPE = 'distortion'
     CRDS - INFO -  META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
     CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
     CRDS - INFO -  META.SUBARRAY.NAME = 'MASK1550'
@@ -262,9 +271,8 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  20 infos
+    CRDS - INFO -  24 infos
     0
-
     >>> test_config.cleanup(old_state)
 
     """
@@ -437,15 +445,29 @@ def certify_jwst_invalid():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
-    CRDS - INFO - FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
-    CRDS - ERROR - instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading : JWST Data Model (jwst.datamodels) : 'FOO' is not valid in keyword 'DETECTOR'
-    CRDS - INFO - ########################################
-    CRDS - INFO - 1 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 4 infos
-    1
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
+    CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
+    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (is_table(PHOTOM_ARRAY)) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'NELEM','INT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE'])) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'FILTER','STRING')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'ORDER','INT')) is not satisfied.
+    CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  12 errors
+    CRDS - INFO -  2 warnings
+    CRDS - INFO -  5 infos
+    12
     >>> test_config.cleanup(old_state)
     """
 
@@ -455,15 +477,29 @@ def certify_jwst_missing_optional_parkey():
     >>> TestCertifyScript("crds.certify data/niriss_ref_photom_missing_detector.fits --comparison-context jwst_0125.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_missing_detector.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
     CRDS - INFO -  FITS file 'niriss_ref_photom_missing_detector.fits' conforms to FITS standards.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.REFFILE.USEAFTER' : Invalid JWST date 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' format should be 'YYYY-MM-DDTHH:MM:SS'
-    <BLANKLINE>
+    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Missing required keyword 'META.INSTRUMENT.DETECTOR'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (is_table(PHOTOM_ARRAY)) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'NELEM','INT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE'])) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'FILTER','STRING')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'ORDER','INT')) is not satisfied.
+    CRDS - WARNING -  Failed resolving comparison reference for table checks :  parameter='META.INSTRUMENT.DETECTOR' value='UNDEFINED' is not in ('NIS', '*', 'N/A')
+    CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_missing_detector.fits' in context 'jwst_0125.pmap'. Skipping tables comparison.
     CRDS - INFO -  ########################################
-    CRDS - INFO -  2 errors
-    CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
-    2
+    CRDS - INFO -  13 errors
+    CRDS - INFO -  3 warnings
+    CRDS - INFO -  5 infos
+    13
     >>> test_config.cleanup(old_state)
     """
     
@@ -500,9 +536,9 @@ def certify_jwst_invalid_json():
 def certify_jwst_invalid_yaml():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/invalid.yaml  --comparison-context jwst.pmap")()
+    >>> TestCertifyScript("crds.certify data/invalid.yaml  --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/invalid.yaml' (1/1) as 'YAML' relative to context 'jwst.pmap'
+    CRDS - INFO -  Certifying 'data/invalid.yaml' (1/1) as 'YAML' relative to context 'jwst_0034.pmap'
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.yaml' ::  Validation error : while scanning a tag
       in "data/invalid.yaml", line 1, column 5
     expected ' ', but found '^'
@@ -876,11 +912,11 @@ class TestCertify(test_config.CRDSTestCase):
         
     def test_JsonCertify_valid(self):
         certify.certify_file(
-            self.data("valid.json"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)
+            self.data("valid.json"), observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
             
     def test_YamlCertify_valid(self):
         certify.certify_file(
-            self.data("valid.yaml"), observatory="jwst", context="jwst.pmap", trap_exceptions=False)
+            self.data("valid.yaml"), observatory="jwst", context="jwst_0034.pmap", trap_exceptions=False)
 
     def test_AsdfCertify_valid(self):
         certify.certify_file(
