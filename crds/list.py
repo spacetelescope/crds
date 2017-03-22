@@ -378,25 +378,31 @@ and ids used for CRDS reprocessing recommendations.
                 catted_files.remove(self.default_context)
             except Exception:
                 pass
-
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
-            path = os.path.abspath(self.locate_file(name))
-            self._cat_banner("File:", path)
-            if config.is_reference(path):
-                self._cat_header(path)
-                if path.endswith(".fits"):
-                    self._cat_banner("Fits Info:")
-                    fits.info(path)
-                    self._cat_array_properties(path)
-            else:
-                self._cat_text(path)
+            with log.error_on_exception("Failed dumping:", repr(name)):
+                path = os.path.abspath(self.locate_file(name))
+                self._cat_file(path)
 
-    def _cat_banner(self, *args, delim="#"):
+    def _cat_file(self, path):
+        """Print out information on a single reference or mapping at `path`."""
+        self._cat_banner("File:", path, delim="#", bottom_delim="-")
+        if config.is_reference(path):
+            self._cat_header(path)
+            if path.endswith(".fits"):
+                self._cat_banner("Fits Info:", delim="-")
+                fits.info(path)
+                self._cat_array_properties(path)
+        else:
+            self._cat_text(path)
+
+    def _cat_banner(self, *args, delim="#", bottom_delim=None):
         """Print a banner for --cat for `name` and return the filepath of `name`."""
-        print(delim*80)
+        if delim:
+            print(delim*80)
         print(*args)
-        print(delim*80)
+        if bottom_delim:
+            print(bottom_delim*80)
         
     def _cat_array_properties(self, path):
         """Print out the CRDS interpretation of every array in `path`,  currently FITS only."""
