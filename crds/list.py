@@ -396,8 +396,10 @@ and ids used for CRDS reprocessing recommendations.
         else:
             self._cat_text(path)
 
-    def _cat_banner(self, *args, delim="#", bottom_delim=None):
+    def _cat_banner(self, *args, **keys):
         """Print a banner for --cat for `name` and return the filepath of `name`."""
+        delim = keys.get("delim","#")
+        bottom_delim = keys.get("bottom_delim", None)
         if delim:
             print(delim*80)
         print(*args)
