@@ -213,12 +213,7 @@ def get_classic_tpninfos(filepath):
     # XXXX Doesn't use verbose_warning_on_exception because --debug-traps would
     # always trigger since trapped exceptions are expected here,  debugging this
     # is trickier than normal.
-    try:
-        return load_tpn(filepath)
-    except Exception as exc:
-        log.verbose_warning("Exception reading TPN", repr(filepath), ":",
-                            log.srepr(exc), verbosity=70)
-        return []
+    return load_tpn(filepath) if os.path.exists(filepath) else []
     
 # =============================================================================
 

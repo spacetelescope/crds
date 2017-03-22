@@ -630,11 +630,15 @@ def is_full_frame(subarray):
 
 def is_subarray(subarray):
     """Return True IFF `subarray` is defined and is not a full frame value."""
-    return  subarray != "UNDEFINED" and not is_full_frame(subarray)
+    return  (subarray != "UNDEFINED") and not is_full_frame(subarray)
 
 def is_irs2(readpatt):
     """Return True IFF `readpatt` is one of the IRS2 READPATTs."""
-    return readpatt != 'UNDEFINED' and 'IRS2' in readpatt
+    return 'IRS2' in readpatt
+
+def irs2_dim(readpatt):
+    """Return 3200 if `readpatt` indicates and IRS2 mode else return 2048."""
+    return 3200 if is_irs2(readpatt) else 2048
 
 def is_defined(keyword):
     """Return True IFF `keyword` is not 'UNDEFINED' or None."""

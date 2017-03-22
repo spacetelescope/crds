@@ -7,7 +7,7 @@ include nir_dq_def_array.tpn
 
 WAVELENGTH   A           X         R             (is_table(WAVELENGTH_ARRAY))
 WAVELENGTH   A           X         R             (has_columns(WAVELENGTH_ARRAY,['WAVELENGTH']))
-WAVELENGTH   A           X         R             (has_column_type(WAVELENGTH_ARRAY,'WAVELENGTH','FLOAT_ARRAY')
+WAVELENGTH   A           X         R             (has_column_type(WAVELENGTH_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))
 
 FAST_VARIATION    A           X         R        (is_table(FAST_VARIATION_ARRAY))
 FAST_VARIATION    A           X         R        (has_columns(FAST_VARIATION_ARRAY,['SLIT_NAME','NELEM','WAVELENGTH','DATA']))

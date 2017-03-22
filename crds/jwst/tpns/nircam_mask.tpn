@@ -1,3 +1,4 @@
 include nir_subarray.tpn
-include nir_dq_array.tpn
+
+include nir_dq_irs2_array.tpn
 include nir_dq_def_array.tpn
