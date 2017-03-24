@@ -447,27 +447,43 @@ def certify_jwst_invalid():
     >>> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
-    CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
-    CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
-    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (is_table(PHOTOM_ARRAY)) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'NELEM','INT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE'])) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'FILTER','STRING')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_bad.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'ORDER','INT')) is not satisfied.
-    CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : JWST Data Model (jwst.datamodels) : 'FOO' is not one of [u'NRCA1', u'NRCA2', u'NRCA3', u'NRCA4', u'NRCALONG', u'NRCB1', u'NRCB2', u'NRCB3', u'NRCB4', u'NRCBLONG', u'NRS1', u'NRS2', u'ANY', u'MIRIMAGE', u'MIRIFULONG', u'MIRIFUSHORT', u'NIRISS', u'NIS', u'GUIDER1', u'GUIDER2', u'N/A']
+    <BLANKLINE>
+    Failed validating u'enum' in schema:
+        {u'$schema': u'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
+         u'description': u"'NIRISS' is deprecated in favor of 'NIS'",
+         u'enum': [u'NRCA1',
+                   u'NRCA2',
+                   u'NRCA3',
+                   u'NRCA4',
+                   u'NRCALONG',
+                   u'NRCB1',
+                   u'NRCB2',
+                   u'NRCB3',
+                   u'NRCB4',
+                   u'NRCBLONG',
+                   u'NRS1',
+                   u'NRS2',
+                   u'ANY',
+                   u'MIRIMAGE',
+                   u'MIRIFULONG',
+                   u'MIRIFUSHORT',
+                   u'NIRISS',
+                   u'NIS',
+                   u'GUIDER1',
+                   u'GUIDER2',
+                   u'N/A'],
+         u'fits_keyword': u'DETECTOR',
+         u'title': u'Name of detector used to acquire the data',
+         u'type': u'string'}
+    <BLANKLINE>
+    On instance:
+        'FOO'
     CRDS - INFO -  ########################################
-    CRDS - INFO -  12 errors
-    CRDS - INFO -  2 warnings
-    CRDS - INFO -  5 infos
-    12
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  3 infos
+    1
     >>> test_config.cleanup(old_state)
     """
 
