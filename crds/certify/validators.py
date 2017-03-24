@@ -650,6 +650,23 @@ def is_defined(keyword):
     """Return True IFF `keyword` is not 'UNDEFINED' or None."""
     return keyword not in ["UNDEFINED", None]
 
+# @utils.traced
+def nir_filter(instrument, reftype, exp_type):
+    """Return True if a SCI, ERR, or DQ array is appropriate for the specified
+    JWST NIR instrument, reftype, and exp_type.
+    """
+    if instrument == "NIRSPEC":
+        if reftype == "SFLAT":
+            return exp_type in ["NRS_MSASPEC","NRS_IFU"]
+        elif reftype == "DFLAT":
+            return True
+        elif reftype in "FFLAT":
+            return exp_type in ["NRS_MSASPEC"]
+        else:
+            return True
+    else:
+        return True
+
 # ----------------------------------------------------------------------------
 
 def validator(info):

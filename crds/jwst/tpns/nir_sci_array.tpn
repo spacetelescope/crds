@@ -5,16 +5,16 @@
 # These are X instead of H because they're fundamentally not keyword/header checks,  
 # they're condition checks where the name of the condition is given in place of the keyword.
 
-SUBARRAY_INBOUNDS_X         X   X   R  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
-SUBARRAY_INBOUNDS_Y         X   X   R  (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+SUBARRAY_INBOUNDS_X         H   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                          (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+SUBARRAY_INBOUNDS_Y         H   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                          (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
 
-SCI       H           X         F             (META_SUBARRAY_XSTART==1)
-SCI       H           X         F             (META_SUBARRAY_YSTART==1)
-SCI       A           X         F             (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       H           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_XSTART==1)
+SCI       H           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_YSTART==1)
+SCI       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
 
-SCI       A           X         R             (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         R             (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
-SCI       A           X         S             (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+SCI       A           X         (is_subarray(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))    (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
-SCI       A           X         R             (is_image(SCI_ARRAY))
-SCI       A           X         R             (has_type(SCI_ARRAY,'FLOAT'))
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (is_image(SCI_ARRAY))
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (has_type(SCI_ARRAY,'FLOAT'))

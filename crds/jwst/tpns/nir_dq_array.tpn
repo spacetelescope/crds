@@ -2,14 +2,13 @@
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
 
-DQ       H           X         F                            (META_SUBARRAY_XSTART==1)
-DQ       H           X         F                            (META_SUBARRAY_YSTART==1)
-DQ       A           X         F                            (DQ_ARRAY.SHAPE[-2:]==(2048,2048))
+DQ       H           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_XSTART==1)
+DQ       H           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_YSTART==1)
+DQ       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (DQ_ARRAY.SHAPE[-2:]==(2048,2048))
 
-DQ       A           X         R                            (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=2048)
-DQ       A           X         R                            (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=2048)
+DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=2048)
+DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=2048)
+DQ       A           X         (is_subarray(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))    (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
-DQ       A           X         S                             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-
-DQ       A           X         R                             (is_image(DQ_ARRAY))
-DQ       A           X         R                             (has_type(DQ_ARRAY,'INT'))
+DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (is_image(DQ_ARRAY))
+DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (has_type(DQ_ARRAY,'INT'))

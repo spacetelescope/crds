@@ -1,3 +1,10 @@
+include nir_subarray.tpn
+
+include nir_sci_array.tpn
+include nir_err_array.tpn
+include nir_dq_array.tpn
+include nir_dq_def_array.tpn
+
 # 
 # Currently crds.certify doesn't have the capability of verifying something this complicated
 # 

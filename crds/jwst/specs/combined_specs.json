@@ -49,6 +49,19 @@
             "text_descr":"Dark files for all instruments.",
             "tpn":"all_photom.tpn",
             "unique_rowkeys":null
+        },
+        "throughput":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"THROUGHPUT",
+            "filetype":"THROUGHPUT",
+            "instrument":"ALL",
+            "ld_tpn":"all_throughput_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"THROUGHPUT",
+            "text_descr":"Throughput constraints for all instruments.",
+            "tpn":"all_throughput.tpn",
+            "unique_rowkeys":null
         }
     },
     "fgs":{

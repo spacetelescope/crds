@@ -2,3 +2,5 @@ include nir_subarray.tpn
 
 include nir_sci_array.tpn
 
+BUNIT    H   C    R   DN
+
