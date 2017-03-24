@@ -176,12 +176,12 @@ class Validator(object):
         """
         value = header.get(self.complex_name, "UNDEFINED")
         if value in [None, "UNDEFINED"]:
-            return self._handle_missing()
+            return self._handle_missing(header)
         elif self.info.presence == "E":
             raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
         return value
     
-    def _handle_missing(self):
+    def _handle_missing(self, header=None):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
@@ -196,9 +196,14 @@ class Validator(object):
         elif self.info.presence in ["S","F"]:
             log.verbose("Conditional SUBARRAY parameter is not defined.")
             return "UNDEFINED"
+        elif self.conditionally_required:
+            if header and self.is_applicable(header):
+                raise MissingKeywordError("Missing keyword", repr(self.name), 
+                                           "required by condition", self.info.presence)
+                return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
-                                     log.srepr(self.info.presence))
+                                     repr(self.info.presence))
 
     @property
     def optional(self):
@@ -212,8 +217,9 @@ class Validator(object):
         it compiles now.
         """
         has_condition = generic_tpn.is_expression(self.info.presence)
-        if has_condition and not self._presence_condition_code:
-            self._presence_condition_code = compile(self.info.presence, repr(self.info), "eval")
+        if has_condition:
+            if not self._presence_condition_code:
+                self._presence_condition_code = compile(self.info.presence, repr(self.info), "eval")
             return True
         else:
             return False
