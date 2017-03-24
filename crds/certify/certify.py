@@ -687,6 +687,10 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     """    
     try:
         old_flag = log.set_exception_trap(trap_exceptions)    #  XXX non-reentrant code,  no threading
+
+        if filename == "N/A":
+            log.verbose("Skipping certify N/A file.")
+            return
         
         if original_name is None:
             original_name = filename
