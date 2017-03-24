@@ -447,35 +447,35 @@ def certify_jwst_invalid():
     >>> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : JWST Data Model (jwst.datamodels) : 'FOO' is not one of [u'NRCA1', u'NRCA2', u'NRCA3', u'NRCA4', u'NRCALONG', u'NRCB1', u'NRCB2', u'NRCB3', u'NRCB4', u'NRCBLONG', u'NRS1', u'NRS2', u'ANY', u'MIRIMAGE', u'MIRIFULONG', u'MIRIFUSHORT', u'NIRISS', u'NIS', u'GUIDER1', u'GUIDER2', u'N/A']
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : JWST Data Model (jwst.datamodels) : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIRISS', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
     <BLANKLINE>
-    Failed validating u'enum' in schema:
-        {u'$schema': u'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
-         u'description': u"'NIRISS' is deprecated in favor of 'NIS'",
-         u'enum': [u'NRCA1',
-                   u'NRCA2',
-                   u'NRCA3',
-                   u'NRCA4',
-                   u'NRCALONG',
-                   u'NRCB1',
-                   u'NRCB2',
-                   u'NRCB3',
-                   u'NRCB4',
-                   u'NRCBLONG',
-                   u'NRS1',
-                   u'NRS2',
-                   u'ANY',
-                   u'MIRIMAGE',
-                   u'MIRIFULONG',
-                   u'MIRIFUSHORT',
-                   u'NIRISS',
-                   u'NIS',
-                   u'GUIDER1',
-                   u'GUIDER2',
-                   u'N/A'],
-         u'fits_keyword': u'DETECTOR',
-         u'title': u'Name of detector used to acquire the data',
-         u'type': u'string'}
+    Failed validating 'enum' in schema:
+        {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
+         'description': "'NIRISS' is deprecated in favor of 'NIS'",
+         'enum': ['NRCA1',
+                  'NRCA2',
+                  'NRCA3',
+                  'NRCA4',
+                  'NRCALONG',
+                  'NRCB1',
+                  'NRCB2',
+                  'NRCB3',
+                  'NRCB4',
+                  'NRCBLONG',
+                  'NRS1',
+                  'NRS2',
+                  'ANY',
+                  'MIRIMAGE',
+                  'MIRIFULONG',
+                  'MIRIFUSHORT',
+                  'NIRISS',
+                  'NIS',
+                  'GUIDER1',
+                  'GUIDER2',
+                  'N/A'],
+         'fits_keyword': 'DETECTOR',
+         'title': 'Name of detector used to acquire the data',
+         'type': 'string'}
     <BLANKLINE>
     On instance:
         'FOO'
