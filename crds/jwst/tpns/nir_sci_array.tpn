@@ -17,4 +17,5 @@ SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))         
 SCI       A           X         (is_subarray(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))    (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
 SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (is_image(SCI_ARRAY))
-SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (has_type(SCI_ARRAY,'FLOAT'))
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(REFTYPE!='SATURATION'))    (has_type(SCI_ARRAY,'FLOAT'))
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(REFTYPE=='SATURATION'))    (has_type(SCI_ARRAY,'INT'))

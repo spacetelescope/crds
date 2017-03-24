@@ -50,6 +50,23 @@
             "tpn":"all_photom.tpn",
             "unique_rowkeys":null
         },
+        "rscd":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"RSCD",
+            "filetype":"RSCD",
+            "instrument":"ALL",
+            "ld_tpn":"all_rscd_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"RSCD",
+            "text_descr":"Reset Switch Charge Decay Correction",
+            "tpn":"all_rscd.tpn",
+            "unique_rowkeys":[
+                "READPATT",
+                "SUBARRAY",
+                "ROWS"
+            ]
+        },
         "throughput":{
             "extra_keys":null,
             "file_ext":".fits",
@@ -933,11 +950,15 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"ec43fcd3756a572d11405b7e683983c5d2fe51ff",
+            "sha1sum":"6f7393efd0ed9c420e0beb38d92a84e4efaeb9d3",
             "suffix":"rscd",
             "text_descr":"Reset Switch Charge Decay correction",
             "tpn":"miri_rscd.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "READPATT",
+                "SUBARRAY",
+                "ROWS"
+            ]
         },
         "saturation":{
             "derived_from":"jwst_miri_saturation_0000.rmap",

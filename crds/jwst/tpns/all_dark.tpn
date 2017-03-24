@@ -11,3 +11,7 @@ META.SUBARRAY.NAME          H   C   R   NOT_GENERIC
 META.EXPOSURE.NFRAMES       H   I   R  
 META.EXPOSURE.GROUPGAP      H   I   R   
 META.EXPOSURE.NGROUPS       H   I   R                  
+
+SCI     A     X      R    (len(SCI_ARRAY.shape)==3)
+ERR     A     X      R    (len(ERR_ARRAY.shape)==3)
+DQ      A     X      R    (len(DQ_ARRAY.shape)==2)

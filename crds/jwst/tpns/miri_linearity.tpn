@@ -13,6 +13,7 @@ COEFFS       A           X         R            (has_type(COEFFS_ARRAY,'FLOAT'))
 COEFFS       A           X         R            (is_image(COEFFS_ARRAY))
 COEFFS       A           X         R            (len(COEFFS_ARRAY.SHAPE)==3)
 
+# Optional ERR 
 ERR       H           X         F               (META_SUBARRAY_XSTART==1)
 ERR       H           X         F               (META_SUBARRAY_YSTART==1)
 ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==(1024,1032))
@@ -25,4 +26,7 @@ ERR       A           X         S               (ERR_ARRAY.SHAPE[-2:]==(META_SUB
 ERR       A           X         R               (has_type(ERR_ARRAY,'FLOAT'))
 ERR       A           X         R               (is_image(ERR_ARRAY))
 
+
+include miri_dq_array.tpn
+include miri_dq_def_array.tpn
 
