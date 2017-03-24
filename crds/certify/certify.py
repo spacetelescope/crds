@@ -471,6 +471,7 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
     basename = repr(os.path.basename(tab.filename) + "[{}]".format(tab.segment))
     log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
     log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
+    log.verbose("Checking for duplicate modes.")
     modes = defaultdict(list)
     for i, row in enumerate(tab.rows):
         new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
