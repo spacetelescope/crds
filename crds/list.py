@@ -366,6 +366,8 @@ and ids used for CRDS reprocessing recommendations.
 
     def cat_files(self):
         """Print out the files listed after --cat"""
+        self.show_context_resolution = True
+
         self.args.files = self.args.cat   # determine observatory from --cat files.
 
         # --cat files...   specifying *no* files still triggers --cat logic
@@ -381,12 +383,13 @@ and ids used for CRDS reprocessing recommendations.
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
             with log.error_on_exception("Failed dumping:", repr(name)):
-                path = os.path.abspath(self.locate_file(name))
-                self._cat_file(path)
+                path = self.locate_file(name)
+                if path != "N/A":
+                    self._cat_file(path)
 
     def _cat_file(self, path):
         """Print out information on a single reference or mapping at `path`."""
-        self._cat_banner("File:", path, delim="#", bottom_delim="-")
+        self._cat_banner("File:", os.path.abspath(path), delim="#", bottom_delim="-")
         if config.is_reference(path):
             self._cat_header(path)
             if path.endswith(".fits"):
