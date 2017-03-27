@@ -512,7 +512,8 @@ class ExpressionValidator(Validator):
         """
         # super(ExpressionValidator, self).check_header(filename, header)
         header = data_file.convert_to_eval_header(header)
-        log.verbose("File=" + repr(os.path.basename(filename)), "Checking condition", str(self._expr))
+        log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
+                    repr(self.name), "condition", str(self._expr))
         satisfied = True
         with log.verbose_warning_on_exception("Failed checking condition", repr(self._expr)):
             satisfied = eval(self._expr_code, header, dict(globals()))
