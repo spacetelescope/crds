@@ -1124,7 +1124,6 @@ class TestCertify(test_config.CRDSTestCase):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&ANYDATE',))
         checker = certify.validator(tinfo)
         checker.check("test.fits", {"USEAFTER":"25/12/2016"})
-        checker.check("test.fits", {"USEAFTER":"2017-01-01T00:00:00.000"})
         checker.check("test.fits", {"USEAFTER":"Mar 21 2001 12:00:00 am"})
         assert_raises(ValueError, checker.check, "test.fits", {"USEAFTER":"2017-01-01T00:00:00.000"})
         assert_raises(ValueError, checker.check, "test.fits", {"USEAFTER":"12-25-2017"})
@@ -1134,7 +1133,7 @@ class TestCertify(test_config.CRDSTestCase):
 # ------------------------------------------------------------------------------
 
     def certify_rmap_missing_parkey(self):
-        certify.certify_files([self.data("hst_cos_deadtab_missing_parkey.rmap")], observatory="hst")
+        certify.certify_files([self.data("hst_missing_parkey.rmap")], observatory="hst")
     
     def certify_no_corresponding_rmap(self):
         certify.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap")  
