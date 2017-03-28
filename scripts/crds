@@ -16,6 +16,8 @@ from crds.pysh import usage
 if len(sys.argv) > 2 and "--help" in sys.argv:
     del sys.argv[2]
     RESTORE_HELP = True
+elif len(sys.argv) == 2 and "--help" not in sys.argv:
+    RESTORE_HELP = True
 else:
     RESTORE_HELP = False
 
