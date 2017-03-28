@@ -7,6 +7,12 @@ from __future__ import absolute_import
 
 import os
 
+# ==================================================================================
+
+from nose.tools import assert_raises, assert_true
+
+# ==================================================================================
+
 from crds.core import utils, log
 from crds import client
 from crds import certify
@@ -14,8 +20,6 @@ from crds.certify import CertifyScript
 from crds.certify import generic_tpn
 
 from crds.tests import test_config
-
-from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
@@ -27,6 +31,8 @@ class TestCertifyScript(CertifyScript):
             return super(TestCertifyScript, self).__call__()
         finally:
             test_config.cleanup(old_config)
+
+# ==================================================================================
 
 def certify_truncated_file():
     """
@@ -444,7 +450,11 @@ def certify_jwst_valid():
 def certify_jwst_invalid():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
+
+    >> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
+    
+    XXX DISABLED due to unicode formatting 2.7 vs. 3.5,  added unit test
+    
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : JWST Data Model (jwst.datamodels) : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIRISS', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
@@ -569,14 +579,14 @@ def certify_jwst_invalid_yaml():
  
 def certify_test_jwst_load_all_type_constraints():
     """
-    >>> old_state = test_config.setup(url="https://jwst-crds.stsci.edu")
+    >>> old_state = test_config.setup(url="https://jwst-crds.stsci.edu", observatory="jwst")
     >>> generic_tpn.load_all_type_constraints("jwst")
     >>> test_config.cleanup(old_state)
     """
 
 def certify_test_hst_load_all_type_constraints():
     """
-    >>> old_state = test_config.setup(url="https://hst-crds.stsci.edu")
+    >>> old_state = test_config.setup(url="https://hst-crds.stsci.edu", observatory="hst")
     >>> generic_tpn.load_all_type_constraints("hst")
     >>> test_config.cleanup(old_state)
     """
@@ -648,21 +658,6 @@ class TestCertify(test_config.CRDSTestCase):
         assert_true(isinstance(cval, certify.CharacterValidator))
         header = {"DETECTR" : "WFC" }
         cval.check("foo.fits", header)
-
-    # ------------------------------------------------------------------------------
-        
-    def test_regex_validator_good(self):
-        tinfo = certify.TpnInfo('DETECTOR','H','Z','R', ('WFC|HRC|S.C',))
-        cval = certify.validator(tinfo)
-        assert_true(isinstance(cval, certify.RegexValidator))
-        cval.check("foo.fits", {"DETECTOR":"SBC"})
-
-    def test_regex_validator_bad(self):
-        tinfo = certify.TpnInfo('DETECTOR','H','Z','R', ('WFC|HRC|S.C',))
-        cval = certify.validator(tinfo)
-        assert_true(isinstance(cval, certify.RegexValidator))
-        header = {"DETECTOR" : "WFD" }
-        assert_raises(ValueError, cval.check, "foo.fits", header)
 
     # ------------------------------------------------------------------------------
         
@@ -799,6 +794,20 @@ class TestCertify(test_config.CRDSTestCase):
         info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
         assert_raises(ValueError, certify.validator, info)
  
+    def test_real_validator_float_zero(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('1','0.0'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "0.0001"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
+    def test_real_validator_float_zero_zero(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('1','0.0'))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "0.0003"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
     # ------------------------------------------------------------------------------
         
     def test_double_validator_bad_format(self):
@@ -900,7 +909,204 @@ class TestCertify(test_config.CRDSTestCase):
         header = { "DETECTOR" : "FRODO", "SUBARRAY":"BAZ" }
         checker.check("foo.fits", header)
 
-    # ------------------------------------------------------------------------------
+    def test_not_conditionally_required(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ("FOO","BAR","BAZ"))
+        checker = certify.validator(info)
+        assert_true(not checker.conditionally_required)  #
+        
+    def test_tpn_bad_presence(self):
+        try:
+            certify.TpnInfo('DETECTOR','H', 'C', 'Q', ("FOO","BAR","BAZ"))
+        except ValueError as exc:
+            assert_true("presence" in str(exc), "Wrong exception for test_tpn_bad_presence")
+
+    def test_tpn_bad_group_keytype(self):
+        info = certify.TpnInfo('DETECTOR','G', 'C', 'R', ("FOO","BAR","BAZ"))
+        checker = certify.validator(info)
+        warns = log.warnings()
+        checker.check("test.fits", {"DETECTOR":"FOO"})
+        new_warns = log.warnings()
+        assert_true(new_warns - warns >= 1, "No warning issued for unsupported group .tpn constraint type.")
+        
+    def test_tpn_repr(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ("FOO","BAR","BAZ"))
+        repr(certify.Validator(info))
+ 
+    def test_tpn_check_value_method_not_implemented(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ("FOO","BAR","BAZ"))
+        checker = certify.Validator(info)
+        assert_raises(NotImplementedError, checker.check, "test.fits", header={"DETECTOR":"FOO"})
+
+    def test_tpn_handle_missing(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'W', ("FOO","BAR","BAZ"))
+        checker = certify.validator(info)
+        assert_true(checker._handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'S', ("FOO","BAR","BAZ"))
+        checker = certify.validator(info)
+        assert_true(checker._handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'F', ("FOO","BAR","BAZ"))
+        checker = certify.validator(info)
+        assert_true(checker._handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")        
+
+    def test_tpn_handle_missing_conditional(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', '(READPATT=="FOO")', ("FOO","BAR","BAZ"))
+        checker = certify.validator(info)
+        assert_raises(certify.MissingKeywordError, checker._handle_missing, header={"READPATT":"FOO"})
+        assert_true(checker._handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED")
+        
+
+    def test_missing_column_validator(self):
+        info = certify.TpnInfo('FOO','C', 'C', 'R', ("X","Y","Z"))
+        checker = certify.validator(info)
+        assert_raises(certify.MissingKeywordError, checker.check, self.data("v8q14451j_idc.fits"), 
+                      header={"DETECTOR":"IRRELEVANT"})
+
+    def test_tpn_excluded_keyword(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'E', ())
+        checker = certify.validator(info)
+        assert_raises(certify.IllegalKeywordError, checker.get_header_value, {"DETECTOR":"SHOULDNT_DEFINE"})
+
+    def test_tpn_not_value(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('SUBARRAY','H', 'C', 'R', ["NOT_GENERIC"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"SUBARRAY":"GENERIC"})
+
+    def test_tpn_or_bar_value(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["THIS","THAT","OTHER"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"DETECTOR":"THAT|THIS"})
+                
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["THAT","OTHER"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"DETECTOR":"THAT|THIS"})
+
+    def test_tpn_esoteric_value(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["([abc]+)","BETWEEN_300_400","#OTHER#"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"DETECTOR":"([abc]+)"})
+        assert_raises(ValueError, checker.check, "test.fits", {"DETECTOR": "([def]+)"})
+                                    
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["{.*1234}","BETWEEN_300_400","#OTHER#"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"DETECTOR":"{.*1234}"})
+                                    
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["(THIS)","BETWEEN_300_400","#OTHER#"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"DETECTOR":"BETWEEN_300_400"})
+
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["# >1 and <37 #","BETWEEN_300_400","#OTHER#"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"DETECTOR":"# >1 and <37 #"})
+                                    
+        info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["NOT_FOO","BETWEEN_300_400","#OTHER#"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"DETECTOR":"NOT_FOO"})
+                                    
+                                    
+    def test_tpn_pedigree_missing(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(certify.MissingKeywordError, 
+            checker.check, "test.fits", {"DETECTOR":"This is a test"})
+
+    def test_tpn_pedigree_dummy(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"PEDIGREE":"DUMMY"})
+
+    def test_tpn_pedigree_ground(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"PEDIGREE":"GROUND"})
+
+    def test_tpn_pedigree_inflight(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT"})
+
+    def test_tpn_pedigree_simulation(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"PEDIGREE":"SIMULATION"})
+
+    def test_tpn_pedigree_bad_leading(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"xDUMMY"})
+
+    def test_tpn_pedigree_bad_trailing(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"DUMMYxyz"})
+
+    def test_tpn_pedigree_good_datetime_slash(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"PEDIGREE":"INFLIGHT 02/01/2017 03/01/2017"})
+
+    def test_tpn_pedigree_bad_datetime_slash(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 02/25/2017 03/01/2017"})
+
+    def test_tpn_pedigree_good_datetime_dash(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 2017-01-02"})
+
+    def test_tpn_pedigree_bad_datetime_dash(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 01-02-2017"})
+
+    def test_tpn_pedigree_good_datetime_dash_dash(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        checker.check("test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02"})
+        
+    def test_tpn_pedigree_bad_datetime_format_1(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", 
+                      {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02 -"})
+        
+    def test_tpn_pedigree_bad_datetime_format_2(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, 
+                      "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017/01/02"})
+        
+    def test_tpn_pedigree_bad_datetime_format_3(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, 
+                      "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01T00:00:00 2017-01-02"})
+        
+# ------------------------------------------------------------------------------
         
     def test_sybdate_validator(self):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
@@ -908,6 +1114,36 @@ class TestCertify(test_config.CRDSTestCase):
         assert_true(isinstance(cval,certify.SybdateValidator))
         cval.check(self.data('acs_new_idc.fits'))
 
+    def test_slashdate_validator(self):
+        tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SLASHDATE',))
+        checker = certify.validator(tinfo)
+        checker.check("test.fits", {"USEAFTER":"25/12/2016"})
+        assert_raises(ValueError, checker.check, "test.fits", {"USEAFTER":"2017-12-25"})
+
+    def test_Anydate_validator(self):
+        tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&ANYDATE',))
+        checker = certify.validator(tinfo)
+        checker.check("test.fits", {"USEAFTER":"25/12/2016"})
+        checker.check("test.fits", {"USEAFTER":"2017-01-01T00:00:00.000"})
+        checker.check("test.fits", {"USEAFTER":"Mar 21 2001 12:00:00 am"})
+        assert_raises(ValueError, checker.check, "test.fits", {"USEAFTER":"2017-01-01T00:00:00.000"})
+        assert_raises(ValueError, checker.check, "test.fits", {"USEAFTER":"12-25-2017"})
+        assert_raises(ValueError, checker.check, "test.fits", {"USEAFTER":"Mxx 21 2001 01:00:00 PM"})
+        assert_raises(ValueError, checker.check, "test.fits", {"USEAFTER":"35/12/20117"})
+
+# ------------------------------------------------------------------------------
+
+    def certify_rmap_missing_parkey(self):
+        certify.certify_files([self.data("hst_cos_deadtab_missing_parkey.rmap")], observatory="hst")
+    
+    def certify_no_corresponding_rmap(self):
+        certify.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap")  
+  
+    def certify_missing_provenance(self):
+        certify.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap",
+                              dum_provenance=True, provenance=["GAIN"])  
+    
+# ------------------------------------------------------------------------------
     def test_check_dduplicates(self):
         certify.certify_files([self.data("hst.pmap")], observatory="hst")
         certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
@@ -954,6 +1190,13 @@ class TestCertify(test_config.CRDSTestCase):
     def test_AsdfCertify_opaque_name(self):
         certify.certify_file(self.data("opaque_asd.tmp"), observatory="jwst", context="jwst_0082.pmap", 
             original_name="valid.tmp", trap_exceptions=False)
+
+# ------------------------------------------------------------------------------
+        
+    def test_jwst_certify_bad_value(self):
+        import jsonschema
+        assert_raises(jsonschema.ValidationError, certify.certify_file,
+            self.data("niriss_ref_photom_bad.fits"), observatory="jwst", context=None, trap_exceptions=False)
 
 # ==================================================================================
 

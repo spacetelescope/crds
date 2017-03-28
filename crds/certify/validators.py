@@ -28,6 +28,7 @@ from crds import data_file
 from . import reftypes
 from . import generic_tpn
 from .generic_tpn import TpnInfo   # generic TpnInfo code
+from .validator_helpers import *
 
 # ============================================================================
 
@@ -64,10 +65,13 @@ class Validator(object):
         if not (self.info.presence in ["R", "P", "E", "O", "W", "F", "S"] or
                 self.conditionally_required):
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
+        
+        if not (self.info.keytype in ["H", "C", "A", "D", "X", "G"]):
+            raise ValueError("Bad TPN keytype " + repr(self.info.keytype))
 
         if not hasattr(self.__class__, "_values"):
-            self._values = self.condition_values(
-                [val for val in info.values if not val.upper().startswith("NOT_")])
+            self._values = self.condition_values(info.values)
+#                [val for val in info.values if not val.upper().startswith("NOT_")])
             self._not_values = self.condition_values(
                 [val[4:] for val in info.values if val.upper().startswith("NOT_")])
             
@@ -200,6 +204,7 @@ class Validator(object):
             if header and self.is_applicable(header):
                 raise MissingKeywordError("Missing keyword", repr(self.name), 
                                            "required by condition", self.info.presence)
+            else:
                 return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
@@ -279,28 +284,19 @@ class KeywordValidator(Validator):
     
 # ----------------------------------------------------------------------------
 
-class RegexValidator(KeywordValidator):
-    """Checks that a value matches TpnInfo values treated as regexes."""
-    def _match_value(self, value):
-        if super(RegexValidator, self)._match_value(value):
-            return True
-        sval = str(value)
-        for pat in self._values:
-            if re.match(config.complete_re(pat), sval):
-                return True
-        return False
-
-# ----------------------------------------------------------------------------
-
 class CharacterValidator(KeywordValidator):
     """Validates values of type Character."""
     def condition(self, value):
+        """Condition a header values by stripping, converting to all uppercase, and replacing
+        space with underscore.
+        """
         chars = str(value).strip().upper()
         if " " in chars:
             chars = '"' + "_".join(chars.split()) + '"'
         return chars
 
     def _check_value(self, filename, value):
+        """Support rmap validation by handling esoteric values and or-groups."""
         if selectors.esoteric_key(value):
             values = [value]
         else:
@@ -375,7 +371,7 @@ class FloatValidator(NumericalValidator):
                 if possible:
                     err = (value-possible)/possible
                 elif value:
-                    err = (value-possible)/value
+                    err = value
                 else:
                     continue
                 # print "considering", possible, value, err
@@ -411,29 +407,38 @@ class PedigreeValidator(KeywordValidator):
         """
         value = super(PedigreeValidator, self).get_header_value(header)
         if value == "UNDEFINED":
-            return
+            return "UNDEFINED"
+        values = value.split()
+        if len(values) not in [1, 3, 4]:
+            raise ValueError("Invalid PEDIGREE format: " + repr(value))
         try:
-            pedigree, start, stop = value.split()
+            pedigree, start, stop = values
         except ValueError:
             try:
-                pedigree, start, _dash, stop = value.split()
+                pedigree, start, _dash, stop = values
             except ValueError:
                 pedigree = value
                 start = stop = None
         pedigree = pedigree.upper()
-        if start is not None:
-            timestamp.slashdate_or_dashdate(start)
-        if stop is not None:
-            timestamp.slashdate_or_dashdate(stop)
+        if start is not None and stop is not None:
+            if "T" in start+stop:  # can't appear in either string
+                raise ValueError("Invalid PEDIGREE format: " + repr(value))
+            start_dt = timestamp.slashdate_or_dashdate(start)
+            stop_dt = timestamp.slashdate_or_dashdate(stop)
+            if not (start_dt < stop_dt):
+                raise ValueError("PEDIGREE date order invalid: " + repr(start) + " >= " + repr(stop))
+        else:
+            if pedigree == "INFLIGHT":
+                raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
         return pedigree
 
-    def _match_value(self, value):
-        """Match raw pattern as prefix string only,  no complete_re()."""
-        sval = str(value)
-        for pat in self._values:
-            if re.match(pat, sval):   # intentionally NOT complete_re()
-                return True
-        return False
+#     def _match_value(self, value):
+#         """Match raw pattern as prefix string only,  no complete_re()."""
+#         sval = str(value)
+#         for pat in self._values:
+#             if re.match(pat, sval):   # intentionally NOT complete_re()
+#                 return True
+#         return False
 
 # ----------------------------------------------------------------------------
 
@@ -483,15 +488,6 @@ class AnydateValidator(KeywordValidator):
     def _check_value(self, filename, value):
         self.verbose(filename, value)
         timestamp.Anydate.get_datetime(value)
-
-# ----------------------------------------------------------------------------
-
-class FilenameValidator(KeywordValidator):
-    """Validates &FILENAME fields."""
-    def _check_value(self, filename, value):
-        self.verbose(filename, value)
-        result = (value == "(initial)") or not os.path.dirname(value)
-        return result
 
 # ----------------------------------------------------------------------------
 
@@ -547,129 +543,6 @@ class KernelunityValidator(Validator):
 
 # ----------------------------------------------------------------------------
 
-# Table check expression helper functions
-
-def has_columns(array_info, col_names):
-    """Return True IFF CRDS `array_info` object defines `col_names` columns in any order."""
-    if not array_exists(array_info):
-        return False
-    for col in col_names:
-        if col not in array_info.COLUMN_NAMES:
-            return False
-    return True
-
-def has_type(array_info, typestr):
-    """Return True IFF CRDS `array_info` object has a data array of type `typestr`."""
-    typestr = _image_type(typestr)
-    return array_exists(array_info) and typestr in array_info.DATA_TYPE
-
-def _image_type(typestr):
-    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
-    If CRDS has no definition for `typestr`,  return it unchanged.
-    """
-    return {
-        'COMPLEX':'complex',
-        'INT' : 'int',
-        'INTEGER' : 'int',
-        'FLOAT' : 'float',
-    }.get(typestr, typestr)
-
-def has_column_type(array_info, col_name, typestr):
-    """Return True IFF column `col_name` of CRDS `array_info` object has a 
-    data array of type `typestr`.
-    """
-    if not array_exists(array_info):
-        return False
-    typestrs = _table_type(typestr)
-    try:
-        for typestr in typestrs:
-            if typestr in array_info.DATA_TYPE[col_name.upper()]:
-                return True
-        return False
-    except KeyError:
-        raise MissingColumnError("Data type not defined for column", repr(col_name))
-        
-def _table_type(typestr):
-    """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
-    If CRDS has no definition for `typestr`,  return it unchanged.
-    """
-    int_types = [">i","<i","uint","int"]
-    float_types = [">f","<f","float","float"]
-    complex_types = [">c","<c","complex","complex"]
-    string_types = ["|S"]
-    
-    def _array_types(types):
-        return ["('" + typestr for typestr in types]
-    
-    trans = {
-        'COMPLEX': complex_types,
-        'COMPLEX_ARRAY': _array_types(complex_types),
-        'INT' : int_types,
-        'INTEGER' : int_types,
-        'INT_ARRAY' : _array_types(int_types),
-        'INTEGER_ARRAY' : _array_types(int_types),
-        'FLOAT' : float_types,
-        'FLOAT_ARRAY' : _array_types(float_types),
-        'STR' : string_types,
-        'STRING' : string_types,
-        'STR_ARRAY' : _array_types(string_types),
-        'STRING_ARRAY' : _array_types(string_types),
-    }.get(typestr, typestr)
-
-    return trans
-
-def is_table(array_info):
-    """Return True IFF CRDS `array_info` object corresponds to a table."""
-    return array_exists(array_info) and array_info.KIND=="TABLE"
-    
-def is_image(array_info):
-    """Return True IFF CRDS `array_info` object corresponds to an image."""
-    return array_exists(array_info) and array_info.KIND=="IMAGE"
-
-def  array_exists(array_info):
-    """Return True IFF array_info is not UNDEFINED."""
-    return array_info != "UNDEFINED" 
-
-def is_full_frame(subarray):
-    """Return True IFF `subarray` is defined and has a full frame subarray value."""
-    return subarray in ["FULL","GENERIC","N/A","ANY","*"]
-
-
-def is_subarray(subarray):
-    """Return True IFF `subarray` is defined and is not a full frame value."""
-    return  (subarray != "UNDEFINED") and not is_full_frame(subarray)
-
-def is_irs2(readpatt):
-    """Return True IFF `readpatt` is one of the IRS2 READPATTs."""
-    return 'IRS2' in readpatt
-
-def irs2_dim(readpatt):
-    """Return 3200 if `readpatt` indicates and IRS2 mode else return 2048."""
-    return 3200 if is_irs2(readpatt) else 2048
-
-def is_defined(keyword):
-    """Return True IFF `keyword` is not 'UNDEFINED' or None."""
-    return keyword not in ["UNDEFINED", None]
-
-# @utils.traced
-def nir_filter(instrument, reftype, exp_type):
-    """Return True if a SCI, ERR, or DQ array is appropriate for the specified
-    JWST NIR instrument, reftype, and exp_type.
-    """
-    if instrument == "NIRSPEC":
-        if reftype == "SFLAT":
-            return exp_type in ["NRS_MSASPEC","NRS_IFU"]
-        elif reftype == "DFLAT":
-            return True
-        elif reftype in "FFLAT":
-            return exp_type in ["NRS_MSASPEC"]
-        else:
-            return True
-    else:
-        return True
-
-# ----------------------------------------------------------------------------
-
 def validator(info):
     """Given TpnInfo object `info`, construct and return a Validator for it."""
     if len(info.values) == 1 and len(info.values[0]) and \
@@ -688,8 +561,6 @@ def validator(info):
         rval = IntValidator(info)
     elif info.datatype == "L":
         rval = LogicalValidator(info)
-    elif info.datatype == "Z":
-        rval = RegexValidator(info)
     elif info.datatype == "X":
         rval = ExpressionValidator(info)
     else:
