@@ -16,3 +16,7 @@ META.REFFILE.AUTHOR     H   C   R
 META.REFFILE.DESCRIPTION H   C  R
 META.REFFILE.HISTORY     H   C  R
 
+# Make EXP_TYPE available in headers even if only UNDEFINED
+# Keyword cross-strapping doesn't work for UNDEFINED values...
+META.EXPOSURE.TYPE     H    C   O
+EXP_TYPE               H    C   O
