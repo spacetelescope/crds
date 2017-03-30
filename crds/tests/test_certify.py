@@ -8,12 +8,13 @@ from __future__ import absolute_import
 import os
 
 # ==================================================================================
+import numpy as np
 
 from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-from crds.core import utils, log
+from crds.core import utils, log, exceptions
 from crds import client
 from crds import certify
 from crds.certify import CertifyScript
@@ -590,7 +591,11 @@ def certify_test_hst_load_all_type_constraints():
     >>> generic_tpn.load_all_type_constraints("hst")
     >>> test_config.cleanup(old_state)
     """
-
+    
+def certify_validator_bad_presence_condition():
+    """
+    >>> info = certify.TpnInfo('DETECTOR','H','C', '(Q)', ('WFC','HRC','SBC'))
+    """
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
@@ -625,6 +630,14 @@ class TestCertify(test_config.CRDSTestCase):
         
     # ------------------------------------------------------------------------------
         
+    def test_validator_bad_presence(self):
+        tinfo = certify.TpnInfo('DETECTOR','H','C','Q', ('WFC','HRC','SBC'))
+        assert_raises(ValueError, certify.validator, tinfo)
+        
+    def test_validator_bad_keytype(self):
+        tinfo = certify.TpnInfo('DETECTOR','Q','C','R', ('WFC','HRC','SBC'))
+        assert_raises(ValueError, certify.validator, tinfo)
+
     def test_character_validator_file_good(self):
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
@@ -1006,11 +1019,11 @@ class TestCertify(test_config.CRDSTestCase):
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["# >1 and <37 #","BETWEEN_300_400","#OTHER#"])
         checker = certify.validator(info)
         checker.check("test.fits", {"DETECTOR":"# >1 and <37 #"})
-                                    
+
+        # This demos synatax/check for "NOT FOO" in rmap match tuples
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["NOT_FOO","BETWEEN_300_400","#OTHER#"])
         checker = certify.validator(info)
-        checker.check("test.fits", {"DETECTOR":"NOT_FOO"})
-                                    
+        checker.check("test.fits", {"DETECTOR":"NOT_FOO"})                           
                                     
     def test_tpn_pedigree_missing(self):
         # typical subtle expression error, "=" vs. "=="
@@ -1066,6 +1079,12 @@ class TestCertify(test_config.CRDSTestCase):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 02/25/2017 03/01/2017"})
+
+    def test_tpn_pedigree_bad_datetime_order(self):
+        # typical subtle expression error, "=" vs. "=="
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-02 2017-01-01"})
 
     def test_tpn_pedigree_good_datetime_dash(self):
         # typical subtle expression error, "=" vs. "=="
@@ -1194,8 +1213,58 @@ class TestCertify(test_config.CRDSTestCase):
         
     def test_jwst_certify_bad_value(self):
         import jsonschema
-        assert_raises(jsonschema.ValidationError, certify.certify_file,
+        assert_raises(ValueError, certify.certify_file,
             self.data("niriss_ref_photom_bad.fits"), observatory="jwst", context=None, trap_exceptions=False)
+        
+    def test_certify_deep_sync(self):
+        script = certify.CertifyScript(
+            "crds.certify --deep --comparison-context hst_0317.pmap zbn1927fl_gsag.fits --sync-files")
+        errors = script()
+        assert_true(errors == 0)
+        
+    def test_certify_sync_comparison_reference(self):
+        script = certify.CertifyScript(
+            "crds.certify --comparison-reference zbn1927fl_gsag.fits zbn1927fl_gsag.fits --sync-files")
+        script()
+        
+    def test_certify_dont_recurse_mappings(self):
+        script = certify.CertifyScript("crds.certify hst_0317.pmap --dont-recurse-mappings")
+        errors = script()
+        
+    def test_certify_kernel_unity_validator_good(self):
+        header = {'SCI_ARRAY': utils.Struct({'COLUMN_NAMES': None,
+                                'DATA': np.array([[ 0.        ,  0.0276    ,  0.        ],
+                                               [ 0.0316    ,  0.88160002,  0.0316    ],
+                                               [ 0.        ,  0.0276    ,  0.        ]], dtype='float32'),
+                                'DATA_TYPE': 'float32',
+                                'EXTENSION': 1,
+                                'KIND': 'IMAGE',
+                                'SHAPE': (3, 3)})
+                }
+        info = certify.TpnInfo('SCI','D','X','R',('&KernelUnity',))
+        checker = certify.KernelunityValidator(info)
+        checker.check("test.fits", header)        
+
+    def test_certify_kernel_unity_validator_bad(self):
+        header = {'SCI_ARRAY': utils.Struct({'COLUMN_NAMES': None,
+                                'DATA': np.array([[ 0.        ,  0.0276    ,  0.        ],
+                                               [ 0.0316    ,  0.88160002 + 1e-6,  0.0316    ],
+                                               [ 0.        ,  0.0276    ,  0.        ]], dtype='float32'),
+                                'DATA_TYPE': 'float32',
+                                'EXTENSION': 1,
+                                'KIND': 'IMAGE',
+                                'SHAPE': (3, 3)})
+                }
+        info = certify.TpnInfo('SCI','D','X','R',('&KernelUnity',))
+        checker = certify.KernelunityValidator(info)
+        assert_raises(exceptions.BadKernelSumError, checker.check, "test.fits", header)
+        
+    def test_certify_mapping_compare_derived(self):
+        script = certify.CertifyScript(
+            "crds.certify --comparison-context jwst_0101.pmap jwst_0jwst_miri_distortion_0007.rmap")
+        script()
+        
+
 
 # ==================================================================================
 
