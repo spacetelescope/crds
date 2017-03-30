@@ -254,7 +254,7 @@ class SyncScript(cmdline.ContextsScript):
         """Synchronize files."""
 
         if self.args.dry_run:
-            self.args.readonly_cache = True
+            config.set_cache_readonly(True)
 
         if self.args.repair_files:
             self.args.check_files = True
@@ -291,7 +291,7 @@ class SyncScript(cmdline.ContextsScript):
                     active_references = self.get_context_references()
                 active_references = sorted(set(active_references + self.get_conjugates(active_references)))
                 if self.args.fetch_references:
-                    self.fetch_references(active_references)
+                    self.fetch_files(self.contexts[0], active_references)
                     verify_file_list += active_references
                 if self.args.purge_references:
                     self.purge_references(active_references)    
@@ -375,25 +375,37 @@ class SyncScript(cmdline.ContextsScript):
         
     # ------------------------------------------------------------------------------------------
     
-    def fetch_references(self, references):
-        """Gets all references required to support `only_contexts`.  Removes
-        all references from the CRDS reference cache which are not required for
-        `only_contexts`.
+    def fetch_files(self, context, files):
+        """Downloads `files` as needed relative to `context` nominally used to identify
+        the observatory to the server.  If the CRDS cache is currently configured as READONLY,
+        prints an estimate about which files will download and the total size.  The estimate
+        does not (currently) include the nested mappings associated with the closure of `files`,
+        but the dominant costs of downloads are reference files.
         """
-        if not self.contexts:
-            return
-        if self.args.readonly_cache:
-            already_have = set(rmap.list_references("*", self.observatory))
-            fetched = [ x for x in sorted(set(references)-set(already_have)) if not x.startswith("NOT FOUND") ]
+        files = set([os.path.basename(_file) for _file in files])
+        if config.get_cache_readonly():
+            log.info("READONLY CACHE estimating required downloads.")
+            if not self.args.ignore_cache:
+                already_have = (set(rmap.list_references("*", self.observatory)) |
+                                set(rmap.list_mappings("*", self.observatory)))
+            else:
+                already_have = set()
+            fetched = [ x for x in sorted(files - already_have) if not x.startswith("NOT FOUND") ]
+            for _file in files:
+                if _file in already_have:
+                    log.verbose("File", repr(_file), "is already in the CRDS cache.", verbosity=55)
+                else:
+                    log.verbose("File", repr(_file), "would be downloaded.", verbosity=55)
             if fetched:
-                log.info("READONLY CACHE would fetch references:", repr(fetched))
-                with log.info_on_exception("Reference size information not available."):
+                with log.info_on_exception("File size information not available."):
                     info_map = api.get_file_info_map(self.observatory, fetched, fields=["size"])
                     total_bytes = api.get_total_bytes(info_map)
-                    log.info("READONLY CACHE would download", len(fetched), "references totaling",  
+                    log.info("READONLY CACHE would download", len(fetched), "files totalling",  
                              utils.human_format_number(total_bytes).strip(), "bytes.")
+            else:
+                log.info("READONLY CACHE no reference downloads expected.")
         else:
-            self.dump_files(self.contexts[0], references)
+            self.dump_files(context, files, self.args.ignore_cache)
 
     def purge_references(self, keep=None):
         """Remove all references not references under pmaps `self.contexts`."""
@@ -458,7 +470,7 @@ class SyncScript(cmdline.ContextsScript):
     def sync_explicit_files(self):
         """Cache `self.files`."""
         log.info("Syncing explicitly listed files.")
-        self.dump_files(self.default_context, self.files)
+        self.fetch_files(self.default_context, self.files)
 
     # ------------------------------------------------------------------------------------------
     
