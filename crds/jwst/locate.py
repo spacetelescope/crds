@@ -25,7 +25,7 @@ from crds import data_file
 
 from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
 
-# from . import schema
+from . import schema
 
 
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
@@ -53,7 +53,6 @@ def tpn_path(tpn_file):
     return os.path.join(HERE, "tpns", tpn_file)
 
 def get_extra_tpninfos(refpath):
-    from . import schema
     return schema.get_schema_tpninfos(refpath)
 
 def project_check(refpath):

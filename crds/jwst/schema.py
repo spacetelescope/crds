@@ -20,12 +20,13 @@ import pprint
 # ====================================================================================
 
 # from jwst import datamodels   # deferred
+# from . import locate  # deferred
+
 
 import crds
 from crds.core import log, utils, heavy_client
 from crds.certify import TpnInfo
 
-from . import locate
 
 # ====================================================================================
 
@@ -65,6 +66,7 @@ def get_flat_schema(schema_name=None):
 @utils.cached
 def refpath_to_parkeys(refpath):
     """Given a key for a TpnInfo's list, return the associated required parkeys."""
+    from . import locate
     keys = []
     with log.verbose_warning_on_exception("Can't determine parkeys for", repr(refpath)):
         _mode, context  = heavy_client.get_processing_mode("jwst")

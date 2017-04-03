@@ -254,13 +254,16 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
+    CRDS - INFO -  EXP_TYPE = 'mir_image'
     CRDS - INFO -  META.EXPOSURE.READPATT = 'any'
     CRDS - INFO -  META.EXPOSURE.TYPE = 'mir_image'
     CRDS - INFO -  META.INSTRUMENT.BAND = 'medium'
     CRDS - INFO -  META.INSTRUMENT.CHANNEL = '34'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
     CRDS - INFO -  META.INSTRUMENT.FILTER = 'UNDEFINED'
-    CRDS - INFO -  META.INSTRUMENT.NAME = 'MIRI'
+    CRDS - INFO -  META.INSTRUMENT.NAME = 'miri'
+    CRDS - INFO -  META.OBSERVATION.DATE = '2015-01-25'
+    CRDS - INFO -  META.OBSERVATION.TIME = '12:00:00'
     CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
     CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
     CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
@@ -278,7 +281,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  24 infos
+    CRDS - INFO -  27 infos
     0
     >>> test_config.cleanup(old_state)
 
@@ -652,6 +655,48 @@ def certify_rmap_compare(self):
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("jwst_miri_distortion_0007.rmap", context="jwst_0101.pmap")
     CRDS - INFO -  Certifying 'jwst_miri_distortion_0007.rmap' as 'MAPPING' relative to context 'jwst_0101.pmap'
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_jwst_bad_fits(self):
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None)
+    CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
+    CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  Checking JWST datamodels.
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Error loading : JWST Data Models: 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIRISS', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
+    <BLANKLINE>
+    Failed validating 'enum' in schema:
+        {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
+         'description': "'NIRISS' is deprecated in favor of 'NIS'",
+         'enum': ['NRCA1',
+                  'NRCA2',
+                  'NRCA3',
+                  'NRCA4',
+                  'NRCALONG',
+                  'NRCB1',
+                  'NRCB2',
+                  'NRCB3',
+                  'NRCB4',
+                  'NRCBLONG',
+                  'NRS1',
+                  'NRS2',
+                  'ANY',
+                  'MIRIMAGE',
+                  'MIRIFULONG',
+                  'MIRIFUSHORT',
+                  'NIRISS',
+                  'NIS',
+                  'GUIDER1',
+                  'GUIDER2',
+                  'N/A'],
+         'fits_keyword': 'DETECTOR',
+         'title': 'Name of detector used to acquire the data',
+         'type': 'string'}
+    <BLANKLINE>
+    On instance:
+        'FOO'
     >>> test_config.cleanup(old_state)
     """
 
@@ -1247,11 +1292,6 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, certify.certify_file,
             self.data("s7g1700gm_dead_broken.fits"), observatory="hst", context="hst.pmap", trap_exceptions=False)
         
-    def test_jwst_bad_value(self):
-        assert_raises(exceptions.ValidationError, certify.certify_file,
-            "data/niriss_ref_photom_bad.fits", observatory="jwst",
-            context=None, trap_exceptions=False)
-    
     # ------------------------------------------------------------------------------
         
     def test_certify_deep_sync(self):
