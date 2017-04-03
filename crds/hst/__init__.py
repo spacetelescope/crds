@@ -15,9 +15,6 @@ from __future__ import absolute_import
 >>> TYPES.get_filekinds("wfpc2")
 ['atodfile', 'biasfile', 'darkfile', 'dgeofile', 'flatfile', 'idctab', 'maskfile', 'offtab', 'shadfile', 'wf4tfile']
 
->>> TYPES.mapping_validator_key("hst_acs_darkfile.rmap")
-('acs_drk_ld.tpn', "hst_acs_darkfile.rmap")
-
 >>> from crds import config
 
 Originally the CDBS .tpn files for STIS LFL and PFL varied by OBSMODE.  This design quirk

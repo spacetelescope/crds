@@ -1,6 +1,8 @@
 """This module defines replacement functionality for the CDBS "certify" program
-used to check parameter values in .fits reference files.   It verifies that FITS
-files define required parameters and that they have legal values.
+used to check parameter values in .fits reference files.   It verifies that reference
+files in multiple formats (FITS, json, yaml, ...) define required parameters and that 
+they have legal values.    It is also used to verify that CRDS mapping files are 
+consistent with outside systems.
 """
 from __future__ import print_function
 from __future__ import division
@@ -20,11 +22,11 @@ import numpy as np
 import crds
 
 from crds.core import pysh, log, config, utils, rmap, cmdline
-from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationError
+from crds.core.exceptions import InvalidFormatError, ValidationError
 
 from crds import data_file, diff, tables
 from crds.client import api
-from crds.io import abstract
+# from crds.io import abstract
 
 from . import mapping_parser
 from . import validators
@@ -168,12 +170,14 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
+        self.complex_init()
+        """
         try:
-            self.complex_init()
         except TypeSetupError as exc:
             log.verbose_warning("Error locating constraints for", repr(self.format_name), ":", str(exc))
         except Exception as exc:
             raise
+        """
         with self.error_on_exception("Error loading"):
             self.header = self.load()
         if not self.header:
@@ -191,9 +195,12 @@ class ReferenceCertifier(Certifier):
     
     def load(self):
         """Load and parse header from self.filename."""
-        header = data_file.get_header(self.filename, observatory=self.observatory, original_name=self.original_name)
+        from crds.io import abstract
+        # needed_keys=tuple([checker.complex_name for checker in self.validators])
+        header = data_file.get_header(
+            self.filename, (), self.original_name, self.observatory)
         header = self.map_reference_keywords_to_dataset_keywords(header)
-        header = self.cross_strap_instrument_keywords(header)
+        # header = self.cross_strap_instrument_keywords(header)
         header = self.add_array_keywords(header)
         header = abstract.ensure_keys_defined(header, needed_keys=[checker.complex_name for checker in self.validators])
         return header
@@ -201,7 +208,7 @@ class ReferenceCertifier(Certifier):
     def map_reference_keywords_to_dataset_keywords(self, header):
         """Based on the rmap corresponding to this reference filename a`header`,  map keywords
         in `header` from the names used in reference files to the corresponding names matched in
-        datasets.   Returnes new `header`.
+        datasets.   Returns new `header`.
         """
         if self.context:
             rmapping = None
@@ -212,15 +219,15 @@ class ReferenceCertifier(Certifier):
                     header = rmapping.locate.reference_keys_to_dataset_keys(rmapping, header)
         return header
     
-    def cross_strap_instrument_keywords(self, header):
-        """Add all variations of the instrument keyword to `header` based on some variation of
-        instrument name defined in `header`.   Mutates `header`.
-        """
-        header = dict(header)
-        instr = utils.header_to_instrument(header)
-        for key in crds.INSTRUMENT_KEYWORDS:
-            header[key] = instr
-        return header
+#     def cross_strap_instrument_keywords(self, header):
+#         """Add all variations of the instrument keyword to `header` based on some variation of
+#         instrument name defined in `header`.   Mutates `header`.
+#         """
+#         header = dict(header)
+#         instr = utils.header_to_instrument(header)
+#         for key in crds.INSTRUMENT_KEYWORDS:
+#             header[key] = instr
+#         return header
 
     def add_array_keywords(self, header):
         """Add synthetic array keywords based on properties of the arrays mentioned in
@@ -249,8 +256,8 @@ class ReferenceCertifier(Certifier):
         warn_keys = self.provenance_keys
         for key in sorted(unseen):
             if key in warn_keys:
-                log.warning("Missing keyword '%s'."  % key)
-
+                 log.warning("Missing keyword '%s'."  % key)
+ 
     def _dump_provenance_core(self, dump_keys):
         """Generic dumper for self.header,  returns unseen keys."""
         unseen = set(dump_keys)
@@ -521,8 +528,10 @@ class FitsCertifier(ReferenceCertifier):
             return
         with data_file.fits_open_trapped(self.filename, checksum=bool(config.FITS_VERIFY_CHECKSUM)) as pfile:
             pfile.verify(option='exception') # validates all keywords
+        self.locator.project_check(self.filename)
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
+
 
     def _dump_provenance_core(self, dump_keys):
         """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""

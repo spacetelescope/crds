@@ -22,20 +22,21 @@ import pprint
 # from jwst import datamodels   # deferred
 
 import crds
-from crds.core import log, utils, rmap, heavy_client
+from crds.core import log, utils, heavy_client
 from crds.certify import TpnInfo
+
+from . import locate
 
 # ====================================================================================
 
-def get_schema_tpninfos(tpn_file, refpath):
+def get_schema_tpninfos(refpath):
     """Load the list of TPN info tuples corresponding to `instrument` and 
     `filekind` from it's .tpn file.
     """
-    key = (tpn_file, refpath)
-    with log.warn_on_exception("Failed loading schema constraints for", repr(key)):
+    with log.warn_on_exception("Failed loading schema constraints for", repr(refpath)):
         schema_name = reference_to_schema_name(refpath)
         tpns = get_schema_tpns(schema_name)
-        parkeys = tpninfos_key_to_parkeys(key)
+        parkeys = refpath_to_parkeys(refpath)
         return [ info for info in tpns if info.name in parkeys ]
     return []
 
@@ -62,17 +63,16 @@ def get_flat_schema(schema_name=None):
     return _schema_to_flat(_load_schema(schema_name))
 
 @utils.cached
-def tpninfos_key_to_parkeys(tpn):
+def refpath_to_parkeys(refpath):
     """Given a key for a TpnInfo's list, return the associated required parkeys."""
-    if "all_" or "_all." in tpn:
-        return []
-    with log.verbose_warning_on_exception("Can't determine parkeys for", repr(tpn)):
+    keys = []
+    with log.verbose_warning_on_exception("Can't determine parkeys for", repr(refpath)):
         _mode, context  = heavy_client.get_processing_mode("jwst")
         p = crds.get_pickled_mapping(context)   # reviewed
-        instrument, suffix = tpn.split(".")[0].split("_")[:2]
-        filekind = p.locate.suffix_to_filekind(instrument, suffix)
+        instrument, filekind = locate.get_file_properties(refpath)
         keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
         keys.append("META.INSTRUMENT.NAME")
+        keys.append("META.REFFILE.TYPE")
     return sorted(keys)
 
 # =============================================================================
@@ -175,7 +175,7 @@ def _flat_to_tpns(flat=None, schema_name=None):
             legal_values = [str(val) for val in flat.get(basekey + ".ENUM", [])]
             if legal_values:
                 legal_values += ["ANY", "N/A"]
-            legal_values = sorted(set(legal_values))
+            legal_values = tuple(sorted(set(legal_values)))
             if isinstance(value, list):
                 value = tuple(value)
             datatype = SCHEMA_TYPE_TO_TPN.get(value, None)
@@ -211,14 +211,14 @@ def dm_to_fits(key):
     global DM_TO_FITS
     if DM_TO_FITS is None:
         DM_TO_FITS = _get_dm_to_fits()
-    return DM_TO_FITS.get(key, None)
+    return DM_TO_FITS.get(key.upper(), None)
 
 def fits_to_dm(key):
     """Return the DM keyword for FITS `key` or None."""
     global FITS_TO_DM
     if FITS_TO_DM is None:
         FITS_TO_DM = _get_fits_to_dm()
-    return FITS_TO_DM.get(key, None)
+    return FITS_TO_DM.get(key.upper(), None)
 
 # =============================================================================
 

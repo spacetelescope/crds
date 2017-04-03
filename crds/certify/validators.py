@@ -71,9 +71,6 @@ class Validator(object):
 
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(info.values)
-#                [val for val in info.values if not val.upper().startswith("NOT_")])
-            self._not_values = self.condition_values(
-                [val[4:] for val in info.values if val.upper().startswith("NOT_")])
             
     @property
     def complex_name(self):
@@ -141,9 +138,8 @@ class Validator(object):
         """
         if value in [None, "UNDEFINED"]: # missing optional or excluded keyword
             return True
-        if self.condition is not None:  # verify type regardless of values.
-            value = self.condition(value)
-        if not (self._values or self._not_values):
+        value = self.condition(value)
+        if not self._values:
             self.verbose(filename, value, "no .tpn values defined.")
             return True
         self._check_value(filename, value)
@@ -270,17 +266,11 @@ class KeywordValidator(Validator):
                 self.verbose(filename, value, "is in", repr(self._values))
         else:
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
-                             str(log.PP(self._values)))    
-        if self._not_match_value(value):
-            raise ValueError("Value " + str(log.PP(value)) + " is disallowed.")
+                             str(log.PP(self._values)))
     
     def _match_value(self, value):
         """Do a literal match of `value` to the allowed values of this tpninfo."""
         return value in self._values or not self._values
-    
-    def _not_match_value(self, value):
-        """Do a literal match of `value` to the disallowed values of this tpninfo."""
-        return value in self._not_values
     
 # ----------------------------------------------------------------------------
 
@@ -311,7 +301,6 @@ class CharacterValidator(KeywordValidator):
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
     _values = ["T","F"]
-    _not_values = []
 
 # ----------------------------------------------------------------------------
 
@@ -373,14 +362,14 @@ class FloatValidator(NumericalValidator):
                 elif value:
                     err = value
                 else:
-                    continue
-                # print "considering", possible, value, err
+                    err = 0
                 if abs(err) < self.epsilon:
-                    self.verbose(filename, value, "is within +-", repr(self.epsilon), 
-                                 "of", repr(possible))
-                    return
-            raise
-
+                     self.verbose(filename, value, "is within +-", repr(self.epsilon), 
+                                  "of", repr(possible))
+                     return
+            raise ValueError("Float", repr(value), "is not within +-", repr(self.epsilon), 
+                            "of any of", repr(self._values))
+ 
 # ----------------------------------------------------------------------------
 
 class RealValidator(FloatValidator):
@@ -398,7 +387,6 @@ class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields."""
 
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
-    _not_values = []
 
     def get_header_value(self, header):
         """Extract the PEDIGREE value from header,  checking any
@@ -574,14 +562,19 @@ def get_validators(observatory, refpath):
     corresponding validators that define individual constraints that reference
     should satisfy.
     """
-    types = reftypes.get_types_object(observatory)   # pluggable by observatory
-    locator = utils.get_locator_module(observatory)  # pluggable by observatory
-    checkers = []
-    # Loosely, validator keys are something like (tpn_file, refpath)
-    for key in types.reference_name_to_validator_keys(refpath):
-        # Loosely this produces a Validator subclass instance for every TpnInfo corresponding to `key`
-        validators_for_keys = [validator(x) for x in locator.get_tpninfos(*key)]
-        checkers.extend(validators_for_keys)
+    tpns = get_reffile_tpninfos(observatory, refpath)
+    checkers = [validator(x) for x in tpns]
     log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=65)
     return checkers
+
+def get_reffile_tpninfos(observatory, refpath):
+    """Load just the TpnInfo objects for `observatory` and the given `refpath`.
+    This entails both "class" TpnInfo's from CDBS as well as TpnInfo objects
+    derived from the JWST data models.
+    """
+    locator = utils.get_locator_module(observatory)
+    instrument, filekind = locator.get_file_properties(refpath)
+    tpns = locator.get_all_tpninfos(instrument, filekind, "tpn")
+    tpns.extend(locator.get_extra_tpninfos(refpath))
+    return tpns
 

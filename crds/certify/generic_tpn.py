@@ -97,7 +97,6 @@ class TpnInfo(_TpnInfo):
             "L" : "LOGICAL",
             "R" : "REAL",
             "D" : "DOUBLE",
-            "Z" : "REGEX",
             "X" : "EXPRESSION",
             }.get(self.datatype[0], self.datatype[0]))
 
@@ -119,6 +118,21 @@ class TpnInfo(_TpnInfo):
             return "expression=" + repr(self.values[0])
         else:
             return "values=" + repr(self.values)
+        
+    @property
+    def is_expression(self):
+        """Return True IFF this is an expression constraint."""
+        return self.datatype[0] == "X"
+
+    @property
+    def is_conditionally_applicable(self):
+        """Return True IFF this constraint has an expression defining when it is applicable."""
+        return is_expression(self.presence)
+    
+    @property
+    def is_complex_constraint(self):
+        """Used to eliminate infos not appropriate as rmap value lists."""
+        return self.is_expression or self.is_conditionally_applicable
 
 # =============================================================================
 
@@ -204,7 +218,7 @@ def _fix_quoted_whitespace(line):
     return line
 
 @utils.cached
-def get_classic_tpninfos(filepath):
+def get_tpninfos(filepath):
     """Load the list of TPN info tuples from .tpn file at `filepath`.  Unlike
     load_tpn(), this function is structured such that missing files are an
     expected error and relegated to a verbose warning.  This is because for
@@ -221,12 +235,13 @@ def load_all_type_constraints(observatory):
     """Load all the type constraint files from `observatory` package."""
     from crds.core import rmap, heavy_client
     pmap_name = heavy_client.load_server_info(observatory).operational_context
-    api.dump_mappings(pmap_name)
     pmap = rmap.get_cached_mapping(pmap_name)
     locator = utils.get_locator_module(observatory)
-    locator.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")
+    locator.get_all_tpninfos("all","all","tpn")
+    locator.get_all_tpninfos("all","all","ld_tpn")
     for instr in pmap.selections:
-        locator.get_tpninfos(instr + "_" + "all" + ".tpn", "foo.fits")
+        locator.get_all_tpninfos(instr, "all", "tpn")
+        locator.get_all_tpninfos(instr, "all", "ld_tpn")
         imap = pmap.get_imap(instr)
         for filekind in imap.selections:
             if imap.selections[filekind] == "N/A":
@@ -236,8 +251,10 @@ def load_all_type_constraints(observatory):
             except Exception as exc:
                 log.warning("Missing suffix coverage for", repr((instr, filekind)), ":", exc)
             else:
-                locator.get_tpninfos("all" + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
-                locator.get_tpninfos(instr + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos(instr, suffix, "tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "ld_tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos(instr, suffix, "ld_tpn")  # With core schema,  one type loads all
 
 # =============================================================================
 

@@ -227,21 +227,24 @@ class TypeParameters(object):
 
 # =============================================================================
 
-    def mapping_validator_key(self, mapping):
-        """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
-        mapping = rmap.asmapping(mapping)
-        tpnfile = self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"]
-        return (tpnfile, mapping.filename)
-        # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")   # now has multiple values
-
     @utils.cached
-    def reference_name_to_validator_keys(self, filename, field="tpn"):
+    def get_all_tpninfos(self, instrument, filekind, field):
+        """Return all the TpnInfo objects defined by the specified parameters.
+        Doesn't include "extra" TpnInfo's defined by a project for a specific
+        reference file.
+        """
+        tpns = []
+        locator = utils.get_locator_module(self.observatory)  # pluggable by observatory
+        for tpn_file in self.reference_name_to_validator_keys(instrument, filekind, field=field):
+            tpns.extend(generic_tpn.get_tpninfos(locator.tpn_path(tpn_file)))
+        return sorted(list(set(tpns)))
+    
+
+    def reference_name_to_validator_keys(self, instrument, filekind, field="tpn"):
         """Return the sequence of validator keys associated with `filename`.   A validator key
         is nominally a .tpn filename and can vary by observatory, instrument, and type as well
         as by functions on the header of `filename`.
         """
-        locator = utils.get_locator_module(self.observatory)
-        instrument, filekind = locator.get_file_properties(filename)
         results = []
         def append_tpn_level(results, instrument, filekind):
             """Append the validator key for one level of the `instrument`
@@ -249,13 +252,11 @@ class TypeParameters(object):
             """
             try:
                 tpnfile = self.unified_defs[instrument][filekind][field]
-                validator_key = (tpnfile, filename)
-                log.verbose("Adding validator key", repr(validator_key),
-                            verbosity=70)
-                results.append(validator_key)
+                log.verbose("Adding validator key", repr(tpnfile), verbosity=70)
+                results.append(tpnfile)
             except Exception as exc:
                 log.verbose_warning("Can't find TPN key for", 
-                    (filename, instrument, filekind), ":", str(exc),
+                    (instrument, filekind, field), ":", str(exc),
                                     verbosity=75)
         append_tpn_level(results, "all", "all")
         append_tpn_level(results, instrument, "all")

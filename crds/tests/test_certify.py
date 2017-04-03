@@ -505,28 +505,30 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_missing_detector.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
     CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  Checking JWST datamodels.
     CRDS - INFO -  FITS file 'niriss_ref_photom_missing_detector.fits' conforms to FITS standards.
-    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Missing required keyword 'META.INSTRUMENT.DETECTOR'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (is_table(PHOTOM_ARRAY)) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'NELEM','INT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE'])) is not satisfied.
+    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'FILTER','STRING')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'NELEM','INT')) is not satisfied.
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'ORDER','INT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY')) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE'])) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (is_table(PHOTOM_ARRAY)) is not satisfied.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Missing required keyword 'META.INSTRUMENT.DETECTOR'
     CRDS - WARNING -  Failed resolving comparison reference for table checks :  parameter='META.INSTRUMENT.DETECTOR' value='UNDEFINED' is not in ('NIS', '*', 'N/A')
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_missing_detector.fits' in context 'jwst_0125.pmap'. Skipping tables comparison.
     CRDS - INFO -  ########################################
-    CRDS - INFO -  13 errors
+    CRDS - INFO -  14 errors
     CRDS - INFO -  3 warnings
-    CRDS - INFO -  5 infos
-    13
+    CRDS - INFO -  6 infos
+    14
     >>> test_config.cleanup(old_state)
     """
     
@@ -580,22 +582,79 @@ def certify_jwst_invalid_yaml():
  
 def certify_test_jwst_load_all_type_constraints():
     """
-    >>> old_state = test_config.setup(url="https://jwst-crds.stsci.edu", observatory="jwst")
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> generic_tpn.load_all_type_constraints("jwst")
     >>> test_config.cleanup(old_state)
     """
 
 def certify_test_hst_load_all_type_constraints():
     """
-    >>> old_state = test_config.setup(url="https://hst-crds.stsci.edu", observatory="hst")
+    >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
     >>> generic_tpn.load_all_type_constraints("hst")
     >>> test_config.cleanup(old_state)
     """
     
 def certify_validator_bad_presence_condition():
     """
-    >>> info = certify.TpnInfo('DETECTOR','H','C', '(Q)', ('WFC','HRC','SBC'))
+    >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
+    >>> info = certify.TpnInfo('DETECTOR','H','C', '(Q='BAR')', ('WFC','HRC','SBC'))
+    Traceback (most recent call last):
+    ...
+    SyntaxError: invalid syntax
+    >>> test_config.cleanup(old_state)
     """
+    
+def certify_JsonCertify_valid(self):
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> certify.certify_file("data/valid.json", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
+    CRDS - INFO -  Certifying 'data/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'
+
+    >>> test_config.cleanup(old_state)
+    """
+            
+def certify_YamlCertify_valid(self):
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> certify.certify_file("data/valid.yaml", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
+    CRDS - INFO -  Certifying 'data/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'
+
+    >>> test_config.cleanup(old_state)
+    """
+            
+def certify_AsdfCertify_valid(self):
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
+    CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0034.pmap'
+
+    >>> test_config.cleanup(old_state)
+    """
+    
+def certify_FitsCertify_opaque_name(self):
+    """
+    >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
+    >>> certify.certify_file("data/opaque_fts.tmp", observatory="hst",context="hst.pmap", trap_exceptions=False)
+    CRDS - INFO -  Certifying 'data/opaque_fts.tmp' as 'FITS' relative to context 'hst.pmap'
+    >>> test_config.cleanup(old_state)
+    """
+    
+def certify_AsdfCertify_opaque_name(self):
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
+    CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0034.pmap'
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_rmap_compare(self):
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> certify.certify_file("jwst_miri_distortion_0007.rmap", context="jwst_0101.pmap")
+    CRDS - INFO -  Certifying 'jwst_miri_distortion_0007.rmap' as 'MAPPING' relative to context 'jwst_0101.pmap'
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
@@ -603,7 +662,7 @@ class TestHSTTpnInfoClass(test_config.CRDSTestCase):
     def setUp(self, *args, **keys):
         super(TestHSTTpnInfoClass, self).setUp(*args, **keys)
         hstlocator = utils.get_locator_module("hst")
-        self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn', "foo.fits")
+        self.tpninfos = hstlocator.get_all_tpninfos("acs","idctab","tpn")
         self.validators = [certify.validator(info) for info in self.tpninfos]
         client.set_crds_server('https://crds-serverless-mode.stsci.edu')
         os.environ['CRDS_MAPPATH'] = self.hst_mappath
@@ -1180,18 +1239,6 @@ class TestCertify(test_config.CRDSTestCase):
         certify.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst", 
                               context="hst.pmap", compare_old_reference=True)
         
-    def test_JsonCertify_valid(self):
-        certify.certify_file(
-            self.data("valid.json"), observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
-            
-    def test_YamlCertify_valid(self):
-        certify.certify_file(
-            self.data("valid.yaml"), observatory="jwst", context="jwst_0034.pmap", trap_exceptions=False)
-
-    def test_AsdfCertify_valid(self):
-        certify.certify_file(
-            self.data("valid.asdf"), observatory="jwst",context="jwst_0082.pmap", trap_exceptions=False)
-            
     def test_UnknownCertifier_missing(self):
         assert_raises(certify.InvalidFormatError, certify.certify_file, 
             self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
@@ -1200,21 +1247,12 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, certify.certify_file,
             self.data("s7g1700gm_dead_broken.fits"), observatory="hst", context="hst.pmap", trap_exceptions=False)
         
-    def test_FitsCertify_opaque_name(self):
-        certify.certify_file(
-            self.data("opaque_fts.tmp"), observatory="hst", context="hst.pmap",
-            original_name="s7g1700gl_dead.fits", trap_exceptions=False)
-
-    def test_AsdfCertify_opaque_name(self):
-        certify.certify_file(self.data("opaque_asd.tmp"), observatory="jwst", context="jwst_0082.pmap", 
-            original_name="valid.tmp", trap_exceptions=False)
-
-# ------------------------------------------------------------------------------
-        
-    def test_jwst_certify_bad_value(self):
-        import jsonschema
-        assert_raises(ValueError, certify.certify_file,
-            self.data("niriss_ref_photom_bad.fits"), observatory="jwst", context=None, trap_exceptions=False)
+    def test_jwst_bad_value(self):
+        assert_raises(exceptions.ValidationError, certify.certify_file,
+            "data/niriss_ref_photom_bad.fits", observatory="jwst",
+            context=None, trap_exceptions=False)
+    
+    # ------------------------------------------------------------------------------
         
     def test_certify_deep_sync(self):
         script = certify.CertifyScript(
@@ -1257,13 +1295,7 @@ class TestCertify(test_config.CRDSTestCase):
                 }
         info = certify.TpnInfo('SCI','D','X','R',('&KernelUnity',))
         checker = certify.KernelunityValidator(info)
-        assert_raises(exceptions.BadKernelSumError, checker.check, "test.fits", header)
-        
-    def test_certify_mapping_compare_derived(self):
-        script = certify.CertifyScript(
-            "crds.certify --comparison-context jwst_0101.pmap jwst_0jwst_miri_distortion_0007.rmap")
-        script()
-        
+        assert_raises(exceptions.BadKernelSumError, checker.check, "test.fits", header)        
 
 
 # ==================================================================================

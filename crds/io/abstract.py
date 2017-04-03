@@ -25,7 +25,7 @@ from crds.core import exceptions, python23, config, log, utils, timestamp
 
 # ================================================================================================
 
-DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
+DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS","EXTNAME","EXTVER"]
 APPEND_KEYS = ["COMMENT", "HISTORY"]
     
 # ===========================================================================
@@ -313,7 +313,7 @@ class AbstractFile(object):
                         header[key] += "\n" + value
                 else:
                     header[key] = value
-        return ensure_keys_defined(header)
+        return ensure_keys_defined(header, needed_keys)
     
     # ----------------------------------------------------------------------------------------------
 

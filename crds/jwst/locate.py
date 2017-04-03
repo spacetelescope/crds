@@ -14,10 +14,9 @@ import re
 
 # =======================================================================
 
-from crds.core import rmap, config, utils, timestamp
+from crds.core import rmap, config, utils, timestamp, log, exceptions
 from crds.certify import generic_tpn
 from crds import data_file
-from . import schema
 
 # =======================================================================
 
@@ -26,10 +25,14 @@ from . import schema
 
 from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
 
+# from . import schema
+
+
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
 suffix_to_filekind = TYPES.suffix_to_filekind
 filekind_to_suffix = TYPES.filekind_to_suffix
+get_all_tpninfos = TYPES.get_all_tpninfos
 
 from crds.jwst.pipeline import header_to_reftypes
 
@@ -49,21 +52,25 @@ def tpn_path(tpn_file):
     """Return the full filepath of `tpn_file`."""
     return os.path.join(HERE, "tpns", tpn_file)
 
-def get_tpninfos(tpn_name, refpath):
-    """Load the listof TPN info tuples corresponding to `key` from it's .tpn file.
+def get_extra_tpninfos(refpath):
+    from . import schema
+    return schema.get_schema_tpninfos(refpath)
 
-    Key's are typically of the form  ('miri_flat.tpn', refpath) or
-    ('miri_flat.ld_tpn', refpath).
-    """
-    return (generic_tpn.get_classic_tpninfos(tpn_path(tpn_name)) + 
-            schema.get_schema_tpninfos(tpn_name, refpath))
+def project_check(refpath):
+    return get_data_model_flat_dict(refpath)
 
-# =======================================================================
-
-def mapping_validator_key(mapping):
-    """For now,  just use instrument based constraints."""
-    return (mapping.instrument + "_all_ld.tpn", mapping.name)
-
+def get_data_model_flat_dict(filepath):
+    """Get the header from `filepath` using the jwst data model."""
+    from jwst import datamodels
+    log.info("Checking JWST datamodels.")
+    # with log.error_on_exception("JWST Data Model (jwst.datamodels)"):
+    try:
+        with datamodels.open(filepath) as d_model:
+            flat_dict = d_model.to_flat_dict(include_arrays=False)
+    except Exception as exc:
+        raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'"))
+    return flat_dict
+    
 # =======================================================================
 
 # When loading headers,  make sure each keyword in a tuple is represented with
@@ -243,6 +250,8 @@ def get_reference_properties(filename):
 
 # =======================================================================
 
+FILEKIND_KEYWORDS = ["REFTYPE", "TYPE", "META.TYPE", "META.REFFILE.TYPE"]
+
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
     """
@@ -250,9 +259,10 @@ def ref_properties_from_header(filename):
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "jwst")
+    header["TELESCOP"] = header["TELESCOPE"] = header["META.TELESCOPE"] = "jwst"
     instrument = utils.header_to_instrument(header).lower()
+    filekind = utils.get_any_of(header, FILEKIND_KEYWORDS, "UNDEFINED").lower()
     assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
-    filekind = utils.get_any_of(header, ["REFTYPE", "TYPE", "META.TYPE", "META.REFFILE.TYPE"], "UNDEFINED").lower()
     assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
     return path, "jwst", instrument, filekind, serial, ext
 
@@ -344,7 +354,7 @@ def filekind_to_keyword(filekind):
     """Return the FITS keyword at which a reference should be recorded."""
     from . import schema
     flat_schema = schema.get_flat_schema()
-    meta_path = "META.REF_FILE.{}.NAME.FITS_KEYWORD".format(filekind.upper())
+    meta_path = "META.REFFILE.{}.NAME.FITS_KEYWORD".format(filekind.upper())
     return flat_schema[meta_path]
 
 def locate_file(refname, mode=None):

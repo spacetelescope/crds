@@ -1240,11 +1240,12 @@ class ReferenceMapping(Mapping):
 
         return { parkey : [ valid values ] }
         """
-        key = self.locate.mapping_validator_key(self)
-        tpninfos = self.locate.get_tpninfos(*key)
+        tpninfos = self.locate.get_all_tpninfos(self.instrument, self.filekind, "ld_tpn")
         required_keys = self.get_required_parkeys()
         valid_values = {}
         for info in tpninfos:
+            if info.is_complex_constraint:
+                continue
             if info.name in required_keys:
                 values = info.values
                 if len(values) == 1 and ":" in values[0]:

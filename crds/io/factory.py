@@ -44,15 +44,13 @@ def file_factory(filepath, original_name=None, observatory=None):
     elif filetype == "geis":
         from crds.io import geis
         file_class = geis.GeisFile
+    elif filetype == "fits":
+        from crds.io import fits
+        file_class = fits.FitsFile
     else:
-        if observatory is None:
-            observatory = get_observatory(filepath, original_name) # slow?
-        if observatory == "jwst":
-            from crds.io import jwstdm
-            file_class = jwstdm.DataModelsFile
-        else:
-            from crds.io import fits
-            file_class = fits.FitsFile
+        raise RuntimeError("Unknown file type for " + repr(filepath) )
+    if observatory is None:
+        observatory = get_observatory(filepath, original_name) # slow?
     return file_class(filepath, original_name, observatory)
 
 # ----------------------------------------------------------------------------------------------
@@ -95,10 +93,10 @@ def get_filetype(filepath, original_name=None):
         return filetype
     
     with open(filepath, "rb") as handle:
-        first_5 = handle.read(5)
+        first_5 = str(handle.read(5).decode('utf-8'))
     if first_5 == "#ASDF":
         return "asdf"
-    elif first_5 == "SIMPLE":
+    elif first_5 == "SIMPL":
         return "fits"
     
     try:
@@ -116,6 +114,7 @@ def get_filetype(filepath, original_name=None):
             return "yaml"
     except Exception:
         pass
+    
     return "unknown"
 
 # ----------------------------------------------------------------------------------------------

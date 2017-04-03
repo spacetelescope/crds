@@ -34,11 +34,11 @@ from crds.hst import siname
 
 from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
 
-mapping_validator_key = TYPES.mapping_validator_key
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
 suffix_to_filekind = TYPES.suffix_to_filekind
 filekind_to_suffix = TYPES.filekind_to_suffix
+get_all_tpninfos = TYPES.get_all_tpninfos
 
 # =======================================================================
 HERE = os.path.dirname(__file__) or "."
@@ -46,14 +46,11 @@ HERE = os.path.dirname(__file__) or "."
 def tpn_path(tpn_file):
     return os.path.join(HERE, "tpns", tpn_file)
 
-@utils.cached
-def get_tpninfos(tpn_file, refpath):
-    """Load the list of TPN_info tuples corresponding to *args from it's .tpn file.
-    Nominally args are (instrument, filekind),  but *args should be supported to 
-    handle *key for any key returned by reference_name_to_validator_key.   In particular,
-    for some subtypes,  *args will be (tpn_filename,).
-    """
-    return generic_tpn.get_classic_tpninfos(tpn_path(tpn_file))
+def get_extra_tpninfos(refpath):
+    return []
+
+def project_check(refpath):
+    return
 
 # =======================================================================
 
@@ -590,33 +587,6 @@ def locate_dir(instrument, mode=None):
 def fits_to_parkeys(header):
     """Map a FITS header onto rmap parkeys appropriate for this observatory."""
     return dict(header)
-
-# ============================================================================
-
-__all__ = [
-    "INSTRUMENTS",
-
-    "get_tpninfos",
-    "get_item",
-
-    "get_env_prefix",
-    "decompose_newstyle_name",
-    "locate_dir",
-    "get_file_properties",
-
-    "get_row_keys_by_instrument",
-    
-    "fits_to_parkeys",
-    "reference_keys_to_dataset_keys",
-    "condition_matching_header",
-
-    "generate_unique_name",
-    "generate_unique_name_core",
-    "generate_timestamp",
-]
-
-for name in __all__:
-    assert name in dir()
 
 # =======================================================================
 
