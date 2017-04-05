@@ -21,7 +21,7 @@ import numpy as np
 from crds.core import log, config, utils, timestamp, selectors
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
-from crds.core.exceptions import BadKernelSumError, MissingColumnError
+from crds.core.exceptions import BadKernelSumError
 from crds import tables
 from crds import data_file
 

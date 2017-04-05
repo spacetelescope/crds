@@ -293,7 +293,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
                 dkey = translations[rkey]
                 dval = header.get(translations[rkey], None)
                 rval = header[rkey]
-                if dval in [None, "N/A", "UNDEFINED"] and rval not in [None, "UNDEFINED"]:
+                if rval not in [None, "UNDEFINED"]:
+                    log.info("Setting", repr(dkey) + "=" + repr(dval), 
+                            "to value of", repr(rkey) + "=" + repr(rval))
                     header[dkey] = rval
     if "USEAFTER" not in header and "META.REFFILE.USEAFTER" in header:
         header["USEAFTER"] = header["META.REFFILE.USEAFTER"]

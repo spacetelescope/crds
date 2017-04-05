@@ -9,7 +9,7 @@ are restricted to pigeon-Python that does not allow spaces.  See the JWST .tpn f
 those files for these functions.
 """
 
-from crds.core import utils
+from crds.core import utils, exceptions
 
 # ----------------------------------------------------------------------------
 
@@ -87,7 +87,7 @@ def has_column_type(array_info, col_name, typestr):
                 return True
         return False
     except KeyError:
-        raise MissingColumnError("Data type not defined for column", repr(col_name))
+        raise exceptions.MissingColumnError("Data type not defined for column", repr(col_name))
         
 def _table_type(typestr):
     """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.

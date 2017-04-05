@@ -83,12 +83,6 @@ class MissingHeaderKeyError(MappingError):
 class InconsistentParkeyError(MappingError):
     """The parkey tuple was inconsistent with the rest of the .rmap in some way."""
     
-class MissingArrayError(CrdsError):
-    """A specified (named?) array was not found in a reference file."""
-
-class MissingColumnError(CrdsError):
-    """A specified (named?) column was not found in a reference file."""
-
 # -------------------------------------------------------------------------------------------
 
 class ValidationError(CrdsError):
@@ -204,8 +198,13 @@ class RequiredConditionError(CertifyError):
     """An ExpressionValidator evaluated to False with respect to a file header."""
 
 class BadKernelSumError(CertifyError):
-    """A convolution kernel array had a sum too far from 1.0, or similar."""
-    
+    """A convolution kernel array had a sum too far from 1.0, or similar."""  
+
+class MissingArrayError(CrdsError):
+    """A specified (named?) array was not found in a reference file."""
+
+class MissingColumnError(CrdsError):
+    """A specified (named?) column was not found in a reference file."""
 
 # -------------------------------------------------------------------------------------------
 
