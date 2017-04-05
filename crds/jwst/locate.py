@@ -293,7 +293,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
                 dkey = translations[rkey]
                 dval = header.get(translations[rkey], None)
                 rval = header[rkey]
-                if rval not in [None, "UNDEFINED"]:
+                if rval not in [None, "UNDEFINED"] and rval != dval:
                     log.info("Setting", repr(dkey) + "=" + repr(dval), 
                             "to value of", repr(rkey) + "=" + repr(rval))
                     header[dkey] = rval
