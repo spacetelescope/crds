@@ -2,8 +2,6 @@ REFTYPE    H      C      R      PHOTOM
 
 EXP_TYPE    H     C      O
 
-PHOTMJSR    H     R      (('IFU')in(EXP_TYPE))
-PHOTUJA2    H     R      (('IFU')in(EXP_TYPE))
 PIXAR_SR    H     R      R
 PIXAR_A2    H     R      R
 

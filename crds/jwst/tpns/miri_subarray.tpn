@@ -14,3 +14,7 @@ MIRIMAGE_AXIS               X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(
 MIRIFULONG_AXIS             X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
 MIRIFUSHORT_AXIS            X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
 
+FULLFRAME_XSTART      H           X         F             (META_SUBARRAY_XSTART==1)
+FULLFRAME_YSTART      H           X         F             (META_SUBARRAY_YSTART==1)
+FULLFRAME_XSIZE       H           X         F             (META_SUBARRAY_XSIZE==1032)
+FULLFRAME_YSIZE       H           X         F             (META_SUBARRAY_YSIZE==1024)

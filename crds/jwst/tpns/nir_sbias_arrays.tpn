@@ -12,17 +12,15 @@ READPATT  H           C         O
 # These are X instead of H because they're fundamentally not keyword/header checks,  
 # they're condition checks where the name of the condition is given in place of the keyword.
 
-SUBARRAY_INBOUNDS_X   H   X   R  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=irs2_dim(READPATT))
-SUBARRAY_INBOUNDS_Y   H   X   R  (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+SUBARRAY_INBOUNDS_X   X   X   R  (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=irs2_dim(READPATT))
+SUBARRAY_INBOUNDS_Y   X   X   R  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
 
 # ------------------------------------------------
 
-SCI       H           X         F             (META_SUBARRAY_XSTART==1)
-SCI       H           X         F             (META_SUBARRAY_YSTART==1)
-SCI       A           X         F             (SCI_ARRAY.SHAPE[-2:]==(2048,irs2_dim(READPATT)))
+SCI       A           X         F             (SCI_ARRAY.SHAPE[-2:]==(irs2_dim(READPATT),2048))
 
-SCI       A           X         R             (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         R             (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=irs2_dim(READPATT))
+SCI       A           X         R             (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+SCI       A           X         R             (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=irs2_dim(READPATT))
 SCI       A           X         S             (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
 SCI       A           X         R             (is_image(SCI_ARRAY))
@@ -30,12 +28,10 @@ SCI       A           X         R             (has_type(SCI_ARRAY,'FLOAT'))
 
 # ------------------------------------------------
 
-ERR       H           X         F             (META_SUBARRAY_XSTART==1)
-ERR       H           X         F             (META_SUBARRAY_YSTART==1)
-ERR       A           X         F             (ERR_ARRAY.SHAPE[-2:]==(2048,irs2_dim(READPATT)))
+ERR       A           X         F             (ERR_ARRAY.SHAPE[-2:]==(irs2_dim(READPATT),2048))
 
-ERR       A           X         R             (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[-2]-1<=2048)
-ERR       A           X         R             (1<=META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[-1]-1<=irs2_dim(READPATT))
+ERR       A           X         R             (1<=META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[-1]-1<=2048)
+ERR       A           X         R             (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[-2]-1<=irs2_dim(READPATT))
 ERR       A           X         S             (ERR_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
 ERR       A           X         R             (is_image(ERR_ARRAY))

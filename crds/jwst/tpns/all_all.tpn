@@ -11,10 +11,10 @@ META.TELESCOPE          H   C   R               JWST
 META.INSTRUMENT.NAME    H   C   R               FGS,NIRCAM,NIRISS,NIRSPEC,MIRI,SYSTEM
 META.REFFILE.TYPE       H   C   R
 META.REFFILE.USEAFTER   H   C   R               &JWSTDATE
-META.REFFILE.PEDIGREE   H   C   R               &PEDIGREE
-META.REFFILE.AUTHOR     H   C   R
-META.REFFILE.DESCRIPTION H   C  R
-META.REFFILE.HISTORY     H   C  R
+META.REFFILE.PEDIGREE   H   C   O               &PEDIGREE
+META.REFFILE.AUTHOR     H   C   O
+META.REFFILE.DESCRIPTION H   C  O
+META.REFFILE.HISTORY     H   C  O
 
 # Make EXP_TYPE available in headers even if only UNDEFINED
 # Keyword cross-strapping doesn't work for UNDEFINED values...
