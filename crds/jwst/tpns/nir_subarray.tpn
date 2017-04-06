@@ -2,6 +2,7 @@
 
 # These constrain keyword values to a type and make them required.
 META.SUBARRAY.NAME          H   C   R
+SUBARRAY                    H   C   O
 META.SUBARRAY.XSTART        H   I   R
 META.SUBARRAY.YSTART        H   I   R
 META.SUBARRAY.XSIZE         H   I   R

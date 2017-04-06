@@ -15,7 +15,7 @@ WAVELENGTH   A           X         R             (has_column_type(WAVELENGTH_ARR
 
 FAST_VARIATION    A           X         R        (is_table(FAST_VARIATION_ARRAY))
 FAST_VARIATION    A           X         R        (has_columns(FAST_VARIATION_ARRAY,['SLIT_NAME','NELEM','WAVELENGTH','DATA']))
-FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'SLITNAME','STRING'))
+FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'SLIT_NAME','STRING'))
 FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'NELEM','INT'))
 FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))
 FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'DATA','FLOAT_ARRAY'))

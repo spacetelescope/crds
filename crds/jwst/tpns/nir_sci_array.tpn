@@ -5,6 +5,7 @@
 # These are X instead of H because they're fundamentally not keyword/header checks,  
 # they're condition checks where the name of the condition is given in place of the keyword.
 
+SCI       A           X         (nir_filter(INSTRUMENT,REFTYPE,EXP_TYPE))                           (array_exists(SCI_ARRAY))
 SCI       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
 
 SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)

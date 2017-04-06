@@ -496,14 +496,19 @@ class ExpressionValidator(Validator):
         """
         # super(ExpressionValidator, self).check_header(filename, header)
         header = data_file.convert_to_eval_header(header)
+        if self.info.keytype in ["A","D"] and header.get(self.complex_name, "UNDEFINED") == "UNDEFINED":
+            log.warning("Array", repr(self.complex_name),
+                        "is undefined.  Skipping check", str(self._expr))
+            return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))
-        satisfied = True
-        with log.verbose_warning_on_exception("Failed checking condition", repr(self._expr)):
+        try:
             satisfied = eval(self._expr_code, header, dict(globals()))
+        except Exception as exc:
+            raise RequiredConditionError("Failed checking condition", repr(self._expr), ":", str(exc))
         if not satisfied:
             raise RequiredConditionError("Condition", str(self._expr), "is not satisfied.")
-        
+        return satisfied
 # ---------------------------------------------------------------------------
 
 class KernelunityValidator(Validator):
@@ -564,7 +569,7 @@ def get_validators(observatory, refpath):
     """
     tpns = get_reffile_tpninfos(observatory, refpath)
     checkers = [validator(x) for x in tpns]
-    log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=65)
+    log.verbose("Validators for", repr(refpath), "("+str(len(checkers))+"):\n", log.PP(checkers), verbosity=65)
     return checkers
 
 def get_reffile_tpninfos(observatory, refpath):
@@ -574,7 +579,7 @@ def get_reffile_tpninfos(observatory, refpath):
     """
     locator = utils.get_locator_module(observatory)
     instrument, filekind = locator.get_file_properties(refpath)
-    tpns = locator.get_all_tpninfos(instrument, filekind, "tpn")
+    tpns = list(locator.get_all_tpninfos(instrument, filekind, "tpn"))
     tpns.extend(locator.get_extra_tpninfos(refpath))
     return tpns
 

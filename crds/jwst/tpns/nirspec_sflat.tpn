@@ -11,7 +11,7 @@ WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (has_c
 
 FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (is_table(FAST_VARIATION_ARRAY))
 FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_columns(FAST_VARIATION_ARRAY,['SLIT_NAME','NELEM','WAVELENGTH','DATA']))
-FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_column_type(FAST_VARIATION_ARRAY,'SLITNAME','STRING'))
+FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_column_type(FAST_VARIATION_ARRAY,'SLIT_NAME','STRING'))
 FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_column_type(FAST_VARIATION_ARRAY,'NELEM','INT'))
 
 # Too restrictive

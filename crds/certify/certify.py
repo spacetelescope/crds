@@ -185,8 +185,8 @@ class ReferenceCertifier(Certifier):
         log.verbose("Header:", log.PP(self.header), verbosity=55)
         for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
-                log.verbose("Checking", checker, verbosity=70)
                 checker.check(self.filename, self.header)                
+                log.verbose("Checked", checker, verbosity=70)
         with self.error_on_exception("Checking", repr(checker.info.name)):
             if self.mode_columns:
                 self.certify_reference_modes()
@@ -242,6 +242,12 @@ class ReferenceCertifier(Certifier):
             if ((array_name not in header) or 
                 (checker.info.keytype=="D" and header[array_name]["DATA"] is None)):
                 header[array_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
+        seen = set()
+        for checker in self.array_validators:
+            if checker.is_applicable(header) and header.get(checker.complex_name, "UNDEFINED") == "UNDEFINED":
+                if checker.complex_name not in seen:
+                    self.log_and_track_error("Missing required array", repr(checker.name))
+                    seen.add(checker.name)
         return header
 
     def dump_provenance(self):
