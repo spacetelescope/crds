@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2017-04-05',
+    'file_ext' : '.fits',
+    'filekind' : 'RESOL',
+    'filetype' : 'RESOL',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_resol.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '1bb7f8112b3a58dca248e586f9983f0dbb2be530',
+    'suffix' : 'resol',
+    'text_descr' : 'MRS Spectral Resolution File',
+}
+
+selector = Match({
+})
