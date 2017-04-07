@@ -510,28 +510,54 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - INFO -  FITS file 'niriss_ref_photom_missing_detector.fits' conforms to FITS standards.
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT!='MIRI'))", expression='(ERR_ARRAY.SHAPE==(2048,2048))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(ERR_ARRAY.SHAPE==(1024,1032))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression="(has_type(ERR_ARRAY,'FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(is_image(ERR_ARRAY))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'NELEM','INT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression='(is_table(PHOTOM_ARRAY))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT!='MIRI'))", expression='(SCI_ARRAY.SHAPE==(2048,2048))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(SCI_ARRAY.SHAPE==(1024,1032))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression="(has_type(SCI_ARRAY,'FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(is_image(SCI_ARRAY))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT!='MIRI'))", expression='(ERR_ARRAY.SHAPE==(2048,2048))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(ERR_ARRAY.SHAPE==(1024,1032))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression="(has_type(ERR_ARRAY,'FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(is_image(ERR_ARRAY))') skipping check :  name 'DETECTOR' is not defined
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Missing required keyword 'META.INSTRUMENT.DETECTOR'
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'FILTER','STRING')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'NELEM','INT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'ORDER','INT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY')) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE'])) is not satisfied.
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PHOTOM' : Condition (is_table(PHOTOM_ARRAY)) is not satisfied.
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'NELEM','INT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression='(is_table(PHOTOM_ARRAY))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
+    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_column_type(PHOTOM_ARRAY,'ORDER','INT'))
+    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING'))
+    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT!='MIRI'))", expression='(SCI_ARRAY.SHAPE==(2048,2048))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(SCI_ARRAY.SHAPE==(1024,1032))') skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression="(has_type(SCI_ARRAY,'FLOAT'))") skipping check :  name 'DETECTOR' is not defined
+    CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(is_image(SCI_ARRAY))') skipping check :  name 'DETECTOR' is not defined
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Missing required keyword 'META.INSTRUMENT.DETECTOR'
     CRDS - WARNING -  Failed resolving comparison reference for table checks :  parameter='META.INSTRUMENT.DETECTOR' value='UNDEFINED' is not in ('NIS', '*', 'N/A')
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_missing_detector.fits' in context 'jwst_0125.pmap'. Skipping tables comparison.
     CRDS - INFO -  ########################################
-    CRDS - INFO -  14 errors
-    CRDS - INFO -  3 warnings
+    CRDS - INFO -  8 errors
+    CRDS - INFO -  35 warnings
     CRDS - INFO -  6 infos
-    14
+    8
     >>> test_config.cleanup(old_state)
     """
     
