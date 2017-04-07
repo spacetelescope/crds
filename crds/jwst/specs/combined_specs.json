@@ -449,6 +449,36 @@
             "tpn":"miri_area.tpn",
             "unique_rowkeys":null
         },
+        "cubepar":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2017-04-07",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"CUBEPAR",
+            "filetype":"CUBEPAR",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_cubepar_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_cubepar.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"f1c720bacc4d4b29ea7442cf2cdf33546b6126e0",
+            "suffix":"cubepar",
+            "text_descr":"MRS IFU Cube defaults",
+            "tpn":"miri_cubepar.tpn",
+            "unique_rowkeys":null
+        },
         "dark":{
             "derived_from":"jwst_miri_dark_0003.rmap",
             "extra_keys":null,
