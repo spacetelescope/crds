@@ -1,5 +1,5 @@
-PHOTMJSR    H     R      (('IFU')in(EXP_TYPE))
-PHOTUJA2    H     R      (('IFU')in(EXP_TYPE))
+# PHOTMJSR    H     R      (('IFU')in(DETECTOR))
+# PHOTUJA2    H     R      (('IFU')in(DETECTOR))
 
 PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_columns(PHOTOM_ARRAY,['FILTER','SUBARRAY','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
 PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))

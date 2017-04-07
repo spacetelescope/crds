@@ -1,4 +1,4 @@
-PHOTOM     A      X      (not('IFU')in(EXP_TYPE))                             (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
-PHOTOM     A      X      (not('IFU')in(EXP_TYPE))                             (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
-PHOTOM     A      X      (not('IFU')in(EXP_TYPE))                             (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING'))
-PHOTOM     A      X      (not('IFU')in(EXP_TYPE))                             (has_column_type(PHOTOM_ARRAY,'ORDER','INT'))
+PHOTOM     A      X      R   (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
+PHOTOM     A      X      R   (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
+PHOTOM     A      X      R   (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING'))
+PHOTOM     A      X      R   (has_column_type(PHOTOM_ARRAY,'ORDER','INT'))
