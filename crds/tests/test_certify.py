@@ -695,34 +695,35 @@ def certify_jwst_bad_fits(self):
     <BLANKLINE>
     Failed validating 'enum' in schema:
         {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
-         'description': "'NIRISS' is deprecated in favor of 'NIS'",
+         'description': u"'NIRISS' is deprecated in favor of 'NIS'",
          'enum': ['NRCA1',
-                  'NRCA2',
-                  'NRCA3',
-                  'NRCA4',
-                  'NRCALONG',
-                  'NRCB1',
-                  'NRCB2',
-                  'NRCB3',
-                  'NRCB4',
-                  'NRCBLONG',
-                  'NRS1',
-                  'NRS2',
-                  'ANY',
-                  'MIRIMAGE',
-                  'MIRIFULONG',
-                  'MIRIFUSHORT',
-                  'NIRISS',
-                  'NIS',
-                  'GUIDER1',
-                  'GUIDER2',
-                  'N/A'],
+                   'NRCA2',
+                   'NRCA3',
+                   'NRCA4',
+                   'NRCALONG',
+                   'NRCB1',
+                   'NRCB2',
+                   'NRCB3',
+                   'NRCB4',
+                   'NRCBLONG',
+                   'NRS1',
+                   'NRS2',
+                   'ANY',
+                   'MIRIMAGE',
+                   'MIRIFULONG',
+                   'MIRIFUSHORT',
+                   'NIRISS',
+                   'NIS',
+                   'GUIDER1',
+                   'GUIDER2',
+                   'N/A'],
          'fits_keyword': 'DETECTOR',
          'title': 'Name of detector used to acquire the data',
          'type': 'string'}
     <BLANKLINE>
     On instance:
         'FOO'
+
     >>> test_config.cleanup(old_state)
     """
 

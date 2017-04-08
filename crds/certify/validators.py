@@ -497,8 +497,8 @@ class ExpressionValidator(Validator):
         # super(ExpressionValidator, self).check_header(filename, header)
         header = data_file.convert_to_eval_header(header)
         if self.info.keytype in ["A","D"] and header.get(self.complex_name, "UNDEFINED") == "UNDEFINED":
-            log.warning("Array", repr(self.name),
-                        "is undefined.  Skipping check", str(self._expr))
+            log.verbose_warning("Array", repr(self.name),
+                "is undefined.  Skipping check", str(self._expr))
             return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))

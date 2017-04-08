@@ -5,13 +5,13 @@
 # These are X instead of H because they're fundamentally not keyword/header checks,  
 # they're condition checks where the name of the condition is given in place of the keyword.
 
-SCI       A           X         (nir_filter(INSTRUMENT,REFTYPE,EXP_TYPE))                           (array_exists(SCI_ARRAY))
-SCI       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       A           X         R                           (array_exists(SCI_ARRAY))
+SCI       A           X         R                           (is_image(SCI_ARRAY))
+SCI       A           X         (REFTYPE!='SATURATION')     (has_type(SCI_ARRAY,'FLOAT'))
+SCI       A           X         (REFTYPE=='SATURATION')     (has_type(SCI_ARRAY,'INT'))
 
-SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
-SCI       A           X         (is_subarray(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))    (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+SCI       A           X         F       (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       A           X         R       (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         R       (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+SCI       A           X         S       (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
-SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (is_image(SCI_ARRAY))
-SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(REFTYPE!='SATURATION'))    (has_type(SCI_ARRAY,'FLOAT'))
-SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(REFTYPE=='SATURATION'))    (has_type(SCI_ARRAY,'INT'))

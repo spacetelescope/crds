@@ -245,7 +245,7 @@ class ReferenceCertifier(Certifier):
         seen = set()
         for checker in self.array_validators:
             if checker.is_applicable(header) and header.get(checker.complex_name, "UNDEFINED") == "UNDEFINED":
-                if checker.complex_name not in seen:
+                if checker.name not in seen:
                     self.log_and_track_error("Missing required array", repr(checker.name))
                     seen.add(checker.name)
         return header

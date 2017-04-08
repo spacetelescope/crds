@@ -73,8 +73,11 @@ def refpath_to_parkeys(refpath):
         p = crds.get_pickled_mapping(context)   # reviewed
         instrument, filekind = locate.get_file_properties(refpath)
         keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
-        keys.append("META.INSTRUMENT.NAME")
-        keys.append("META.REFFILE.TYPE")
+        # The below turned out to be bad because CRDS-only values aren't in datamodels
+        # so in this case the datamodels schema are too narrow for these and will reject
+        # e.g. SYSTEM or it's types.
+        #         keys.append("META.INSTRUMENT.NAME")
+        #         keys.append("META.REFFILE.TYPE")
     return sorted(keys)
 
 # =============================================================================
