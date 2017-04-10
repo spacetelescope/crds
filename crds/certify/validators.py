@@ -61,12 +61,15 @@ class Validator(object):
         self.info = info
         self.name = info.name
         self._presence_condition_code = None
+        
+        if self.info.datatype not in generic_tpn.TpnInfo.datatypes:
+            raise ValueError("Bad TPN datatype field " + repr(self.info.presence))
 
-        if not (self.info.presence in ["R", "P", "E", "O", "W", "F", "S"] or
+        if not (self.info.presence in generic_tpn.TpnInfo.presences or
                 self.conditionally_required):
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
         
-        if not (self.info.keytype in ["H", "C", "A", "D", "X", "G"]):
+        if not (self.info.keytype in generic_tpn.TpnInfo.keytypes):
             raise ValueError("Bad TPN keytype " + repr(self.info.keytype))
 
         if not hasattr(self.__class__, "_values"):
@@ -193,7 +196,7 @@ class Validator(object):
         elif self.info.presence in ["O"]:
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
             return "UNDEFINED"
-        elif self.info.presence in ["S","F"]:
+        elif self.info.presence in ["S","F","A"]:
             log.verbose("Conditional SUBARRAY parameter is not defined.")
             return "UNDEFINED"
         elif self.conditionally_required:
@@ -230,6 +233,7 @@ class Validator(object):
         defined,  returns False indicating that the validator is not applicable to the situation
         defined by `header`.
         """
+        SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
             try:
                 required = eval(self._presence_condition_code, header, dict(globals()))
@@ -239,10 +243,12 @@ class Validator(object):
                 log.warning("Failed checking applicability of", repr(self.info),"skipping check : ", str(exc))
                 required = False
             return required
-        elif self.info.presence == "F": # IF_FULL_FRAME
-            return is_full_frame(header.get("SUBARRAY", "UNDEFINED"))
+        if self.info.presence == "F": # IF_FULL_FRAME
+            return is_full_frame(SUBARRAY)
         elif self.info.presence == "S": # IF_SUBARRAY        
-            return is_subarray(header.get("SUBARRAY", "UNDEFINED"))
+            return is_subarray(SUBARRAY)
+        elif self.info.presence == "A":
+            return subarray_defined(header)
         else:    
             return True
 

@@ -79,39 +79,46 @@ class TpnInfo(_TpnInfo):
                 + self._repr_datatype() + ", "
                 + self._repr_presence() + ", "
                 + self._repr_values() + ")")
+    
+    keytypes = {
+        "H" : "HEADER",
+        "C" : "COLUMN",
+        "G" : "GROUP",
+        "A" : "ARRAY_FORMAT",
+        "D" : "ARRAY_DATA",
+        "X" : "EXPRESSION",
+    }
 
     def _repr_keytype(self):
-        return repr({
-            "H" : "HEADER",
-            "C" : "COLUMN",
-            "G" : "GROUP",
-            "A" : "ARRAY_FORMAT",
-            "D" : "ARRAY_DATA",
-            "X" : "EXPRESSION",
-            }.get(self.keytype[0], self.keytype[0]))
+        return repr(self.keytypes.get(self.keytype[0], self.keytype[0]))
+
+    datatypes = {
+        "C" : "CHARACTER",
+        "I" : "INTEGER",
+        "L" : "LOGICAL",
+        "R" : "REAL",
+        "D" : "DOUBLE",
+        "X" : "EXPRESSION",
+    }
 
     def _repr_datatype(self):
-        return repr({
-            "C" : "CHARACTER",
-            "I" : "INTEGER",
-            "L" : "LOGICAL",
-            "R" : "REAL",
-            "D" : "DOUBLE",
-            "X" : "EXPRESSION",
-            }.get(self.datatype[0], self.datatype[0]))
-
+        return repr(self.datatypes.get(self.datatype[0], self.datatype[0]))
+        
+    presences = {
+        "E" : "EXCLUDED",
+        "R" : "REQUIRED",
+        "P" : "REQUIRED",
+        "W" : "WARN",
+        "O" : "OPTIONAL",
+        "F" : "IF_FULL_FRAME",
+        "S" : "IF_SUBARRAY",
+        "A" : "ANY_SUBARRAY"
+    }
+    
     def _repr_presence(self):
         if is_expression(self.presence):
             return "condition="+repr(self.presence)
-        return repr({
-            "E" : "EXCLUDED",
-            "R" : "REQUIRED",
-            "P" : "REQUIRED",
-            "W" : "WARN",
-            "O" : "OPTIONAL",
-            "F" : "IF_FULL_FRAME",
-            "S" : "IF_SUBARRAY",
-            }.get(self.presence[0], self.presence[0]))
+        return repr(self.presences.get(self.presence[0], self.presence[0]))
 
     def _repr_values(self):
         if self.values and is_expression(self.values[0]):

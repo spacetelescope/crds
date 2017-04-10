@@ -192,6 +192,14 @@ def is_subarray(subarray):
     """
     return  (subarray != "UNDEFINED") and not is_full_frame(subarray)
 
+def subarray_defined(header):
+    """Return True IFF SUBARRAY related keywords are defined."""
+    for keyword in ["SUBARRAY","SUBSTRT1","SUBSTRT2","SUBSIZE1","SUBSIZE2"]:
+        value = header.get(keyword,"UNDEFINED")
+        if value == "UNDEFINED":
+            return False
+    return True
+
 def is_irs2(readpatt):
     """Return True IFF `readpatt` is one of the IRS2 READPATTs.
     

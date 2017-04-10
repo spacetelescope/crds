@@ -451,56 +451,6 @@ def certify_jwst_valid():
     0
     """
 
-def certify_jwst_invalid():
-    """
-    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-
-    >> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
-    
-    XXX DISABLED due to unicode formatting 2.7 vs. 3.5,  added unit test
-    
-    CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : JWST Data Model (jwst.datamodels) : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIRISS', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
-    <BLANKLINE>
-    Failed validating 'enum' in schema:
-        {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
-         'description': "'NIRISS' is deprecated in favor of 'NIS'",
-         'enum': ['NRCA1',
-                  'NRCA2',
-                  'NRCA3',
-                  'NRCA4',
-                  'NRCALONG',
-                  'NRCB1',
-                  'NRCB2',
-                  'NRCB3',
-                  'NRCB4',
-                  'NRCBLONG',
-                  'NRS1',
-                  'NRS2',
-                  'ANY',
-                  'MIRIMAGE',
-                  'MIRIFULONG',
-                  'MIRIFUSHORT',
-                  'NIRISS',
-                  'NIS',
-                  'GUIDER1',
-                  'GUIDER2',
-                  'N/A'],
-         'fits_keyword': 'DETECTOR',
-         'title': 'Name of detector used to acquire the data',
-         'type': 'string'}
-    <BLANKLINE>
-    On instance:
-        'FOO'
-    CRDS - INFO -  ########################################
-    CRDS - INFO -  1 errors
-    CRDS - INFO -  0 warnings
-    CRDS - INFO -  3 infos
-    1
-    >>> test_config.cleanup(old_state)
-    """
-
 def certify_jwst_missing_optional_parkey():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
@@ -521,9 +471,6 @@ def certify_jwst_missing_optional_parkey():
     CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))") skipping check :  name 'DETECTOR' is not defined
     CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression='(is_table(PHOTOM_ARRAY))') skipping check :  name 'DETECTOR' is not defined
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Missing required array 'PHOTOM'
     CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT!='MIRI'))", expression='(SCI_ARRAY.SHAPE==(2048,2048))') skipping check :  name 'DETECTOR' is not defined
     CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression='(SCI_ARRAY.SHAPE==(1024,1032))') skipping check :  name 'DETECTOR' is not defined
     CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT=='MIRI'))", expression="(has_type(SCI_ARRAY,'FLOAT'))") skipping check :  name 'DETECTOR' is not defined
@@ -540,10 +487,6 @@ def certify_jwst_missing_optional_parkey():
     CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT'))") skipping check :  name 'DETECTOR' is not defined
     CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression="(has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))") skipping check :  name 'DETECTOR' is not defined
     CRDS - WARNING -  Failed checking applicability of ('PHOTOM', 'ARRAY_FORMAT', 'EXPRESSION', condition="(not('IFU')in(DETECTOR))", expression='(is_table(PHOTOM_ARRAY))') skipping check :  name 'DETECTOR' is not defined
-    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
-    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_column_type(PHOTOM_ARRAY,'ORDER','INT'))
-    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING'))
-    CRDS - WARNING -  Array 'PHOTOM' is undefined.  Skipping check (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','ORDER','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='niriss_ref_photom_missing_detector.fits' ::  Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
     CRDS - WARNING -  Failed checking applicability of ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition="((('IFU')in(DETECTOR))and(INSTRUMENT!='MIRI'))", expression='(SCI_ARRAY.SHAPE==(2048,2048))') skipping check :  name 'DETECTOR' is not defined
@@ -554,10 +497,10 @@ def certify_jwst_missing_optional_parkey():
     CRDS - WARNING -  Failed resolving comparison reference for table checks :  parameter='META.INSTRUMENT.DETECTOR' value='UNDEFINED' is not in ('NIS', '*', 'N/A')
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_missing_detector.fits' in context 'jwst_0125.pmap'. Skipping tables comparison.
     CRDS - INFO -  ########################################
-    CRDS - INFO -  8 errors
-    CRDS - INFO -  35 warnings
+    CRDS - INFO -  5 errors
+    CRDS - INFO -  31 warnings
     CRDS - INFO -  6 infos
-    8
+    5
     >>> test_config.cleanup(old_state)
     """
     
@@ -691,39 +634,8 @@ def certify_jwst_bad_fits(self):
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
     CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Error loading : JWST Data Models: 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIRISS', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
-    <BLANKLINE>
-    Failed validating 'enum' in schema:
-        {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
-         'description': u"'NIRISS' is deprecated in favor of 'NIS'",
-         'enum': ['NRCA1',
-                   'NRCA2',
-                   'NRCA3',
-                   'NRCA4',
-                   'NRCALONG',
-                   'NRCB1',
-                   'NRCB2',
-                   'NRCB3',
-                   'NRCB4',
-                   'NRCBLONG',
-                   'NRS1',
-                   'NRS2',
-                   'ANY',
-                   'MIRIMAGE',
-                   'MIRIFULONG',
-                   'MIRIFUSHORT',
-                   'NIRISS',
-                   'NIS',
-                   'GUIDER1',
-                   'GUIDER2',
-                   'N/A'],
-         'fits_keyword': 'DETECTOR',
-         'title': 'Name of detector used to acquire the data',
-         'type': 'string'}
-    <BLANKLINE>
-    On instance:
-        'FOO'
-
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not valid in 'DETECTOR'
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Error loading : JWST Data Models: fits data is not valid: DETECTOR
     >>> test_config.cleanup(old_state)
     """
 

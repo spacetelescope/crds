@@ -9,9 +9,9 @@ SCI       A           X         R                           (array_exists(SCI_AR
 SCI       A           X         R                           (is_image(SCI_ARRAY))
 SCI       A           X         (REFTYPE!='SATURATION')     (has_type(SCI_ARRAY,'FLOAT'))
 SCI       A           X         (REFTYPE=='SATURATION')     (has_type(SCI_ARRAY,'INT'))
-
 SCI       A           X         F       (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
-SCI       A           X         R       (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         R       (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+
+SCI       A           X         A       (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         A       (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
 SCI       A           X         S       (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
