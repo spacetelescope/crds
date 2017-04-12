@@ -551,7 +551,7 @@ class UniqueErrorsMixin(object):
         self.add_argument("--unique-threshold", type=int, default=1,
             help="Only print unique error classes with this many or more instances.")
         self.add_argument("--max-errors-per-class", type=int, default=500, metavar="N",
-            help="Only print the first N defailed errors of any particular class.")
+            help="Only print the first N detailed errors of any particular class.")
         self.add_argument("--unique-delimiter", type=str, default=None,
             help="Use the given delimiter (e.g. semicolon) in tracked error messages to make them amenable to spreadsheets.")
 

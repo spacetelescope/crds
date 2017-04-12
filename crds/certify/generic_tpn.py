@@ -54,7 +54,8 @@ import collections
 
 # ============================================================================
 
-from crds.core import log, utils
+from crds.core import log, utils, exceptions
+from crds.client import api
 
 # ============================================================================
 
@@ -78,41 +79,67 @@ class TpnInfo(_TpnInfo):
                 + self._repr_datatype() + ", "
                 + self._repr_presence() + ", "
                 + self._repr_values() + ")")
+    
+    keytypes = {
+        "H" : "HEADER",
+        "C" : "COLUMN",
+        "G" : "GROUP",
+        "A" : "ARRAY_FORMAT",
+        "D" : "ARRAY_DATA",
+        "X" : "EXPRESSION",
+    }
 
     def _repr_keytype(self):
-        return {
-            "H" : "HEADER",
-            "C" : "COLUMN",
-            "G" : "GROUP",
-            }.get(self.keytype, self.keytype)
+        return repr(self.keytypes.get(self.keytype[0], self.keytype[0]))
+
+    datatypes = {
+        "C" : "CHARACTER",
+        "I" : "INTEGER",
+        "L" : "LOGICAL",
+        "R" : "REAL",
+        "D" : "DOUBLE",
+        "X" : "EXPRESSION",
+    }
 
     def _repr_datatype(self):
-        return {
-            "C" : "CHARACTER",
-            "I" : "INTEGER",
-            "L" : "LOGICAL",
-            "R" : "REAL",
-            "D" : "DOUBLE",
-            "Z" : "REGEX",
-            "X" : "EXPRESSION",
-            }.get(self.datatype, self.datatype)
-
+        return repr(self.datatypes.get(self.datatype[0], self.datatype[0]))
+        
+    presences = {
+        "E" : "EXCLUDED",
+        "R" : "REQUIRED",
+        "P" : "REQUIRED",
+        "W" : "WARN",
+        "O" : "OPTIONAL",
+        "F" : "IF_FULL_FRAME",
+        "S" : "IF_SUBARRAY",
+        "A" : "ANY_SUBARRAY"
+    }
+    
     def _repr_presence(self):
         if is_expression(self.presence):
-            return "condition="+self.presence
-        return {
-            "E" : "EXCLUDED",
-            "R" : "REQUIRED",
-            "P" : "REQUIRED",
-            "W" : "WARN",
-            "O" : "OPTIONAL",
-            }.get(self.presence, self.presence)
+            return "condition="+repr(self.presence)
+        return repr(self.presences.get(self.presence[0], self.presence[0]))
 
     def _repr_values(self):
         if self.values and is_expression(self.values[0]):
             return "expression=" + repr(self.values[0])
         else:
             return "values=" + repr(self.values)
+        
+    @property
+    def is_expression(self):
+        """Return True IFF this is an expression constraint."""
+        return self.datatype[0] == "X"
+
+    @property
+    def is_conditionally_applicable(self):
+        """Return True IFF this constraint has an expression defining when it is applicable."""
+        return is_expression(self.presence)
+    
+    @property
+    def is_complex_constraint(self):
+        """Used to eliminate infos not appropriate as rmap value lists."""
+        return self.is_expression or self.is_conditionally_applicable
 
 # =============================================================================
 
@@ -133,7 +160,7 @@ def load_tpn(fname):
             values = []
         else:
             name, keytype, datatype, presence, values = items
-            values = values.split(",")
+            values = values.split(",") if datatype != "X" else [values]
             values = [v if is_expression(v) else v.upper() for v in values]
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
@@ -147,6 +174,7 @@ def is_expression(tpn_field):
     """
     return tpn_field.startswith("(") and tpn_field.endswith(")")
     
+@utils.cached
 def load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.  If a line begins with "include",  the
@@ -165,6 +193,8 @@ def load_tpn_lines(fname):
             if line.startswith("include"):
                 include = line.split(" ")[1]
                 fname2 = os.path.join(dirname, include)
+                if not os.path.exists(fname2):
+                    exceptions.MissingTpnIncludeError("Included .tpn file", repr(include), "cannot be found.")
                 lines += load_tpn_lines(fname2)
                 continue
             if append:
@@ -194,7 +224,8 @@ def _fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
-def get_classic_tpninfos(filepath):
+@utils.cached
+def get_tpninfos(filepath):
     """Load the list of TPN info tuples from .tpn file at `filepath`.  Unlike
     load_tpn(), this function is structured such that missing files are an
     expected error and relegated to a verbose warning.  This is because for
@@ -203,32 +234,35 @@ def get_classic_tpninfos(filepath):
     # XXXX Doesn't use verbose_warning_on_exception because --debug-traps would
     # always trigger since trapped exceptions are expected here,  debugging this
     # is trickier than normal.
-    try:
-        return load_tpn(filepath)
-    except Exception as exc:
-        log.verbose_warning("Exception reading TPN", repr(filepath), ":",
-                            log.srepr(exc), verbosity=70)
-        return []
+    return load_tpn(filepath) if os.path.exists(filepath) else []
     
 # =============================================================================
 
 def load_all_type_constraints(observatory):
     """Load all the type constraint files from `observatory` package."""
     from crds.core import rmap, heavy_client
-    pmap = rmap.get_cached_mapping(heavy_client.load_server_info(observatory).operational_context)
+    pmap_name = heavy_client.load_server_info(observatory).operational_context
+    pmap = rmap.get_cached_mapping(pmap_name)
     locator = utils.get_locator_module(observatory)
-    locator.get_tpninfos("all" + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
+    locator.get_all_tpninfos("all","all","tpn")
+    locator.get_all_tpninfos("all","all","ld_tpn")
     for instr in pmap.selections:
-        locator.get_tpninfos(instr + "_" + "all" + ".tpn", "foo.fits")  # With core schema,  one type loads all
+        locator.get_all_tpninfos(instr, "all", "tpn")
+        locator.get_all_tpninfos(instr, "all", "ld_tpn")
         imap = pmap.get_imap(instr)
         for filekind in imap.selections:
+            if imap.selections[filekind] == "N/A":
+                continue
             try:
                 suffix  = locator.TYPES.filekind_to_suffix(instr, filekind)
             except Exception as exc:
                 log.warning("Missing suffix coverage for", repr((instr, filekind)), ":", exc)
             else:
-                locator.get_tpninfos("all" + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
-                locator.get_tpninfos(instr + "_" + suffix + ".tpn", "foo.fits")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos(instr, suffix, "tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "ld_tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos(instr, suffix, "ld_tpn")  # With core schema,  one type loads all
+
 # =============================================================================
 
 def main():

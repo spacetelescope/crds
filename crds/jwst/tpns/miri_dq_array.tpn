@@ -1,0 +1,12 @@
+# This .tpn defines constraints related to array objects vs. header keywords.
+# Required relationships between subarray keywords are defined in a subarray .tpn
+# This file pertains to array properties and their relationships to header keywords.
+
+DQ       A           X         F             (DQ_ARRAY.SHAPE[-2:]==(1024,1032))
+DQ       A           X         A             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)
+DQ       A           X         A             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)
+DQ       A           X         S             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+DQ       A           X         R             (is_image(DQ_ARRAY))
+DQ       A           X         R             (has_type(DQ_ARRAY,'INT'))
+

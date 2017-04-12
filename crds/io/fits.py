@@ -15,9 +15,9 @@ from astropy.io import fits
 
 # ============================================================================
 
-from crds.core import python23, config, utils, log
+from crds.core import python23, config, utils, log, exceptions
 
-from .abstract import AbstractFile, ArrayFormat, hijack_warnings
+from .abstract import AbstractFile, hijack_warnings
 
 # ============================================================================
 
@@ -69,30 +69,12 @@ class FitsFile(AbstractFile):
         info_string = "\n".join(s.read().splitlines()[1:])
         return info_string
 
-    def get_format(self, array_name, array_id_info):
-        """Return the ArrayInfo object defining the data array `array_name` taken from
-        FITS `filepath`
-        """
-        with fits_open(self.filepath) as hdulist:
-            for (i, hdu) in enumerate(hdulist):
-                name, class_name, _header_len, shape, typespec, _unknown = hdu._summary()  # XXX uses private _summary
-                generic_class = {
-                    "IMAGEHDU" : "IMAGE",
-                    "BINTABLEHDU" : "TABLE", 
-                }.get(class_name.upper(), "UNKNOWN")
-                if array_name == name:
-                    return ArrayFormat(name, str(i), generic_class, shape, typespec)
-        raise 
-            
-    def get_array(self, name, extension):
+    def get_array(self, array_name_or_ext):
         """Return the `name`d array data from `filepath`,  alternately indexed
         by `extension` number.
         """
         with fits_open(self.filepath) as hdus:
-            try:
-                return hdus[name].data
-            except Exception:
-                return hdus[extension].data
+            return hdus[array_name_or_ext].data
             
     def get_raw_header(self, needed_keys=()):
         """Get the union of keywords from all header extensions of FITS
@@ -109,8 +91,35 @@ class FitsFile(AbstractFile):
                         continue
                     union.append((key, value))
         return union
-    
+
     def setval(self, key, value):
         fits.setval(self.filepath, key, value=value)
 
+    def get_array_properties(self, array_name, keytype="A"):
+        """Return a Struct defining the properties of the FITS array in extension named `array_name`."""
+        with fits_open(self.filepath) as hdulist:
+            for (i, hdu) in enumerate(hdulist):
+                if hdu.name == array_name:
+                    break
+            else:
+                return 'UNDEFINED'
+            generic_class = {
+                "IMAGEHDU" : "IMAGE",
+                "BINTABLEHDU" : "TABLE", 
+            }.get(hdu.__class__.__name__.upper(), "UNKNOWN")
+            if generic_class == "IMAGE":
+                typespec = hdu.data.dtype.name
+                column_names = None
+            else:
+                dtype = hdu.data.dtype
+                typespec = {name.upper():str(dtype.fields[name][0]) for name in dtype.names}
+                column_names = [name.upper() for name in hdu.data.dtype.names]
+            return utils.Struct( 
+                        SHAPE = hdu.data.shape,
+                        KIND = generic_class,
+                        DATA_TYPE = typespec,
+                        COLUMN_NAMES = column_names,
+                        EXTENSION = i,
+                        DATA = hdu.data if (keytype == "D") else None
+                    )
 

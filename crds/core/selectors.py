@@ -1861,7 +1861,7 @@ Restore original debug behavior:
                 log.verbose("Unchecked", repr(name), "=", repr(key[i]))
                 continue
             for value in str(key[i]).split("|"):
-                log.verbose("Checking", repr(name), "=", repr(key[i]), "against",
+                log.verbose("Checking", repr(name), "=", repr(value), "against",
                             valid_values_map[name])
                 self._validate_value(name, value, valid_values_map[name], runtime=False)
         for other in self.keys():

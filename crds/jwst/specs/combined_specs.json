@@ -23,6 +23,62 @@
             "text_descr":"Dark files for all instruments.",
             "tpn":"all_dark.tpn",
             "unique_rowkeys":null
+        },
+        "ipc":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"IPC",
+            "filetype":"IPC",
+            "instrument":"ALL",
+            "ld_tpn":"all_ipc_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"IPC",
+            "text_descr":"Interpixel Capacitance",
+            "tpn":"all_ipc.tpn",
+            "unique_rowkeys":null
+        },
+        "photom":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PHOTOM",
+            "filetype":"PHOTOM",
+            "instrument":"ALL",
+            "ld_tpn":"all_photom_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"PHOTOM",
+            "text_descr":"Dark files for all instruments.",
+            "tpn":"all_photom.tpn",
+            "unique_rowkeys":null
+        },
+        "rscd":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"RSCD",
+            "filetype":"RSCD",
+            "instrument":"ALL",
+            "ld_tpn":"all_rscd_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"RSCD",
+            "text_descr":"Reset Switch Charge Decay Correction",
+            "tpn":"all_rscd.tpn",
+            "unique_rowkeys":[
+                "READPATT",
+                "SUBARRAY",
+                "ROWS"
+            ]
+        },
+        "throughput":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"THROUGHPUT",
+            "filetype":"THROUGHPUT",
+            "instrument":"ALL",
+            "ld_tpn":"all_throughput_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"THROUGHPUT",
+            "text_descr":"Throughput constraints for all instruments.",
+            "tpn":"all_throughput.tpn",
+            "unique_rowkeys":null
         }
     },
     "fgs":{
@@ -820,7 +876,11 @@
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"miri_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "SUBARRAY",
+                "BAND"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
@@ -951,11 +1011,15 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"ec43fcd3756a572d11405b7e683983c5d2fe51ff",
+            "sha1sum":"6f7393efd0ed9c420e0beb38d92a84e4efaeb9d3",
             "suffix":"rscd",
             "text_descr":"Reset Switch Charge Decay correction",
             "tpn":"miri_rscd.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "READPATT",
+                "SUBARRAY",
+                "ROWS"
+            ]
         },
         "saturation":{
             "derived_from":"jwst_miri_saturation_0000.rmap",
@@ -1391,7 +1455,10 @@
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"nircam_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
@@ -1814,7 +1881,11 @@
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"niriss_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL",
+                "ORDER"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
@@ -2654,11 +2725,15 @@
                     "META.EXPOSURE.TYPE"
                 ]
             ],
-            "sha1sum":"245afb7ea97b599dba7cd1460650074d141e1b22",
+            "sha1sum":"7de3339c05deafd41e227aff105fbf8d97033fcc",
             "suffix":"photom",
             "text_descr":"Absolute Calibration",
             "tpn":"nirspec_photom.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "FILTER",
+                "GRATING",
+                "SLIT"
+            ]
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",

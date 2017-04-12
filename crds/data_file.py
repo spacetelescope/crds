@@ -43,7 +43,6 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """
     return get_free_header(filepath, needed_keys, original_name, observatory)
 
-
 # A clearer name
 get_unconditioned_header = get_header
 
@@ -87,9 +86,20 @@ def setval(filepath, key, value):
     """Set metadata keyword `key` of `filepath` to `value`."""
     if key.upper().startswith(("META.","META_")):
         key = key.replace("META_", "META.")
-        observatory = "jwst"
-    file_obj = file_factory(filepath, original_name=None, observatory=observatory)
+    file_obj = file_factory(filepath)
     file_obj.setval(key, value)
+
+# ================================================================================================================
+
+def get_array_properties(filename, array_name, keytype="A"):
+    """Return the dictionary defining basic properties of `array_name` of `filename`.
+    
+    Keytype == "A" for "array" means lightweight format only checks with no data included.
+    Keytype == "D" for "data" means heavy data oriented checks with data arrays returned as well.
+    """
+    file_obj = file_factory(filename)
+    props = file_obj.get_array_properties(array_name, keytype)
+    return props
 
 # ================================================================================================================
 

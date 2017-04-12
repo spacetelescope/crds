@@ -240,7 +240,7 @@ class BooleanConfigItem(ConfigItem):
 FITS_IGNORE_MISSING_END = BooleanConfigItem("CRDS_FITS_IGNORE_MISSING_END", False,
     "When True, ignore missing END records in the FITS primary header.  Otherwise fail.")
 
-FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", False,
+FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", True,
     "When True, verify that FITS header CHECKSUM and DATASUM values are correct.  Otherwise fail.")
 
 ADD_LOG_MSG_COUNTER = BooleanConfigItem(
@@ -804,6 +804,8 @@ def relocate_reference(ref, observatory):
     """
     # This limited case is required for the server and dealing with temporary filenames
     # which cannot be used to determine instrument subdirectory based on name.
+    if ref == "N/A":
+        return ref
     if get_crds_ref_subdir_mode(observatory) == "flat":
         return os.path.join(get_crds_refpath(observatory), os.path.basename(ref))
     else:
@@ -1103,6 +1105,8 @@ def relocate_mapping(mappath, observatory=None):
     """
     if observatory is None:
         observatory = mapping_to_observatory(mappath)
+    if mappath == "N/A":
+        return mappath
     return os.path.join(get_crds_mappath(observatory), os.path.basename(mappath))
 
 def mapping_exists(mapping):

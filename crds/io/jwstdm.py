@@ -17,8 +17,8 @@ from astropy.io import fits as pyfits
 
 from crds.core import config, log, utils
 
-from .abstract import AbstractFile, ArrayFormat, hijack_warnings
-
+from .abstract import hijack_warnings
+from .fits import FitsFile
 # ============================================================================
 
 def sanitize_data_model_dict(flat_dict):
@@ -59,7 +59,7 @@ def sanitize_data_model_dict(flat_dict):
 
 # ================================================================================================================
 
-class DataModelsFile(AbstractFile):
+class DataModelsFile(FitsFile):
     
     format = "JWSTDM"
     
@@ -101,7 +101,6 @@ class DataModelsFile(AbstractFile):
             with datamodels.open(self.filepath) as d_model:
                 flat_dict = d_model.to_flat_dict(include_arrays=False)
         return flat_dict
-
 
 '''
 from jwst import datamodels

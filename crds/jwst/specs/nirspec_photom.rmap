@@ -8,9 +8,10 @@ header = {
     'name' : 'nirspec_photom.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',),),
-    'sha1sum' : '245afb7ea97b599dba7cd1460650074d141e1b22',
+    'sha1sum' : '7de3339c05deafd41e227aff105fbf8d97033fcc',
     'suffix' : 'photom',
     'text_descr' : 'Absolute Calibration',
+    'unique_rowkeys' : ('FILTER', 'GRATING', 'SLIT'),
 }
 
 selector = Match({

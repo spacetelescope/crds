@@ -13,9 +13,9 @@ from __future__ import absolute_import
 
 # ============================================================================
 
-from crds.core import timestamp
+from crds.core import timestamp, utils
 
-from .abstract import AbstractFile, ArrayFormat, hijack_warnings
+from .abstract import AbstractFile
 
 # ============================================================================
 
@@ -23,6 +23,7 @@ class AsdfFile(AbstractFile):
     
     format = "ASDF"
 
+    @utils.gc_collected
     def get_raw_header(self, needed_keys=()):
         """Return the flattened header associated with an ASDF file."""
         import asdf

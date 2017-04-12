@@ -25,11 +25,7 @@ from crds.core import exceptions, python23, config, log, utils, timestamp
 
 # ================================================================================================
 
-ArrayFormat = namedtuple("ArrayInfo","name,array_id_info,array_class,shape,typespec")
-
-# ================================================================================================
-
-DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
+DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS","EXTNAME","EXTVER"]
 APPEND_KEYS = ["COMMENT", "HISTORY"]
     
 # ===========================================================================
@@ -48,8 +44,9 @@ def hijack_warnings(func):
         with warnings.catch_warnings():
             old_showwarning = warnings.showwarning
             warnings.showwarning = hijacked_showwarning
-            warnings.simplefilter("always", AstropyUserWarning)
             warnings.filterwarnings("always", r".*", UserWarning, r".*jwst.*")
+            warnings.simplefilter("always", AstropyUserWarning)
+            # warnings.filterwarnings("error", r".*sum verification failed.*", AstropyUserWarning, r".*astropy.io.fits.*")
             if not config.ALLOW_SCHEMA_VIOLATIONS:
                 warnings.filterwarnings("error", r".*is not valid in keyword.*", UserWarning, r".*jwst.*")
             # warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*crds.data_file.*")
@@ -240,6 +237,7 @@ class AbstractFile(object):
         self.filepath = filepath
         self.original_name = original_name
         self.observatory = observatory
+        self.array_formats = {}
 
     def _unsupported_file_op_error(self, method):
         return exceptions.UnsupportedFileOpError(
@@ -251,11 +249,11 @@ class AbstractFile(object):
         """
         raise self._unsupported_file_op_error("get_format")
 
-    def get_info(self, array_id_info):
-        """Return the ArrayInfo tuple corresponding to array selected by `array_id_info`."""
-        raise self._unsupported_file_op_error("get_info")
+    def get_array_properties(self, array_name, keytype="A"):
+        """Return a basic properties dictionary for array named `array_name`."""
+        raise self._unsupported_file_op_error("get_array_properties")
 
-    def get_array(self, array_id_info):
+    def get_array(self, array_name):
         """Return the array object corresponding to array selected by `array_id_info`."""
         raise self._unsupported_file_op_error("get_array")
     
@@ -315,7 +313,7 @@ class AbstractFile(object):
                         header[key] += "\n" + value
                 else:
                     header[key] = value
-        return ensure_keys_defined(header)
+        return ensure_keys_defined(header, needed_keys)
     
     # ----------------------------------------------------------------------------------------------
 

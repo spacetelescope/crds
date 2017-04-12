@@ -1,1 +1,4 @@
 include miri_subarray.tpn
+
+include miri_dq_array.tpn
+include miri_dq_def_array.tpn

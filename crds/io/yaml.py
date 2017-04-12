@@ -15,8 +15,7 @@ from __future__ import absolute_import
 
 from crds.core import exceptions
 
-from .abstract import AbstractFile, ArrayFormat, hijack_warnings
-
+from .abstract import AbstractFile
 # ============================================================================
 
 class YamlFile(AbstractFile):

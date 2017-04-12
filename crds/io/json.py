@@ -15,7 +15,7 @@ import json
 
 from crds.core import exceptions
 
-from .abstract import AbstractFile, ArrayFormat, hijack_warnings
+from .abstract import AbstractFile
 
 # ============================================================================
 

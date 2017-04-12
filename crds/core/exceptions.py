@@ -82,7 +82,7 @@ class MissingHeaderKeyError(MappingError):
 
 class InconsistentParkeyError(MappingError):
     """The parkey tuple was inconsistent with the rest of the .rmap in some way."""
-
+    
 # -------------------------------------------------------------------------------------------
 
 class ValidationError(CrdsError):
@@ -180,10 +180,13 @@ class IllegalKeywordError(CertifyError):
     """A keyword which should not be defined was present."""
 
 class InvalidFormatError(CertifyError):
-    """The given file was not loadable."""
+    """The given file was not load-able."""
 
 class TpnDefinitionError(CertifyError):
     """Something was wrong with a .tpn constraint."""
+
+class MissingTpnIncludeError(CertifyError):
+    """Any .tpn include files must exist or it's an error.  This is in contrast to other speculative .tpn loads."""
 
 class TypeSetupError(CertifyError):
     """An error occured while trying to locate file constraints and row mode variables."""
@@ -193,7 +196,15 @@ class MissingReferenceError(CertifyError):
 
 class RequiredConditionError(CertifyError):
     """An ExpressionValidator evaluated to False with respect to a file header."""
-    
+
+class BadKernelSumError(CertifyError):
+    """A convolution kernel array had a sum too far from 1.0, or similar."""  
+
+class MissingArrayError(CrdsError):
+    """A specified (named?) array was not found in a reference file."""
+
+class MissingColumnError(CrdsError):
+    """A specified (named?) column was not found in a reference file."""
 
 # -------------------------------------------------------------------------------------------
 

@@ -376,7 +376,7 @@ def update_file_bestrefs(context, dataset, updates):
     locator = utils.instrument_to_locator(instrument)
     prefix = locator.get_env_prefix(instrument) 
 
-    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
+    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True, checksum=False) as hdulist:
 
         def set_key(keyword, value):
             """Set a single keyword value with logging,  bound to outer-scope hdulist."""
