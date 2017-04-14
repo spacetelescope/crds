@@ -1,6 +1,6 @@
-__version__ = '91d920a'
+__version__ = '956fb01'
 
 __full_version_info__ = '''
-branch: bump-version
-sha1: 91d920a
+branch: rev2
+sha1: 956fb01
 '''
