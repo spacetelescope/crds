@@ -1,6 +1,6 @@
-__version__ = '91d920a'
+__version__ = 'bdc43b9'
 
 __full_version_info__ = '''
-branch: bump-version
-sha1: 91d920a
+branch: doover-7.1.1
+sha1: bdc43b9
 '''
