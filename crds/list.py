@@ -10,6 +10,8 @@ import os.path
 import sys
 from collections import OrderedDict
 
+from astropy.io import fits
+
 import crds
 from crds.core import config, log, python23, rmap, heavy_client, cmdline
 from crds import data_file
@@ -364,6 +366,8 @@ and ids used for CRDS reprocessing recommendations.
 
     def cat_files(self):
         """Print out the files listed after --cat"""
+        self.show_context_resolution = True
+
         self.args.files = self.args.cat   # determine observatory from --cat files.
 
         # --cat files...   specifying *no* files still triggers --cat logic
@@ -376,23 +380,48 @@ and ids used for CRDS reprocessing recommendations.
                 catted_files.remove(self.default_context)
             except Exception:
                 pass
-
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
-            path = self.locate_file(name)
-            path = self._cat_banner(path)
-            if config.is_reference(path):
-                self._cat_header(path)
-            else:
-                self._cat_text(path)
+            with log.error_on_exception("Failed dumping:", repr(name)):
+                path = self.locate_file(name)
+                if path != "N/A":
+                    self._cat_file(path)
 
-    def _cat_banner(self, name):
+    def _cat_file(self, path):
+        """Print out information on a single reference or mapping at `path`."""
+        self._cat_banner("File:", os.path.abspath(path), delim="#", bottom_delim="-")
+        if config.is_reference(path):
+            self._cat_header(path)
+            if path.endswith(".fits"):
+                self._cat_banner("Fits Info:", delim="-")
+                fits.info(path)
+                self._cat_array_properties(path)
+        else:
+            self._cat_text(path)
+
+    def _cat_banner(self, *args, **keys):
         """Print a banner for --cat for `name` and return the filepath of `name`."""
-        print("#"*120)
-        path = os.path.abspath(name)
-        print("File: ", repr(path))
-        print("#"*120)
-        return path
+        delim = keys.get("delim","#")
+        bottom_delim = keys.get("bottom_delim", None)
+        if delim:
+            print(delim*80)
+        print(*args)
+        if bottom_delim:
+            print(bottom_delim*80)
+        
+    def _cat_array_properties(self, path):
+        """Print out the CRDS interpretation of every array in `path`,  currently FITS only."""
+        i = 0
+        with data_file.fits_open(path) as hdulist:
+            for hdu in hdulist:
+                with log.warn_on_exception("Can't load array properties for HDU[" + str(i) +"]"):
+                    if i > 0:
+                        extname = hdu.header["EXTNAME"]
+                        self._cat_banner("CRDS Array Info [" + repr(extname) + "]:", delim="-")
+                        props = data_file.get_array_properties(path, hdu.header["EXTNAME"])
+                        props = { prop:value for (prop,value) in props.items() if value is not None }
+                        print(log.PP(props))
+                i += 1
 
     def _cat_text(self, path):
         """Dump out the contexts of a text file."""
@@ -517,10 +546,7 @@ and ids used for CRDS reprocessing recommendations.
     def list_status(self):
         """Print out *basic* configuration info about the current environment and server."""
         info = config.get_crds_env_vars()
-        real_paths = config.get_crds_actual_paths(self.observatory)
         server = self.server_info
-        current_server_url = api.get_crds_server()
-        cache_subdir_mode = config.get_crds_ref_subdir_mode(self.observatory)
         pyinfo = _get_python_info()
         status = OrderedDict(
             [("CRDS_PATH", info.get("CRDS_PATH", "undefined")),

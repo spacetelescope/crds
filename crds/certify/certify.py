@@ -1,6 +1,8 @@
 """This module defines replacement functionality for the CDBS "certify" program
-used to check parameter values in .fits reference files.   It verifies that FITS
-files define required parameters and that they have legal values.
+used to check parameter values in .fits reference files.   It verifies that reference
+files in multiple formats (FITS, json, yaml, ...) define required parameters and that 
+they have legal values.    It is also used to verify that CRDS mapping files are 
+consistent with outside systems.
 """
 from __future__ import print_function
 from __future__ import division
@@ -20,10 +22,11 @@ import numpy as np
 import crds
 
 from crds.core import pysh, log, config, utils, rmap, cmdline
-from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationError
+from crds.core.exceptions import InvalidFormatError, ValidationError
 
 from crds import data_file, diff, tables
 from crds.client import api
+# from crds.io import abstract
 
 from . import mapping_parser
 from . import validators
@@ -87,7 +90,7 @@ class Certifier(object):
             
     def certify(self):
         """Certify `self.filename`,  either reporting using log.error() or raising
-        ValidationError exceptions.
+        exceptions.
         """
         raise NotImplementedError("Certify is an abstract class.")
 
@@ -98,9 +101,14 @@ class Certifier(object):
         """
         # Get the cache key for this filetype.
         checkers = validators.get_validators(self.observatory, self.filename)
-        checkers = self.set_rmap_parkeys_to_required(checkers) 
+        checkers = self.set_rmap_parkeys_to_required(checkers)
         return checkers
-    
+
+    @property
+    def array_validators(self):
+        """Return the list of Validator objects that apply to arrays."""
+        return [checker for checker in self.validators if checker.info.keytype in ["A","D"]]
+
     def set_rmap_parkeys_to_required(self, checkers):
         """Mutate copies of `checkers` so that any specified by the rmap parkey are required."""
         parkeys = set(self.get_rmap_parkeys())
@@ -162,39 +170,84 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
-        with log.augment_exception("Error loading", exception_class=InvalidFormatError):
-            self.header = self.load()
-        with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
-            self.complex_init()
-        self.run_validators()
-        if self.mode_columns:
-            self.certify_reference_modes()
-        if self._dump_provenance_flag:
-            self.dump_provenance()
-    
-    def run_validators(self):
-        """Check parameter values,  column and non-column.
-
-        If a validator is conditionally required, only check it if is applicable to this header/file.
+        self.complex_init()
         """
+        try:
+        except TypeSetupError as exc:
+            log.verbose_warning("Error locating constraints for", repr(self.format_name), ":", str(exc))
+        except Exception as exc:
+            raise
+        """
+        with self.error_on_exception("Error loading"):
+            self.header = self.load()
+        if not self.header:
+            return
+        log.verbose("Header:", log.PP(self.header), verbosity=55)
         for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
-                log.verbose("Checking", checker, verbosity=70)
-                checker.check(self.filename, self.header)
-                
+                checker.check(self.filename, self.header)                
+                log.verbose("Checked", checker, verbosity=70)
+        with self.error_on_exception("Checking", repr(checker.info.name)):
+            if self.mode_columns:
+                self.certify_reference_modes()
+            if self._dump_provenance_flag:
+                self.dump_provenance()
+    
     def load(self):
-        """Load and parse header from self.filename"""
-        header = data_file.get_header(self.filename, observatory=self.observatory, original_name=self.original_name)
+        """Load and parse header from self.filename."""
+        from crds.io import abstract
+        # needed_keys=tuple([checker.complex_name for checker in self.validators])
+        header = data_file.get_header(
+            self.filename, (), self.original_name, self.observatory)
+        header = self.map_reference_keywords_to_dataset_keywords(header)
+        # header = self.cross_strap_instrument_keywords(header)
+        header = self.add_array_keywords(header)
+        header = abstract.ensure_keys_defined(header, needed_keys=[checker.complex_name for checker in self.validators])
+        return header
+    
+    def map_reference_keywords_to_dataset_keywords(self, header):
+        """Based on the rmap corresponding to this reference filename a`header`,  map keywords
+        in `header` from the names used in reference files to the corresponding names matched in
+        datasets.   Returns new `header`.
+        """
         if self.context:
-            r = None
+            rmapping = None
             with log.verbose_warning_on_exception("No corresponding rmap"):
-                r = self.get_corresponding_rmap()
-            if r:
+                rmapping = self.get_corresponding_rmap()
+            if rmapping:
                 with self.error_on_exception("Error mapping reference names and values to dataset names and values"):
-                    header = r.locate.reference_keys_to_dataset_keys(r, header)
-        instr = utils.header_to_instrument(header)
-        for key in crds.INSTRUMENT_KEYWORDS:
-            header[key] = instr
+                    header = rmapping.locate.reference_keys_to_dataset_keys(rmapping, header)
+        return header
+    
+#     def cross_strap_instrument_keywords(self, header):
+#         """Add all variations of the instrument keyword to `header` based on some variation of
+#         instrument name defined in `header`.   Mutates `header`.
+#         """
+#         header = dict(header)
+#         instr = utils.header_to_instrument(header)
+#         for key in crds.INSTRUMENT_KEYWORDS:
+#             header[key] = instr
+#         return header
+
+    def add_array_keywords(self, header):
+        """Add synthetic array keywords based on properties of the arrays mentioned in
+        array validators to header.   Muates `header`.
+        """
+        header = dict(header)
+        for checker in self.array_validators:
+            array_name = checker.complex_name
+            # None is untried,  UNDEFINED is tried and failed.
+            if header.get(array_name, None) == "UNDEFINED":
+                continue
+            if ((array_name not in header) or 
+                (checker.info.keytype=="D" and header[array_name]["DATA"] is None)):
+                header[array_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
+        seen = set()
+        for checker in self.array_validators:
+            if checker.is_applicable(header) and header.get(checker.complex_name, "UNDEFINED") == "UNDEFINED":
+                if checker.name not in seen:
+                    self.log_and_track_error("Missing required array", repr(checker.name))
+                    seen.add(checker.name)
         return header
 
     def dump_provenance(self):
@@ -209,8 +262,8 @@ class ReferenceCertifier(Certifier):
         warn_keys = self.provenance_keys
         for key in sorted(unseen):
             if key in warn_keys:
-                log.warning("Missing keyword '%s'."  % key)
-
+                 log.warning("Missing keyword '%s'."  % key)
+ 
     def _dump_provenance_core(self, dump_keys):
         """Generic dumper for self.header,  returns unseen keys."""
         unseen = set(dump_keys)
@@ -431,6 +484,7 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
     basename = repr(os.path.basename(tab.filename) + "[{}]".format(tab.segment))
     log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
     log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
+    log.verbose("Checking for duplicate modes.")
     modes = defaultdict(list)
     for i, row in enumerate(tab.rows):
         new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
@@ -470,7 +524,7 @@ class FitsCertifier(ReferenceCertifier):
             if status == 0:
                 log.verbose("fitsverify enabled and installled at", repr(out))
             else:
-                log.warning("External fitsverify program (cfitsio) is enabled but not found on PATH.")
+                log.warning("External fitsverify program is enabled but not found on PATH.")
                 self.run_fitsverify = False
 
     def load(self):
@@ -478,10 +532,12 @@ class FitsCertifier(ReferenceCertifier):
         if not self.filename.endswith(".fits"):
             log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
-        with data_file.fits_open_trapped(self.filename, checksum=True) as pfile:
+        with data_file.fits_open_trapped(self.filename, checksum=bool(config.FITS_VERIFY_CHECKSUM)) as pfile:
             pfile.verify(option='exception') # validates all keywords
+        self.locator.project_check(self.filename)
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
+
 
     def _dump_provenance_core(self, dump_keys):
         """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""
@@ -515,11 +571,17 @@ class FitsCertifier(ReferenceCertifier):
                 log.warning(">>", line)
             else:
                 log.info(">>", line)
-        m = re.search(r"(\d+)\s+error\(s\)", output)
-        if m and m.groups()[0] != "0":
-            log.error("Errors indicated by fitsverify log output.")
-        elif err:
-            log.warning("Errors or warnings indicated by fitsverify exit status.")
+        grade_fitsverify_output(err, output)
+
+def grade_fitsverify_output(status, output):
+    """Issue log error or warning messages based on the exit status and output
+    returned by fitsverify.
+    """
+    m = re.search(r"(\d+)\s+error\(s\)", output)
+    if m and m.groups()[0] != "0" or "checksum is not" in output:
+        log.error("Errors or checksum warnings in fitsverify log output.")
+    elif status:
+        log.warning("Errors or warnings indicated by fitsverify exit status.")
 
 # ============================================================================
 
@@ -638,11 +700,13 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     script:                 command line Script instance
     trap_exceptions:        if True, trapped exceptions issue ERROR messages. Otherwise reraised.
     original_name:          browser-side name of file if any, files 
-    """
-    gc.collect()
-    
+    """    
     try:
         old_flag = log.set_exception_trap(trap_exceptions)    #  XXX non-reentrant code,  no threading
+
+        if filename == "N/A":
+            log.verbose("Skipping certify N/A file.")
+            return
         
         if original_name is None:
             original_name = filename
@@ -675,6 +739,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
 
     finally:
         log.set_exception_trap(old_flag)
+        gc.collect()
 
 def get_certifier_class(original_name, filepath):
     """Given a reference file name with a valid extension, return the filetype and 
@@ -689,7 +754,7 @@ def get_certifier_class(original_name, filepath):
         "geis" : ReferenceCertifier,
         "unknown" : UnknownCertifier,
     }
-    filetype = data_file.get_filetype(original_name, filepath)
+    filetype = data_file.get_filetype(filepath, original_name)
     klass = klasses.get(filetype, UnknownCertifier)
     return filetype, klass
         
@@ -848,9 +913,14 @@ For more information on the checks being performed,  use --verbose or --verbosit
             log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
             self.args.comparison_context = None
             
+        if self.args.comparison_reference:
+            comparison_reference = config.locate_reference(self.args.comparison_reference, self.observatory)
+        else:
+            comparison_reference = None
+            
         certify_files(sorted(all_files), 
                       context=self.resolve_context(self.args.comparison_context),
-                      comparison_reference=self.args.comparison_reference,
+                      comparison_reference=comparison_reference,
                       compare_old_reference=self.args.comparison_context or self.args.comparison_reference,
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 

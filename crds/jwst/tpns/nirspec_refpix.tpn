@@ -1,0 +1,3 @@
+IRS2   A     X     R    (is_table(IRS2_ARRAY))
+IRS2   A     X     R    (has_columns(IRS2_ARRAY,['ALPHA_0','ALPHA_1','ALPHA_2','ALPHA_3','BETA_0','BETA_1','BETA_2','BETA_3']))
+READPATT H   X     R    (('IRS2')in(READPATT))

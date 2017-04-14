@@ -1,0 +1,12 @@
+REFTYPE    H      C      R      RSCD
+
+RSCD        A     X      R   (is_table(RSCD_ARRAY))
+RSCD        A     X      R   (has_columns(RSCD_ARRAY,['SUBARRAY','READPATT','ROWS','TAU1','SCALE1','TAU2','SCALE2']))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SUBARRAY','STRING'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'READPATT','STRING'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ROWS','STRING'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'TAU1','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SCALE1','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'TAU2','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SCALE2','FLOAT'))
+

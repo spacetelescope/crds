@@ -1,0 +1,5 @@
+THROUGHPUT    A       X       R     (is_table(THROUGHPUT_ARRAY))
+THROUGHPUT    A       X       R     (has_columns(THROUGHPUT_ARRAY,['WAVELENGTH','THROUGHPUT']))
+THROUGHPUT    A       X       R     (has_column_type(THROUGHPUT_ARRAY,'WAVELENGTH','FLOAT'))
+THROUGHPUT    A       X       R     (has_column_type(THROUGHPUT_ARRAY,'THROUGHPUT','FLOAT'))
+

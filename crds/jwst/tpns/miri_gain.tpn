@@ -1,1 +1,6 @@
 include miri_subarray.tpn
+
+include miri_sci_array.tpn
+
+SCI    A    X    R   (len(SCI_ARRAY.SHAPE)==2)
+

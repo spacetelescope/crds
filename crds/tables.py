@@ -65,8 +65,12 @@ _HERE = os.path.dirname(__file__) or "."
 def ntables(filename):
     """Return the number of segments / hdus in `filename`."""
     if filename.endswith(".fits"):
+        tables = 0
         with data_file.fits_open(filename) as hdus:
-            return len(hdus) - 1
+            for i,hdu in enumerate(hdus):
+                if hdu.__class__.__name__.upper() == 'BINTABLEHDU':
+                    tables += 1
+        return tables
     else:
         return 1
 
@@ -77,8 +81,12 @@ def tables(filename):
     This function is self-cached.    Clear the cache using clear_cache().
     """
     if filename.endswith(".fits"):
+        tables = []
         with data_file.fits_open(filename) as hdus:
-            return [ SimpleTable(filename, i+1) for i in range(len(hdus)-1) ]
+            for i,hdu in enumerate(hdus):
+                if hdu.__class__.__name__.upper() == 'BINTABLEHDU':
+                    tables.append(SimpleTable(filename, i))
+        return tables
     else:
         return [ SimpleTable(filename, segment=1) ]
     

@@ -14,16 +14,43 @@ import copy
 
 # ============================================================================
 
+import numpy as np
+
+# ============================================================================
+
 from crds.core import log, config, utils, timestamp, selectors
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
+from crds.core.exceptions import BadKernelSumError
 from crds import tables
 from crds import data_file
 
 from . import reftypes
 from . import generic_tpn
 from .generic_tpn import TpnInfo   # generic TpnInfo code
+from .validator_helpers import *
 
+# ============================================================================
+
+def array_name(rootname):
+    """Given the `rootname` for an array,  return the name of the array used
+    in Validator expressions.  
+    
+    >>> array_name('SCI')
+    'SCI_ARRAY'
+    >>> array_name(1)
+    'ARRAY_1'
+    >>> array_name('1')
+    'ARRAY_1'
+    
+    """
+    if isinstance(rootname,int) or re.match(r"\d+", rootname):
+        return "ARRAY_" + str(rootname)
+    elif isinstance(rootname, str):
+        return rootname.upper() + "_ARRAY"
+    else:
+        raise TypeError("Invalid array rootname type for: " + repr(rootname))
+    
 # ============================================================================
 
 class Validator(object):
@@ -34,17 +61,30 @@ class Validator(object):
         self.info = info
         self.name = info.name
         self._presence_condition_code = None
+        
+        if self.info.datatype not in generic_tpn.TpnInfo.datatypes:
+            raise ValueError("Bad TPN datatype field " + repr(self.info.presence))
 
-        if not (self.info.presence in ["R", "P", "E", "O", "W"] or
+        if not (self.info.presence in generic_tpn.TpnInfo.presences or
                 self.conditionally_required):
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
+        
+        if not (self.info.keytype in generic_tpn.TpnInfo.keytypes):
+            raise ValueError("Bad TPN keytype " + repr(self.info.keytype))
 
         if not hasattr(self.__class__, "_values"):
-            self._values = self.condition_values(
-                [val for val in info.values if not val.upper().startswith("NOT_")])
-            self._not_values = self.condition_values(
-                [val[4:] for val in info.values if val.upper().startswith("NOT_")])
-
+            self._values = self.condition_values(info.values)
+            
+    @property
+    def complex_name(self):
+        """If this is an array validator,  return name of array as it appears in expressions,
+        otherwise return self.name.
+        """
+        if self.info.keytype in ["A","D"]:
+            return array_name(self.name)
+        else:
+            return self.name
+        
     def verbose(self, filename, value, *args, **keys):
         """Prefix log.verbose() with standard info about this Validator.
         Unique message is in *args, **keys
@@ -72,34 +112,37 @@ class Validator(object):
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
         """
-        if self.info.keytype == "C":
-            return self.check_column(filename)
-        elif self.info.keytype == "G":
-            return self.check_group(filename)
-
         if header is None:
             header = data_file.get_header(filename)
 
         if not self.is_applicable(header):
             return True
-
-        if self.info.keytype == "H":
-            return self.check_header(filename, header)
-        elif self.info.keytype == "X":
+        
+        if self.info.keytype == "C":
+            return self.check_column(filename)
+        elif self.info.keytype == "G":
+            return self.check_group(filename)
+        elif self.info.keytype in ["H","X","A","D"]:
             return self.check_header(filename, header)
         else:
             raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) + 
                              " for " + repr(self.name))
 
+    def check_header(self, filename, header):
+        """Extract the value for this Validator's keyname,  either from `header`
+        or from `filename`'s header if header is None.   Check the value.
+        """
+        value = self.get_header_value(header)
+        return self.check_value(filename, value)
+
     def check_value(self, filename, value):
         """Check a single header or column value against the legal values
         for this Validator.
         """
-        if value is None: # missing optional or excluded keyword
+        if value in [None, "UNDEFINED"]: # missing optional or excluded keyword
             return True
-        if self.condition is not None:  # verify type regardless of values.
-            value = self.condition(value)
-        if not (self._values or self._not_values):
+        value = self.condition(value)
+        if not self._values:
             self.verbose(filename, value, "no .tpn values defined.")
             return True
         self._check_value(filename, value)
@@ -111,13 +154,6 @@ class Validator(object):
         raise NotImplementedError(
             "Validator is an abstract class.  Sub-class and define _check_value().")
     
-    def check_header(self, filename, header):
-        """Extract the value for this Validator's keyname,  either from `header`
-        or from `filename`'s header if header is None.   Check the value.
-        """
-        value = self._get_header_value(header)
-        return self.check_value(filename, value)
-
     def check_column(self, filename):
         """Extract a column of new_values from `filename` and check them all against
         the legal values for this Validator.   This checks a single column,  not a row/mode.
@@ -130,27 +166,25 @@ class Validator(object):
                 for i, value in enumerate(tab.columns[self.name]): # compare to TPN values
                     self.check_value(filename + "[" + str(i) +"]", value)
         if not column_seen:
-            self.__handle_missing()
-        else:
-            self.__handle_excluded(None)
+            self._handle_missing()
         return True
         
     def check_group(self, _filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
         log.warning("Group keys are not currently supported by CRDS.")
 
-    def _get_header_value(self, header):
+    def get_header_value(self, header):
         """Pull this Validator's value out of `header` and return it.
         Handle the cases where the value is missing or excluded.
         """
-        try:
-            value = header[self.name]
-            assert value != "UNDEFINED", "Undefined keyword " + repr(self.name)
-        except (KeyError, AssertionError):
-            return self.__handle_missing()
-        return self.__handle_excluded(value)
-
-    def __handle_missing(self):
+        value = header.get(self.complex_name, "UNDEFINED")
+        if value in [None, "UNDEFINED"]:
+            return self._handle_missing(header)
+        elif self.info.presence == "E":
+            raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
+        return value
+    
+    def _handle_missing(self, header=None):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
@@ -158,21 +192,22 @@ class Validator(object):
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         elif self.info.presence in ["W"]:
             log.warning("Missing suggested keyword " + repr(self.name))
+            return "UNDEFINED"
         elif self.info.presence in ["O"]:
-            # sys.exc_clear()
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
-            return # missing value is None, so let's be explicit about the return value
+            return "UNDEFINED"
+        elif self.info.presence in ["S","F","A"]:
+            log.verbose("Conditional SUBARRAY parameter is not defined.")
+            return "UNDEFINED"
+        elif self.conditionally_required:
+            if header and self.is_applicable(header):
+                raise MissingKeywordError("Missing keyword", repr(self.name), 
+                                           "required by condition", self.info.presence)
+            else:
+                return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
-                                     log.srepr(self.info.presence))
-
-    def __handle_excluded(self, value):
-        """If this Validator's key is excluded,  raise an exception.  Otherwise
-        return `value`.
-        """
-        if self.info.presence == "E":
-            raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
-        return value
+                                     repr(self.info.presence))
 
     @property
     def optional(self):
@@ -186,8 +221,9 @@ class Validator(object):
         it compiles now.
         """
         has_condition = generic_tpn.is_expression(self.info.presence)
-        if has_condition and not self._presence_condition_code:
-            self._presence_condition_code = compile(self.info.presence, repr(self.info), "eval")
+        if has_condition:
+            if not self._presence_condition_code:
+                self._presence_condition_code = compile(self.info.presence, repr(self.info), "eval")
             return True
         else:
             return False
@@ -197,14 +233,23 @@ class Validator(object):
         defined,  returns False indicating that the validator is not applicable to the situation
         defined by `header`.
         """
+        SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
-            required = eval(self._presence_condition_code, header, header)
-            log.verbose("Validator", self.info, "is",
-                        "applicable" if required else "not applicable",
-                        "based on condition", self.info.presence,
-                        verbosity=70)
+            try:
+                required = eval(self._presence_condition_code, header, dict(globals()))
+                log.verbose("Validator", self.info, "is",
+                            "applicable." if required else "not applicable.", verbosity=70)
+            except Exception as exc:
+                log.warning("Failed checking applicability of", repr(self.info),"skipping check : ", str(exc))
+                required = False
             return required
-        else:
+        if self.info.presence == "F": # IF_FULL_FRAME
+            return is_full_frame(SUBARRAY)
+        elif self.info.presence == "S": # IF_SUBARRAY        
+            return is_subarray(SUBARRAY)
+        elif self.info.presence == "A":
+            return subarray_defined(header)
+        else:    
             return True
 
     def get_required_copy(self):
@@ -227,42 +272,27 @@ class KeywordValidator(Validator):
                 self.verbose(filename, value, "is in", repr(self._values))
         else:
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
-                             str(log.PP(self._values)))    
-        if self._not_match_value(value):
-            raise ValueError("Value " + str(log.PP(value)) + " is disallowed.")
+                             str(log.PP(self._values)))
     
     def _match_value(self, value):
         """Do a literal match of `value` to the allowed values of this tpninfo."""
         return value in self._values or not self._values
     
-    def _not_match_value(self, value):
-        """Do a literal match of `value` to the disallowed values of this tpninfo."""
-        return value in self._not_values
-    
-# ----------------------------------------------------------------------------
-
-class RegexValidator(KeywordValidator):
-    """Checks that a value matches TpnInfo values treated as regexes."""
-    def _match_value(self, value):
-        if super(RegexValidator, self)._match_value(value):
-            return True
-        sval = str(value)
-        for pat in self._values:
-            if re.match(config.complete_re(pat), sval):
-                return True
-        return False
-
 # ----------------------------------------------------------------------------
 
 class CharacterValidator(KeywordValidator):
     """Validates values of type Character."""
     def condition(self, value):
+        """Condition a header values by stripping, converting to all uppercase, and replacing
+        space with underscore.
+        """
         chars = str(value).strip().upper()
         if " " in chars:
             chars = '"' + "_".join(chars.split()) + '"'
         return chars
 
     def _check_value(self, filename, value):
+        """Support rmap validation by handling esoteric values and or-groups."""
         if selectors.esoteric_key(value):
             values = [value]
         else:
@@ -277,7 +307,6 @@ class CharacterValidator(KeywordValidator):
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
     _values = ["T","F"]
-    _not_values = []
 
 # ----------------------------------------------------------------------------
 
@@ -337,16 +366,16 @@ class FloatValidator(NumericalValidator):
                 if possible:
                     err = (value-possible)/possible
                 elif value:
-                    err = (value-possible)/value
+                    err = value
                 else:
-                    continue
-                # print "considering", possible, value, err
+                    err = 0
                 if abs(err) < self.epsilon:
-                    self.verbose(filename, value, "is within +-", repr(self.epsilon), 
-                                 "of", repr(possible))
-                    return
-            raise
-
+                     self.verbose(filename, value, "is within +-", repr(self.epsilon), 
+                                  "of", repr(possible))
+                     return
+            raise ValueError("Float", repr(value), "is not within +-", repr(self.epsilon), 
+                            "of any of", repr(self._values))
+ 
 # ----------------------------------------------------------------------------
 
 class RealValidator(FloatValidator):
@@ -364,38 +393,46 @@ class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields."""
 
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
-    _not_values = []
 
-    def _get_header_value(self, header):
+    def get_header_value(self, header):
         """Extract the PEDIGREE value from header,  checking any
         start/stop dates.   Return only the PEDIGREE classification.
         Ignore missing start/stop dates.
         """
-        value = super(PedigreeValidator, self)._get_header_value(header)
-        if value is None:
-            return
+        value = super(PedigreeValidator, self).get_header_value(header)
+        if value == "UNDEFINED":
+            return "UNDEFINED"
+        values = value.split()
+        if len(values) not in [1, 3, 4]:
+            raise ValueError("Invalid PEDIGREE format: " + repr(value))
         try:
-            pedigree, start, stop = value.split()
+            pedigree, start, stop = values
         except ValueError:
             try:
-                pedigree, start, _dash, stop = value.split()
+                pedigree, start, _dash, stop = values
             except ValueError:
                 pedigree = value
                 start = stop = None
         pedigree = pedigree.upper()
-        if start is not None:
-            timestamp.slashdate_or_dashdate(start)
-        if stop is not None:
-            timestamp.slashdate_or_dashdate(stop)
+        if start is not None and stop is not None:
+            if "T" in start+stop:  # can't appear in either string
+                raise ValueError("Invalid PEDIGREE format: " + repr(value))
+            start_dt = timestamp.slashdate_or_dashdate(start)
+            stop_dt = timestamp.slashdate_or_dashdate(stop)
+            if not (start_dt < stop_dt):
+                raise ValueError("PEDIGREE date order invalid: " + repr(start) + " >= " + repr(stop))
+        else:
+            if pedigree == "INFLIGHT":
+                raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
         return pedigree
 
-    def _match_value(self, value):
-        """Match raw pattern as prefix string only,  no complete_re()."""
-        sval = str(value)
-        for pat in self._values:
-            if re.match(pat, sval):   # intentionally NOT complete_re()
-                return True
-        return False
+#     def _match_value(self, value):
+#         """Match raw pattern as prefix string only,  no complete_re()."""
+#         sval = str(value)
+#         for pat in self._values:
+#             if re.match(pat, sval):   # intentionally NOT complete_re()
+#                 return True
+#         return False
 
 # ----------------------------------------------------------------------------
 
@@ -411,14 +448,12 @@ class JwstdateValidator(KeywordValidator):
     """Check &JWSTDATE date fields."""
     def _check_value(self, filename, value):
         self.verbose(filename, value)
-        try:
-            timestamp.Jwstdate.get_datetime(value)
-        except Exception:
-            raise ValueError(log.format(
-                "Invalid JWST date", repr(value), "for", repr(self.name),
-                "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
-            
-'''
+#         try:
+#             timestamp.Jwstdate.get_datetime(value)
+#         except Exception:
+#             raise ValueError(log.format(
+#                 "Invalid JWST date", repr(value), "for", repr(self.name),
+#                 "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
         try:
             timestamp.Jwstdate.get_datetime(value)
         except ValueError:
@@ -428,10 +463,9 @@ class JwstdateValidator(KeywordValidator):
                 try:
                     timestamp.Jwstdate.get_datetime(value.replace(" ","T"))
                 except ValueError:
-                    timestamp.Jwstdate.get_datetime(value)                    
+                    timestamp.Jwstdate.get_datetime(value)   # re-execute to replace exception raised                 
             log.warning("Non-compliant date format", repr(value), "for", repr(self.name),
                         "should be", repr("YYYY-MM-DDTHH:MM:SS"),)
-'''
 
 # ----------------------------------------------------------------------------
 
@@ -451,15 +485,6 @@ class AnydateValidator(KeywordValidator):
 
 # ----------------------------------------------------------------------------
 
-class FilenameValidator(KeywordValidator):
-    """Validates &FILENAME fields."""
-    def _check_value(self, filename, value):
-        self.verbose(filename, value)
-        result = (value == "(initial)") or not os.path.dirname(value)
-        return result
-
-# ----------------------------------------------------------------------------
-
 class ExpressionValidator(Validator):
     """Value is an expression on the reference header that must evaluate to True."""
 
@@ -468,39 +493,65 @@ class ExpressionValidator(Validator):
         self._expr = info.values[0]
         self._expr_code = compile(self._expr, repr(self.info), "eval")
 
-    def _check_value(self, *args, **keys):
-        """If this validator is inadvertantly executed... no point in failing.  Design
-        intent is to *only* execute check_header().
-        """
+    def _check_value(self, *args, **keys):   
         return True
 
     def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
         with respect to the given `header`.  Read `header` from `filename` if `header` is None.
         """
+        # super(ExpressionValidator, self).check_header(filename, header)
         header = data_file.convert_to_eval_header(header)
-        log.verbose("Checking", repr(os.path.basename(filename)), "for condition", repr(self._expr))
-        is_true = False
-        with log.verbose_warning_on_exception(
-            "Failed evaluating condition expression", repr(self._expr)):
-            is_true = eval(self._expr_code, header, header)
-        if not is_true:
-            raise RequiredConditionError(
-                "Required condition", repr(self._expr), "failed to evaluate or is not satisfied.")
+        if self.info.keytype in ["A","D"] and header.get(self.complex_name, "UNDEFINED") == "UNDEFINED":
+            log.verbose_warning("Array", repr(self.name),
+                "is undefined.  Skipping check", str(self._expr))
+            return
+        log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
+                    repr(self.name), "condition", str(self._expr))
+        try:
+            satisfied = eval(self._expr_code, header, dict(globals()))
+        except Exception as exc:
+            raise RequiredConditionError("Failed checking condition", repr(self._expr), ":", str(exc))
+        if not satisfied:
+            raise RequiredConditionError("Condition", str(self._expr), "is not satisfied.")
+        return satisfied
+# ---------------------------------------------------------------------------
+
+class KernelunityValidator(Validator):
+    """Ensure that every image in the specified array as a sum() near 1.0"""    
+    def _check_value(self, *args, **keys):  
+        return True
+
+    def check_header(self, filename, header):
+        """Evalutate the header expression associated with this validator (as its sole value)
+        with respect to the given `header`.  Read `header` from `filename` if `header` is None.
+        """
+        # super(KernelunityValidator, self).check_header(filename, header)
+        array_name = self.complex_name
+        all_data = header[array_name].DATA.transpose()
+        images = int(np.product(all_data.shape[:-2]))
+        images_shape = (images,) + all_data.shape[-2:]
+        images_data = np.reshape(all_data, images_shape)
+        log.verbose("File=" + repr(os.path.basename(filename)),
+                   "Checking", len(images_data), repr(array_name), "kernel(s) of size", 
+                    images_data[0].shape, "for individual sums of 1+-1e-6.")
+        for (i, image) in enumerate(images_data):
+            if abs(image.sum()-1.0) > 1.0e-6:
+                raise BadKernelSumError("Kernel sum", image.sum(),
+                    "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
 
 # ----------------------------------------------------------------------------
 
 def validator(info):
     """Given TpnInfo object `info`, construct and return a Validator for it."""
-    if info.datatype == "C":
-        if len(info.values) == 1 and len(info.values[0]) and \
-            info.values[0][0] == "&":
-            # This block handles &-types like &PEDIGREE and &SYBDATE
-            # only called on static TPN infos.
-            func = eval(info.values[0][1:].capitalize() + "Validator")
-            rval = func(info)
-        else:
-            rval = CharacterValidator(info)
+    if len(info.values) == 1 and len(info.values[0]) and \
+        info.values[0][0] == "&":
+        # This block handles &-types like &PEDIGREE and &SYBDATE
+        # only called on static TPN infos.
+        class_name = info.values[0][1:].capitalize() + "Validator"
+        rval = eval(class_name)(info)
+    elif info.datatype == "C":
+        rval = CharacterValidator(info)
     elif info.datatype == "R":
         rval = RealValidator(info)
     elif info.datatype == "D":
@@ -509,8 +560,6 @@ def validator(info):
         rval = IntValidator(info)
     elif info.datatype == "L":
         rval = LogicalValidator(info)
-    elif info.datatype == "Z":
-        rval = RegexValidator(info)
     elif info.datatype == "X":
         rval = ExpressionValidator(info)
     else:
@@ -524,12 +573,19 @@ def get_validators(observatory, refpath):
     corresponding validators that define individual constraints that reference
     should satisfy.
     """
-    types = reftypes.get_types_object(observatory)
-    locator = utils.get_locator_module(observatory)
-    checkers = []
-    for key in types.reference_name_to_validator_keys(refpath):
-        validators_for_keys = [validator(x) for x in locator.get_tpninfos(*key)]
-        checkers.extend(validators_for_keys)
-    log.verbose("Validators for", repr(refpath), ":\n", log.PP(checkers), verbosity=60)
+    tpns = get_reffile_tpninfos(observatory, refpath)
+    checkers = [validator(x) for x in tpns]
+    log.verbose("Validators for", repr(refpath), "("+str(len(checkers))+"):\n", log.PP(checkers), verbosity=65)
     return checkers
+
+def get_reffile_tpninfos(observatory, refpath):
+    """Load just the TpnInfo objects for `observatory` and the given `refpath`.
+    This entails both "class" TpnInfo's from CDBS as well as TpnInfo objects
+    derived from the JWST data models.
+    """
+    locator = utils.get_locator_module(observatory)
+    instrument, filekind = locator.get_file_properties(refpath)
+    tpns = list(locator.get_all_tpninfos(instrument, filekind, "tpn"))
+    tpns.extend(locator.get_extra_tpninfos(refpath))
+    return tpns
 

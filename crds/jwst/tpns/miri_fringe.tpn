@@ -1,0 +1,10 @@
+include miri_subarray.tpn
+
+include miri_sci_array.tpn
+include miri_err_array.tpn
+include miri_dq_array.tpn
+include miri_dq_def_array.tpn
+
+SCI    A     X    R   (len(SCI_ARRAY.SHAPE)==2)
+ERR    A     X    R   (len(ERR_ARRAY.SHAPE)==2)
+DQ     A     X    R   (len(DQ_ARRAY.SHAPE)==2)

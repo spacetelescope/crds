@@ -7,7 +7,11 @@
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
-META.SUBARRAY.NAME          H   C   R   NOT_GENERIC
+META.SUBARRAY.NAME          H   X   R   (META_SUBARRAY_NAME!='GENERIC')
 META.EXPOSURE.NFRAMES       H   I   R  
 META.EXPOSURE.GROUPGAP      H   I   R   
 META.EXPOSURE.NGROUPS       H   I   R                  
+
+# SCI     A     X      R    (len(SCI_ARRAY.SHAPE)==3)
+# ERR     A     X      R    (len(ERR_ARRAY.SHAPE)==3)
+# DQ      A     X      R    (len(DQ_ARRAY.SHAPE)==2)

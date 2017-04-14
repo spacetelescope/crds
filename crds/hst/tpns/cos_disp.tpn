@@ -14,7 +14,7 @@
 INSTRUME            H        C         R    COS
 FILETYPE            H        C         R    "DISPERSION RELATION REFERENCE TABLE"
 DETECTOR            H        C         R    FUV,NUV
-LIFE_ADJ            H        C         R    -1,1,2,3,N/A 
+LIFE_ADJ            H        C         R    -1,0,1,2,3,4,N/A
 OBSTYPE             H        C         R    SPECTROSCOPIC
 VCALCOS             H        C         R    
 USEAFTER            H        C         R    &SYBDATE

@@ -1,1 +1,7 @@
 include nir_subarray.tpn
+
+include nir_coeffs_array.tpn
+include nir_opt_err_array.tpn
+include nir_dq_array.tpn
+include nir_dq_def_array.tpn
+

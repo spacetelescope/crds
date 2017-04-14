@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import absolute_import
 
 import json
+import gc
 
 import crds
 from crds.core import log, utils, python23, heavy_client
@@ -193,6 +194,7 @@ class FileHeaderGenerator(HeaderGenerator):
 
     def _header(self, filename):
         """Get the best references recommendations recorded in the header of file `dataset`."""
+        gc.collect()
         if filename not in self.headers:
             self.headers[filename] = data_file.get_free_header(filename, (), None, self.observatory)
         return self.headers[filename]
@@ -374,7 +376,7 @@ def update_file_bestrefs(context, dataset, updates):
     locator = utils.instrument_to_locator(instrument)
     prefix = locator.get_env_prefix(instrument) 
 
-    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
+    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True, checksum=False) as hdulist:
 
         def set_key(keyword, value):
             """Set a single keyword value with logging,  bound to outer-scope hdulist."""

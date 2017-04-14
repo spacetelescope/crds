@@ -1,0 +1,14 @@
+# ------------------------------------------------
+READPATT H           C         O
+
+# DQ       A           X         R              (array_exists(DQ_ARRAY))
+DQ       A           X         F              (DQ_ARRAY.SHAPE[-2:]==(irs2_dim(READPATT),2048))
+
+DQ       A           X         A              (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=irs2_dim(READPATT))
+DQ       A           X         A              (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=2048)
+
+DQ       A           X         S              (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+DQ       A           X         R              (is_image(DQ_ARRAY))
+DQ       A           X         R              (has_type(DQ_ARRAY,'INT'))
+
