@@ -1,6 +1,6 @@
-__version__ = 'bdc43b9'
+__version__ = '956fb01'
 
 __full_version_info__ = '''
-branch: doover-7.1.1
-sha1: bdc43b9
+branch: rev2
+sha1: 956fb01
 '''
