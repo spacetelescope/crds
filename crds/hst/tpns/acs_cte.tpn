@@ -14,29 +14,10 @@
 #
 # NAME       KEYTYPE  DATATYPE   PRESENCE      VALUES
 #----------------------------------------------------------
-INSTRUME        H       C        R       ACS
-FILETYPE        H       C        R       PIXCTE
-DETECTOR        H       C        R       WFC
-NCHGLEAK        H       I        R
-SIM_NIT         H       I        R
-SHFT_NIT        H       I        R
-RN_CLIP         H       R        R
-NSEMODEL        H       I        R       0,1,2
-SUBTHRSH        H       R        R
-USEAFTER        H       C        R       &SYBDATE
-PEDIGREE        H       C        R       &PEDIGREE
-DTDE            C       R        R
-Q               C       I        R
-LEVEL           C       I        O
-MJD             C       R        O
-SCALE           C       R        O
-COLUMN          C       I        O
-AMPA            C       R        O
-AMPB            C       R        O
-AMPC            C       R        O
-AMPD            C       R        O
-NODE            C       I        O
-LOG_Q_1         C       R        O
-LOG_Q_2         C       R        O
-LOG_Q_3         C       R        O
-LOG_Q_4         C       R        O
+INSTRUME    H   C   R   ACS
+FILETYPE    H   C   R   PIXCTE
+DETECTOR    H   C   R   WFC
+# BINAXIS1    H   I   R   1,2,3
+# BINAXIS2    H   I   R   1,2,3
+USEAFTER    H   C   R   &SYBDATE
+PEDIGREE    H   C   R   &PEDIGREE

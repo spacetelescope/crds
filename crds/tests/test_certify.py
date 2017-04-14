@@ -1196,11 +1196,11 @@ class TestCertify(test_config.CRDSTestCase):
         
     # ------------------------------------------------------------------------------
         
-    def test_certify_deep_sync(self):
-        script = certify.CertifyScript(
-            "crds.certify --deep --comparison-context hst_0317.pmap zbn1927fl_gsag.fits --sync-files")
-        errors = script()
-        assert_true(errors == 0)
+    # def test_certify_deep_sync(self):
+    #     script = certify.CertifyScript(
+    #         "crds.certify --deep --comparison-context hst_0317.pmap zbn1927fl_gsag.fits --sync-files")
+    #     errors = script()
+    #     assert_true(errors == 0)
         
     def test_certify_sync_comparison_reference(self):
         script = certify.CertifyScript(
