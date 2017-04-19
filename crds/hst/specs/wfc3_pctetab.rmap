@@ -11,9 +11,10 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
     'rmap_relevance' : '(DETECTOR=="UVIS" and PCTECORR == "PERFORM")',
-    'sha1sum' : '01fb551f5a911bc0bb1c00d4149e1625ec101d59',
+    'sha1sum' : '5dfc235c5fc8e0a1a1d738cf3a1744447a3c9aaa',
     'suffix' : 'cte',
     'text_descr' : 'Pixel CTE Correction Table',
+    'unique_rowkeys' : ('W', 'IZ'),
 }
 
 selector = Match({

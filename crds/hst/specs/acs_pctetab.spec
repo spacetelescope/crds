@@ -12,5 +12,5 @@
     'suffix': 'cte',
     'text_descr': 'Pixel CTE Correction Table',
     'tpn': 'acs_cte.tpn',
-    'unique_rowkeys': ('LEVEL', 'COLUMN', 'NODE', 'MJD'),
+    'unique_rowkeys' : ('W', 'IZ'),
 }

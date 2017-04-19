@@ -452,10 +452,8 @@
             "text_descr":"Pixel CTE Correction Table",
             "tpn":"acs_cte.tpn",
             "unique_rowkeys":[
-                "LEVEL",
-                "COLUMN",
-                "NODE",
-                "MJD"
+                "W",
+                "IZ"
             ]
         },
         "pfltfile":{
@@ -2611,11 +2609,14 @@
             "reffile_required":"YES",
             "reffile_switch":"PCTECORR",
             "rmap_relevance":"(DETECTOR==\"UVIS\" and PCTECORR == \"PERFORM\")",
-            "sha1sum":"01fb551f5a911bc0bb1c00d4149e1625ec101d59",
+            "sha1sum":"5dfc235c5fc8e0a1a1d738cf3a1744447a3c9aaa",
             "suffix":"cte",
             "text_descr":"Pixel CTE Correction Table",
             "tpn":"wfc3_cte.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "W",
+                "IZ"
+            ]
         },
         "pfltfile":{
             "extra_keys":[],
