@@ -597,8 +597,8 @@ def certify_jwst_bad_fits(self):
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
     CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not valid in 'DETECTOR'
-    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Error loading : JWST Data Models: fits data is not valid: DETECTOR
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : In data/niriss_ref_photom_bad.fits 'FOO' is not valid in DETECTOR
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Error loading : JWST Data Models: In data/niriss_ref_photom_bad.fits fits data is not valid: DETECTOR
     >>> test_config.cleanup(old_state)
     """
 
