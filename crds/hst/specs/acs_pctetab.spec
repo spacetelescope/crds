@@ -12,4 +12,5 @@
     'suffix': 'cte',
     'text_descr': 'Pixel CTE Correction Table',
     'tpn': 'acs_cte.tpn',
+    'unique_rowkeys' : ('W', 'IZ'),
 }
