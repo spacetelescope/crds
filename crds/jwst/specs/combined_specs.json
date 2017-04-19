@@ -529,11 +529,14 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"f1c720bacc4d4b29ea7442cf2cdf33546b6126e0",
+            "sha1sum":"63de6e9efd98c551fc60a30cd3d19d1a4032eebd",
             "suffix":"cubepar",
-            "text_descr":"MRS IFU Cube defaults",
+            "text_descr":"IFU Cube defaults",
             "tpn":"miri_cubepar.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "GRATING",
+                "FILTER"
+            ]
         },
         "dark":{
             "derived_from":"jwst_miri_dark_0003.rmap",
@@ -2190,6 +2193,39 @@
             "text_descr":"Collimator",
             "tpn":"nirspec_collimator.tpn",
             "unique_rowkeys":null
+        },
+        "cubepar":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2017-04-18",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"CUBEPAR",
+            "filetype":"CUBEPAR",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_cubepar_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_cubepar.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"8c68a2f89e0579452af3e4150b7e6f9ea4cfa925",
+            "suffix":"cubepar",
+            "text_descr":"IFU Cube defaults",
+            "tpn":"nirspec_cubepar.tpn",
+            "unique_rowkeys":[
+                "GRATING",
+                "FILTER"
+            ]
         },
         "dark":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-07-31",
