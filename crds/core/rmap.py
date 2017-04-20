@@ -1110,6 +1110,12 @@ class ReferenceMapping(Mapping):
         """Property, dictionary of valid values for each parameter loaded from .tpn files or equivalent."""
         return self.get_valid_values_map()
 
+    def get_filekinds(self, dataset=None):
+        """Return the filekinds associated with this dataset, but for an rmap,
+        just the rmap's filekind.
+        """
+        return [self.filekind]
+        
     def get_best_references(self, header, include=None):
         """Shim so that .rmaps can be used for bestrefs in place of a .pmap or .imap for single type development."""
         if include is not None and self.filekind not in include:
