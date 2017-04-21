@@ -85,6 +85,7 @@ except ImportError:
 
 MAPPING_PARSER = None
 
+'''
 def profile_parse(filename="hst_cos_deadtab.rmap"):
     """Profile the parsing of `filename`, print stats, and instantiate the
     mapping to run the duplicates checking.
@@ -98,6 +99,7 @@ def profile_parse(filename="hst_cos_deadtab.rmap"):
     stats = pstats.Stats(statsname)
     stats.sort_stats("time")
     stats.print_stats(20)
+'''
     
 Parsing = namedtuple("Parsing", "header,selector,comment")
     
@@ -127,6 +129,8 @@ def check_duplicates(parsing):
         selectors.check_duplicates(parsing.header, ["header"])
         selectors.check_duplicates(parsing.selector, ["selector"])
 
+'''
 if __name__ == "__main__":
     with log.error_on_exception(""):
         check_duplicates(parse_mapping(sys.argv[1]))
+'''
