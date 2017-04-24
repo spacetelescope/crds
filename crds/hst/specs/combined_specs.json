@@ -451,10 +451,7 @@
             "suffix":"cte",
             "text_descr":"Pixel CTE Correction Table",
             "tpn":"acs_cte.tpn",
-            "unique_rowkeys":[
-                "W",
-                "IZ"
-            ]
+            "unique_rowkeys":null
         },
         "pfltfile":{
             "extra_keys":[],
@@ -2609,14 +2606,11 @@
             "reffile_required":"YES",
             "reffile_switch":"PCTECORR",
             "rmap_relevance":"(DETECTOR==\"UVIS\" and PCTECORR == \"PERFORM\")",
-            "sha1sum":"5dfc235c5fc8e0a1a1d738cf3a1744447a3c9aaa",
+            "sha1sum":"4943b4caf3ac974f30bd3c4b6a28fce168edd919",
             "suffix":"cte",
             "text_descr":"Pixel CTE Correction Table",
             "tpn":"wfc3_cte.tpn",
-            "unique_rowkeys":[
-                "W",
-                "IZ"
-            ]
+            "unique_rowkeys":null
         },
         "pfltfile":{
             "extra_keys":[],
