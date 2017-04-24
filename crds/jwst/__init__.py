@@ -5,7 +5,7 @@ import os.path
 
 from crds.certify import reftypes
 
-HERE  = os.path.dirname(__file__) or "."
+HERE  = os.path.abspath(os.path.dirname(__file__) or ".")
 
 TYPES = reftypes.from_package_file("jwst", __file__)
 
