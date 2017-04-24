@@ -338,7 +338,7 @@ def hv_best_references(context_file, header, include=None, condition=True):
         # requires conditioned header,  or compatible header
         include = set(ctx.locate.header_to_reftypes(conditioned))
         ctx_filekinds = set(ctx.get_filekinds(conditioned))
-        include = list(ctx_filekinds - include)
+        include = list(ctx_filekinds & include)
     minheader = ctx.minimize_header(conditioned)
     log.verbose("Bestrefs header:\n", log.PP(minheader))
     return ctx.get_best_references(minheader, include=include)
