@@ -28,7 +28,7 @@ def _invert_instr_dict(dct):
     return inverted
 
 # =============================================================================
-
+'''
 def write_spec(specpath, spec_dict):
     """Pretty print a spec dictionary."""
     with open(specpath, "w+") as spec:
@@ -36,6 +36,7 @@ def write_spec(specpath, spec_dict):
         for key, value in sorted(spec_dict.items()):
             spec.write("    {} : {},\n".format(repr(key), repr(value)))
         spec.write("}\n")
+'''
 
 # =============================================================================
 
@@ -197,6 +198,11 @@ class TypeParameters(object):
                 for instr in self.unified_defs
                 }
 
+    @property
+    def locator(self):
+        """Deferred evaluation do to import orders."""
+        return utils.get_locator_module(self.observatory)  # pluggable by observatory
+            
     def filetype_to_filekind(self, instrument, filetype):
         """Map the value of a FILETYPE keyword onto it's associated
         keyword name,  i.e.  'dark image' --> 'darkfile'
@@ -234,9 +240,8 @@ class TypeParameters(object):
         reference file.
         """
         tpns = []
-        locator = utils.get_locator_module(self.observatory)  # pluggable by observatory
         for tpn_file in self.reference_name_to_validator_keys(instrument, filekind, field=field):
-            tpns.extend(generic_tpn.get_tpninfos(locator.tpn_path(tpn_file)))
+            tpns.extend(generic_tpn.get_tpninfos(self.locator.tpn_path(tpn_file)))
         return sorted(list(set(tpns)))
     
 
@@ -266,52 +271,34 @@ class TypeParameters(object):
 
 # -----------------------------------------------------------------------------
 
-    reference_name_to_tpn_keys = reference_name_to_validator_keys
-
-    def reference_name_to_ld_tpn_keys(self, filename):
-        """Return the _ld.tpn file key associated with reference `filename`.
+    def reference_name_to_tpninfos(self, filename, field="tpn"):
+        """Return the .tpn file key associated with reference `filename`.
         Strictly speaking this should be driven by mapping_validator_key...  but the interface
         for that is wrong so slave it to reference_name_to_tpn_key instead,  historically
         one-for-one.
         """
-        return self.reference_name_to_validator_keys(filename, field="ld_tpn")
+        filepath = self.locator.locate_file(filename)
+        instrument, filekind = self.locator.get_file_properties(filepath)
+        return self.get_all_tpninfos(instrument, filekind, field=field)
 
 # -----------------------------------------------------------------------------
 
     def reference_name_to_tpn_text(self, filename):
         """Given reference `filename`,  return the text of the corresponding .tpn"""
-        path = rmap.locate_file(filename, self.observatory)
-        keys = self.reference_name_to_tpn_keys(path)
-        return self.get_tpn_text(keys)
+        infos = self.reference_name_to_tpninfos(filename)
+        return self.get_tpn_text(infos)
 
     def reference_name_to_ld_tpn_text(self, filename):
         """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
-        path = rmap.locate_file(filename, self.observatory)
-        keys = self.reference_name_to_ld_tpn_keys(path)
-        return self.get_tpn_text(keys)
+        infos = self.reference_name_to_tpninfos(filename, field="ld_tpn")
+        return self.get_tpn_text(infos)
 
-    def get_tpn_text(self, tpn_keys):
-        """Given a list of `tpn_keys`,  concatenate the text of the constraint files
+    def get_tpn_text(self, infos):
+        """Given a list of TpnInfo objects `infos`,  concatenate the text of their reprs
         into a single string that can be used to expose the constraints on web sites, etc.
         """
-        text = []
-        for key in tpn_keys:
-            tpn_name, refname = key
-            text += ["="*20 + repr(tpn_name) + "="*20]
-            text += [self._get_tpn_text(tpn_name)]
-            text += ["\n"]
-        return "\n".join(text)
+        return str(log.PP(infos))
 
-    utils.cached
-    def _get_tpn_text(self, tpn_name):
-        """Return the .tpn text corresponding to validator_keys.
-        """
-        locator = utils.get_locator_module(self.observatory)
-        text = "\n".join(generic_tpn.load_tpn_lines(locator.tpn_path(tpn_name)))
-        # with open(locator.tpn_path(tpn_name)) as pfile:
-        #    text = pfile.read()
-        return text
-    
 # =============================================================================
 
     def get_row_keys(self, instrument, filekind):
