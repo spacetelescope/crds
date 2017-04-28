@@ -1,3 +1,5 @@
+include nir_photom.tpn
+
 PHOTOM     A      X      R   (has_columns(PHOTOM_ARRAY,['FILTER','PUPIL','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
 PHOTOM     A      X      R   (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
 PHOTOM     A      X      R   (has_column_type(PHOTOM_ARRAY,'PUPIL','STRING'))
