@@ -10,8 +10,8 @@ header = {
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'SINKCORR',
-    'rmap_relevance' : '(SINKCORR != "OMIT")',
-    'sha1sum' : '94a6121812e20946808d4767c0a40fdd4157a951',
+    'rmap_relevance' : '((SINKCORR != "OMIT") and (DETECTOR == "WFC"))',
+    'sha1sum' : '30295160c5ca40bbbd7253ec16fa18d7f5486e08',
     'suffix' : 'snk',
     'text_descr' : 'Sink Pixel Flagging Image',
 }
