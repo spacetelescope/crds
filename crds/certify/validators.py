@@ -142,7 +142,7 @@ class Validator(object):
         if value in [None, "UNDEFINED"]: # missing optional or excluded keyword
             return True
         value = self.condition(value)
-        if not self._values:
+        if not self._values and log.get_verbose():
             self.verbose(filename, value, "no .tpn values defined.")
             return True
         self._check_value(filename, value)
@@ -268,7 +268,7 @@ class KeywordValidator(Validator):
     def _check_value(self, filename, value):
         """Raises ValueError if `value` is not valid."""
         if self._match_value(value):
-            if self._values:
+            if self._values and log.get_verbose():
                 self.verbose(filename, value, "is in", repr(self._values))
         else:
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
@@ -337,7 +337,7 @@ class NumericalValidator(KeywordValidator):
                 raise ValueError("Value for " + repr(self.name) + " of " +
                                  repr(value) + " is outside acceptable range " +
                                  self.info.values[0])
-            else:
+            elif log.get_verbose():
                 self.verbose(filename, value, "is in range", self.info.values[0])
         else:   # First try a simple exact string match check
             KeywordValidator._check_value(self, filename, value)
@@ -369,7 +369,7 @@ class FloatValidator(NumericalValidator):
                     err = value
                 else:
                     err = 0
-                if abs(err) < self.epsilon:
+                if abs(err) < self.epsilon and log.get_verbose():
                      self.verbose(filename, value, "is within +-", repr(self.epsilon), 
                                   "of", repr(possible))
                      return

@@ -451,12 +451,7 @@
             "suffix":"cte",
             "text_descr":"Pixel CTE Correction Table",
             "tpn":"acs_cte.tpn",
-            "unique_rowkeys":[
-                "LEVEL",
-                "COLUMN",
-                "NODE",
-                "MJD"
-            ]
+            "unique_rowkeys":null
         },
         "pfltfile":{
             "extra_keys":[],
@@ -529,8 +524,8 @@
             "reffile_format":"IMAGE",
             "reffile_required":"YES",
             "reffile_switch":"SINKCORR",
-            "rmap_relevance":"(SINKCORR != \"OMIT\")",
-            "sha1sum":"94a6121812e20946808d4767c0a40fdd4157a951",
+            "rmap_relevance":"((SINKCORR != \"OMIT\") and (DETECTOR == \"WFC\"))",
+            "sha1sum":"30295160c5ca40bbbd7253ec16fa18d7f5486e08",
             "suffix":"snk",
             "text_descr":"Sink Pixel Flagging Image",
             "tpn":"acs_snk.tpn",
@@ -2611,7 +2606,7 @@
             "reffile_required":"YES",
             "reffile_switch":"PCTECORR",
             "rmap_relevance":"(DETECTOR==\"UVIS\" and PCTECORR == \"PERFORM\")",
-            "sha1sum":"01fb551f5a911bc0bb1c00d4149e1625ec101d59",
+            "sha1sum":"4943b4caf3ac974f30bd3c4b6a28fce168edd919",
             "suffix":"cte",
             "text_descr":"Pixel CTE Correction Table",
             "tpn":"wfc3_cte.tpn",

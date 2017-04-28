@@ -333,12 +333,14 @@ def hv_best_references(context_file, header, include=None, condition=True):
     filekinds listed in `include`.
     """
     ctx = get_symbolic_mapping(context_file, cached=True)
+    conditioned = utils.condition_header(header) if condition else header
     if include is None:
-        include = ctx.locate.header_to_reftypes(header)
-    minheader = ctx.minimize_header(header)
+        # requires conditioned header,  or compatible header
+        include = set(ctx.locate.header_to_reftypes(conditioned))
+        ctx_filekinds = set(ctx.get_filekinds(conditioned))
+        include = list(ctx_filekinds & include)
+    minheader = ctx.minimize_header(conditioned)
     log.verbose("Bestrefs header:\n", log.PP(minheader))
-    if condition:
-        minheader = utils.condition_header(minheader)
     return ctx.get_best_references(minheader, include=include)
 
 # ============================================================================

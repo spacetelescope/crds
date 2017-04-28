@@ -39,6 +39,8 @@ import os.path
 
 from crds.certify import reftypes
 
+HERE  = os.path.abspath(os.path.dirname(__file__) or ".")
+
 TYPES = reftypes.from_package_file("hst", __file__)
 
 OBSERVATORY = TYPES.observatory
@@ -46,8 +48,6 @@ INSTRUMENTS = TYPES.instruments
 EXTENSIONS = TYPES.extensions
 TEXT_DESCR = TYPES.text_descr
 FILEKINDS = TYPES.filekinds
-
-HERE  = os.path.dirname(__file__) or "."
 
 UNDEFINED_PARKEY_SUBST_VALUE = "UNDEFINED"
 
