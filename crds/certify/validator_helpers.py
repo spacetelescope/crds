@@ -9,7 +9,7 @@ are restricted to pigeon-Python that does not allow spaces.  See the JWST .tpn f
 those files for these functions.
 """
 
-from crds.core import utils, exceptions
+from crds.core import utils, exceptions, python23
 
 # ----------------------------------------------------------------------------
 
@@ -51,10 +51,17 @@ def has_type(array_info, typestr):
     True
     >>> has_type(utils.Struct({"DATA_TYPE" : "complex64"}), "FLOAT")
     False
-    
+    >>> has_type(utils.Struct({"DATA_TYPE" : "complex64"}), ["FLOAT","INT"])
+    False
+    >>> has_type(utils.Struct({"DATA_TYPE" : "complex64"}), ["COMPLEX","INT"])
+    True
     """
-    typestr = _image_type(typestr)
-    return array_exists(array_info) and typestr in array_info.DATA_TYPE
+    possible_types = [typestr] if isinstance(typestr, python23.string_types) else typestr
+    for possible_type in possible_types:
+        itype = _image_type(possible_type)
+        if array_exists(array_info) and itype in array_info.DATA_TYPE:
+            return True
+    return False
 
 def _image_type(typestr):
     """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.

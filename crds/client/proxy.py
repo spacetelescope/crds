@@ -150,8 +150,15 @@ class ServiceCallBinding(object):
         else:
             result = crds_decode(jsonrpc["result"])
             result = fix_strings(result)
-            log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
+            self.log_result(result)
             return result
+
+    def log_result(self, result):
+        if isinstance(result, (python23.string_types,int,float,bool)):
+            log.verbose("RPC OK -->", repr(result))
+        else:
+            log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
+
 
     def classify_exception(self, decoded):
         """Interpret exc __str__ to define as more precise CRDS exception."""

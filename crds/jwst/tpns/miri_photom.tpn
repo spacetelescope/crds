@@ -1,10 +1,34 @@
-# PHOTMJSR    H     R      (('IFU')in(DETECTOR))
-# PHOTUJA2    H     R      (('IFU')in(DETECTOR))
+SCI         A     X      (('IFU')in(DETECTOR))       (has_type(SCI_ARRAY,'FLOAT'))
+SCI         A     X      (('IFU')in(DETECTOR))       (is_image(SCI_ARRAY))
+SCI         A     X      (('IFU')in(DETECTOR))       (SCI_ARRAY.SHAPE==(1024,1032))
+
+ERR         A     X      (('IFU')in(DETECTOR))       (has_type(ERR_ARRAY,'FLOAT'))
+ERR         A     X      (('IFU')in(DETECTOR))       (is_image(ERR_ARRAY))
+ERR         A     X      (('IFU')in(DETECTOR))       (ERR_ARRAY.SHAPE==(1024,1032))
+
+DQ         A     X      (('IFU')in(DETECTOR))        (has_type(DQ_ARRAY,'INT'))
+DQ         A     X      (('IFU')in(DETECTOR))        (is_image(DQ_ARRAY))
+DQ         A     X      (('IFU')in(DETECTOR))        (DQ_ARRAY.SHAPE==(1024,1032))
+
+DQ_DEF       D           X         (('IFU')in(DETECTOR))        (is_table(DQ_DEF_ARRAY))
+DQ_DEF       D           X         (('IFU')in(DETECTOR))        (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+DQ_DEF       D           X         (('IFU')in(DETECTOR))        (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+DQ_DEF       D           X         (('IFU')in(DETECTOR))        (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+DQ_DEF       D           X         (('IFU')in(DETECTOR))        (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+DQ_DEF       D           X         (('IFU')in(DETECTOR))        (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+
+PIXSIZ     A     X      (('IFU')in(DETECTOR))        (has_type(PIXSIZ_ARRAY,'FLOAT'))
+PIXSIZ     A     X      (('IFU')in(DETECTOR))        (is_image(PIXSIZ_ARRAY))
+PIXSIZ     A     X      (('IFU')in(DETECTOR))        (PIXSIZ_ARRAY.SHAPE==(1024,1032))
+
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (is_table(PHOTOM_ARRAY))
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT'))
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT'))
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'NELEM','INT'))
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))
+PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY'))
 
 PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_columns(PHOTOM_ARRAY,['FILTER','SUBARRAY','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
 PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
 PHOTOM     A      X      (('IMAGE')in(DETECTOR))  (has_column_type(PHOTOM_ARRAY,'SUBARRAY','STRING'))
-
-PHOTOM     A      X      (('IFU')in(DETECTOR))    (has_columns(PHOTOM_ARRAY,['BAND','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
-PHOTOM     A      X      (('IFU')in(DETECTOR))    (has_column_type(PHOTOM_ARRAY,'BAND','STRING'))
 
