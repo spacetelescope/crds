@@ -70,16 +70,7 @@ setup_pars = {
 import crds   #  local subdirectory...  ew...
 
 setup(name="crds",
-      provides=["crds", "crds.client", "crds.core",
-                
-                "crds.hst","crds.jwst", "crds.tobs",
-                
-                "crds.bestrefs", "crds.certify",
-
-                "crds.misc", "crds.refactoring",
-                
-                "crds.tests"
-      ],
+      provides=["crds"],
       version=crds.__version__,
       description="Calibration Reference Data System,  HST/JWST reference file management",
       long_description=open('README.rst').read(),
