@@ -367,7 +367,11 @@ class Script(object):
         """ 
         if not hasattr(self.args, "files"):
             raise NotImplementedError("Class must implement list of `self.args.files` raw file paths.")
-        return [self.locate_file(fname) for fname in self.get_files(self.args.files)]
+        files1 = self.get_files(self.args.files)
+        files2 = []
+        for file in files1:
+            files2.extend(expand_all_instruments(self.observatory, file))
+        return [self.locate_file(fname) for fname in files2]
         
 
     # 
@@ -599,7 +603,7 @@ class UniqueErrorsMixin(object):
                          self.args.unique_threshold, "instances.")
             for key in sorted(self.ue_mixin.messages):
                 if self.ue_mixin.count[key] >= self.args.unique_threshold:
-                    log.info("%06d" % self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
+                    log.info("%06d" % self.ue_mixin.count[key], "errors like::", self.ue_mixin.messages[key])
             log.info("All unique error types:", len(self.ue_mixin.messages))
             log.info("Untracked errors:", log.errors() - self.ue_mixin.tracked_errors)            
             log.info("="*20, "="*len("unique error classes"), "="*20)
@@ -642,7 +646,10 @@ class ContextsScript(Script):
         log.verbose("Determining contexts.", verbosity=55)
         if self.args.contexts:
             # permit instrument and reference mappings,  not just pipelines:
-            contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
+            contexts = []
+            for ctx in self.args.contexts:
+                contexts.extend(expand_all_instruments(self.observatory, ctx)) 
+            contexts = [self.resolve_context(ctx) for ctx in contexts]
         elif self.args.all:
             contexts = self._list_mappings("*.pmap")
         elif self.args.last_n_contexts:
@@ -740,4 +747,23 @@ class ContextsScript(Script):
             except Exception:  # only ask the server if loading context fails
                 files |= set(api.get_reference_names(context))
         return sorted(files)
+
+def expand_all_instruments(observatory, context):
+    """Expand symbolic context specifiers for rmaps with "all" for instrument 
+    into the list of rmaps for every instrument in the related context (e.g. edit or operational).
+    
+    e.g.  jwst-all-photom-operational -->  [jwst-miri-photom-operational, jwst-nircam-photom-operational, ...]
+
+    Expansion of "all" is determined by instruments in e.g. jwst-operational
+    """
+    pattern = observatory + r"\-all\-([^\-]+)\-(.+)"
+    mtch = re.match(pattern, context)
+    if mtch:
+        root_context = observatory + "-" + mtch.group(2)
+        pmap = crds.get_symbolic_mapping(root_context)
+        all = [ "-".join([observatory, instrument, mtch.group(1), mtch.group(2)])
+                for instrument in pmap.selections.keys() if instrument != "system"]
+    else:
+        all = [context]
+    return all
 
