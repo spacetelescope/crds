@@ -18,7 +18,7 @@ COMMENT             H        C         R
 INSTRUMENT      H        C         R    COS
 REFERENCE_FILE_TYPE H        C         R    DISP
 DETECTOR            C        C         R    FUV,NUV
-LIFE_ADJ            H        C         R    -1,0,1,2,3,4,N/A 
+LIFE_ADJ            H        C         R    0,1,-1,-11,2,-2,3,4,N/A
 OBSTYPE             C        C         R    SPECTROSCOPIC
 PEDIGREE        C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
 SEGMENT             C        C         R    FUVA,FUVB,NUVA,NUVB,NUVC
