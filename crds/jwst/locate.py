@@ -53,7 +53,11 @@ def tpn_path(tpn_file):
     return os.path.join(HERE, "tpns", tpn_file)
 
 def get_extra_tpninfos(refpath):
-    return schema.get_schema_tpninfos(refpath)
+    """Returns TpnInfos (valid value enumerations) derived from the cal code data models schema."""
+    return []
+    # XXX Disabled during transition period to more specialized reference file schema
+    # that will require enhanced schema scraping.
+    # return schema.get_schema_tpninfos(refpath)
 
 def project_check(refpath):
     return get_data_model_flat_dict(refpath)

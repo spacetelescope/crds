@@ -163,7 +163,7 @@ class ReferenceCertifier(Certifier):
         """Can't do this until we at least know the file is loadable."""
         self.validators = self.get_validators()
         self.all_column_names = [ val.name for val in self.validators if val.info.keytype == 'C' ]
-        self.all_simple_names = [ val.name for val in self.validators if val.info.keytype != 'C' ]
+        self.all_simple_names = [ val.name for val in self.validators if val.info.keytype == 'H' ]
         self.mode_columns = self.get_mode_column_names()
     
     def certify(self):
@@ -262,7 +262,7 @@ class ReferenceCertifier(Certifier):
         warn_keys = self.provenance_keys
         for key in sorted(unseen):
             if key in warn_keys:
-                 log.warning("Missing keyword '%s'."  % key)
+                log.warning("Missing keyword '%s'."  % key)
  
     def _dump_provenance_core(self, dump_keys):
         """Generic dumper for self.header,  returns unseen keys."""

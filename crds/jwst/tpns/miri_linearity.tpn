@@ -1,7 +1,7 @@
 include miri_subarray.tpn
 
-COEFFS       H           X         F             (META_SUBARRAY_XSTART==1)
-COEFFS       H           X         F             (META_SUBARRAY_YSTART==1)
+COEFFS       X           X         F             (META_SUBARRAY_XSTART==1)
+COEFFS       X           X         F             (META_SUBARRAY_YSTART==1)
 COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[-2:]==(1024,1032))
 
 COEFFS       A           X         R             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[-2]-1<=1024)
@@ -14,8 +14,6 @@ COEFFS       A           X         R            (is_image(COEFFS_ARRAY))
 COEFFS       A           X         R            (len(COEFFS_ARRAY.SHAPE)==3)
 
 # Optional ERR 
-ERR       H           X         F               (META_SUBARRAY_XSTART==1)
-ERR       H           X         F               (META_SUBARRAY_YSTART==1)
 ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==(1024,1032))
 
 ERR       A           X         O               (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[-2]-1<=1024)

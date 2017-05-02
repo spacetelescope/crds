@@ -7,8 +7,8 @@ DQ       A           X         R   (is_image(DQ_ARRAY))
 DQ       A           X         R   (has_type(DQ_ARRAY,'INT'))
 
 
-DQ       H           X         F   (META_SUBARRAY_XSTART==1)
-DQ       H           X         F   (META_SUBARRAY_YSTART==1)
+DQ       X           X         F   (META_SUBARRAY_XSTART==1)
+DQ       X           X         F   (META_SUBARRAY_YSTART==1)
 DQ       A           X         F   (DQ_ARRAY.SHAPE[-2:]==(2048,2048))
 DQ       A           X         A   (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=2048)
 DQ       A           X         A   (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=2048)

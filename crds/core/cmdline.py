@@ -11,14 +11,13 @@ import os
 import argparse
 import pdb
 import cProfile, pstats
-import io
 import re
 from collections import Counter, defaultdict
 
 from argparse import RawTextHelpFormatter
 
 import crds
-from crds.core import python23, rmap, log, heavy_client
+from crds.core import python23, log, heavy_client
 from crds.core import config, utils, exceptions
 from crds.client import api
 # from crds import data_file
@@ -761,9 +760,9 @@ def expand_all_instruments(observatory, context):
     if mtch:
         root_context = observatory + "-" + mtch.group(2)
         pmap = crds.get_symbolic_mapping(root_context)
-        all = [ "-".join([observatory, instrument, mtch.group(1), mtch.group(2)])
+        all_imaps = [ "-".join([observatory, instrument, mtch.group(1), mtch.group(2)])
                 for instrument in pmap.selections.keys() if instrument != "system"]
     else:
-        all = [context]
-    return all
+        all_imaps = [context]
+    return all_imaps
 

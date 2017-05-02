@@ -2,8 +2,8 @@ include miri_subarray.tpn
 
 include miri_sci_array.tpn
 
-# SCI       H           X         F             (META_SUBARRAY_XSTART==1)
-# SCI       H           X         F             (META_SUBARRAY_YSTART==1)
+# SCI       X           X         F             (META_SUBARRAY_XSTART==1)
+# SCI       X           X         F             (META_SUBARRAY_YSTART==1)
 # SCI       A           X         F             (SCI_ARRAY.SHAPE[-2:]==(1024,1024))
 #
 # SCI       A           X         R             (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=1024)

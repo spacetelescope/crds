@@ -7,7 +7,7 @@
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
-META.SUBARRAY.NAME          H   X   R   (META_SUBARRAY_NAME!='GENERIC')
+META.SUBARRAY.NAME          X   X   R   (not(META_SUBARRAY_NAME)in(['GENERIC','N/A']))
 META.EXPOSURE.NFRAMES       H   I   R  
 META.EXPOSURE.GROUPGAP      H   I   R   
 META.EXPOSURE.NGROUPS       H   I   R                  

@@ -212,14 +212,22 @@ DM_TO_FITS = None
 FITS_TO_DM = None
 
 def dm_to_fits(key):
-    """Return the FITS keyword for DM `key` or None."""
+    """Return the FITS keyword for DM `key` or None.
+    
+    >>> dm_to_fits('META.SUBARRAY.NAME')
+    'SUBARRAY'
+    """
     global DM_TO_FITS
     if DM_TO_FITS is None:
         DM_TO_FITS = _get_dm_to_fits()
     return DM_TO_FITS.get(key.upper(), None)
 
 def fits_to_dm(key):
-    """Return the DM keyword for FITS `key` or None."""
+    """Return the DM keyword for FITS `key` or None.
+    
+    >>> fits_to_dm('SUBARRAY')
+    'META.SUBARRAY.NAME'
+    """
     global FITS_TO_DM
     if FITS_TO_DM is None:
         FITS_TO_DM = _get_fits_to_dm()
