@@ -3,8 +3,8 @@
 # This file pertains to array properties and their relationships to header keywords.
 
 DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))   (array_exists(DQ_ARRAY))
-DQ       H           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_XSTART==1)
-DQ       H           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_YSTART==1)
+DQ       X           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_XSTART==1)
+DQ       X           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_YSTART==1)
 DQ       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (DQ_ARRAY.SHAPE[-2:]==(2048,2048))
 
 DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=2048)

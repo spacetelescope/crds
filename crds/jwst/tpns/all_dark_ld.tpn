@@ -7,4 +7,4 @@
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
-META.SUBARRAY.NAME          H   X    R      (META_SUBARRAY_NAME!='GENERIC')
+META.SUBARRAY.NAME          X   X    R      (META_SUBARRAY_NAME!='GENERIC')
