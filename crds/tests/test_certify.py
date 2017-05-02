@@ -261,9 +261,9 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.INSTRUMENT.CHANNEL = '34'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
     CRDS - INFO -  META.INSTRUMENT.FILTER = 'UNDEFINED'
+    CRDS - INFO -  META.INSTRUMENT.GRATING = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.NAME = 'miri'
-    CRDS - INFO -  META.OBSERVATION.DATE = '2015-01-25'
-    CRDS - INFO -  META.OBSERVATION.TIME = '12:00:00'
+    CRDS - INFO -  META.INSTRUMENT.PUPIL = 'UNDEFINED'
     CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
     CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
     CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
@@ -587,6 +587,7 @@ def certify_rmap_compare(self):
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("jwst_miri_distortion_0007.rmap", context="jwst_0101.pmap")
     CRDS - INFO -  Certifying 'jwst_miri_distortion_0007.rmap' as 'MAPPING' relative to context 'jwst_0101.pmap'
+    CRDS - ERROR -  Match('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.EXPOSURE.TYPE') : ('*', '*', '*', 'MIR_MSA') :  parameter='META.EXPOSURE.TYPE' value='MIR_MSA' is not in ('MIR_IMAGE', 'MIR_TACQ', 'MIR_LYOT', 'MIR_4QPM', 'MIR_LRS-FIXEDSLIT', 'MIR_LRS-SLITLESS', 'MIR_MRS', 'MIR_DARK', 'MIR_FLATIMAGE', 'MIR_FLATMRS', 'MIR_FLAT-IMAGE', 'MIR_FLAT-MRS', 'MIR_CORONCAL', '*', 'N/A')
     >>> test_config.cleanup(old_state)
     """
 

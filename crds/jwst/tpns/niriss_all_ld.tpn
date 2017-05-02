@@ -8,11 +8,18 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 META.INSTRUMENT.NAME        H   C   R                   NIRISS
-META.INSTRUMENT.PUPIL       H   C   O
-#                   CLEARP,F090W,F115W,F140M,F150W,F158M,F200W,GR700XD,NRM,ANY,N/A
+
 META.INSTRUMENT.DETECTOR    H   C   O                   NIS,ANY,N/A
+
 META.EXPOSURE.READPATT      H   C   O                   NIS,NISRAPID,ANY,N/A
-META.EXPOSURE.TYPE          H   C   O
-#                   NIS_IMAGE,NIS_TACQ,NIS_TACONFIRM,NIS_WFSS,NIS_SOSS,NIS_AMI,NIS_FOCUS,NIS_DARK,NIS_LAMP,ANY,N/A
-META.INSTRUMENT.FILTER      H   C   O
+
+META.EXPOSURE.TYPE          H   C   O                   NIS_AMI,NIS_DARK,NIS_FOCUS,NIS_IMAGE,NIS_LAMP,\
+                                                        NIS_SOSS,NIS_TACQ,NIS_TACONFIRM,NIS_WFSS,ANY,N/A
+
 include nir_subarray_baseline.tpn
+
+# META.INSTRUMENT.FILTER      H   C   O
+
+# META.INSTRUMENT.PUPIL       H   C   O
+#                   CLEARP,F090W,F115W,F140M,F150W,F158M,F200W,GR700XD,NRM,ANY,N/A
+
