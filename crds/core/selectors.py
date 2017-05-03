@@ -366,7 +366,10 @@ class Selector(object):
         for i, (old_key, choice) in enumerate(self._raw_selections):
             try:
                 ix = self._parameters.index(parameter)
-                new_key = old_key[:ix] + old_key[ix+1:]
+                if len(self._parameters) > 1:
+                    new_key = old_key[:ix] + old_key[ix+1:]
+                else:
+                    new_key = ()
                 self._raw_selections[i] = (new_key, choice)
                 log.verbose("Replacing match case", repr(old_key), "with", repr(new_key))
             except ValueError:
