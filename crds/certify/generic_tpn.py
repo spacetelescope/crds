@@ -155,6 +155,8 @@ def load_tpn(fname):
     for line in load_tpn_lines(fname):
         line = _fix_quoted_whitespace(line)
         items = line.split()
+        items = _restore_embedded_spaces(items)
+        items = _remove_quotes(items)
         if len(items) == 4:
             name, keytype, datatype, presence = items
             values = []
@@ -204,9 +206,11 @@ def load_tpn_lines(fname):
             append = line.endswith("\\")
     return lines
 
+SPACE_MAGIC = "@@1324$$" 
+
 def _fix_quoted_whitespace(line):
     """Replace spaces and tabs which appear inside quotes in `line` with
-    underscores,  and return it.
+    magic,  and return it.
     """
     i = 0
     while i < len(line):
@@ -221,8 +225,21 @@ def _fix_quoted_whitespace(line):
             if char == quote:
                 break
             if char in " \t":
-                line = line[:i-1] + "_" + line[i:]
+                line = line[:i-1] + SPACE_MAGIC + line[i:]
     return line
+
+def _restore_embedded_spaces(values):
+    """Undo space encoding needed to make simple splits work for TpnInfos."""
+    return [value.replace(SPACE_MAGIC, " ") for value in values]
+    
+def _remove_quotes(values):
+    """Remove any quotes from quoted values."""
+    removed = []
+    for value in values:
+        if value.startswith('"') and value.endswith('"'):
+            value = value[1:-1]
+        removed.append(value)
+    return removed
 
 @utils.cached
 def get_tpninfos(filepath):

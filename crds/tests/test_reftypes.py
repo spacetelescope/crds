@@ -88,7 +88,7 @@ def reftypes_hst_reference_name_to_tpn_infos():
     >>> print(log.PP(infos))
     [('DESCRIP', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=('FUV', 'NUV')),
-     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('"DEADTIME_REFERENCE_TABLE"',)),
+     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('DEADTIME REFERENCE TABLE',)),
      ('INSTRUME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('COS',)),
      ('PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&PEDIGREE',)),
      ('SEGMENT', 'COLUMN', 'CHARACTER', 'REQUIRED', values=('FUVA', 'FUVB', 'ANY')),
@@ -198,7 +198,7 @@ def reftypes_reference_name_to_tpn_text():
     >>> print(types.reference_name_to_tpn_text("data/s7g1700gl_dead.fits"))
     [('DESCRIP', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=('FUV', 'NUV')),
-     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('"DEADTIME_REFERENCE_TABLE"',)),
+     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('DEADTIME REFERENCE TABLE',)),
      ('INSTRUME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('COS',)),
      ('PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&PEDIGREE',)),
      ('SEGMENT', 'COLUMN', 'CHARACTER', 'REQUIRED', values=('FUVA', 'FUVB', 'ANY')),
@@ -214,13 +214,12 @@ def reftypes_reference_name_to_ld_tpn_text():
     >>> print(types.reference_name_to_tpn_text("data/s7g1700gl_dead.fits"))
     [('DESCRIP', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=('FUV', 'NUV')),
-     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('"DEADTIME_REFERENCE_TABLE"',)),
+     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('DEADTIME REFERENCE TABLE',)),
      ('INSTRUME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('COS',)),
      ('PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&PEDIGREE',)),
      ('SEGMENT', 'COLUMN', 'CHARACTER', 'REQUIRED', values=('FUVA', 'FUVB', 'ANY')),
      ('USEAFTER', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&SYBDATE',)),
      ('VCALCOS', 'HEADER', 'CHARACTER', 'REQUIRED', values=())]
-
     >>> test_config.cleanup(old_state)
     """
     

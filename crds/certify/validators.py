@@ -287,18 +287,15 @@ class CharacterValidator(KeywordValidator):
         space with underscore.
         """
         chars = str(value).strip().upper()
-        if " " in chars:
-            chars = '"' + "_".join(chars.split()) + '"'
+#         if " " in chars:
+#             chars = '"' + chars + '"'
         return chars
 
     def _check_value(self, filename, value):
         """Support rmap validation by handling esoteric values and or-groups."""
-        if selectors.esoteric_key(value):
-            values = [value]
-        else:
-            values = value.split("|") 
-            if len(values) > 1:
-                self.verbose(filename, value, "is an or'ed parameter matching", values)
+        values = selectors.glob_list(value)
+        if len(values) > 1:
+            self.verbose(filename, value, "is an or'ed parameter matching", values)
         for val in values:
             super(CharacterValidator, self)._check_value(filename, val)
 

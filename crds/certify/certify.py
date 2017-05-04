@@ -534,7 +534,6 @@ class FitsCertifier(ReferenceCertifier):
             return
         with data_file.fits_open_trapped(self.filename, checksum=bool(config.FITS_VERIFY_CHECKSUM)) as pfile:
             pfile.verify(option='exception') # validates all keywords
-        self.locator.project_check(self.filename)
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
 
@@ -559,7 +558,8 @@ class FitsCertifier(ReferenceCertifier):
         super(FitsCertifier, self).certify()
         if self.run_fitsverify:
             self.fitsverify()
-    
+        self.locator.project_check(self.filename)
+   
     def fitsverify(self):
         """Run optional external fitsverify program from cfitsio library, installed separately from CRDS."""
         log.info("Running fitsverify.")
