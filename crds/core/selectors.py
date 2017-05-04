@@ -115,6 +115,22 @@ def glob_list(value):
     splitting on the |-bar and stripping,  dropping any empty-string values.
     
     Otherwise,  return [value] for esoteric or simple values.
+    
+    >>> glob_list("FOO|BAR | BAZ")
+    ['FOO', 'BAR', 'BAZ']
+    
+    >>> glob_list('FOO')
+    ['FOO']
+    
+    >>> glob_list('{THIS|THAT|OTHER}')
+    ['{THIS|THAT|OTHER}']
+    
+    >>> glob_list('(THIS|THAT|OTHER)')
+    ['(THIS|THAT|OTHER)']
+    
+    >>> glob_list('#THIS|THAT|OTHER#')
+    ['#THIS|THAT|OTHER#']
+    
     """
     if not esoteric_key(value) and "|" in value:  
         return [ val.strip() for val in value.split("|") if val.strip() ]
@@ -124,8 +140,24 @@ def glob_list(value):
 def glob_set(value):
     """If `value` is an or-glob expression,  return the corresponding set of values.
     Otherwise,  return the singleton set([value]),
+    
+    >>> glob_set("FOO|BAR | BAZ") == set(['FOO', 'BAR', 'BAZ'])
+    True
     """
     return set(glob_list(value))
+
+def glob_compress(value):
+    """Squash spaces out of glob value.
+    
+    >>> glob_compress("FOO|BAR | BAZ")          # spaces removed
+    'FOO|BAR|BAZ'
+
+    >>> glob_compress('#THIS|  THAT |OTHER#')   # nothing happens
+    '#THIS|  THAT |OTHER#'
+    """
+    return "|".join(glob_list(value))
+
+# ==============================================================================
 
 def dict_wo_dups(items):
     """Convert an item list to a dictionary,  ensuring no duplicate keys exist
@@ -852,7 +884,7 @@ class Selector(object):
         """For rmap modification,  make a key for this Selector based on reference
         file `header` and self's lookup `parameters`.  This is a raw, not conditioned, key.
         """
-        key = tuple([header[par] for par in parameters])
+        key = tuple([glob_compress(header[par]) for par in parameters])
         if len(key) == 1:
             key = key[0]
         return key
@@ -1181,6 +1213,10 @@ class GlobMatcher(RegexMatcher):
     >>> p = GlobMatcher("UVIS-SUB-QUAD|UVIS-SUB-W2K")
     >>> p.match("UVIS-SUB")
     -1
+    >>> p.match("UVIS-SUB-QUAD")
+    1
+
+    >>> p = GlobMatcher(" UVIS-SUB-QUAD  |  UVIS-SUB-W2K  ")
     >>> p.match("UVIS-SUB-QUAD")
     1
     
@@ -2226,8 +2262,23 @@ Restore debug configuration.
         
     @classmethod
     def _make_key(self, header, parkeys):
-        """Join reference file version parameters with periods."""
-        return ".".join([header[par] for par in parkeys])
+        """Join reference file version parameters with periods, remove glob spaces.
+        
+        The two approaches to constructing version keys are mutually incompatible.
+        
+        If the parkey is of the form (major, minor, point) then the resulting key
+        can only be a single literal match of the form 'x.y.z' assembled from the specified
+        parameters by joining on "."
+        
+        If the parkey is a singleton like (calver,)  it's possible for it to specify a glob of 
+        versions to be matched.   This is actually the syntax first used in JWST,
+        e.g.  '0.7.0rc6|0.7.0rc7|0.7.0rc8|0.7.0rc9'
+        
+        For consistency with ordinary string matches, spaces are allowed in the glob expression.
+        
+        '0.7.0rc6|    0.7.0rc7 |0.7.0rc8   |0.7.0rc9' -->  '0.7.0rc6|0.7.0rc7|0.7.0rc8|0.7.0rc9'
+        """
+        return glob_compress(".".join([header[par] for par in parkeys]))
     
     def condition_key(self, version):
         """Convert a period seperated string into a tuple of ints of length 3, zero filling."""

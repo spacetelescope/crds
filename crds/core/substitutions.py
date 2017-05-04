@@ -29,7 +29,7 @@ from __future__ import absolute_import
 import os.path
 
 import crds
-from crds.core import log, utils
+from crds.core import log, utils, selectors
 
 # ============================================================================
 
@@ -109,7 +109,8 @@ class HeaderExpander(object):
         for (var, expr), (expansion, compiled) in self.mapping.items():
             if var not in values:
                 values[var] = set()
-            values[var] |= set([value for value in expansion.split("|") if not value.startswith("BETWEEN")])
+            values[var] |= set([value for value in selectors.glob_list(expansion) 
+                                if not value.startswith("BETWEEN")])
         return { var : sorted(list(vals)) for (var, vals) in values.items() }
         
 def required_keys(expr):
@@ -144,14 +145,14 @@ class ReferenceHeaderExpanders(dict):
         return header
 
     def validate_expansions(self, pmap):
-        for instrument in pmap.selections:
+        for instrument in sorted(pmap.selections):
             if instrument not in self:
                 log.verbose("Instrument", repr(instrument), "has no substitutions.")
                 continue
             imap = pmap.get_imap(instrument)
             valid_values = imap.get_valid_values_map(condition=True, remove_special=False)
-            for parameter, values in self[instrument].get_expansion_values().items():
-                for value in values:
+            for parameter, values in sorted(self[instrument].get_expansion_values().items()):
+                for value in sorted(values):
                     if parameter not in valid_values or not valid_values[parameter]:
                         log.verbose("For", repr(instrument), "parameter", repr(parameter),
                                     "with value", repr(value), "is unchecked.")
