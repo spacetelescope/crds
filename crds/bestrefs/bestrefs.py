@@ -331,8 +331,9 @@ amount of informational and debug output.
             self.instruments = self.args.instruments
         elif self.args.all_instruments:
             instruments = list(self.obs_pkg.INSTRUMENTS)
-            instruments.remove("all")
-            instruments.remove("system")
+            for instr in ("all","system"):
+                if instr in instruments:
+                    instruments.remove(instr)
             self.instruments = instruments
         else:
             self.instruments = []
@@ -384,9 +385,9 @@ amount of informational and debug output.
             deleted_references = diff.get_deleted_references(old_imap, new_imap)
             added_exp_time = deleted_exp_time = MAX_DATE
             if added_references:
-                added_exp_time = matches.get_minimum_exptime(new_imap.name, added_references)
+                added_exp_time = matches.get_minimum_exptime(new_imap, added_references)
             if deleted_references:
-                deleted_exp_time = matches.get_minimum_exptime(old_imap.name, deleted_references)
+                deleted_exp_time = matches.get_minimum_exptime(old_imap, deleted_references)
             exp_time = min(added_exp_time, deleted_exp_time)
             if exp_time != MAX_DATE:  # if a USEAFTER min found,  remember it.
                 datasets_since[instrument] = exp_time
@@ -589,7 +590,7 @@ amount of informational and debug output.
             log.info("Computing bestrefs for datasets", repr(self.args.datasets))
         elif self.instruments:
             self.require_server_connection()
-            log.info("Computing bestrefs for db datasets for", repr(self.instruments))
+            log.info("Computing bestrefs for db datasets for", repr(list(self.instruments)))
             the_headers = headers.InstrumentHeaderGenerator(
                 context, self.instruments, datasets_since, self.args.save_pickle, self.server_info)
         elif self.args.load_pickles:
