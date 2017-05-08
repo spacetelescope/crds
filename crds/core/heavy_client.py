@@ -620,7 +620,7 @@ def get_pickled_mapping(mapping, cached=True, use_pickles=None, save_pickles=Non
     """Load CRDS mapping from a context pickle if possible, nominally as a file
     system optimization to prevent 100+ file reads.   
     """
-    assert config.is_mapping(mapping), \
+    assert config.is_mapping(mapping) or isinstance(mapping, rmap.Mapping), \
         "`mapping` must be a literal CRDS mapping name, not a date-based context specification."
     if use_pickles is None:
         use_pickles = config.USE_PICKLED_CONTEXTS
