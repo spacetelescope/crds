@@ -454,15 +454,17 @@ def certify_jwst_valid():
 def certify_jwst_missing_optional_parkey():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.fits --comparison-context jwst_0125.pmap")()
+    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap")()
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/jwst_miri_ipc_0003.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    CRDS - INFO -  Certifying 'data/jwst_miri_ipc_0003.add.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
+    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'=None to value of 'P_BAND'='SHORT | MEDIUM |'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFUSHORT|MIRIFULONG|'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.fits' conforms to FITS standards.
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  5 infos
+    CRDS - INFO -  7 infos
     0
     >>> test_config.cleanup(old_state)
     """
