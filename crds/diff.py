@@ -690,34 +690,41 @@ in the logical differences between two mappings.
     
 For example:
     
-    % python -m crds.diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
+    % crds diff hst_0001.pmap  hst_0005.pmap  --brief
     
-Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
+Or to include UNIX diff style diffs of rules as well:
     
-    NOTE: mapping logical differences (the default) do not compare CRDS mapping headers,  use
-    --include-header-diffs to get those as well.
+    % crds diff hst_0001.pmap  hst_0005.pmap  --brief --mapping-text-diffs
+    
+Or for more recursive diffs,  including reference file diffs similar to fitsdiff:
 
-    NOTE: mapping logical differences do not normally include nested files which are implicitly
-    added or deleted by a hgher level mapping change.  See --recurse-added-deleted to include those.
+    % crds diff hst_0001.pmap  hst_0005.pmap  --brief --primitive-diffs
 
-    NOTE: crds.diff has "non-standard" exit status similar to UNIX diff:
-         0 no differences
-         1 some differences
-         2 errors or warnings
+NOTE: mapping logical differences (the default) do not compare CRDS mapping headers,  use
+--brief or read --help about other switch options.
+
+NOTE: mapping logical differences do not normally include nested files which are implicitly
+added or deleted by a hgher level mapping change.  See --recurse-added-deleted to include those.
+
+RETURNS: crds.diff has "non-standard" exit status similar to UNIX diff:
+     0 no differences
+     1 some differences
+     2 errors or warnings
 
 Differencing two sets of rules (withing the same cache) with simplified output:
 
-    % python -m crds.diff jwst_0080.pmap jwst_0081.pmap --brief --squash-tuples
+    % crds diff jwst_0080.pmap jwst_0081.pmap --brief --squash-tuples
     jwst_miri_regions_0004.rmap jwst_miri_regions_0005.rmap -- MIRIFUSHORT 12 SHORT N/A -- added Match rule for jwst_miri_regions_0006.fits
     jwst_miri_0048.imap jwst_miri_0049.imap -- regions -- replaced jwst_miri_regions_0004.rmap with jwst_miri_regions_0005.rmap
     jwst_0080.pmap jwst_0081.pmap -- miri -- replaced jwst_miri_0048.imap with jwst_miri_0049.imap
 
 Differencing two sets of rules (from two different pre-synced caches, e.g. from TEST and OPS)  rules only:
-
+    
+    # First make sure two rules caches are up to date by syncing
     % .... sync cache #1 using crds.sync and server #1
     % .... sync cache #2 using crds.sync and server #2
 
-    % python -m crds.diff --cache1=/Users/fred/crds_cache_test --cache2=/Users/fred/crds_cache_ops hst_0382.pmap hst_0422.pmap  -F -Q
+    % crds diff --cache1=/Users/fred/crds_cache_test --cache2=/Users/fred/crds_cache_ops hst_0382.pmap hst_0422.pmap  -F -Q
     ...
 
     --cache1 and --cache2 are required as a pair.
@@ -759,16 +766,17 @@ Mutually Exclusive Modes
 
         self.add_argument("-T", "--mapping-text-diffs",  dest="mapping_text_diffs", action="store_true",
             help="In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.")
+        self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
+            help="Include mapping header differences in logical diffs: rmap_relevance, sha1sum, derived_from, etc.")
+        self.add_argument("-B", "--hide-boring-diffs", dest="hide_boring_diffs", action="store_true",
+            help="Remove boiler-plate header differences in logical diffs: sha1sum, derived_from, etc.")
         self.add_argument("-U", "--recurse-added-deleted",  dest="recurse_added_deleted", action="store_true",
             help="When a mapping is added or deleted, include all nested files as also added or deleted.  Else only top mapping change listed.")
+
         self.add_argument("-K", "--check-diffs", dest="check_diffs", action="store_true",
             help="Issue warnings about new rules, deletions, or reversions.")
         self.add_argument("--check-references", dest="check_references", action="store_true",
             help="Issue warnings if references are added to or deleted from either mapping.")
-        self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
-            help="Include mapping header differences in logical diffs: sha1sum, derived_from, etc.")
-        self.add_argument("-B", "--hide-boring-diffs", dest="hide_boring_diffs", action="store_true",
-            help="Remove boiler-plate header differences in logical diffs: sha1sum, derived_from, etc.")
 
         group = self.get_exclusive_arg_group(required=False)
         group.add_argument("-N", "--print-new-files", dest="print_new_files", action="store_true",

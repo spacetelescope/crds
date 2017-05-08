@@ -444,7 +444,8 @@ class Mapping(object):
                         path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                 else: # either no recursion or key is special and cannot be recursed.
                     nested_diffs = []
-            elif self._value_name(key) != new_mapping._value_name(key):   # replacements in self
+            elif (self._value_name(key) != new_mapping._value_name(key) and 
+                  self._value_xsum(key) != new_mapping._value_xsum(key)):   # replacements in self
                 diff = selectors.DiffTuple(
                     * (path + ((self.filename, new_mapping.filename), (key,), 
                     "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
@@ -517,6 +518,13 @@ class Mapping(object):
         value = self.selections[key]
         return value if MappingSelectionsDict.is_special_value(value) else value.filename
     
+    def _value_xsum(self, key):
+        """Return selections[key] if it is a special value, otherwise assume it is a mapping
+        and return the sha1sum header field.
+        """
+        value = self.selections[key]
+        return value if MappingSelectionsDict.is_special_value(value) else value.sha1sum
+
     def difference_header(self, other, path=(), pars=()):
         """Compare `self` with `other` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
