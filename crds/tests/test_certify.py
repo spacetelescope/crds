@@ -454,15 +454,17 @@ def certify_jwst_valid():
 def certify_jwst_missing_optional_parkey():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.fits --comparison-context jwst_0125.pmap")()
+    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap")()
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/jwst_miri_ipc_0003.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    CRDS - INFO -  Certifying 'data/jwst_miri_ipc_0003.add.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
+    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'=None to value of 'P_BAND'='SHORT | MEDIUM |'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFUSHORT|MIRIFULONG|'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.fits' conforms to FITS standards.
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  5 infos
+    CRDS - INFO -  7 infos
     0
     >>> test_config.cleanup(old_state)
     """
@@ -597,9 +599,16 @@ def certify_jwst_bad_fits(self):
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None)
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
     CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
+    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
+    CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : In data/niriss_ref_photom_bad.fits 'FOO' is not valid in DETECTOR
-    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Error loading : JWST Data Models: In data/niriss_ref_photom_bad.fits fits data is not valid: DETECTOR
+    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: In data/niriss_ref_photom_bad.fits fits data is not valid: DETECTOR
     >>> test_config.cleanup(old_state)
     """
 

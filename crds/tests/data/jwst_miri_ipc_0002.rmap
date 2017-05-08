@@ -1,0 +1,28 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'jwst_miri_ipc_0002.rmap',
+    'filekind' : 'IPC',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_ipc_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.BAND'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'babe18480f6dc76a9807e2a3603a74579efb7731',
+}
+
+comment = """
+This rmap has been hacked for testing purposes.  BAND
+was added as a matching parameter to test CRDS.
+"""
+
+selector = Match({
+    ('MIRIFULONG', 'LONG') : UseAfter({
+        '1900-01-01 00:00:00' : 'jwst_miri_ipc_0004.fits',
+    }),
+    ('MIRIFUSHORT', 'SHORT|MEDIUM') : UseAfter({
+        '1900-01-01 00:00:00' : 'jwst_miri_ipc_0005.fits',
+    }),
+    ('MIRIMAGE', 'N/A') : UseAfter({
+        '1900-01-01 00:00:00' : 'jwst_miri_ipc_0006.fits',
+    }),
+})

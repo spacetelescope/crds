@@ -283,30 +283,75 @@ def reference_keys_to_dataset_keys(rmapping, header):
     terms rmaps know:  dataset keywords.
     """
     header = dict(header)
+    
+    # Basic common pattern translations
+    translations = {
+            "META.EXPOSURE.P_EXPTYPE" : "META.EXPOSURE.TYPE",
+            "P_EXPTYP" : "META.EXPOSURE.TYPE",
+    
+            #  guessed
+            "META.INSTRUMENT.P_BAND" : "META.INSTRUMENT.BAND",
+            "P_BAND" : "META.INSTRUMENT.BAND",
+              
+            # guessed
+            "META.INSTRUMENT.P_DETECTOR"  : "META.INSTRUMENT.DETECTOR",
+            "P_DETECT"  : "META.INSTRUMENT.DETECTOR",
+
+            "META.INSTRUMENT.P_CHANNEL" : "META.INSTRUMENT.CHANNEL",
+            "P_CHANNE" : "META.INSTRUMENT.CHANNEL",
+            
+            "META.INSTRUMENT.P_FILTER" : "META.INSTRUMENT.FILTER",
+            "P_FILTER"  : "META.INSTRUMENT.FILTER",
+            
+            "META.INSTRUMENT.P_PUPIL"  : "META.INSTRUMENT.PUPIL",
+            "P_PUPIL" : "META.INSTRUMENT.PUPIL",
+            
+            "META.SUBARRAY.P_NAME" : "META.SUBARRAY.NAME",
+            "P_SUBARR" : "META.SUBARRAY.NAME",
+        }
+
+    # Rmap header reference_to_dataset field tranlations,  can override basic!
     try:
-        translations = rmapping.reference_to_dataset
+        translations.update(rmapping.reference_to_dataset)
     except AttributeError:
         pass
-    else:
-        # Add replacements for translations *if* the existing untranslated value
-        # is poor and the translated value is better defined.   This is to do
-        # translations w/o replacing valid/concrete DM values with something 
-        # like guessed values of "UNDEFINED" or "N/A".
-        for rkey in translations:
-            if rkey in header:
-                dkey = translations[rkey]
-                dval = header.get(translations[rkey], None)
-                rval = header[rkey]
-                if rval not in [None, "UNDEFINED"] and rval != dval:
-                    log.info("Setting", repr(dkey) + "=" + repr(dval), 
-                            "to value of", repr(rkey) + "=" + repr(rval))
-                    header[dkey] = rval
+    
+    log.verbose("reference_to_dataset translations:\n", log.PP(translations), verbosity=60)
+    log.verbose("reference_to_dataset header:\n", log.PP(header), verbosity=80)
+    
+    for key in header:
+        # Match META.X.P_SOMETHING or P_SOMETH
+        if (key.split(".")[-1].startswith("P_")) and key not in translations:
+            log.warning("CRDS-pattern-like keyword", repr(key), 
+                        "w/o CRDS translation to corresponding dataset keyword.")
+            log.info("Pattern-like keyword", repr(key), 
+                     "may be misspelled or missing its translation in CRDS.  Pattern will not be used.")
+            log.info("The translation for", repr(key), 
+                     "can be defined in crds.jwst.locate or rmap header reference_to_dataset field.")
+            log.info("If this is not a pattern keyword, adding a translation to 'not-a-pattern'",
+                     "will suppress this warning.")
+    
+    # Add replacements for translations *if* the existing untranslated value
+    # is poor and the translated value is better defined.   This is to do
+    # translations w/o replacing valid/concrete DM values with something 
+    # like guessed values of "UNDEFINED" or "N/A".
+    for rkey in translations:
+        if rkey in header:
+            dkey = translations[rkey]
+            dval = header.get(translations[rkey], None)
+            rval = header[rkey]
+            if rval not in [None, "UNDEFINED"] and rval != dval:
+                log.info("Setting", repr(dkey) + "=" + repr(dval), 
+                        "to value of", repr(rkey) + "=" + repr(rval))
+                header[dkey] = rval
+
     if "USEAFTER" not in header and "META.REFFILE.USEAFTER" in header:
         header["USEAFTER"] = header["META.REFFILE.USEAFTER"]
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_useafter(rmapping, header).split()
         header["DATE-OBS"] = header["META.OBSERVATION.DATE"] = reformatted[0]
         header["TIME-OBS"] = header["META.OBSERVATION.TIME"] = reformatted[1]
+
     return header
 
 # =============================================================================

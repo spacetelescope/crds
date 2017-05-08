@@ -18,7 +18,7 @@ from collections import defaultdict
 from pprint import pprint as pp
 
 import crds
-from crds.core import python23, log, utils, config, cmdline
+from crds.core import python23, log, utils, config, cmdline, selectors
 from crds.client import api
 
 # ===================================================================
@@ -330,7 +330,8 @@ jwst_niriss_throughput_0008.fits :  META.INSTRUMENT.FILTER='F480M'
             key, value = (item.strip() for item in filter.split("="))
             for section in path[1:]:
                 for tup in section:
-                    if tup[0].upper() == key.upper() and value.upper() not in tup[1].upper().split("|"):
+                    if (tup[0].upper() == key.upper() and 
+                        value.upper() not in selectors.glob_list(tup[1].upper())):
                         return True
         return False
                         
