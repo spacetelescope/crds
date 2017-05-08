@@ -252,6 +252,70 @@ def dt_bestrefs_context_to_context():
     >>> test_config.cleanup(old_state)
     """
 
+def dt_bestrefs_all_instruments_hst():
+    """
+    Compute comparison bestrefs between two contexts:
+    
+    >>> old_state = test_config.setup()
+    >>> script = BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --all-instruments") # doctest: +ELLIPSIS
+    >>> script.complex_init()
+    CRDS - INFO -  Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
+    CRDS - INFO -  Dumping dataset parameters for 'acs' from CRDS server at '...'
+    CRDS - INFO -  Downloaded  ... dataset ids for 'acs' since None
+    CRDS - INFO -  Dumping dataset parameters for 'cos' from CRDS server at '...'
+    CRDS - INFO -  Downloaded  ... dataset ids for 'cos' since None
+    CRDS - INFO -  Dumping dataset parameters for 'nicmos' from CRDS server at '...'
+    CRDS - INFO -  Downloaded  ... dataset ids for 'nicmos' since None
+    CRDS - INFO -  Dumping dataset parameters for 'stis' from CRDS server at '...'
+    CRDS - INFO -  Downloaded  ... dataset ids for 'stis' since None
+    CRDS - INFO -  Dumping dataset parameters for 'wfc3' from CRDS server at '...'
+    CRDS - INFO -  Downloaded  ... dataset ids for 'wfc3' since None
+    CRDS - INFO -  Dumping dataset parameters for 'wfpc2' from CRDS server at '...'
+    CRDS - INFO -  Downloaded  ... dataset ids for 'wfpc2' since None
+    True
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_bestrefs_datasets_since_auto_hst():
+    """
+    Compute comparison bestrefs between two contexts:
+    
+    >>> old_state = test_config.setup()
+    >>> script = BestrefsScript(argv="bestrefs.py --old-context hst.pmap --new-context data/hst_0001.pmap --diffs-only --datasets-since=auto") # doctest: +ELLIPSIS
+    >>> script.complex_init()
+    CRDS - INFO -  Mapping differences from 'hst.pmap' --> 'data/hst_0001.pmap' affect:
+     {'acs': ['biasfile']}
+    CRDS - INFO -  Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'data/hst_0001.pmap' are:
+     {'acs': '1992-01-02 00:00:00'}
+    CRDS - INFO -  Computing bestrefs for db datasets for ['acs']
+    CRDS - INFO -  Dumping dataset parameters for 'acs' from CRDS server at '...' since '1992-01-02 00:00:00'
+    CRDS - INFO -  Downloaded  ... dataset ids for 'acs' since '1992-01-02 00:00:00'
+    True
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_bestrefs_dataset_drop_ids():
+    """
+    >>> old_state = test_config.setup()
+    >>> script = BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --load-pickle data/test_cos.json --drop-ids LCE31SW6Q:LCE31SW6Q")
+    >>> script.complex_init()
+    CRDS - INFO -  Loading file 'data/test_cos.json'
+    CRDS - INFO -  Loaded 1 datasets from file 'data/test_cos.json' completely replacing existing headers.
+    True
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_bestrefs_dataset_only_ids():
+    """
+    >>> old_state = test_config.setup()
+    >>> script = BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --load-pickle data/test_cos.json --only-ids LPPPPPP6Q:LCE31SW6Q")
+    >>> script.complex_init()
+    CRDS - INFO -  Loading file 'data/test_cos.json'
+    CRDS - INFO -  Loaded 1 datasets from file 'data/test_cos.json' completely replacing existing headers.
+    True
+    >>> test_config.cleanup(old_state)
+    """
+
 def dt_test_cleanpath():
     """
     Removes prefixes added to reference files prior to writing into FITS headers.
