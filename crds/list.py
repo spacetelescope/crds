@@ -9,6 +9,7 @@ from __future__ import absolute_import
 import os.path
 import sys
 from collections import OrderedDict
+import json
 
 from astropy.io import fits
 
@@ -291,6 +292,8 @@ and ids used for CRDS reprocessing recommendations.
             help="print out only the first exposure ID (header or expanded) associated with a particular product ID.")
         self.add_argument("--minimize-headers", action="store_true", dest="minimize_headers",
             help="print out only header parameters required by a particular CRDS context.")
+        self.add_argument("--json-headers", action="store_true", dest="json_headers",
+            help="print out header parameters in JSON format suited for crds.bestrefs and grepping.")
 
         self.add_argument("--config", action="store_true", dest="config",
             help="print CRDS configuration information.")
@@ -502,10 +505,19 @@ and ids used for CRDS reprocessing recommendations.
                                     header2 = dict(header)
                                 header2.pop("REFTYPE", None)
                                 header2["dataset_id"] = returned_id
-                                log.info("Dataset pars for", repr(returned_id), "with respect to", repr(context) + ":\n",
-                                         log.PP(header2))
+                                header2["CRDS_CTX"] = context
+                                self.dump_header(context, returned_id, header2)
                             if self.args.first_id_expansion_only:
                                 break
+                            
+    def dump_header(self, context, header_id, header):
+        """Print out dataset `header` for `id` and `context` in either .json or multi-line formats."""
+        if self.args.json_headers:
+            json_header = { header_id : header }
+            print(json.dumps(json_header))
+        else:
+            print("Dataset pars for", repr(header_id), "with respect to", repr(context) + ":\n",
+                  log.PP(header))
 
     def list_dataset_ids(self):
         """Print out the dataset ids associated with the instruments specified as command line params."""
