@@ -119,7 +119,13 @@ def glob_list(value):
     >>> glob_list("FOO|BAR | BAZ")
     ['FOO', 'BAR', 'BAZ']
     
+    >>> glob_list("FOO|BAR | BAZ| ")
+    ['FOO', 'BAR', 'BAZ']
+    
     >>> glob_list('FOO')
+    ['FOO']
+    
+    >>> glob_list('FOO|')
     ['FOO']
     
     >>> glob_list('{THIS|THAT|OTHER}')
