@@ -747,7 +747,7 @@ amount of informational and debug output.
 
     no_update = ":: No update."
 
-    def verbose_with_prefix(dataset, instrument, filekind, *args, **keys):
+    def verbose_with_prefix(self, dataset, instrument, filekind, *args, **keys):
         """Output a verbose log message with a prefix formated using format_prefix()."""
         if log.should_output(*args, **keys):
             log.verbose(self.format_prefix(dataset, instrument, filekind), *args, **keys)
