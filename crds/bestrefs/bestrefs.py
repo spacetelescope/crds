@@ -747,6 +747,11 @@ amount of informational and debug output.
 
     no_update = ":: No update."
 
+    def verbose_with_prefix(dataset, instrument, filekind, *args, **keys):
+        """Output a verbose log message with a prefix formated using format_prefix()."""
+        if log.should_output(*args, **keys):
+            log.verbose(self.format_prefix(dataset, instrument, filekind), *args, **keys)
+
     def screen_bestrefs(self, instrument, dataset, newrefs):
         """Scan best references dict `newrefs` for atypical results and issue errors and warnings.
 
@@ -763,14 +768,13 @@ amount of informational and debug output.
             filekind = filekind.lower()
 
             if filekind in self.skip_filekinds:
-                log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            "Skipping type.", verbosity=55)
+                self.verbose_with_prefix(dataset, instrument, filekind, "Skipping type.", verbosity=55)
                 continue
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
-            if new_ok:
-                log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
+            if new_ok:                
+                self.verbose_with_prefix(dataset, instrument, filekind,
+                    "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
             else:  # ERROR's cannot update
                 pass
@@ -794,8 +798,7 @@ amount of informational and debug output.
             filekind = filekind.lower()
 
             if filekind in self.skip_filekinds:
-                log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            "Skipping type.", verbosity=55)
+                self.verbose_with_prefix(dataset, instrument, filekind, "Skipping type.", verbosity=55)
                 continue
 
             _old_ok, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind)
@@ -816,8 +819,8 @@ amount of informational and debug output.
                              "New best reference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
-                log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            "Lookup MATCHES:", repr(old).lower(), self.no_update,  verbosity=30)
+                self.verbose_with_prefix(dataset, instrument, filekind,
+                    "Lookup MATCHES:", repr(old).lower(), self.no_update,  verbosity=30)
         return updates
 
     def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind):
@@ -837,8 +840,7 @@ amount of informational and debug output.
         ref = ref_org.upper()
         ref_ok = True
         if ref.startswith("NOT FOUND N/A"):
-            log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "Bestref is natural N/A.", verbosity=60)
+            self.verbose_with_prefix(dataset, instrument, filekind, "Bestref is natural N/A.", verbosity=60)
             ref = "N/A"
         elif ref in ("NOT FOUND NO MATCH FOUND.", "UNDEFINED", "NONE", "", "*"):
             if self.args.undefined_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
@@ -846,8 +848,8 @@ amount of informational and debug output.
                     dataset, instrument, filekind, name,  "No match found:", repr(ref_org))
                 ref_ok = False
             else:
-                log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            name, "No match found:", repr(ref_org), " => 'N/A'.")
+                self.verbose_with_prefix(dataset, instrument, filekind,
+                    name, "No match found:", repr(ref_org), " => 'N/A'.")
                 ref = "N/A"
         elif ref.startswith("NOT FOUND"):
             self.log_and_track_error(

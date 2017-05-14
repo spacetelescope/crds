@@ -176,17 +176,17 @@ class CrdsLogger(object):
         self.debugs += 1
         self.logger.debug(self.eformat(self.msg_count, *args, **keys))
 
-    def verbose(self, *args, **keys):
+    def should_output(self, *args, **keys):
         verbosity = keys.get("verbosity", DEFAULT_VERBOSITY_LEVEL)
-        if self.verbose_level < verbosity:
-            return
-        self.debug(*args, **keys)
+        return not self.verbose_level < verbosity
+            
+    def verbose(self, *args, **keys):
+        if self.should_output(*args, **keys):
+            self.debug(*args, **keys)
  
     def verbose_warning(self, *args, **keys):
-        verbosity = keys.get("verbosity", DEFAULT_VERBOSITY_LEVEL)
-        if self.verbose_level < verbosity:
-            return
-        self.warn(*args, **keys)
+        if self.should_output(*args, **keys):
+            self.warn(*args, **keys)
             
     def write(self, *args, **keys):
         """Output a message to stdout, formatting each positional parameter
@@ -249,6 +249,7 @@ error = THE_LOGGER.error
 warning = THE_LOGGER.warn
 verbose_warning = THE_LOGGER.verbose_warning
 verbose = THE_LOGGER.verbose
+should_output = THE_LOGGER.should_output
 debug = THE_LOGGER.debug
 fatal_error = THE_LOGGER.fatal_error
 status = THE_LOGGER.status
