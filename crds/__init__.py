@@ -9,6 +9,11 @@ import os.path
 import sys
 import importlib
 
+import warnings
+
+warnings.filterwarnings(
+    "ignore", ".*found in sys.modules after import of package.*")
+
 # ============================================================================
 
 __version__ = "7.1.2"  
