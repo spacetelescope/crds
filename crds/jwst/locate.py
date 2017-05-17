@@ -335,7 +335,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     # is poor and the translated value is better defined.   This is to do
     # translations w/o replacing valid/concrete DM values with something 
     # like guessed values of "UNDEFINED" or "N/A".
-    for rkey in translations:
+    for rkey in sorted(translations):
         if rkey in header:
             dkey = translations[rkey]
             dval = header.get(translations[rkey], None)
