@@ -273,8 +273,9 @@ class SyncScript(cmdline.ContextsScript):
 
         self.require_server_connection()
 
-        if self.readonly_cache and self.args.verify_context_change:
-            log.error("--readonly-cache and --verify-context-change are incompatible,  a readonly cache cannot change.")
+        if self.readonly_cache:
+            log.info("Syncing READONLY cache,  only checking functions are enabled.")
+            log.info("All cached updates, context changes, and file downloads are inhibited.")
 
         if self.args.files:
             self.sync_explicit_files()
