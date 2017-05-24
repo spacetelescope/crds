@@ -114,7 +114,13 @@ def _x_schema_to_flat(schema):
         if feature in schema:
             log.verbose_warning("Schema item has unhandled feature {}.", verbosity=80)
             return None
-    if schema["type"] ==  "object":
+        
+    if "anyOf" in schema and "type" in schema["anyOf"]:
+        schema_type = schema["anyOf"]["type"]
+    else:
+        schema_type = schema.get("type", "null")
+        
+    if schema_type ==  "object":
         subprops = schema["properties"]
         for prop in subprops:
             with log.augment_exception("In schema property", repr(prop)):
@@ -126,16 +132,16 @@ def _x_schema_to_flat(schema):
                         results[prop + "." + subprop] = val
                 else:
                     results[prop] = sub_tree
-    elif schema["type"] in BASIC_TYPES:
+    elif schema_type in BASIC_TYPES:
         return schema
-    elif schema["type"] in OPTIONAL_TYPES:
+    elif schema_type in OPTIONAL_TYPES:
         return schema
-    elif schema["type"] == "array":
+    elif schema_type == "array":
         return None
-    elif schema["type"] in ["any", "null"]:
+    elif schema_type in ["any", "null"]:
         return None
     else:
-        log.verbose_warning("Schema item has unhandled type", repr(schema["type"]), verbosity=80)
+        log.verbose_warning("Schema item has unhandled type", repr(schema_type), verbosity=80)
     return results
 
 def type_or_null(names):
