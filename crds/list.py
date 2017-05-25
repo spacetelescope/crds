@@ -485,8 +485,8 @@ and ids used for CRDS reprocessing recommendations.
     def list_dataset_headers(self):
         """List dataset header info for self.args.dataset_headers with respect to self.args.context"""
         
-        # treate ids specified in dataset_headers param as files to get @-file handling
-        ids = self.get_files(self.args.dataset_headers)
+        # Support @-files for ids specified on command line
+        ids = self.get_words(self.args.dataset_headers)
         
         for context in self.contexts:
             with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context), 

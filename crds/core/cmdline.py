@@ -327,37 +327,44 @@ class Script(object):
         """Return the default operational .pmap defined by the CRDS server or cache."""
         return self.server_info["operational_context"]
 
-    def get_files(self, file_list):
+    def get_words(self, word_list):
         """Process a file list,  expanding @-files into corresponding lists of
         files.   Return a flat, depth-first,  file list.
         """
-        files = []
-        for fname in file_list:
-            if fname.startswith("@"):
-                files.extend(self.load_file_list(fname[1:]))
+        words = []
+        for word in word_list:
+            if word.startswith("@"):
+                words.extend(self._load_word_list(word[1:]))
             else:
-                files.append(fname)
-        return files # [fname.lower() for fname in files]
+                words.append(word)
+        return words # [word.lower() for word in words]
     
-    def load_file_list(self, at_file):
-        """Recursively load an @-file, returning a list of words/files.
+    def _load_word_list(self, at_file):
+        """Recursively load an @-file, returning a list of words.
         Any stripped line beginning with # is a comment line to be ignored.
         Any word beginning with @ is a file to load recursively.
-        Each line is split into words/files using whitespace.
+        Each line is split into words/words using whitespace.
         """
-        files = []
+        words = []
         with open(at_file) as atf:
             for line in atf.readlines():
-                fname = line.strip()
-                if fname.startswith("#"):
+                word = line.strip()
+                if word.startswith("#"):
                     continue
-                if fname.startswith("@"):
-                    more = self.load_file_list(fname[1:])
+                if word.startswith("@"):
+                    more = self._load_word_list(word[1:])
                 else:
-                    more = fname.split()
-                files.extend(more)
-        return self.get_files(files)   # another pass to fix paths
+                    more = word.split()
+                words.extend(more)
+        return self.get_words(words)   # another pass to fix paths
 
+    def get_files(self, file_list):
+        
+        """Expand a list of files by treating any filename beginning with an
+        @-sign as a file containing one word per line.
+        """
+        return self.get_words(file_list)
+    
     @property
     def files(self):
         """Handle @-files and add cache_paths to command line file parameters.
