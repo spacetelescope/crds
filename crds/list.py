@@ -484,12 +484,16 @@ and ids used for CRDS reprocessing recommendations.
         
     def list_dataset_headers(self):
         """List dataset header info for self.args.dataset_headers with respect to self.args.context"""
+        
+        # treate ids specified in dataset_headers param as files to get @-file handling
+        ids = self.get_files(self.args.dataset_headers)
+        
         for context in self.contexts:
             with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context), 
                                         "for", repr(self.args.dataset_headers)):
-                pars = api.get_dataset_headers_by_id(context, self.args.dataset_headers)
+                pars = api.get_dataset_headers_unlimited(context, ids)
                 pmap = crds.get_cached_mapping(context)
-                for requested_id in self.args.dataset_headers:
+                for requested_id in ids:
                     for returned_id in sorted(pars.keys()):
                         if requested_id.upper() in returned_id.upper():
                             header = pars[returned_id]
@@ -526,7 +530,10 @@ and ids used for CRDS reprocessing recommendations.
                 for context in self.contexts:
                     ids = api.get_dataset_ids(context, instrument)
                     for dataset_id in ids:
-                        print(context, dataset_id)
+                        if len(self.contexts) > 1:
+                            print(context, dataset_id)
+                        else:
+                            print(dataset_id)
 
     def list_config(self):
         """Print out configuration info about the current environment and server."""

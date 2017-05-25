@@ -56,6 +56,11 @@ import os.path
 import io
 import inspect
 
+if sys.version_info >= (3,0,0):
+    from io import StringIO
+else:
+    import StringIO
+
 from subprocess import PIPE, STDOUT, Popen
 
 # =========================================================================
@@ -63,7 +68,7 @@ from subprocess import PIPE, STDOUT, Popen
 __all__ = [
     "sys", "os", "re", "glob",
 
-    "sh", "out", "err", "out_err", "status", "words", "lines", "usage",
+    "sh", "out", "err", "out_err", "status", "words", "lines", "usage",  "arg",
 
     "Shell", "pysh_execfile"
 ]
@@ -314,6 +319,23 @@ def usage(description, min_args, max_args=sys.maxsize, help=""):
     if not (min_args <= len(sys.argv)-1 <= max_args) or "--help" in sys.argv:
         fail("\nusage: " + progname + " "  + description + help)
 
+def arg(index, default=None, typecast=str):
+    """Ultra-simple convenience function for extracting command line parameters by
+    index, optionally using a `default` value if fewer than `index` parameters
+    are provided.  The function `typecast` can be set to a python type object
+    to cast parameter strings to other python types like int or float.
+
+    $ program  arg1 arg2 arg3
+
+    progname = arg(0)
+    arg1 = arg(1, "foo")
+    arg2 = arg(2, 57, int)
+    arg3 = arg(3, 45.0, float)
+
+    """
+    val = sys.argv[index] if len(sys.argv) >= index+1 else default
+    return typecast(val)
+        
 # =========================================================================
 
 # Code for rewriting a file of pysh-script as an ordinary python module.
