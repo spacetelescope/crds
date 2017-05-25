@@ -213,7 +213,7 @@ this command line interface must be members of the CRDS operators group
         log.info("Determining existing files.")
         result = self.connection.get('/upload/list/').json()
         log.verbose("JSON info on existing ingested files:\n", log.PP(result))
-        return { info["name"] : info for info in result }
+        return { info["name"] : info for info in result["files"] }
 
     def copy_file(self, name, path, destination):
         """Perform a cp-based or scp-based copy of file `name`,  either to `path` or
