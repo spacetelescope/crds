@@ -1,5 +1,7 @@
-#! /usr/bin/env python                                                                                                                                                                                                                   
-#-*-python-*-                                                                                                                                                   import sys                                                                         
+#! /usr/bin/env python
+#-*-python-*-
+
+import sys                                                                         
 
 from crds.query_affected import QueryAffectedDatasetsScript
 from crds import log
