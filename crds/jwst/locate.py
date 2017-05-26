@@ -81,16 +81,16 @@ def get_data_model_flat_dict(filepath):
 CROSS_STRAPPED_KEYWORDS = {
 
     # These include non-DM keywords
-    "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE"],
-    "META.TELESCOPE" : ["TELESCOP","TELESCOPE"],
-    "META.REFFILE.DESCRIPTION" : ["DESCRIP","DESCRIPTION"],
-    "META.REFFILE.TYPE" : ["REFTYPE"],
+    "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE",],
+    "META.TELESCOPE" : ["TELESCOP","TELESCOPE","META.TELESCOPE"],
+    "META.REFFILE.DESCRIPTION" : ["DESCRIP","DESCRIPTION","META.DESCRIPTION"],
+    "META.REFFILE.TYPE" : ["REFTYPE","META.REFTYPE"],
 
     # These include non-core-DM DM fields
-    "META.REFFILE.AUTHOR" : ["AUTHOR"],
-    "META.REFFILE.PEDIGREE" : ["PEDIGREE"],
-    "META.REFFILE.USEAFTER" : ["USEAFTER"],
-    "META.REFFILE.HISTORY" : ["HISTORY"],
+    "META.REFFILE.AUTHOR" : ["AUTHOR", "META.AUTHOR"],
+    "META.REFFILE.PEDIGREE" : ["PEDIGREE", "META.PEDIGREE"],
+    "META.REFFILE.USEAFTER" : ["USEAFTER", "META.USEAFTER"],
+    "META.REFFILE.HISTORY" : ["HISTORY", "META.HISTORY"],
 
     # These should all be stock DM:FITS,  automatic
     # "META.INSTRUMENT.BAND" : ["BAND"],
@@ -287,7 +287,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     # Basic common pattern translations
     translations = {
             "META.EXPOSURE.P_EXPTYPE" : "META.EXPOSURE.TYPE",
-            "P_EXPTYP" : "META.EXPOSURE.TYPE",
+            "P_EXP_TY" : "META.EXPOSURE.TYPE",
     
             #  guessed
             "META.INSTRUMENT.P_BAND" : "META.INSTRUMENT.BAND",
