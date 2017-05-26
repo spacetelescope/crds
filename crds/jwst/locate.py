@@ -306,7 +306,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
             "META.INSTRUMENT.P_PUPIL"  : "META.INSTRUMENT.PUPIL",
             "P_PUPIL" : "META.INSTRUMENT.PUPIL",
             
-            "META.SUBARRAY.P_NAME" : "META.SUBARRAY.NAME",
+            "META.P_SUBARRAY" : "META.SUBARRAY.NAME",
             "P_SUBARR" : "META.SUBARRAY.NAME",
         }
 
