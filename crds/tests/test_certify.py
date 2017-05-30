@@ -254,8 +254,6 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
-    CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
     CRDS - INFO -  EXP_TYPE = 'mir_image'
     CRDS - INFO -  META.AUTHOR = 'Todd Miller'
     CRDS - INFO -  META.DESCRIPTION = 'Brief notes on this reference.'
@@ -291,7 +289,6 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  32 infos
     0
     >>> test_config.cleanup(old_state)
-
     """
 
 def certify_missing_keyword():
@@ -609,14 +606,13 @@ def certify_jwst_bad_fits(self):
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
-    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']Failed validating 'enum' in schema:    {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',     'description': 'Detector name.',     'enum': ['NRCA1',              'NRCA2',              'NRCA3',              'NRCA4',              'NRCALONG',              'NRCB1',              'NRCB2',              'NRCB3',              'NRCB4',              'NRCBLONG',              'NRS1',              'NRS2',              'ANY',              'MIRIMAGE',              'MIRIFULONG',              'MIRIFUSHORT',              'NIS',              'GUIDER1',              'GUIDER2',              'N/A'],     'fits_keyword': 'DETECTOR',     'title': 'Name of detector used to acquire the data',     'type': 'string'}On instance:    'FOO'
     CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: In data/niriss_ref_photom_bad.fits fits data is not valid: DETECTOR
-    >>> test_config.cleanup(old_state)
     """
 
 # ==================================================================================

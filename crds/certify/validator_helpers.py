@@ -280,7 +280,7 @@ def nir_filter(instrument, reftype, exp_type):
             return exp_type in ["NRS_MSASPEC","NRS_IFU"]
         elif reftype == "DFLAT":
             return True
-        elif reftype in "FFLAT":
+        elif reftype == "FFLAT":
             return exp_type in ["NRS_MSASPEC"]
         else:
             return True
