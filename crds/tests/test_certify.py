@@ -254,9 +254,14 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
     CRDS - INFO -  EXP_TYPE = 'mir_image'
+    CRDS - INFO -  META.AUTHOR = 'Todd Miller'
+    CRDS - INFO -  META.DESCRIPTION = 'Brief notes on this reference.'
     CRDS - INFO -  META.EXPOSURE.READPATT = 'any'
     CRDS - INFO -  META.EXPOSURE.TYPE = 'mir_image'
+    CRDS - INFO -  META.HISTORY = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.INSTRUMENT.BAND = 'medium'
     CRDS - INFO -  META.INSTRUMENT.CHANNEL = '34'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
@@ -264,12 +269,13 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.INSTRUMENT.GRATING = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.NAME = 'miri'
     CRDS - INFO -  META.INSTRUMENT.PUPIL = 'UNDEFINED'
+    CRDS - INFO -  META.PEDIGREE = 'dummy'
     CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
     CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
     CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.REFFILE.PEDIGREE = 'dummy'
-    CRDS - INFO -  META.REFFILE.TYPE = 'distortion'
     CRDS - INFO -  META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
+    CRDS - INFO -  META.REFTYPE = 'distortion'
     CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
     CRDS - INFO -  META.SUBARRAY.NAME = 'MASK1550'
     CRDS - INFO -  META.SUBARRAY.SLOWAXIS = '2'
@@ -278,10 +284,11 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.SUBARRAY.YSIZE = '4'
     CRDS - INFO -  META.SUBARRAY.YSTART = '1020'
     CRDS - INFO -  META.TELESCOPE = 'jwst'
+    CRDS - INFO -  META.USEAFTER = '2015-01-25T12:00:00'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  27 infos
+    CRDS - INFO -  32 infos
     0
     >>> test_config.cleanup(old_state)
 
