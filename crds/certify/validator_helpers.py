@@ -155,6 +155,28 @@ def  array_exists(array_info):
     """
     return array_info != "UNDEFINED" 
 
+def is_imaging_mode(exp_type):
+    """Return True IFF `exp_type` is one of the imaging modes for any instrument.
+    
+    >>> is_imaging_mode('MIR_IMAGE')
+    True
+    >>> is_imaging_mode("NRS_IFU")
+    False
+    """
+    return exp_type in ["NRC_IMAGE", "NRC_TACQ", "NRC_TACONF", "NRC_CORON", "NRC_TSIMAGE",
+                        "NRC_FOCUS", "NRC_DARK", "NRC_FLAT", "NRC_LED",
+                        
+                        "MIR_IMAGE", "MIR_TACQ", "MIR_LYOT", "MIR_4QPM", "MIR_DARK",
+                        "MIR_FLATIMAGE", "MIR_CORONCAL", 
+                        
+                        "NRS_TASLIT", "NRS_TACQ", "NRS_TACONFIRM", 
+                        "NRS_CONFIRM", "NRS_IMAGE", "NRS_FOCUS", "NRS_DARK", "NRS_MIMF",
+                        
+                        "NIS_IMAGE", "NIS_TACQ", "NIS_TACONFIRM", "NIS_AMI", 
+                        "NIS_FOCUS", "NIS_DARK", "NIS_LAMP",
+                        
+                        "FGS_IMAGE", "FGS_FOCUS", "FGS_SKYFLAT", "FGS_INTFLAT", "FGS_DARK"]
+    
 def is_full_frame(subarray):
     """Return True IFF `subarray` is defined and has a full frame subarray value.
     
@@ -282,6 +304,8 @@ def nir_filter(instrument, reftype, exp_type):
             return True
         elif reftype == "FFLAT":
             return exp_type in ["NRS_MSASPEC"]
+        elif reftype == "AREA":
+            return is_imaging_mode(exp_type)
         else:
             return True
     else:

@@ -79,6 +79,9 @@ def get_data_model_flat_dict(filepath):
 # When loading headers,  make sure each keyword in a tuple is represented with
 # the same value enabling any form to be used.  Case insensitive.
 CROSS_STRAPPED_KEYWORDS = {
+                           
+    # META.REFFILE.X is now obsolete but retained for backward compatibility.
+    # it was replaced by META.X
 
     # These include non-DM keywords
     "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE",],
@@ -289,11 +292,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
             "META.EXPOSURE.P_EXPTYPE" : "META.EXPOSURE.TYPE",
             "P_EXP_TY" : "META.EXPOSURE.TYPE",
     
-            #  guessed
             "META.INSTRUMENT.P_BAND" : "META.INSTRUMENT.BAND",
             "P_BAND" : "META.INSTRUMENT.BAND",
               
-            # guessed
             "META.INSTRUMENT.P_DETECTOR"  : "META.INSTRUMENT.DETECTOR",
             "P_DETECT"  : "META.INSTRUMENT.DETECTOR",
 
@@ -306,7 +307,10 @@ def reference_keys_to_dataset_keys(rmapping, header):
             "META.INSTRUMENT.P_PUPIL"  : "META.INSTRUMENT.PUPIL",
             "P_PUPIL" : "META.INSTRUMENT.PUPIL",
             
-            "META.P_SUBARRAY" : "META.SUBARRAY.NAME",
+            "META.INSTRUMENT.P_MODULE"  : "META.INSTRUMENT.MODULE",
+            "P_MODULE" : "META.INSTRUMENT.MODULE",
+            
+            "META.SUBARRAY.P_SUBARRAY" : "META.SUBARRAY.NAME",
             "P_SUBARR" : "META.SUBARRAY.NAME",
         }
 
@@ -317,7 +321,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
         pass
     
     log.verbose("reference_to_dataset translations:\n", log.PP(translations), verbosity=60)
-    log.verbose("reference_to_dataset header:\n", log.PP(header), verbosity=80)
+    log.verbose("reference_to_dataset input header:\n", log.PP(header), verbosity=80)
     
     for key in header:
         # Match META.X.P_SOMETHING or P_SOMETH
@@ -344,14 +348,33 @@ def reference_keys_to_dataset_keys(rmapping, header):
                 log.info("Setting", repr(dkey) + "=" + repr(dval), 
                         "to value of", repr(rkey) + "=" + repr(rval))
                 header[dkey] = rval
-
+                
+    # NOTE:  the hacks below happen after cross-strapping and pattern handling
+    # so if the keywords are still undefined they're undefined.  They have to
+    # be explicitly defined as UNDEFINED somehow since they're nearly universally
+    # used in constraints as condition variables even if they're not used in rmaps.
+    # Unlike the targets of constraints,  CRDS is nominally unaware of condition
+    # variables so they need to be incidentally defined.  This currently doesn't
+    # work out if the rmap doesn't use them.  Condition variables are eval'ed in
+    # expressions.
+    
+    if "SUBARRAY" not in header:
+        header["SUBARRAY"] = header["META.SUBARRAY.NAME"] = "UNDEFINED"
+                
+    if "EXP_TYPE" not in header:
+        header["EXP_TYPE"] = header["META.EXPOSURE.TYPE"] = "UNDEFINED"
+                
     if "USEAFTER" not in header and "META.REFFILE.USEAFTER" in header:
         header["USEAFTER"] = header["META.REFFILE.USEAFTER"]
+    if "USEAFTER" not in header and "META.USEAFTER" in header:
+        header["USEAFTER"] = header["META.USEAFTER"]
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_useafter(rmapping, header).split()
         header["DATE-OBS"] = header["META.OBSERVATION.DATE"] = reformatted[0]
         header["TIME-OBS"] = header["META.OBSERVATION.TIME"] = reformatted[1]
 
+    log.verbose("reference_to_dataset output header:\n", log.PP(header), verbosity=80)
+    
     return header
 
 # =============================================================================

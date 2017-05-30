@@ -24,8 +24,8 @@ from .abstract import AbstractFile, hijack_warnings
 @contextlib.contextmanager
 @utils.gc_collected
 def fits_open(filename, **keys):
-    """Return the results of io.fits.open() configured using CRDS environment settings,  overriden by
-    any conflicting keyword parameter values.
+    """Return the results of io.fits.open() configured using CRDS environment settings,  overridden by
+    any conflicting keyword parameter values.   Nominally used for updating bestrefs FITS headers.
     """
     keys = dict(keys)
     if "checksum" not in keys:
