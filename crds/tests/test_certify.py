@@ -359,8 +359,9 @@ def certify_table_comparison_context():
 
     >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying '.../references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
-    CRDS - INFO -  Table unique row parameters defined as ['DATE']
+    CRDS - INFO -  Certifying '/Users/jmiller/crds-cache-default-test/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
+    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
+    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
     CRDS - INFO -  Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
     CRDS - WARNING -  Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
@@ -381,7 +382,7 @@ def certify_table_comparison_context():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  15 warnings
-    CRDS - INFO -  6 infos
+    CRDS - INFO -  7 infos
     0
     >>> test_config.cleanup(old_state)
     """
@@ -391,7 +392,8 @@ def certify_table_comparison_reference():
     >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-reference data/y9j16159l_hv.fits")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
-    CRDS - INFO -  Table unique row parameters defined as ['DATE']
+    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
+    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
     CRDS - WARNING -  Table mode (('DATE', 56923.583400000003),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
@@ -410,7 +412,7 @@ def certify_table_comparison_reference():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  10 warnings
-    CRDS - INFO -  5 infos
+    CRDS - INFO -  6 infos
     0
     """
 
@@ -419,13 +421,14 @@ def certify_comparison_context_none_all_references():
     >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-context None")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
-    CRDS - INFO -  Table unique row parameters defined as ['DATE']
+    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
+    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
     CRDS - WARNING -  No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
-    CRDS - INFO -  5 infos
+    CRDS - INFO -  6 infos
     0
     """
 
@@ -602,7 +605,8 @@ def certify_jwst_bad_fits(self):
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None)
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
-    CRDS - INFO -  Table unique row parameters defined as ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  Potential table unique row selection parameters are ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']

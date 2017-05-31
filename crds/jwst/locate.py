@@ -17,6 +17,7 @@ import re
 from crds.core import rmap, config, utils, timestamp, log, exceptions
 from crds.certify import generic_tpn
 from crds import data_file
+from crds.io import abstract
 
 # =======================================================================
 
@@ -348,7 +349,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
                 log.info("Setting", repr(dkey) + "=" + repr(dval), 
                         "to value of", repr(rkey) + "=" + repr(rval))
                 header[dkey] = rval
-                
+    
+    header = abstract.cross_strap_header(header)
+    
     # NOTE:  the hacks below happen after cross-strapping and pattern handling
     # so if the keywords are still undefined they're undefined.  They have to
     # be explicitly defined as UNDEFINED somehow since they're nearly universally

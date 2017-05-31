@@ -91,7 +91,7 @@ def hijacked_showwarning(message, category, filename, lineno, *args, **keys):
 # For projects supporting the datamodels,  the schema is used to define the correspondence
 # between data model dotted paths and the keyword of the underlying file format.
 #
-def _cross_strap_header(header):
+def cross_strap_header(header):
     """Set up keyword equivalencies in a copy of `header`.  Ensure both FITS
     and datamodel dotted path variants are defined for each keyword.
     Also add variations defined by observatory locator module
@@ -279,7 +279,7 @@ class AbstractFile(object):
          """
         raw_header = self.get_raw_header(needed_keys)
         reduced_header = self._reduce_header(raw_header, needed_keys)
-        crossed_header = _cross_strap_header(reduced_header)
+        crossed_header = cross_strap_header(reduced_header)
         return crossed_header
     
     def get_raw_header(self, needed_keys):
