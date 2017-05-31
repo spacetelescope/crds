@@ -194,7 +194,7 @@ class Validator(object):
             log.warning("Missing suggested keyword " + repr(self.name))
             return "UNDEFINED"
         elif self.info.presence in ["O"]:
-            log.verbose("Optional parameter " + repr(self.name) + " is missing.")
+            log.verbose("Optional parameter " + repr(self.name) + " is missing.", verbosity=70)
             return "UNDEFINED"
         elif self.info.presence in ["S","F","A"]:
             log.verbose("Conditional SUBARRAY parameter is not defined.")
