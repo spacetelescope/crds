@@ -255,8 +255,11 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
     CRDS - INFO -  EXP_TYPE = 'mir_image'
+    CRDS - INFO -  META.AUTHOR = 'Todd Miller'
+    CRDS - INFO -  META.DESCRIPTION = 'Brief notes on this reference.'
     CRDS - INFO -  META.EXPOSURE.READPATT = 'any'
     CRDS - INFO -  META.EXPOSURE.TYPE = 'mir_image'
+    CRDS - INFO -  META.HISTORY = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.INSTRUMENT.BAND = 'medium'
     CRDS - INFO -  META.INSTRUMENT.CHANNEL = '34'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
@@ -264,12 +267,13 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.INSTRUMENT.GRATING = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.NAME = 'miri'
     CRDS - INFO -  META.INSTRUMENT.PUPIL = 'UNDEFINED'
+    CRDS - INFO -  META.PEDIGREE = 'dummy'
     CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
     CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
     CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.REFFILE.PEDIGREE = 'dummy'
-    CRDS - INFO -  META.REFFILE.TYPE = 'distortion'
     CRDS - INFO -  META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
+    CRDS - INFO -  META.REFTYPE = 'distortion'
     CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
     CRDS - INFO -  META.SUBARRAY.NAME = 'MASK1550'
     CRDS - INFO -  META.SUBARRAY.SLOWAXIS = '2'
@@ -278,13 +282,13 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.SUBARRAY.YSIZE = '4'
     CRDS - INFO -  META.SUBARRAY.YSTART = '1020'
     CRDS - INFO -  META.TELESCOPE = 'jwst'
+    CRDS - INFO -  META.USEAFTER = '2015-01-25T12:00:00'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  27 infos
+    CRDS - INFO -  32 infos
     0
     >>> test_config.cleanup(old_state)
-
     """
 
 def certify_missing_keyword():
@@ -602,7 +606,7 @@ def certify_jwst_bad_fits(self):
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
-    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.REFFILE.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.

@@ -4,6 +4,8 @@
 
 # These are X instead of H because they're fundamentally not keyword/header checks,  
 # they're condition checks where the name of the condition is given in place of the keyword.
+#
+# See crds.cerify.validator_helpers for definitions of condition functions (e.g. nir_filter())
 
 FULLFRAME_XSTART            X   X   (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_XSTART==1)
 FULLFRAME_YSTART            X   X   (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (META_SUBARRAY_YSTART==1)
