@@ -154,7 +154,6 @@ class ReferenceCertifier(Certifier):
         super(ReferenceCertifier, self).__init__(*args, **keys)
         self.header = None
         self.validators = None
-        self.all_column_names = None
         self.all_simple_names = None
         self.mode_columns = None
         self.types = reftypes.get_types_object(self.observatory)
@@ -162,7 +161,6 @@ class ReferenceCertifier(Certifier):
     def complex_init(self):
         """Can't do this until we at least know the file is loadable."""
         self.validators = self.get_validators()
-        self.all_column_names = [ val.name for val in self.validators if val.info.keytype == 'C' ]
         self.all_simple_names = [ val.name for val in self.validators if val.info.keytype == 'H' ]
         self.mode_columns = self.get_mode_column_names()
     
@@ -306,7 +304,11 @@ class ReferenceCertifier(Certifier):
             instrument, filekind = utils.get_file_properties(self.observatory, self.filename)
             mode_columns = self.types.get_row_keys(instrument, filekind)
             if mode_columns:
-                log.info("Table unique row parameters defined as", repr(mode_columns))
+                if tables.ntables(self.filename):
+                    log.info("Potential table unique row selection parameters are", repr(mode_columns))
+                    log.info("Final combination is intersection with available table columns.")
+                else:
+                    log.verbose("No tables defined in reference.   Skipping row checks.")
             else:
                 log.verbose("No unique row parameters, skipping table row checks.")
         return mode_columns
@@ -482,9 +484,9 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
     """
     all_cols = [name.upper() for name in tab.colnames]
     basename = repr(os.path.basename(tab.filename) + "[{}]".format(tab.segment))
-    log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
-    log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
-    log.verbose("Checking for duplicate modes.")
+    log.verbose("Mode columns defined by spec for", generic_name, basename, "are:", repr(mode_keys))
+    log.verbose("All column names for this table", generic_name, basename, "are:", repr(all_cols))
+    log.verbose("Checking for duplicate modes using intersection", set(mode_keys)&set(all_cols))
     modes = defaultdict(list)
     for i, row in enumerate(tab.rows):
         new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
