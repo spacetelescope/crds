@@ -84,7 +84,7 @@ class Certifier(object):
     def log_and_track_error(self, *args, **keys):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
         if self.script:
-            self.script.log_and_track_error(self.basename, *args, **keys)
+            self.script.log_and_track_error(self.filename, *args, **keys)
         else:
             log.error("In", repr(self.basename), ":", *args, **keys)
             
@@ -940,7 +940,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
             instrument, filekind = utils.get_file_properties(self.observatory, filename)
         except Exception:
             instrument = filekind = "unknown"
-        super(CertifyScript, self).log_and_track_error(filename, instrument, filekind, *args, **keys)
+        basename = os.path.basename(filename)
+        super(CertifyScript, self).log_and_track_error(basename, instrument, filekind, *args, **keys)
         return None  # to suppress re-raise
     
     def mapping_closure(self, files):
