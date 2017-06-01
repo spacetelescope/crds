@@ -54,7 +54,7 @@ def dt_or_bars_certify_bad_value():
     CRDS - INFO -  FITS file 'jwst_miri_ipc.bad-value.fits' conforms to FITS standards.
     CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'=None to value of 'P_BAND'='LONG'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFUSHORT|FOO|'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
+    CRDS - ERROR -  instrument='MIRI' type='IPC' data='data/jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors

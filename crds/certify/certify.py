@@ -940,8 +940,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
             instrument, filekind = utils.get_file_properties(self.observatory, filename)
         except Exception:
             instrument = filekind = "unknown"
-        basename = os.path.basename(filename)
-        super(CertifyScript, self).log_and_track_error(basename, instrument, filekind, *args, **keys)
+        super(CertifyScript, self).log_and_track_error(filename, instrument, filekind, *args, **keys)
         return None  # to suppress re-raise
     
     def mapping_closure(self, files):

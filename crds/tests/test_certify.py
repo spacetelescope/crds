@@ -359,7 +359,7 @@ def certify_table_comparison_context():
 
     >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying '/Users/jmiller/crds-cache-default-test/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
+    CRDS - INFO -  Certifying '.../y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
     CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
     CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
