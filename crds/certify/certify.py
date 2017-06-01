@@ -84,7 +84,7 @@ class Certifier(object):
     def log_and_track_error(self, *args, **keys):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
         if self.script:
-            self.script.log_and_track_error(self.basename, *args, **keys)
+            self.script.log_and_track_error(self.filename, *args, **keys)
         else:
             log.error("In", repr(self.basename), ":", *args, **keys)
             
