@@ -10,11 +10,11 @@ crds Convenience Wrapper
 
 DEPRECATED original command line syntax, e.g. for the list command::
 
-  % python -m crds.list --config
+  % python -m crds.list --status
 
 NEW command line syntax, e.g.::
 
-  % crds list --config
+  % crds list --status
 
 Internally the 'crds' wrapper launches a command similar to the original
 '-m' syntax.   However, aside from easier typing,  the 'crds' wrapper
@@ -32,38 +32,35 @@ for detail on a single command do, e.g.::
 Specifying File Paths
 ---------------------
 
-The command line tools operate on CRDS reference and mapping files in various
-ways.
+The command line tools operate on CRDS reference and mapping files both inside
+and outside the CRDS cache.   Files specified without a path are assumed to be
+in the CRDS cache.   Files specified with an explicit absolute or relative
+path can be located anywhere.   See examples below.
 
 .................
 In the CRDS cache
 .................
 
-To specify a file in the CRDS file cache, as defined by CRDS_PATH, use no path
-on the file::
+To specify a file inside the CRDS file cache, use no path on the file::
 
-  % crds diff hst.pmap  hst_0001.pmap  # assumes paths in CRDS cache
+  % crds diff hst.pmap  hst_0001.pmap  # assumes paths, and nested paths, are
+  in CRDS cache
 
-A full hierarchical set of CRDS rules is tricky to construct.  Hence, end-users
-will most likely only test mappings in a public CRDS cache.
-
-Rmaps are easier to test in isolation so they referring to personal copies
-in the current working directory is more of an option:
-
-  % crds diff ./hst_acs_darkfile_0250.rmap  ./hst_acs_darkfile_0251.rmap
+This is the default and aligns with the behavior of CRDS rules files.
 
 ........................
 In the current directory
 ........................
   
-To specify a particular file which is not located in your cache,  use an
-explicit relative or absolute path::
-  
-  % crds diff /some/path/hst.pmap ./hst_0002.pmap   # uses given paths
+To specify a file which is not located in the CRDS cache, use an explicit
+relative or absolute path::
+    
+  % crds diff ./hst_acs_darkfile_0250.rmap  ./hst_acs_darkfile_0251.rmap
 
 In this example,  the ./ is critical for telling CRDS to use the file in
 the current working directory.
-  
+
+
 crds.bestrefs
 -------------
 
