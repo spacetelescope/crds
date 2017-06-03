@@ -33,17 +33,37 @@ Specifying File Paths
 ---------------------
 
 The command line tools operate on CRDS reference and mapping files in various
-ways.  To specify a file in your local CRDS file cache,  as defined by CRDS_PATH,
-use no path on the file::
+ways.
+
+.................
+In the CRDS cache
+.................
+
+To specify a file in the CRDS file cache, as defined by CRDS_PATH, use no path
+on the file::
 
   % crds diff hst.pmap  hst_0001.pmap  # assumes paths in CRDS cache
 
-To specify a particular file which is not located in your cache,  give at least
-a relative path to the file, ./ will do::
+A full hierarchical set of CRDS rules is tricky to construct.  Hence, end-users
+will most likely only test mappings in a public CRDS cache.
+
+Rmaps are easier to test in isolation so they referring to personal copies
+in the current working directory is more of an option:
+
+  % crds diff ./hst_acs_darkfile_0250.rmap  ./hst_acs_darkfile_0251.rmap
+
+........................
+In the current directory
+........................
+  
+To specify a particular file which is not located in your cache,  use an
+explicit relative or absolute path::
   
   % crds diff /some/path/hst.pmap ./hst_0002.pmap   # uses given paths
-  
 
+In this example,  the ./ is critical for telling CRDS to use the file in
+the current working directory.
+  
 crds.bestrefs
 -------------
 
@@ -491,7 +511,7 @@ matching parameter values.   For reference files,  crds.certify also performs ch
 of the FITS format and when given a context,  and will compare the given file against
 the file it replaces looking for new or missing table rows. 
 
-* crds.certify --help yields::
+* crds certify --help yields::
 
     usage: /Users/homer/work/workspace_crds/CRDS/crds/certify.py  
        [-h] [-d] [-r] [-a] [-e] [-p] [-x COMPARISON_CONTEXT]
@@ -531,15 +551,15 @@ the file it replaces looking for new or missing table rows.
   --verbosity VERBOSITY Set log verbosity to a specific level: 0..100.
   -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
          
-* crds.certify is normally invoked as, e.g.::
+* crds.certify is normally invoked like e.g.::
 
-    % crds certify --comparison-context=hst_0027.pmap   some_reference.fits
+    % crds certify --comparison-context=hst_0027.pmap --run-fitsverify --dump-provenance ./some_reference.fits
     
-    % crds certify hst.pmap
+    % crds certify ./hst_acs_darkfile_00250.rmap
     
 * To run crds.certify on a reference(s) to verify basic file format and parameter constraints::
 
-  % crds certify --comparison-context=hst_0027.pmap   some_reference.fits...
+  % crds certify --comparison-context=hst_0027.pmap   ./some_reference.fits...
 
   If some_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
 
@@ -552,10 +572,12 @@ the file it replaces looking for new or missing table rows.
 
 * For reference table checks,  a comparison reference can also be specified directly rather than inferred from context::
 
-  % crds certify some_reference.fits --comparison-reference=old_reference_version.fits
+  % crds certify ./some_reference.fits --comparison-reference=old_reference_version.fits --run-fitsverify --dump-provenance
 
 * For more information on the checks being performed,  use --verbose or --verbosity=N where N > 50.
     
+  % crds certify ./some_reference.fits --comparison-reference=old_reference_version.fits --run-fitsverify --dump-provenance --verbose
+
 * Invoking crds.certify on a context mapping recursively certifies all sub-mappings.
 
 crds.diff
@@ -630,7 +652,7 @@ For standard CRDS filenames,  crds.diff can guess the observatory.   For
 non-standard names,  the observatory needs to be specified.  crds.diff can be
 invoked like::
 
-  % crds diff   jwst_nircam_dark_0010.fits  jwst_nircam_dark_0011.fits
+  % crds diff   ./jwst_nircam_dark_0010.fits  ./jwst_nircam_dark_0011.fits
 
   % crds diff  jwst_0001.pmap   jwst_0002.pmap
   (('hst.pmap', 'hst_0004.pmap'), ('hst_acs.imap', 'hst_acs_0004.imap'), ('hst_acs_darkfile.rmap', 'hst_acs_darkfile_0003.rmap'), ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0'), '2011-03-16 23:34:35', "replaced 'v441434ej_drk.fits' with 'hst_acs_darkfile_0003.fits'")
