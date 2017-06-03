@@ -16,8 +16,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.1.3"  #  RC versions are not tracked here
-__rationale__ = "HST 2017.2 test update 2, COS DGEOFILE, JWST P_ pattern keywords"
+__version__ = "7.1.4"  #  RC versions are not tracked here
+__rationale__ = "3rd quarter JWST development"
 
 # ============================================================================
 
