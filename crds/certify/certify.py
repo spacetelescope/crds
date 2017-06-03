@@ -824,7 +824,9 @@ Checks a CRDS reference or mapping file:
     
 To run crds.certify on a reference(s) to verify basic file format and parameter constraints:
 
-  % python -m crds.certify --comparison-context=hst_0027.pmap   some_reference.fits...
+  % python -m crds.certify --comparison-context=hst_0027.pmap  ./some_reference.fits...
+
+NOTE:  specifying ./ makes CRDS look in the current working directory instead of the CRDS cache.
 
 If some_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
 
@@ -837,7 +839,7 @@ the comparison context.  Many classes of mapping differences will result in warn
 
 For reference table checks,  a comparison reference can also be specified directly rather than inferred from context:
 
-  % python -m crds.certify some_reference.fits --comparison-reference=old_reference_version.fits
+  % python -m crds.certify ./some_reference.fits --comparison-reference=old_reference_version.fits
 
 For more information on the checks being performed,  use --verbose or --verbosity=N where N > 50.
     """
