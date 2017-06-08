@@ -123,6 +123,7 @@ def _get_fixed_cross_strapped_pairs(locator):
     """
     pairs = []
     equivalencies = locator.__dict__.get("CROSS_STRAPPED_KEYWORDS", [])
+    log.verbose("Explicitly cross_strapped_keywords:", log.PP(equivalencies), verbosity=90)
     for master, slaves in equivalencies.items():
         for slave in slaves:
             pairs.append((master, slave))
@@ -145,6 +146,7 @@ def _get_fits_datamodel_pairs(locator, header):
             dmkey = schema.fits_to_dm(key) or key
             pairs.append((fitskey, dmkey))
             pairs.append((dmkey, fitskey))
+    log.verbose("Cal code datamodels keyword equivalencies:\n", log.PP(pairs), verbosity=90)
     return pairs
     
 def _cross_strap_pair(header, keyword_pair):
