@@ -213,7 +213,7 @@ this command line interface must be members of the CRDS operators group
         log.info("Determining existing files.")
         result = self.connection.get('/upload/list/').json()
         log.verbose("JSON info on existing ingested files:\n", log.PP(result))
-        if "files" in result and isinstance(result["files"], dict):
+        if "files" in result and isinstance(result["files"], list):
             return { info["name"] : info for info in result["files"] }
         else:
             return { info["name"] : info for info in result }
