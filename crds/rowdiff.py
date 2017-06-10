@@ -345,6 +345,7 @@ class RowDiff(object):
         self.ignore_fields = [field.lower() for field in ignore_fields]
         self.mode_fields = mode_fields
         self.summary_only = False
+        self.consistent = False
 
         # Check that fields and ignore_fields are not both
         # specified.
@@ -358,7 +359,10 @@ class RowDiff(object):
 
             # Do basic consistency checking. The number of HDUs in each
             # HDUList must be the same and the type of HDU must match.
-            hdus_consistent(self.a_hdulist, self.b_hdulist)
+            try:
+                self.consistent = hdus_consistent(self.a_hdulist, self.b_hdulist)
+            except RuntimeError as exc:
+                print("rowdiff:", str(exc))
                 
             # Set the differencing function.
             if self.mode_fields:
@@ -370,6 +374,9 @@ class RowDiff(object):
             # We only need to look at the first HDUlist because we have
             # already checked consistency.
             self.diffs = []
+            if not self.consistent:
+                return
+
             for hdu_index in range(len(self.a_hdulist)):
                 if isinstance(self.a_hdulist[hdu_index], _TableLikeHDU):
                     self.diffs.append((hdu_index, 
