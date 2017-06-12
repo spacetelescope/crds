@@ -28,7 +28,7 @@ from nose.tools import assert_raises, assert_true
 def dt_or_bars_certify_bad_keyword():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> CertifyScript("crds.certify data/jwst_miri_ipc.bad-keyword.fits")()   # doctest: +ELLIPSIS
+    >>> CertifyScript("crds.certify data/jwst_miri_ipc.bad-keyword.fits")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/jwst_miri_ipc.bad-keyword.fits' (1/1) as 'FITS' relative to context 'jwst_....pmap'
     CRDS - INFO -  FITS file 'jwst_miri_ipc.bad-keyword.fits' conforms to FITS standards.
@@ -48,9 +48,9 @@ def dt_or_bars_certify_bad_keyword():
 def dt_or_bars_certify_bad_value():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> CertifyScript("crds.certify data/jwst_miri_ipc.bad-value.fits")()
+    >>> CertifyScript("crds.certify data/jwst_miri_ipc.bad-value.fits")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/jwst_miri_ipc.bad-value.fits' (1/1) as 'FITS' relative to context 'jwst_0319.pmap'
+    CRDS - INFO -  Certifying 'data/jwst_miri_ipc.bad-value.fits' (1/1) as 'FITS' relative to context 'jwst_....pmap'
     CRDS - INFO -  FITS file 'jwst_miri_ipc.bad-value.fits' conforms to FITS standards.
     CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'=None to value of 'P_BAND'='LONG'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFUSHORT|FOO|'
