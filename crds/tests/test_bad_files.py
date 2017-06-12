@@ -140,13 +140,11 @@ def dt_bad_references_bestrefs_script_warning():
 
 def dt_bad_references_bestrefs_script_deprecated():
     """
-    As a backward compatibility measure,  the --bad-files-are-errors switch is still accepted but is a tautology:
-    
     >>> old_state = test_config.setup(clear_existing=False)
     >>> config.ALLOW_BAD_RULES.reset()
     >>> config.ALLOW_BAD_REFERENCES.reset()
     
-    >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits --bad-files-are-errors")() # doctest: +ELLIPSIS
+    >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits")() # doctest: +ELLIPSIS
     CRDS - INFO - No comparison context or source comparison requested.
     CRDS - INFO - No file header updates requested;  dry run.
     CRDS - INFO - ===> Processing data/j8btxxx_raw_bad.fits
