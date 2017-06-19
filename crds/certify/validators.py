@@ -391,14 +391,8 @@ class PedigreeValidator(KeywordValidator):
 
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
 
-    def get_header_value(self, header):
-        """Extract the PEDIGREE value from header,  checking any
-        start/stop dates.   Return only the PEDIGREE classification.
-        Ignore missing start/stop dates.
-        """
-        value = super(PedigreeValidator, self).get_header_value(header)
-        if value == "UNDEFINED":
-            return "UNDEFINED"
+    def check_value(self, _filename, value):
+        """Check `value` as a PEDIGREE."""
         values = value.split()
         if len(values) not in [1, 3, 4]:
             raise ValueError("Invalid PEDIGREE format: " + repr(value))
@@ -416,11 +410,11 @@ class PedigreeValidator(KeywordValidator):
                 raise ValueError("Invalid PEDIGREE format: " + repr(value))
             start_dt = timestamp.slashdate_or_dashdate(start)
             stop_dt = timestamp.slashdate_or_dashdate(stop)
-            if not (start_dt < stop_dt):
-                raise ValueError("PEDIGREE date order invalid: " + repr(start) + " >= " + repr(stop))
-        else:
-            if pedigree == "INFLIGHT":
-                raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
+            if not (start_dt <= stop_dt):
+                raise ValueError("PEDIGREE date order invalid: " + repr(start) + " > " + repr(stop))
+        # else:
+        #     if pedigree == "INFLIGHT":
+        #         raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
         return pedigree
 
 #     def _match_value(self, value):
