@@ -937,7 +937,8 @@ class Selector(object):
             return obj.short_name if isinstance(obj, Selector) else obj.__class__.__name__
         
         if self.__class__ != new_selector.__class__:
-            return [msg(None, "different classes", short_name(self), ":", short_name(new_selector))]
+            return [msg(None, "different classes", short_name(self), ":",
+                        "N/A" if new_selector == "N/A" else short_name(new_selector))]
         if self._parameters != new_selector._parameters:
             return [msg(None, "different parameter lists ", 
                     repr(self._parameters), ":", repr(new_selector._parameters))]
