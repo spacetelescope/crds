@@ -391,7 +391,7 @@ class PedigreeValidator(KeywordValidator):
 
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
 
-    def check_value(self, _filename, value):
+    def _check_value(self, filename, value):
         """Check `value` as a PEDIGREE."""
         values = value.split()
         if len(values) not in [1, 3, 4]:
@@ -415,7 +415,7 @@ class PedigreeValidator(KeywordValidator):
         # else:
         #     if pedigree == "INFLIGHT":
         #         raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
-        return pedigree
+        return super(PedigreeValidator, self)._check_value(filename, pedigree)
 
 #     def _match_value(self, value):
 #         """Match raw pattern as prefix string only,  no complete_re()."""
