@@ -302,6 +302,28 @@
             "tpn":"fgs_mask.tpn",
             "unique_rowkeys":null
         },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"fgs_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"03cc51797eeeda380e0b1ad1b5a206877d7f7670",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"fgs_persat.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"Hand derived 2016-02-19",
             "extra_keys":null,
@@ -426,6 +448,28 @@
             "suffix":"sbias",
             "text_descr":"Super Bias",
             "tpn":"fgs_sbias.tpn",
+            "unique_rowkeys":null
+        },
+        "trapdensity":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trapdensity",
+            "filetype":"TRAPDENSITY",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_trapdensity_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"fgs_trapdensity.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"4f64aa67e19c0ac3583b4336a566173808e8004c",
+            "suffix":"trapdensity",
+            "text_descr":"Trap Density For Persistence Step",
+            "tpn":"fgs_trapdensity.tpn",
             "unique_rowkeys":null
         },
         "trappars":{
@@ -1459,6 +1503,28 @@
             "tpn":"nircam_mask.tpn",
             "unique_rowkeys":null
         },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nircam_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"f967a3c470528943a55127c40d385b2c952a416f",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"nircam_persat.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-09-04",
             "extra_keys":null,
@@ -1587,6 +1653,28 @@
             "suffix":"sbias",
             "text_descr":"Super Bias",
             "tpn":"nircam_sbias.tpn",
+            "unique_rowkeys":null
+        },
+        "trapdensity":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trapdensity",
+            "filetype":"TRAPDENSITY",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_trapdensity_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nircam_trapdensity.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"84ae640cf272a64d2287a7d10ad4e7d4fbd369c4",
+            "suffix":"trapdensity",
+            "text_descr":"Trap Density For Persistence Step",
+            "tpn":"nircam_trapdensity.tpn",
             "unique_rowkeys":null
         },
         "trappars":{
@@ -1907,6 +1995,28 @@
             "tpn":"niriss_pathloss.tpn",
             "unique_rowkeys":null
         },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"niriss_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"ab6f4d32be8678df139433f707cac7221eef1a4f",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"niriss_persat.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"jwst_niriss_photom_0002.rmap",
             "extra_keys":null,
@@ -2081,6 +2191,28 @@
             "suffix":"throughput",
             "text_descr":"Throughput",
             "tpn":"niriss_throughput.tpn",
+            "unique_rowkeys":null
+        },
+        "trapdensity":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trapdensity",
+            "filetype":"TRAPDENSITY",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_trapdensity_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"niriss_trapdensity.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"49131f430f86e9d55ea832ce8bd82c6ce3c7fe1e",
+            "suffix":"trapdensity",
+            "text_descr":"Trap Density For Persistence Step",
+            "tpn":"niriss_trapdensity.tpn",
             "unique_rowkeys":null
         },
         "trappars":{
@@ -2817,6 +2949,28 @@
             "tpn":"nirspec_pathloss.tpn",
             "unique_rowkeys":null
         },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"335177fe813edc4fc04945a760143b76b2f8f6e2",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"nirspec_persat.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"handmade spec 07-18-2016",
             "extra_keys":null,
@@ -3034,6 +3188,28 @@
             "suffix":"sbias",
             "text_descr":"Super Bias",
             "tpn":"nirspec_sbias.tpn",
+            "unique_rowkeys":null
+        },
+        "trapdensity":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trapdensity",
+            "filetype":"TRAPDENSITY",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_trapdensity_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_trapdensity.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"ebd57d4f08539c59f34be12ad209e5e8f3f4f1bf",
+            "suffix":"trapdensity",
+            "text_descr":"Trap Density For Persistence Step",
+            "tpn":"nirspec_trapdensity.tpn",
             "unique_rowkeys":null
         },
         "trappars":{
