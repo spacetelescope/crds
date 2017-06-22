@@ -129,7 +129,7 @@ def reftypes_jwst_get_filekinds():
     >>> old_state = test_config.setup()
     >>> types = reftypes.get_types_object("jwst")
     >>> types.get_filekinds("niriss")
-    ['all', 'amplifier', 'area', 'dark', 'distortion', 'extract1d', 'flat', 'gain', 'ipc', 'linearity', 'mask', 'pathloss', 'photom', 'readnoise', 'regions', 'saturation', 'specwcs', 'superbias', 'throughput', 'wcsregions']
+    ['all', 'amplifier', 'area', 'dark', 'distortion', 'extract1d', 'flat', 'gain', 'ipc', 'linearity', 'mask', 'pathloss', 'persat', 'photom', 'readnoise', 'regions', 'saturation', 'specwcs', 'superbias', 'throughput', 'trapdensity', 'trappars', 'wcsregions']
     >>> test_config.cleanup(old_state)
     """
     
