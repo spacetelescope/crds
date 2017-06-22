@@ -924,6 +924,28 @@
             "tpn":"miri_pathloss.tpn",
             "unique_rowkeys":null
         },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"miri_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"10b119d3f354a9802c72b7cfaf08b39315fdd18f",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"miri_persat.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"jwst_miri_photom_0002.rmap",
             "extra_keys":null,
@@ -1168,6 +1190,50 @@
             "suffix":"straymask",
             "text_descr":"Stray Light Mask",
             "tpn":"miri_straymask.tpn",
+            "unique_rowkeys":null
+        },
+        "trapdensity":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trapdensity",
+            "filetype":"TRAPDENSITY",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_trapdensity_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"miri_trapdensity.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"347b4f7cb502c5ace23f7408515cd14b94a6c4ad",
+            "suffix":"trapdensity",
+            "text_descr":"Trap Density For Persistence Step",
+            "tpn":"miri_trapdensity.tpn",
+            "unique_rowkeys":null
+        },
+        "trappars":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trappars",
+            "filetype":"TRAPPARS",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_trappars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"miri_trappars.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"6e5e14690a8968d28ff9c3c19ba318f0a26d111f",
+            "suffix":"trappars",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"miri_trappars.tpn",
             "unique_rowkeys":null
         },
         "v2v3":{
