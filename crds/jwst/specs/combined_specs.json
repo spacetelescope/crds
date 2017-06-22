@@ -302,6 +302,28 @@
             "tpn":"fgs_mask.tpn",
             "unique_rowkeys":null
         },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"fgs_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"03cc51797eeeda380e0b1ad1b5a206877d7f7670",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"fgs_persat.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"Hand derived 2016-02-19",
             "extra_keys":null,
@@ -1437,6 +1459,28 @@
             "tpn":"nircam_mask.tpn",
             "unique_rowkeys":null
         },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nircam_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"f967a3c470528943a55127c40d385b2c952a416f",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"nircam_persat.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-09-04",
             "extra_keys":null,
@@ -1861,6 +1905,28 @@
             "suffix":"pathloss",
             "text_descr":"Path loss correction",
             "tpn":"niriss_pathloss.tpn",
+            "unique_rowkeys":null
+        },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"niriss_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"ab6f4d32be8678df139433f707cac7221eef1a4f",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"niriss_persat.tpn",
             "unique_rowkeys":null
         },
         "photom":{
@@ -2749,6 +2815,28 @@
             "suffix":"pathloss",
             "text_descr":"Path loss correction",
             "tpn":"nirspec_pathloss.tpn",
+            "unique_rowkeys":null
+        },
+        "persat":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"persat",
+            "filetype":"PERSAT",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_persat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_persat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"335177fe813edc4fc04945a760143b76b2f8f6e2",
+            "suffix":"persat",
+            "text_descr":"Persistence Saturation Threshold",
+            "tpn":"nirspec_persat.tpn",
             "unique_rowkeys":null
         },
         "photom":{
