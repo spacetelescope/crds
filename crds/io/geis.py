@@ -158,8 +158,8 @@ True
 >>> is_geis("bar.fits")
 False
 
->>> import io
->>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
+>>> from crds.core.python23 import StringIO
+>>> header = get_geis_header(StringIO(_GEIS_TEST_DATA))
 
 >> import pprint
 >> pprint.pprint(header)
