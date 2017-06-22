@@ -39,11 +39,17 @@ import fnmatch
 from . import rmap, log, utils, config
 from crds.client import api
 from crds.core.log import srepr
-from crds.core.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError
+from crds.core.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError
 from crds.core import python23
 # import crds  forward
 
-__all__ = ["getreferences", "getrecommendations"]
+__all__ = [
+    "getreferences", "getrecommendations",
+    "get_config_info", "update_config_info", "load_server_info",
+    "get_processing_mode",
+    "version_info",
+    "get_bad_mappings_in_context", "list_mappings",
+]
 
 # ============================================================================
 
@@ -358,7 +364,7 @@ def get_processing_mode(observatory, context=None):
     info = get_config_info(observatory)
         
     final_context = get_final_context(info, context)
-    
+
     return info.effective_mode, final_context
 
 def get_final_context(info, context):
@@ -477,8 +483,17 @@ def get_config_info(observatory):
         info.status = "cache"
         info.connected = False
         log.verbose("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
+    if info.observatory != observatory:
+        raise CrdsConfigError(
+            "CRDS server at", repr(api.get_crds_server()),
+            "is inconsistent with observatory", repr(observatory) + ".",
+            "You may be configured for the wrong project.  "
+            "Check CRDS_SERVER_URL and CRDS_OBSERVATORY "
+            "environment settings.  See https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/ (JWST) "
+            "or https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ (HST) for information on configuring CRDS.")
     return info
 
+@utils.cached # effectively a "once" directive
 def update_config_info(observatory):
     """Write out any server update to the CRDS configuration information.
     Skip the update if: not connected to server, readonly cache, write protected config files.

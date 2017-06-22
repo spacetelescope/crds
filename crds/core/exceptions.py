@@ -24,6 +24,11 @@ class OwningProcessAbortedError(ServiceError):
 
 # -------------------------------------------------------------------------------------------
 
+class CrdsConfigError(CrdsError):
+    """An inconsistency has been detected between CRDS configuration and operating status or data."""
+
+# -------------------------------------------------------------------------------------------
+
 class CrdsWebError(CrdsError):
     """The id='error_message' <div> of a CRDS_server responsae page was present and not empty.
     Generic 'caught' web error with error message.

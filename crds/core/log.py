@@ -75,6 +75,13 @@ Traceback (most recent call last):
 ...
 ValueError: some value was bad.
 
+>>> with log.error_on_exception("Something bad happened and we trapped it"):
+...     raise ValueError("some value was bad.")
+...     print("this code not reached")
+Traceback (most recent call last):
+...
+ValueError: some value was bad.
+
 >>> with log.augment_exception("A tad more parent info"):
 ...     raise ValueError("some vague deeply nested exception.")
 Traceback (most recent call last):
