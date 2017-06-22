@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 06-22-2017',
+    'file_ext' : '.fits',
+    'filekind' : 'trappars',
+    'filetype' : 'TRAPPARS',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'niriss_trappars.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '07e6f095ffe9ca609a05c18d414c90755afff8ca',
+    'suffix' : 'trappars',
+    'text_descr' : 'Trap Capture and Decay Parameters',
+}
+
+selector = Match({
+})

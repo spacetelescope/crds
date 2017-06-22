@@ -472,6 +472,28 @@
             "tpn":"fgs_trapdensity.tpn",
             "unique_rowkeys":null
         },
+        "trappars":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trappars",
+            "filetype":"TRAPPARS",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_trappars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"fgs_trappars.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"0182e5fbf9a1a6362f28f1d46f29020b62d3f481",
+            "suffix":"trappars",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"fgs_trappars.tpn",
+            "unique_rowkeys":null
+        },
         "wcsregions":{
             "derived_from":"Handmade spec",
             "extra_keys":null,
@@ -1655,6 +1677,28 @@
             "tpn":"nircam_trapdensity.tpn",
             "unique_rowkeys":null
         },
+        "trappars":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trappars",
+            "filetype":"TRAPPARS",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_trappars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nircam_trappars.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"b276e2c4899732ca8481eb2255c7149e7e70ba13",
+            "suffix":"trappars",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"nircam_trappars.tpn",
+            "unique_rowkeys":null
+        },
         "wcsregions":{
             "derived_from":"Handmade spec",
             "extra_keys":null,
@@ -2169,6 +2213,28 @@
             "suffix":"trapdensity",
             "text_descr":"Trap Density For Persistence Step",
             "tpn":"niriss_trapdensity.tpn",
+            "unique_rowkeys":null
+        },
+        "trappars":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trappars",
+            "filetype":"TRAPPARS",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_trappars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"niriss_trappars.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"07e6f095ffe9ca609a05c18d414c90755afff8ca",
+            "suffix":"trappars",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"niriss_trappars.tpn",
             "unique_rowkeys":null
         },
         "wcsregions":{
@@ -3144,6 +3210,28 @@
             "suffix":"trapdensity",
             "text_descr":"Trap Density For Persistence Step",
             "tpn":"nirspec_trapdensity.tpn",
+            "unique_rowkeys":null
+        },
+        "trappars":{
+            "derived_from":"handmade spec 06-22-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"trappars",
+            "filetype":"TRAPPARS",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_trappars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_trappars.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ]
+            ],
+            "sha1sum":"fd4811c2f5d59b91d892addf3e99aa71e40c85e6",
+            "suffix":"trappars",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"nirspec_trappars.tpn",
             "unique_rowkeys":null
         },
         "wavelengthrange":{
