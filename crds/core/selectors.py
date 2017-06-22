@@ -1030,7 +1030,7 @@ class DiffTuple(tuple):
         self.parameter_names = pars
         self.instrument = keys.pop("instrument", None)
         self.filekind = keys.pop("filekind", None)
-        
+
     @property
     def flat(self):
         """Removes the Selector nesting structure and return an equivalent tuple."""
@@ -1059,6 +1059,10 @@ class DiffTuple(tuple):
         else:
             return False
 
+    def __hash__(self):
+        """Required on Python-3 since __eq__() is defined."""
+        return super(DiffTuple, self).__hash__()
+        
     def items(self):
         """Return [ (param_name, val), ... ]"""
         return [ (str(x), str(y)) for (x, y) in zip(self.parameter_names, self) ]
