@@ -548,7 +548,7 @@ def certify_validator_bad_presence_condition():
     >>> test_config.cleanup(old_state)
     """
     
-def certify_JsonCertify_valid(self):
+def certify_JsonCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.json", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
@@ -557,7 +557,7 @@ def certify_JsonCertify_valid(self):
     >>> test_config.cleanup(old_state)
     """
             
-def certify_YamlCertify_valid(self):
+def certify_YamlCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.yaml", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
@@ -566,7 +566,7 @@ def certify_YamlCertify_valid(self):
     >>> test_config.cleanup(old_state)
     """
             
-def certify_AsdfCertify_valid(self):
+def certify_AsdfCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
@@ -575,7 +575,7 @@ def certify_AsdfCertify_valid(self):
     >>> test_config.cleanup(old_state)
     """
     
-def certify_FitsCertify_opaque_name(self):
+def certify_FitsCertify_opaque_name():
     """
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
     >>> certify.certify_file("data/opaque_fts.tmp", observatory="hst",context="hst.pmap", trap_exceptions=False)
@@ -583,7 +583,7 @@ def certify_FitsCertify_opaque_name(self):
     >>> test_config.cleanup(old_state)
     """
     
-def certify_AsdfCertify_opaque_name(self):
+def certify_AsdfCertify_opaque_name():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
@@ -591,7 +591,7 @@ def certify_AsdfCertify_opaque_name(self):
     >>> test_config.cleanup(old_state)
     """
 
-def certify_rmap_compare(self):
+def certify_rmap_compare():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("jwst_miri_distortion_0007.rmap", context="jwst_0101.pmap")
@@ -600,7 +600,7 @@ def certify_rmap_compare(self):
     >>> test_config.cleanup(old_state)
     """
 
-def certify_jwst_bad_fits(self):
+def certify_jwst_bad_fits():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None)
@@ -620,6 +620,31 @@ def certify_jwst_bad_fits(self):
     >>> test_config.cleanup(old_state)
     """
 
+def certify_duplicate_rmap_case_error():
+    """
+    >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
+    >>> certify.certify_file("data/hst_cos_tdstab_duplicate.rmap", observatory="hst")
+    CRDS - INFO -  Certifying 'data/hst_cos_tdstab_duplicate.rmap' as 'MAPPING' relative to context None
+    CRDS - ERROR -  Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter
+    CRDS - WARNING -  Checksum error : sha1sum mismatch in 'hst_cos_tdstab_duplicate.rmap'
+    >>> test_config.cleanup(old_state)
+    """
+
+    
+def checksum_duplicate_rmap_case_error():
+    """
+    Verify that the crds rmap checksum update tool does not silently drop duplicate rmap entries
+    when updating the checksum and rewriting the file.
+
+    >>> from crds.refactoring import checksum
+    >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
+    >>> checksum.update_checksums(["data/hst_cos_tdstab_duplicate.rmap"])
+    CRDS - INFO -  Updating checksum for data/hst_cos_tdstab_duplicate.rmap
+    CRDS - ERROR -  Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter
+    >>> test_config.cleanup(old_state)
+    """
+
+    
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
