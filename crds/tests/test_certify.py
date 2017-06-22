@@ -482,10 +482,12 @@ def certify_jwst_invalid_asdf():
     >>> TestCertifyScript("crds.certify data/invalid.asdf  --comparison-context jwst.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : Does not appear to be a ASDF file.
+    CRDS - WARNING -  VerifyWarning : astropy.io.fits.hdu.hdulist : Error validating header for HDU #0 (note: Astropy uses zero-based indexing).    'ascii' codec can't decode byte 0xd3 in position 637: ordinal not in range(128)There may be extra bytes after the last HDU or the file is corrupted.
+    CRDS - WARNING -  VerifyWarning : astropy.io.fits.hdu.hdulist : Error validating header for HDU #0 (note: Astropy uses zero-based indexing).    'ascii' codec can't decode byte 0xd3 in position 637: ordinal not in range(128)There may be extra bytes after the last HDU or the file is corrupted.
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : Input object does not appear to be ASDF file or FITS with an ASDF extension
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
-    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 warnings
     CRDS - INFO -  3 infos
     1
     >>> test_config.cleanup(old_state)
@@ -1263,10 +1265,10 @@ class TestCertify(test_config.CRDSTestCase):
     #     errors = script()
     #     assert_true(errors == 0)
         
-    def test_certify_sync_comparison_reference(self):
-        script = certify.CertifyScript(
-            "crds.certify --comparison-reference zbn1927fl_gsag.fits zbn1927fl_gsag.fits --sync-files")
-        script()
+    # def test_certify_sync_comparison_reference(self):
+    #     script = certify.CertifyScript(
+    #         "crds.certify --comparison-reference zbn1927fl_gsag.fits zbn1927fl_gsag.fits --sync-files")
+    #     script()
         
     def test_certify_dont_recurse_mappings(self):
         script = certify.CertifyScript("crds.certify hst_0317.pmap --dont-recurse-mappings")
