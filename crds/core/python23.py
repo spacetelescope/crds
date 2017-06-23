@@ -25,7 +25,7 @@ else:
 
     import ConfigParser as configparser
     import cPickle as pickle
-    import StringIO
+    from StringIO import StringIO
     import __builtin__ as builtins
 
     def unicode_to_str(input):
