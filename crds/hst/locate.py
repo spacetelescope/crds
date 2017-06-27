@@ -577,8 +577,9 @@ def locate_dir(instrument, mode=None):
         if not os.path.exists(refdir):
             if config.writable_cache_or_verbose("Skipping making instrument directory link for", repr(instrument)):
                 log.verbose("Creating legacy cache link", repr(refdir), "-->", repr(rootdir))
-                utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
-                os.symlink(rootdir, refdir)
+                with log.verbose_warning_on_exception("Failed creating legacy symlink:", refdir, "-->", rootdir):
+                    utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
+                    os.symlink(rootdir, refdir)
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
         rootdir = crds_refpath
     else:
