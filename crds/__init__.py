@@ -16,7 +16,7 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.1.4"  #  RC versions are not tracked here
+__version__ = "7.1.4"  #  XXXX also update version in setup.cfg
 __rationale__ = "3rd quarter JWST development"
 
 # ============================================================================
