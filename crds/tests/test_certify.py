@@ -482,7 +482,7 @@ def certify_jwst_invalid_asdf():
     >>> TestCertifyScript("crds.certify data/invalid.asdf  --comparison-context jwst.pmap")()   # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : Input object does not appear to be ASDF file or FITS with an ASDF extension
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : Input object does not appear to be ASDF...
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
     CRDS - INFO -  0 warnings

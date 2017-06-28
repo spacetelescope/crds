@@ -14,7 +14,7 @@ This test really just verifies that lockfile imports,  particularly under Travis
 >>> old = log.set_verbose()
 >>> with get_cache_lock():
 ...     pass
->>> log.set_verbose(old)
+>>> _ = log.set_verbose(old)
 """
 
 from __future__ import print_function, absolute_import
