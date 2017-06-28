@@ -25,9 +25,10 @@ install:
     - git clone git://github.com/astropy/ci-helpers.git
     - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
     - ./setup_test_cache $CRDS_TEST_ROOT
-
+    
 script:
     - ./install
+    - conda list
     - ./runtests --cover
 
 # after_success:

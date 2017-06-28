@@ -9,14 +9,14 @@ import failure for lockfile as well as the readonly mode of the CRDS cache.
 
 This test really just verifies that lockfile imports,  particularly under Travis:
 
->>> from crds.tests import test_config
->>> old_state = test_config.setup()
+>> from crds.tests import test_config
+>> old_state = test_config.setup()
 
->>> _ = log.set_verbose()
->>> with get_cache_lock():
+>> _ = log.set_verbose()
+>> with get_cache_lock():
 ...     pass
 
->>> test_config.cleanup(old_state)
+>> test_config.cleanup(old_state)
 """
 
 from __future__ import print_function, absolute_import
