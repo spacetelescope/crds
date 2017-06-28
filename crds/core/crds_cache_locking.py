@@ -1,7 +1,25 @@
 """This module defines locking primitives for the CRDS cache used to prevent
 simultaneous writes.  This is principally motivated by the JWST association
-logic.
+logic which may attempt to prefetch files for multiple images at the same time.
+
+This module is a thin wrapper around the "lockfile" package designed to handle
+import failure for lockfile as well as the readonly mode of the CRDS cache.
+
+-----------------------------------------------------------------------------
+
+This test really just verifies that lockfile imports,  particularly under Travis:
+
+>>> from . import log
+>>> log.set_test_mode()
+>>> log.set_verbose()
+0
+>>> with get_cache_lock():
+...     pass
+
 """
+
+
+from __future__ import print_function, absolute_import
 
 # =========================================================================
 
@@ -51,3 +69,14 @@ def get_cache_lock():
             return get_fake_crds_lock(lockpath)
     else:
         return get_fake_crds_lock(lockpath)
+
+# =========================================================================
+
+def test():
+    import doctest
+    from crds import crds_cache_locking
+    return doctest.testmod(crds_cache_locking)
+
+if __name__ == "__main__":
+    print(test())
+
