@@ -40,17 +40,14 @@ def get_cache_lock():
     concurrent writes.
     """
     if config.writable_cache_or_warning("cannot sync files or create cache file lock."):
-#         config_dir = config.get_crds_cfgpath(observatory)
-#         lockpath = os.path.join(config_dir, "cache_file_lock")
-        lockpath = os.path.join(os.environ["HOME"], ".crds.cache.lock")
+        lockpath = config.CACHE_LOCK.get()
         try:
-#             utils.ensure_dir_exists(lockpath)            
+#             utils.ensure_dir_exists(lockpath)  XXXX this itself turns into a locking issue,  use one lock.
             return lockfile.LockFile(lockpath)
         except Exception as exc:
-            log.warning("Failed creating CRDS cache lock file during cache sync. "
-                        "Cannot support multiprocessing while syncing reference files. "
-                        "export CRDS_READONLY_CACHE=1 to suppress this message.")
-            log.info("Exception was:", str(exc))
+            log.verbose_warning("Failed creating CRDS cache lock file during cache sync. "
+                        "Cannot support multiprocessing while syncing reference files.")
+            log.verbose_warning("Exception was:", str(exc))
             return get_fake_crds_lock(lockpath)
     else:
         return get_fake_crds_lock(lockpath)

@@ -74,6 +74,7 @@ CORE_MODULES = [
     "cmdline",
     "naming",
     "git_version",
+    "crds_cache_locking",
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
