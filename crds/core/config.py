@@ -235,6 +235,7 @@ class BooleanConfigItem(ConfigItem):
 
     __bool__ = __nonzero__
 
+
 # ===========================================================================
 
 FITS_IGNORE_MISSING_END = BooleanConfigItem("CRDS_FITS_IGNORE_MISSING_END", False,
@@ -811,6 +812,11 @@ def relocate_reference(ref, observatory):
     else:
         from crds.core import utils
         return utils.get_locator_module(observatory).locate_file(ref)
+
+# ===========================================================================
+
+CACHE_LOCK = StrConfigItem("CRDS_CACHE_LOCK", os.path.join(os.environ["HOME"], ".crds.cache.lock"),
+    "Full path of lock file used to control access to CRDS cache, including filename.")
 
 # -------------------------------------------------------------------------------------
 

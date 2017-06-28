@@ -16,7 +16,7 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.1.4"  #  RC versions are not tracked here
+__version__ = "7.1.4"  #  XXXX also update version in setup.cfg
 __rationale__ = "3rd quarter JWST development"
 
 # ============================================================================
@@ -74,6 +74,7 @@ CORE_MODULES = [
     "cmdline",
     "naming",
     "git_version",
+    "crds_cache_locking",
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
