@@ -73,7 +73,7 @@ class CrdsLockFile(lockfile.LockFile):
  
 # =========================================================================
 
-DEFAULT_LOCK_FILENAME = ".crds.cache.lock"   # filename only
+DEFAULT_LOCK_FILENAME = "crds.cache.lock"   # filename only
 
 def get_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
     """Return a file lock context manager to guard the CRDS cache against
@@ -87,6 +87,10 @@ def get_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
         
     if config.get_cache_readonly():
         log.verbose("CRDS cache is readonly, omitting cache file locking.")
+        return get_fake_crds_lock(lockpath)
+        
+    if not config.USE_LOCKING.get():
+        log.verbose_warning("CRDS cache locking is turned off via CRDS_USE_LOCKING. Cache syncs while multi-processing may fail.")
         return get_fake_crds_lock(lockpath)
         
     try:

@@ -850,6 +850,9 @@ def relocate_reference(ref, observatory):
 CACHE_LOCK_PATH = StrConfigItem("CRDS_CACHE_LOCK_PATH", get_crds_root_cfgpath(),
     "Lock directory used to store lock files that control access to CRDS cache.")
 
+USE_LOCKING = BooleanConfigItem("CRDS_USE_LOCKING", True,
+    "Set to False to turn off CRDS cache locking.")
+
 def get_crds_lockpath(lock_filename):
     """Return the full path of `lock_filename` filename based on CRDS lock path configuration."""
     return os.path.join(CACHE_LOCK_PATH.get(), lock_filename)
