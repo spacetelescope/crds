@@ -592,10 +592,12 @@ def remove(rmpath, observatory):
             abs_path = os.path.abspath(rmpath)
             abs_cache = os.path.abspath(config.get_crds_path())
             abs_config = os.path.abspath(config.get_crds_cfgpath(observatory))
+            abs_root_config = os.path.abspath(config.get_crds_root_cfgpath())
             abs_references = os.path.abspath(config.get_crds_refpath(observatory))
             abs_mappings = os.path.abspath(config.get_crds_mappath(observatory))
             abs_pickles = os.path.abspath(config.get_crds_picklepath(observatory))
-            assert abs_path.startswith((abs_cache, abs_config, abs_references, abs_mappings, abs_pickles)), \
+            assert abs_path.startswith((abs_cache, abs_config, abs_root_config,
+                                        abs_references, abs_mappings, abs_pickles)), \
                 "remove() only works on files in CRDS cache. not: " + repr(rmpath)
             log.verbose("CACHE removing:", repr(rmpath))
             if os.path.isfile(rmpath):

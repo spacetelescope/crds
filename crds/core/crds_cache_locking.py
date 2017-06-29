@@ -28,7 +28,7 @@ import os.path
 
 # =========================================================================
 
-from . import log, config
+from . import log, config, utils
 
 # =========================================================================
 
@@ -53,22 +53,27 @@ def get_fake_crds_lock(lockpath):
 
 # =========================================================================
 
-def get_cache_lock():
+DEFAULT_LOCK_FILENAME = ".crds.cache.lock"   # filename only
+
+def get_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
     """Return a file lock context manager to guard the CRDS cache against
     concurrent writes.
     """
-    if config.writable_cache_or_warning("cannot sync files or create cache file lock."):
-        lockpath = config.CACHE_LOCK.get()
-        try:
-#             utils.ensure_dir_exists(lockpath)  XXXX this itself turns into a locking issue,  use one lock.
-            return lockfile.LockFile(lockpath)
-        except Exception as exc:
+    lockpath = config.get_crds_lockpath(lock_filename)
+    try:
+#             utils.ensure_dir_exists(lockpath)  XXXX this itself turns into a locking issue,  use pre-existing path.
+        return lockfile.LockFile(lockpath)
+    except Exception as exc:
+        if not config.get_cache_readonly():
             log.verbose_warning("Failed creating CRDS cache lock file during cache sync. "
-                        "Cannot support multiprocessing while syncing reference files.")
+                                "Cannot support multiprocessing while syncing reference files.")
             log.verbose_warning("Exception was:", str(exc))
-            return get_fake_crds_lock(lockpath)
-    else:
         return get_fake_crds_lock(lockpath)
+
+def clear_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
+    """Make sure that `lock_filename` does not exist."""
+    lockpath = config.get_crds_lockpath(lock_filename)
+    utils.remove(lockpath, "all")  # all is observatory for root config dir.
 
 # =========================================================================
 
