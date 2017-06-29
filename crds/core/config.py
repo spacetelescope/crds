@@ -846,9 +846,14 @@ def relocate_reference(ref, observatory):
         return utils.get_locator_module(observatory).locate_file(ref)
 
 # ===========================================================================
+if os.path.exists("/tmp"):
+    DEFAULT_LOCK_PATH = "/tmp"
+else:
+    DEFAULT_LOCK_PATH = os.path.join(get_crds_root_cfgpath(), "locks")
 
-CACHE_LOCK_PATH = StrConfigItem("CRDS_CACHE_LOCK_PATH", get_crds_root_cfgpath(),
-    "Lock directory used to store lock files that control access to CRDS cache.")
+CACHE_LOCK_PATH = StrConfigItem(
+    "CRDS_LOCK_PATH", DEFAULT_LOCK_PATH,
+    "Lock directory used to store lock files,  nominally for CRDS cache.")
 
 USE_LOCKING = BooleanConfigItem("CRDS_USE_LOCKING", True,
     "Set to False to turn off CRDS cache locking.")

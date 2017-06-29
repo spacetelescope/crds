@@ -23,7 +23,6 @@ from __future__ import print_function, absolute_import
 
 # =========================================================================
 
-import contextlib
 import os.path
 
 # =========================================================================
@@ -39,37 +38,55 @@ except ImportError:
 
 # =========================================================================
 
-@contextlib.contextmanager
-def get_fake_crds_lock(lockpath):    
-    """Return an empty lock context manager so that CRDS does not outright crash in
-    all cases because it attempts to support e.g. sync'ing references for multiple
-    association images concurrently.
-    """
-    try:
-        yield
-    finally:
-        pass
-
-# =========================================================================
-
-class CrdsLockFile(lockfile.LockFile):
-
+class CrdsFakeLockFile(object):
+        
     def __init__(self, lockpath):
         self._lockpath = lockpath
-        super(CrdsLockFile, self).__init__(self._lockpath)
-        
-    def __enter__(self):
-        log.verbose("Acquiring lock", repr(self))
-        result = super(CrdsLockFile, self).__enter__()
-        log.verbose("Lock acquired", repr(self))
-        return result
-        
-    def __exit__(self, *exc):
-        log.verbose("Releasing lock", repr(self))
-        result = super(CrdsLockFile, self).__exit__(*exc)
-        log.verbose("Lock released", repr(self))
-        return result
+
+    def acquire(self, *args, **keys):
+        pass
     
+    def release(self, *args, **keys):
+        pass
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_exc):
+        pass
+
+    def break_lock(self):
+        pass
+    
+if lockfile is not None:
+
+    class CrdsLockFile(lockfile.LockFile):
+        """Wrap LockFile to add CRDS log messages for acquire/release."""
+        
+        def __init__(self, lockpath):
+            self._lockpath = lockpath
+            super(CrdsLockFile, self).__init__(self._lockpath)
+        
+        def aquire(self, *args, **keys):
+            log.verbose("Acquiring lock", repr(self))
+            result = super(CrdsLockFile, self).acquire(*args, **keys)
+            log.verbose("Lock acquired", repr(self))
+            return result
+        
+        def release(self, *args, **keys):
+            log.verbose("Releasing lock", repr(self))
+            result = super(CrdsLockFile, self).release(*args, **keys)
+            log.verbose("Lock released", repr(self))
+            return result
+
+        def break_lock(self):
+            log.verbose("Breaking lock", repr(self))
+            result = super(CrdsLockFile, self).break_lock()
+            log.verbose("Broke lock", repr(self))
+
+else:
+
+    CrdsLockFile = CrdsFakeLockFile
  
 # =========================================================================
 
@@ -81,17 +98,17 @@ def get_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
     """
     lockpath = config.get_crds_lockpath(lock_filename)
     
-    if lockfile is None:
-        log.warning("Failed importing 'lockfile' package.  "
-                    "Cannot support downloading files while multiprocessing.")
-        
-    if config.get_cache_readonly():
-        log.verbose("CRDS cache is readonly, omitting cache file locking.")
-        return get_fake_crds_lock(lockpath)
-        
     if not config.USE_LOCKING.get():
-        log.verbose_warning("CRDS cache locking is turned off via CRDS_USE_LOCKING. Cache syncs while multi-processing may fail.")
-        return get_fake_crds_lock(lockpath)
+        return _fake_lock_verbose(lockpath, "CRDS_USE_LOCKING = False.")
+
+    if config.get_cache_readonly():
+        return CrdsFakeLockFile(lockpath)
+
+    if not utils.is_writable(lockpath):
+        return _fake_lock_verbose(lockpath, "CACHE LOCK not writable.")
+        
+    if lockfile is None:
+        return _fake_lock_verbose(lockpath, "Failed importing 'lockfile' package.")
         
     try:
         # XXXX lock dir creation turns into a locking issue,  use pre-existing path.
@@ -99,15 +116,37 @@ def get_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
         # utils.ensure_dir_exists(lockpath)
         return CrdsLockFile(lockpath)
     except Exception as exc:
-        log.warning("Failed creating CRDS cache lock file. "
-                    "Cannot support multiprocessing while syncing reference files.")
-        log.warning("Exception was:", str(exc))
-        return get_fake_crds_lock(lockpath)
+        log.warning("Failed creating CRDS cache lock file:", str(exc))
+        return _fake_lock_verbose(lockpath, "Failed creating CRDS cache lock")
+
+def _fake_lock_verbose(lockpath, explain):
+    log.verbose(explain + " Cannot support downloading files while multiprocessing.")
+    return CrdsFakeLockFile(lockpath)
+                    
+    
+# =========================================================================
 
 def clear_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
     """Make sure that `lock_filename` does not exist."""
     lockpath = config.get_crds_lockpath(lock_filename)
-    utils.remove(lockpath, "all")  # all is observatory for root config dir.
+    utils.ensure_dir_exists(lockpath)
+    lock = get_cache_lock(lockpath)
+    lock.break_lock()
+
+def clear_cache_locks():
+    """Clear all CRDS cache file locks."""
+    clear_cache_lock(DEFAULT_LOCK_FILENAME)   # XXXX needs to be expanded if non-default locks are used.
+
+# =========================================================================
+
+def _locking_enabled():
+    """Return True IFF almalgum of all config settings enable locking."""
+    lock = get_cache_lock()
+    return not isinstance(lock, CrdsFakeLockFile)
+            
+def status():
+    """Return configured/actual ability of CRDS to lock the cache."""
+    return "enabled" if _locking_enabled() else "disabled"
 
 # =========================================================================
 

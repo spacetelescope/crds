@@ -32,8 +32,10 @@ import re
 import shutil
 import glob
 
+# ============================================================================
+
 import crds
-from crds.core import log, config, utils, rmap, heavy_client, cmdline
+from crds.core import log, config, utils, rmap, heavy_client, cmdline, crds_cache_locking
 from crds import data_file
 from crds.core.log import srepr
 from crds.client import api
@@ -248,11 +250,18 @@ class SyncScript(cmdline.ContextsScript):
                           help="Save pre-compiled versions of the sync'ed contexts in the CRDS cache.  Keep pre-existing pickles.")
         self.add_argument("--output-dir", type=str, default=None,
                           help="Directory to output sync'ed files, for simple syncs.")
+        self.add_argument("--clear-locks", action="store_true",
+                          help="Remove CRDS cache file lock(s).")
+
     # ------------------------------------------------------------------------------------------
     
     def main(self):
         """Synchronize files."""
 
+        if self.args.clear_locks:
+            crds_cache_locking.clear_cache_locks()
+            return log.errors()
+        
         if self.args.dry_run:
             config.set_cache_readonly(True)
 
