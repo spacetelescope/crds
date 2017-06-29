@@ -35,8 +35,7 @@ from . import log, config, utils
 try:
     import lockfile
 except ImportError:
-    log.verbose_warning("Failed importing 'lockfile' package.  "
-                        "CRDS cannot support cache syncs while multiprocessing.")
+    lockfile = None
 
 # =========================================================================
 
@@ -60,8 +59,14 @@ def get_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
     concurrent writes.
     """
     lockpath = config.get_crds_lockpath(lock_filename)
+    if lockfile is None:  # module import failed
+        log.verbose_warning("Failed importing 'lockfile' package.  "
+                            "CRDS cannot support cache syncs while multiprocessing.")
+        return get_fake_crds_lock(lockpath)
     try:
-#             utils.ensure_dir_exists(lockpath)  XXXX this itself turns into a locking issue,  use pre-existing path.
+        # XXXX lock dir creation turns into a locking issue,  use pre-existing path.
+        # Either initialize cache using "crds sync --last 1" or set CRDS_CACHE_LOCK_PATH
+        # utils.ensure_dir_exists(lockpath)
         return lockfile.LockFile(lockpath)
     except Exception as exc:
         if not config.get_cache_readonly():
