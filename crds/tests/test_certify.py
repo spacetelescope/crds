@@ -268,11 +268,6 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.INSTRUMENT.NAME = 'miri'
     CRDS - INFO -  META.INSTRUMENT.PUPIL = 'UNDEFINED'
     CRDS - INFO -  META.PEDIGREE = 'dummy'
-    CRDS - INFO -  META.REFFILE.AUTHOR = 'Todd Miller'
-    CRDS - INFO -  META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
-    CRDS - INFO -  META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
-    CRDS - INFO -  META.REFFILE.PEDIGREE = 'dummy'
-    CRDS - INFO -  META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
     CRDS - INFO -  META.REFTYPE = 'distortion'
     CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
     CRDS - INFO -  META.SUBARRAY.NAME = 'MASK1550'
@@ -286,7 +281,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  32 infos
+    CRDS - INFO -  27 infos
     0
     >>> test_config.cleanup(old_state)
     """
