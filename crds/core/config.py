@@ -310,6 +310,8 @@ def _std_cache_path(observatory, root_env, subdir):
     CRDS_MAPPATH         -->   <env path for mappings for both observatories> + / + <observatory>
     CRDS_PATH_SINGLE     -->   <env path for overall cache for one observatory> + "/mappings/"
     CRDS_PATH            -->   <env path for overall cache for all observatories> + "/mappings/" + <observatory>
+
+    XXXX `observatory` should accept pseudo-observatory "all"
     """
     if root_env + "_SINGLE" in os.environ:
         path = os.environ[root_env + "_SINGLE"]
@@ -385,6 +387,36 @@ def get_crds_cfgpath(observatory):
     CRDS_CFGPATH should be defined.
     """
     return _std_cache_path(observatory, "CRDS_CFGPATH", "config")
+
+def get_crds_root_cfgpath():
+    """Return the root multi-project config path. Used for e.g. lockfiles.
+
+    >>> temp = dict(os.environ)
+    >>> os.environ = {}
+    
+    >>> os.environ["CRDS_PATH"] = '/somewhere'
+    >>> get_crds_root_cfgpath()
+    '/somewhere/config'
+    
+    >>> os.environ["CRDS_PATH_SINGLE"] = "/somewhere2"
+    >>> get_crds_root_cfgpath()
+    '/somewhere2/config'
+    
+    >>> os.environ["CRDS_CFGPATH"] = "/somewhere3/cfg2"
+    >>> get_crds_root_cfgpath()
+    '/somewhere3/cfg2'
+    
+    >>> os.environ["CRDS_CFGPATH_SINGLE"] = "/somewhere4/cfg3"
+    >>> get_crds_root_cfgpath()
+    '/somewhere4/cfg3'
+    
+    >>> os.environ = temp
+    """
+    dirname = get_crds_cfgpath("all")
+    if dirname.endswith("all"):
+        return os.path.dirname(dirname)
+    else:
+        return dirname
 
 def get_crds_refpath(observatory):
     """get_crds_refpath returns the base path of the directory tree where CRDS 
@@ -814,11 +846,23 @@ def relocate_reference(ref, observatory):
         return utils.get_locator_module(observatory).locate_file(ref)
 
 # ===========================================================================
+if os.path.exists("/tmp"):
+    DEFAULT_LOCK_PATH = "/tmp"
+else:
+    DEFAULT_LOCK_PATH = os.path.join(get_crds_root_cfgpath(), "locks")
 
-CACHE_LOCK = StrConfigItem("CRDS_CACHE_LOCK", os.path.join(os.environ["HOME"], ".crds.cache.lock"),
-    "Full path of lock file used to control access to CRDS cache, including filename.")
+CACHE_LOCK_PATH = StrConfigItem(
+    "CRDS_LOCK_PATH", DEFAULT_LOCK_PATH,
+    "Lock directory used to store lock files,  nominally for CRDS cache.")
 
-# -------------------------------------------------------------------------------------
+USE_LOCKING = BooleanConfigItem("CRDS_USE_LOCKING", True,
+    "Set to False to turn off CRDS cache locking.")
+
+def get_crds_lockpath(lock_filename):
+    """Return the full path of `lock_filename` filename based on CRDS lock path configuration."""
+    return os.path.join(CACHE_LOCK_PATH.get(), lock_filename)
+
+# ===========================================================================
 
 def complete_re(regex_str):
     """Add ^$ to `regex_str` to force match to entire string."""

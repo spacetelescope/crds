@@ -15,6 +15,7 @@ from astropy.io import fits
 
 import crds
 from crds.core import config, log, python23, rmap, heavy_client, cmdline
+from crds.core import crds_cache_locking
 from crds import data_file
 
 from crds.client import api
@@ -572,6 +573,7 @@ and ids used for CRDS reprocessing recommendations.
              ("CRDS_SERVER_URL", info.get("CRDS_SERVER_URL", "undefined")),
              ("CRDS_MODE", info["CRDS_MODE"]),
              ("Readonly Cache", self.readonly_cache),
+             ("Cache Locking", crds_cache_locking.status()),
              ("Effective Context", heavy_client.get_processing_mode(self.observatory)[1]),
              ("Last Synced", server.last_synced),
              ("CRDS Version", heavy_client.version_info()),
