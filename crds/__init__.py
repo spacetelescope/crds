@@ -21,7 +21,7 @@ try:
     __version__ = pkg_resources.require(__name__)[0].version
 except Exception:
     __version__ = 'unknown'
-__rationale__ = "3rd quarter 2017 JWST development, support for JWST CRDS cache file locks" 
+__rationale__ = "3rd/4th quarter 2017 JWST development" 
 
 # ============================================================================
 
