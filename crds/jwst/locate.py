@@ -313,6 +313,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
             
             "META.SUBARRAY.P_SUBARRAY" : "META.SUBARRAY.NAME",
             "P_SUBARR" : "META.SUBARRAY.NAME",
+
+            "META.INSTRUMENT.P_GRATING" : "META.INSTRUMENT.GRATING",
+            "P_GRATIN" : "META.INSTRUMENT.GRATING",
         }
 
     # Rmap header reference_to_dataset field tranlations,  can override basic!
