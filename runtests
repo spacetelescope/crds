@@ -26,9 +26,12 @@ os.environ["CRDS_DEFAULT_CACHE"] = os.environ["CRDS_PATH"]
 # os.system("./install")
 # os.system("./setup_test_cache")
 if "--cover-html" in sys.argv:
-    os.system("nosetests --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-branches --cover-package=crds --cover-erase".format(topdir))
+    status = os.system("nosetests --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-branches --cover-package=crds --cover-erase".format(topdir))
 elif "--cover" in sys.argv:
-    os.system("nosetests --with-coverage --cover-branches --cover-package=crds".format(topdir))
+    status = os.system("nosetests --with-coverage --cover-branches --cover-package=crds".format(topdir))
 else:
-    os.system("nosetests")
+    status = os.system("nosetests")
 os.system("python -m crds.list --status --log-time")
+sys.exit(status)
+
+
