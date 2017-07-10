@@ -16,11 +16,7 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-try:
-    import pkg_resources
-    __version__ = pkg_resources.require(__name__)[0].version
-except Exception:
-    __version__ = 'unknown'
+__version__ = "7.1.5"   # XXXX  see also ../setup.cfg
 __rationale__ = "3rd/4th quarter 2017 JWST development" 
 
 # ============================================================================
