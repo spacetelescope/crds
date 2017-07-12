@@ -126,8 +126,9 @@ def _get_fixed_cross_strapped_pairs(locator):
     log.verbose("Explicitly cross_strapped_keywords:", log.PP(equivalencies), verbosity=90)
     for master, slaves in equivalencies.items():
         for slave in slaves:
-            pairs.append((master, slave))
-            pairs.append((slave, master))
+            if master != slave:
+                pairs.append((master, slave))
+                pairs.append((slave, master))
     return pairs    
 
 def _get_fits_datamodel_pairs(locator, header):
