@@ -22,16 +22,18 @@ Boilerplate Keywords
 ....................
 
 Both the HST and JWST projects define a small set of required keywords that
-define reference file provenance information::
+define reference file provenance information,  shown here in FITS format for
+simplicity:
 
   TELESCOP
   INSTRUME
   REFTYPE (JWST) or FILETYPE (HST)
   USEAFTER
+  AUTHOR (JWST)
   PEDIGREE
   HISTORY
-  COMMENT
-  DESCRIP
+  COMMENT (HST)
+  DESCRIP (HST)
 
 Keywords For New File Formats
 .............................
