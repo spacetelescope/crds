@@ -29,6 +29,8 @@ if "--cover-html" in sys.argv:
     status = os.system("nosetests --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-branches --cover-package=crds --cover-erase".format(topdir))
 elif "--cover" in sys.argv:
     status = os.system("nosetests --with-coverage --cover-branches --cover-package=crds".format(topdir))
+elif "--profile" in sys.argv:
+    status = os.system("nosetests --with-cprofile --cprofile-stats-file={0}/runtests.profile.stats --cprofile-stats-erase".format(topdir))
 else:
     status = os.system("nosetests")
 os.system("python -m crds.list --status --log-time")
