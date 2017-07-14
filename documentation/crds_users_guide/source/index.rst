@@ -14,6 +14,7 @@ CRDS User Manual
    top_level_use.rst
    core_library_functions.rst
    rmap_syntax.rst
+   reference_conventions.rst
    web_site_use.rst
    web_services.rst
    database.rst

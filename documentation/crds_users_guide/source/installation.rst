@@ -5,44 +5,48 @@ The CRDS client and command line software is distributed as a single package wit
 several sub-packages:
 
    * crds
-       - core package enabling local use and development of mappings
+       - Core package enabling local use and development of mappings
          and reference files.  contains command line utility programs.
 
    * crds.client
-       - network client library for interacting with the central CRDS server.  This is
-       primarily for internal use in CRDS,  encapsulating JSONRPC interfaces with Python.
+       - Network client library for interacting with the central CRDS server.  This is primarily for internal use in CRDS,  encapsulating JSONRPC interfaces with Python.
 
    * crds.hst
-       - observatory personality package for HST, defining how HST types, reference file
-       certification constraints, and naming works.
+       - Observatory personality package for HST, defining how HST types, reference file certification constraints, and naming works.
 
    * crds.jwst
-       - analogous to crds.hst,  for JWST.
+       - Analogous to crds.hst,  for JWST.
 
-CRDS also contains a number of command line tools:
+CRDS also contains a number of command line tools managed by a top-level *crds* command:
 
-    * crds.bestrefs
+    * crds bestrefs
         - Best references utility for HST FITS files and context-to-context affected datasets computations.
 
-    * crds.sync
+    * crds sync
         - Cache download and maintenance tool, fetches, removes, checks, and repairs rules and references.
 
-    * crds.certify
+    * crds certify
         - Checks constraints and format for CRDS rules and references.
 
-    * crds.diff, crds.rowdiff
+    * crds diff, crds rowdiff
         - Difference utility for rules and references,  also FITS table differences.
 
-    * crds.matches
-        - Prints out parameter matches for particular references,  or database matching parameters with
-        respect to particular dataset IDs.
+    * crds matches
+        - Prints out parameter matches for particular references,  or database matching parameters with respect to particular dataset IDs.
 
-    * crds.uses
+    * crds uses
         - Lists files which refer to (are dependent on) some CRDS rules or reference file.
 
-    * crds.list
+    * crds list
         - Lists cache files and configuration,  prints rules files,  dumps database dataset parameter dictionaries.
 
+Each sub-command can also be invoked as follows::
+
+     $ crds sync --help
+
+to print help information,  where --help must be specified as the first parameter to the sub-command.
+
+ 
 Installation
 ============
 
@@ -124,6 +128,7 @@ CRDS source code can be cloned from the GitHub source code repository as follows
   $ cd CRDS
 
   $ # optionally,  switch to release tag
+  $ git fetch origin
   $ git checkout <release tag,  e.g. 6.0.1>
 
 Run the Install Script
@@ -142,16 +147,17 @@ processing.   Standard STScI calibration environments should already include it.
 Nevertheless, for installing CRDS independently, these dependencies are applicable:
 
 REQUIRED: CRDS requires these dependencies to be installed in your Python environment:
-
    * numpy
    * astropy
 
 OPTIONAL: For executing the unit tests (runtests) add:
-
    * nose
 
-OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
+OPTIONAL: 
+   * jwst.datamodels    needed to run crds certify on JWST references
+   * lockfile           needed to synchronize local CRDS cache syncs done by associations
 
+OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
    * Parsley-1.2
    * pyaml  (for certifying and using yaml references)
    * asdf (for certifying and using ASDF references)
@@ -338,6 +344,60 @@ For **HST**, to fetch the references required to process some FITS datasets::
 
 For **JWST**, CRDS is directly integrated with the calibration step code and
 will automatically download rules and references as needed.
+
+CRDS Cache Locking
+------------------
+
+CRDS cache locking (file-based, currently built upon the lockfile package) has
+been added to support JWST associations calibration multi-processing. Since
+associations launch multiple concurrent processes, it poses a problem of
+simultaneous updates to the shared CRDS cache resource.  Cache locking
+addresses that issue and is automatically used for read/write caches typically
+associated with offsite use.
+
+There are multiple conditions in CRDS that determine when locking is really
+used::
+
+    1. The lockfile package must be installed and importable
+    2. The CRDS_LOCK_PATH directory (nominally /tmp) should already exist   
+    2. A lockfile lock must be successully created
+    3. The CRDS cache must be physically writable
+    4. CRDS_USE_LOCKING must be undefined or 1
+    5. CRDS_READONLY_CACHE must be undefined or 0
+
+Otherwise, locking is either broken or the sync is impossible or forbidden.
+
+The env var::
+
+  CRDS_READONLY_CACHE=1
+
+currently prevents HST + JWST pipeline installations from using locking.
+
+The readonly nature of::
+
+  /grp/crds/cache
+
+prevents the use of locking for typical onsite users.  /grp/crds/cache is
+complete, automatically maintained by CRDS, and needs no user-based updates or
+file downloads.
+
+The env var::
+
+  CRDS_LOCK_PATH
+
+can be used to define the location of file locks, defaulting to */tmp*. It
+should be noted that the existence of the lock file directory is itself a
+concurrency issue, so it must be created or otherwise available before cache
+synchronization takes place.
+
+The CRDS command::
+
+  $ crds sync --clear-locks
+
+can be used to remove orphan locks (due to some unexpected failure) that are
+blocking processing.
+
+Locking requires installation of the *lockfile* package and CRDS-7.1.4 or later.
 
 Additional HST Settings
 +++++++++++++++++++++++
