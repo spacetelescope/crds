@@ -8,8 +8,12 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 META.INSTRUMENT.NAME        H   C   R                   FGS
-META.INSTRUMENT.DETECTOR    H   C   O                   GUIDER1,GUIDER2,ANY,N/A
-META.EXPOSURE.READPATT      H   C   O                   ID,ACQ1,ACQ2,TRACK,FINEGUIDE,FGS60,FGS840,FGS7850,FGS8370,FGSRAPID,FGS,ANY,N/A
-META.EXPOSURE.TYPE          H   C   O                   FGS_IMAGE,FGS_FOCUS,FGS_SKYFLAT,FGS_INTFLAT,FGS_DARK,ANY,N/A
 
+META.INSTRUMENT.DETECTOR    H   C   O                   GUIDER1,GUIDER2,ANY,N/A
+
+META.EXPOSURE.READPATT      H   C   O                   ID,ACQ1,ACQ2,TRACK,FINEGUIDE,FGS,FGS60,FGS8370,FGS840,FGSRAPID,FINEGUIDE,ANY,N/A
+
+META.EXPOSURE.TYPE          H   C   O                   FGS_ACQ1,FGS_ACQ2,FGS_DARK,FGS_FINEGUIDE,FGS_FOCUS,FGS_ID-IMAGE,FGS_ID-STACK,\
+                                                        FGS_IMAGE,FGS_INTFLAT,FGS_SKYFLAT,FGS_TRACK,ANY,N/A
+                                                        
 include nir_subarray_baseline.tpn
