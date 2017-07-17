@@ -67,7 +67,7 @@ if lockfile is not None:
             self._lockpath = lockpath
             super(CrdsLockFile, self).__init__(self._lockpath)
         
-        def aquire(self, *args, **keys):
+        def acquire(self, *args, **keys):
             log.verbose("Acquiring lock", repr(self))
             result = super(CrdsLockFile, self).acquire(*args, **keys)
             log.verbose("Lock acquired", repr(self))
@@ -102,7 +102,7 @@ def get_cache_lock(lock_filename=DEFAULT_LOCK_FILENAME):
         return _fake_lock_verbose(lockpath, "CRDS_USE_LOCKING = False.")
 
     if config.get_cache_readonly():
-        return CrdsFakeLockFile(lockpath)
+        return _fake_lock_verbose(lockpath, "CRDS_READONLY_CACHE = True.")
 
     if not utils.is_writable(lockpath):
         return _fake_lock_verbose(lockpath, "CACHE LOCK not writable.")
