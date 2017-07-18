@@ -1050,8 +1050,11 @@ def is_simple_crds_mapping(mapping):
     >>> is_simple_crds_mapping("hst-foo")
     False
     """
-    basename = os.path.basename(mapping)
-    return is_valid_mapping_name(basename) and (locate_mapping(mapping) == locate_mapping(basename))
+    if isinstance(mapping, python23.string_types):
+        basename = os.path.basename(mapping)
+        return is_valid_mapping_name(basename) and (locate_mapping(mapping) == locate_mapping(basename))
+    else:
+        return False
 
 def is_valid_mapping_name(mapping):
     """Return True IFF `mapping` has a CRDS-style root name and a mapping extension."""
