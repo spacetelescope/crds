@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 07-20-2017',
+    'file_ext' : '.fits',
+    'filekind' : 'crdscfg',
+    'filetype' : 'CRDSCFG',
+    'instrument' : 'SYSTEM',
+    'mapping' : 'REFERENCE',
+    'name' : 'system_crdscfg.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('CAL_VER',),),
+    'sha1sum' : 'b53969290a4d61c923343fbfa732b6e4dd57b775',
+    'suffix' : 'crdscfg',
+    'text_descr' : 'Parameters for CRDS',
+}
+
+selector = Match({
+})

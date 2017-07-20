@@ -3374,6 +3374,28 @@
             "tpn":"system_calver.tpn",
             "unique_rowkeys":null
         },
+        "crdscfg":{
+            "derived_from":"handmade spec 07-20-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"crdscfg",
+            "filetype":"CRDSCFG",
+            "instrument":"SYSTEM",
+            "ld_tpn":"system_crdscfg_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"system_crdscfg.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "CAL_VER"
+                ]
+            ],
+            "sha1sum":"b53969290a4d61c923343fbfa732b6e4dd57b775",
+            "suffix":"crdscfg",
+            "text_descr":"Parameters for CRDS",
+            "tpn":"system_crdscfg.tpn",
+            "unique_rowkeys":null
+        },
         "datalvl":{
             "classes":[
                 "VersionAfter"
