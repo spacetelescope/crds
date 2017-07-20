@@ -1,6 +1,20 @@
 """This module provides functions that interface with the JWST calibration code to determine
 things like "reference types used by a pipeline."
+
+>>> header_to_reftypes(test_header("0.7.0", "FGS_DARK"))
+['ipc', 'linearity', 'mask', 'refpix', 'rscd', 'saturation', 'superbias']
+
+>>> header_to_reftypes(test_header("0.7.0", "NRS_BRIGHTOBJ"))
+['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'pathloss', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'straymask', 'superbias', 'v2v3', 'wavelengthrange']
+
+>>> header_to_reftypes(test_header("0.7.0", "MIR_IMAGE"))
+['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'superbias', 'v2v3', 'wavelengthrange']
+
+>>> header_to_reftypes(test_header("0.7.0", "MIR_LRS-FIXEDSLIT"))
+['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'flat', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'pathloss', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'straymask', 'superbias', 'v2v3', 'wavelengthrange']
+
 """
+
 import fnmatch
 import re
 
@@ -10,6 +24,15 @@ from crds.core import exceptions, config, log, utils
 from crds.core.log import srepr
 
 # from jwst.stpipe import cmdline
+
+def test_header(calver, exp_type):
+    header = {
+        "META.INSTRUMENT.NAME" : "SYSTEM",
+        "META.REFTYPE" : "CRDSCFG",
+        "META.CALIBRATION_SOFTWARE_VERSION" : calver,
+        "META.EXPOSURE.TYPE" : exp_type,
+        }
+    return header
 
 '''
 DARK, (LED, LAMP, FLAT)  all level2a only
@@ -184,8 +207,6 @@ steps_to_reftypes_exceptions:
         - case3:
             exp_types: ["*"]
             reftypes: [flat]
-
-
 '''
 
 # --------------------------------------------------------------------------------------
@@ -284,6 +305,10 @@ def glob_match(expr, value):
     """Convert the given glob `expr` to a regex and match it to `value`."""
     re_str = fnmatch.translate(expr)
     return re.match(re_str, value)
+
+def test():
+    import doctest, crds.jwst.pipeline
+    return doctest.testmod(crds.jwst.pipeline)
 
 # --------------------------------------------------------------------------------------
 
