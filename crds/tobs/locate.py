@@ -202,7 +202,7 @@ def ref_properties_from_header(filename):
     
 # =======================================================================
 
-def header_to_reftypes(header):
+def header_to_reftypes(context, header):
     """Based on `header` return the default list of appropriate reference type names."""
     return [] # translates to all types.
 

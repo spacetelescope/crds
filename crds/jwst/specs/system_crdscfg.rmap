@@ -1,4 +1,5 @@
 header = {
+    'classes' : ('VersionAfter',),
     'derived_from' : 'handmade spec 07-20-2017',
     'file_ext' : '.fits',
     'filekind' : 'crdscfg',
@@ -11,10 +12,10 @@ header = {
     'reference_to_dataset' : {
         'CAL_VER' : 'META.CALIBRATION_SOFTWARE_VERSION',
     },
-    'sha1sum' : '982e919c575150563fd9e37fd9db85282d34c751',
+    'sha1sum' : '555e2388728e047419770df8fa09d18309304996',
     'suffix' : 'crdscfg',
     'text_descr' : 'Parameters for CRDS',
 }
 
-selector = Match({
+selector = VersionAfter({
 })

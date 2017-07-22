@@ -340,10 +340,10 @@ def dt_test_cleanpath():
 def dt_test_hst_tobs_header_to_reftypes():
     """
     >>> from crds.hst.locate import header_to_reftypes
-    >>> header_to_reftypes({})
+    >>> header_to_reftypes("hst.pmap", {})
     []
     >>> from crds.tobs.locate import header_to_reftypes
-    >>> header_to_reftypes({})
+    >>> header_to_reftypes("tobs.pmap", {})
     []
     """
 
@@ -351,17 +351,17 @@ def dt_test_jwst_header_to_reftypes():
     """
     >>> from crds.jwst.locate import header_to_reftypes
 
-    >>> header_to_reftypes({"EXP_TYPE":"MIR_DARK"})
+    >>> header_to_reftypes("jwst_0301.pmap", {"EXP_TYPE":"MIR_DARK", "CAL_VER": "0.7.0"})
     ['ipc', 'linearity', 'mask', 'refpix', 'rscd', 'saturation', 'superbias']
 
-    >>> header_to_reftypes({"EXP_TYPE":"NIR_IMAGE"})
+    >>> header_to_reftypes("jwst_0301.pmap", {"EXP_TYPE":"NIR_IMAGE", "CAL_VER": "0.7.0"})
     []
 
     # Traceback (most recent call last):
     # ...
     # RuntimeError: Unhandled EXP_TYPE 'NIR_IMAGE'
 
-    >>> header_to_reftypes({"EXP_TYPE":"MIR_IMAGE"})
+    >>> header_to_reftypes("jwst_0301.pmap", {"EXP_TYPE":"MIR_IMAGE", "CAL_VER": "0.7.0"})
     ['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'superbias', 'v2v3', 'wavelengthrange']
     """
 

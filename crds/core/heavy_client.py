@@ -342,7 +342,7 @@ def hv_best_references(context_file, header, include=None, condition=True):
     conditioned = utils.condition_header(header) if condition else header
     if include is None:
         # requires conditioned header,  or compatible header
-        include = set(ctx.locate.header_to_reftypes(conditioned))
+        include = set(ctx.locate.header_to_reftypes(context_file, conditioned))
         ctx_filekinds = set(ctx.get_filekinds(conditioned))
         include = list(ctx_filekinds & include)
     minheader = ctx.minimize_header(conditioned)
