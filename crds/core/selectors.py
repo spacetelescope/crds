@@ -2294,7 +2294,11 @@ Restore debug configuration.
     def condition_key(self, version):
         """Convert a period seperated string into a tuple of ints of length 3, zero filling."""
         self._validate_version(version)
-        parts = tuple(int(x, base=10) for x in version.split("."))
+        parts = version.split(".")
+        if len(parts) >= 4:
+            # devext = re.split("[a-zA-Z]*", parts[3])[-1] # dev345 -> 345
+            parts = parts[:3]
+        parts = tuple(int(x, base=10) for x in parts)
         if len(parts) < 3:
             parts = parts + (3-len(parts))*(0,)
         return parts
