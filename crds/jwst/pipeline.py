@@ -25,7 +25,7 @@ import re
 
 # --------------------------------------------------------------------------------------
 
-import crds
+import crds, crds.core
 from crds.core import exceptions, log, utils
 from crds.core.log import srepr
 from crds.client import api
@@ -58,6 +58,9 @@ def header_to_reftypes(context, header):
     """
     with log.warn_on_exception("Failed determining required reftypes from header", log.PP(header)):
         cal_ver = header.get("META.CALIBRATION_SOFTWARE_VERSION", header.get("CAL_VER"))
+        if cal_ver is None:
+            from jwst import version
+            cal_ver = version.__version__
         exp_type = header.get("META.EXPOSURE.TYPE",  header.get("EXP_TYPE"))
         config_manager = get_config_manager(context, cal_ver)
         if config_manager is not None:
@@ -85,8 +88,9 @@ def get_config_manager(context, cal_ver):
         pmap = crds.get_symbolic_mapping(context)
         imap = pmap.get_imap("system")
         rmapping = imap.get_rmap("crdscfg")
-        refpath = rmapping.get_bestref(header)
-        api.dump_references(context, [refpath])
+        ref = rmapping.get_best_ref(header)
+        refpath = rmapping.locate_file(ref)
+        api.dump_references(context, [ref])
     with open(refpath) as opened:
         crdscfg =  yaml.load(opened)
     return CrdsCfgManager(context, refpath, crdscfg)
