@@ -2307,7 +2307,7 @@ Restore debug configuration.
         "." and matched against the corresponding parameter.
         """
         if len(self._parameters) == 1:
-            return ((self._parameters[0], key.split(".")),)
+            return ((self._parameters[0], key),)   # XXX needs split?
         else:
             return tuple(zip(self._parameters, key.split(".")))
     
