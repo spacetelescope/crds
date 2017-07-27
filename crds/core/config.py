@@ -746,6 +746,9 @@ def filetype(filename):
     >>> filetype("foo.r0h")
     'geis'
 
+    >>> filetype("foo.r0d")
+    'geis'
+
     >>> filetype('foo.exe')
     'unknown'
     """
@@ -761,7 +764,7 @@ def filetype(filename):
         return "asdf"
     elif filename.endswith(".txt"):
         return "text"
-    elif re.match(r".*\.r[0-9]h$", filename): # GEIS header
+    elif re.match(r".*\.r[0-9][hd]$", filename): # GEIS header
         return "geis"
     else:
         return "unknown"
