@@ -37,6 +37,3 @@ class AsdfFile(AbstractFile):
                 header["HISTORY"] = "\n".join(histall)
         return header
 
-#
-
-

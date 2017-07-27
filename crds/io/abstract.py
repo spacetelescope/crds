@@ -295,7 +295,7 @@ class AbstractFile(object):
     # ----------------------------------------------------------------------------------------------
 
     def to_simple_types(self, tree):
-        """Convert an ASDF tree structure to a flat dictionary of simple types with dotted path tree keys."""
+        """Convert a tree structure to a flat dictionary of simple types with dotted path tree keys."""
         result = dict()
         for key in tree:
             if not isinstance(key, python23.string_types):  # skip non-string keys
@@ -320,4 +320,5 @@ class AbstractFile(object):
         else:
             rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
         return rval
+
 
