@@ -15,7 +15,7 @@ from astropy.io import fits
 
 # ============================================================================
 
-from crds.core import python23, config, utils, log, exceptions
+from crds.core import python23, config, utils, log
 
 from .abstract import AbstractFile, hijack_warnings
 

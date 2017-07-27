@@ -77,49 +77,6 @@ def get_data_model_flat_dict(filepath):
     
 # =======================================================================
 
-# When loading headers,  make sure each keyword in a tuple is represented with
-# the same value enabling any form to be used.  Case insensitive.
-CROSS_STRAPPED_KEYWORDS = {
-                           
-    # META.REFFILE.X is now obsolete but retained for backward compatibility.
-    # it was replaced by META.X
-
-    # These include non-DM keywords
-    "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE",],
-    "META.TELESCOPE" : ["TELESCOP","TELESCOPE","META.TELESCOPE"],
-    "META.REFFILE.DESCRIPTION" : ["DESCRIP","DESCRIPTION","META.DESCRIPTION"],
-    "META.REFFILE.TYPE" : ["REFTYPE","META.REFTYPE"],
-
-    # These include non-core-DM DM fields
-    "META.REFFILE.AUTHOR" : ["AUTHOR", "META.AUTHOR"],
-    "META.REFFILE.PEDIGREE" : ["PEDIGREE", "META.PEDIGREE"],
-    "META.REFFILE.USEAFTER" : ["USEAFTER", "META.USEAFTER"],
-    "META.REFFILE.HISTORY" : ["HISTORY", "META.HISTORY"],
-
-    # These should all be stock DM:FITS,  automatic
-    # "META.INSTRUMENT.BAND" : ["BAND"],
-    # "META.INSTRUMENT.CHANNEL" : ["CHANNEL"],
-    # "META.INSTRUMENT.DETECTOR" : ["DETECTOR"],
-    # "META.INSTRUMENT.FILTER" : ["FILTER"],
-    # "META.INSTRUMENT.PUPIL" : ["PUPIL"],
-    # "META.INSTRUMENT.GRATING" : ["GRATING"],
-
-    # "META.SUBARRAY.NAME" : ["SUBARRAY"],
-    # "META.SUBARRAY.XSTART" : ["SUBSTRT1"],
-    # "META.SUBARRAY.YSTART" : ["SUBSTRT2"],
-    # "META.SUBARRAY.XSIZE" : ["SUBSIZE1"],
-    # "META.SUBARRAY.YSIZE" : ["SUBSIZE2"],
-    # "META.SUBARRAY.FASTAXIS" : ["FASTAXIS"],
-    # "META.SUBARRAY.SLOWAXIS" : ["SLOWAXIS"],
-    
-    # "META.EXPOSURE.TYPE" : ["EXP_TYPE"],
-    # "META.EXPOSURE.READPATT" : ["READPATT"],
-
-    # "META.APERTURE.NAME" : ["APERTURE"],
-}
-
-# =======================================================================
-
 def match_context_key(key):
     """Set the case of a context key appropriately for this project, JWST
     always uses upper case.
@@ -468,6 +425,78 @@ def locate_dir(instrument, mode=None):
     else:
         raise ValueError("Unhandled reference file location mode " + repr(mode))
     return rootdir
+
+# =======================================================================
+
+# When loading headers,  make sure each keyword in a tuple is represented with
+# the same value enabling any form to be used.  Case insensitive.
+CROSS_STRAPPED_KEYWORDS = {
+                           
+    # META.REFFILE.X is now obsolete but retained for backward compatibility.
+    # it was replaced by META.X
+
+    # These include non-DM keywords
+    "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE",],
+    "META.TELESCOPE" : ["TELESCOP","TELESCOPE","META.TELESCOPE"],
+    "META.REFFILE.DESCRIPTION" : ["DESCRIP","DESCRIPTION","META.DESCRIPTION"],
+    "META.REFFILE.TYPE" : ["REFTYPE","META.REFTYPE"],
+
+    # These include non-core-DM DM fields
+    "META.REFFILE.AUTHOR" : ["AUTHOR", "META.AUTHOR"],
+    "META.REFFILE.PEDIGREE" : ["PEDIGREE", "META.PEDIGREE"],
+    "META.REFFILE.USEAFTER" : ["USEAFTER", "META.USEAFTER"],
+    "META.REFFILE.HISTORY" : ["HISTORY", "META.HISTORY"],
+
+    # These should all be stock DM:FITS,  automatic
+    # "META.INSTRUMENT.BAND" : ["BAND"],
+    # "META.INSTRUMENT.CHANNEL" : ["CHANNEL"],
+    # "META.INSTRUMENT.DETECTOR" : ["DETECTOR"],
+    # "META.INSTRUMENT.FILTER" : ["FILTER"],
+    # "META.INSTRUMENT.PUPIL" : ["PUPIL"],
+    # "META.INSTRUMENT.GRATING" : ["GRATING"],
+
+    # "META.SUBARRAY.NAME" : ["SUBARRAY"],
+    # "META.SUBARRAY.XSTART" : ["SUBSTRT1"],
+    # "META.SUBARRAY.YSTART" : ["SUBSTRT2"],
+    # "META.SUBARRAY.XSIZE" : ["SUBSIZE1"],
+    # "META.SUBARRAY.YSIZE" : ["SUBSIZE2"],
+    # "META.SUBARRAY.FASTAXIS" : ["FASTAXIS"],
+    # "META.SUBARRAY.SLOWAXIS" : ["SLOWAXIS"],
+    
+    # "META.EXPOSURE.TYPE" : ["EXP_TYPE"],
+    # "META.EXPOSURE.READPATT" : ["READPATT"],
+
+    # "META.APERTURE.NAME" : ["APERTURE"],
+}
+
+# ============================================================================
+
+@utils.cached
+def get_static_pairs():
+    return abstract.equivalence_dict_to_pairs(CROSS_STRAPPED_KEYWORDS)
+
+def get_cross_strapped_pairs(header):
+    """Return the list of keyword pairs where each pair describes synonyms for the same
+    piece of data.
+    """
+    return  get_static_pairs() + _get_fits_datamodel_pairs(header)
+
+def _get_fits_datamodel_pairs(header):
+    """Return the (FITS, DM) and (DM, FITS) cross strap pairs associated with
+    every keyword in `header` as defined by the datamodels interface functions
+    defined by the CRDS JWST schema module.
+    """
+    pairs = []
+    from . import schema
+    for key in header:
+        with log.verbose_warning_on_exception("Failed cross strapping keyword", repr(key)):
+            fitskey = schema.dm_to_fits(key) or key
+            dmkey = schema.fits_to_dm(key) or key
+            pairs.append((fitskey, dmkey))
+            pairs.append((dmkey, fitskey))
+    log.verbose("Cal code datamodels keyword equivalencies:\n", log.PP(pairs), verbosity=90)
+    return pairs
+
 
 # ============================================================================
 

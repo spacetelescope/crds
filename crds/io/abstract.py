@@ -104,51 +104,25 @@ def cross_strap_header(header):
         log.verbose_warning(
             "Cannot identify observatory from header. Skipping keyword aliasing")
         return crossed
-    equivalency_pairs = _get_cross_strapped_pairs(locator, header)
+    equivalency_pairs = locator.get_cross_strapped_pairs(header)
     for pair in equivalency_pairs:
         _cross_strap_pair(crossed, pair)
     return crossed
 
-    # ----------------------------------------------------------------------------------------------
-    
-def _get_cross_strapped_pairs(locator, header):
-    """Return the list of keyword pairs where each pair describes synonyms for the same
-    piece of data.
-    """
-    return _get_fixed_cross_strapped_pairs(locator) + _get_fits_datamodel_pairs(locator, header)
-
-def _get_fixed_cross_strapped_pairs(locator):
-    """Return the header keyword equivalency pairs defined by the 
-    observatory's locator module.
+def equivalence_dict_to_pairs(equivalent_keywords_dict):
+    """Convert a dictionary mapping master keywords to equivalents to
+    a list of keyword pairs that should be cross-strapped.
     """
     pairs = []
-    equivalencies = locator.__dict__.get("CROSS_STRAPPED_KEYWORDS", [])
-    log.verbose("Explicitly cross_strapped_keywords:", log.PP(equivalencies), verbosity=90)
-    for master, slaves in equivalencies.items():
+    log.verbose("Explicitly cross_strapped_keywords:", 
+                log.PP(equivalent_keywords_dict), verbosity=90)
+    for master, slaves in equivalent_keywords_dict.items():
         for slave in slaves:
             if master != slave:
                 pairs.append((master, slave))
                 pairs.append((slave, master))
     return pairs    
 
-def _get_fits_datamodel_pairs(locator, header):
-    """Return the (FITS, DM) and (DM, FITS) cross strap pairs associated with
-    every keyword in `header` as defined by the datamodels interface functions
-    defined by the observatory's schema module.
-    """
-    pairs = []
-    schema = locator.__dict__.get("schema")
-    if schema is None:   # e.g. HST doesn't support/need datamodels,  not defined
-        return pairs
-    for key in header:
-        with log.verbose_warning_on_exception(
-                "Failed cross strapping keyword", repr(key)):
-            fitskey = schema.dm_to_fits(key) or key
-            dmkey = schema.fits_to_dm(key) or key
-            pairs.append((fitskey, dmkey))
-            pairs.append((dmkey, fitskey))
-    log.verbose("Cal code datamodels keyword equivalencies:\n", log.PP(pairs), verbosity=90)
-    return pairs
     
 def _cross_strap_pair(header, keyword_pair):
     """Mutate `header` using (master, slave) `keyword_pair` so that slave
@@ -346,3 +320,4 @@ class AbstractFile(object):
         else:
             rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
         return rval
+

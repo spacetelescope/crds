@@ -1,8 +1,12 @@
 """This module defines functions for loading JWST's data model schema files which
 describe reference parameters and their values.   The schema files are used to 
-validate reference and rmap parameters to screen out illegal values.   In particular
-the resulting TpnInfo objects describe rmap constraints which are not enforced at
-load time by the JWST data model since rmaps are not loaded by the data model.
+validate reference and rmap parameters to screen out illegal values.
+
+The primary functions provided by this module are:
+
+1. Scraping the cal code data models schema for keyword value enumerations
+2. Defining translations to and from "data model paths" like META.SUBARRAY.NAME and
+"physical keyword values, e.g. FITS" like SUBARRAY.
 
 See the tpn.py and locator.py modules,  as well as crds.certify and crds.rmap,
 and crds.selectors for more information.
@@ -13,15 +17,8 @@ from __future__ import absolute_import
 
 # ====================================================================================
 
-import sys
-import os.path
-import pprint
-
-# ====================================================================================
-
 # from jwst import datamodels   # deferred
 # from . import locate  # deferred
-
 
 import crds
 from crds.core import log, utils, heavy_client
