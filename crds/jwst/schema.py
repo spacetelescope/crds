@@ -74,7 +74,7 @@ def refpath_to_parkeys(refpath):
         # so in this case the datamodels schema are too narrow for these and will reject
         # e.g. SYSTEM or it's types.
         #         keys.append("META.INSTRUMENT.NAME")
-        #         keys.append("META.REFFILE.TYPE")
+        #         keys.append("META.REFTYPE")
     return sorted(keys)
 
 # =============================================================================
