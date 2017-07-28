@@ -790,9 +790,7 @@ class Selector(object):
         """Return the pattern of selector nesting for this rmap."""
         if "classes" in self._rmap_header:
             return tuple(self._rmap_header["classes"])
-        elif self._rmap_header["observatory"] == "jwst":
-            return ("Match",)
-        else:  # nominally HST / CDBS
+        else: 
             return ("Match", "UseAfter")
         
     @property
