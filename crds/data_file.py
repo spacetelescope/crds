@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 # =============================================================================
 
-from crds.core  import utils, log, config, python23, timestamp, exceptions
+from crds.core  import utils, log
 
 # =============================================================================
 

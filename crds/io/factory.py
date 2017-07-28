@@ -93,12 +93,22 @@ def get_filetype(filepath, original_name=None):
         return filetype
     
     with open(filepath, "rb") as handle:
-        first_5 = str(handle.read(5).decode('utf-8'))
-    if first_5 == "#ASDF":
-        return "asdf"
-    elif first_5 == "SIMPL":
-        return "fits"
-    
+        first_5 = str(handle.read(5).decode('utf-8'))    
+        if first_5 == "#ASDF":
+            return "asdf"
+        elif first_5 == "SIMPL":
+            first_81 = first_5 + handle.read(76).decode('utf-8')
+            if first_81[-1] == '\n':
+                all_chars = first_81 + handle.read().decode('utf-8')
+                lines = all_chars.splitlines()
+                lengths = { len(line) for line in lines }
+                if len(lengths) == 1 and 80 in lengths:
+                    return 'geis'
+                else:
+                    return 'fits'
+            else:
+                return "fits"
+
     try:
         with open(filepath) as handle:
             import json

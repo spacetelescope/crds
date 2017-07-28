@@ -44,6 +44,8 @@ setup_pars = {
     "package_data" : {
         'crds.hst': [
             '*.dat',
+            '*.yaml',
+            '*.json',
             'tpns/*.tpn',
             'specs/*.spec',
             'specs/*.rmap',
@@ -51,6 +53,8 @@ setup_pars = {
             ],
         'crds.jwst': [
             '*.dat',
+            '*.yaml',
+            '*.json',
             'tpns/*.tpn',
             'specs/*.spec',
             'specs/*.rmap',
@@ -58,6 +62,8 @@ setup_pars = {
             ],
         'crds.tobs': [
             '*.dat',
+            '*.yaml',
+            '*.json',
             'tpns/*.tpn',
             'specs/*.spec',
             'specs/*.rmap',

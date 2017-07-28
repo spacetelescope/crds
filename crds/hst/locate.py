@@ -15,17 +15,16 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 import os.path
-import glob
 import datetime
 import time
 
 # =======================================================================
 
 from crds.core import log, rmap, config, utils, timestamp
-from crds.certify import generic_tpn
 from crds import data_file
 from crds.core.exceptions import CrdsError
 from crds.hst import siname
+from crds.io import abstract
 
 # =======================================================================
 
@@ -57,8 +56,18 @@ def project_check(refpath):
 # When loading headers,  make sure each keyword in a tuple is represented with
 # the same value enabling any form to be used.
 CROSS_STRAPPED_KEYWORDS = {
+       # "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE",],
     }
 
+@utils.cached
+def get_static_pairs():
+    return abstract.equivalence_dict_to_pairs(CROSS_STRAPPED_KEYWORDS)
+
+def get_cross_strapped_pairs(header):
+    """Return the list of keyword pairs where each pair describes synonyms for the same
+    piece of data.
+    """
+    return  get_static_pairs()
 
 # =======================================================================
 

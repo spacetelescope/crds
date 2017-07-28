@@ -24,7 +24,8 @@ import crds
 from crds.core import pysh, log, config, utils, rmap, cmdline
 from crds.core.exceptions import InvalidFormatError, ValidationError
 
-from crds import data_file, diff, tables
+from crds import data_file, diff
+from crds.io import tables
 from crds.client import api
 # from crds.io import abstract
 
