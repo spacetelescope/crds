@@ -45,13 +45,62 @@ def test_get_asdf_type():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_fits_type_opaque():
+def test_get_asdf_type_opaque():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/opaque_asd.tmp")
     'asdf'
     >>> test_config.cleanup(old_state)
     """
+
+def test_get_geis_type():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> factory.get_filetype("data/e1b09593u.r1h")
+    'geis'
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_get_geis_type_opaque():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> factory.get_filetype("data/opaque_gs.tmp")
+    'geis'
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_get_json_type():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> factory.get_filetype("data/valid.json")
+    'json'
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_get_json_type_opaque():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> factory.get_filetype("data/opaque_jsn.tmp")
+    'json'
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_get_yaml_type():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> factory.get_filetype("data/valid.yaml")
+    'yaml'
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_get_yaml_type_opaque():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> factory.get_filetype("data/opaque_yml.tmp")
+    'yaml'
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 
 def main():

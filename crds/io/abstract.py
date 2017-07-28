@@ -220,6 +220,11 @@ class AbstractFile(object):
         return exceptions.UnsupportedFileOpError(
             "Method", repr(method), "is not supported for file format", repr(self.format))
 
+    @classmethod
+    def is_this_type(cls, filepath):
+        return NotImplementedError("CRDS s/w failure.  Filetype", repr(self.__class__.__name__),
+                                   "did not define 'is_this_type()'.")
+
     def get_format(self):
         """Return a string describing the structure of file at `filepath`,  intended
         for file overview describing generic array structure.
@@ -320,5 +325,4 @@ class AbstractFile(object):
         else:
             rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
         return rval
-
 
