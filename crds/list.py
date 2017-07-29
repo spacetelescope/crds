@@ -54,7 +54,7 @@ and ids used for CRDS reprocessing recommendations.
     Python Version = '3.5.2.final.0'
     Readonly Cache = False
 
-    More comprehensive configuration informatio is also available for advanced
+    More comprehensive configuration information is also available for advanced
     configurations:
 
     % python -m crds.list --config
@@ -108,8 +108,8 @@ and ids used for CRDS reprocessing recommendations.
 
     In both cases adding --full-path prints the path of the file within the CRDS cache.
 
-    These are ultimately simple directory listings which ignore the context specifiers
-    and should simply be grep'ed for finer grained answers.
+    These are merely simple directory listings which ignore the context specifiers
+    and can be grep'ed for finer grained answers.
 
     --------------------------------------------------------------------------
     3. The contents of cached mappings or references (header only) can be printed to stdout like this:
@@ -213,15 +213,13 @@ and ids used for CRDS reprocessing recommendations.
     5. Information about the default context can be printed.  There are two variations and a subtle distinction:
 
     % python m crds.list --operational-context
-    CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0204.pmap'
     jwst_0204.pmap 
 
     lists the context which has been *commanded* as default on the CRDS server.
 
     While:
 
-    % python -m crds.list --remote-context jwst-ops-pipeline
-    CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0204.pmap'
+    % crds list --remote-context jwst-ops-pipeline
     jwst_0101.pmap
     
     lists the context which is *in actual use* in the associated archive pipeline as reported by
@@ -240,7 +238,7 @@ and ids used for CRDS reprocessing recommendations.
     because it does not implicitly include all sub-mappings of the specified
     contexts.
 
-    % python -m crds.list --resolve-contexts --all
+    % crds list --resolve-contexts --all
     jwst.pmap
     jwst_0000.pmap
     jwst_0001.pmap
@@ -248,19 +246,18 @@ and ids used for CRDS reprocessing recommendations.
     jwst_0003.pmap
     ...
 
-    % python -m crds.list --resolve-contexts --last 5
+    % crds list --resolve-contexts --last 5
     jwst_0205.pmap
     jwst_0206.pmap
     jwst_0207.pmap
     jwst_0208.pmap
     jwst_0209.pmap
 
-    % python -m crds.list --resolve-contexts  --contexts jwst-miri-dark-operational 
+    % crds list --resolve-contexts  --contexts jwst-miri-dark-operational 
     jwst_miri_dark_0012.rmap
 
-    % python -m crds.list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
+    % crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
     jwst_niriss_superbias_0005.rmap
-
     """
     def __init__(self, *args, **keys):
         super(ListScript, self).__init__(*args, **keys)
@@ -273,15 +270,14 @@ and ids used for CRDS reprocessing recommendations.
             help='print names of reference files referred to by contexts')
         self.add_argument('--mappings', action='store_true', dest="list_mappings",
             help='print names of mapping files referred to by contexts')
-
         self.add_argument("--cached-references", action="store_true",
-            help="print the paths of all references in the local cache.")
+            help="print the paths of all references in the local cache. very primitive.")
         self.add_argument("--cached-mappings", action="store_true",
-            help="print the paths of all mappings in the local cache.")
+            help="print the paths of all mappings in the local cache. very primitive.")
         self.add_argument("--cached-pickles", action="store_true",
-            help="print the paths of all mappings in the local cache.")
+            help="print the paths of all pickles in the local cache. very primitive.")
         self.add_argument("--full-path", action="store_true",
-            help="print the full paths of files for --cached-references and --cached-mappings.")
+            help="print the full paths of listed files.")
 
         self.add_argument("--dataset-ids-for-instruments", nargs="+", dest="dataset_ids", default=None, metavar="INSTRUMENTS",
             help="print the dataset ids known to CRDS associated for the specified instruments.")
@@ -323,32 +319,40 @@ and ids used for CRDS reprocessing recommendations.
         
     def main(self):
         """List files."""
+        if self.args.cat is not None: # including []
+            return self.cat_files()
+
+        if self.args.operational_context:
+            print(self.default_context)
+            return
+        if self.args.remote_context:
+            print(self.remote_context)
+            return
+
         if self.args.resolve_contexts:
             self.list_resolved_contexts()
+                    
         if self.args.list_references:
             self.list_references()
         if self.args.list_mappings:
             self.list_mappings()
-        if self.args.dataset_ids:
-            self.list_dataset_ids()
-        if self.args.dataset_headers:
-            self.list_dataset_headers()
         if self.args.cached_references:
             self.list_cached_references()
         if self.args.cached_mappings:
             self.list_cached_mappings()
         if self.args.cached_pickles:
             self.list_cached_pickles()
+
+        if self.args.dataset_ids:
+            self.list_dataset_ids()
+        if self.args.dataset_headers:
+            self.list_dataset_headers()
+
         if self.args.config:
             self.list_config()
         if self.args.status:
             self.list_status()
-        if self.args.cat is not None:
-            self.cat_files()
-        if self.args.operational_context:
-            print(self.default_context)
-        if self.args.remote_context:
-            print(self.remote_context)
+
         if self.args.required_parkeys:
             self.list_required_parkeys()
 
@@ -366,31 +370,38 @@ and ids used for CRDS reprocessing recommendations.
         as recorded on the server after being pushed by the crds.sync tool in the pipeline.
         """
         self.require_server_connection()
-        return api.get_remote_context(self.observatory, self.args.remote_context)
+        with log.error_on_exception("Failed resolving remote context"):
+            return api.get_remote_context(self.observatory, self.args.remote_context)
 
     def cat_files(self):
-        """Print out the files listed after --cat"""
+        """Print out the files listed after --cat or implied by a combination of 
+        explicitly specified contexts and --mappings or --references.
+        
+        --files is not allowed.
+        
+        """
         self.show_context_resolution = True
 
         self.args.files = self.args.cat   # determine observatory from --cat files.
-
+        
+        
+        mappings = self.get_context_mappings() if self.args.list_mappings else []
+        references = self.get_context_references() if self.args.list_references else []
+        
         # --cat files...   specifying *no* files still triggers --cat logic
-        # XXXX not allowed --files files... @-files are permitted, containing file lists
+        # XXXX not allowed --files files... 
+        # --cat @-files are permitted, containing file lists
         # --contexts context-specifiers [including --all --last --range...]
         # context specifiers can be symbolic and will be resolved.
-        catted_files = self.args.cat + self.contexts
-        if not self.args.contexts or (self.default_context not in self.args.contexts):
-            try:
-                catted_files.remove(self.default_context)
-            except Exception:
-                pass
+        catted_files = self.args.cat + mappings + references
+
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
             with log.error_on_exception("Failed dumping:", repr(name)):
                 path = self.locate_file(name)
                 if path != "N/A":
                     self._cat_file(path)
-
+                    
     def _cat_file(self, path):
         """Print out information on a single reference or mapping at `path`."""
         self._cat_banner("File:", os.path.abspath(path), delim="#", bottom_delim="-")
