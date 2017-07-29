@@ -64,7 +64,18 @@ class CrdsNetworkError(CrdsError):
     
 class CrdsLookupError(CrdsError, LookupError):
     """Filekind NOT FOUND for some reason defined in the exception string."""
-    
+
+class CrdsRemoteContextError(CrdsError):
+    """There was a problem pushing or retrieving the value of a pipeline context
+    recorded on the CRDS server, i.e. the pipeline's echo of the context
+    they're using as reported by the sync tool.   A remote context is CRDS's
+    attempt to track the default context actually sync'ed to a pipeline, i.e.
+    what that particular cache says.  In contrast the operational context
+    is a global maintained on the CRDS server defining what the default *should
+    be* as a result of successful and current cache sync'ing by any pipeline
+    or CRDS user.
+    """
+
 # -------------------------------------------------------------------------------------------
 
 class CrdsUnknownInstrumentError(CrdsError):

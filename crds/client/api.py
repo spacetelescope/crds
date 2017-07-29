@@ -23,6 +23,7 @@ from crds.core.log import srepr
 
 from crds.core.exceptions import ServiceError, CrdsLookupError
 from crds.core.exceptions import CrdsNetworkError, CrdsDownloadError
+from crds.core.exceptions import CrdsRemoteContextError
 from crds.core import python23
 from crds.core.python23 import *
 
@@ -367,13 +368,21 @@ def push_remote_context(observatory, kind, key, context):
     for critical systems like pipelines,  not average users.   This lets the server
     display actual versus commanded (Set Context) operational contexts for a pipeline.
     """
-    return S.push_remote_context(observatory, kind, key, context)
+    try:
+        return S.push_remote_context(observatory, kind, key, context)
+    except Exception:
+        raise CrdsRemoteContextError(
+            "Server error setting pipeline context", (observatory, kind, key, context))
 
 def get_remote_context(observatory, pipeline_name):
     """Get the name of the default context last pushed from `pipeline_name` and
     presumed to be operational.
     """
-    return S.get_remote_context(observatory, pipeline_name)
+    try:
+        return S.get_remote_context(observatory, pipeline_name)
+    except Exception:
+        raise CrdsRemoteContextError(
+            "Server error resolving context in use by pipeline", (observatory, pipeline_name))
 
 # ==============================================================================
 
