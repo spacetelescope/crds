@@ -15,7 +15,7 @@ GCOUNT              H        I         R    4
 PCOUNT              H        I         R    38
 INSTRUME            H        C         R    WFPC2
 FILETYPE            H        C         R    DRK
-USEAFTER_DATE       H        C         R    &SYBDATE
+USEAFTER       H        C         R    &SYBDATE
 MODE                H        C         R    FULL,AREA
 SERIALS             H        C         R    ON,OFF
 IMAGETYP            H        C         R    SPECIAL,CDBS

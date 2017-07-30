@@ -8,7 +8,7 @@
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #--------------------------------------------------------------------------
 FILE_NAME	    H        C         R
-USEAFTER_DATE       H        C         R    &SYBDATE
+USEAFTER       H        C         R    &SYBDATE
 OPUS_FLAG           H        C         R    Y,N
 COMPARISON_FILE     H        C         R    
 COMMENT             H        C         R

@@ -16,7 +16,7 @@ GCOUNT              H        I         R    1
 PCOUNT              H        I         R    12
 ROOTNAME            H        C         R    
 CAMERA              H        C         R    WF,PC
-USEAFTER_DATE       H        C         R    &SYBDATE
+USEAFTER       H        C         R    &SYBDATE
 MODE                H        C         R    FULL,AREA
 DETECTOR            H        I         R    1:8
 FILTNAM1            H        C         R    

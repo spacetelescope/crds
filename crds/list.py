@@ -380,25 +380,19 @@ and ids used for CRDS reprocessing recommendations.
         --files is not allowed.
         
         """
-        self.show_context_resolution = True
-
-        self.args.files = self.args.cat   # determine observatory from --cat files.
-        
-        
-        mappings = self.get_context_mappings() if self.args.list_mappings else []
-        references = self.get_context_references() if self.args.list_references else []
-        
         # --cat files...   specifying *no* files still triggers --cat logic
-        # XXXX not allowed --files files... 
-        # --cat @-files are permitted, containing file lists
         # --contexts context-specifiers [including --all --last --range...]
         # context specifiers can be symbolic and will be resolved.
-        catted_files = self.args.cat + mappings + references
+        # --cat @file is allowed
+
+        mappings = self.get_context_mappings() if self.args.list_mappings else []
+        references = self.get_context_mappings() if self.args.list_references else []        
+        catted_files = self.get_words(self.args.cat) + mappings + references
 
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
             with log.error_on_exception("Failed dumping:", repr(name)):
-                path = self.locate_file(name)
+                path = self.locate_file(name) 
                 if path != "N/A":
                     self._cat_file(path)
                     

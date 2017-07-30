@@ -27,6 +27,6 @@ SAMPPLN             H        I         R    64,128,256,512
 LINEPFM             H        I         R    64,128,256,512,1024
 SAMPBEG             H        I         R    0:512
 LINEBEG             H        I         R    0:1024
-USEAFTER_DATE       H        C         R    &SYBDATE
+USEAFTER       H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R
