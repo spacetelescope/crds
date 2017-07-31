@@ -583,6 +583,9 @@ class Selector(object):
         
         Raise a ValidationError if there are any problems.
         """
+        if len(self.parkey) != len(self.class_list):
+            raise ValidationError("Length mismatch between rmap parkey:", log.srepr(self.parkey), 
+                                  "and rmap classes header fields", log.srepr(self.class_list))
         for selection in self._selections:
             key, choice = selection.key, selection.choice
             with log.augment_exception(repr(key)):
