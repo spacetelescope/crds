@@ -324,6 +324,11 @@ class TestContextsScript(test_config.CRDSTestCase):
         contexts = s.determine_contexts()
         assert len(contexts) == 5, contexts
 
+    def test_determine_contexts_range(self):
+        s = ContextsScript("cmdline.ContextsScript --range 1:7")
+        contexts = s.determine_contexts()
+        assert len(contexts) == 7, contexts
+
     def test_determine_contexts_upto(self):
         s = ContextsScript("cmdline.ContextsScript --up-to-context hst-2016-01-01")
         contexts = s.determine_contexts()

@@ -192,7 +192,7 @@ class Script(object):
     
     def determine_contexts(self):
         """Return the list of contexts used by this invocation of the script.  Empty for Script."""
-        return []    
+        return []
 
     def add_args(self):
         """Add script-specific argparse add_argument calls here on self.parser"""
@@ -394,7 +394,8 @@ class Script(object):
         Symbolic context names, e.g. hst-operatonal, resolved to literal contexts, e.g. hst_0320.pmap
         """
         filename = config.pop_crds_uri(filename)   # nominally crds://
-        return config.locate_file(self.resolve_context(filename), observatory=self.observatory)
+        filename = self.resolve_context(filename) if config.is_date_based_mapping_spec(filename) else filename
+        return config.locate_file(filename, observatory=self.observatory)
 
     def locate_file_outside_cache(self, filename):
         """This is essentially normal filename syntax,  except crds:// is interpreted to mean
@@ -448,15 +449,12 @@ class Script(object):
         """
         if isinstance(context, str) and context.lower() == "none":
             return None
-        if config.is_date_based_mapping_spec(context):
-            if re.match(config.complete_re(config.OBSERVATORY_RE_STR + r"-operational"), context):
-                final_context = self.server_info.operational_context
-            else:
-                _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
-            if self.show_context_resolution:
-                log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
-            context = final_context
-        return context
+        if not config.is_date_based_mapping_spec(context):
+            return context           
+        _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
+        if self.show_context_resolution:
+            log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
+        return final_context
 
     def get_conjugates(self, file_list):
         """Given a list of references,  return any GEIS data files associated with them."""
@@ -631,6 +629,7 @@ class ContextsScript(Script):
     
     def __init__(self, *args, **keys):
         super(ContextsScript, self).__init__(*args, **keys)
+        self.contexts = []
 
     def add_args(self):
         group = self.get_exclusive_arg_group(required=False)
@@ -642,9 +641,9 @@ class ContextsScript(Script):
             help='Operate with respect to all known CRDS contexts.')
         group.add_argument('--last-n-contexts', metavar="N", type=int, default=None,
             help='Operate with respect to the last N contexts.')
-        group.add_argument("--up-to-context", metavar='CONTEXT', type=mapping_spec, nargs=1,
+        group.add_argument("--up-to-context", metavar='CONTEXT', type=mapping_spec, nargs=1, default=None,
             help='Operate on all contexts up to and including the specified context.')
-        group.add_argument("--after-context", metavar='CONTEXT', type=mapping_spec, nargs=1,
+        group.add_argument("--after-context", metavar='CONTEXT', type=mapping_spec, nargs=1, default=None,
             help='Operate on all contexts after and including the specified context.')
 
     def determine_contexts(self):
@@ -682,8 +681,10 @@ class ContextsScript(Script):
                 after_context = self.resolve_context(self.args.after_context[0])
                 after_ix = pmaps.index(after_context)
                 contexts = pmaps[after_ix:]
+        elif config.get_crds_env_context():
+            contexts = [self.resolve_context(config.get_crds_env_context())]
         else:
-            contexts = [self.resolve_context(config.get_crds_env_context() or self.observatory + "-operational")]
+            contexts = [self.resolve_context(self.observatory + "-operational")]
         log.verbose("Determined contexts: ", contexts, verbosity=55)
         return sorted(contexts)
 

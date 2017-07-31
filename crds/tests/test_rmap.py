@@ -529,7 +529,7 @@ class TestRmap(test_config.CRDSTestCase):
     def test_rmap_list_references(self):
         os.environ["CRDS_REFPATH_SINGLE"] = self.data_dir
         config.CRDS_REF_SUBDIR_MODE = "flat"
-        self.assertEqual(rmap.list_references("*.r1h", "hst"), ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h'])
+        self.assertEqual(rmap.list_references("*.r1h", "hst"), ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h', 'valid.r1h'])
 
     def test_rmap_get_derived_from(self):
         # api.dump_mappings("hst.pmap", mappings=["hst_acs_flshfile_0251.rmap"])
