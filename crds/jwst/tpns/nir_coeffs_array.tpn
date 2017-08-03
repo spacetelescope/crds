@@ -2,7 +2,7 @@
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
 
-COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[-2:]==(2048,2048))
+COEFFS       A           X         (is_full_frame(SUBARRAY)and(INSTRUME!='NIRSPEC'))            (COEFFS_ARRAY.SHAPE[-2:]==(2048,2048))
 
 COEFFS       A           X         A             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[-2]-1<=2048)
 COEFFS       A           X         A             (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[-1]-1<=2048)

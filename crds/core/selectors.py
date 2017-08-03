@@ -583,6 +583,9 @@ class Selector(object):
         
         Raise a ValidationError if there are any problems.
         """
+        if len(self.parkey) != len(self.class_list):
+            raise ValidationError("Length mismatch between rmap parkey:", log.srepr(self.parkey), 
+                                  "and rmap classes header fields", log.srepr(self.class_list))
         for selection in self._selections:
             key, choice = selection.key, selection.choice
             with log.augment_exception(repr(key)):
@@ -783,20 +786,26 @@ class Selector(object):
         This call defines the starting point for parkeys and classes,  whereas
         _insert has diminishing lists passed down to nested Selectors.
         """
-        self._insert(header, value, self._rmap_header["parkey"], self.class_list, valid_values_map)
+        with log.augment_exception(
+            "Failed inserting", log.srepr(value), "into rmap:", log.srepr(self.name), 
+            "with header:\n", log.PP(header), 
+            "\n\nparkey:", log.srepr(self.parkey), "\nclasses:", self.class_list, 
+            "\nvalid_values:\n", log.PP(valid_values_map), "\n"):
+            self._insert(header, value, self.parkey, self.class_list, valid_values_map)
 
+    @property
+    def name(self):
+        return self._rmap_header.get("name", "UNDEFINED")
+
+    @property
+    def parkey(self):
+        return tuple(self._rmap_header.get("parkey", "UNDEFINED"))
+    
     @property
     def class_list(self):
         """Return the pattern of selector nesting for this rmap."""
-        if "classes" in self._rmap_header:
-            return tuple(self._rmap_header["classes"])
-        else: 
-            return ("Match", "UseAfter")
+        return tuple(self._rmap_header.get("classes", ("Match", "UseAfter")))
         
-    @property
-    def parkey(self):
-        return self._rmap_header["parkey"]
-    
     def _insert(self, header, value, parkey, classes, valid_values_map):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
         key = self._make_key(header, parkey[0])
