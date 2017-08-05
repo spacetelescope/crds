@@ -589,9 +589,7 @@ def certify_AsdfCertify_opaque_name():
 def certify_rmap_compare():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("jwst_miri_distortion_0007.rmap", context="jwst_0101.pmap")
-    CRDS - INFO -  Certifying 'jwst_miri_distortion_0007.rmap' as 'MAPPING' relative to context 'jwst_0101.pmap'
-    CRDS - ERROR -  Match('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.EXPOSURE.TYPE') : ('*', '*', '*', 'MIR_MSA') :  parameter='META.EXPOSURE.TYPE' value='MIR_MSA' is not in ('MIR_IMAGE', 'MIR_TACQ', 'MIR_LYOT', 'MIR_4QPM', 'MIR_LRS-FIXEDSLIT', 'MIR_LRS-SLITLESS', 'MIR_MRS', 'MIR_DARK', 'MIR_FLATIMAGE', 'MIR_FLATMRS', 'MIR_FLAT-IMAGE', 'MIR_FLAT-MRS', 'MIR_CORONCAL', '*', 'N/A')
+    >>> certify.certify_file("jwst_miri_distortion_0025.rmap", context="jwst_0357.pmap")
     >>> test_config.cleanup(old_state)
     """
 

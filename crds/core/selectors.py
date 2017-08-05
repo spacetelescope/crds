@@ -1674,11 +1674,19 @@ Tuple results are legal as long as the elements are simple strings:
     
     >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, 'N/A') : ("100","200"),
+    ... },
+    ... {
+    ...    'classes' : ('Match',),
+    ...    'parkey' : (("foo","bar"),),
     ... })
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
 
     >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, 'N/A') : (100,"200"),
+    ... },
+    ... {
+    ...    'classes' : ('Match',),
+    ...    'parkey' : (("foo","bar"),),
     ... })
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
@@ -1689,11 +1697,19 @@ Dictionary results are legal as long as the keys and values are simple strings:
     
     >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, 'N/A') : {"flummox":"200"},
+    ... },
+    ... {
+    ...    'classes' : ('Match',),
+    ...    'parkey' : (("foo","bar"),),
     ... })
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
 
     >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, 'N/A') : {"flummox":200},
+    ... },
+    ... {
+    ...    'classes' : ('Match',),
+    ...    'parkey' : (("foo","bar"),),
     ... })
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
@@ -1702,6 +1718,10 @@ Dictionary results are legal as long as the keys and values are simple strings:
 
     >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, 'N/A') : { 1:"200"},
+    ... },
+    ... {
+    ...    'classes' : ('Match',),
+    ...    'parkey' : (("foo","bar"),),
     ... })
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
@@ -1712,7 +1732,12 @@ No other primitive choices are legal,  so None is invalid:
 
     >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, 'N/A') : None,
+    ... },
+    ... {
+    ...    'classes' : ('Match',),
+    ...    'parkey' : (("foo","bar"),),
     ... })
+    
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
@@ -2233,6 +2258,10 @@ VersionAfter versions should look like x, x.y, x.y.z
     ...        '200':'test_0.json',
     ...        '200.100':'test_1.json',
     ...        '200.100.1':'test_2.json',
+    ... },
+    ... {
+    ...    'classes' : ('VersionAfter',),
+    ...    'parkey' : (("CAL_VER",),),
     ... })
     
     >>> u.validate_selector({})
