@@ -590,6 +590,7 @@ def certify_rmap_compare():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("jwst_miri_distortion_0025.rmap", context="jwst_0357.pmap")
+    CRDS - INFO -  Certifying 'jwst_miri_distortion_0025.rmap' as 'MAPPING' relative to context 'jwst_0357.pmap'
     >>> test_config.cleanup(old_state)
     """
 
