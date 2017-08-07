@@ -529,12 +529,12 @@ class SyncScript(cmdline.ContextsScript):
         if info["state"] not in ["archived", "operational"]:
             log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
         if info["rejected"] != "false":
-            log.warning("File", repr(base), "has been explicitly rejected.")
+            log.verbose_warning("File", repr(base), "has been explicitly rejected.")
             if self.args.purge_rejected:
                 self.remove_files([path], "files")
             return
         if info["blacklisted"] != "false":
-            log.warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
+            log.verbose_warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
             if self.args.purge_blacklisted:
                 self.remove_files([path], "files")
             return
