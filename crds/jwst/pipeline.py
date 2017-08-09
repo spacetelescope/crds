@@ -118,7 +118,11 @@ class CrdsCfgManager(object):
 
         Return [reftypes, ... ]
         """
-        return self._crdscfg.exptypes_to_reftypes[exp_type]
+        reftypes = self._crdscfg.exptypes_to_reftypes[exp_type]
+        log.verbose("Applicable reftypes for", srepr(exp_type), 
+                    "determined by", srepr(os.path.basename(self._refpath)),
+                    "are", srepr(reftypes))
+        return reftypes
 
     def exptypes_to_pipelines(self, exp_type):
         """For a given EXP_TYPE string, return a list of pipeline .cfg's needed to 
@@ -126,7 +130,11 @@ class CrdsCfgManager(object):
 
         Return [.cfg's, ... ]
         """
-        return self._crdscfg.exptypes_to_pipelines[exp_type]
+        pipelines = self._crdscfg.exptypes_to_pipelines[exp_type]
+        log.verbose("Applicable pipelines for", srepr(exp_type), 
+                    "determined by", srepr(os.path.basename(self._refpath)),
+                    "are", srepr(pipelines))
+        return pipelines
 
 def test():
     import doctest, crds.jwst.pipeline
