@@ -36,6 +36,8 @@ CAL_VER = re.match(r"^" + VERSION_RE_STR, version.__version__).group(1)
 
 GENERATION_DATE = timestamp.now("T").split(".")[0]
 
+REFERENCE_DIVIDER = "# vvvvvvvv GENERATED vvvvvvvv"
+
 # --------------------------------------------------------------------------------------
 
 class CrdsCfgGenerator(object):
@@ -67,7 +69,7 @@ class CrdsCfgGenerator(object):
                 input_body += ["    generation_date: " + GENERATION_DATE]
             else:
                 input_body += [line]
-        return "\n".join(input_body).split("# vvvvvvvv GENERATED vvvvvvvv")[0]
+        return "\n".join(input_body).split(REFERENCE_DIVIDER)[0] + "\n" + REFERENCE_DIVIDER + "\n"
     
     def generate_pipeline_info(self):
         """Based on the input YAML and JWST cal code,  generate the mappings:
