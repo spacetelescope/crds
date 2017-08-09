@@ -67,7 +67,7 @@ class CrdsCfgGenerator(object):
                 input_body += ["    generation_date: " + GENERATION_DATE]
             else:
                 input_body += [line]
-        return "\n".join(input_body)
+        return "\n".join(input_body).split("# vvvvvvvv GENERATED vvvvvvvv")[0]
     
     def generate_pipeline_info(self):
         """Based on the input YAML and JWST cal code,  generate the mappings:

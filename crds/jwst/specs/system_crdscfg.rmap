@@ -1,7 +1,7 @@
 header = {
     'classes' : ('VersionAfter',),
     'derived_from' : 'handmade spec 07-20-2017',
-    'file_ext' : '.fits',
+    'file_ext' : '.yaml',
     'filekind' : 'crdscfg',
     'filetype' : 'CRDSCFG',
     'instrument' : 'SYSTEM',
@@ -12,7 +12,7 @@ header = {
     'reference_to_dataset' : {
         'CAL_VER' : 'META.CALIBRATION_SOFTWARE_VERSION',
     },
-    'sha1sum' : '555e2388728e047419770df8fa09d18309304996',
+    'sha1sum' : 'e0129b8c5618431b521b25256dd59bb0d3409067',
     'suffix' : 'crdscfg',
     'text_descr' : 'Parameters for CRDS',
 }
