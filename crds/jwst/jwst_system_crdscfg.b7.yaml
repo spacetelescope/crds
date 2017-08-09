@@ -6,7 +6,9 @@ pedigree: DUMMY
 reftype: CRDSCFG
 telescope: JWST
 useafter: 1900-01-01T00:00:00
-cal_ver: "0.0.0"
+calibration_software_version: 0.7.0
+crds_version: 7.0.12
+generation_date: 2016-12-25T00:00:00
 
 pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calniriss_soss2.cfg,
   calwebb_image2.cfg]
