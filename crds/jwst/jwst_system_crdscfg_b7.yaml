@@ -3,14 +3,14 @@
 
 meta:
     author: CRDS
-    descrip: "Reference used to determine pipeline configuration from dataset parameters."
+    description: "Reference used to determine pipeline configuration from dataset parameters."
     history: "First version generated from calcode .cfg files and EXP_TYPE/LEVEL mapping."
     instrument: SYSTEM
     pedigree: DUMMY
     reftype: CRDSCFG
     telescope: JWST
     useafter: 1900-01-01T00:00:00
-    calibration_software_version: 0.7.7
+    calibration_software_version: 0.7.0
     crds_version: 7.0.12
     generation_date: 2017-08-09T16:31:31
 

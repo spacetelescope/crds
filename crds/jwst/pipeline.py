@@ -88,7 +88,7 @@ def get_config_refpath(context, cal_ver):
     # default enables running on contexts that have no system crdscfg 
     # reference, B7 and earlier.
     refpath = DEFAULT_SYSTEM_CRDSCFG_PATH
-    with log.verbose_warning_on_exception(
+    with log.warn_on_exception(
             "Failed locating SYSTEM CRDSCFG reference",
             "under context", repr(context),
             "and cal_ver", repr(cal_ver) + ".",

@@ -1246,9 +1246,23 @@ USER_NAME_RE = re.compile(complete_re(USER_NAME_RE_STR))
 # approximate regex to validate semver.org version numbers.
 
 VERSION_RE_STR = complete_re(
-    r"\d{1,8}(\.\d{1,8}(\.\d{1,8}(\.\w{1,8})?)?)?")
+    r"(\d{1,8}(\.\d{1,8}(\.\d{1,8})?)?)[a-zA-Z0-9_\-\.]*")
 VERSION_RE = re.compile(VERSION_RE_STR)
 
+def simplify_version(version):
+    """
+    >>> simplify_version('0.7.8rc1.dev305')
+    '0.7.8'
+    >>> simplify_version('0.7.8')
+    '0.7.8'
+    >>> simplify_version('0.7')
+    '0.7'
+    >>> simplify_version('0')
+    '0'
+    >>> simplify_version('0.foo')
+    '0'
+    """
+    return VERSION_RE.match(version).group(1)
 # -------------------------------------------------------------------------------------
 
 def test():
