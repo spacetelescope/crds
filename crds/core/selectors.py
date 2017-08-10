@@ -2266,13 +2266,6 @@ VersionAfter versions should look like x, x.y, x.y.z
     
     >>> u.validate_selector({})
 
-    >>> u = VersionAfterSelector(("CAL_VER",), {
-    ...        '200.foo':'test_0.json',
-    ... })
-    Traceback (most recent call last):
-    ...
-    AssertionError: Invalid version string '200.foo'
-    
 Empty VersionAfterSelectors always raise an exception on choose():
     
     >>> u = VersionAfterSelector(("CAL_VER",), { })
@@ -2298,7 +2291,7 @@ Restore debug configuration.
             assert isinstance(part, int), "Invalid version key " + repr(key)
         
     def _validate_version(self, version):
-        assert isinstance(version, str) and re.match(config.VERSION_RE, version), \
+        assert isinstance(version, str) and config.VERSION_RE.match(version), \
             "Invalid version string " + repr(version)
 
     def _validate_header(self, header):
@@ -2330,7 +2323,7 @@ Restore debug configuration.
     def condition_key(self, version):
         """Convert a period seperated string into a tuple of ints of length 3, zero filling."""
         self._validate_version(version)
-        parts = version.split(".")
+        parts = config.simplify_version(version).split(".")
         if len(parts) >= 4:
             # devext = re.split("[a-zA-Z]*", parts[3])[-1] # dev345 -> 345
             parts = parts[:3]

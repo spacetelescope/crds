@@ -41,12 +41,11 @@ def test_header(calver, exp_type):
         }
     return header
 
-
 # --------------------------------------------------------------------------------------
 
 HERE = os.path.dirname(__file__) or "."
 
-DEFAULT_SYSTEM_CRDSCFG_PATH = os.path.join(HERE, "jwst_system_crdscfg.yaml")
+DEFAULT_SYSTEM_CRDSCFG_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.yaml")
 
 # --------------------------------------------------------------------------------------
 
@@ -69,14 +68,27 @@ def header_to_reftypes(context, header):
 
 @utils.cached  # for caching,  pars must be immutable, ideally simple
 def get_config_manager(context, cal_ver):
-    """Construct a pipeline configuration manager appropriate for the given CRDS `context`
-    and calibration s/w version `calver`.
+    """Given `context` and calibration s/w version `cal_ver`,  identify the appropriate
+    SYSTEM CRDSCFG reference file and create a CrdsCfgManager from it.
     """
+    refpath = get_config_refpath(context, cal_ver)
+    return load_refpath(context, refpath)
+
+def load_refpath(context, refpath):
+    """Given `context` and SYSTEM CRDSCFG reference at `refpath`,  construct a CrdsCfgManager."""
     import yaml
+    with open(refpath) as opened:
+        crdscfg =  yaml.load(opened)
+    return CrdsCfgManager(context, refpath, crdscfg)
+
+def get_config_refpath(context, cal_ver):
+    """Given CRDS `context` and calibration s/w version `cal_ver`,  identify the applicable
+    SYSTEM CRDSCFG reference file, cache it, and return the file path.
+    """
     # default enables running on contexts that have no system crdscfg 
     # reference, B7 and earlier.
     refpath = DEFAULT_SYSTEM_CRDSCFG_PATH
-    with log.verbose_warning_on_exception(
+    with log.warn_on_exception(
             "Failed locating SYSTEM CRDSCFG reference",
             "under context", repr(context),
             "and cal_ver", repr(cal_ver) + ".",
@@ -91,90 +103,38 @@ def get_config_manager(context, cal_ver):
         ref = rmapping.get_best_ref(header)
         refpath = rmapping.locate_file(ref)
         api.dump_references(context, [ref])
-    with open(refpath) as opened:
-        crdscfg =  yaml.load(opened)
-    return CrdsCfgManager(context, refpath, crdscfg)
+    return refpath
 
 class CrdsCfgManager(object):
-    """The CrdsCfgManager handles find."""
+    """The CrdsCfgManager handles using SYSTEM CRDSCFG information to compute things."""
     def __init__(self, context, refpath, crdscfg):
         self._context = context
         self._refpath = refpath
-        self._crdscfg = crdscfg
+        self._crdscfg = utils.Struct(crdscfg)
         
-    @utils.cached
     def exptype_to_reftypes(self, exp_type):
         """For a given EXP_TYPE string, return a list of reftypes needed to process that
         EXP_TYPE through the data levels appropriate for that EXP_TYPE.
 
-        Return [reftypes... ]
+        Return [reftypes, ... ]
         """
-        level_2a_pipeline = self.get_level_pipeline("level2a", exp_type)
-        level_2b_pipeline = self.get_level_pipeline("level2b", exp_type)
-        level_2a_types = self.get_pipeline_types(level_2a_pipeline, exp_type)
-        level_2b_types = self.get_pipeline_types(level_2b_pipeline, exp_type)
-        combined = sorted(list(set(level_2a_types + level_2b_types)))
-        return combined
-
-    @utils.cached
-    def get_level_pipeline(self, level, exp_type):
-        """Interpret the level_pipeline_exptypes data structure relative to
-        processing `level` and `exp_type` to determine a pipeline .cfg file.
-
-        Return pipeline .cfg
-        """
-        pipeline_exptypes = self._crdscfg["level_pipeline_exptypes"][level]
-        for mapping in pipeline_exptypes:
-            for pipeline, exptypes in mapping.items():
-                for exptype_pattern in exptypes:
-                    if glob_match(exptype_pattern, exp_type):
-                        log.verbose("Pipeline .cfg for", srepr(level), "and", 
-                                    srepr(exp_type), "is:", srepr(pipeline))
-                        return pipeline
-        raise exceptions.CrdsPipelineCfgDeterminationError("Unhandled EXP_TYPE", srepr(exp_type))
-
-    def get_pipeline_types(self, pipeline, exp_type):
-        """Based on a pipeline .cfg filename and an EXP_TYPE,  look up
-        the Steps corresponding to the .cfg and extrapolate those to the
-        reftypes used by those Steps.   If there are exceptions to the
-        reftypes assigned for a particular Step that depend on EXP_TYPE,
-        return the revised types for that Step instead.
-        
-        Return [reftypes ...]
-        """
-        crdscfg = self._crdscfg
-        steps = crdscfg["pipeline_cfgs_to_steps"][pipeline]
-        exceptions = crdscfg["steps_to_reftypes_exceptions"]
-        reftypes = []
-        for step in steps:
-            if step not in exceptions:
-                reftypes.extend(crdscfg["steps_to_reftypes"][step])
-            else:
-                for case in exceptions[step]:
-                    item = list(case.values())[0]
-                    more_reftypes = item["reftypes"][:]
-                    exptypes = item["exp_types"][:]
-                    found = False
-                    for exptype_pattern in exptypes:
-                        if glob_match(exptype_pattern, exp_type):
-                            log.verbose("Adding exceptional types", more_reftypes, 
-                                        "for step", srepr(step), "case", srepr(exptype_pattern), 
-                                        "based on exp_type", srepr(exp_type))
-                            found = True
-                            reftypes.extend(more_reftypes)
-                            break
-                    if found:
-                        break
-                else:
-                    raise exceptions.CrdsPipelineTypeDeterminationError("Unhandled EXP_TYPE for exceptional Step", srepr(step))
-        log.verbose("Reftypes for pipeline", srepr(pipeline), "and", srepr(exp_type), 
-                    "are:", srepr(reftypes))
+        reftypes = self._crdscfg.exptypes_to_reftypes[exp_type]
+        log.verbose("Applicable reftypes for", srepr(exp_type), 
+                    "determined by", srepr(os.path.basename(self._refpath)),
+                    "are", srepr(reftypes))
         return reftypes
 
-def glob_match(expr, value):
-    """Convert the given glob `expr` to a regex and match it to `value`."""
-    re_str = fnmatch.translate(expr)
-    return re.match(re_str, value)
+    def exptypes_to_pipelines(self, exp_type):
+        """For a given EXP_TYPE string, return a list of pipeline .cfg's needed to 
+        process that EXP_TYPE through the appropriate data levels.
+
+        Return [.cfg's, ... ]
+        """
+        pipelines = self._crdscfg.exptypes_to_pipelines[exp_type]
+        log.verbose("Applicable pipelines for", srepr(exp_type), 
+                    "determined by", srepr(os.path.basename(self._refpath)),
+                    "are", srepr(pipelines))
+        return pipelines
 
 def test():
     import doctest, crds.jwst.pipeline
