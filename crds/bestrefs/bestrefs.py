@@ -861,6 +861,9 @@ amount of informational and debug output.
         """Track and categorize the specified error,  printing out the dataset header
         if requested on the command line.
         """
+        parts = dataset.split(":")
+        if parts[0] == parts[-1]:  # no guarantee len() == 2
+            dataset = parts[0]
         super(BestrefsScript, self).log_and_track_error(dataset, *pars, **keys)
         if self.args.print_error_headers:
             log.info("Header for", repr(dataset) + ":\n", log.PP(self.active_header))
