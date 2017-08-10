@@ -34,7 +34,7 @@ meta:
     useafter: 1900-01-01T00:00:00
     calibration_software_version: 0.7.8
     crds_version: 7.1.5
-    generation_date: 2017-08-09T16:43:50
+    generation_date: 2017-08-10T08:58:05
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -126,6 +126,8 @@ steps_to_reftypes_exceptions:
 #
 # ----------------------------------------------------------------------------------------------
 
+
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg: [dq_init, group_scale, ipc, lastframe, linearity, refpix, rscd,
@@ -169,60 +171,60 @@ steps_to_reftypes:
 
 exptypes_to_pipelines:
   FGS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
-  FGS_FOCUS: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  FGS_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  FGS_FOCUS: [calwebb_image2.cfg, calwebb_sloper.cfg]
+  FGS_IMAGE: [calwebb_image2.cfg, calwebb_sloper.cfg]
   FGS_INTFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
   FGS_SKYFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
-  MIR_4QPM: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  MIR_CORONCAL: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  MIR_4QPM: [calwebb_image2.cfg, calwebb_sloper.cfg]
+  MIR_CORONCAL: [calwebb_image2.cfg, calwebb_sloper.cfg]
   MIR_DARK: [calwebb_dark.cfg, skip_2b.cfg]
   MIR_FLAT-IMAGE: [calwebb_sloper.cfg, skip_2b.cfg]
   MIR_FLAT-MRS: [calwebb_sloper.cfg, skip_2b.cfg]
   MIR_FLATIMAGE: [calwebb_sloper.cfg, skip_2b.cfg]
   MIR_FLATMRS: [calwebb_sloper.cfg, skip_2b.cfg]
-  MIR_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  MIR_IMAGE: [calwebb_image2.cfg, calwebb_sloper.cfg]
   MIR_LRS-FIXEDSLIT: [calwebb_sloper.cfg, calwebb_spec2.cfg]
   MIR_LRS-SLITLESS: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  MIR_LYOT: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  MIR_LYOT: [calwebb_image2.cfg, calwebb_sloper.cfg]
   MIR_MRS: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  MIR_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NIS_AMI: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  MIR_TACQ: [calwebb_image2.cfg, calwebb_sloper.cfg]
+  NIS_AMI: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NIS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
   NIS_FOCUS: [calwebb_sloper.cfg, skip_2b.cfg]
-  NIS_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NIS_IMAGE: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NIS_LAMP: [calwebb_sloper.cfg, skip_2b.cfg]
   NIS_SOSS: [calwebb_sloper.cfg, calwebb_spec2.cfg]
   NIS_TACONFIRM: [calwebb_sloper.cfg]
-  NIS_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NIS_TACQ: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NIS_WFSS: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRC_CORON: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRC_CORON: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRC_DARK: [calwebb_dark.cfg, skip_2b.cfg]
   NRC_FLAT: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRC_FOCUS: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRC_FOCUS: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRC_GRISM: [calwebb_sloper.cfg]
-  NRC_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRC_IMAGE: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRC_LED: [calwebb_sloper.cfg, skip_2b.cfg]
   NRC_TACONFIRM: [calwebb_sloper.cfg]
-  NRC_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRC_TACQ: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRC_TSGRISM: [calwebb_sloper.cfg]
   NRC_TSIMAGE: [calwebb_sloper.cfg]
   NRC_WFSC: [calwebb_sloper.cfg]
   NRS_AUTOFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
   NRS_AUTOWAVE: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_BOTA: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRS_BOTA: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRS_BRIGHTOBJ: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_CONFIRM: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRS_CONFIRM: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
   NRS_FIXEDSLIT: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_FOCUS: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRS_FOCUS: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRS_IFU: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRS_IMAGE: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRS_LAMP: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRS_MIMF: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRS_MIMF: [calwebb_image2.cfg, calwebb_sloper.cfg]
   NRS_MSASPEC: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_TACONFIRM: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_TASLIT: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRS_TACONFIRM: [calwebb_image2.cfg, calwebb_sloper.cfg]
+  NRS_TACQ: [calwebb_image2.cfg, calwebb_sloper.cfg]
+  NRS_TASLIT: [calwebb_image2.cfg, calwebb_sloper.cfg]
 
 exptypes_to_reftypes:
   FGS_DARK: [ipc, linearity, mask, refpix, rscd, saturation, superbias]

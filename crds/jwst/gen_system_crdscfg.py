@@ -103,7 +103,7 @@ class CrdsCfgGenerator(object):
         pipelines = []
         for level in self.loaded_cfg.level_pipeline_exptypes.keys():
             pipelines.extend(self.get_level_pipeline(level, exp_type))
-        return pipelines
+        return sorted(list(set(pipelines)))
 
     def exptype_to_reftypes(self, exp_type):
         """Return all reftypes associated with processing all steps of all pipelines for `exp_type`."""
