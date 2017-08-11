@@ -1681,19 +1681,39 @@
             "unique_rowkeys":null
         },
         "specwcs":{
-            "derived_from":"Handmade spec",
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Handmade 2017-08-11",
             "extra_keys":null,
-            "file_ext":".json",
+            "file_ext":".asdf",
             "filekind":"SPECWCS",
             "filetype":"SPECWCS",
             "instrument":"NIRCAM",
             "ld_tpn":"nircam_specwcs_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_nircam_specwcs_0000.rmap",
+            "name":"jwst_nircam_specwcs.rmap",
             "observatory":"JWST",
-            "parkey":[],
+            "parkey":[
+                [
+                    "META.INSTRUMENT.PUPIL",
+                    "META.INSTRUMENT.MODULE",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "EXP_TYPE":"META.EXPOSURE.TYPE",
+                "MODULE":"META.INSTRUMENT.MODULE",
+                "PUPIL":"META.INSTRUMENT.PUPIL"
+            },
+            "sha1sum":"9767ad3d8ad7b7bc7510127e62ae5df723f0cfce",
             "suffix":"specwcs",
-            "text_descr":"Spectroscopic World Coordinate System",
+            "text_descr":"Wide Field Slitless Spectral World Coordinate System",
             "tpn":"nircam_specwcs.tpn",
             "unique_rowkeys":null
         },
