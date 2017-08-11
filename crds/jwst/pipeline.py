@@ -45,7 +45,8 @@ def test_header(calver, exp_type):
 
 HERE = os.path.dirname(__file__) or "."
 
-DEFAULT_SYSTEM_CRDSCFG_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.yaml")
+SYSTEM_CRDSCFG_B7_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.yaml")
+SYSTEM_CRDSCFG_B7_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.yaml")
 
 # --------------------------------------------------------------------------------------
 
@@ -85,14 +86,18 @@ def get_config_refpath(context, cal_ver):
     """Given CRDS `context` and calibration s/w version `cal_ver`,  identify the applicable
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
-    # default enables running on contexts that have no system crdscfg 
-    # reference, B7 and earlier.
-    refpath = DEFAULT_SYSTEM_CRDSCFG_PATH
-    with log.warn_on_exception(
+    # default enables running if system calver is never delivered as reference file.
+    # and for B7 and earlier.
+    if cal_ver < '0.7.7':
+        refpath = SYSTEM_CRDSCFG_B7_PATH
+    else:
+        refpath = SYSTEM_CRDSCFG_B7_1_PATH
+        
+    with log.verbose_warning_on_exception(
             "Failed locating SYSTEM CRDSCFG reference",
             "under context", repr(context),
             "and cal_ver", repr(cal_ver) + ".",
-            "Using build-7 default."):
+            "Using builtin:", srepr(refpath)):
         header = {
             "META.INSTRUMENT.NAME" : "SYSTEM", 
             "META.CALIBRATION_SOFTWARE_VERSION": cal_ver 
@@ -103,6 +108,8 @@ def get_config_refpath(context, cal_ver):
         ref = rmapping.get_best_ref(header)
         refpath = rmapping.locate_file(ref)
         api.dump_references(context, [ref])
+        log.verbose("Using", srepr(refpath),
+                    "to determine applicable default reftypes for", srepr(cal_ver))
     return refpath
 
 class CrdsCfgManager(object):
