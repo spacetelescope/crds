@@ -717,7 +717,7 @@ amount of informational and debug output.
         """
         applicable_types = set()
         with log.verbose_warning_on_exception("Failed determining reftypes for", repr(dataset)):
-            applicable_types = set(self.locator.header_to_reftypes(context, header))
+            applicable_types = set(self.locator.header_to_reftypes(header, context))
         if self.affected_instruments:
             types = set(self.affected_instruments[instrument.lower()])
             if applicable_types:

@@ -71,7 +71,7 @@ def get_cross_strapped_pairs(header):
 
 # =======================================================================
 
-def header_to_reftypes(context, header):
+def header_to_reftypes(header, context="hst-operational"):
     """Based on `header` return the default list of appropriate reference type names."""
     return []  # translates to everything.
 
