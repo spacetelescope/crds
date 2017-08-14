@@ -24,14 +24,35 @@ things like "reference types used by a pipeline."
     
 >>> header_to_pipelines(test_header("0.7.0", "MIR_LRS-FIXEDSLIT"))
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
-    
+
+>>> _get_missing_calver("0.7.0")
+'0.7.0'
+
+>>> s = _get_missing_calver(None)
+>>> isinstance(s, str)
+True
+
+>>> s = _get_missing_calver()
+>>> isinstance(s, str)
+True
+
+>>> _get_missing_context()
+'jwst-operational'
+
+>>> _get_missing_context('jwst_0341.pmap')
+'jwst_0341.pmap'
+
 """
 
 # --------------------------------------------------------------------------------------
 
 import os.path
 
-# import yaml
+# import yaml     DEFERRED
+
+# --------------------------------------------------------------------------------------
+
+# from jwst import version     DEFERRED
 
 # --------------------------------------------------------------------------------------
 import crds
@@ -59,38 +80,75 @@ SYSTEM_CRDSCFG_B7_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.yaml")
 
 # --------------------------------------------------------------------------------------
 
-def header_to_reftypes(header, context="jwst-operational"):
+def _get_missing_calver(cal_ver=None):
+    """If `cal_ver` is None, return the calibration software version for 
+    the installed version of calibration code.  Otherwise return `cal_ver`
+    unchanged.
+    """
+    if cal_ver is None:
+        from jwst import version
+        cal_ver = version.__version__
+    return cal_ver
+
+def _get_missing_context(context=None):
+    """Default the context to `jwst-operational` if `context` is None, otherwise
+    return context unchanged.
+    """
+    return "jwst-operational" if context is None else context
+    
+# --------------------------------------------------------------------------------------
+
+def header_to_reftypes(header, context=None):
     """Given a dataset `header`,  extract the EXP_TYPE or META.EXPOSURE.TYPE keyword
     from and use it to look up the reftypes required to process it.
 
     Return a list of reftype names.
     """
-    with log.warn_on_exception("Failed determining required reftypes from header", log.PP(header)):
+    with log.warn_on_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
+        return get_reftypes(exp_type, cal_ver, context)
+    return []
+
+def get_reftypes(exp_type, cal_ver=None, context=None):
+    """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
+    reference file and determine the reference types required to process every pipeline Step
+    nominally associated with that exp_type.
+    """
+    context = _get_missing_context(context)
+    cal_ver = _get_missing_calver(cal_ver)
+    with log.warn_on_exception("Failed determining required reftypes from",
+                               "EXP_TYPE", srepr(exp_type), "CAL_VER", srepr(cal_ver)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.exptype_to_reftypes(exp_type)
     return []
 
 # This is potentially an external interface to system data processing (SDP) / the archive pipeline.
-def header_to_pipelines(header, context="jwst-operational"):
+def header_to_pipelines(header, context=None):
     """Given a dataset `header`,  extract the EXP_TYPE or META.EXPOSURE.TYPE keyword
     from and use it to look up the pipelines required to process it.
 
     Return a list of reftype names.
     """
-    with log.warn_on_exception("Failed determining required pipelines from header", log.PP(header)):
+    with log.augment_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
+    return get_pipelines(exp_type, cal_ver, context)
+
+def get_pipelines(exp_type, cal_ver=None, context=None):
+    """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
+    reference file and determine the sequence of pipeline .cfgs required to process that
+    exp_type.
+    """
+    context = _get_missing_context(context)
+    cal_ver = _get_missing_calver(cal_ver)
+    with log.augment_exception("Failed determining required pipeline .cfgs for",
+                               "EXP_TYPE", srepr(exp_type), "CAL_VER", srepr(cal_ver)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.exptype_to_pipelines(exp_type)
-    return []
 
 def _header_to_exptype_calver(header):
     """Given dataset `header`,  return the EXP_TYPE and CAL_VER values."""
     cal_ver = header.get("META.CALIBRATION_SOFTWARE_VERSION", header.get("CAL_VER"))
-    if cal_ver is None:
-        from jwst import version
-        cal_ver = version.__version__
-    exp_type = header.get("META.EXPOSURE.TYPE",  header.get("EXP_TYPE"))
+    exp_type = header.get("META.EXPOSURE.TYPE",  header.get("EXP_TYPE", "UNDEFINED"))
     return exp_type, cal_ver
 
 @utils.cached  # for caching,  pars must be immutable, ideally simple

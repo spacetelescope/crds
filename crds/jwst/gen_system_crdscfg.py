@@ -44,6 +44,7 @@ class CrdsCfgGenerator(object):
     def __init__(self, input_yaml):
         self.input_yaml = input_yaml
         self.loaded_cfg = self.get_body()
+        self.levels = self.loaded_cfg.levels
         self.exp_types = self.loaded_cfg.exp_types
         self.pipeline_cfgs_to_steps = {}
         self.steps_to_reftypes = {}
@@ -101,9 +102,9 @@ class CrdsCfgGenerator(object):
         Return [reftypes... ]
         """
         pipelines = []
-        for level in self.loaded_cfg.level_pipeline_exptypes.keys():
+        for level in self.levels:
             pipelines.extend(self.get_level_pipeline(level, exp_type))
-        return sorted(list(set(pipelines)))
+        return pipelines
 
     def exptype_to_reftypes(self, exp_type):
         """Return all reftypes associated with processing all steps of all pipelines for `exp_type`."""
@@ -113,7 +114,6 @@ class CrdsCfgGenerator(object):
             reftypes.extend(self.get_pipeline_types(pipeline, exp_type))
         reftypes = sorted(list(set(reftypes)))
         return reftypes
-        return []
     
     def get_level_pipeline(self, level, exp_type):
         """Interpret the level_pipeline_exptypes data structure relative to
