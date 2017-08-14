@@ -86,11 +86,12 @@ level_pipeline_exptypes:
 
     level2b:
         - calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_LRS-SLITLESS, MIR_MRS, NRS_FIXEDSLIT, 
-                             NRS_MSASPEC, NRS_IFU, NRS_BRIGHTOBJ, NRS_AUTOWAVE, NIS_SOSS]
+                             NRS_MSASPEC, NRS_IFU, NRS_BRIGHTOBJ, NRS_AUTOWAVE, NIS_SOSS,
+                             NRC_GRISM, NRC_TSGRISM]
 
-        - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, 
+        - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, NRC_WFSC, NRC_TACONFIRM, NRC_TSIMAGE,
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
-                             NIS_IMAGE, NIS_AMI, NIS_TACQ,
+                             NIS_IMAGE, NIS_AMI, NIS_TACQ, NIS_TACONFIRM, 
                              NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
