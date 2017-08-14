@@ -222,7 +222,7 @@ def dt_get_file_properties():
 
     >>> s = Script("crds.Script --jwst")
     >>> s.get_file_properties("data/valid.asdf")
-    ('miri', 'distortion')
+    ('niriss', 'specwcs')
    
     >>> test_config.cleanup(old_state)
     """
