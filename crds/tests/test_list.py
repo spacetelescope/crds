@@ -446,7 +446,49 @@ def dt_list_dataset_headers_id_expansions_only():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_list_required_parkeys():
+def dt_list_required_parkeys_pmap():
+    """
+    >>> old_state = test_config.setup()
+    >>> ListScript("crds.list --required-parkeys --contexts hst.pmap")() # doctest: +ELLIPSIS
+    --------------------- Parkeys required for 'hst.pmap' ---------------------
+    acs = ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'CCDAMP', 'CCDCHIP', 'CCDGAIN', 'CRCORR', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 'FILTER1', 'FILTER2', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'GLINCORR', 'LTV1', 'LTV2', 'NUMCOLS', 'NUMROWS', 'OBSTYPE', 'PCTECORR', 'PHOTCORR', 'REFTYPE', 'SHADCORR', 'SHUTRPOS', 'TIME-OBS', 'XCORNER', 'YCORNER']
+    cos = ['INSTRUME', 'BADTCORR', 'BRSTCORR', 'DATE-OBS', 'DEADCORR', 'DETECTOR', 'EXPTYPE', 'FLATCORR', 'FLUXCORR', 'LIFE_ADJ', 'OBSMODE', 'OBSTYPE', 'OPT_ELEM', 'REFTYPE', 'TDSCORR', 'TIME-OBS', 'WALKCORR']
+    nicmos = ['INSTRUME', 'CAMERA', 'DATE-OBS', 'FILTER', 'NREAD', 'OBSMODE', 'READOUT', 'REFTYPE', 'SAMP_SEQ', 'TIME-OBS']
+    stis = ['INSTRUME', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CCDOFFST', 'CENWAVE', 'DATE-OBS', 'DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'REFTYPE', 'TIME-OBS']
+    wfc3 = ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CHINJECT', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 'FILTER', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'PHOTCORR', 'REFTYPE', 'SAMP_SEQ', 'SHUTRPOS', 'SUBARRAY', 'SUBTYPE', 'TIME-OBS']
+    wfpc2 = ['INSTRUME', 'ATODGAIN', 'DATE-OBS', 'FILTER1', 'FILTER2', 'FILTNAM1', 'FILTNAM2', 'IMAGETYP', 'LRFWAVE', 'MODE', 'REFTYPE', 'SERIALS', 'SHUTTER', 'TIME-OBS']
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_list_required_parkeys_imap():
+    """
+    >>> old_state = test_config.setup()
+    >>> ListScript("crds.list --required-parkeys --contexts hst_acs.imap")() # doctest: +ELLIPSIS
+    atodtab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'ATODCORR']
+    biasfile: ['DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP', 'DATE-OBS', 'TIME-OBS', 'BIASCORR', 'XCORNER', 'YCORNER', 'CCDCHIP']
+    bpixtab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'DQICORR']
+    ccdtab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS']
+    cfltfile: ['DETECTOR', 'FILTER1', 'FILTER2', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS']
+    crrejtab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'CRCORR']
+    d2imfile: ['DATE-OBS', 'TIME-OBS', 'DRIZCORR']
+    darkfile: ['DETECTOR', 'CCDAMP', 'CCDGAIN', 'DATE-OBS', 'TIME-OBS', 'DARKCORR']
+    dgeofile: ['DETECTOR', 'FILTER1', 'FILTER2', 'DATE-OBS', 'TIME-OBS']
+    drkcfile: ['DETECTOR', 'CCDAMP', 'CCDGAIN', 'DATE-OBS', 'TIME-OBS', 'PCTECORR']
+    flshfile: ['DETECTOR', 'CCDAMP', 'CCDGAIN', 'FLASHCUR', 'SHUTRPOS', 'DATE-OBS', 'TIME-OBS', 'FLSHCORR']
+    idctab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS']
+    imphttab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'PHOTCORR']
+    mdriztab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'DRIZCORR']
+    mlintab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'GLINCORR']
+    npolfile: ['DETECTOR', 'FILTER1', 'FILTER2', 'DATE-OBS', 'TIME-OBS', 'DRIZCORR']
+    oscntab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS']
+    pctetab: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'PCTECORR']
+    pfltfile: ['DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'DATE-OBS', 'TIME-OBS', 'FLATCORR']
+    shadfile: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'SHADCORR']
+    spottab: ['DETECTOR', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS']
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_list_required_parkeys_rmap():
     """
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --required-parkeys --contexts hst_acs_darkfile.rmap")() # doctest: +ELLIPSIS
