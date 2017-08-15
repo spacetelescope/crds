@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Handmade 2017-08-15',
+    'file_ext' : '.asdf',
+    'filekind' : 'WAVECORR',
+    'filetype' : 'WAVECORR',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_wavecorr.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'a6a8d9f98865ef58921e301575283602587853a5',
+    'suffix' : 'wavecorr',
+    'text_descr' : 'Wave Correlation',
+}
+
+selector = Match({
+})
