@@ -1226,6 +1226,7 @@ def set_crds_state(old_state):
 def clear_crds_state():
     """Wipe out the existing configuration variable state of CRDS.
     """
+    global CRDS_REF_SUBDIR_MODE, _CRDS_CACHE_READONLY
     for var in list(os.environ.keys()):
         if var.startswith("CRDS_"):
             del os.environ[var]

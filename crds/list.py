@@ -386,7 +386,7 @@ and ids used for CRDS reprocessing recommendations.
         # --cat @file is allowed
 
         mappings = self.get_context_mappings() if self.args.list_mappings else []
-        references = self.get_context_mappings() if self.args.list_references else []        
+        references = self.get_context_references() if self.args.list_references else []        
         catted_files = self.get_words(self.args.cat) + mappings + references
 
         # This could be expanded to include the closure of mappings or references
