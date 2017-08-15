@@ -3320,6 +3320,36 @@
             "tpn":"nirspec_trappars.tpn",
             "unique_rowkeys":null
         },
+        "wavecorr":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Handmade 2017-08-15",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"WAVECORR",
+            "filetype":"WAVECORR",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_wavecorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_wavecorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"a6a8d9f98865ef58921e301575283602587853a5",
+            "suffix":"wavecorr",
+            "text_descr":"Wave Correlation",
+            "tpn":"nirspec_wavecorr.tpn",
+            "unique_rowkeys":null
+        },
         "wavelengthrange":{
             "derived_from":"Hand made 2015-10-09 15:35:00",
             "extra_keys":null,
