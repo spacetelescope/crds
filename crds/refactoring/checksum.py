@@ -11,7 +11,8 @@ from __future__ import absolute_import
 
 import sys
 
-from crds.core import config, log, rmap
+
+from crds.core import config, log, rmap, cmdline
 from crds.certify import mapping_parser
 
 def update_checksum(file_):
@@ -38,9 +39,29 @@ def update_checksums(files):
             new_errs = log.errors()
             if (new_errs == old_errs):
                 update_checksum(file_)
-                
+
+# ============================================================================
+
+class ChecksumScript(cmdline.Script):
+    """Command line script for updating mapping checksums."""
+
+    description = """
+    Updates the embedded checksums in the specified list of CRDS mapping 
+    (pmap, imap, rmap) files.
+    """
+    
+    epilog = """    
+    """
+    
+    def add_args(self):
+        self.add_argument('mappings', type=str, nargs="+",
+            help="CRDS mapping files (pmaps, imaps, rmaps) to update checksums for.")
+        
+    def main(self):
+        with log.error_on_exception("Checksuming operation FAILED"):
+            update_checksums(sys.argv[1:])
+        return log.errors()
+
 if __name__ == "__main__":
-    import crds
-    update_checksums(sys.argv[1:])
-    log.standard_status()
-    sys.exit(log.errors())
+    sys.exit(ChecksumScript()())
+
