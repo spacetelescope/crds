@@ -2,10 +2,15 @@
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
+# ===================================================================
+
+#  XXXX lots of bogus pylint warnings here,  verify before removing imports.
+
 import sys
 import os   # False pylint warning unused import,  verify before removing.
 import os.path
-import shutil
+import shutil  # False pylint warning unused import,  verify before removing.
 import stat
 import re
 import hashlib
@@ -17,6 +22,8 @@ import ast
 import gc
 
 # from crds import data_file,  import deferred until required
+
+# ===================================================================
 
 from crds.core import log, config, pysh
 from crds.core.constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
@@ -579,9 +586,14 @@ def is_writable(filepath, no_exist=True):
     if not os.path.exists(filepath):   # If file doesn't exist,  make sure directory is writable.
         return no_exist and len(os.path.dirname(filepath)) and is_writable(os.path.dirname(filepath))
     stats = os.stat(filepath)
-    return bool((stats.st_mode & stat.S_IWUSR) and (stats.st_uid == os.geteuid()) or 
-                (stats.st_mode & stat.S_IWGRP) and (stats.st_gid in os.getgroups()) or
-                (stats.st_mode & stat.S_IWOTH))
+    user_writeable = bool(stats.st_mode & stat.S_IWUSR) 
+    effective_user_matches =  bool(stats.st_uid == os.geteuid())
+    group_writeable = bool(stats.st_mode & stat.S_IWGRP)
+    group_matches = bool(stats.st_gid in os.getgroups())
+    other_writeable = bool(stats.st_mode & stat.S_IWOTH)
+    return bool((user_writeable and effective_user_matches) or 
+                (group_writeable and group_matches) or
+                (other_writeable))
 
 # ===================================================================
 
