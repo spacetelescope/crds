@@ -189,7 +189,7 @@ optional arguments:
     % python -m crds.list --cat jwst_nirspec_dark_0036.fits
     CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
     ##########################################################################################
-    File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
+    File:  '.../references/jwst/jwst_nirspec_dark_0036.fits'
     ##########################################################################################
     {'A1_COL_C': '8.9600000e+002',
     'A1_CONF1': '2.1846000e+004',
@@ -567,7 +567,7 @@ def dt_list_cat_mappings():
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00")() # doctest: +ELLIPSIS
     ################################################################################
-    File: /home/jmiller/crds_cache_ops/mappings/hst/hst_cos_deadtab_0250.rmap
+    File: .../mappings/hst/hst_cos_deadtab_0250.rmap
     --------------------------------------------------------------------------------
     header = {
         'derived_from' : 'generated from CDBS database 2014-05-09 23:24:57.840119',
@@ -592,6 +592,7 @@ def dt_list_cat_mappings():
             '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
         }),
     })
+
     >>> test_config.cleanup(old_state)
     """
 

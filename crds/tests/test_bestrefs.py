@@ -305,17 +305,21 @@ def dt_bestrefs_dataset_drop_ids():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_bestrefs_dataset_only_ids():
+def dt_bestrefs_compare_source_canary():
     """
     >>> old_state = test_config.setup()
-    >>> script = BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --load-pickle data/test_cos.json --only-ids LPPPPPP6Q:LCE31SW6Q")
-    >>> script.complex_init()
-    CRDS - INFO -  Loading file 'data/test_cos.json'
-    CRDS - INFO -  Loaded 1 datasets from file 'data/test_cos.json' completely replacing existing headers.
-    True
+    >>> BestrefsScript("crds.bestrefs --new-context hst_0551.pmap --compare-source --load-pickles data/canary.json --differences-are-errors")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Loading file 'data/canary.json'
+    CRDS - INFO -  Loaded 1 datasets from file 'data/canary.json' completely replacing existing headers.
+    CRDS - ERROR -  instrument='COS' type='BPIXTAB' data='LA7803FIQ' ::  Comparison difference: 'bar.fits' --> 'yae1249sl_bpix.fits' :: Would update.
+    CRDS - ERROR -  instrument='COS' type='XWLKFILE' data='LA7803FIQ' ::  Comparison difference: 'foo.fits' --> '14o2013ql_xwalk.fits' :: Would update.
+    CRDS - INFO -  2 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 infos
+    2
     >>> test_config.cleanup(old_state)
     """
-
+    
 def dt_test_cleanpath():
     """
     Removes prefixes added to reference files prior to writing into FITS headers.
