@@ -260,7 +260,7 @@ class Selector(object):
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
             self._raw_selections = sorted([Selection(s) for s in selections.items()])
-            self._substitutions = DEFAULT_SUBSTITUTIONS
+            self._substitutions = dict(DEFAULT_SUBSTITUTIONS)
             self._substitutions.update(self._rmap_header.get("substitutions", {}))
             selects = self.do_substitutions(parameters, selections, self._substitutions)
             self._selections = [Selection(s) for s in self.condition_selections(selects)]
