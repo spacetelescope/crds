@@ -215,6 +215,22 @@ class Selection(tuple):
     def __lt__(self, other):
         return self._cmp_key(self.key) < self._cmp_key(other.key)
 
+    
+
+# ==============================================================================
+
+# These subsitutions will apply to all rmaps,  only add those which are truly generic
+# and widely accepted.
+
+DEFAULT_SUBSTITUTIONS = {
+    'META.SUBARRAY.NAME' : {
+        'GENERIC' : 'N/A',
+    },
+    'SUBARRAY' : {
+        'GENERIC' : 'N/A',
+    },
+}
+
 # ==============================================================================
 
 class Selector(object):
@@ -244,11 +260,9 @@ class Selector(object):
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
             self._raw_selections = sorted([Selection(s) for s in selections.items()])
-            self._substitutions = dict(self._rmap_header.get("substitutions", {}))
-            if self._substitutions:
-                selects = self.do_substitutions(parameters, selections, self._substitutions)
-            else:
-                selects = selections
+            self._substitutions = DEFAULT_SUBSTITUTIONS
+            self._substitutions.update(self._rmap_header.get("substitutions", {}))
+            selects = self.do_substitutions(parameters, selections, self._substitutions)
             self._selections = [Selection(s) for s in self.condition_selections(selects)]
         else:
             # This branch exists to efficiently implement the
@@ -257,6 +271,7 @@ class Selector(object):
             # is really only good for a single lookup operation.
             assert isinstance(merge_selections, list),  \
                 "merge_selections should be a sorted item list,  not: " + repr(merge_selections)
+            # Because merge_selections are derived from selections, no substitutions are done here
             self._raw_selections = merge_selections  # XXX not really,  nominally unused XXXX
             self._selections = merge_selections
         self._parkey_map = self.get_parkey_map()
