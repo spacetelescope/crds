@@ -596,7 +596,7 @@ and ids used for CRDS reprocessing recommendations.
                 log.divider(name="Parkeys required for " + repr(mapping.basename), func=log.write)
                 _print_dict("", mapping.get_required_parkeys())
             elif isinstance(mapping, rmap.InstrumentContext):
-                for name in mapping.selections:
+                for name in sorted(mapping.selections):
                     try:
                         rmapping = mapping.get_rmap(name)
                     except (crds.exceptions.IrrelevantReferenceTypeError,

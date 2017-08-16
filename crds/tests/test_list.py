@@ -380,10 +380,17 @@ def dt_list_references():
 
 def dt_list_cached_references():
     """
+    >>> import doctest
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE, observatory="hst")
     >>> ListScript("crds.list --cached-references --full-path")() # doctest: +ELLIPSIS
-    ...
+    -ignore-/crds-cache-test/references/hst/v8q14451j_idc.fits
+    -ignore-/crds-cache-test/references/hst/z1q2219el_2zx.fits
+    -ignore-/crds-cache-test/references/hst/z1r1943el_1dx.fits
+    -ignore-/crds-cache-test/references/hst/z2d19237l_1dx.fits
+    -ignore-/crds-cache-test/references/hst/z2d1925ql_2zx.fits
     >>> test_config.cleanup(old_state)
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
 def dt_list_dataset_ids():
@@ -420,13 +427,18 @@ def dt_list_dataset_headers():
      'dataset_id': 'U20L0U01T:U20L0U01T'}
     >>> test_config.cleanup(old_state)
     """
+
 def dt_list_dataset_headers_json():
     """
-    >>> old_state = test_config.setup()  
+    >>> old_state = test_config.setup()
+    >>> import doctest
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> ListScript("crds.list --dataset-headers U20L0U01T:U20L0U01T --contexts hst.pmap --json")()   # doctest: +ELLIPSIS
-    {"U20L0U01T:U20L0U01T": {"SERIALS": "OFF", "OFFTAB": "S9M1329LU_OFF.FITS", "IDCTAB": "SAD1946EU_IDC.FITS", "DATA_SET": "U20L0U01T", "WF4TFILE": "N/A", "DGEOFILE": "SA119437U_DXY.FITS", "SHUTTER": "A", "DATE-OBS": "1993-12-07", "ATODGAIN": "15.0", "FILTER1": "0.0", "FILTER2": "0.0", "DATA_SET_EXP": "U20L0U01T", "EXPSTART": "1993-12-07 10:07:16.930000", "LRFWAVE": "0.0", "FLATFILE": "N/A", "DARKFILE": "E1Q14338U.R3H", "BIASFILE": "E4P16298U.R2H", "FILTNAM1": "UNDEFINED", "IMAGETYP": "BIAS", "ATODFILE": "DBU1405FU.R1H", "INSTRUME": "WFPC2", "MASKFILE": "F8213081U.R0H", "MODE": "FULL", "FILTNAM2": "UNDEFINED", "SHADFILE": "E371355EU.R5H", "TIME-OBS": "10:07:16.929999", "dataset_id": "U20L0U01T:U20L0U01T", "CRDS_CTX": "hst.pmap"}}
+    -ignore-
     >>> test_config.cleanup(old_state)
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
+
 def dt_list_dataset_headers_bogus():
     """
     >>> old_state = test_config.setup()  
@@ -555,7 +567,7 @@ def dt_list_cat_mappings():
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00")() # doctest: +ELLIPSIS
     ################################################################################
-    File: /Users/jmiller/crds_cache_ops/mappings/hst/hst_cos_deadtab_0250.rmap
+    File: /home/jmiller/crds_cache_ops/mappings/hst/hst_cos_deadtab_0250.rmap
     --------------------------------------------------------------------------------
     header = {
         'derived_from' : 'generated from CDBS database 2014-05-09 23:24:57.840119',
@@ -596,7 +608,7 @@ def dt_list_status():
     Effective Context = 'hst_....pmap'
     Last Synced = '...'
     Python Executable = '...'
-    Python Version = '3.6.2.final.0'
+    Python Version = '...'
     Readonly Cache = False
     >>> test_config.cleanup(old_state)
     """
