@@ -262,7 +262,7 @@ class Selector(object):
             self._raw_selections = sorted([Selection(s) for s in selections.items()])
             self._substitutions = dict(DEFAULT_SUBSTITUTIONS)
             self._substitutions.update(self._rmap_header.get("substitutions", {}))
-            selects = self.do_substitutions(parameters, selections, self._substitutions)
+            selects = self.do_substitutions(parameters, selections)
             self._selections = [Selection(s) for s in self.condition_selections(selects)]
         else:
             # This branch exists to efficiently implement the
@@ -285,9 +285,9 @@ class Selector(object):
         for i,choice  in enumerate(self.choices()):
             utils.trace_compare(choice, ochoices[i], show_equal)
 
-    def do_substitutions(self, parameters, selections, substitutions):
+    def do_substitutions(self, parameters, selections):
         """Replace parkey values in `selections` which are specified
-        in mapping `substitutions` as {parkey : { old_value : new_value }}
+        in mapping self._substitutions as {parkey : { old_value : new_value }}
         
         >>> header = {
         ...    'name' : 'jwst_miri_flat_0015.rmap',
@@ -326,28 +326,35 @@ class Selector(object):
           'jwst_miri_flat_0038.fits')]
 
         """
+        substitutions = self._substitutions
         selections2 = copy.deepcopy(selections)
-        matches = sorted(list(selections.keys()))
-        for match in matches:
-            if not isinstance(match, python23.string_types):
-                new_match = list(match)
-                for parkey in substitutions:
-                    try:
-                        which = parameters.index(parkey)
-                    except Exception:
-                        continue
+        for match in selections.keys():
+            is_tuple = isinstance(match, tuple)
+            for parkey in substitutions:
+                if is_tuple:
+                    new_match = list(match)
+                try:
+                    which = parameters.index(parkey)
+                except Exception:
+                    continue
+                if is_tuple:
                     old_parvalue = match[which]
-                    if old_parvalue in substitutions[parkey]:
-                        replacement = substitutions[parkey][old_parvalue]
-                        if isinstance(replacement, list):
-                            replacement = tuple(replacement)
-                        old_match = new_match[:]
+                else:
+                    old_parvalue = match
+                if old_parvalue in substitutions[parkey]:
+                    replacement = substitutions[parkey][old_parvalue]
+                    if isinstance(replacement, list):
+                        replacement = tuple(replacement)
+                    old_match = new_match[:]
+                    if is_tuple:
                         new_match[which] = replacement
-                        log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
-                                    (parkey, old_parvalue, replacement), "transforms",
-                                    repr(old_match), "-->", repr(new_match), verbosity=70)
-                new_match = tuple(new_match)
-                selections2[new_match] = selections2.pop(match)
+                        new_match = tuple(new_match)
+                    else:
+                        new_match = replacement
+                    log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
+                                (parkey, old_parvalue, replacement), "transforms",
+                                repr(old_match), "-->", repr(new_match), verbosity=70)
+                    selections2[new_match] = selections2.pop(match)
         return selections2
 
     def todict(self):
