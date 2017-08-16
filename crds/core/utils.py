@@ -717,6 +717,7 @@ def get_instruments_filekinds(observatory, filepaths):
 
 MODULE_PATH_RE = re.compile(r"^crds(\.\w{1,64}){0,10}$")
 
+@cached
 def get_object(*args):
     """Import the given `dotted_name` and return the object.
     
