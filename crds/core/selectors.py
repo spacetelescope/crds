@@ -215,6 +215,22 @@ class Selection(tuple):
     def __lt__(self, other):
         return self._cmp_key(self.key) < self._cmp_key(other.key)
 
+    
+
+# ==============================================================================
+
+# These subsitutions will apply to all rmaps,  only add those which are truly generic
+# and widely accepted.
+
+DEFAULT_SUBSTITUTIONS = {
+    'META.SUBARRAY.NAME' : {
+        'GENERIC' : 'N/A',
+    },
+    'SUBARRAY' : {
+        'GENERIC' : 'N/A',
+    },
+}
+
 # ==============================================================================
 
 class Selector(object):
@@ -244,11 +260,9 @@ class Selector(object):
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
             self._raw_selections = sorted([Selection(s) for s in selections.items()])
-            self._substitutions = dict(self._rmap_header.get("substitutions", {}))
-            if self._substitutions:
-                selects = self.do_substitutions(parameters, selections, self._substitutions)
-            else:
-                selects = selections
+            self._substitutions = dict(DEFAULT_SUBSTITUTIONS)
+            self._substitutions.update(self._rmap_header.get("substitutions", {}))
+            selects = self.do_substitutions(selections)
             self._selections = [Selection(s) for s in self.condition_selections(selects)]
         else:
             # This branch exists to efficiently implement the
@@ -257,6 +271,7 @@ class Selector(object):
             # is really only good for a single lookup operation.
             assert isinstance(merge_selections, list),  \
                 "merge_selections should be a sorted item list,  not: " + repr(merge_selections)
+            # Because merge_selections are derived from selections, no substitutions are done here
             self._raw_selections = merge_selections  # XXX not really,  nominally unused XXXX
             self._selections = merge_selections
         self._parkey_map = self.get_parkey_map()
@@ -270,9 +285,9 @@ class Selector(object):
         for i,choice  in enumerate(self.choices()):
             utils.trace_compare(choice, ochoices[i], show_equal)
 
-    def do_substitutions(self, parameters, selections, substitutions):
-        """Replace parkey values in `selections` which are specified
-        in mapping `substitutions` as {parkey : { old_value : new_value }}
+    def do_substitutions(self, selections):
+        """Replace parkey values in `selections` that have translations defined 
+        in mapping self._substitutions as {parkey : { old_value : new_value }}
         
         >>> header = {
         ...    'name' : 'jwst_miri_flat_0015.rmap',
@@ -311,29 +326,69 @@ class Selector(object):
           'jwst_miri_flat_0038.fits')]
 
         """
-        selections2 = copy.deepcopy(selections)
-        matches = sorted(list(selections.keys()))
-        for match in matches:
-            if not isinstance(match, python23.string_types):
-                new_match = list(match)
-                for parkey in substitutions:
-                    try:
-                        which = parameters.index(parkey)
-                    except Exception:
-                        continue
-                    old_parvalue = match[which]
-                    if old_parvalue in substitutions[parkey]:
-                        replacement = substitutions[parkey][old_parvalue]
-                        if isinstance(replacement, list):
-                            replacement = tuple(replacement)
-                        old_match = new_match[:]
-                        new_match[which] = replacement
-                        log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
-                                    (parkey, old_parvalue, replacement), "transforms",
-                                    repr(old_match), "-->", repr(new_match), verbosity=70)
-                new_match = tuple(new_match)
-                selections2[new_match] = selections2.pop(match)
-        return selections2
+        # This is tricky,  careful with this.   First,  iterate over all the keywords for
+        # this Selector,  updating every tuple in the selections dict for that keyword.
+        # With each iteration,  the starting selections for the next update are replaced
+        # with the results from the last substitution.
+        for keyword in self._parameters:
+            if keyword in self._substitutions:
+                self._substitute(selections, keyword)
+        return selections
+
+    def _substitute(self, selections, keyword):
+        """Iterate of match keys `selections` dictionary and replace any values
+        of parameter `keyword` for which substitutions have been defined.
+        """
+        for match in list(selections.keys()):
+            if isinstance(match, tuple):
+                new_match = self._substitute_tuple_value(match, keyword)
+            else:
+                new_match = self._substitute_simple_value(match, keyword)
+            if new_match is not None:
+                selections[new_match] = selections.pop(match)
+    
+    def _substitute_tuple_value(self, match, keyword):
+        """Handle the nominal case of doing substitutions on a tuple valued
+        `match` case,  replacing the item corresponding to `keyword` with 
+        any substitution defined for the original value of that item.
+        
+        Return any revised `match` tuple or None if no substitution is performed.
+        """
+        which = self._parameters.index(keyword)
+        old_parvalue = match[which]
+        if old_parvalue in self._substitutions[keyword]:
+            new_match = list(match)
+            old_match = new_match[:]
+            replacement = self._substitutions[keyword][old_parvalue]
+            if isinstance(replacement, list):
+                replacement = tuple(replacement)
+            new_match[which] = replacement
+            log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
+                        (keyword, old_parvalue, replacement), "transforms",
+                        repr(old_match), "-->", repr(new_match), verbosity=70)
+            new_match = tuple(new_match)
+        else:
+            new_match = None
+        return new_match
+        
+    
+    def _substiute_simple_value(self, match, keyword):
+        """Handle the syntactic sugar case where the `match` key is a single simple value
+        rather than a tuple.   Return any revised `match` key or None if no substitution
+        is defined for `match`.
+        """
+        old_parvalue = match
+        if old_parvalue in self._substitutions[keyword]:
+            replacement = self._substitutions[keyword][old_parvalue]
+            if isinstance(replacement, list):
+                replacement = tuple(replacement)
+            new_match = replacement
+            log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
+                        (keyword, old_parvalue, replacement), "transforms",
+                        repr(match), "-->", repr(new_match), verbosity=70)
+        else:
+            new_match = None
+        return new_match
 
     def todict(self):
         """Return a 'pure data' dictionary representation of this selector and it's children
@@ -799,7 +854,7 @@ class Selector(object):
 
     @property
     def parkey(self):
-        return tuple(self._rmap_header.get("parkey", "UNDEFINED"))
+        return tuple(self._rmap_header.get("parkey", (("UNDEFINED",),)))
     
     @property
     def class_list(self):
