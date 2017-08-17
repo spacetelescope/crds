@@ -329,54 +329,65 @@ class Selector(object):
         # This is tricky,  careful with this.   First,  iterate over all the keywords for
         # this Selector,  updating every tuple in the selections dict for that keyword.
         # With each iteration,  the starting selections for the next update are replaced
-        # with the results from the last substitution.  (So... the match keys being iterated
-        # over in sub-methods are themselves changing with each iteration.)  Also,  the
-        # running result selections2 is continually updated.   Two selections dicts are 
-        # required to enable changing dictionary keys during the sub-method iteration.
+        # with the results from the last substitution.
         for keyword in self._parameters:
             if keyword in self._substitutions:
-                selections = self._substitute(selections, keyword)
+                self._substitute(selections, keyword)
         return selections
 
-    def _substitute(self, selections, parkey):
-        matches = list(selections.keys())
-        for match in matches:
+    def _substitute(self, selections, keyword):
+        """Iterate of match keys `selections` dictionary and replace any values
+        of parameter `keyword` for which substitutions have been defined.
+        """
+        for match in list(selections.keys()):
             if isinstance(match, tuple):
-                new_match = self._substitute_tuple_value(match, parkey)
+                new_match = self._substitute_tuple_value(match, keyword)
             else:
-                new_match = self._substitute_simple_value(match, parkey)
-            selections[new_match] = selections.pop(match)
-        return selections
+                new_match = self._substitute_simple_value(match, keyword)
+            if new_match is not None:
+                selections[new_match] = selections.pop(match)
     
-    def _substitute_tuple_value(self, match, parkey):
-        which = self._parameters.index(parkey)
+    def _substitute_tuple_value(self, match, keyword):
+        """Handle the nominal case of doing substitutions on a tuple valued
+        `match` case,  replacing the item corresponding to `keyword` with 
+        any substitution defined for the original value of that item.
+        
+        Return any revised `match` tuple or None if no substitution is performed.
+        """
+        which = self._parameters.index(keyword)
         old_parvalue = match[which]
-        if old_parvalue in self._substitutions[parkey]:
+        if old_parvalue in self._substitutions[keyword]:
             new_match = list(match)
             old_match = new_match[:]
-            replacement = self._substitutions[parkey][old_parvalue]
+            replacement = self._substitutions[keyword][old_parvalue]
             if isinstance(replacement, list):
                 replacement = tuple(replacement)
             new_match[which] = replacement
             log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
-                        (parkey, old_parvalue, replacement), "transforms",
+                        (keyword, old_parvalue, replacement), "transforms",
                         repr(old_match), "-->", repr(new_match), verbosity=70)
             new_match = tuple(new_match)
         else:
-            new_match = match
+            new_match = None
         return new_match
         
     
-    def _substiute_simple_value(self, match, parkey):
-        old_parvalue = new_match = match
-        if old_parvalue in self._substitutions[parkey]:
-            replacement = self._substitutions[parkey][old_parvalue]
+    def _substiute_simple_value(self, match, keyword):
+        """Handle the syntactic sugar case where the `match` key is a single simple value
+        rather than a tuple.   Return any revised `match` key or None if no substitution
+        is defined for `match`.
+        """
+        old_parvalue = match
+        if old_parvalue in self._substitutions[keyword]:
+            replacement = self._substitutions[keyword][old_parvalue]
             if isinstance(replacement, list):
                 replacement = tuple(replacement)
             new_match = replacement
             log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
-                        (parkey, old_parvalue, replacement), "transforms",
+                        (keyword, old_parvalue, replacement), "transforms",
                         repr(match), "-->", repr(new_match), verbosity=70)
+        else:
+            new_match = None
         return new_match
 
     def todict(self):
