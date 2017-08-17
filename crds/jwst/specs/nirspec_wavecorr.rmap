@@ -11,7 +11,7 @@ header = {
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : 'a6a8d9f98865ef58921e301575283602587853a5',
     'suffix' : 'wavecorr',
-    'text_descr' : 'Wave Correlation',
+    'text_descr' : 'Wavelength Zero-point Correction',
 }
 
 selector = Match({
