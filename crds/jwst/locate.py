@@ -397,8 +397,17 @@ def filekind_to_keyword(filekind):
     """
     from . import schema
     flat_schema = schema.get_flat_schema()
-    meta_path = "META.REF_FILE.{}.NAME.FITS_KEYWORD".format(filekind.upper())
-    return flat_schema[meta_path]
+    filekind = filekind.upper()
+    meta_path = "META.REF_FILE.{}.NAME.FITS_KEYWORD".format(filekind)
+    try:
+        return flat_schema[meta_path]
+    except KeyError:
+        warn_filekind_once(filekind)
+        return filekind
+
+@utils.cached
+def warn_filekind_once(filekind):
+    log.warning("No apparent JWST cal code data models schema support for", log.srepr(filekind))
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.

@@ -256,6 +256,10 @@ class Selector(object):
             "parameters should be a list or tuple of header keys"
         self._rmap_header = rmap_header or {}
         self._parameters = tuple(parameters)
+        if "merge_overlaps" in self._rmap_header:
+            self._merge_overlaps = str(self._rmap_header["merge_overlaps"]).upper() in ["TRUE", "1"]
+        else:
+            self._merge_overlaps =  self._rmap_header.get("observatory", None) == "hst"
         if selections is not None:
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
@@ -1876,7 +1880,7 @@ Restore original debug behavior:
         for selection in self.winnowing_match(header):
             yield selection
 
-    def winnowing_match(self, header, raise_ambiguous=None):
+    def winnowing_match(self, header):
         """Iterate through each of the parameters in `fitskeys`, binding
         them successively to corresponding values from `header`.  For
         each bound fitskey,  iterate through `selections` and winnow out
@@ -1884,12 +1888,6 @@ Restore original debug behavior:
         Successively yield any survivors,  in the order of most specific
         matching value (fewest *'s) to least specific matching value.
         """
-        if raise_ambiguous is None:
-            if "raise_ambiguous" in self._rmap_header:
-                raise_ambiguous = self._rmap_header["raise_ambiguous"] in ["True", "true", "TRUE", "1"]
-            else:
-                raise_ambiguous =  self._rmap_header.get("observatory", None) != "hst"
-
         weights, remaining = self._winnow(header, dict(self._match_selections))
 
         sorted_candidates = self._rank_candidates(weights, remaining)
@@ -1898,7 +1896,7 @@ Restore original debug behavior:
         # merging equivalently weighted candidate match_tuples.
         for _weight, match_tuples in sorted_candidates:
             if len(match_tuples) > 1:
-                if raise_ambiguous:
+                if not self._merge_overlaps:
                     raise AmbiguousMatchError("More than one match clause matched.")
                 subselectors = tuple([remaining[match_tuple].choice for match_tuple in match_tuples])
                 if isinstance(subselectors[0], Selector):
@@ -2024,9 +2022,10 @@ Restore original debug behavior:
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
-                log.verbose_warning("Match tuple " + repr(key) + 
-                                    " is an equal weight special case of " + repr(other),
-                                    " requiring dynamic merging.")
+                warn = log.verbose_warning if self._merge_overlaps else log.warning
+                warn("Match tuple " + repr(key) + 
+                    " is an equal weight special case of " + repr(other),
+                    " requiring dynamic merging.")
                 
 # ==============================================================================
 

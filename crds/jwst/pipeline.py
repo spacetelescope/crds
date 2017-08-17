@@ -176,11 +176,7 @@ def _get_config_refpath(context, cal_ver):
         refpath = SYSTEM_CRDSCFG_B7_PATH
     else:
         refpath = SYSTEM_CRDSCFG_B7_1_PATH
-        
-    with log.verbose_warning_on_exception(
-            "Failed locating SYSTEM CRDSCFG reference",
-            "under context", repr(context),
-            "and cal_ver", repr(cal_ver) + "."):
+    try:  # Use a normal try/except because exceptions are expected.
         header = {
             "META.INSTRUMENT.NAME" : "SYSTEM", 
             "META.CALIBRATION_SOFTWARE_VERSION": cal_ver 
@@ -191,6 +187,11 @@ def _get_config_refpath(context, cal_ver):
         ref = rmapping.get_best_ref(header)
         refpath = rmapping.locate_file(ref)
         api.dump_references(context, [ref])
+    except Exception:
+        log.verbose_warning(
+            "Failed locating SYSTEM CRDSCFG reference",
+            "under context", repr(context),
+            "and cal_ver", repr(cal_ver) + ".")
     log.verbose("Using", srepr(os.path.basename(refpath)),
                 "to determine applicable default reftypes for", srepr(cal_ver))
     return refpath
