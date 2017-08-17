@@ -339,29 +339,31 @@ class Selector(object):
         return selections
 
     def _substitute(self, selections, parkey):
-        selections2 = dict(selections)
-        for match in selections.keys():
+        matches = list(selections.keys())
+        for match in matches:
             if isinstance(match, tuple):
                 new_match = self._substitute_tuple_value(match, parkey)
             else:
                 new_match = self._substitute_simple_value(match, parkey)
-            selections2[new_match] = selections2.pop(match)
-        return selections2
+            selections[new_match] = selections.pop(match)
+        return selections
     
     def _substitute_tuple_value(self, match, parkey):
-        new_match = list(match)
         which = self._parameters.index(parkey)
         old_parvalue = match[which]
         if old_parvalue in self._substitutions[parkey]:
+            new_match = list(match)
+            old_match = new_match[:]
             replacement = self._substitutions[parkey][old_parvalue]
             if isinstance(replacement, list):
                 replacement = tuple(replacement)
-            old_match = new_match[:]
             new_match[which] = replacement
             log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
                         (parkey, old_parvalue, replacement), "transforms",
                         repr(old_match), "-->", repr(new_match), verbosity=70)
-        new_match = tuple(new_match)
+            new_match = tuple(new_match)
+        else:
+            new_match = match
         return new_match
         
     
