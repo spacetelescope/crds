@@ -305,6 +305,17 @@ def dt_bestrefs_dataset_drop_ids():
     >>> test_config.cleanup(old_state)
     """
 
+def dt_bestrefs_dataset_only_ids():
+    """
+    >>> old_state = test_config.setup()
+    >>> script = BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --load-pickle data/test_cos.json --only-ids LPPPPPP6Q:LCE31SW6Q")
+    >>> script.complex_init()
+    CRDS - INFO -  Loading file 'data/test_cos.json'
+    CRDS - INFO -  Loaded 1 datasets from file 'data/test_cos.json' completely replacing existing headers.
+    True
+    >>> test_config.cleanup(old_state)
+    """
+
 def dt_bestrefs_compare_source_canary():
     """
     >>> old_state = test_config.setup()
