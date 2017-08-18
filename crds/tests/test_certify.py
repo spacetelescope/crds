@@ -564,9 +564,9 @@ def certify_YamlCertify_valid():
 def certify_AsdfCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
-    CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0034.pmap'
-
+    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False)
+    CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     """
     
@@ -581,8 +581,9 @@ def certify_FitsCertify_opaque_name():
 def certify_AsdfCertify_opaque_name():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
-    CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0034.pmap'
+    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False)
+    CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     """
 
@@ -610,7 +611,9 @@ def certify_jwst_bad_fits():
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']Failed validating 'enum' in schema:    {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',     'description': 'Detector name.',     'enum': ['NRCA1',              'NRCA2',              'NRCA3',              'NRCA4',              'NRCALONG',              'NRCB1',              'NRCB2',              'NRCB3',              'NRCB4',              'NRCBLONG',              'NRS1',              'NRS2',              'ANY',              'MIRIMAGE',              'MIRIFULONG',              'MIRIFUSHORT',              'NIS',              'GUIDER1',              'GUIDER2',              'N/A'],     'fits_keyword': 'DETECTOR',     'title': 'Name of detector used to acquire the data',     'type': 'string'}On instance:    'FOO'
-    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: In data/niriss_ref_photom_bad.fits fits data is not valid: DETECTOR
+    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: In data/niriss_ref_photom_bad.fits
+      Invalid values: DETECTOR
+    <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
 
