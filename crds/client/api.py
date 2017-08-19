@@ -6,14 +6,11 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-import sys
 import os
 import os.path
 import base64
 import re
 import zlib
-
-from .proxy import CheckingProxy
 
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
@@ -28,6 +25,7 @@ from crds.core import python23
 from crds.core.python23 import *
 
 from . import proxy
+from .proxy import CheckingProxy
 
 # ==============================================================================
 
@@ -335,9 +333,9 @@ def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
     log.verbose("Dumping datasets for", repr(instrument))
     ids = get_dataset_ids(context, instrument, datasets_since)
-    return get_dataset_headers_unlimited(context, ids, datasets_since)
+    return get_dataset_headers_unlimited(context, ids)
 
-def get_dataset_headers_unlimited(context, ids, datasets_since=None):
+def get_dataset_headers_unlimited(context, ids):
     """Return { dataset_id : { header } } for `ids`,  potentially more
     ids than can be serviced with a single JSONRPC request, looping 
     internally.
@@ -813,7 +811,6 @@ def _squash_unicode_in_bestrefs(bestrefs, localrefs):
             raise CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
     return refs
 
-
 # =====================================================================================================
 
 # These functions are deprecated and only work when the full CRDS library is installed,  and only for 
@@ -835,4 +832,3 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     dump_mappings(context, ignore_cache=ignore_cache)
     ctx = crds.get_pickled_mapping(context)   # reviewed
     return ctx.get_minimum_header(dataset)
-

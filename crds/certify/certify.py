@@ -105,11 +105,6 @@ class Certifier(object):
         checkers = self.set_rmap_parkeys_to_required(checkers)
         return checkers
 
-    @property
-    def array_validators(self):
-        """Return the list of Validator objects that apply to arrays."""
-        return [checker for checker in self.validators if checker.info.keytype in ["A","D"]]
-
     def set_rmap_parkeys_to_required(self, checkers):
         """Mutate copies of `checkers` so that any specified by the rmap parkey are required."""
         parkeys = set(self.get_rmap_parkeys())
@@ -170,13 +165,6 @@ class ReferenceCertifier(Certifier):
         ValidationError exceptions.
         """
         self.complex_init()
-        """
-        try:
-        except TypeSetupError as exc:
-            log.verbose_warning("Error locating constraints for", repr(self.format_name), ":", str(exc))
-        except Exception as exc:
-            raise
-        """
         with self.error_on_exception("Error loading"):
             self.header = self.load()
         if not self.header:
@@ -218,15 +206,10 @@ class ReferenceCertifier(Certifier):
                     header = rmapping.locate.reference_keys_to_dataset_keys(rmapping, header)
         return header
     
-#     def cross_strap_instrument_keywords(self, header):
-#         """Add all variations of the instrument keyword to `header` based on some variation of
-#         instrument name defined in `header`.   Mutates `header`.
-#         """
-#         header = dict(header)
-#         instr = utils.header_to_instrument(header)
-#         for key in crds.INSTRUMENT_KEYWORDS:
-#             header[key] = instr
-#         return header
+    @property
+    def array_validators(self):
+        """Return the list of Validator objects that apply to arrays."""
+        return [checker for checker in self.validators if checker.info.keytype in ["A","D"]]
 
     def add_array_keywords(self, header):
         """Add synthetic array keywords based on properties of the arrays mentioned in
@@ -239,7 +222,8 @@ class ReferenceCertifier(Certifier):
             if header.get(array_name, None) == "UNDEFINED":
                 continue
             if ((array_name not in header) or 
-                (checker.info.keytype=="D" and header[array_name]["DATA"] is None)):
+                (checker.info.keytype=="D" and
+                 header[array_name]["DATA"] is None)):
                 header[array_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
         seen = set()
         for checker in self.array_validators:
@@ -960,5 +944,3 @@ For more information on the checks being performed,  use --verbose or --verbosit
                     more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files
         return sorted(closure_files)
-
-

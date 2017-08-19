@@ -31,8 +31,7 @@ def apply_with_retries(func, *pars, **keys):
             log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
             time.sleep(delay)
             exc2 = exc
-    else:
-        raise exc2
+    raise exc2
 
 def message_id():
     """Return a nominal identifier for this program."""
@@ -150,15 +149,11 @@ class ServiceCallBinding(object):
         else:
             result = crds_decode(jsonrpc["result"])
             result = fix_strings(result)
-            self.log_result(result)
+            if isinstance(result, (python23.string_types,int,float,bool)):
+                log.verbose("RPC OK -->", repr(result))
+            else:
+                log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
             return result
-
-    def log_result(self, result):
-        if isinstance(result, (python23.string_types,int,float,bool)):
-            log.verbose("RPC OK -->", repr(result))
-        else:
-            log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
-
 
     def classify_exception(self, decoded):
         """Interpret exc __str__ to define as more precise CRDS exception."""

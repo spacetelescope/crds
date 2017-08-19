@@ -41,6 +41,9 @@ REFERENCE_DIVIDER = "# vvvvvvvv GENERATED vvvvvvvv"
 # --------------------------------------------------------------------------------------
 
 class CrdsCfgGenerator(object):
+    """Used to re-generate SYSTEM CRDSCFG reference files based on modified
+    versions of previous reference files.
+    """
     def __init__(self, input_yaml):
         self.input_yaml = input_yaml
         self.loaded_cfg = self.get_body()

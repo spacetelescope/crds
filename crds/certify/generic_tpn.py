@@ -55,7 +55,6 @@ import collections
 # ============================================================================
 
 from crds.core import log, utils, exceptions
-from crds.client import api
 
 # ============================================================================
 
@@ -288,4 +287,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

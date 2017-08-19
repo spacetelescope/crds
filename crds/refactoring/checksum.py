@@ -12,7 +12,7 @@ from __future__ import absolute_import
 import sys
 
 
-from crds.core import config, log, rmap, cmdline
+from crds.core import log, rmap, cmdline
 from crds.certify import mapping_parser
 
 def update_checksum(file_):
@@ -37,7 +37,7 @@ def update_checksums(files):
             old_errs = log.errors()
             check_duplicates(file_)
             new_errs = log.errors()
-            if (new_errs == old_errs):
+            if new_errs == old_errs:
                 update_checksum(file_)
 
 # ============================================================================
@@ -54,7 +54,8 @@ class ChecksumScript(cmdline.Script):
     """
     
     def add_args(self):
-        self.add_argument('mappings', type=str, nargs="+",
+        self.add_argument(
+            'mappings', type=str, nargs="+",
             help="CRDS mapping files (pmaps, imaps, rmaps) to update checksums for.")
         
     def main(self):
@@ -64,4 +65,3 @@ class ChecksumScript(cmdline.Script):
 
 if __name__ == "__main__":
     sys.exit(ChecksumScript()())
-

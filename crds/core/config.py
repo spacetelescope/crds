@@ -68,11 +68,11 @@ def get_crds_env_str(section, varname, default):
 # ===========================================================================
 
 def env_to_bool(varname, default=False, section=None):
-     """Convert the specified environment variable `varname` into a Python bool
-     defaulting to `default` if it's not defined in os.environ.
-     """
-     env_str = get_crds_env_str(section, varname, default)
-     return env_str_to_bool(varname, env_str)
+    """Convert the specified environment variable `varname` into a Python bool
+    defaulting to `default` if it's not defined in os.environ.
+    """
+    env_str = get_crds_env_str(section, varname, default)
+    return env_str_to_bool(varname, env_str)
 
 def env_str_to_bool(varname, val):
     """Convert the boolean environment value string `val` to a Python bool
@@ -88,11 +88,11 @@ def env_str_to_bool(varname, val):
     return rval
 
 def env_to_int(varname, default, section=None):
-     """Convert the specified environment variable `varname` into a Python int
-     defaulting to `default` if it's not defined in os.environ.
-     """
-     env_str = get_crds_env_str(section, varname, default)
-     return env_str_to_int(varname, env_str)
+    """Convert the specified environment variable `varname` into a Python int
+    defaulting to `default` if it's not defined in os.environ.
+    """
+    env_str = get_crds_env_str(section, varname, default)
+    return env_str_to_int(varname, env_str)
 
 def env_str_to_int(varname, val):
     """Convert environment variable decimal value `val` from `varname` to an int and return it."""
@@ -436,6 +436,7 @@ def locate_config(cfg, observatory):
 # -------------------------------------------------------------------------------------
 
 def get_crds_picklepath(observatory):
+    """Return the directory name where CRDS stores pickles for `observatory`."""
     return _std_cache_path(observatory, "CRDS_PICKLEPATH", "pickles")
 
 def locate_pickle(mapping, observatory=None):

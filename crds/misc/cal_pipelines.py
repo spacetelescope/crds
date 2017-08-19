@@ -31,13 +31,15 @@ pipelines used to process the given dataset filepath or dataset with a particula
 
 # --------------------------------------------------------------------------------------
 
-import crds
-from crds.core import utils, heavy_client
+from crds.core import utils
 from crds import data_file
 
 # --------------------------------------------------------------------------------------
 
 def test_header(calver, exp_type):
+    """Create a header-like dict from `calver` and `exp_type` to support 
+    testing.
+    """
     header = {
         "META.INSTRUMENT.NAME" : "SYSTEM",
         "REFTYPE" : "CRDSCFG",

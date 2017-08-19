@@ -376,7 +376,7 @@ class Selector(object):
         return new_match
         
     
-    def _substiute_simple_value(self, match, keyword):
+    def _substitute_simple_value(self, match, keyword):
         """Handle the syntactic sugar case where the `match` key is a single simple value
         rather than a tuple.   Return any revised `match` key or None if no substitution
         is defined for `match`.
