@@ -23,10 +23,6 @@ from __future__ import print_function, absolute_import
 
 # =========================================================================
 
-import os.path
-
-# =========================================================================
-
 from . import log, config, utils
 
 # =========================================================================
@@ -152,9 +148,8 @@ def status():
 
 def test():
     import doctest
-    from crds import crds_cache_locking
+    from crds.core import crds_cache_locking
     return doctest.testmod(crds_cache_locking)
 
 if __name__ == "__main__":
     print(test())
-

@@ -63,6 +63,9 @@ from crds.client import api
 # --------------------------------------------------------------------------------------
 
 def test_header(calver, exp_type):
+    """Create a header-like dictionary from `calver` and `exp_type` to
+    support testing header-based functions.
+    """
     header = {
         "META.INSTRUMENT.NAME" : "SYSTEM",
         "REFTYPE" : "CRDSCFG",
@@ -228,8 +231,10 @@ class CrdsCfgManager(object):
         return pipelines
 
 def test():
-    import doctest, crds.jwst.pipeline
-    return doctest.testmod(crds.jwst.pipeline)
+    """Run the module doctests."""
+    import doctest
+    from crds.jwst import pipeline
+    return doctest.testmod(pipeline)
 
 # --------------------------------------------------------------------------------------
 
