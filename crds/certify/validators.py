@@ -18,14 +18,13 @@ import numpy as np
 
 # ============================================================================
 
-from crds.core import log, config, utils, timestamp, selectors
+from crds.core import log, utils, timestamp, selectors
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds.core.exceptions import BadKernelSumError
 from crds.io import tables
 from crds import data_file
 
-from . import reftypes
 from . import generic_tpn
 from .generic_tpn import TpnInfo   # generic TpnInfo code
 from .validator_helpers import *
@@ -264,6 +263,12 @@ class Validator(object):
 
 class KeywordValidator(Validator):
     """Checks that a value is one of the literal TpnInfo values."""
+
+    def condition(self, value):
+        """Condition `value` to standard format for this Validator, squashing
+        Python-2.7 unicode.
+        """
+        return str(value)
 
     def _check_value(self, filename, value):
         """Raises ValueError if `value` is not valid."""

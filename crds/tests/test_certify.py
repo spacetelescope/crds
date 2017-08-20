@@ -6,6 +6,7 @@ from __future__ import absolute_import
 # ==================================================================================
 
 import os
+import doctest
 
 # ==================================================================================
 import numpy as np
@@ -37,84 +38,45 @@ class TestCertifyScript(CertifyScript):
 
 def certify_truncated_file():
     """
-    >>> TestCertifyScript("crds.certify data/truncated.fits --comparison-context hst.pmap")()
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
+    >>> TestCertifyScript("crds.certify data/truncated.fits --comparison-context hst.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
+    -ignore-
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - INFO -  FITS file 'truncated.fits' conforms to FITS standards.
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    -ignore-
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  9 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  -ignore- warnings
+    CRDS - INFO -  -ignore- infos
     0
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
 def certify_bad_checksum():
     """
-    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_508.pmap")()
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_508.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_508.pmap'
+    -ignore-
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-    CRDS - INFO -  FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    -ignore-
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >> File: data/s7g1700gl_dead_bad_xsum.fits
-    CRDS - INFO -  >> 
-    CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  23 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    -ignore-
     CRDS - WARNING -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
     CRDS - WARNING -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
     CRDS - ERROR -  >> *** Error:   checking data fill: Data fill area invalid
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  31 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>    (3 columns x 10 rows)
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 SEGMENT              4A        
-    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
-    CRDS - INFO -  >>    3 LIVETIME             D         
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     2         1     
-    CRDS - INFO -  >>  
+    -ignore-
     CRDS - INFO -  >> **** Verification found 2 warning(s) and 1 error(s). ****
     CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
     CRDS - INFO -  ########################################
     CRDS - INFO -  2 errors
-    CRDS - INFO -  10 warnings
-    CRDS - INFO -  39 infos
+    CRDS - INFO -  -ignore- warnings
+    CRDS - INFO -  -ignore- infos
     2
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
 def certify_good_checksum():
@@ -473,17 +435,19 @@ def certify_jwst_missing_optional_parkey():
 def certify_jwst_invalid_asdf():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/invalid.asdf  --comparison-context jwst.pmap")()   # doctest: +ELLIPSIS
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
+    >>> TestCertifyScript("crds.certify data/invalid.asdf  --comparison-context jwst.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
-    ...
-    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : ... not appear ... ASDF ...
+    -ignore-
+    CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : -ignore- not appear -ignore- ASDF -ignore-
     CRDS - INFO -  ########################################
-    CRDS - INFO -  ... errors
-    CRDS - INFO -  ... warnings
+    CRDS - INFO -  -ignore- errors
+    CRDS - INFO -  -ignore- warnings
     CRDS - INFO -  3 infos
     1
     >>> test_config.cleanup(old_state)
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
 def certify_jwst_invalid_json():
@@ -563,13 +527,14 @@ def certify_YamlCertify_valid():
             
 def certify_AsdfCertify_valid():
     """
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False)
+    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
-    CRDS - WARNING -  <class  : asdf.asdftypes : 'tag:stsci.edu:asdf/transform/tabular' with version 1.0.0 found in file, but latest supported version is 1.1.0
-    CRDS - WARNING -  <class  : asdf.asdftypes : 'tag:stsci.edu:asdf/transform/tabular' with version 1.0.0 found in file, but latest supported version is 1.1.0
+    -ignore-
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
     
 def certify_FitsCertify_opaque_name():
@@ -582,13 +547,14 @@ def certify_FitsCertify_opaque_name():
     
 def certify_AsdfCertify_opaque_name():
     """
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False)
+    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
-    CRDS - WARNING -  <class  : asdf.asdftypes : 'tag:stsci.edu:asdf/transform/tabular' with version 1.0.0 found in file, but latest supported version is 1.1.0
-    CRDS - WARNING -  <class  : asdf.asdftypes : 'tag:stsci.edu:asdf/transform/tabular' with version 1.0.0 found in file, but latest supported version is 1.1.0
+    -ignore-
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
 def certify_rmap_compare():
@@ -601,8 +567,10 @@ def certify_rmap_compare():
 
 def certify_jwst_bad_fits():
     """
+    
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None)
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
+    >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
     CRDS - INFO -  Potential table unique row selection parameters are ['FILTER', 'PUPIL', 'ORDER']
     CRDS - INFO -  Final combination is intersection with available table columns.
@@ -614,10 +582,9 @@ def certify_jwst_bad_fits():
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']Failed validating 'enum' in schema:    {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',     'description': 'Detector name.',     'enum': ['NRCA1',              'NRCA2',              'NRCA3',              'NRCA4',              'NRCALONG',              'NRCB1',              'NRCB2',              'NRCB3',              'NRCB4',              'NRCBLONG',              'NRS1',              'NRS2',              'ANY',              'MIRIMAGE',              'MIRIFULONG',              'MIRIFUSHORT',              'NIS',              'GUIDER1',              'GUIDER2',              'N/A'],     'fits_keyword': 'DETECTOR',     'title': 'Name of detector used to acquire the data',     'type': 'string'}On instance:    'FOO'
-    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: In data/niriss_ref_photom_bad.fits
-      Invalid values: DETECTOR
-    <BLANKLINE>
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']-ignore-
+    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: -ignore-
+    >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
     """
 

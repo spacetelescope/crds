@@ -387,7 +387,7 @@ class TestBestrefs(test_config.CRDSTestCase):
     cache = test_config.CRDS_TESTING_CACHE
 
     def test_bestrefs_affected_datasets(self):
-        self.run_script("crds.bestrefs --affected-datasets --old-context hst_0528.pmap --new-context hst_0529.pmap --datasets-since 2017-06-01",
+        self.run_script("crds.bestrefs --affected-datasets --old-context hst_0543.pmap --new-context hst_0544.pmap --datasets-since 2017-06-01",
                         expected_errs=0)
         
     def test_bestrefs_from_pickle(self):
