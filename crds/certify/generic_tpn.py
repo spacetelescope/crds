@@ -163,7 +163,7 @@ def load_tpn(fname):
         else:
             name, keytype, datatype, presence, values = items
             values = _remove_quotes(values.split(",") if datatype != "X" else [values])
-            values = [v if is_expression(v) else v.upper() for v in values]
+            values = [str(v) if is_expression(v) else str(v.upper()) for v in values]
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
