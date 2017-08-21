@@ -16,8 +16,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.1.5"   # XXXX  see also ../setup.cfg
-__rationale__ = "3rd/4th quarter 2017 JWST development" 
+__version__ = "7.1.6"   # XXXX  see also ../setup.cfg
+__rationale__ = "4th quarter 2017 JWST development,  JWST Build-7.1 final"
 
 # ============================================================================
 
