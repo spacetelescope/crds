@@ -772,7 +772,7 @@ amount of informational and debug output.
                 continue
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
-            if new_ok:                
+            if new_ok or self.args.update_pickle:                
                 self.verbose_with_prefix(dataset, instrument, filekind,
                     "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
@@ -805,7 +805,7 @@ amount of informational and debug output.
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
 
-            if not new_ok:   # ERROR's in new cannot update
+            if not (new_ok or self.args.update_pickle):   # ERROR's in new cannot update,  except during regression capture
                 continue
 
             if new != old:
