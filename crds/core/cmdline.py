@@ -78,7 +78,8 @@ def reference_mapping(filename):
 def observatory(obs):
     """Verify that `obs` is the name of an observatory and return it."""
     obs = obs.lower()
-    assert obs in ALL_OBSERVATORIES, "Unknown observatory " + repr(obs)
+    assert obs in constants.ALL_OBSERVATORIES, \
+        "Unknown observatory " + repr(obs)
     return obs
 
 def nrange(string):
@@ -220,7 +221,7 @@ class Script(object):
 
         url = os.environ.get("CRDS_SERVER_URL", None)
         if url is not None:
-            for obs in ALL_OBSERVATORIES:
+            for obs in constants.ALL_OBSERVATORIES:
                 if obs in url.lower():
                     return self.set_server(obs)
 
