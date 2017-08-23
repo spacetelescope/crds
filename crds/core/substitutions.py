@@ -28,8 +28,7 @@ from __future__ import absolute_import
 
 import os.path
 
-import crds
-from crds.core import log, utils, selectors
+from . import log, utils, selectors, heavy_client
 
 # ============================================================================
 
@@ -170,6 +169,6 @@ def expand_wildcards(rmapping, header):
 
 
 def validate_substitutions(pmap_name):
-    pmap = crds.get_symbolic_mapping(pmap_name)
+    pmap = heavy_client.get_symbolic_mapping(pmap_name)
     expanders = ReferenceHeaderExpanders.load(pmap.observatory)
     expanders.validate_expansions(pmap)

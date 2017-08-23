@@ -16,10 +16,10 @@ from collections import Counter, defaultdict
 
 from argparse import RawTextHelpFormatter
 
-import crds
-from crds.core import python23, log, heavy_client
-from crds.core import config, utils, exceptions
+from . import python23, log, heavy_client, constants
+from . import config, utils, exceptions, rmap
 from crds.client import api
+
 # from crds import data_file
 
 # =============================================================================
@@ -78,7 +78,7 @@ def reference_mapping(filename):
 def observatory(obs):
     """Verify that `obs` is the name of an observatory and return it."""
     obs = obs.lower()
-    assert obs in crds.ALL_OBSERVATORIES, "Unknown observatory " + repr(obs)
+    assert obs in ALL_OBSERVATORIES, "Unknown observatory " + repr(obs)
     return obs
 
 def nrange(string):
@@ -220,7 +220,7 @@ class Script(object):
 
         url = os.environ.get("CRDS_SERVER_URL", None)
         if url is not None:
-            for obs in crds.ALL_OBSERVATORIES:
+            for obs in ALL_OBSERVATORIES:
                 if obs in url.lower():
                     return self.set_server(obs)
 
@@ -720,13 +720,13 @@ class ContextsScript(Script):
                     self.dump_files(pmaps[-1], files)
             for context in self.contexts:
                 with log.warn_on_exception("Failed loading context", repr(context)):
-                    pmap = crds.get_cached_mapping(context)
+                    pmap = rmap.get_cached_mapping(context)
                     useable_contexts.append(context)
         else:
             for context in self.contexts:
                 with log.warn_on_exception("Failed listing mappings for", repr(context)):
                     try:
-                        pmap = crds.get_cached_mapping(context)
+                        pmap = rmap.get_cached_mapping(context)
                         files |= set(pmap.mapping_names())
                     except Exception:
                         files |= set(api.get_mapping_names(context))
@@ -748,7 +748,7 @@ class ContextsScript(Script):
         files = set()
         for context in self.contexts:
             try:
-                pmap = crds.get_cached_mapping(context)
+                pmap = rmap.get_cached_mapping(context)
                 files |= set(pmap.reference_names())
                 log.verbose("Determined references from cached mapping", repr(context))
             except Exception:  # only ask the server if loading context fails
@@ -767,7 +767,7 @@ def expand_all_instruments(observatory, context):
     mtch = re.match(pattern, context)
     if mtch:
         root_context = observatory + "-" + mtch.group(2)
-        pmap = crds.get_symbolic_mapping(root_context)
+        pmap = heavy_client.get_symbolic_mapping(root_context)
         all_imaps = [ "-".join([observatory, instrument, mtch.group(1), mtch.group(2)])
                 for instrument in pmap.selections.keys() if instrument != "system"]
     else:

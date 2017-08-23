@@ -25,9 +25,9 @@ import gc
 
 # ===================================================================
 
-from crds.core import log, config, pysh
-from crds.core.constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
-from crds.core.python23 import *
+from . import log, config, pysh
+from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
+from .python23 import *
 
 # ===================================================================
 

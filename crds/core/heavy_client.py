@@ -36,11 +36,11 @@ import traceback
 import uuid
 import fnmatch 
 
-from . import rmap, log, utils, config
+from . import rmap, log, utils, config, python23
+from .constants import ALL_OBSERVATORIES
+from .log import srepr
+from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError
 from crds.client import api
-from crds.core.log import srepr
-from crds.core.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError
-from crds.core import python23
 # import crds  forward
 
 __all__ = [
@@ -236,7 +236,7 @@ def mapping_names(context):
     else consult server.
     """
     try:
-        mapping = crds.get_symbolic_mapping(context)
+        mapping = get_symbolic_mapping(context)
         contained_mappings = mapping.mapping_names()
     except IOError:
         contained_mappings = api.get_mapping_names(context)
@@ -399,7 +399,7 @@ def translate_date_based_context(context, observatory=None):
         return context
 
     if observatory is None:
-        for observatory in crds.ALL_OBSERVATORIES:
+        for observatory in ALL_OBSERVATORIES:
             if context.startswith(observatory):
                 break
         else:
@@ -559,6 +559,7 @@ def load_server_info(observatory):
 # XXXX which cause problems for other systems.
 def version_info():
     """Return CRDS checkout URL and revision,  client side."""
+    import crds
     try:
         from . import git_version
         branch = revision = "none"
@@ -677,8 +678,4 @@ def save_pickled_mapping(mapping, loaded):
         pickled = python23.pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
         log.info("Saved pickled context", repr(pickle_file))
-
-# =============================================================================
-
-import crds # for __version__,  circular dependency.
 

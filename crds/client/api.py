@@ -6,22 +6,25 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ==============================================================================
+
 import os
 import os.path
 import base64
 import re
 import zlib
 
+# ==============================================================================
+
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
-import crds
-from crds.core import utils, log, config
+# import crds
+from crds.core import utils, log, config, python23
 from crds.core.log import srepr
 
 from crds.core.exceptions import ServiceError, CrdsLookupError
 from crds.core.exceptions import CrdsNetworkError, CrdsDownloadError
 from crds.core.exceptions import CrdsRemoteContextError
-from crds.core import python23
 from crds.core.python23 import *
 
 from . import proxy
@@ -511,6 +514,7 @@ class FileCacher(object):
 
     def observatory_from_context(self):
         """Determine the observatory from `pipeline_context`,  based on name if possible."""
+        import crds
         if "jwst" in self.pipeline_context:
             observatory = "jwst"
         elif "hst" in self.pipeline_context:
@@ -829,6 +833,7 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     """Given a `dataset` and a `context`,  extract relevant header 
     information from the `dataset`.
     """
+    import crds
     dump_mappings(context, ignore_cache=ignore_cache)
     ctx = crds.get_pickled_mapping(context)   # reviewed
     return ctx.get_minimum_header(dataset)
