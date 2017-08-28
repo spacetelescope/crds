@@ -81,13 +81,13 @@ def certify_bad_checksum():
 
 def certify_good_checksum():
     """
-    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_good_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap")()
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_good_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     CRDS - INFO -  FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
