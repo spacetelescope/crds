@@ -1,16 +1,19 @@
-"""This module is used to generate the SYSTEM CRDSCFG reference file.  The
-code is directly edited and the module itself is run to emit a new reference
-as in:
+"""This module is used to generate the SYSTEM CRDSCFG reference file.  The code
+is directly edited and the module itself is run to emit a new reference as in:
 
 $ python -m crds.jwst.gen_system_crdscfg  updated_inputs.yaml  >new_reference.yaml
 
 Suggested approach for obtaining updated inputs is downloading the most current
 SYSTEM CRDSCFG reference file and updating MANUAL sections.
 
-Current calibration code must be available in order to automatically regenerates
-since CRDS will inspect the installed .cfg files to determine Step configurations
-and required reference types.
+Current calibration code must be available in order to automatically
+regenerates since CRDS will inspect the installed .cfg files to determine Step
+configurations and required reference types.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+
 import sys
 import re
 import fnmatch
