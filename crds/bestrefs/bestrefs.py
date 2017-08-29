@@ -15,6 +15,7 @@ from collections import namedtuple, OrderedDict
 
 import crds
 from crds.core import log, config, utils, timestamp, cmdline, heavy_client
+from crds.core.log import srepr
 from crds import diff, matches
 from . import table_effects, headers
 from crds.client import api
@@ -813,14 +814,14 @@ amount of informational and debug output.
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
                     if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
                         self.log_and_track_error(dataset, instrument, filekind,
-                                                 "Comparison difference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
+                            "Comparison difference:", sreprlow(old), "-->", sreprlow(new), self.update_promise)
                 elif self.args.print_new_references or log.get_verbose() >= 30 or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind),
-                             "New best reference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
+                             "New best reference:", sreprlow(old), "-->", sreprlow(new), self.update_promise)
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
                 self.verbose_with_prefix(dataset, instrument, filekind,
-                    "Lookup MATCHES:", repr(old).lower(), self.no_update,  verbosity=30)
+                    "Lookup MATCHES:", sreprlow(old), self.no_update,  verbosity=30)
         return updates
 
     def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind):
@@ -971,6 +972,10 @@ amount of informational and debug output.
         api.dump_references(self.new_context, sorted(synced_references), raise_exceptions=self.args.pdb)
 
 # ============================================================================
+
+def sreprlow(s):
+    """Squash unicode and return the repr() of string `s` as lower case."""
+    return repr(str(s)).lower()
 
 def cleanpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""

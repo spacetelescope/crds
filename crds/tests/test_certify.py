@@ -582,7 +582,7 @@ def certify_jwst_bad_fits():
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']-ignore-
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of -ignore-
     CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: -ignore-
     >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
