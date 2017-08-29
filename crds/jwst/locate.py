@@ -274,6 +274,10 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
             "META.INSTRUMENT.P_GRATING" : "META.INSTRUMENT.GRATING",
             "P_GRATIN" : "META.INSTRUMENT.GRATING",
+
+            "META.EXPOSURE.PREADPATT" : "META.EXPOSURE.READPATT",
+            "META.EXPOSURE.P_READPATT" : "META.EXPOSURE.READPATT",
+            "P_READPA" : "META.EXPOSURE.READPATT",
         }
 
     # Rmap header reference_to_dataset field tranlations,  can override basic!
