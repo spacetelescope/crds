@@ -8,6 +8,9 @@ are restricted to pigeon-Python that does not allow spaces.  See the JWST .tpn f
 (particularly *array*.tpn) for examples of presence or constraint expressions,  grep
 those files for these functions.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 from crds.core import utils, exceptions, python23
 
