@@ -28,7 +28,8 @@ from __future__ import absolute_import
 
 import os.path
 
-from . import log, utils, selectors, heavy_client
+from . import log, utils, selectors
+# from . import heavy_client (circular for rmap)
 
 # ============================================================================
 
@@ -169,6 +170,8 @@ def expand_wildcards(rmapping, header):
 
 
 def validate_substitutions(pmap_name):
+    """This is a unit test function."""
+    from . import heavy_client
     pmap = heavy_client.get_symbolic_mapping(pmap_name)
     expanders = ReferenceHeaderExpanders.load(pmap.observatory)
     expanders.validate_expansions(pmap)
