@@ -592,6 +592,7 @@ class UniqueErrorsMixin(object):
     def format_prefix(self, data, instrument, filekind, *params, **keys):
         """Create a standard (instrument,filekind,data) prefix for log messages."""
         delim = self.args.unique_delimiter  # for spreadsheets
+        data, instrument, filekind = str(data), str(instrument), str(filekind) # squash 2.7 unicode
         if delim:
             return log.format(delim, instrument.upper(), delim, filekind.upper(), delim, data, delim,
                               *params, end="", **keys)
