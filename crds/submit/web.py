@@ -1,6 +1,9 @@
 """This module codifies standard practices for scripted interactions with the 
 web server file submission system.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 from crds.core import config, log, utils, exceptions
 from crds.core.python23 import *
