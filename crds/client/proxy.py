@@ -14,7 +14,7 @@ import json
 import time
 import os
 
-import crds
+# import crds
 from crds.core import python23, exceptions, log, config
 
 # ============================================================================
@@ -35,6 +35,7 @@ def apply_with_retries(func, *pars, **keys):
 
 def message_id():
     """Return a nominal identifier for this program."""
+    import crds
     return _program_name() + "-" + crds.__version__ + "-" + _PROCESS_ID + "-" + _request_id()
 
 def _program_name():
