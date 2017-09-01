@@ -27,6 +27,8 @@ from nose.tools import assert_raises, assert_true
 
 def dt_or_bars_certify_bad_keyword():
     """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> CertifyScript("crds.certify data/jwst_miri_ipc.bad-keyword.fits")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/jwst_miri_ipc.bad-keyword.fits' (1/1) as 'FITS' relative to context 'jwst_0361.pmap'
     CRDS - INFO -  FITS file 'jwst_miri_ipc.bad-keyword.fits' conforms to FITS standards.
