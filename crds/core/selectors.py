@@ -87,6 +87,8 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ==============================================================================
+
 import re
 import fnmatch
 import sys
@@ -98,16 +100,15 @@ from pprint import pprint as pp
 
 # import numpy as np
 
-import crds
-from crds.core import log, utils, timestamp, config
+# ==============================================================================
 
-from crds.core.exceptions import (ValidationError, CrdsLookupError,
+from . import log, utils, timestamp, config, python23
+
+from .exceptions import (ValidationError, CrdsLookupError,
                                   AmbiguousMatchError, 
                                   MatchingError, UseAfterError,
                                   InvalidDatetimeError,
                                   VersionAfterError)
-from crds.core import python23
-
 # ==============================================================================
 
 def glob_list(value):

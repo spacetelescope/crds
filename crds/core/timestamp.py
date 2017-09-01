@@ -9,8 +9,8 @@ from __future__ import absolute_import
 import datetime
 import re
 
-import crds
-from crds.core import python23, config, exceptions, log
+from . import python23, config, exceptions, log
+from . import exceptions
 
 # =======================================================================
 
@@ -481,7 +481,7 @@ def is_datetime(datetime_str):
     try:
         parse_date(datetime_str)
     except ValueError as exc:
-        raise crds.CrdsError(str(exc))
+        raise exceptions.CrdsError(str(exc))
     return datetime_str
 
 

@@ -13,10 +13,14 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ===================================================================
+
 from crds.core import rmap, log
 from crds.core.python23 import *
 from crds.io import tables
 from crds.client import api
+
+# ===================================================================
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):
     """This is the top level interface to crds.bestrefs running in "Affected Datasets" mode.

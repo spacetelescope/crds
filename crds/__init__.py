@@ -21,16 +21,17 @@ __rationale__ = "3rd/4th quarter 2017 JWST development"
 
 # ============================================================================
 
-from crds.core import config   # module
+from .core import config   # module
 
-from crds.core.heavy_client import getreferences, getrecommendations
-from crds.core.heavy_client import get_symbolic_mapping, get_pickled_mapping
-from crds.core.rmap import get_cached_mapping, asmapping
-from crds.core.config import locate_mapping, locate_file
+from .core.rmap import get_cached_mapping, asmapping
+from .core.config import locate_mapping, locate_file
 
-from crds.core import exceptions
-from crds.core.exceptions import *
-from crds.core.constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
+from .core import exceptions
+from .core.exceptions import *
+from .core.constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
+
+from .core.heavy_client import getreferences, getrecommendations
+from .core.heavy_client import get_symbolic_mapping, get_pickled_mapping
 
 from crds.client import api
 from crds.client import get_default_context
