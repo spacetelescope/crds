@@ -1,2 +1,2 @@
-nir_sci_array.tpn
-nir_subarray.tpn
+include nir_subarray.tpn
+include nir_sci_array.tpn
