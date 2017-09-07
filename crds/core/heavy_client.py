@@ -174,7 +174,7 @@ def _initial_recommendations(
         log.verbose("CRDS_SERVER_URL =", os.environ.get("CRDS_SERVER_URL", "UNDEFINED"))
 
         check_observatory(observatory)
-        check_parameters(parameters)
+        parameters = check_parameters(parameters)
         check_reftypes(reftypes)
         check_context(context)  
 
@@ -273,7 +273,9 @@ def check_observatory(observatory):
     assert observatory in ["hst", "jwst", "tobs"]
 
 def check_parameters(header):
-    """Make sure dict-like `header` is a mapping from strings to simple types."""
+    """Make sure dict-like `header` is a mapping from strings to simple types.
+    Drop non-simple values with a verbose warning.
+    """
     header = dict(header)
     keys = list(header.keys())
     for key in keys:
@@ -287,6 +289,7 @@ def check_parameters(header):
         if not isinstance(header[key], (python23.string_types, float, int, bool)):
             log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
             del header[key]
+    return header
 
 def check_reftypes(reftypes):
     """Make sure reftypes is a sequence of string identifiers."""
