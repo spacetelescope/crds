@@ -1785,6 +1785,36 @@
             "tpn":"nircam_trappars.tpn",
             "unique_rowkeys":null
         },
+        "wavelengthrange":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"jwst_nircam_wavelengthrange_0000.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"wavelengthrange",
+            "filetype":"WAVELENGTHRANGE",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_wavelengthrange_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_wavelengthrange_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"7805fb6adbc7afd6ad71ab3cea484e3d18bd272d",
+            "suffix":"wavelengthrange",
+            "text_descr":"Spectral Configurations",
+            "tpn":"nircam_wavelengthrange.tpn",
+            "unique_rowkeys":null
+        },
         "wcsregions":{
             "derived_from":"Handmade spec",
             "extra_keys":null,
@@ -2321,6 +2351,36 @@
             "suffix":"trappars",
             "text_descr":"Trap Capture and Decay Parameters",
             "tpn":"niriss_trappars.tpn",
+            "unique_rowkeys":null
+        },
+        "wavelengthrange":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"jwst_niriss_wavelengthrange_0000.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"wavelengthrange",
+            "filetype":"WAVELENGTHRANGE",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_wavelengthrange_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_wavelengthrange_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"dcd2b0fa884ec38af7a0920e6660a97329762b5b",
+            "suffix":"wavelengthrange",
+            "text_descr":"Spectral Configurations",
+            "tpn":"niriss_wavelengthrange.tpn",
             "unique_rowkeys":null
         },
         "wcsregions":{
