@@ -26,7 +26,7 @@ from nose.tools import assert_raises, assert_true
 # ==================================================================================
 
 def dt_getreferences_rmap_na():
-    """
+    """ 
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
@@ -104,6 +104,34 @@ def dt_cache_references_multiple_bad_files():
     >>> test_config.cleanup(old_state)
     
     """
+
+def dt_get_context_name_literal():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> heavy_client.get_context_name("jwst", "jwst_0341.pmap")
+    'jwst_0341.pmap'
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_get_context_name_crds_context():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> os.environ["CRDS_CONTEXT"] = "jwst_0399.pmap"
+    >>> heavy_client.get_context_name("jwst")
+    'jwst_0399.pmap'
+    >>> del os.environ["CRDS_CONTEXT"]
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_get_context_name_symbolic():
+    """
+    >>> old_state = test_config.setup()
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> heavy_client.get_context_name("jwst", "jwst-operational")  # doctest: +ELLIPSIS
+    'jwst_...pmap'
+    >>> test_config.cleanup(old_state)
+    """
+
 
 # ==================================================================================
 

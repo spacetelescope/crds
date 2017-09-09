@@ -46,7 +46,7 @@ from crds.client import api
 __all__ = [
     "getreferences", "getrecommendations",
     "get_config_info", "update_config_info", "load_server_info",
-    "get_processing_mode",
+    "get_processing_mode", "get_context_name",
     "version_info",
     "get_bad_mappings_in_context", "list_mappings",
 ]
@@ -369,6 +369,20 @@ def get_processing_mode(observatory, context=None):
     final_context = get_final_context(info, context)
 
     return info.effective_mode, final_context
+
+@utils.cached
+def get_context_name(observatory, context=None):
+    """Return the .pmap name of the default context based on:
+
+    1. literal definitiion in `context` (jwst_0001.pmap)
+    2. symbolic definition in `context` (jwst-operational or jwst-edit)
+    3. date-based definition in `context` (jwst-2017-01-15T00:05:00)
+    4. CRDS_CONTEXT env var override
+
+    Symbolic and date-based contexts may require definition of CRDS_SERVER_URL
+    to enable server-side translations of the symbolic names.
+    """
+    return get_processing_mode(observatory, context)[1]
 
 def get_final_context(info, context):
     """Based on env CRDS_CONTEXT, the `context` parameter, and the server's reported,
