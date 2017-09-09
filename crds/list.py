@@ -554,7 +554,7 @@ and ids used for CRDS reprocessing recommendations.
                 "server_url" : current_server_url, 
                 "cache_subdir_mode": cache_subdir_mode,
                 "readonly_cache": self.readonly_cache,
-                "effective_context": heavy_client.get_processing_mode(self.observatory)[1],
+                "effective_context": heavy_client.get_context_name(self.observatory),
                 "crds" : repr(crds),
                 "version": heavy_client.version_info() 
                 })
@@ -579,7 +579,7 @@ and ids used for CRDS reprocessing recommendations.
              ("CRDS_MODE", info["CRDS_MODE"]),
              ("Readonly Cache", self.readonly_cache),
              ("Cache Locking", crds_cache_locking.status()),
-             ("Effective Context", heavy_client.get_processing_mode(self.observatory)[1]),
+             ("Effective Context", heavy_client.get_context_name(self.observatory)),
              ("Last Synced", server.last_synced),
              ("CRDS Version", heavy_client.version_info()),
              ("Python Version", pyinfo["Python Version"]),

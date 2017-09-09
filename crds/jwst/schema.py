@@ -66,7 +66,7 @@ def refpath_to_parkeys(refpath):
     from . import locate
     keys = []
     with log.verbose_warning_on_exception("Can't determine parkeys for", repr(refpath)):
-        _mode, context  = heavy_client.get_processing_mode("jwst")
+        context  = heavy_client.get_context_name("jwst")
         p = crds.get_pickled_mapping(context)   # reviewed
         instrument, filekind = locate.get_file_properties(refpath)
         keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()

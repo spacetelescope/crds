@@ -452,7 +452,7 @@ class Script(object):
             return None
         if not config.is_date_based_mapping_spec(context):
             return context           
-        _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
+        final_context = heavy_client.get_context_name(self.observatory, context)
         if self.show_context_resolution:
             log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
         return final_context
