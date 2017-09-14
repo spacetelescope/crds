@@ -75,6 +75,25 @@ def header_to_reftypes(header, context="hst-operational"):
     """Based on `header` return the default list of appropriate reference type names."""
     return []  # translates to everything.
 
+def get_reftypes(exp_type, cal_ver=None, context=None):
+    """Based on the exposure type, CAL s/w version, and CRDS context,  determine
+    the list of applicable reference file types.
+    """
+    return []
+
+def header_to_pipelines(header, context=None):
+    """Base on bestrefs parameter dictionary `header` and `context` name,  determine
+    the list of pipeline .cfg filenames that would be used to calibrate a corresponding
+    dataset.
+    """
+    raise NotImplementedError("HST has not defined pipeline .cfg files.")
+
+def get_pipelines(exp_type, cal_ver=None, context=None):
+    """Return the list of pipeline .cfg files that would be used to calibrate a dataset
+    with the given parameters.
+    """
+    raise NotImplementedError("HST has not defined pipeline .cfg files.")
+
 # =======================================================================
 
 def match_context_key(key):

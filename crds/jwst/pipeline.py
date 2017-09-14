@@ -198,7 +198,7 @@ def _get_config_refpath(context, cal_ver):
         log.verbose_warning(
             "Failed locating SYSTEM CRDSCFG reference",
             "under context", repr(context),
-            "and cal_ver", repr(cal_ver) + ".")
+            "and cal_ver", repr(cal_ver) + ".   Using built-in references.")
     log.verbose("Using", srepr(os.path.basename(refpath)),
                 "to determine applicable default reftypes for", srepr(cal_ver))
     return refpath
