@@ -77,7 +77,7 @@ def dt_or_bars_refactor_add_file():
     0
 
     >>> diff.DiffScript("crds.diff data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0003.add.rmap")()
-    (('data/jwst_miri_ipc_0002.rmap', './jwst_miri_ipc_0003.add.rmap'), ('MIRIFUSHORT|MIRIFULONG', 'SHORT|MEDIUM'), ('2014-01-01', '00:00:00'), 'added Match rule for jwst_miri_ipc_0003.add.fits')
+    (('data/jwst_miri_ipc_0002.rmap', './jwst_miri_ipc_0003.add.rmap'), ('MIRIFULONG|MIRIFUSHORT', 'MEDIUM|SHORT'), ('2014-01-01', '00:00:00'), 'added Match rule for jwst_miri_ipc_0003.add.fits')
     1
     
     >>> pp(refactor.rmap_check_modifications("data/jwst_miri_ipc_0002.rmap", "./jwst_miri_ipc_0003.add.rmap", "none", "data/jwst_miri_ipc_0003.add.fits", expected=("add_rule",)))
