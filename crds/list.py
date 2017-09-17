@@ -6,12 +6,18 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ============================================================================
+
 import os.path
 import sys
 from collections import OrderedDict
 import json
 
+# ============================================================================
+
 from astropy.io import fits
+
+# ============================================================================
 
 import crds
 from crds.core import config, log, python23, rmap, heavy_client, cmdline
@@ -19,6 +25,8 @@ from crds.core import crds_cache_locking
 from crds import data_file
 
 from crds.client import api
+
+# ============================================================================
 
 class ListScript(cmdline.ContextsScript):
     """Command line script for listing a variety of information about CRDS."""
@@ -315,6 +323,12 @@ and ids used for CRDS reprocessing recommendations.
         self.add_argument("--required-parkeys", action="store_true",
             help="print the names of the parkeys required to compute bestrefs for the specified mappings.")
 
+        self.add_argument("--expected-reftypes", dest="expected_reftypes", default=None,
+                          help="print the list of reference type names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context.")
+
+        self.add_argument("--expected-pipelines", dest="expected_pipelines", default=None,
+                          help="print the list of CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given context.")
+
         super(ListScript, self).add_args()
         
     def main(self):
@@ -355,6 +369,12 @@ and ids used for CRDS reprocessing recommendations.
 
         if self.args.required_parkeys:
             self.list_required_parkeys()
+
+        if self.args.expected_reftypes:
+            self.list_expected_reftypes()
+
+        if self.args.expected_pipelines:
+            self.list_expected_pipelines()
 
     def list_resolved_contexts(self):
         """Print out the literal interpretation of the contexts implied by the script's
@@ -588,8 +608,7 @@ and ids used for CRDS reprocessing recommendations.
         _print_dict(None, status)
 
     def list_required_parkeys(self):
-        """Print out the parkeys required for matching using the specified contexts."""
-        
+        """Print out the parkeys required for matching using the specified contexts.""" 
         for name in self.contexts:
             mapping = crds.get_cached_mapping(name)
             if isinstance(mapping, rmap.PipelineContext):
@@ -606,7 +625,25 @@ and ids used for CRDS reprocessing recommendations.
                         print(name + ":",  rmapping.get_required_parkeys())
             else:
                 print(name + ":",  mapping.get_required_parkeys())
-        
+
+    def list_expected_reftypes(self):
+        """For each context,  print out the reftypes that CRDS believes are required for 
+        calibrating the given EXP_TYPE under the given CAL s/w version. Initially JWST only.
+        """
+        exp_type, cal_ver = self.args.expected_reftypes.split(",")
+        exp_type, cal_ver = exp_type.upper(), cal_ver.upper()
+        for context in self.contexts:
+            print(context + " : " + repr(self.locator.get_reftypes(exp_type, cal_ver, context)))
+            
+    def list_expected_pipelines(self):
+        """For each context,  print out the CAL pipeline .cfgs that CRDS believes are required for 
+        for calibrating the given EXP_TYPE under the given s/w version.   Initially JWST only.
+        """
+        exp_type, cal_ver = self.args.expected_pipelines.split(",")
+        exp_type, cal_ver = exp_type.upper(), cal_ver.upper()
+        for context in self.contexts:
+            print(context + " : " + repr(self.locator.get_pipelines(exp_type, cal_ver, context)))
+
 def _get_python_info():
     """Collect and return information about the Python environment"""
     pyinfo = {
