@@ -34,7 +34,7 @@ meta:
     useafter: 1900-01-01T00:00:00
     calibration_software_version: 0.7.8
     crds_version: 7.1.5
-    generation_date: 2017-09-14T12:54:57
+    generation_date: 2017-09-19T17:09:19
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -142,10 +142,13 @@ steps_to_reftypes_exceptions:
 
 
 
+
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg: [dq_init, group_scale, ipc, lastframe, linearity, refpix, rscd,
     saturation, superbias]
+  calwebb_guider.cfg: [dq_init, flat_field, guider_cds]
   calwebb_image2.cfg: [assign_wcs, bkg_subtract, flat_field, photom]
   calwebb_sloper.cfg: [dark_current, dq_init, gain_scale, group_scale, ipc, jump,
     lastframe, linearity, persistence, ramp_fit, refpix, rscd, saturation, superbias]
@@ -167,6 +170,7 @@ steps_to_reftypes:
   fringe: [fringe]
   gain_scale: [gain]
   group_scale: []
+  guider_cds: []
   imprint_subtract: []
   ipc: [ipc]
   jump: [gain, readnoise]
@@ -186,11 +190,17 @@ steps_to_reftypes:
   superbias: [superbias]
 
 exptypes_to_pipelines:
+  FGS_ACQ1: [calwebb_guider.cfg, skip_2b.cfg]
+  FGS_ACQ2: [calwebb_guider.cfg, skip_2b.cfg]
   FGS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
+  FGS_FINEGUIDE: [calwebb_guider.cfg, skip_2b.cfg]
   FGS_FOCUS: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  FGS_ID-IMAGE: [calwebb_guider.cfg, skip_2b.cfg]
+  FGS_ID-STACK: [calwebb_guider.cfg, skip_2b.cfg]
   FGS_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
   FGS_INTFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
   FGS_SKYFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
+  FGS_TRACK: [calwebb_guider.cfg, skip_2b.cfg]
   MIR_4QPM: [calwebb_sloper.cfg, calwebb_image2.cfg]
   MIR_CORONCAL: [calwebb_sloper.cfg, calwebb_image2.cfg]
   MIR_DARK: [calwebb_dark.cfg, skip_2b.cfg]
@@ -243,11 +253,16 @@ exptypes_to_pipelines:
   NRS_TASLIT: [calwebb_sloper.cfg, calwebb_image2.cfg]
 
 exptypes_to_reftypes:
+  FGS_ACQ1: [flat, mask]
+  FGS_ACQ2: [flat, mask]
   FGS_DARK: [ipc, linearity, mask, refpix, rscd, saturation, superbias]
+  FGS_FINEGUIDE: [flat, mask]
   FGS_FOCUS: [area, camera, collimator, dark, disperser, distortion, filteroffset,
     flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
     ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
     trapdensity, trappars, v2v3, wavelengthrange]
+  FGS_ID-IMAGE: [flat, mask]
+  FGS_ID-STACK: [flat, mask]
   FGS_IMAGE: [area, camera, collimator, dark, disperser, distortion, filteroffset,
     flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
     ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
@@ -256,6 +271,7 @@ exptypes_to_reftypes:
     saturation, superbias, trapdensity, trappars]
   FGS_SKYFLAT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
+  FGS_TRACK: [flat, mask]
   MIR_4QPM: [area, camera, collimator, dark, disperser, distortion, filteroffset,
     flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
     ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
