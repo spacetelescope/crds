@@ -44,7 +44,7 @@ meta:
 # ----------------------------------------------------------------------------------------------
 
 pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calwebb_image2.cfg,
-               calwebb_guider.cfg, calwebb_cds.cfg]
+               calwebb_guider.cfg]
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -99,7 +99,8 @@ level_pipeline_exptypes:
                              NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
-        - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_WFSS, NRS_AUTOWAVE]
+        - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_WFSS, NRS_AUTOWAVE,  FGS_ACQ1, FGS_ACQ2,
+                        FGS_FINEGUIDE, FGS_ID-IMAGE, FGS_ID-STACK, FGS_TRACK]
 
 # ----------------------------------------------------------------------------------------------
 #
