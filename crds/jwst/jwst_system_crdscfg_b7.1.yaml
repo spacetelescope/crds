@@ -43,7 +43,8 @@ meta:
 #
 # ----------------------------------------------------------------------------------------------
 
-pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calwebb_image2.cfg]
+pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calwebb_image2.cfg,
+               calwebb_guider.cfg, calwebb_cds.cfg]
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -52,7 +53,8 @@ pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calwebb
 #
 # ----------------------------------------------------------------------------------------------
 
-exp_types:  [FGS_DARK, FGS_FOCUS, FGS_IMAGE, FGS_INTFLAT, FGS_SKYFLAT,
+exp_types: [FGS_ACQ1, FGS_ACQ2, FGS_DARK, FGS_FINEGUIDE, FGS_FOCUS,
+              FGS_ID-IMAGE, FGS_ID-STACK, FGS_IMAGE, FGS_INTFLAT, FGS_SKYFLAT, FGS_TRACK,
               MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_LRS-FIXEDSLIT,
               MIR_LRS-SLITLESS, MIR_MRS, MIR_DARK, MIR_FLAT-IMAGE, MIR_FLATIMAGE,
               MIR_FLAT-MRS, MIR_FLATMRS, MIR_CORONCAL, NIS_AMI, NIS_DARK,
@@ -81,6 +83,8 @@ levels: [ level2a, level2b]
 level_pipeline_exptypes:
     level2a:
         - calwebb_dark.cfg: [FGS_DARK, MIR_DARK, NRC_DARK, NIS_DARK, NRS_DARK]
+
+        - calwebb_guider.cfg: [FGS_ID-STACK, FGS_ID-IMAGE, FGS_ACQ1, FGS_ACQ2, FGS_TRACK, FGS_FINEGUIDE]
 
         - calwebb_sloper.cfg: ["*"]
 
