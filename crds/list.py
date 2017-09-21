@@ -329,6 +329,12 @@ and ids used for CRDS reprocessing recommendations.
         self.add_argument("--expected-pipelines", dest="expected_pipelines", default=None,
                           help="print the list of CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given context.")
 
+        self.add_argument("--tpninfos", dest="tpninfos", nargs="*", metavar="KEYWORD", default=None,
+                          help="print the constraint objects CRDS applies to the specified keyword or it's datamodel equivalent.")
+
+        self.add_argument("--collect-tpn-values", dest="collect_tpn_values", nargs="*", metavar="KEYWORD",
+                          help="For each keyword,  print the union of all values accepted by some TpnInfo constraint.")
+
         super(ListScript, self).add_args()
         
     def main(self):
@@ -375,6 +381,12 @@ and ids used for CRDS reprocessing recommendations.
 
         if self.args.expected_pipelines:
             self.list_expected_pipelines()
+
+        if self.args.tpninfos is not None:
+            self.list_tpninfos()
+
+        if self.args.collect_tpn_values:
+            self.collect_tpn_values()
 
     def list_resolved_contexts(self):
         """Print out the literal interpretation of the contexts implied by the script's
@@ -643,6 +655,16 @@ and ids used for CRDS reprocessing recommendations.
         exp_type, cal_ver = exp_type.upper(), cal_ver.upper()
         for context in self.contexts:
             print(context + " : " + repr(self.locator.get_pipelines(exp_type, cal_ver, context)))
+
+    def list_tpninfos(self):
+        infos = self.locator.get_matching_tpninfos(self.args.tpninfos)
+        for info in infos:
+            print(info)
+
+    def collect_tpn_values(self):
+        for name in self.args.collect_tpn_values:
+            values = self.locator.collect_tpn_values(name)
+            print(name, ":" , values)
 
 def _get_python_info():
     """Collect and return information about the Python environment"""

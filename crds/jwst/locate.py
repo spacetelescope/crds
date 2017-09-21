@@ -38,6 +38,8 @@ get_all_tpninfos = TYPES.get_all_tpninfos
 from crds.jwst.pipeline import header_to_reftypes, header_to_pipelines
 from crds.jwst.pipeline import get_reftypes, get_pipelines
 
+from crds.jwst.schema import get_matching_tpninfos, collect_tpn_values
+
 # =======================================================================
 
 try:

@@ -34,8 +34,11 @@ def get_schema_tpninfos(refpath):
     with log.warn_on_exception("Failed loading schema constraints for", repr(refpath)):
         schema_name = reference_to_schema_name(refpath)
         tpns = get_schema_tpns(schema_name)
-        parkeys = refpath_to_parkeys(refpath)
-        return [ info for info in tpns if info.name in parkeys ]
+        if refpath:
+            parkeys = refpath_to_parkeys(refpath)
+            return [ info for info in tpns if info.name in parkeys ]
+        else:
+            return tpns
     return []
 
 def reference_to_schema_name(reference_name):
@@ -76,6 +79,24 @@ def refpath_to_parkeys(refpath):
         #         keys.append("META.INSTRUMENT.NAME")
         #         keys.append("META.REFTYPE")
     return sorted(keys)
+
+def get_matching_tpninfos(names, refpath=None):
+    infos = get_schema_tpninfos(refpath)
+    if names:
+        names = [name.upper() for name in names]
+        return [info for info in infos if info.name in names]
+    else:
+        return infos
+
+def collect_tpn_values(name, refpath=None):
+    names = set([name, dm_to_fits(name), fits_to_dm(name)])
+    names = [val for val in names if val is not None]
+    infos = get_matching_tpninfos(names, refpath)
+    values = set()
+    for info in infos:
+        values |= set(info.values)
+    values = values - set(["ANY","N/A"])
+    return values
 
 # =============================================================================
 
