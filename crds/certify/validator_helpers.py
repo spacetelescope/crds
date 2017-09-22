@@ -314,6 +314,10 @@ def nir_filter(instrument, reftype, exp_type):
     else:
         return True
     
+def nir_xdim(exp_type):
+    """Handle weird X-dimensions for NIR detectors,  currently FGS_ID-STACK=3200 not 2048."""
+    return 3200 if exp_type.upper() in ["FGS_ID-STACK"] else 2048
+
 # ----------------------------------------------------------------------------
 
 def test():
