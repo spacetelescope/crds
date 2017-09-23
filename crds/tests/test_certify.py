@@ -534,7 +534,6 @@ def certify_AsdfCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
-    -ignore-
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
@@ -554,7 +553,6 @@ def certify_AsdfCertify_opaque_name():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
-    -ignore-
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
