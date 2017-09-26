@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Handmade 2017-09-26',
+    'file_ext' : '.fits',
+    'filekind' : 'BARSHADOW',
+    'filetype' : 'BARSHADOW',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_barshadow.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '3bf3861362a3e81e51bc487903effc9616a15433',
+    'suffix' : 'barshadow',
+    'text_descr' : ' Bar Shadow Correction',
+}
+
+selector = Match({
+})

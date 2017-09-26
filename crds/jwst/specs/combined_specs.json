@@ -2494,6 +2494,36 @@
             "tpn":"nirspec_badshutter.tpn",
             "unique_rowkeys":null
         },
+        "barshadow":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Handmade 2017-09-26",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"BARSHADOW",
+            "filetype":"BARSHADOW",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_barshadow_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_barshadow.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"3bf3861362a3e81e51bc487903effc9616a15433",
+            "suffix":"barshadow",
+            "text_descr":" Bar Shadow Correction",
+            "tpn":"nirspec_barshadow.tpn",
+            "unique_rowkeys":null
+        },
         "camera":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
             "extra_keys":null,
