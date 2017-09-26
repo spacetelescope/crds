@@ -636,7 +636,7 @@ def dt_list_config():
 def dt_list_expected_reftypes():
     """
     >>> old_state = test_config.setup(observatory="jwst")
-    >>> ListScript("crds.list --expected-reftypes NIS_FOCUS,0.7.8 --contexts jwst_0361.pmap")()
+    >>> ListScript("crds.list --required-reftypes NIS_FOCUS,0.7.8 --contexts jwst_0361.pmap")()
     jwst_0361.pmap : ['area', 'camera', 'collimator', 'dark', 'dflat', 'disperser', 'distortion', 'fflat', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'persat', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'sflat', 'specwcs', 'superbias', 'trapdensity', 'trappars', 'v2v3', 'wavelengthrange']
     >>> test_config.cleanup(old_state)
     """
@@ -644,7 +644,7 @@ def dt_list_expected_reftypes():
 def dt_list_expected_pipelines():
     """
     >>> old_state = test_config.setup(observatory="jwst")
-    >>> ListScript("crds.list --expected-pipelines NIS_FOCUS,0.7.8 --contexts jwst_0355.pmap")()
+    >>> ListScript("crds.list --required-pipelines NIS_FOCUS,0.7.8 --contexts jwst_0355.pmap")()
     jwst_0355.pmap : ['calwebb_sloper.cfg', 'calwebb_image2.cfg']
     >>> test_config.cleanup(old_state)
     """
