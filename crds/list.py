@@ -323,11 +323,11 @@ and ids used for CRDS reprocessing recommendations.
         self.add_argument("--required-parkeys", action="store_true",
             help="print the names of the parkeys required to compute bestrefs for the specified mappings.")
 
-        self.add_argument("--expected-reftypes", dest="expected_reftypes", default=None,
-                          help="print the list of reference type names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context.")
+        self.add_argument("--required-reftypes", dest="required_reftypes", default=None,
+                          help="print reference type names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.")
 
-        self.add_argument("--expected-pipelines", dest="expected_pipelines", default=None,
-                          help="print the list of CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given context.")
+        self.add_argument("--required-pipelines", dest="required_pipelines", default=None,
+                          help="print CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.")
 
         super(ListScript, self).add_args()
         
@@ -370,11 +370,11 @@ and ids used for CRDS reprocessing recommendations.
         if self.args.required_parkeys:
             self.list_required_parkeys()
 
-        if self.args.expected_reftypes:
-            self.list_expected_reftypes()
+        if self.args.required_reftypes:
+            self.list_required_reftypes()
 
-        if self.args.expected_pipelines:
-            self.list_expected_pipelines()
+        if self.args.required_pipelines:
+            self.list_required_pipelines()
 
     def list_resolved_contexts(self):
         """Print out the literal interpretation of the contexts implied by the script's
@@ -626,24 +626,38 @@ and ids used for CRDS reprocessing recommendations.
             else:
                 print(name + ":",  mapping.get_required_parkeys())
 
-    def list_expected_reftypes(self):
+    def list_required_reftypes(self):
         """For each context,  print out the reftypes that CRDS believes are required for 
         calibrating the given EXP_TYPE under the given CAL s/w version. Initially JWST only.
         """
-        exp_type, cal_ver = self.args.expected_reftypes.split(",")
-        exp_type, cal_ver = exp_type.upper(), cal_ver.upper()
+        exp_type, cal_ver = self._get_exptype_calver(self.args.required_reftypes)
         for context in self.contexts:
             print(context + " : " + repr(self.locator.get_reftypes(exp_type, cal_ver, context)))
             
-    def list_expected_pipelines(self):
+    def list_required_pipelines(self):
         """For each context,  print out the CAL pipeline .cfgs that CRDS believes are required for 
         for calibrating the given EXP_TYPE under the given s/w version.   Initially JWST only.
         """
-        exp_type, cal_ver = self.args.expected_pipelines.split(",")
-        exp_type, cal_ver = exp_type.upper(), cal_ver.upper()
+        exp_type, cal_ver = self._get_exptype_calver(self.args.required_pipelines)
         for context in self.contexts:
             print(context + " : " + repr(self.locator.get_pipelines(exp_type, cal_ver, context)))
 
+    def _get_exptype_calver(self, parameter):
+        """Return (EXP_TYPE,CAL_VER) based on command line parameter string which is
+        nominally a single word of two forms:
+
+        1.  EXP_TYPE
+        2.  EXP_TYPE,CAL_VER
+
+        If no comma appears the default CAL_VER is used.
+        """
+        try:
+            exp_type, cal_ver = parameter.split(",")
+            exp_type, cal_ver = exp_type.upper(), cal_ver.upper()
+        except Exception:
+            exp_type, cal_ver = parameter, None
+        return exp_type, cal_ver
+            
 def _get_python_info():
     """Collect and return information about the Python environment"""
     pyinfo = {
