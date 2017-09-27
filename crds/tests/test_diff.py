@@ -155,6 +155,52 @@ def dt_diff_fits_diff():
     >>> test_config.cleanup(old_state)
     """
 
+def dt_diff_asdf():
+    """
+    Compute diffs for two .asdf's:
+
+    >>> old_state = test_config.setup()
+
+    >>> DiffScript("crds.diff data/jwst_nircam_specwcs_0010.asdf data/jwst_nircam_specwcs_0011.asdf")() # doctest: +ELLIPSIS
+            ndarrays differ by contents
+            ndarrays differ by contents
+            ndarrays differ by contents
+            ndarrays differ by contents
+    tree:
+      history:
+        -
+          description:
+    >       Created from NIRCAM_modA_R.conf
+    <       Created from NIRCAM_modA_C.conf
+          time:
+    >       2017-09-08 16:57:27.004949
+    <       2017-09-08 16:57:26.927451
+            ndarrays differ by contents
+            ndarrays differ by contents
+            ndarrays differ by contents
+            ndarrays differ by contents
+      meta:
+        date:
+    >     2017-09-08T12:57:27.006
+    <     2017-09-08T12:57:26.928
+        description:
+    >     GRISMR dispersion models
+    <     GRISMC dispersion models
+        filename:
+    >     NIRCAM_modA_R.asdf
+    <     NIRCAM_modA_C.asdf
+        instrument:
+          pupil:
+    >       GRISMR
+    <       GRISMC
+    1
+
+     >>> DiffScript("crds.diff data/jwst_nircam_specwcs_0010.asdf data/jwst_nircam_specwcs_0010.asdf")() # doctest: +ELLIPSIS
+     0
+ 
+    >>> test_config.cleanup(old_state)
+    """
+
 def dt_diff_rmap_primitive_diffs():
     """
     Compute primitive diffs for two .rmap's:
