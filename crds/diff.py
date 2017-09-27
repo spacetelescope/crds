@@ -235,6 +235,7 @@ class MappingDifferencer(Differencer):
         return 1 if differences else 0
 
     def squash_diff_tuples(self, diff2):
+        """Change notation of diff tuples into -- separated components for readability."""
         return " -- ".join([" ".join(diff) if isinstance(diff, tuple) else diff for diff in diff2])
     
     def mapping_diffs(self):
@@ -371,11 +372,13 @@ class AsdfDifferencer(Differencer):
         loc_old_file = self.locate_file(self.old_file)
         loc_new_file = self.locate_file(self.new_file)
         status, out_err = pysh.status_out_err("asdftool diff ${loc_old_file} ${loc_new_file}", raise_on_error=False)   # secure
-        if not status and len(out_err):  # convert asdftool "no errors" to diff-style "diffs exist"
+        if not status and len(out_err) != 0:  
+            # convert asdftool "no errors" to diff-style "diffs exist"
             status = 1
-        if not len(out_err):
+        if len(out_err) == 0:
             out_err = ""  # otherwise b''
-        else:  # asdftool colorizes diffs using ANSI color escape sequences.
+        else:  
+            # asdftool colorizes diffs using ANSI color escape sequences.
             out_err = decolorize(out_err)
         return status, out_err
 
@@ -390,12 +393,12 @@ class JsonDifferencer(TextDifferencer):
         self.pretty_print = keys.pop("pretty_print", True)
         self.remove_files = []
         
-    def locate_file(self, source_name):
+    def locate_file(self, filename):
         """Create a temporary file based on source filename source name IFF self.pretty_print."""
         if not self.pretty_print:
-            return super(JsonDifferencer, self).locate_file(source_name)
+            return super(JsonDifferencer, self).locate_file(filename)
         else:
-            source_path = config.check_path(source_name)
+            source_path = config.check_path(filename)
             temp_file = tempfile.NamedTemporaryFile(delete=False)
             with open(source_path) as source_file:
                 source_json = json.load(source_file)
@@ -794,8 +797,8 @@ Mutually Exclusive Modes
     """
     def __init__(self, *args, **keys):
         super(DiffScript, self).__init__(*args, **keys)
-        # self.old_file = None
-        # self.new_file = None
+        self.old_file = None
+        self.new_file = None
     
     def add_args(self):
         """Add diff-specific command line parameters."""
