@@ -168,7 +168,10 @@ class Differencer(object):
         status, out_err = self.diff()
         print(out_err, end="")
         return status
-
+    
+    def diff(self):
+        """Placeholder diff() method for abstract class."""
+        raise NotImplementedError("Differencer is an abstract class.")
 # ==============================================================================================================
     
 class MappingDifferencer(Differencer):
