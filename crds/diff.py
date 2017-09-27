@@ -7,6 +7,8 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ============================================================================
+
 import os
 import sys
 from collections import defaultdict
@@ -15,12 +17,16 @@ import json
 import pprint
 import re
 
+# ============================================================================
+
+from astropy.io.fits import FITSDiff
+
+# ============================================================================
+
 import crds
 from crds.core import python23, config, log, pysh, utils, rmap
 from crds.core import cmdline, naming
 from crds import rowdiff, sync
-
-from astropy.io.fits import FITSDiff
 
 # ============================================================================
         
@@ -77,6 +83,7 @@ def difference(observatory, old_file, new_file, *args, **keys):
     filetype = config.filetype(old_file)
     differs = {
         "mapping" : MappingDifferencer,
+        "asdf" : AsdfDifferencer,
         "fits" : FitsDifferencer,
         "text" : TextDifferencer,
         "yaml" : TextDifferencer,
@@ -90,6 +97,12 @@ def difference(observatory, old_file, new_file, *args, **keys):
         differ = differ_class(observatory, old_file, new_file, *args, **keys)
         status = differ.difference()
     return status
+
+# ============================================================================
+
+def decolorize(output):
+    """Remove ANSI color codes,  particularly for doc-testing."""
+    return re.sub(r"\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]", "", output)
 
 # ==============================================================================================================
     
@@ -140,6 +153,25 @@ class Differencer(object):
         config.check_path(path)  # check_path returns abspath,  bad for listsings.
         return path
 
+    def difference(self):
+        """Run diff() method on `old_file` and `new_file` and print() output.
+
+        Returns the output status and 
+        
+        Returns:
+        0 no differences
+        1 some differences
+        2 errors
+        
+        NOTE:  often overridden
+        """
+        status, out_err = self.diff()
+        print(out_err, end="")
+        return status
+    
+    def diff(self):
+        """Placeholder diff() method for abstract class."""
+        raise NotImplementedError("Differencer is an abstract class.")
 # ==============================================================================================================
     
 class MappingDifferencer(Differencer):
@@ -203,6 +235,7 @@ class MappingDifferencer(Differencer):
         return 1 if differences else 0
 
     def squash_diff_tuples(self, diff2):
+        """Change notation of diff tuples into -- separated components for readability."""
         return " -- ".join([" ".join(diff) if isinstance(diff, tuple) else diff for diff in diff2])
     
     def mapping_diffs(self):
@@ -323,19 +356,31 @@ class TextDifferencer(Differencer):
         status, out_err = pysh.status_out_err("diff -b -c ${loc_old_file} ${loc_new_file}", raise_on_error=False)   # secure
         return status, out_err
 
-    def difference(self):
-        """Run UNIX diff on two text files named `old_file` and `new_file`.
+# ==============================================================================================================
+    
+class AsdfDifferencer(Differencer):
+    """Run UNIX diff on two text files named `old_file` and `new_file`."""
 
-        Returns the output status and 
-        
-        Returns:
-        0 no differences
-        1 some differences
-        2 errors
-        """
-        status, out_err = self.diff()
-        print(out_err, end="")
-        return status
+    def __init__(self, *args, **keys):
+        """Initialize TextDifferencer validating identical extensions for both files."""
+        super(AsdfDifferencer, self).__init__(*args, **keys)
+        assert os.path.splitext(self.old_file)[-1] == os.path.splitext(self.new_file)[-1], \
+            "Files " + repr(self.old_file) + " and " + repr(self.new_file) + " are of different types."
+
+    def diff(self):
+        """Returns the diff status and combined output from stdout and stderr of the diff command."""
+        loc_old_file = self.locate_file(self.old_file)
+        loc_new_file = self.locate_file(self.new_file)
+        status, out_err = pysh.status_out_err("asdftool diff ${loc_old_file} ${loc_new_file}", raise_on_error=False)   # secure
+        if not status and len(out_err) != 0:  
+            # convert asdftool "no errors" to diff-style "diffs exist"
+            status = 1
+        if len(out_err) == 0:
+            out_err = ""  # otherwise b''
+        else:  
+            # asdftool colorizes diffs using ANSI color escape sequences.
+            out_err = decolorize(out_err)
+        return status, out_err
 
 # ==============================================================================================================
     
@@ -348,12 +393,12 @@ class JsonDifferencer(TextDifferencer):
         self.pretty_print = keys.pop("pretty_print", True)
         self.remove_files = []
         
-    def locate_file(self, source_name):
+    def locate_file(self, filename):
         """Create a temporary file based on source filename source name IFF self.pretty_print."""
         if not self.pretty_print:
-            return super(JsonDifferencer, self).locate_file(source_name)
+            return super(JsonDifferencer, self).locate_file(filename)
         else:
-            source_path = config.check_path(source_name)
+            source_path = config.check_path(filename)
             temp_file = tempfile.NamedTemporaryFile(delete=False)
             with open(source_path) as source_file:
                 source_json = json.load(source_file)
@@ -752,8 +797,8 @@ Mutually Exclusive Modes
     """
     def __init__(self, *args, **keys):
         super(DiffScript, self).__init__(*args, **keys)
-        # self.old_file = None
-        # self.new_file = None
+        self.old_file = None
+        self.new_file = None
     
     def add_args(self):
         """Add diff-specific command line parameters."""

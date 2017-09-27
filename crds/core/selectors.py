@@ -1268,7 +1268,9 @@ class GlobMatcher(RegexMatcher):
     A Matcher repr generally shows the underlying regex.
     
     >>> repr(m)
-    "GlobMatcher('^(foo\\\\Z(?ms))$')"
+    "GlobMatcher('^((?s:foo)\\\\Z)$')"
+
+    Used to be "GlobMatcher('^(foo\\\\Z(?ms))$')"
 
     >>> m.match("bar")
     -1
