@@ -2530,7 +2530,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"3bf3861362a3e81e51bc487903effc9616a15433",
+            "sha1sum":"d731a016f49c2d4229997efc0601ef50e7919ca2",
             "suffix":"barshadow",
             "text_descr":" Bar Shadow Correction",
             "tpn":"nirspec_barshadow.tpn",
