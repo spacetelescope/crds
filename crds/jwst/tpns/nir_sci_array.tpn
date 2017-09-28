@@ -8,9 +8,14 @@
 SCI       A           X         R                           (array_exists(SCI_ARRAY))
 SCI       A           X         R                           (is_image(SCI_ARRAY))
 SCI       A           X         R                           (has_type(SCI_ARRAY,['FLOAT','INT']))
-SCI       A           X         F       (SCI_ARRAY.SHAPE[-2:]==(2048,nir_xdim(EXP_TYPE)))
 
-SCI       A           X         A       (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         A       (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=nir_xdim(EXP_TYPE))
-SCI       A           X         S       (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+# Full width striping is an issue,  array may not match subarray size
+# SCI       A           X         F       (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+# SCI       A           X         A       (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+# SCI       A           X         A       (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=4096)
+
+
+SUBARRAY_INBOUNDS_X         X   X   R   (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+SUBARRAY_INBOUNDS_Y         X   X   R   (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+SCI       A           X         S       (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
