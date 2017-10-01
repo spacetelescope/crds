@@ -34,7 +34,7 @@ meta:
     useafter: 1900-01-01T00:00:00
     calibration_software_version: 0.7.8
     crds_version: 7.1.5
-    generation_date: 2017-09-22T11:13:26
+    generation_date: 2017-10-01T14:52:23
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -145,14 +145,15 @@ steps_to_reftypes_exceptions: []
 
 
 
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg: [dq_init, group_scale, ipc, lastframe, linearity, refpix, rscd,
     saturation, superbias]
-  calwebb_guider.cfg: [dq_init, flat_field, guider_cds]
-  calwebb_image2.cfg: [assign_wcs, bkg_subtract, flat_field, photom]
   calwebb_detector1.cfg: [dark_current, dq_init, gain_scale, group_scale, ipc, jump,
     lastframe, linearity, persistence, ramp_fit, refpix, rscd, saturation, superbias]
+  calwebb_guider.cfg: [dq_init, flat_field, guider_cds]
+  calwebb_image2.cfg: [assign_wcs, bkg_subtract, flat_field, photom]
   calwebb_spec2.cfg: [assign_wcs, bkg_subtract, cube_build, extract_1d, extract_2d,
     flat_field, fringe, imprint_subtract, msa_flagging, pathloss, photom, resample_spec,
     srctype, straylight]
