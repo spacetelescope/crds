@@ -16,6 +16,10 @@ META.AUTHOR     H   C   R
 META.DESCRIPTION H   C  R
 META.HISTORY     H   C  R
 
+# Added automatically when files are created with the CAL code data models
+# Determines verification performed by CAL code data models so can be critical
+META.MODEL_TYPE  H   C  W
+
 # Make EXP_TYPE available in headers even if only UNDEFINED
 # Keyword cross-strapping doesn't work for UNDEFINED values...
 EXP_TYPE               H    C   O

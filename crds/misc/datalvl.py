@@ -1,6 +1,10 @@
 """This module implements a get_data_level(reftype) function that returns the
 first processing level at which the requested reftype is used.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+
 import json
 
 import crds

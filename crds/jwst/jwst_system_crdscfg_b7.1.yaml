@@ -34,7 +34,7 @@ meta:
     useafter: 1900-01-01T00:00:00
     calibration_software_version: 0.7.8
     crds_version: 7.1.5
-    generation_date: 2017-08-18T08:56:14
+    generation_date: 2017-10-01T14:52:23
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -43,7 +43,8 @@ meta:
 #
 # ----------------------------------------------------------------------------------------------
 
-pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calwebb_image2.cfg]
+pipeline_cfgs: [calwebb_dark.cfg, calwebb_detector1.cfg, calwebb_spec2.cfg, calwebb_image2.cfg,
+               calwebb_guider.cfg]
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -52,7 +53,8 @@ pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calwebb
 #
 # ----------------------------------------------------------------------------------------------
 
-exp_types:  [FGS_DARK, FGS_FOCUS, FGS_IMAGE, FGS_INTFLAT, FGS_SKYFLAT,
+exp_types: [FGS_ACQ1, FGS_ACQ2, FGS_DARK, FGS_FINEGUIDE, FGS_FOCUS,
+              FGS_ID-IMAGE, FGS_ID-STACK, FGS_IMAGE, FGS_INTFLAT, FGS_SKYFLAT, FGS_TRACK,
               MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_LRS-FIXEDSLIT,
               MIR_LRS-SLITLESS, MIR_MRS, MIR_DARK, MIR_FLAT-IMAGE, MIR_FLATIMAGE,
               MIR_FLAT-MRS, MIR_FLATMRS, MIR_CORONCAL, NIS_AMI, NIS_DARK,
@@ -82,7 +84,9 @@ level_pipeline_exptypes:
     level2a:
         - calwebb_dark.cfg: [FGS_DARK, MIR_DARK, NRC_DARK, NIS_DARK, NRS_DARK]
 
-        - calwebb_sloper.cfg: ["*"]
+        - calwebb_guider.cfg: [FGS_ID-STACK, FGS_ID-IMAGE, FGS_ACQ1, FGS_ACQ2, FGS_TRACK, FGS_FINEGUIDE]
+
+        - calwebb_detector1.cfg: ["*"]
 
     level2b:
         - calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_LRS-SLITLESS, MIR_MRS, NRS_FIXEDSLIT, 
@@ -91,11 +95,12 @@ level_pipeline_exptypes:
 
         - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, NRC_WFSC, NRC_TACONFIRM, NRC_TSIMAGE,
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
-                             NIS_IMAGE, NIS_AMI, NIS_TACQ, NIS_TACONFIRM, 
+                             NIS_IMAGE, NIS_FOCUS, NIS_AMI, NIS_TACQ, NIS_TACONFIRM, 
                              NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
-        - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_FOCUS, NIS_WFSS, NRS_AUTOWAVE]
+        - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_WFSS, NRS_AUTOWAVE,  FGS_ACQ1, FGS_ACQ2,
+                        FGS_FINEGUIDE, FGS_ID-IMAGE, FGS_ID-STACK, FGS_TRACK]
 
 # ----------------------------------------------------------------------------------------------
 #
@@ -109,17 +114,17 @@ level_pipeline_exptypes:
 #
 # ----------------------------------------------------------------------------------------------
 
-steps_to_reftypes_exceptions:
-    flat_field:
-        - case1:
-            exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC, NRS_BRIGHTOBJ]
-            reftypes: [dflat, fflat, sflat]
-        - case2:
-            exp_types: ["NRS_*"]
-            reftypes: []
-        - case3:
-            exp_types: ["*"]
-            reftypes: [flat]
+steps_to_reftypes_exceptions: []
+    # flat_field:
+        # - case1:
+        #     exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC, NRS_BRIGHTOBJ]
+        #    reftypes: [dflat, fflat, sflat]
+        # - case2:
+        #     exp_types: ["NRS_*"]
+        #     reftypes: [flat, dflat, fflat,  sflat]
+        # - case3:
+        #     exp_types: ["*"]
+        #     reftypes: [flat]
 
 # ----------------------------------------------------------------------------------------------
 #
@@ -135,13 +140,20 @@ steps_to_reftypes_exceptions:
 
 
 
+
+
+
+
+
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg: [dq_init, group_scale, ipc, lastframe, linearity, refpix, rscd,
     saturation, superbias]
-  calwebb_image2.cfg: [assign_wcs, flat_field, photom]
-  calwebb_sloper.cfg: [dark_current, dq_init, group_scale, ipc, jump, lastframe, linearity,
-    persistence, ramp_fit, refpix, rscd, saturation, superbias]
+  calwebb_detector1.cfg: [dark_current, dq_init, gain_scale, group_scale, ipc, jump,
+    lastframe, linearity, persistence, ramp_fit, refpix, rscd, saturation, superbias]
+  calwebb_guider.cfg: [dq_init, flat_field, guider_cds]
+  calwebb_image2.cfg: [assign_wcs, bkg_subtract, flat_field, photom]
   calwebb_spec2.cfg: [assign_wcs, bkg_subtract, cube_build, extract_1d, extract_2d,
     flat_field, fringe, imprint_subtract, msa_flagging, pathloss, photom, resample_spec,
     srctype, straylight]
@@ -155,10 +167,12 @@ steps_to_reftypes:
   dark_current: [dark]
   dq_init: [mask]
   extract_1d: [extract1d]
-  extract_2d: []
+  extract_2d: [wavecorr]
   flat_field: [dflat, fflat, flat, sflat]
   fringe: [fringe]
+  gain_scale: [gain]
   group_scale: []
+  guider_cds: []
   imprint_subtract: []
   ipc: [ipc]
   jump: [gain, readnoise]
@@ -178,84 +192,96 @@ steps_to_reftypes:
   superbias: [superbias]
 
 exptypes_to_pipelines:
+  FGS_ACQ1: [calwebb_guider.cfg, skip_2b.cfg]
+  FGS_ACQ2: [calwebb_guider.cfg, skip_2b.cfg]
   FGS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
-  FGS_FOCUS: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  FGS_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  FGS_INTFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
-  FGS_SKYFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
-  MIR_4QPM: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  MIR_CORONCAL: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  FGS_FINEGUIDE: [calwebb_guider.cfg, skip_2b.cfg]
+  FGS_FOCUS: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  FGS_ID-IMAGE: [calwebb_guider.cfg, skip_2b.cfg]
+  FGS_ID-STACK: [calwebb_guider.cfg, skip_2b.cfg]
+  FGS_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  FGS_INTFLAT: [calwebb_detector1.cfg, skip_2b.cfg]
+  FGS_SKYFLAT: [calwebb_detector1.cfg, skip_2b.cfg]
+  FGS_TRACK: [calwebb_guider.cfg, skip_2b.cfg]
+  MIR_4QPM: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  MIR_CORONCAL: [calwebb_detector1.cfg, calwebb_image2.cfg]
   MIR_DARK: [calwebb_dark.cfg, skip_2b.cfg]
-  MIR_FLAT-IMAGE: [calwebb_sloper.cfg, skip_2b.cfg]
-  MIR_FLAT-MRS: [calwebb_sloper.cfg, skip_2b.cfg]
-  MIR_FLATIMAGE: [calwebb_sloper.cfg, skip_2b.cfg]
-  MIR_FLATMRS: [calwebb_sloper.cfg, skip_2b.cfg]
-  MIR_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  MIR_LRS-FIXEDSLIT: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  MIR_LRS-SLITLESS: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  MIR_LYOT: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  MIR_MRS: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  MIR_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NIS_AMI: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  MIR_FLAT-IMAGE: [calwebb_detector1.cfg, skip_2b.cfg]
+  MIR_FLAT-MRS: [calwebb_detector1.cfg, skip_2b.cfg]
+  MIR_FLATIMAGE: [calwebb_detector1.cfg, skip_2b.cfg]
+  MIR_FLATMRS: [calwebb_detector1.cfg, skip_2b.cfg]
+  MIR_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  MIR_LRS-FIXEDSLIT: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  MIR_LRS-SLITLESS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  MIR_LYOT: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  MIR_MRS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  MIR_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NIS_AMI: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
-  NIS_FOCUS: [calwebb_sloper.cfg, skip_2b.cfg]
-  NIS_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NIS_LAMP: [calwebb_sloper.cfg, skip_2b.cfg]
-  NIS_SOSS: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NIS_TACONFIRM: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NIS_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NIS_WFSS: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRC_CORON: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NIS_FOCUS: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NIS_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NIS_LAMP: [calwebb_detector1.cfg, skip_2b.cfg]
+  NIS_SOSS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NIS_TACONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NIS_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NIS_WFSS: [calwebb_detector1.cfg, skip_2b.cfg]
+  NRC_CORON: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRC_DARK: [calwebb_dark.cfg, skip_2b.cfg]
-  NRC_FLAT: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRC_FOCUS: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRC_GRISM: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRC_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRC_LED: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRC_TACONFIRM: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRC_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRC_TSGRISM: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRC_TSIMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRC_WFSC: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_AUTOFLAT: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRS_AUTOWAVE: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_BOTA: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_BRIGHTOBJ: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_CONFIRM: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRC_FLAT: [calwebb_detector1.cfg, skip_2b.cfg]
+  NRC_FOCUS: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRC_GRISM: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NRC_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRC_LED: [calwebb_detector1.cfg, skip_2b.cfg]
+  NRC_TACONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRC_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRC_TSGRISM: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NRC_TSIMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRC_WFSC: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRS_AUTOFLAT: [calwebb_detector1.cfg, skip_2b.cfg]
+  NRS_AUTOWAVE: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NRS_BOTA: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRS_BRIGHTOBJ: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NRS_CONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
-  NRS_FIXEDSLIT: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_FOCUS: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_IFU: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_IMAGE: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_LAMP: [calwebb_sloper.cfg, skip_2b.cfg]
-  NRS_MIMF: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_MSASPEC: [calwebb_sloper.cfg, calwebb_spec2.cfg]
-  NRS_TACONFIRM: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_TACQ: [calwebb_sloper.cfg, calwebb_image2.cfg]
-  NRS_TASLIT: [calwebb_sloper.cfg, calwebb_image2.cfg]
+  NRS_FIXEDSLIT: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NRS_FOCUS: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRS_IFU: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NRS_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRS_LAMP: [calwebb_detector1.cfg, skip_2b.cfg]
+  NRS_MIMF: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRS_MSASPEC: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  NRS_TACONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRS_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRS_TASLIT: [calwebb_detector1.cfg, calwebb_image2.cfg]
 
 exptypes_to_reftypes:
+  FGS_ACQ1: [dflat, fflat, flat, mask, sflat]
+  FGS_ACQ2: [dflat, fflat, flat, mask, sflat]
   FGS_DARK: [ipc, linearity, mask, refpix, rscd, saturation, superbias]
-  FGS_FOCUS: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  FGS_IMAGE: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  FGS_FINEGUIDE: [dflat, fflat, flat, mask, sflat]
+  FGS_FOCUS: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  FGS_ID-IMAGE: [dflat, fflat, flat, mask, sflat]
+  FGS_ID-STACK: [dflat, fflat, flat, mask, sflat]
+  FGS_IMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   FGS_INTFLAT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
   FGS_SKYFLAT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
-  MIR_4QPM: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  MIR_CORONCAL: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  FGS_TRACK: [dflat, fflat, flat, mask, sflat]
+  MIR_4QPM: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  MIR_CORONCAL: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   MIR_DARK: [ipc, linearity, mask, refpix, rscd, saturation, superbias]
   MIR_FLAT-IMAGE: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
@@ -265,165 +291,167 @@ exptypes_to_reftypes:
     saturation, superbias, trapdensity, trappars]
   MIR_FLATMRS: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
-  MIR_IMAGE: [area, camera, collimator, dark, disperser, distortion, filteroffset,
+  MIR_IMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  MIR_LRS-FIXEDSLIT: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  MIR_LRS-SLITLESS: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  MIR_LYOT: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  MIR_MRS: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  MIR_TACQ: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NIS_AMI: [area, camera, collimator, dark, dflat, disperser, distortion, fflat, filteroffset,
     flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  MIR_LRS-FIXEDSLIT: [area, camera, collimator, cubepar, dark, disperser, distortion,
-    drizpars, extract1d, filteroffset, flat, fore, fpa, fringe, gain, ifufore, ifupost,
-    ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom,
-    readnoise, refpix, regions, resol, rscd, saturation, specwcs, straymask, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  MIR_LRS-SLITLESS: [area, camera, collimator, cubepar, dark, disperser, distortion,
-    drizpars, extract1d, filteroffset, flat, fore, fpa, fringe, gain, ifufore, ifupost,
-    ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom,
-    readnoise, refpix, regions, resol, rscd, saturation, specwcs, straymask, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  MIR_LYOT: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  MIR_MRS: [area, camera, collimator, cubepar, dark, disperser, distortion, drizpars,
-    extract1d, filteroffset, flat, fore, fpa, fringe, gain, ifufore, ifupost, ifuslicer,
-    ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom, readnoise,
-    refpix, regions, resol, rscd, saturation, specwcs, straymask, superbias, trapdensity,
-    trappars, v2v3, wavelengthrange]
-  MIR_TACQ: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NIS_AMI: [area, camera, collimator, dark, disperser, distortion, filteroffset, flat,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, sflat, specwcs,
+    superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NIS_DARK: [ipc, linearity, mask, refpix, rscd, saturation, superbias]
-  NIS_FOCUS: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd, saturation,
-    superbias, trapdensity, trappars]
-  NIS_IMAGE: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  NIS_FOCUS: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NIS_IMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NIS_LAMP: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd, saturation,
     superbias, trapdensity, trappars]
-  NIS_SOSS: [area, camera, collimator, cubepar, dark, disperser, distortion, drizpars,
-    extract1d, filteroffset, flat, fore, fpa, fringe, gain, ifufore, ifupost, ifuslicer,
-    ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom, readnoise,
-    refpix, regions, resol, rscd, saturation, specwcs, straymask, superbias, trapdensity,
-    trappars, v2v3, wavelengthrange]
-  NIS_TACONFIRM: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NIS_TACQ: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  NIS_SOSS: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NIS_TACONFIRM: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NIS_TACQ: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NIS_WFSS: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd, saturation,
     superbias, trapdensity, trappars]
-  NRC_CORON: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  NRC_CORON: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRC_DARK: [ipc, linearity, mask, refpix, rscd, saturation, superbias]
   NRC_FLAT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd, saturation,
     superbias, trapdensity, trappars]
-  NRC_FOCUS: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NRC_GRISM: [area, camera, collimator, cubepar, dark, disperser, distortion, drizpars,
-    extract1d, filteroffset, flat, fore, fpa, fringe, gain, ifufore, ifupost, ifuslicer,
-    ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom, readnoise,
-    refpix, regions, resol, rscd, saturation, specwcs, straymask, superbias, trapdensity,
-    trappars, v2v3, wavelengthrange]
-  NRC_IMAGE: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  NRC_FOCUS: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NRC_GRISM: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NRC_IMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRC_LED: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd, saturation,
     superbias, trapdensity, trappars]
-  NRC_TACONFIRM: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NRC_TACQ: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NRC_TSGRISM: [area, camera, collimator, cubepar, dark, disperser, distortion, drizpars,
-    extract1d, filteroffset, flat, fore, fpa, fringe, gain, ifufore, ifupost, ifuslicer,
-    ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom, readnoise,
-    refpix, regions, resol, rscd, saturation, specwcs, straymask, superbias, trapdensity,
-    trappars, v2v3, wavelengthrange]
-  NRC_TSIMAGE: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NRC_WFSC: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa,
-    ote, persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  NRC_TACONFIRM: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NRC_TACQ: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NRC_TSGRISM: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NRC_TSIMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NRC_WFSC: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRS_AUTOFLAT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
-  NRS_AUTOWAVE: [area, camera, collimator, cubepar, dark, disperser, distortion, drizpars,
-    extract1d, filteroffset, fore, fpa, fringe, gain, ifufore, ifupost, ifuslicer,
-    ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom, readnoise,
-    refpix, regions, resol, rscd, saturation, specwcs, straymask, superbias, trapdensity,
-    trappars, v2v3, wavelengthrange]
-  NRS_BOTA: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  NRS_AUTOWAVE: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NRS_BOTA: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRS_BRIGHTOBJ: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
-    drizpars, extract1d, fflat, filteroffset, fore, fpa, fringe, gain, ifufore, ifupost,
-    ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom,
-    readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
-    superbias, trapdensity, trappars, v2v3, wavelengthrange]
-  NRS_CONFIRM: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NRS_CONFIRM: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRS_DARK: [ipc, linearity, mask, refpix, rscd, saturation, superbias]
   NRS_FIXEDSLIT: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
-    drizpars, extract1d, fflat, filteroffset, fore, fpa, fringe, gain, ifufore, ifupost,
-    ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom,
-    readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
-    superbias, trapdensity, trappars, v2v3, wavelengthrange]
-  NRS_FOCUS: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NRS_FOCUS: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRS_IFU: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
-    drizpars, extract1d, fflat, filteroffset, fore, fpa, fringe, gain, ifufore, ifupost,
-    ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom,
-    readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
-    superbias, trapdensity, trappars, v2v3, wavelengthrange]
-  NRS_IMAGE: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NRS_IMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRS_LAMP: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd, saturation,
     superbias, trapdensity, trappars]
-  NRS_MIMF: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+  NRS_MIMF: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
   NRS_MSASPEC: [area, camera, collimator, cubepar, dark, dflat, disperser, distortion,
-    drizpars, extract1d, fflat, filteroffset, fore, fpa, fringe, gain, ifufore, ifupost,
-    ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat, photom,
-    readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
-    superbias, trapdensity, trappars, v2v3, wavelengthrange]
-  NRS_TACONFIRM: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NRS_TACQ: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
-  NRS_TASLIT: [area, camera, collimator, dark, disperser, distortion, filteroffset,
-    fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, ote,
-    persat, photom, readnoise, refpix, regions, rscd, saturation, specwcs, superbias,
-    trapdensity, trappars, v2v3, wavelengthrange]
+    drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe, gain, ifufore,
+    ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss, persat,
+    photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs, straymask,
+    superbias, trapdensity, trappars, v2v3, wavecorr, wavelengthrange]
+  NRS_TACONFIRM: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NRS_TACQ: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
+  NRS_TASLIT: [area, camera, collimator, dark, dflat, disperser, distortion, fflat,
+    filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc, linearity,
+    mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
+    sflat, specwcs, superbias, trapdensity, trappars, v2v3, wavelengthrange]
 
 

@@ -36,17 +36,17 @@ import traceback
 import uuid
 import fnmatch 
 
-from . import rmap, log, utils, config
+from . import rmap, log, utils, config, python23
+from .constants import ALL_OBSERVATORIES
+from .log import srepr
+from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError
 from crds.client import api
-from crds.core.log import srepr
-from crds.core.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError
-from crds.core import python23
 # import crds  forward
 
 __all__ = [
     "getreferences", "getrecommendations",
     "get_config_info", "update_config_info", "load_server_info",
-    "get_processing_mode",
+    "get_processing_mode", "get_context_name",
     "version_info",
     "get_bad_mappings_in_context", "list_mappings",
 ]
@@ -174,7 +174,7 @@ def _initial_recommendations(
         log.verbose("CRDS_SERVER_URL =", os.environ.get("CRDS_SERVER_URL", "UNDEFINED"))
 
         check_observatory(observatory)
-        check_parameters(parameters)
+        parameters = check_parameters(parameters)
         check_reftypes(reftypes)
         check_context(context)  
 
@@ -236,7 +236,7 @@ def mapping_names(context):
     else consult server.
     """
     try:
-        mapping = crds.get_symbolic_mapping(context)
+        mapping = get_symbolic_mapping(context)
         contained_mappings = mapping.mapping_names()
     except IOError:
         contained_mappings = api.get_mapping_names(context)
@@ -273,7 +273,9 @@ def check_observatory(observatory):
     assert observatory in ["hst", "jwst", "tobs"]
 
 def check_parameters(header):
-    """Make sure dict-like `header` is a mapping from strings to simple types."""
+    """Make sure dict-like `header` is a mapping from strings to simple types.
+    Drop non-simple values with a verbose warning.
+    """
     header = dict(header)
     keys = list(header.keys())
     for key in keys:
@@ -287,6 +289,7 @@ def check_parameters(header):
         if not isinstance(header[key], (python23.string_types, float, int, bool)):
             log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
             del header[key]
+    return header
 
 def check_reftypes(reftypes):
     """Make sure reftypes is a sequence of string identifiers."""
@@ -367,6 +370,20 @@ def get_processing_mode(observatory, context=None):
 
     return info.effective_mode, final_context
 
+@utils.cached
+def get_context_name(observatory, context=None):
+    """Return the .pmap name of the default context based on:
+
+    1. literal definitiion in `context` (jwst_0001.pmap)
+    2. symbolic definition in `context` (jwst-operational or jwst-edit)
+    3. date-based definition in `context` (jwst-2017-01-15T00:05:00)
+    4. CRDS_CONTEXT env var override
+
+    Symbolic and date-based contexts may require definition of CRDS_SERVER_URL
+    to enable server-side translations of the symbolic names.
+    """
+    return get_processing_mode(observatory, context)[1]
+
 def get_final_context(info, context):
     """Based on env CRDS_CONTEXT, the `context` parameter, and the server's reported,
     cached, or defaulted `operational_context`,  choose the pipeline mapping which 
@@ -399,7 +416,7 @@ def translate_date_based_context(context, observatory=None):
         return context
 
     if observatory is None:
-        for observatory in crds.ALL_OBSERVATORIES:
+        for observatory in ALL_OBSERVATORIES:
             if context.startswith(observatory):
                 break
         else:
@@ -559,6 +576,7 @@ def load_server_info(observatory):
 # XXXX which cause problems for other systems.
 def version_info():
     """Return CRDS checkout URL and revision,  client side."""
+    import crds
     try:
         from . import git_version
         branch = revision = "none"
@@ -677,8 +695,4 @@ def save_pickled_mapping(mapping, loaded):
         pickled = python23.pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
         log.info("Saved pickled context", repr(pickle_file))
-
-# =============================================================================
-
-import crds # for __version__,  circular dependency.
 

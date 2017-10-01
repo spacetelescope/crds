@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'miri_trapdensity.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
-    'sha1sum' : '347b4f7cb502c5ace23f7408515cd14b94a6c4ad',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'efe02d857ba30b7d97befc00093bba38e6ada29e',
     'suffix' : 'trapdensity',
     'text_descr' : 'Trap Density For Persistence Step',
 }

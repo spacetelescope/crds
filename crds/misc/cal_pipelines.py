@@ -24,10 +24,11 @@ pipelines used to process the given dataset filepath or dataset with a particula
     
 >>> get_pipelines("MIR_LRS-FIXEDSLIT", "0.7.0", observatory="jwst")
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
-    
-
-
+   
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 # --------------------------------------------------------------------------------------
 

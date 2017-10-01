@@ -65,18 +65,18 @@ from collections import namedtuple
 
 # ===================================================================
 
-import crds
-from crds.core import python23, log, utils, config, selectors, substitutions
+from . import python23, log, utils, config, selectors, substitutions
 
 # XXX For backward compatability until refactored away.
-from crds.core.config import locate_file, locate_mapping, locate_reference
-from crds.core.config import mapping_exists, is_mapping
+from .config import locate_file, locate_mapping, locate_reference
+from .config import mapping_exists, is_mapping
 
-from crds.core import exceptions as crexc
-from crds.core import python23
-from crds.core.custom_dict import LazyFileDict
-from crds.core.mapping_verifier import MAPPING_VERIFIER
-from crds.core.log import srepr
+from . import exceptions as crexc
+from . import python23
+from .custom_dict import LazyFileDict
+from .mapping_verifier import MAPPING_VERIFIER
+from .log import srepr
+from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
 # from crds import data_file   (deferred to actual uses)
 
@@ -186,7 +186,7 @@ class Mapping(object):
 
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
-        assert self.observatory in crds.ALL_OBSERVATORIES, \
+        assert self.observatory in ALL_OBSERVATORIES, \
             "Invalid observatory " + repr(self.obsevatory) + " in " + repr(self.filename)
 
     def check_instrument(self):
@@ -761,7 +761,7 @@ class PipelineContext(ContextMapping):
 
     def get_instrument(self, header):
         """Get the instrument name defined by file `header`."""
-        for key in [self.instrument_key.upper(), self.instrument_key.lower()] + crds.INSTRUMENT_KEYWORDS:
+        for key in [self.instrument_key.upper(), self.instrument_key.lower()] + INSTRUMENT_KEYWORDS:
             try: # This hack makes FITS headers work prior to back-mapping to data model names.
                 instr = header[key]
             except KeyError:

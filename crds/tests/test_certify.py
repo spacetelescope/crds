@@ -81,13 +81,13 @@ def certify_bad_checksum():
 
 def certify_good_checksum():
     """
-    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_good_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap")()
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_good_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     CRDS - INFO -  FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -215,6 +215,7 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
     CRDS - INFO -  EXP_TYPE = 'mir_image'
     CRDS - INFO -  META.AUTHOR = 'Todd Miller'
     CRDS - INFO -  META.DESCRIPTION = 'Brief notes on this reference.'
@@ -228,6 +229,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.INSTRUMENT.GRATING = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.NAME = 'miri'
     CRDS - INFO -  META.INSTRUMENT.PUPIL = 'UNDEFINED'
+    CRDS - INFO -  META.MODEL_TYPE = 'UNDEFINED'
     CRDS - INFO -  META.PEDIGREE = 'dummy'
     CRDS - INFO -  META.REFTYPE = 'distortion'
     CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
@@ -241,8 +243,8 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.USEAFTER = '2015-01-25T12:00:00'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  0 warnings
-    CRDS - INFO -  27 infos
+    CRDS - INFO -  1 warnings
+    CRDS - INFO -  28 infos
     0
     >>> test_config.cleanup(old_state)
     """
@@ -423,10 +425,11 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
     CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'=None to value of 'P_BAND'='SHORT | MEDIUM |'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFUSHORT|MIRIFULONG|'
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  0 warnings
+    CRDS - INFO -  1 warnings
     CRDS - INFO -  7 infos
     0
     >>> test_config.cleanup(old_state)
@@ -512,7 +515,7 @@ def certify_JsonCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.json", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
     CRDS - INFO -  Certifying 'data/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'
-
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
     >>> test_config.cleanup(old_state)
     """
             
@@ -521,7 +524,7 @@ def certify_YamlCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.yaml", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
     CRDS - INFO -  Certifying 'data/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'
-
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
     >>> test_config.cleanup(old_state)
     """
             
@@ -531,7 +534,6 @@ def certify_AsdfCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
-    -ignore-
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
@@ -551,7 +553,6 @@ def certify_AsdfCertify_opaque_name():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
-    -ignore-
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
@@ -577,13 +578,16 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_A2' : Missing required keyword 'PIXAR_A2'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']-ignore-
-    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: -ignore-
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']Failed validating 'enum' in schema:    {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',     'description': 'Detector name.',     'enum': ['NRCA1',              'NRCA2',              'NRCA3',              'NRCA4',              'NRCALONG',              'NRCB1',              'NRCB2',              'NRCB3',              'NRCB4',              'NRCBLONG',              'NRS1',              'NRS2',              'ANY',              'MIRIMAGE',              'MIRIFULONG',              'MIRIFUSHORT',              'NIS',              'GUIDER1',              'GUIDER2',              'N/A'],     'fits_keyword': 'DETECTOR',     'title': 'Name of detector used to acquire the data',     'type': 'string'}On instance:    'FOO'
+    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: In data/niriss_ref_photom_bad.fits
+      Invalid values: DETECTOR
+    <BLANKLINE>
     >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
     """

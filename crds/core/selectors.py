@@ -87,6 +87,8 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ==============================================================================
+
 import re
 import fnmatch
 import sys
@@ -98,16 +100,15 @@ from pprint import pprint as pp
 
 # import numpy as np
 
-import crds
-from crds.core import log, utils, timestamp, config
+# ==============================================================================
 
-from crds.core.exceptions import (ValidationError, CrdsLookupError,
+from . import log, utils, timestamp, config, python23
+
+from .exceptions import (ValidationError, CrdsLookupError,
                                   AmbiguousMatchError, 
                                   MatchingError, UseAfterError,
                                   InvalidDatetimeError,
                                   VersionAfterError)
-from crds.core import python23
-
 # ==============================================================================
 
 def glob_list(value):
@@ -117,10 +118,10 @@ def glob_list(value):
     Otherwise,  return [value] for esoteric or simple values.
     
     >>> glob_list("FOO|BAR | BAZ")
-    ['FOO', 'BAR', 'BAZ']
+    ['BAR', 'BAZ', 'FOO']
     
     >>> glob_list("FOO|BAR | BAZ| ")
-    ['FOO', 'BAR', 'BAZ']
+    ['BAR', 'BAZ', 'FOO']
     
     >>> glob_list('FOO')
     ['FOO']
@@ -139,7 +140,7 @@ def glob_list(value):
     
     """
     if not esoteric_key(value) and "|" in value:  
-        return [ val.strip() for val in value.split("|") if val.strip() ]
+        return list(sorted([val.strip() for val in value.split("|") if val.strip()]))
     else:
         return [value]
     
@@ -147,8 +148,11 @@ def glob_set(value):
     """If `value` is an or-glob expression,  return the corresponding set of values.
     Otherwise,  return the singleton set([value]),
     
-    >>> glob_set("FOO|BAR | BAZ") == set(['FOO', 'BAR', 'BAZ'])
+    >>> glob_set("FOO|BAR | BAZ") == set(['FOO', 'BAZ', 'BAR'])
     True
+
+    >>> glob_set("FOO|BCD | BAZ") == set(['FOO', 'BAZ', 'BAR'])
+    False
     """
     return set(glob_list(value))
 
@@ -156,7 +160,10 @@ def glob_compress(value):
     """Squash spaces out of glob value.
     
     >>> glob_compress("FOO|BAR | BAZ")          # spaces removed
-    'FOO|BAR|BAZ'
+    'BAR|BAZ|FOO'
+
+    >>> glob_compress("FOO|BAR | BAZ|")          # trailing or removed
+    'BAR|BAZ|FOO'
 
     >>> glob_compress('#THIS|  THAT |OTHER#')   # nothing happens
     '#THIS|  THAT |OTHER#'
@@ -884,7 +891,7 @@ class Selector(object):
                 else:
                     log.verbose("Selector replaces terminal at", repr(key), "adding new selector.")
                     new_value = self._create_path(header, value, parkey[1:], classes[1:])
-                    self._add_item(key, new_value)
+                    self._add_item(old_key, new_value)
         else:  # add or replace primitive result
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))
@@ -1245,7 +1252,6 @@ class RegexMatcher(Matcher):
     def __init__(self, key):
         super(RegexMatcher, self).__init__(key)
         self._regex = re.compile(key)
-        self._exceptional_matches = ["*"]
         
     def match(self, value):
         result = super(RegexMatcher, self).match(value)
@@ -1262,7 +1268,9 @@ class GlobMatcher(RegexMatcher):
     A Matcher repr generally shows the underlying regex.
     
     >>> repr(m)
-    "GlobMatcher('^(foo\\\\Z(?ms))$')"
+    "GlobMatcher('^((?s:foo)\\\\Z)$')"
+
+    Used to be "GlobMatcher('^(foo\\\\Z(?ms))$')"
 
     >>> m.match("bar")
     -1
@@ -1309,7 +1317,6 @@ class GlobMatcher(RegexMatcher):
         super(GlobMatcher, self).__init__(new_key)
         # To support automatic refactoring in the refactor module,  also
         # match on the original key such as A|B|C|D
-        self._exceptional_matches.append(key)
         
 class InequalityMatcher(Matcher):
     """
@@ -1850,9 +1857,9 @@ Restore original debug behavior:
             elif "|" in elem:
                 elem = "|".join([utils.condition_value(x) for x in glob_list(elem)])
             else:
-                elem = utils.condition_value(elem)
-        elif isinstance(elem, (tuple, list)):
-            elem = "|".join([utils.condition_value(key) for key in elem])
+                elem = utils.condition_value(glob_compress(elem))
+        elif isinstance(elem, (tuple, list)):  # match set for single parameter
+            elem = "|".join([utils.condition_value(val) for val in elem])
         else:
             elem = utils.condition_value(elem)
         return elem

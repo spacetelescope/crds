@@ -9,9 +9,9 @@ from __future__ import absolute_import
 import os
 import re
 
-import crds
-from crds.core  import python23, config, log, utils
-from crds.core.exceptions import NameComparisonError
+from . import python23, config, log, utils
+from .exceptions import NameComparisonError
+from .constants import ALL_OBSERVATORIES
 from crds.client import api
 
 # =============================================================================================================
@@ -190,7 +190,7 @@ def crds_name(name):
     >>> crds_name("hst_acs_darkfile_0001.fits")
     True
     """
-    return name.startswith(tuple(crds.ALL_OBSERVATORIES))
+    return name.startswith(tuple(ALL_OBSERVATORIES))
 
 OLD_CDBS = re.compile(config.complete_re(r"[A-Za-z][A-Za-z0-9]{8}_[A-Za-z0-9]{1,8}\.[A-Za-z0-9]{1,6}"))
 NEW_CDBS = re.compile(config.complete_re(r"[0-9][A-Za-z0-9]{8}_[A-Za-z0-9]{1,8}\.[A-Za-z0-9]{1,6}"))

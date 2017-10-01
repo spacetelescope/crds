@@ -925,7 +925,7 @@
             "unique_rowkeys":null
         },
         "persat":{
-            "derived_from":"handmade spec 06-22-2017",
+            "derived_from":"handmade spec 09-26-2017",
             "extra_keys":null,
             "file_ext":".fits",
             "filekind":"persat",
@@ -938,9 +938,13 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"10b119d3f354a9802c72b7cfaf08b39315fdd18f",
+            "sha1sum":"6896bfbc69f2276aac8ad7ce6f348d13521917ff",
             "suffix":"persat",
             "text_descr":"Persistence Saturation Threshold",
             "tpn":"miri_persat.tpn",
@@ -1206,9 +1210,13 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"347b4f7cb502c5ace23f7408515cd14b94a6c4ad",
+            "sha1sum":"efe02d857ba30b7d97befc00093bba38e6ada29e",
             "suffix":"trapdensity",
             "text_descr":"Trap Density For Persistence Step",
             "tpn":"miri_trapdensity.tpn",
@@ -1228,9 +1236,13 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"6e5e14690a8968d28ff9c3c19ba318f0a26d111f",
+            "sha1sum":"53b24cb8e79526efd12402f6e7c7fc902740d0e7",
             "suffix":"trappars",
             "text_descr":"Trap Capture and Decay Parameters",
             "tpn":"miri_trappars.tpn",
@@ -1785,6 +1797,36 @@
             "tpn":"nircam_trappars.tpn",
             "unique_rowkeys":null
         },
+        "wavelengthrange":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"jwst_nircam_wavelengthrange_0000.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"wavelengthrange",
+            "filetype":"WAVELENGTHRANGE",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_wavelengthrange_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_wavelengthrange_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"7805fb6adbc7afd6ad71ab3cea484e3d18bd272d",
+            "suffix":"wavelengthrange",
+            "text_descr":"Spectral Configurations",
+            "tpn":"nircam_wavelengthrange.tpn",
+            "unique_rowkeys":null
+        },
         "wcsregions":{
             "derived_from":"Handmade spec",
             "extra_keys":null,
@@ -2323,6 +2365,36 @@
             "tpn":"niriss_trappars.tpn",
             "unique_rowkeys":null
         },
+        "wavelengthrange":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"jwst_niriss_wavelengthrange_0000.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"wavelengthrange",
+            "filetype":"WAVELENGTHRANGE",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_wavelengthrange_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_wavelengthrange_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"dcd2b0fa884ec38af7a0920e6660a97329762b5b",
+            "suffix":"wavelengthrange",
+            "text_descr":"Spectral Configurations",
+            "tpn":"niriss_wavelengthrange.tpn",
+            "unique_rowkeys":null
+        },
         "wcsregions":{
             "derived_from":"Handmade spec",
             "extra_keys":null,
@@ -2432,6 +2504,36 @@
             "suffix":"badshutter",
             "text_descr":"Flagging bad shutters step",
             "tpn":"nirspec_badshutter.tpn",
+            "unique_rowkeys":null
+        },
+        "barshadow":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Handmade 2017-09-26",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"BARSHADOW",
+            "filetype":"BARSHADOW",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_barshadow_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_barshadow.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"d731a016f49c2d4229997efc0601ef50e7919ca2",
+            "suffix":"barshadow",
+            "text_descr":" Bar Shadow Correction",
+            "tpn":"nirspec_barshadow.tpn",
             "unique_rowkeys":null
         },
         "camera":{
