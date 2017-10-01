@@ -645,7 +645,7 @@ def dt_list_expected_pipelines():
     """
     >>> old_state = test_config.setup(observatory="jwst")
     >>> ListScript("crds.list --required-pipelines NIS_FOCUS,0.7.8 --contexts jwst_0355.pmap")()
-    jwst_0355.pmap : ['calwebb_sloper.cfg', 'calwebb_image2.cfg']
+    jwst_0355.pmap : ['calwebb_detector1.cfg', 'calwebb_image2.cfg']
     >>> test_config.cleanup(old_state)
     """
     
