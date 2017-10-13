@@ -2238,7 +2238,7 @@ Restore debug configuration.
                     appended = other
                     overwritten = own
                 log.verbose("Merge collision at", repr(appended.key), "using",
-                            repr(appended.choice), "not", overwritten.choice, verbosity=60)
+                            repr(appended.choice), "not", repr(overwritten.choice), verbosity=10)
             merge_selections.append(appended)
         merge_selections.extend(ownsel)
         merge_selections.extend(othersel)
