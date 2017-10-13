@@ -509,45 +509,49 @@ and ids used for CRDS reprocessing recommendations.
         _print_list(rmap.list_references("*", self.observatory, full_path=self.args.full_path))
         
     def list_dataset_headers(self):
-        """List dataset header info for self.args.dataset_headers with respect to self.args.context"""
-        
+        """List dataset header info for self.args.dataset_headers with respect to self.args.contexts"""
         # Support @-files for ids specified on command line
         ids = self.get_words(self.args.dataset_headers)
-        
+        products_seen, exposures_seen = set(), set()
+        expanded_ids = []
         for context in self.contexts:
             with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context), 
                                         "for", repr(self.args.dataset_headers)):
-                pars = api.get_dataset_headers_unlimited(context, ids)
-                pmap = crds.get_cached_mapping(context)
-                for requested_id in ids:
-                    for returned_id in sorted(pars.keys()):
-                        if requested_id.upper() in returned_id.upper():
-                            header = pars[returned_id]
-                            if isinstance(header, python23.string_types):
-                                log.error("No header for", repr(returned_id), ":", repr(header)) # header is reason
-                                continue
-                            if self.args.id_expansions_only:
-                                print(returned_id, context if len(self.contexts) > 1 else "")
-                            else:
-                                if self.args.minimize_headers:
-                                    header2 = pmap.minimize_header(header)
-                                else:
-                                    header2 = dict(header)
-                                header2.pop("REFTYPE", None)
-                                header2["dataset_id"] = returned_id
-                                header2["CRDS_CTX"] = context
-                                self.dump_header(context, returned_id, header2)
-                            if self.args.first_id_expansion_only:
-                                break
+                for returned_id, header in api.get_dataset_headers_unlimited(context, ids):
+                    product, exposure = returned_id.split(":")
+                    if isinstance(header, python23.string_types):
+                        log.error("No header for", repr(returned_id), ":", repr(header)) # header is reason
+                        continue
+                    if self.args.first_id_expansion_only and product in products_seen:
+                        continue
+                    products_seen.add(product)
+                    exposures_seen.add(exposure)
+                    if self.args.id_expansions_only:
+                        expanded_ids += [ returned_id + (" " + context if len(self.contexts) > 1 else "")]
+                    else:
+                        self.dump_header(context, returned_id, header)
+        if self.args.id_expansions_only:
+            for expanded in sorted(expanded_ids):
+                print(expanded)
                             
-    def dump_header(self, context, header_id, header):
-        """Print out dataset `header` for `id` and `context` in either .json or multi-line formats."""
+    def dump_header(self, context, returned_id, header):
+        """Print out dataset `header` for `id` and `context` in either .json or 
+        multi-line formats.
+        """
+        pmap = crds.get_cached_mapping(context)
+        if self.args.minimize_headers:
+            header2 = pmap.minimize_header(header)
+        else:
+            header2 = dict(header)
+        header2.pop("REFTYPE", None)
+        header2["dataset_id"] = returned_id
+        header2["CRDS_CTX"] = context
         if self.args.json_headers:
-            json_header = { header_id : header }
+            json_header = { returned_id : header }
             print(json.dumps(json_header))
         else:
-            print("Dataset pars for", repr(header_id), "with respect to", repr(context) + ":\n",
-                  log.PP(header))
+            print("Dataset pars for", repr(returned_id), "with respect to", repr(context) + ":\n",
+                  log.PP(header2))
 
     def list_dataset_ids(self):
         """Print out the dataset ids associated with the instruments specified as command line params."""
