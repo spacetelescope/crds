@@ -5,11 +5,8 @@ logic which may attempt to prefetch files for multiple images at the same time.
 CRDS locking wraps more primitive locking functionality such as that provided by
 the lockfile package or the multiprocessing module.
 
-A number of configuration env var settings control locking behavior:
-
-CRDS_USE_LOCKING    boolean control setting turn locks on/off
-CRDS_LOCK_PATH      directory path for lock files  (must pre-exist)
-CRDS_LOCKING_MODE   (filelock, lockfile, or multiprocessing)
+A number of configuration env var settings control locking behavior, see
+crds.core.config for more info.
 """
 
 from __future__ import print_function, absolute_import
