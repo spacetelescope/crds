@@ -605,7 +605,7 @@ def dt_list_status():
     CRDS_MODE = 'auto'
     CRDS_PATH = '...'
     CRDS_SERVER_URL = 'https://....stsci.edu'
-    Cache Locking = 'enabled'
+    Cache Locking = 'enabled, multiprocessing'
     Effective Context = 'hst_....pmap'
     Last Synced = '...'
     Python Executable = '...'
