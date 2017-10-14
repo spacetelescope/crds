@@ -1,0 +1,48 @@
+#! /usr/bin/env python
+
+# ===================================================================
+
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+
+# ===================================================================
+
+import sys
+import os
+
+# ===================================================================
+
+from crds.core import timestamp, log
+from crds.core.pysh import *
+
+# ===================================================================
+
+usage("<instruments...>", 1, help="""
+
+crds_dataset_capture interacts with the CRDS server to dump dataset
+matching parameters for the instruments specified on the command 
+line.  It's a convenience wrapper that automates more primitive
+features in 'crds list'.
+""")
+
+instruments = sys.argv[1:]
+
+now = timestamp.now("T").replace(":","-").split(".")[0]
+capture_dir = "capture-" + now
+
+log.info("Capturing", repr(instruments), "to", repr(capture_dir))
+sh("mkdir ${capture_dir}")
+os.chdir(capture_dir)
+
+for instrument in instruments:
+    ids_file = instrument + ".ids." + now + ".txt"
+    log.info("Capturing", repr(ids_file))
+    sh("crds list --dataset-ids ${instrument} >${ids_file}")
+
+for instrument in instruments:
+    ids_file     = instrument + ".ids." + now + ".txt"
+    headers_file = instrument + ".headers." + now + ".json"
+    log.info("Capturing", repr(ids_file), "to", repr(headers_file))
+    sh("crds list --dataset-headers @${ids_file} --json >${headers_file}")
+
