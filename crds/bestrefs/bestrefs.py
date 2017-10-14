@@ -646,12 +646,14 @@ amount of informational and debug output.
         """Compute bestrefs for datasets."""
         # Finish __init__() inside --pdb
         if self.complex_init():
-            for dataset in self.new_headers:
+            for i, dataset in enumerate(self.new_headers):
+                if i != 0 and i % 1000 == 0:
+                    log.verbose(self.get_stat("datasets"), "sources processed", verbosity=5)
                 self.process(dataset)
             self.post_processing()
         self.report_stats()
-        log.verbose(self.get_stat("datasets"), "sources processed", verbosity=30)
-        log.verbose(len(self.updates), "source updates", verbosity=30)
+        log.verbose(self.get_stat("datasets"), "sources processed", verbosity=5)
+        log.verbose(len(self.updates), "source updates", verbosity=5)
         log.standard_status()
         return log.errors()
 
