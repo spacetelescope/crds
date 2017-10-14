@@ -84,7 +84,7 @@ setup(name="crds",
       author_email="jmiller@stsci.edu",
       url="https://hst-crds.stsci.edu",
       license="BSD",
-      requires=["numpy", "astropy", "lockfile"],  # for HST or JWST, absolutely required
+      requires=["numpy", "astropy", "filelock"],  # for HST or JWST, absolutely required
       # JWST cal code support:      jwst, lockfile
       # File submission support:    requests, lxml, parsley, fitsverify
       # Testing:                    nose

@@ -171,13 +171,53 @@ class ConfigItem(object):
         os.environ.pop(self.env_var, None)
         
 class StrConfigItem(ConfigItem):
-    """Config item for a string value,  currently no difference from base ConfigItem."""
+    """Config item for a string value,  currently no difference from base ConfigItem.
+    
+    >>> CFG = StrConfigItem("CRDS_CFG", "something", "CRDS configuration",
+    ...       valid_values=["something","else","other"])
+    
+    >>> CFG.set("foo")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid value for 'CRDS_CFG' of 'foo' is not one of ['something', 'else', 'other']
+    
+    >>> CFG + "_foo"
+    'something_foo'
+    
+    >>> "foo_" + CFG
+    'foo_something'
+    
+    >>> CFG == 'something'
+    True
+    
+    >>> 'something' == CFG
+    True
+
+    >>> CFG == 'foo'
+    False
+
+    >>> 'foo' == CFG
+    False
+    
+    >>> str(CFG)
+    'something'
+    """
 
     def __str__(self):
+        """Return value of string config item."""
         return str(self.get())
 
     def __eq__(self, other):
+        """Test string value of config item for equality with `other`."""
         return str(self.get()) == other
+    
+    def __add__(self, other):
+        """Add string value of config item to following parameter `other`."""
+        return str(self) + str(other)
+    
+    def __radd__(self, other):
+        """Add string value of config item to preceding parameter `other`."""
+        return str(other) + str(self)
 
 class BooleanConfigItem(ConfigItem):
     """Represents a boolean environment setting for CRDS.
@@ -862,6 +902,11 @@ CACHE_LOCK_PATH = StrConfigItem(
 USE_LOCKING = BooleanConfigItem("CRDS_USE_LOCKING", True,
     "Set to False to turn off CRDS cache locking.")
 
+LOCKING_MODE = StrConfigItem("CRDS_LOCKING_MODE",  "multiprocessing",
+    "Form of locking used by CRDS cache.", 
+    valid_values=["lockfile", "filelock", "multiprocessing"],
+    lower=True)
+
 def get_crds_lockpath(lock_filename):
     """Return the full path of `lock_filename` filename based on CRDS lock path configuration."""
     return os.path.join(CACHE_LOCK_PATH.get(), lock_filename)
@@ -888,10 +933,6 @@ def check_path(path):
     path = os.path.abspath(path)
     assert FILE_PATH_RE.match(path), "Invalid file path " + repr(path)
     return path
-
-# -------------------------------------------------------------------------------------
-
-
 
 # -------------------------------------------------------------------------------------
 
