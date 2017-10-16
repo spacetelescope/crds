@@ -206,6 +206,10 @@ class StrConfigItem(ConfigItem):
     def __str__(self):
         """Return value of string config item."""
         return str(self.get())
+    
+    def __hash__(self):
+        """Use str() of StrConfigItem as hash()"""
+        return hash(str(self))
 
     def __eq__(self, other):
         """Test string value of config item for equality with `other`."""
@@ -1244,18 +1248,22 @@ def get_crds_state():
     """Capture the current CRDS configuration and return it as a dictionary.
     Intended for customizing state during self-tests and restoring during teardown.
     """
+    from .log import get_verbose
     env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
     env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
     env["_CRDS_CACHE_READONLY"] = get_cache_readonly()
     env["PASS_INVALID_VALUES"] = PASS_INVALID_VALUES.get()
+    env["CRDS_VERBOSITY"] = get_verbose()
     return env
 
 def set_crds_state(old_state):
     """Restore the configuration of CRDS returned by get_crds_state()."""
     from crds.client import api   # deferred circular import
+    from .log import set_verbose
     # determination of observatory and server URL are intertwined
     global CRDS_REF_SUBDIR_MODE, _CRDS_CACHE_READONLY
     clear_crds_state()    
+    log.set_verbose(old_state["CRDS_VERBOSITY"])
     _CRDS_CACHE_READONLY = old_state.pop("_CRDS_CACHE_READONLY")
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
     for key, val in old_state.items():
