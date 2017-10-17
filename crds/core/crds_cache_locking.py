@@ -26,14 +26,14 @@ import multiprocessing
 
 # =========================================================================
 
-from . import log, config
+from . import log, config, utils
 
 # =========================================================================
 
 def _warn_required(locking_module):
     if config.LOCKING_MODE == locking_module:
-        log.warning("Locking package '{}' is not installed.".format(locking_module))
-        log.warning("CRDS locking is enabled but inoperable,  CRDS downloads may fail.")
+        log.verbose_warning("Locking package '{}' is not installed.".format(locking_module))
+        log.verbose_warning("CRDS locking cannot be used and will be bypassed.")
     return CrdsFakeLock
 
 # =========================================================================
@@ -114,6 +114,17 @@ class CrdsFakeLock(CrdsAbstractLock):
     
 # =========================================================================
 
+class failed_module_proxy(object):
+    """Generate an exception only when module is actually used by runtime lock
+    instantiation.
+    """
+    def __init__(self, name):
+        self.name = name
+    def __getattr__(self, attr):
+        raise ImportError(repr(self.name) + " import failed.")
+
+# =========================================================================
+
 class CrdsMultiprocessingLock(CrdsAbstractLock):
     """Wrap multiprocessing.Lock as locking basis."""
     def __init__(self, lockname):
@@ -125,41 +136,41 @@ class CrdsMultiprocessingLock(CrdsAbstractLock):
 try:
     import filelock
 except ImportError:
-    CrdsFileLock = _warn_required("filelock")
-else:    
-    class CrdsFileLock(CrdsAbstractLock):
-        """Wrap filelock.FileLock as locking basis.  self.lockname is path.""" 
-        def __init__(self, lockname):
-            super(CrdsFileLock, self).__init__(config.get_crds_lockpath(lockname))
-            self._lock = filelock.FileLock(self.lockname)
+    filelock = failed_module_proxy("filelock")  # instantiating lock intentionally fails
 
-        def _break_lock(self, *args, **keys):
-            """Destroy lock regardless of who owns it."""
-            try:
-                os.remove(self.lockname)
-            except Exception:
-                pass
+class CrdsFileLock(CrdsAbstractLock):
+    """Wrap filelock.FileLock as locking basis.  self.lockname is path.""" 
+    def __init__(self, lockname):
+        super(CrdsFileLock, self).__init__(config.get_crds_lockpath(lockname))
+        self._lock = filelock.FileLock(self.lockname)
+
+    def _break_lock(self, *args, **keys):
+        """Destroy lock regardless of who owns it."""
+        try:
+            os.remove(self.lockname)
+        except Exception:
+            pass
 
 # =========================================================================
 
 try:
     import lockfile
 except ImportError:
-    CrdsLockFile = _warn_required("lockfile")
-else:
-    class CrdsLockFile(CrdsAbstractLock):
-        """Wrap lockfile.LockFile as locking basis.  self.lockname is path."""
-        def __init__(self, lockname):
-            super(CrdsLockFile, self).__init__(config.get_crds_lockpath(lockname))
-            self._lock = lockfile.LockFile(self.lockname)
-        
-        def _break_lock(self,  *args, **keys):
-            """Destroy lock regardless of who owns it."""
-            try:
-                self._lock.break_lock(*args, **keys)
-                os.remove(self.lockname)
-            except Exception:
-                pass
+    lockfile = failed_module_proxy("lockfile")  # instantiating lock intentionally fails
+
+class CrdsLockFile(CrdsAbstractLock):
+    """Wrap lockfile.LockFile as locking basis.  self.lockname is path."""
+    def __init__(self, lockname):
+        super(CrdsLockFile, self).__init__(config.get_crds_lockpath(lockname))
+        self._lock = lockfile.LockFile(self.lockname)
+    
+    def _break_lock(self,  *args, **keys):
+        """Destroy lock regardless of who owns it."""
+        try:
+            self._lock.break_lock(*args, **keys)
+            os.remove(self.lockname)
+        except Exception:
+            pass
     
 # =========================================================================
 
@@ -194,17 +205,23 @@ def create_lock(lockname):
         try:
             lock = lock_class(lockname)
         except Exception as exc:
-            lock = _fake_lock_verbose(lockname, "Failed creating CRDS cache lock: " + str(exc))
+            lock = _fake_lock_verbose(lockname, "Failed creating CRDS cache lock: " + str(exc), 
+                                      logger=log.warning)
     return lock
 
-def _fake_lock_verbose(lockname, explain):
+def _fake_lock_verbose(lockname, explain, logger=log.debug):
     """Issue a verbose log message based on `explain` indicating why fake 
     locks are being used.
     
     Returns a fake lock for `lockpath`.
     """
-    log.warning(explain + " Cannot support downloading files while multiprocessing.")
+    _explain_once(explain, logger)
     return CrdsFakeLock(lockname)
+
+@utils.cached
+def _explain_once(explain, logger):
+    """Issue locking unsupported message `explain` to `logger` once."""
+    logger(explain + " Cannot support downloading CRDS files while multiprocessing.")
     
 # =========================================================================
 

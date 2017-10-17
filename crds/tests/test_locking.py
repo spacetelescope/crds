@@ -10,14 +10,15 @@ from __future__ import absolute_import
 
 # ===================================================================
 
-import random
+import sys
+import os
 import time
 import multiprocessing
-import logging
+import tempfile
 
 # ===================================================================
 
-from crds.core import log, config, crds_cache_locking
+from crds.core import python23, log, config, crds_cache_locking
 
 # ===================================================================
 
@@ -25,17 +26,26 @@ from . import test_config
 
 # ===================================================================
 
-def multiprocessing_instance(nothing):
+def multiprocessing_instance(output_file_name):
     """Pretend to do something generic."""
+    output_file = open(output_file_name, "a")
     with crds_cache_locking.get_cache_lock():
-        log.info("Doing something.")
-        time.sleep(random.random()*1)
+        for char in "testing":
+            output_file.write(char)
+            output_file.flush()
+            time.sleep(0.2)
+        output_file.write("\n")
+        output_file.flush()
+            
 
 def try_multiprocessing():
     """Run some test functions using multiprocessing."""
     pool = multiprocessing.Pool(5)
-    pool.map(multiprocessing_instance, [None]*5)
-    pool.close()
+    with tempfile.NamedTemporaryFile(mode="a") as output_file:
+        pool.map(multiprocessing_instance, [output_file.name]*5)
+        pool.close()
+        reader = open(output_file.name)
+        print(reader.read())
 
 def dt_default_locking():
     """
@@ -47,6 +57,12 @@ def dt_default_locking():
     >>> crds_cache_locking.status()
     'enabled, multiprocessing'
     >>> try_multiprocessing()
+    testing
+    testing
+    testing
+    testing
+    testing
+    <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
 
@@ -61,6 +77,12 @@ def dt_multiprocessing_locking():
     >>> crds_cache_locking.status()
     'enabled, multiprocessing'
     >>> try_multiprocessing()
+    testing
+    testing
+    testing
+    testing
+    testing
+    <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
 
@@ -77,6 +99,12 @@ def dt_filelock_locking():
     >>> crds_cache_locking.get_cache_lock()
     CrdsFileLock('/tmp/crds.cache')
     >>> try_multiprocessing()
+    testing
+    testing
+    testing
+    testing
+    testing
+    <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
 
@@ -92,7 +120,15 @@ def dt_lockfile_locking():
     'enabled, lockfile'
     >>> crds_cache_locking.get_cache_lock()
     CrdsLockFile('/tmp/crds.cache')
-    >>> try_multiprocessing()
+    
+    >> try_multiprocessing()    XXXXX lockfile is broken
+    testing
+    testing
+    testing
+    testing
+    testing
+    <BLANKLINE>
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -103,10 +139,16 @@ def dt_default_disabled():
     >>> old_state = test_config.setup()
     >>> _ = config.USE_LOCKING.set(False)
     >>> crds_cache_locking.init_locks()
-    CRDS - WARNING -  CRDS_USE_LOCKING = False. Cannot support downloading files while multiprocessing.
-    CRDS - WARNING -  CRDS_USE_LOCKING = False. Cannot support downloading files while multiprocessing.
+    CRDS - DEBUG -  CRDS_USE_LOCKING = False. Cannot support downloading CRDS files while multiprocessing.
     >>> crds_cache_locking.status()
     'disabled, multiprocessing'
+    >>> try_multiprocessing()
+    ttttteeeeessssstttttiiiiinnnnnggggg
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
 
@@ -117,10 +159,16 @@ def dt_default_readonly():
     >>> old_state = test_config.setup()
     >>> _ = config.set_cache_readonly()
     >>> crds_cache_locking.init_locks()
-    CRDS - WARNING -  CRDS_READONLY_CACHE = True. Cannot support downloading files while multiprocessing.
-    CRDS - WARNING -  CRDS_READONLY_CACHE = True. Cannot support downloading files while multiprocessing.
+    CRDS - DEBUG -  CRDS_READONLY_CACHE = True. Cannot support downloading CRDS files while multiprocessing.
     >>> crds_cache_locking.status()
     'disabled, multiprocessing'
+    >>> try_multiprocessing()
+    ttttteeeeessssstttttiiiiinnnnnggggg
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
 
