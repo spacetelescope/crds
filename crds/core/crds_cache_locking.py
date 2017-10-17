@@ -197,19 +197,19 @@ def get_lock_class():
 def create_lock(lockname):
     """Return a lock context manager to guard the CRDS cache against concurrent writes."""
     if not config.USE_LOCKING.get():
-        lock = _fake_lock_verbose(lockname, "CRDS_USE_LOCKING = False.")
+        lock = _fake_lock(lockname, "CRDS_USE_LOCKING = False.")
     elif config.get_cache_readonly():
-        lock = _fake_lock_verbose(lockname, "CRDS_READONLY_CACHE = True.")
+        lock = _fake_lock(lockname, "CRDS_READONLY_CACHE = True.")
     else:
         lock_class = get_lock_class()
         try:
             lock = lock_class(lockname)
         except Exception as exc:
-            lock = _fake_lock_verbose(lockname, "Failed creating CRDS cache lock: " + str(exc), 
+            lock = _fake_lock(lockname, "Failed creating CRDS cache lock: " + str(exc), 
                                       logger=log.warning)
     return lock
 
-def _fake_lock_verbose(lockname, explain, logger=log.debug):
+def _fake_lock(lockname, explain, logger=log.verbose):
     """Issue a verbose log message based on `explain` indicating why fake 
     locks are being used.
     
