@@ -76,13 +76,13 @@ class FitsFile(AbstractFile):
         with fits_open(self.filepath) as hdus:
             return hdus[array_name_or_ext].data
             
-    def get_raw_header(self, needed_keys=()):
+    def get_raw_header(self, needed_keys=(), **keys):
         """Get the union of keywords from all header extensions of FITS
         file `fname`.  In the case of collisions, keep the first value
         found as extensions are loaded in numerical order.
         """
         union = []
-        with fits_open(self.filepath) as hdulist:
+        with fits_open(self.filepath, **keys) as hdulist:
             for hdu in hdulist:
                 for card in hdu.header.cards:
                     card.verify('fix')
@@ -91,9 +91,6 @@ class FitsFile(AbstractFile):
                         continue
                     union.append((key, value))
         return union
-
-    def setval(self, key, value):
-        fits.setval(self.filepath, key, value=value)
 
     def get_array_properties(self, array_name, keytype="A"):
         """Return a Struct defining the properties of the FITS array in extension named `array_name`."""
@@ -122,4 +119,14 @@ class FitsFile(AbstractFile):
                         EXTENSION = i,
                         DATA = hdu.data if (keytype == "D") else None
                     )
+
+    # ----------------------------------------------------------------------------------------------
+
+    def getval(self, key):
+        """FITS version of getval() with checksum=False added."""
+        return super(FitsFile, self).getval(key, checksum=False)
+
+    def setval(self, key, value):
+        """FITS version of setval() method."""
+        fits.setval(self.filepath, key, value=value)
 
