@@ -98,6 +98,9 @@ class MissingHeaderKeyError(MappingError):
 
 class InconsistentParkeyError(MappingError):
     """The parkey tuple was inconsistent with the rest of the .rmap in some way."""
+
+class MappingInsertionError(MappingError):
+    """The insertion of a new file into a mapping (rmap) failed for some reason."""
     
 # -------------------------------------------------------------------------------------------
 
