@@ -333,24 +333,24 @@ def get_required_parkeys(context):
     return S.get_required_parkeys(context)
 
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
-    """Return { dataset_id : { header } } for `instrument`."""
+    """return { dataset_id:header, ...} for every `dataset_id` for `instrument`."""
     log.verbose("Dumping datasets for", repr(instrument))
     ids = get_dataset_ids(context, instrument, datasets_since)
-    return get_dataset_headers_unlimited(context, ids)
+    return dict(get_dataset_headers_unlimited(context, ids))
 
 def get_dataset_headers_unlimited(context, ids):
-    """Return { dataset_id : { header } } for `ids`,  potentially more
-    ids than can be serviced with a single JSONRPC request, looping 
-    internally.
+    """Generate (dataset_id, header) for `ids`,  potentially more
+    `ids` than can be serviced with a single JSONRPC request.
+     If there is a failure fetching parameters for dataset_id,
+    `header` will be returned as a string / error message.
     """
     max_ids_per_rpc = get_server_info().get("max_headers_per_rpc", 5000)
-    headers = {}
     for i in range(0, len(ids), max_ids_per_rpc):
         log.verbose("Dumping dataset headers", i , "of", len(ids), verbosity=20)
         id_slice = ids[i : i + max_ids_per_rpc]
         header_slice = get_dataset_headers_by_id(context, id_slice)
-        headers.update(header_slice)
-    return headers
+        for item in header_slice.items():
+            yield item
 
 def get_affected_datasets(observatory, old_context=None, new_context=None):
     """Return a structure describing the ids affected by the last context change."""

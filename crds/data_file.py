@@ -74,17 +74,18 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
 # @hijack_warnings
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
-    if condition:
-        header = get_conditioned_header(filepath, (key,), None, None)
-    else:
-        header = get_unconditioned_header(filepath, (key,), None, None)
-    return header[key]
+    if key.upper().startswith("META_"):
+        key = key.replace("META_", "META.")
+    file_obj = file_factory(filepath)
+    value = file_obj.getval(key)
+    value = utils.condition_value(value) if condition else value
+    return value
 
 @hijack_warnings
 @utils.gc_collected
 def setval(filepath, key, value):
     """Set metadata keyword `key` of `filepath` to `value`."""
-    if key.upper().startswith(("META.","META_")):
+    if key.upper().startswith("META_"):
         key = key.replace("META_", "META.")
     file_obj = file_factory(filepath)
     file_obj.setval(key, value)

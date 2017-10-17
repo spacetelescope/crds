@@ -6,7 +6,6 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-from collections import namedtuple
 import functools
 import warnings
 import re
@@ -241,30 +240,26 @@ class AbstractFile(object):
     
     # ----------------------------------------------------------------------------------------------
 
-    def getval(self, key, condition=True):
+    def getval(self, key, **keys):
         """Return a single metadata value from `key` of file at `filepath`."""
-        if condition:
-            header = self.get_conditioned_header((key,), None, None)
-        else:
-            header = self.get_unconditioned_header((key,), None, None)
-        return header[key]
-    
+        return self.get_header((key,), **keys)[key]
+
     def setval(self, key, value):
         """Set the value of a single metadata key,  nominally in the 'primary header'."""
         raise self._unsupported_file_op_error("setval")
     
     # ----------------------------------------------------------------------------------------------
 
-    def get_header(self, needed_keys):
+    def get_header(self, needed_keys, **keys):
         """Return dictionary of metadata for this file,  e.g. FITS primary header
          dictionary featuring keywords `needed_keys`.
          """
-        raw_header = self.get_raw_header(needed_keys)
+        raw_header = self.get_raw_header(needed_keys, **keys)
         reduced_header = self._reduce_header(raw_header, needed_keys)
         crossed_header = cross_strap_header(reduced_header)
         return crossed_header
     
-    def get_raw_header(self, needed_keys):
+    def get_raw_header(self, needed_keys, **keys):
         """Return the metadata dictionary associated with this file,  nominally a dict
         describing the FITS header, ASDF tree, or JSON or YAML contents.
         """
