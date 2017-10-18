@@ -105,10 +105,11 @@ from pprint import pprint as pp
 from . import log, utils, timestamp, config, python23
 
 from .exceptions import (ValidationError, CrdsLookupError,
-                                  AmbiguousMatchError, 
-                                  MatchingError, UseAfterError,
-                                  InvalidDatetimeError,
-                                  VersionAfterError)
+                         AmbiguousMatchError, 
+                         MatchingError, UseAfterError,
+                         InvalidDatetimeError,
+                         VersionAfterError,
+                         MappingInsertionError)
 # ==============================================================================
 
 def glob_list(value):
@@ -856,7 +857,7 @@ class Selector(object):
             "Failed inserting", log.srepr(value), "into rmap:", log.srepr(self.name), 
             "with header:\n", log.PP(header), 
             "\n\nparkey:", log.srepr(self.parkey), "\nclasses:", self.class_list, 
-            "\nvalid_values:\n", log.PP(valid_values_map), "\n"):
+            "\nvalid_values:\n", log.PP(valid_values_map), "\n", exception_class=MappingInsertionError):
             self._insert(header, value, self.parkey, self.class_list, valid_values_map)
 
     @property
