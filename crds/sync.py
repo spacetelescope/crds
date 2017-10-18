@@ -245,7 +245,7 @@ class SyncScript(cmdline.ContextsScript):
         self.add_argument("--push-context", metavar="KEY", type=str,
                           help="Push the name of the final cached context to the server for the pipeline identified by KEY.")
         self.add_argument("--clear-pickles", action="store_true",
-                          help="Remove the pickles for the sync'ed contexts from the CRDS cache. Can precede --save-pickles.")
+                          help="Remove all context pickles from the CRDS cache. Can precede --save-pickles.")
         self.add_argument("--save-pickles", action="store_true",
                           help="Save pre-compiled versions of the sync'ed contexts in the CRDS cache.  Keep pre-existing pickles.")
         self.add_argument("--output-dir", type=str, default=None,
