@@ -168,6 +168,9 @@ class CrdsLockFile(CrdsAbstractLock):
         """Destroy lock regardless of who owns it."""
         try:
             self._lock.break_lock(*args, **keys)
+        except Exception:
+            pass
+        try:
             os.remove(self.lockname)
         except Exception:
             pass
@@ -266,7 +269,7 @@ def init_lock(lockname):
 
 def init_locks():
     """Fully initialize/re-initialize standard locks."""
-    clear_locks()
+    # clear_locks()   This is not multi-tree multiprocessing safe
     init_lock("crds.master")
     init_lock("crds.cache")
 

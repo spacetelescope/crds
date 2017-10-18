@@ -140,10 +140,6 @@ def dt_default_disabled():
     >>> _ = config.USE_LOCKING.set(False)
     >>> _ = log.set_verbose()
     >>> crds_cache_locking.init_locks()
-    CRDS - DEBUG -  Breaking lock CrdsMultiprocessingLock('crds.master')
-    CRDS - DEBUG -  Broke lock CrdsMultiprocessingLock('crds.master')
-    CRDS - DEBUG -  Breaking lock CrdsMultiprocessingLock('crds.cache')
-    CRDS - DEBUG -  Broke lock CrdsMultiprocessingLock('crds.cache')
     CRDS - DEBUG -  CRDS_USE_LOCKING = False. Cannot support downloading CRDS files while multiprocessing.
     >>> crds_cache_locking.status()
     'disabled, multiprocessing'
@@ -165,10 +161,6 @@ def dt_default_readonly():
     >>> _ = config.set_cache_readonly()
     >>> _ = log.set_verbose()
     >>> crds_cache_locking.init_locks()
-    CRDS - DEBUG -  Breaking lock CrdsMultiprocessingLock('crds.master')
-    CRDS - DEBUG -  Broke lock CrdsMultiprocessingLock('crds.master')
-    CRDS - DEBUG -  Breaking lock CrdsMultiprocessingLock('crds.cache')
-    CRDS - DEBUG -  Broke lock CrdsMultiprocessingLock('crds.cache')
     CRDS - DEBUG -  CRDS_READONLY_CACHE = True. Cannot support downloading CRDS files while multiprocessing.
     >>> crds_cache_locking.status()
     'disabled, multiprocessing'
