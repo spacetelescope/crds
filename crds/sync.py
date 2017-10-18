@@ -275,7 +275,7 @@ class SyncScript(cmdline.ContextsScript):
             os.environ["CRDS_PICKLEPATH_SINGLE"] = self.args.output_dir
 
         if self.args.clear_pickles or self.args.ignore_cache or self.args.repair_files:
-            self.clear_pickles(self.contexts)
+            self.clear_pickles()
 
         if self.args.organize:   # do this before syncing anything under the current mode.
             self.organize_references(self.args.organize)
@@ -333,10 +333,10 @@ class SyncScript(cmdline.ContextsScript):
         return log.errors()
     # ------------------------------------------------------------------------------------------
 
-    def clear_pickles(self, contexts):
-        """Remove pickles specified by `contexts`."""
-        for context in contexts:
-            path = config.locate_pickle(context)
+    def clear_pickles(self):
+        """Remove all pickles."""
+        log.info("Removing all context pickles.  Use --save-pickles to recreate for specified contexts.")
+        for path in rmap.list_pickles("*.pmap", self.observatory, full_path=True):
             if os.path.exists(path):
                 utils.remove(path, self.observatory)
 
