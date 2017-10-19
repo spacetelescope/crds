@@ -42,10 +42,11 @@ class CrdsAbstractLock(object):
     """At a design level this also serves as an abstract class defining the API."""
     
     _lock = None  # Overridden in most cases
+    log = log.verbose
     
     def __init__(self, lockname):
         """Abstract lock initialization."""
-        log.verbose("Creating lock", repr(lockname), verbosity=55)
+        self.log("Creating lock", repr(lockname), verbosity=55)
         self.lockname = lockname
         
     def __repr__(self):
@@ -54,21 +55,21 @@ class CrdsAbstractLock(object):
 
     def acquire(self, *args, **keys):
         """Acquire delegate lock,  adding CRDS verbose logging."""
-        log.verbose("Acquiring lock", repr(self))
+        self.log("Acquiring lock", repr(self))
         self._acquire(*args, **keys)
-        log.verbose("Lock acquired", repr(self))
+        self.log("Lock acquired", repr(self))
     
     def release(self, *args, **keys):
         """Release delegate lock,  adding CRDS verbose logging."""
-        log.verbose("Releasing lock", repr(self))
+        self.log("Releasing lock", repr(self))
         self._release(*args, **keys)
-        log.verbose("Lock released", repr(self))
+        self.log("Lock released", repr(self))
 
     def break_lock(self):
         """Break delegate lock,  adding CRDS verbose logging."""
-        log.verbose("Breaking lock", repr(self))
+        self.log("Breaking lock", repr(self))
         self._break_lock()
-        log.verbose("Broke lock", repr(self))
+        self.log("Broke lock", repr(self))
     
     def __enter__(self, *args, **keys):
         """Support context manager protocol, with...:"""
@@ -100,17 +101,18 @@ class CrdsAbstractLock(object):
 
 class CrdsFakeLock(CrdsAbstractLock):
     """Placeholder dummy lock to do nothing,  silently since normal for pipeline."""
-    def acquire(self, *args, **keys):
-        """Silent dummy acquire."""
-        pass
     
-    def release(self, *args, **keys):
-        """Silent dummy release."""
-        pass
+    def log(self, *args, **keys):
+        """Fake locks are silent."""
     
-    def break_lock(self):
-        """Silent dummy break."""
-        pass
+    def _acquire(self, *args, **keys):
+        """Fake _acquire does nothing."""
+    
+    def _release(self, *args, **keys):
+        """Fake _acquire does nothing."""
+    
+    def _break_lock(self):
+        """Fake _acquire does nothing."""
     
 # =========================================================================
 
@@ -168,6 +170,9 @@ class CrdsLockFile(CrdsAbstractLock):
         """Destroy lock regardless of who owns it."""
         try:
             self._lock.break_lock(*args, **keys)
+        except Exception:
+            pass
+        try:
             os.remove(self.lockname)
         except Exception:
             pass
@@ -266,7 +271,7 @@ def init_lock(lockname):
 
 def init_locks():
     """Fully initialize/re-initialize standard locks."""
-    clear_locks()
+    # clear_locks()   This is not multi-tree multiprocessing safe
     init_lock("crds.master")
     init_lock("crds.cache")
 
