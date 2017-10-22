@@ -252,7 +252,9 @@ class SyncScript(cmdline.ContextsScript):
                           help="Directory to output sync'ed files, for simple syncs.")
         self.add_argument("--clear-locks", action="store_true",
                           help="Remove CRDS cache file lock(s).")
-
+        self.add_argument("--force-config-update", action="store_true",
+                          help="Even if sync errors occur, attempt to update the CRDS configuration, including the default context.")
+        
     # ------------------------------------------------------------------------------------------
     
     def main(self):
@@ -320,7 +322,10 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.verify_context_change:
             old_context = heavy_client.load_server_info(self.observatory).operational_context
 
-        heavy_client.update_config_info(self.observatory)
+        if not log.errors() or self.args.force_config_update:
+            heavy_client.update_config_info(self.observatory)
+        else:
+            log.warning("Errors occurred during sync,  skipping CRDS cache config and context update.")
 
         if self.args.verify_context_change:
             self.verify_context_change(old_context)
