@@ -53,7 +53,7 @@ def dt_check_archive_script():
     CRDS - INFO -  Mapping URL: '.../mappings/hst/'
     CRDS - INFO -  Reference URL: '.../references/hst/'
     CRDS - ERROR -  File 'foo.map' failed HTTP HEAD with code = 404 from '.../foo.map'
-    CRDS - INFO -        2 files at    0.3  files-per-second
+    CRDS - INFO -        2 files at    ... files-per-second
     CRDS - INFO -  1 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  3 infos
