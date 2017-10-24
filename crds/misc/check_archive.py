@@ -109,13 +109,16 @@ the archive and appropriate CRDS server.
         log.info("Mapping URL:", repr(self.mapping_url))
         log.info("Reference URL:", repr(self.reference_url))
         stats = utils.TimingStats()
-        self.file_info = api.get_file_info_map(self.observatory, self.files, fields=["size", "sha1sum"])
+        self.init_files(self.files)
         for filename in self.files:
             self.verify_archive_file(filename)
             stats.increment("files")
         self.print_files()
         stats.report_stat("files")
         log.standard_status()
+
+    def init_files(self, files):
+        self.file_info = api.get_file_info_map(self.observatory, files, fields=["size", "sha1sum"])
 
     def archive_url(self, filename):
         """Return the URL used to fetch `filename` from the archive."""
@@ -130,10 +133,11 @@ the archive and appropriate CRDS server.
         response = requests.head(url)
         if response.status_code in [200,]:
             log.verbose("File", repr(filename), "is available from", repr(url))
-            self.check_length(filename, response)
+            return self.check_length(filename, response)
         else:
             log.error("File", repr(filename), "failed HTTP HEAD with code =", response.status_code, "from", repr(url))
             self.missing_files.append(filename)
+            return False
 
     def check_length(self, filename, response):
         """Check the content-length reported by HEAD against the CRDS database's file size."""
@@ -143,8 +147,10 @@ the archive and appropriate CRDS server.
             log.error("File", repr(filename), "available but length bad.  crds size:", crds_size,
                       "archive size:", archive_size)
             self.bad_length_files.append(filename)
+            return False
         else:
             log.verbose("File", repr(filename), "lengths agree:", crds_size)
+            return True
 
     def print_files(self):
         """Print out info on all missing or bad files."""
@@ -159,7 +165,19 @@ the archive and appropriate CRDS server.
             
     def dump_file(self, filename, kind):
         """Dump info about one file annotated with string `kind`."""
-        print(filename, self.file_info[filename]["sha1sum"], self.file_info[filename]["size"], kind)
-        
+        if self.file_info[filename] != "NOT FOUND":
+            print(filename, self.file_info[filename]["sha1sum"], self.file_info[filename]["size"], kind)
+
+def file_available(filename):
+    """Return True IFF `filename` is believed to be available,  nominally
+    based on HTTP HEAD to the archive.
+    """
+    with log.error_on_exception("Failed verify_archive_file() for",
+                                repr(filename)):
+        script = CheckArchiveScript()
+        script.init_files([filename])
+        available = script.verify_archive_file(filename)
+        return available
+
 if __name__ == "__main__":
     sys.exit(CheckArchiveScript()())
