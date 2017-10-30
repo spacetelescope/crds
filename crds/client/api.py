@@ -344,7 +344,7 @@ def get_dataset_headers_unlimited(context, ids):
      If there is a failure fetching parameters for dataset_id,
     `header` will be returned as a string / error message.
     """
-    max_ids_per_rpc = get_server_info().get("max_headers_per_rpc", 5000)
+    max_ids_per_rpc = get_server_info().get("max_headers_per_rpc", 500)
     for i in range(0, len(ids), max_ids_per_rpc):
         log.verbose("Dumping dataset headers", i , "of", len(ids), verbosity=20)
         id_slice = ids[i : i + max_ids_per_rpc]
