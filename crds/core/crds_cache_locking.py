@@ -200,33 +200,24 @@ def get_lock_class():
     return classes[config.LOCKING_MODE]
 
 def create_lock(lockname):
-    """Return a lock context manager to guard the CRDS cache against concurrent writes."""
+    """Return a lock context manager to guard the CRDS cache against concurrent
+writes."""
+    lock = CrdsFakeLock(lockname)
     if not config.USE_LOCKING.get():
-        lock = _fake_lock(lockname, "CRDS_USE_LOCKING = False.")
-    elif config.get_cache_readonly():
-        lock = _fake_lock(lockname, "CRDS_READONLY_CACHE = True.")
-    else:
+        _explain_once("CRDS_USE_LOCKING = False. Cannot support downloading CRDS files while multiprocessing.", log.verbose)
+    elif not config.get_cache_readonly():
         lock_class = get_lock_class()
         try:
             lock = lock_class(lockname)
         except Exception as exc:
-            lock = _fake_lock(lockname, "Failed creating CRDS cache lock: " + str(exc), 
-                                      logger=log.warning)
+            _explain_once("Failed creating CRDS cache lock: " + str(exc), 
+                          log.warning)
     return lock
-
-def _fake_lock(lockname, explain, logger=log.verbose):
-    """Issue a verbose log message based on `explain` indicating why fake 
-    locks are being used.
-    
-    Returns a fake lock for `lockpath`.
-    """
-    _explain_once(explain, logger)
-    return CrdsFakeLock(lockname)
 
 @utils.cached
 def _explain_once(explain, logger):
     """Issue locking unsupported message `explain` to `logger` once."""
-    logger(explain + " Cannot support downloading CRDS files while multiprocessing.")
+    logger(explain)
     
 # =========================================================================
 
