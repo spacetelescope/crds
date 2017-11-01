@@ -169,7 +169,9 @@ class ReferenceCertifier(Certifier):
             self.header = self.load()
         if not self.header:
             return
-        log.verbose("Header:", log.PP(self.header), verbosity=55)
+        display_header = dict(self.header)
+        display_header.pop("__builtins__", None)
+        log.verbose("Header:", log.PP(display_header), verbosity=55)
         for checker in self.validators:
             with self.error_on_exception("Checking", repr(checker.info.name)):
                 checker.check(self.filename, self.header)                
