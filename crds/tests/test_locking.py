@@ -161,7 +161,6 @@ def dt_default_readonly():
     >>> _ = config.set_cache_readonly()
     >>> _ = log.set_verbose()
     >>> crds_cache_locking.init_locks()
-    CRDS - DEBUG -  CRDS_READONLY_CACHE = True. Cannot support downloading CRDS files while multiprocessing.
     >>> crds_cache_locking.status()
     'disabled, multiprocessing'
     >>> try_multiprocessing()
