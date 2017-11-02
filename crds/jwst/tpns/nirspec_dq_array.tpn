@@ -8,7 +8,7 @@ DQ       X           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,R
 DQ       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE))and(INSTRUME!='NIRSPEC'))   (DQ_ARRAY.SHAPE[-2:]==(2048,2048))
 
 DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=2048)
-DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=2048)
+DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=3200)
 DQ       A           X         (is_subarray(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE))and(INSTRUME!='NIRSPEC'))    (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
 DQ       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (is_image(DQ_ARRAY))
