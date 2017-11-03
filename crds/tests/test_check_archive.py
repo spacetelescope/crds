@@ -32,17 +32,21 @@ from . import test_config
 def dt_check_archive_file_api_true():
     """
     >>> old_state = test_config.setup()
+
     >> check_archive.file_available("hst.pmap")     XXXX DISABLED
     True
+
     >>> test_config.cleanup(old_state)
     """
 
 def dt_check_archive_file_api_false():
     """
     >>> old_state = test_config.setup()
+
     >> check_archive.file_available("foo.pmap")     XXXX DISABLED
     CRDS - ERROR -  File 'foo.pmap' failed HTTP HEAD with code = 404 from '.../foo.pmap'
     False
+
     >>> test_config.cleanup(old_state) 
     """
 
