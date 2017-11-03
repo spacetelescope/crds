@@ -7,16 +7,14 @@
 #
 # See crds.cerify.validator_helpers for definitions of condition functions (e.g. nir_filter())
 
-SUBARRAY_INBOUNDS_X         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                               (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=3200)
-SUBARRAY_INBOUNDS_Y         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                               (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
-
-SCI       A           X         (nir_filter(INSTRUMENT,REFTYPE,EXP_TYPE))                             (array_exists(SCI_ARRAY))
-
-SCI       A           X         (is_subarray(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))    (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (array_exists(SCI_ARRAY))
 SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (is_image(SCI_ARRAY))
 SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (has_type(SCI_ARRAY,['INT','FLOAT']))
 
+SUBARRAY_INBOUNDS_X         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))          (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+SUBARRAY_INBOUNDS_Y         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))          (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))              (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+SCI       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (SCI_ARRAY.SHAPE[-2:]>=(2048,2048))
 
 # Full width striping is an issue,  array may not match subarray size
 # SCI       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
