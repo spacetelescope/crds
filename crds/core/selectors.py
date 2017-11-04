@@ -640,9 +640,14 @@ class Selector(object):
         values spec'ed in `valid_values_map`.
         """
         with log.error_on_exception(self.short_name + repr(self._parameters)):
-            self._validate_selector(valid_values_map)
+            if len(self.parkey) != len(self.class_list):
+                raise ValidationError("Length mismatch between rmap parkey:", log.srepr(self.parkey), 
+                                      "and rmap classes header fields", log.srepr(self.class_list))
+        for selection in self._selections:
+            with log.error_on_exception(self.short_name + repr(self._parameters)):
+                self._validate_selector(selection, valid_values_map)
 
-    def _validate_selector(self, valid_values_map):
+    def _validate_selector(self, selection, valid_values_map):
         """Iterate over this Selector's keys checking each field
         of each key against `valid_values_map`.
         
@@ -650,35 +655,31 @@ class Selector(object):
         
         Raise a ValidationError if there are any problems.
         """
-        if len(self.parkey) != len(self.class_list):
-            raise ValidationError("Length mismatch between rmap parkey:", log.srepr(self.parkey), 
-                                  "and rmap classes header fields", log.srepr(self.class_list))
-        for selection in self._selections:
-            key, choice = selection.key, selection.choice
-            with log.augment_exception(repr(key)):
-                log.verbose("Validating key", repr(key))
-                self._validate_conditioned_key(key, valid_values_map)
-            with log.augment_exception(repr(key)):
-                if isinstance(choice, Selector):
-                    choice._validate_selector(valid_values_map)
-                elif isinstance(choice, python23.string_types):
-                    pass
-                elif isinstance(choice, tuple):
-                    for val in choice:
-                        if not isinstance(val, python23.string_types): 
-                            raise ValidationError("Non-string tuple value for choice " + repr(choice) + 
-                                                  " at " + repr(key))
-                elif isinstance(choice, dict):
-                    for val in choice:
-                        if not isinstance(val, python23.string_types):
-                            raise ValidationError("Non-string dictionary key for choice " + repr(choice) +  
-                                                  " at " + repr(key))
-                    for val in choice.values():
-                        if not isinstance(val, python23.string_types):
-                            raise ValidationError("Non-string dictionary value for choice " + repr(choice)  + 
-                                                  " at " + repr(key))
-                else:
-                    raise ValidationError("Illegal type for selector primitive value", repr(choice))
+        key, choice = selection.key, selection.choice
+        with log.augment_exception(repr(key)):
+            log.verbose("Validating key", repr(key))
+            self._validate_conditioned_key(key, valid_values_map)
+        with log.augment_exception(repr(key)):
+            if isinstance(choice, Selector):
+                choice.validate_selector(valid_values_map)
+            elif isinstance(choice, python23.string_types):
+                pass
+            elif isinstance(choice, tuple):
+                for val in choice:
+                    if not isinstance(val, python23.string_types): 
+                        raise ValidationError("Non-string tuple value for choice " + repr(choice) + 
+                                              " at " + repr(key))
+            elif isinstance(choice, dict):
+                for val in choice:
+                    if not isinstance(val, python23.string_types):
+                        raise ValidationError("Non-string dictionary key for choice " + repr(choice) +  
+                                              " at " + repr(key))
+                for val in choice.values():
+                    if not isinstance(val, python23.string_types):
+                        raise ValidationError("Non-string dictionary value for choice " + repr(choice)  + 
+                                              " at " + repr(key))
+            else:
+                raise ValidationError("Illegal type for selector primitive value", repr(choice))
 
     def _validate_header(self, header):
         """Check self._parameters in `header` against the values found in the
@@ -1998,9 +1999,9 @@ Restore original debug behavior:
                         vmap[fitsvar].add(regex_case)
         return vmap
 
-    def _validate_selector(self, valid_values_map):
+    def _validate_selector(self, selection, valid_values_map):
         self._check_valid_values(valid_values_map)
-        Selector._validate_selector(self, valid_values_map)
+        Selector._validate_selector(self, selection, valid_values_map)
             
     def _check_valid_values(self, valid_values_map):
         """Issue warnings for parkeys which aren't covered by valid_values_map."""
