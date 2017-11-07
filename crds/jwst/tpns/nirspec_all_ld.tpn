@@ -17,7 +17,7 @@ META.EXPOSURE.TYPE          H   C   O   NRS_AUTOFLAT,NRS_AUTOWAVE,NRS_BOTA,\
                                         NRS_TACQ,NRS_TASLIT,ANY,N/A       
 
 META.SUBARRAY.NAME          H   C   O   ALLSLITS,S200A1,S200A2,S200B1,S400A1,SUB1024A,SUB1024B,\
-                                        SUB512,SUB32,SUB512S,SUB2048,STRIPE,S1600A1,\
+                                        SUB512,SUB32,SUB512S,SUB2048,S1600A1,STRIPE,\
                                         FULL,GENERIC,ANY,N/A
 
 include nir_subarray_baseline.tpn
