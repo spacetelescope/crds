@@ -189,6 +189,25 @@
             "tpn":"fgs_distortion.tpn",
             "unique_rowkeys":null
         },
+        "drizpars":{
+            "derived_from":"generated as stub rmap on 2014-08-29 15:33:54.199062",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DRIZPARS",
+            "filetype":"DRIZPARS",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_drizpars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_fgs_drizpars_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                []
+            ],
+            "suffix":"drizpars",
+            "text_descr":"Drizzle Parameters used in Image Distortion Correction and Combination",
+            "tpn":"fgs_drizpars.tpn",
+            "unique_rowkeys":null
+        },
         "flat":{
             "derived_from":"Hand created 2016-02-19",
             "extra_keys":null,
@@ -672,7 +691,6 @@
             "parkey":[
                 []
             ],
-            "sha1sum":"01859bb63de2f65b43aa3d72f2204141c3dabbcf",
             "suffix":"drizpars",
             "text_descr":"Drizzle Parameters used in Image Distortion Correction and Combination",
             "tpn":"miri_drizpars.tpn",
@@ -1460,7 +1478,6 @@
             "parkey":[
                 []
             ],
-            "sha1sum":"4c347c518d0ae0bcd7d3f6bd32f5d517a7ab8ca0",
             "suffix":"drizpars",
             "text_descr":"Drizzle Parameters used in Image Distortion Correction and Combination",
             "tpn":"nircam_drizpars.tpn",
@@ -1952,6 +1969,25 @@
             "suffix":"distortion",
             "text_descr":"Distortion",
             "tpn":"niriss_distortion.tpn",
+            "unique_rowkeys":null
+        },
+        "drizpars":{
+            "derived_from":"generated as stub rmap on 2014-08-29 15:33:54.199062",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DRIZPARS",
+            "filetype":"DRIZPARS",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_drizpars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_drizpars_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                []
+            ],
+            "suffix":"drizpars",
+            "text_descr":"Drizzle Parameters used in Image Distortion Correction and Combination",
+            "tpn":"niriss_drizpars.tpn",
             "unique_rowkeys":null
         },
         "extract1d":{
@@ -2723,6 +2759,25 @@
             "suffix":"distortion",
             "text_descr":"Distortion",
             "tpn":"nirspec_distortion.tpn",
+            "unique_rowkeys":null
+        },
+        "drizpars":{
+            "derived_from":"generated as stub rmap on 2014-08-29 15:33:54.199062",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DRIZPARS",
+            "filetype":"DRIZPARS",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_drizpars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_drizpars_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                []
+            ],
+            "suffix":"drizpars",
+            "text_descr":"Drizzle Parameters used in Image Distortion Correction and Combination",
+            "tpn":"nirspec_drizpars.tpn",
             "unique_rowkeys":null
         },
         "extract1d":{
