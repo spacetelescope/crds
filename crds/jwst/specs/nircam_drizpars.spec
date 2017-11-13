@@ -8,7 +8,6 @@
     'name' : 'jwst_nircam_drizpars_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : ((),),
-    'sha1sum' : '4c347c518d0ae0bcd7d3f6bd32f5d517a7ab8ca0',
     'suffix' : 'drizpars',
     'text_descr' : 'Drizzle Parameters used in Image Distortion Correction and Combination',
 }
