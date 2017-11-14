@@ -21,11 +21,23 @@ from .abstract import AbstractFile, hijack_warnings
 
 # ============================================================================
 
+@hijack_warnings
+def fits_open_trapped(filename, **keys):
+    """Same as fits_open but with some astropy and JWST DM warnings hijacked by CRDS.
+    This is predominantly an interface for crds.certify and nominally verifies
+    checksums although technically they are driven by CRDS_FITS_VERIFY_CHECKSUM.
+    """
+    return fits_open(filename, **keys)
+
 @contextlib.contextmanager
 @utils.gc_collected
 def fits_open(filename, **keys):
-    """Return the results of io.fits.open() configured using CRDS environment settings,  overridden by
-    any conflicting keyword parameter values.   Nominally used for updating bestrefs FITS headers.
+    """Return the results of io.fits.open() configured using CRDS environment
+    settings, overridden by any conflicting keyword parameter values.
+    Nominally used for updating bestrefs FITS headers.  
+
+    CRDS_FITS_VERIFY_CHECKSUM is used to enable/disable default checksum verification.
+    CRDS_FITS_IGNORE_MISSING_END is used to enable/disable the missing FITS END check.
     """
     keys = dict(keys)
     if "checksum" not in keys:
@@ -40,18 +52,15 @@ def fits_open(filename, **keys):
         if handle is not None:
             handle.close()
 
-@hijack_warnings
-def fits_open_trapped(filename, **keys):
-    """Same as fits_open but with some astropy and JWST DM warnings hijacked by CRDS."""
-    return fits_open(filename, **keys)
-
-def get_fits_header_union(filepath, needed_keys=(), original_name=None, observatory=None):
+def get_fits_header_union(filepath, needed_keys=(), original_name=None, observatory=None, **keys):
     """Get the union of keywords from all header extensions of FITS
     file `fname`.  In the case of collisions, keep the first value
     found as extensions are loaded in numerical order.
+
+    DOES NOT verify FITS checksums.
     """
     file_obj = FitsFile(filepath)
-    header = file_obj.get_header(needed_keys)
+    header = file_obj.get_header(needed_keys, checksum=False)
     log.verbose("Header of", repr(filepath), "=", log.PP(header), verbosity=90)
     return header
 

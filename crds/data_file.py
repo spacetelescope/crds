@@ -25,6 +25,8 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
 
+    DOES NOT verify checksums.
+
     `original_name`,  if specified,  is used to determine the type of the file
     and is not required to be readable,  whereas `filepath` must be readable
     and contain the desired header.
@@ -37,6 +39,8 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
 
     Hijack io.fits and data model warnings and map them to errors.
+
+    DOES NOT verify checksums.
 
     Original name is used to determine file type for web upload temporary files which
     have no distinguishable extension.  Original name is browser-side name for file.
@@ -51,7 +55,7 @@ get_unconditioned_header = get_header
 def get_free_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
 
-    DOES NOT hijack warnings.
+    DOES NOT hijack warnings.   DOES NOT verify checksums.
 
     Original name is used to determine file type for web upload temporary files
     which have no distinguishable extension.  Original name is browser-side
@@ -65,7 +69,7 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
     clearing the function cache.
     """
     file_obj = file_factory(filepath, original_name, observatory)
-    header = file_obj.get_header(needed_keys)
+    header = file_obj.get_header(needed_keys, checksum=False)
     log.verbose("Header of", repr(filepath), "=", log.PP(header), verbosity=90)
     return header
 

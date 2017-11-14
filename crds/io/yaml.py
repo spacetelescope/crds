@@ -22,7 +22,7 @@ class YamlFile(AbstractFile):
     
     format = "YAML"
 
-    def get_raw_header(self, needed_keys=()):
+    def get_raw_header(self, needed_keys=(), **keys):
         """Return the flattened header associated with a YAML file."""
         import yaml
         with open(self.filepath) as pfile:
