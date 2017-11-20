@@ -16,8 +16,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.1.7"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST B7.1 final"
+__version__ = "7.2.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "JWST B7.2 early development"
 
 # ============================================================================
 
