@@ -1,6 +1,6 @@
-__version__ = '2c824ad'
+__version__ = '139bbcb'
 
 __full_version_info__ = '''
-branch: 7.1.7
-sha1: 2c824ad
+branch: 7.2.0
+sha1: 139bbcb
 '''
