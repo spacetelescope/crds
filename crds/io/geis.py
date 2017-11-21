@@ -52,7 +52,7 @@ class GeisFile(AbstractFile):
     
     format = "GEIS"
 
-    def get_raw_header(self, needed_keys=()):
+    def get_raw_header(self, needed_keys=(), **keys):
         """Return the header dictionary containing `needed_keys` from GEIS file at `name`."""
         
         filepath = self.filepath

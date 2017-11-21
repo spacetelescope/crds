@@ -88,7 +88,7 @@ class DataModelsFile(FitsFile):
             
     # ----------------------------------------------------------------------------------------------
 
-    def get_raw_header(self, needed_keys=()):
+    def get_raw_header(self, needed_keys=(), **keys):
         """Get the header from `filepath` using the jwst data model."""
         flat_dict = self.get_data_model_flat_dict(needed_keys)
         header = sanitize_data_model_dict(flat_dict)
