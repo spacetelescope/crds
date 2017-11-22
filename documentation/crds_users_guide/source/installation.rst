@@ -1,29 +1,73 @@
-Package Overview
-================
+Overview
+========
 
-The CRDS client and command line software is distributed as a single package with
-several sub-packages:
+**CRDS** is a Python library, set of command line programs,  and family of web 
+servers used to **assign and manage the best reference files** that are used to calibrate HST 
+and JWST data.  
 
-   * crds
-       - Core package enabling local use and development of mappings
-         and reference files.  contains command line utility programs.
+CRDS Matching
+-------------
 
-   * crds.client
-       - Network client library for interacting with the central CRDS server.  This is primarily for internal use in CRDS,  encapsulating JSONRPC interfaces with Python.
+CRDS revolves around a hierarchy of plain text rules files that define reference file assignments:
 
-   * crds.hst
-       - Observatory personality package for HST, defining how HST types, reference file certification constraints, and naming works.
+.. figure:: images/crds_concept.png
+   :scale: 80 %
+   :alt: CRDS Matching Concept
+   
+CRDS Rules
+----------
 
-   * crds.jwst
-       - Analogous to crds.hst,  for JWST.
+The CRDS rules hierarchy has 4 tiers corresponding to the overall pipeline configuration,  the current
+rules for each instrument,  the rules for each type of each instrument,  and finally individual reference
+files assigned by instrument configuration and date:
 
-CRDS also contains a number of command line tools managed by a top-level *crds* command:
+.. figure:: images/file_relationships.png
+   :scale: 80 %
+   :alt: diagram of file relationships, .pmap -> .imap -> .rmap -> .reference
+
+.. table:: Kinds of CRDS Files
+   :widths: auto
+
+Kinds of CRDS Files
+-------------------
+
+References are assigned by descending the CRDS rules hierarchy:
+
+======================     ================== ========     ==========================   =================================================
+Class of File              Extension          Quantity     Example Name                 Description
+======================     ================== ========     ==========================   =================================================
+Pipeline Context           .pmap              1            hst_0001.pmap                Governs all instruments for one project             
+Instrument Context         .imap              5-6          hst_acs_0047.imap            Governs all types for one instrument
+Reference Type Mapping     .rmap              100-130      hst_acs_darkfile_0107.rmap   Governs one type for one instrument
+References                 .fits, .asdf, etc. 1000's       lcb12060j_drk.fits           Individual reference files
+======================     ================== ========     ==========================   =================================================
+
+Each calibration requires many types of references that vary by instrument and mode.   Each pipeline context
+defines a specific CRDS configuration (rules version) for the archive pipeline at one point in time.
+
+References are defined by descending the hierarchy based on exposure configuration parameters 
+such as EXP_TYPE, FILTER, etc.
+
+CRDS rules files have a number of properties and implications:
+
+ 1. The name of every rules file has a serial number / version
+ 2. Rules group reference files into succinct mode-based categories.
+ 3. References within a category are generally differentiated by USEAFTER date.
+ 4. No database account or SQL queries are required to review or plain text rules files.
+ 5. While the websites provide tabular displays,  the rules files are directly readable.
+
+CRDS Tools
+----------
+
+In addition to assigning best reference files based on a hierarchy of rules,  CRDS
+provides tools to check, difference, and generally manage a cache of rules and reference
+files.   Individual programs are managed under the "crds" master script:
 
     * crds bestrefs
         - Best references utility for HST FITS files and context-to-context affected datasets computations.
 
     * crds sync
-        - Cache download and maintenance tool, fetches, removes, checks, and repairs rules and references.
+        - Downloads and manages a cache of CRDS rules, references, and state information.
 
     * crds certify
         - Checks constraints and format for CRDS rules and references.
@@ -31,14 +75,14 @@ CRDS also contains a number of command line tools managed by a top-level *crds* 
     * crds diff, crds rowdiff
         - Difference utility for rules and references,  also FITS table differences.
 
+    * crds list
+        - Lists cache files and configuration,  prints rules files,  dumps database dataset parameter dictionaries.
+
     * crds matches
-        - Prints out parameter matches for particular references,  or database matching parameters with respect to particular dataset IDs.
+        - Prints out parameter matches for particular references.
 
     * crds uses
         - Lists files which refer to (are dependent on) some CRDS rules or reference file.
-
-    * crds list
-        - Lists cache files and configuration,  prints rules files,  dumps database dataset parameter dictionaries.
 
 Each sub-command can also be invoked as follows::
 
@@ -46,33 +90,57 @@ Each sub-command can also be invoked as follows::
 
 to print help information,  where --help must be specified as the first parameter to the sub-command.
 
+CRDS Web Sites
+--------------
+
+The CRDS web sites manage CRDS rules and reference files and metadata:
+
+	=======        =============    ================================
+	Project        Use Case         URL
+	=======        =============    ================================
+	HST            Operations       https://hst-crds.stsci.edu
+	HST            Pipeline Test    https://hst-crds-test.stsci.edu
+	JWST           Operations       https://jwst-crds.stsci.edu
+	JWST           Pipeline Test    https://jwst-crds-test.stsci.edu
+	=======        =============    ================================
+
+A number of additional servers exist to support development and JWST I&T.
  
+The CRDS web servers provide these functions:
+
+	1. Cataloging and display of information about CRDS files.
+	2. Tabular display of the current operational rules in the archive pipeline.
+	3. Tracking and display of the history of rules used by the archive pipelines.
+	4. Supporting functions for the CRDS client library.
+	5. File submissions and archiving.
+	6. File and configuration distribution.
+	7. CRDS Rules differencing.
+	8. Team activity and delivery tracking.
+    9. Miscellaneous web services.
+    10. Automatic determination of datasets to reprocess based on new references and/or rules.
+
 Installation
 ============
 
-CRDS is a pure Python software package typically installed in the context of
-other larger calibration software installations.  As such, if you already have
-HST or JWST calibration software you may also have CRDS.
+Implicit Installation
+---------------------
+
+CRDS is generally installed implicitly with the conda installation of HST or JWST calibration software.
 
 To check for CRDS try::
 
    $ crds list --version
    7.0.5, master, c95d1cc
 
-If CRDS is not already installed,  it can be installed using in a variety of
-mechanisms including AstroConda contrib, PyPi, and GitHub source code.   
+If CRDS is not already installed,  it can be installed using in a variety of mechanisms including AstroConda 
+contrib, PyPi, and GitHub source code.   
 
 Installation via AstroConda
 ---------------------------
 
-One way to install CRDS directly is as an AstroConda contributed package.
-Doing this requires first setting up both Anaconda (or mini-Conda) and the
-AstroConda channel.  If HST or JWST pipeline calibration software is being
-installed via a Conda distribution list, there is a good chance CRDS will be
-installed as a dependency so explicit action may not be necessary.
+One way to install CRDS directly is as an AstroConda contributed package:
 
-Install Continuum's Anaconda
-++++++++++++++++++++++++++++
+1.  Install Continuum's Anaconda or Miniconda
 
 Installing Anaconda gives you a generic environment for numerical programming.  See:
 
@@ -80,8 +148,7 @@ Installing Anaconda gives you a generic environment for numerical programming.  
 
 for Anaconda installation instructions.
 
-Set up AstroConda astronomy specific packages
-+++++++++++++++++++++++++++++++++++++++++++++
+2. Set up AstroConda astronomy specific packages
 
 AstroConda is a collaborative effort producing astronomy related packages and making
 them available for installation via Conda.
@@ -94,27 +161,14 @@ Nominally,  setting up AstroConda is something like::
    $ conda create -n astroconda stsci
    $ source activate astroconda
 
-Install CRDS AstroConda Contributed Package
-+++++++++++++++++++++++++++++++++++++++++++
-
-Once AstroConda is installed, CRDS can be installed as an AstroConda
-contributed package::
-
-   $ conda install crds
-
-Typically however CRDS is automatically installed as a dependency of 
-HST or JWST calibration software distributions.
-
 Pip Installation
 ----------------
 
-It's possible to install and update CRDS using Python's pip system like this::
+It's also possible to install and update CRDS using PyPi system like this::
 
    $ pip install crds
 
-Installing CRDS via Conda is preferred since the CRDS version tends to be more
-current and all other Python dependencies are more carefully controlled with
-a distribution list that specifies component versions.
+Installing CRDS via Conda is preferred.
 
 Installing from Source
 ----------------------
@@ -150,23 +204,90 @@ REQUIRED: CRDS requires these dependencies to be installed in your Python enviro
    * numpy
    * astropy
 
-OPTIONAL: For executing the unit tests (runtests) add:
-   * nose
+OPTIONAL: Additional 3rd party supporting packages are needed for more advanced CRDS functions:
 
-OPTIONAL: 
-   * jwst.datamodels    needed to run crds certify on JWST references
-   * lockfile           needed to synchronize local CRDS cache syncs done by associations
+.. table:: Optional Supporting Packages
+   :widths: auto
 
-OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
-   * Parsley-1.2
-   * pyaml  (for certifying and using yaml references)
-   * asdf (for certifying and using ASDF references)
+===============    =======================================================================
+package            supports task
+===============    =======================================================================
+jwst               to run crds certify for JWST
+firelock           for lock file based CRDS cache locking for multiprocessing (preferred)
+lockfile           for lock file based CRDS cache locking for multiprocessing (deprecated)
+fitsverify         for running fitsverify under certify
+lxml               for command line submission interface
+requests           for command line submission interface
+Parsley-1.3        for certifying CRDS rules files
+pyaml              for certifying and using yaml references
+asdf               for certifying and using ASDF references
+docutils           for building documentation
+sphinx             for building documentation
+stsci.sphinxext    for building documentation
+nose               for running CRDS unit tests
+===============    =======================================================================
 
-OPTIONAL: For building documentation add:
-   * docutils
-   * sphinx
-   * stsci.sphinxext
 
+Setting up your Environment
+===========================
+
+Configuring CRDS for pipeline or offsite personal use is accomplished by setting
+shell environment variables.
+
+Basic Environment
+-----------------
+
+Once the private CRDS cache is synced,  these settings enable CRDS to operate without an
+always-on connection to the CRDS server or */grp/crds/cache*.
+
+In addition, having a local cache of files can reduce the transparent network
+I/O implied by accessing */grp/crds/cache* via a VPN based connection to access
+gigabytes of data.
+
+File Cache Location (CRDS_PATH)
++++++++++++++++++++++++++++++++
+
+The CRDS Cache stores reference files, CRDS bestrefs matching rules, and configuration
+information such as the default context.
+
+The location of the CRDS cache is defined by the CRDS_PATH environment setting.
+
+The defaut value of CRDS_PATH is */grp/crds/cache* on the Central Store and is
+typically visible from all STScI systems and available via VPN.  However,
+accessing gigabytes of reference files via VPN over the Internet is painful
+so CRDS provides a capability to make local personal file caches.
+
+A remote or pipeline user defines a non-default CRDS cache by setting, e.g.::
+
+    % setenv CRDS_PATH   $HOME/crds_cache
+
+Note a complete CRDS cache for a particular mission can contain terabytes of files.  
+Hence, demand-based caching for particular datasets (using crds.bestrefs or strun) is
+probably preferred to sync'ing the entire cache using the crds.sync.
+
+Server Selection (CRDS_SERVER_URL)
+++++++++++++++++++++++++++++++++++
+
+Since each project (and test systems) is supported by a different CRDS server
+a user must define the CRDS server they wish to use.
+
+For **HST**::
+
+    % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+
+For **JWST**::
+
+    % setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
+
+If CRDS cannot determine your project, and you did not specify CRDS_SERVER_URL, 
+CRDS_SERVER_URL will be defaulted to::
+
+   % setenv CRDS_SERVER_URL https://crds-serverless-mode.stsci.edu
+
+The serverless-mode URL directs CRDS to operate from the CRDS cache without contacting
+the CRDS server for updates.   This works well with the default cache at */grp/crds/cache*
+since it is kept up to date by the CRDS server.   It is not possible to do cache
+updates while in serverless mode since no connection to the server is enabled.
 
 Best references Basics
 ======================
@@ -201,10 +322,10 @@ Default Onsite Use:
 The CRDS default configuration permits CRDS to operate onsite with no explicit
 environment settings.
 
-By default, CRDS operates using /grp/crds/cache with no connection to any CRDS
+By default, CRDS operates using */grp/crds/cache* with no connection to any CRDS
 server.  
 
-Files and settings in /grp/crds/cache define the references that CRDS will
+Files and settings in */grp/crds/cache* define the references that CRDS will
 assign to a given dataset.
 
 Offsite and Pipeline Use:
@@ -222,76 +343,26 @@ Onsite pipelines use private caches to reduce file system contention.
 
 Offsite pipelines use private caches to achieve more independence from STScI.
 
-Setting up your Environment
-===========================
+Setup for Offsite Use
+---------------------
 
-Configuring CRDS for pipeline or offsite personal use is accomplished by setting
-shell environment variables.
+CRDS has been designed to (optionally) automatically fetch and cache references
+you need to process your datasets to a personal CRDS cache.  You can create a
+small personal cache of rules and references supporting only the datasets you
+care about::
 
-Basic Environment
------------------
+    % setenv CRDS_SERVER_URL  https://hst-crds.stsci.edu   # or similar
+    % setenv CRDS_PATH  ${HOME}/crds_cache
 
-Two environment variables which define basic CRDS setup using a private cache::
+For **HST**, to fetch the references required to process some FITS datasets::
 
-    % setenv CRDS_SERVER_URL  <some_crds_server>
-    % setenv CRDS_PATH        <some_crds_reference_and_rules_cache_directory>
+    % crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
 
-If you are currently working on only a single project,  it may be helpful to declare that project::
-
-    % setenv CRDS_OBSERVATORY   hst (or jwst)
-
-Once the private CRDS cache is synced,  these settings enable CRDS to operate without an
-always-on connection to the CRDS server or /grp/crds/cache.
-
-In addition, having a local cache of files can reduce the transparent network
-I/O implied by accessing /grp/crds/cache via a VPN based connection to access
-gigabytes of data.
-
-Setup for On-site Operational Use (HST or JWST)
------------------------------------------------
-
-This section describes use of operational reference files onsite at STScI.  It's relevant to fully archived
-and operational files,  not development and test.
-
-File Cache Location (CRDS_PATH)
-+++++++++++++++++++++++++++++++
-
-The location of the CRDS cache is defined by the CRDS_PATH environment setting.
-
-The defaut value of CRDS_PATH is /grp/crds/cache and requires direct access to that on site file system.
-
-A remote or pipeline user defines a non-default CRDS cache by setting, e.g.::
-
-    % setenv CRDS_PATH   $HOME/crds_cache
-
-Note that the CRDS cache is often used to store reference files and when fully
-populated for a particular mission can contain *terabytes* of files.  Hence,
-demand-based caching for particular datasets (using crds.bestrefs or strun) is
-probably preferred to sync'ing the entire cache using the crds.sync.
-
-Server Selection (CRDS_SERVER_URL)
-++++++++++++++++++++++++++++++++++
-
-Since each project (and test systems) is supported by a different CRDS server
-a user must define the CRDS server they wish to use.
-
-For **HST**::
-
-    % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
-
-For **JWST**::
-
-    % setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
-
-If CRDS cannot determine your project, and you did not specify CRDS_SERVER_URL,  it will be defaulted to::
-
-   % setenv CRDS_SERVER_URL https://crds-serverless-mode.stsci.edu
-
-In serverless mode it is not possible for CRDS to download new files or configuration settings,
-so best reference recommendations may become stale.
+For **JWST**, CRDS is directly integrated with the calibration step code and
+will automatically download rules and references as needed.
 
 Onsite CRDS Testing
-+++++++++++++++++++
+===================
 
 For reference type development, updates are generally made and tested in the
 test pipelines at STScI.  For coordinating with those tests, **CRDS_PATH** and
@@ -327,80 +398,8 @@ server or ask what the status is on crds_team@stsci.edu.
 
 **NOTE:** Without VPN or port forwarding, the test servers are not usable offsite.
 
-Setup for Offsite Use
----------------------
-
-CRDS has been designed to (optionally) automatically fetch and cache references
-you need to process your datasets to a personal CRDS cache.  You can create a
-small personal cache of rules and references supporting only the datasets you
-care about::
-
-    % setenv CRDS_SERVER_URL  https://hst-crds.stsci.edu   # or similar
-    % setenv CRDS_PATH  ${HOME}/crds_cache
-
-For **HST**, to fetch the references required to process some FITS datasets::
-
-    % crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
-
-For **JWST**, CRDS is directly integrated with the calibration step code and
-will automatically download rules and references as needed.
-
-CRDS Cache Locking
-------------------
-
-CRDS cache locking (file-based, currently built upon the lockfile package) has
-been added to support JWST associations calibration multi-processing. Since
-associations launch multiple concurrent processes, it poses a problem of
-simultaneous updates to the shared CRDS cache resource.  Cache locking
-addresses that issue and is automatically used for read/write caches typically
-associated with offsite use.
-
-There are multiple conditions in CRDS that determine when locking is really
-used::
-
-    1. The lockfile package must be installed and importable
-    2. The CRDS_LOCK_PATH directory (nominally /tmp) should already exist   
-    2. A lockfile lock must be successully created
-    3. The CRDS cache must be physically writable
-    4. CRDS_USE_LOCKING must be undefined or 1
-    5. CRDS_READONLY_CACHE must be undefined or 0
-
-Otherwise, locking is either broken or the sync is impossible or forbidden.
-
-The env var::
-
-  CRDS_READONLY_CACHE=1
-
-currently prevents HST + JWST pipeline installations from using locking.
-
-The readonly nature of::
-
-  /grp/crds/cache
-
-prevents the use of locking for typical onsite users.  /grp/crds/cache is
-complete, automatically maintained by CRDS, and needs no user-based updates or
-file downloads.
-
-The env var::
-
-  CRDS_LOCK_PATH
-
-can be used to define the location of file locks, defaulting to */tmp*. It
-should be noted that the existence of the lock file directory is itself a
-concurrency issue, so it must be created or otherwise available before cache
-synchronization takes place.
-
-The CRDS command::
-
-  $ crds sync --clear-locks
-
-can be used to remove orphan locks (due to some unexpected failure) that are
-blocking processing.
-
-Locking requires installation of the *lockfile* package and CRDS-7.1.4 or later.
-
 Additional HST Settings
-+++++++++++++++++++++++
+-----------------------
 
 HST calibration software accesses reference files indirectly through
 environment variables.  There are two forms of CRDS cache reference file
@@ -410,11 +409,11 @@ software environment variable settings depend on the CRDS cache layout.
 JWST calibration code refers to explict cache paths at runtime and does 
 not require these additional settings.
 
-Flat Cache Layout for /grp/crds/cache
-.....................................
+Flat Cache Layout for */grp/crds/cache*
++++++++++++++++++++++++++++++++++++++
 
 The flat cache layout places all references in a single directory.  The
-shared group cache at /grp/crds/cache has a flat organization::
+shared group cache at */grp/crds/cache* has a flat organization::
 
   setenv iref ${CRDS_PATH}/references/hst/
   setenv jref ${CRDS_PATH}/references/hst/
@@ -425,7 +424,7 @@ shared group cache at /grp/crds/cache has a flat organization::
   setenv uref_linux $uref
 
 By-Instrument Cache Layout
-..........................
+++++++++++++++++++++++++++
 
 The default cache setup for newly created caches for HST is organized by instrument.
 
@@ -444,7 +443,7 @@ organization, set these environment variables::
   setenv uref_linux $uref
 
 Reorganizing CRDS References
-............................
+++++++++++++++++++++++++++++
 
 The crds.sync tool can be used to reorganize the directory structure of an
 existing CRDS cache.   These organizations determine whether or not 
@@ -459,7 +458,7 @@ To switch from by-instrument to flat::
   crds sync --organize=flat
 
 JWST Context
-++++++++++++
+------------
 
 The CRDS context file defines a version of CRDS rules used to assign best references.
 
@@ -477,12 +476,84 @@ the **CRDS_CONTEXT** environment variable::
 **CRDS_CONTEXT** does not override command line switches or parameters passed explicitly to the
 crds.getreferences() API function.
 
-
 Advanced Environment
 --------------------
 
 A number of things in CRDS are configurable with envionment variables,  most important of which is the
 location and structure of the file cache.
+
+CRDS Cache Locking
+++++++++++++++++++
+
+CRDS cache locking has been added to support JWST association calibration multi-processing
+for users who set up personal demand-based CRDS Caches.  Cache locking prevents simultaneous
+transparent CRDS Cache updates from multiple JWST calibration processes.
+
+Single Shell Locking
+....................
+By default,  CRDS uses Python's builtin multiprocessing locks which are robust and suitable for
+running multiprocesses within a single shell or terminal window::
+
+	$ crds list --status
+	CRDS Version = '7.2.0, 7.2.0, 139bbcb'
+	...
+	Cache Locking = 'enabled, multiprocessing'
+	...
+	Readonly Cache = False
+
+However,  this default CRDS cache locking is not suitable for running calibrations in multiple
+terminal windows or for pipeline use.
+
+File Based Locking
+..................
+
+Since Python's default multiprocessing locks cannot support multiple process trees or terminal windows,  
+CRDS also supports file based locking by setting appropriate configuration variables::
+
+	$ export CRDS_LOCKING_MODE=filelock
+    $ crds list --status
+	CRDS Version = '7.2.0, 7.2.0, 139bbcb'
+	...
+	Cache Locking = 'enabled, filelock'
+	...
+	Readonly Cache = False
+	
+File based locking is not used by default for several reasons::
+
+	1. They introduce a dependency on a 3rd party package.
+	2. File locks created on network or other virtualized file systems may be unreliable.
+	3. File lock behavior is OS dependent.
+    
+Restrictions on Locking
+.......................
+
+There are multiple conditions in CRDS that determine when locking is really used::
+
+    1. CRDS_READONLY_CACHE must be undefined or 0
+    2. The CRDS cache must be writable as determined by file system permissions
+    3. The CRDS_LOCK_PATH directory (nominally /tmp) should already exist   
+    4. For file based locking,  a lock must be successully created
+    5. CRDS_USE_LOCKING must be undefined or 1
+    6. For file based locking,  the lockfile or filelock Python package must be installed
+    
+The readonly nature of::
+
+  */grp/crds/cache*
+
+prevents the use of locking for typical onsite users.  None should be required.
+
+It should be noted that the existence of any lock file directory is itself a
+concurrency issue, so it must be created or otherwise available before cache
+synchronization takes place.
+
+The CRDS command::
+
+  $ crds sync --clear-locks
+
+can be used to remove orphan locks (due to some unexpected failure) that are
+blocking processing.
+
+Locking requires installation of the *lockfile* package and CRDS-7.1.4 or later.
 
 Multi-Project Caches
 ++++++++++++++++++++
@@ -607,4 +678,15 @@ transaction with the CRDS server.  Defaults to 1 meaning 1 try with no retries.
 **CRDS_CLIENT_RETRY_DELAY_SECONDS** number of seconds CRDS waits after a failed
 network transaction before trying again.  Defaults to 0 seconds,  meaning
 proceed immediately after fail.
+
+**CRDS_USE_LOCKING** boolean enabling/disabling CRDS cache locking,  currently
+only used for JWST and defaulting to enabled.   File locking is currently limited
+to JWST calibrations so HST sync and bestrefs tools must be run in single 
+processes or with CRDS_READONLY_CACHE=1.
+
+**CRDS_LOCKING_MODE**  chooses between multiprocessing, filelock, or lockfile
+based locks.  multiprocessing is the default.  To support multiple
+terminal windows or pipeline processing,  file based locking must be used
+with filelock recommended and known problems having been observed with the
+lockfile package.
 

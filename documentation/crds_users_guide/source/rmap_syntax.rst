@@ -91,35 +91,42 @@ Instrument Mappings (.imap)
 
 A sample instrument mapping for HST's COS instrument looks like::
 
-    header = {
-        'derived_from' : 'scraped 2011-12-23 11:57:10',
-        'description' : 'Initially generated on 2011-12-23 11:57:10',
-        'instrument' : 'COS',
-        'mapping' : 'INSTRUMENT',
-        'name' : 'hst_cos.imap',
-        'observatory' : 'HST',
-        'parkey' : ('REFTYPE',),
-        'sha1sum' : '800fb1567cb5bed4031402c7396aeb86c5e1db61',
-        'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
-    }
-    
-    selector = {
-        'badttab' : 'hst_cos_badttab.rmap',
-        'bpixtab' : 'hst_cos_bpixtab.rmap',
-        'brftab' : 'hst_cos_brftab.rmap',
-        'brsttab' : 'hst_cos_brsttab.rmap',
-        'deadtab' : 'hst_cos_deadtab.rmap',
-        'disptab' : 'hst_cos_disptab.rmap',
-        'flatfile' : 'hst_cos_flatfile.rmap',
-        'fluxtab' : 'hst_cos_fluxtab.rmap',
-        'geofile' : 'hst_cos_geofile.rmap',
-        'lamptab' : 'hst_cos_lamptab.rmap',
-        'phatab' : 'hst_cos_phatab.rmap',
-        'spwcstab' : 'hst_cos_spwcstab.rmap',
-        'tdstab' : 'hst_cos_tdstab.rmap',
-        'wcptab' : 'hst_cos_wcptab.rmap',
-        'xtractab' : 'hst_cos_xtractab.rmap',
-    }
+	header = {
+	    'derived_from' : 'hst_cos_0290.imap',
+	    'instrument' : 'COS',
+	    'mapping' : 'INSTRUMENT',
+	    'name' : 'hst_cos_0291.imap',
+	    'observatory' : 'HST',
+	    'parkey' : ('REFTYPE',),
+	    'sha1sum' : '85184c1656b487e7af686a7ab75262dcefc882e8',
+	}
+	
+	selector = {
+	    'badttab' : 'hst_cos_badttab_0250.rmap',
+	    'bpixtab' : 'hst_cos_bpixtab_0254.rmap',
+	    'brftab' : 'hst_cos_brftab_0250.rmap',
+	    'brsttab' : 'hst_cos_brsttab_0250.rmap',
+	    'deadtab' : 'hst_cos_deadtab_0250.rmap',
+	    'dgeofile' : 'hst_cos_dgeofile_0002.rmap',
+	    'disptab' : 'hst_cos_disptab_0259.rmap',
+	    'flatfile' : 'hst_cos_flatfile_0254.rmap',
+	    'fluxtab' : 'hst_cos_fluxtab_0261.rmap',
+	    'geofile' : 'hst_cos_geofile_0250.rmap',
+	    'gsagtab' : 'hst_cos_gsagtab_0253.rmap',
+	    'hvtab' : 'hst_cos_hvtab_0259.rmap',
+	    'lamptab' : 'hst_cos_lamptab_0251.rmap',
+	    'phatab' : 'hst_cos_phatab_0250.rmap',
+	    'proftab' : 'hst_cos_proftab_0265.rmap',
+	    'spottab' : 'hst_cos_spottab_0004.rmap',
+	    'spwcstab' : 'hst_cos_spwcstab_0251.rmap',
+	    'tdstab' : 'hst_cos_tdstab_0254.rmap',
+	    'tracetab' : 'hst_cos_tracetab_0265.rmap',
+	    'twozxtab' : 'hst_cos_twozxtab_0266.rmap',
+	    'wcptab' : 'hst_cos_wcptab_0255.rmap',
+	    'xtractab' : 'hst_cos_xtractab_0257.rmap',
+	    'xwlkfile' : 'hst_cos_xwlkfile_0002.rmap',
+	    'ywlkfile' : 'hst_cos_ywlkfile_0002.rmap',
+	}
 
 Instrument mappings match the desired reference file type against the reference mapping which can be used to determine a
 best reference recommendation for a particular dataset.  An instrument mapping lists all possible reference types for
@@ -132,26 +139,29 @@ Reference Mappings (.rmap)
 
 A sample reference mapping for HST COS DEADTAB looks like::
 
-    header = {
-        'derived_from' : 'scraped 2011-12-23 11:54:56',
-        'description' : 'Initially generated on 2011-12-23 11:54:56',
-        'filekind' : 'DEADTAB',
-        'instrument' : 'COS',
-        'mapping' : 'REFERENCE',
-        'name' : 'hst_cos_deadtab.rmap',
-        'observatory' : 'HST',
-        'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-        'sha1sum' : 'e27984a6441d8aaa7cd28ead2267a6be4c3a153b',
-    }
-    
-    selector = Match({
-        ('FUV',) : UseAfter({
-            '1996-10-01 00:00:00' : 's7g1700gl_dead.fits',
-        }),
-        ('NUV',) : UseAfter({
-            '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
-        }),
-    })
+	header = {
+	    'derived_from' : 'generated from CDBS database 2014-05-09 23:24:57.840119',
+	    'filekind' : 'DEADTAB',
+	    'instrument' : 'COS',
+	    'mapping' : 'REFERENCE',
+	    'name' : 'hst_cos_deadtab_0250.rmap',
+	    'observatory' : 'HST',
+	    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+	    'reffile_format' : 'TABLE',
+	    'reffile_required' : 'NONE',
+	    'reffile_switch' : 'DEADCORR',
+	    'rmap_relevance' : '(DEADCORR != "OMIT")',
+	    'sha1sum' : 'bde314f1848b67891d6309b30eaa5c95611f86e2',
+	}
+	
+	selector = Match({
+	    ('FUV',) : UseAfter({
+	        '1996-10-01 00:00:00' : 's7g1700gl_dead.fits',
+	    }),
+	    ('NUV',) : UseAfter({
+	        '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
+	    }),
+	})
 
 Reference mapping selectors are constructed as a nested hierarchy of selection operators which match against 
 various dataset header keywords.
