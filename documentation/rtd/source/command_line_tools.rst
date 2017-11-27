@@ -64,8 +64,6 @@ the current working directory.
 crds.bestrefs
 -------------
 
-.. automodule:: crds.bestrefs.bestrefs
-
 crds.bestrefs computes the best references with respect to a particular context or contexts
 for a set of FITS files, dataset ids,  or instruments::
 
@@ -849,27 +847,57 @@ crds.matches can be invoked in various ways with different output formatting::
     lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
 
 
-pipeline_bestrefs
------------------
+safe_bestrefs
+-------------
 
-The pipeline_bestrefs script is a shim around crds.bestrefs which simplifies the command line interface,
-tuning it to the more limited case of updating FITS dataset headers with best references::
+The *safe_bestrefs* script is a shim around *crds bestrefs* which configures it for operation in
+the pipeline using a readonly cache and no connection to the server.  Typical usage might be::
 
-    usage: pipeline_bestref [-d] [-v] [-h] [--print-affected] <crds_context> <dataset_file(s)>...
-    
-    -d                     dry run,  do not update file headers
-    -v                     verbose,  output additional diagnostic messages
-    -h                     help,  print this help
-    --print-affected       print files with updated bestrefs
-    
-    Updates dataset FITS files with best references recommended by <crds_context>.
-    
-    <crds_context> is a CRDS context file, explicitly named e.g. hst_0004.pmap
-    <crds_context> can be specified abstractly,  e.g.  hst-edit or hst-operational
-    <crds_context> can be specified by date,  e.g.  hst-2013-01-29T12:00:00
-    
-    <dataset_file(s)> are raw dataset files for which best references are
-    computed and updated.
+	$ export CRDS_PATH=<pipeline's CRDS cache path>
+	$ safe_bestrefs --files <datasets FITS files...>
 
+This script is intended to be run in parallel with multiple pipeline bestrefs
+and a concurrent cron_sync.  The "safe" aspect refers to not modifying the
+CRDS cache itself, and to not stumbling into inconsistent cache states while
+another process is updating the cache.
+
+To control when information is received from the server,  and to prevent pipeline stalls
+when the CRDS server is unavailable, safe_bestrefs is configured with a bad server IP address.
+	
+Using a readonly CRDS cache enables the use of bestrefs in a multiprocessing environment
+where multiple copies of bestrefs are running simultaneously.
+
+Configuring bestrefs to run with no connection to the CRDS server makes it impossible for bestrefs
+to do file downloads and keeps the pipeline independent of the server during routine operations.   
+See *cron_sync* for more info on updating the CRDS cache in pipeline environments.
+
+cron_sync
+---------
+
+The *cron_sync* script is a wrapper around the *crds sync* tool that tunes it for updating the CRDS
+cache in a highly concurrent environment where bestrefs may be running during the cache update.
+
+*cron_sync* uses file locks to prevent more than one copy of itself from running at the
+same time, particularly if run periodically as a cron job which may take longer than the period
+to fully download file updates.
+
+Typical setup and execution is::
+
+	$ export CRDS_PATH=<pipeline's CRDS cache path>
+	$ export CRDS_SERVER_URL=<project's CRDS server>
+	$ export CRDS_LOCKS=<directory for cron_sync lock files, defaults to $CRDS_PATH>
+ 	$ cron_sync --all --check-files --fetch-references
+
+*cron_sync* co-exists with an operating copy of *safe_bestrefs* by writing out the cache configuration 
+information last.   The cache configuration information controls the context switch.  While files
+corresponding to the new context are downloading,  the cache remains safe and continues to operate
+under the old context.
+
+The HST and JWST pipeline environments currently further wrap the *cron_sync* script to establish
+the environment settings and required Python stack and eliminate all parameters::
+
+	$ crds_sync_wrapper.csh
+
+Operators typically execute *crds_sync_wrapper.csh* rather than *cron_sync*.	
 
 
