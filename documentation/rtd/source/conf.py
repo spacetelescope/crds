@@ -37,8 +37,8 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
-    'sphinx.ext.inheritance_diagram',
-    'sphinx_pyreverse',
+#    'sphinx.ext.inheritance_diagram',
+#    'sphinx_pyreverse',
     ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -123,7 +123,7 @@ html_sidebars = {
         'navigation.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
-        'donate.html',
+#        'donate.html',
     ]
 }
 

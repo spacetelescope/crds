@@ -96,80 +96,9 @@ the CRDS server for updates.   This works well with the default cache at */grp/c
 since it is kept up to date by the CRDS server.   It is not possible to do cache
 updates while in serverless mode since no connection to the server is enabled.
 
-Best References Basics
-======================
-
-The primary function of CRDS is to assign the names of calibration reference files required
-to calibrate datasets to their metadata headers.
-
-CRDS Bestrefs for HST
----------------------
-
-CRDS provides the crds.bestrefs program for updating dataset headers for HST with the current
-best references.   Running bestrefs for HST is accomplished via::
-
-    % crds bestrefs --files dataset*.fits --update-bestrefs
-
-This command updates the files specified by dataset*.fits with the names of the latest best
-reference files.
-
-CRDS Bestrefs for JWST
-----------------------
-
-The crds.bestrefs functionality that assigns best references to datasets is fully integrated with the
-JWST calibration software and operates transparently as a consequence of running pipelines::
-
-     % strun calwebb_sloper.cfg dataset.fits
-
-The above command will transparently update the reference files specified in the metadata of dataset.fits.
-
-Default Onsite Use:
--------------------
-
-The CRDS default configuration permits CRDS to operate onsite with no explicit
-environment settings.
-
-By default, CRDS operates using */grp/crds/cache* with no connection to any CRDS
-server.  
-
-Files and settings in */grp/crds/cache* define the references that CRDS will
-assign to a given dataset.
-
-Offsite and Pipeline Use:
--------------------------
-
-CRDS can be configured to operate from private/local CRDS caches.  See the
-instructions below for setting CRDS_PATH and CRDS_SERVER_URL.
-
-A private cache reduces the level of network i/o required for offsite use as
-well as eliminating constant dependence on CRDS web servers required to run a
-pipeline.  A private cache can also contain writable files suitable for
-experimentation.
-
-Onsite pipelines use private caches to reduce file system contention.
-
-Offsite pipelines use private caches to achieve more independence from STScI.
-
-Setup for Offsite Use
----------------------
-
-CRDS has been designed to (optionally) automatically fetch and cache references
-you need to process your datasets to a personal CRDS cache.  You can create a
-small personal cache of rules and references supporting only the datasets you
-care about::
-
-    $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu   # or similar
-    $ export CRDS_PATH=${HOME}/crds_cache
-
-For **HST**, to fetch the references required to process some FITS datasets::
-
-    % crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
-
-For **JWST**, CRDS is directly integrated with the calibration step code and
-will automatically download rules and references as needed.
 
 Onsite CRDS Testing
-===================
+-------------------
 
 For reference type development, updates are generally made and tested in the
 test pipelines at STScI.  For coordinating with those tests, **CRDS_PATH** and
@@ -212,10 +141,10 @@ Additional HST Settings
 
 HST calibration software accesses reference files indirectly through
 environment variables.  There are two forms of CRDS cache reference file
-organization: flat and with instrument subdirectories.  The HST calibration
+organization: flat and with instrument sub-directories.  The HST calibration
 software environment variable settings depend on the CRDS cache layout.
 
-JWST calibration code refers to explict cache paths at runtime and does 
+JWST calibration code refers to explicit cache paths at runtime and does 
 not require these additional settings.
 
 Flat Cache Layout for */grp/crds/cache*
@@ -288,7 +217,7 @@ crds.getreferences() API function.
 Advanced Environment
 --------------------
 
-A number of things in CRDS are configurable with envionment variables,  most important of which is the
+A number of things in CRDS are configurable with environment variables,  most important of which is the
 location and structure of the file cache.
 
 CRDS Cache Locking
@@ -300,7 +229,7 @@ transparent CRDS Cache updates from multiple JWST calibration processes.
 
 Single Shell Locking
 ....................
-By default,  CRDS uses Python's builtin multiprocessing locks which are robust and suitable for
+By default,  CRDS uses Python's built in multiprocessing locks which are robust and suitable for
 running multiprocesses within a single shell or terminal window::
 
 	$ crds list --status
@@ -341,7 +270,7 @@ There are multiple conditions in CRDS that determine when locking is really used
     1. CRDS_READONLY_CACHE must be undefined or 0
     2. The CRDS cache must be writable as determined by file system permissions
     3. The CRDS_LOCK_PATH directory (nominally /tmp) should already exist   
-    4. For file based locking,  a lock must be successully created
+    4. For file based locking,  a lock must be successfully created
     5. CRDS_USE_LOCKING must be undefined or 1
     6. For file based locking,  the lockfile or filelock Python package must be installed
     
@@ -368,7 +297,7 @@ Multi-Project Caches
 ++++++++++++++++++++
 
 **CRDS_PATH** defines a cache structure for multiple projects. Each major branch of a multi-project cache
-contains project specific subdirectories::
+contains project specific sub-directories::
 
     /cache
         /mappings

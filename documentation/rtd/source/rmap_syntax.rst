@@ -1,5 +1,5 @@
-About Mappings
-==============
+CRDS Rules (Mappings)
+=====================
 
 CRDS mappings are organized in a 3 tier hierarchy:  pipeline (.pmap),
 instrument (.imap), and reference (.rmap).   Based on dataset parameters,

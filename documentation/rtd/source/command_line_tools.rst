@@ -5,20 +5,18 @@ Using the command line tools requires a local installation of the CRDS library.
 Some of the command line tools also interact with the CRDS server in order to
 implement their functionality.
 
-crds Convenience Wrapper
-------------------------
+crds master program
+-------------------
 
-DEPRECATED original command line syntax, e.g. for the list command::
+The original DEPRECATED command line syntax, e.g. for the list command was::
 
   % python -m crds.list --status
 
-NEW command line syntax, e.g.::
+This was replaced by a dNEW command line syntax, e.g.::
 
   % crds list --status
 
-Internally the 'crds' wrapper launches a command similar to the original
-'-m' syntax.   However, aside from easier typing,  the 'crds' wrapper
-hides internal structural details of the CRDS package.
+The 'crds' wrapper hides internal structural details of the CRDS package.
 
 For a list of available commands do::
 

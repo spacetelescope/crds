@@ -37,22 +37,22 @@ files assigned by instrument configuration and date:
    :scale: 80 %
    :alt: diagram of file relationships, .pmap -> .imap -> .rmap -> .reference
 
-.. table:: Kinds of CRDS Files
-   :widths: auto
-
 Kinds of CRDS Files
 -------------------
 
 References are assigned by descending the CRDS rules hierarchy.
 
-======================     ================== ========     ==========================   =======================================
-Class of File              Extension          Quantity     Example Name                 Description
-======================     ================== ========     ==========================   =======================================
-Pipeline Context           .pmap              1            hst_0001.pmap                Governs all instruments for one project             
-Instrument Context         .imap              5-6          hst_acs_0047.imap            Governs all types for one instrument
-Reference Type Mapping     .rmap              100-130      hst_acs_darkfile_0107.rmap   Governs one type for one instrument
-References                 .fits, .asdf, etc. 1000's       lcb12060j_drk.fits           Individual reference files
-======================     ================== ========     ==========================   =======================================
+.. table:: Kinds of CRDS Files
+	:widths: auto
+
+	======================     ================== ========     ==========================   =======================================
+	Class of File              Extension          Quantity     Example Name                 Description
+	======================     ================== ========     ==========================   =======================================
+	Pipeline Context           .pmap              1            hst_0001.pmap                Governs all instruments for one project             
+	Instrument Context         .imap              5-6          hst_acs_0047.imap            Governs all types for one instrument
+	Reference Type Mapping     .rmap              100-130      hst_acs_darkfile_0107.rmap   Governs one type for one instrument
+	References                 .fits, .asdf, etc. 1000's       lcb12060j_drk.fits           Individual reference files
+	======================     ================== ========     ==========================   =======================================
 
 Each calibration requires many types of references that vary by instrument and mode.   Each pipeline context
 defines a specific CRDS configuration (rules version) for the archive pipeline at one point in time.

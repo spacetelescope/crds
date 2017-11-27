@@ -81,24 +81,24 @@ REQUIRED: CRDS requires these dependencies to be installed in your Python enviro
 OPTIONAL: Additional 3rd party supporting packages are needed for more advanced CRDS functions:
 
 .. table:: Optional Supporting Packages
-   :widths: auto
-	
-===============    =======================================================================
-Package            Supports Task
-===============    =======================================================================
-jwst               to run crds certify for JWST
-firelock           for lock file based CRDS cache locking for multiprocessing (preferred)
-lockfile           for lock file based CRDS cache locking for multiprocessing (deprecated)
-fitsverify         for running fitsverify under certify
-lxml               for command line submission interface
-requests           for command line submission interface
-Parsley-1.3        for certifying CRDS rules files
-pyaml              for certifying and using yaml references
-asdf               for certifying and using ASDF references
-docutils           for building documentation
-sphinx             for building documentation
-stsci.sphinxext    for building documentation
-nose               for running CRDS unit tests
-===============    =======================================================================
+    :widths: auto
+    
+    ===============    =======================================================================
+    Package            Supports Task
+    ===============    =======================================================================
+    jwst               to run crds certify for JWST
+    firelock           for lock file based CRDS cache locking for multiprocessing (preferred)
+    lockfile           for lock file based CRDS cache locking for multiprocessing (deprecated)
+    fitsverify         for running fitsverify under certify
+    lxml               for command line submission interface
+    requests           for command line submission interface
+    Parsley-1.3        for certifying CRDS rules files
+    pyaml              for certifying and using yaml references
+    asdf               for certifying and using ASDF references
+    docutils           for building documentation
+    sphinx             for building documentation
+    stsci.sphinxext    for building documentation
+    nose               for running CRDS unit tests
+    ===============    =======================================================================
 
 
