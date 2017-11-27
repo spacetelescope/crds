@@ -1,19 +1,31 @@
 Overview
 ========
 
-**CRDS** is a Python library, set of command line programs,  and family of web 
-servers used to **assign and manage the best reference files** that are used to calibrate HST 
-and JWST data.  
+**CRDS** (Calibration References Data System) is a Python library, set of command line programs, 
+and family of web servers used to assign and manage the best reference files that are used to 
+calibrate HST and JWST data.  
 
 CRDS Matching
 -------------
+
+The primary function of CRDS is to assign best reference files to datasets so that they can be
+calibrated based upon CRDS rules.
 
 CRDS revolves around a hierarchy of plain text rules files that define reference file assignments:
 
 .. figure:: images/crds_concept.png
    :scale: 80 %
    :alt: CRDS Matching Concept
-   
+
+
+Properties of CRDS
+------------------
+
+1. CRDS rules are versioned.  Given the same instrument configuration,  the results produced by CRDS at 
+any given point in time are reproducible.
+
+2. Since CRDS rules are versioned, bad rule updates can effectively be undone.
+
 CRDS Rules
 ----------
 
@@ -55,6 +67,8 @@ CRDS rules files have a number of properties and implications::
 	 3. References within a category are generally differentiated by USEAFTER date.
 	 4. No database account or SQL queries are required to review or plain text rules files.
 	 5. While the websites provide tabular displays,  the rules files are directly readable.
+	 6. CRDS caching mechanisms avert the need for a constant connection to the CRDS servers.
+	 7. CRDS rule updates can effectively be undone by reverting to a prior version.
 
 CRDS Tools
 ----------
@@ -118,49 +132,6 @@ The CRDS web servers provide these functions:
 	8. Team activity and delivery tracking.
 	9. Automatic determination of datasets to reprocess based on new references and/or rules.
 
-
-Basic Setup
-===========
-
-The CRDS websites document basic client installation and setup suitable for running calibrations:
-
-=======  =================================================
-Project  Setup URL
-=======  =================================================
-HST      https://hst-crds.stsci.edu/docs/cmdline_bestrefs/
-JWST     https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/
-=======  =================================================
-
-More advanced setup is discussed below.
-
-Package Overview
-================
-
-The CRDS (Calibration Reference Data System) is a collection
-of web servers and a client library that manages and assigns
-calibration reference files (e.g. darks, biases) for HST and JWST.
-
-Reference File Assignment
--------------------------
-
-Like it's predecessor, the primary function of CRDS is to assign the
-appropriate reference files to datasets so that they can be
-calibrated.  Best references are assigned based upon CRDS rules.
-Because CRDS supports cache-able rules and user install-able client
-s/w,  best references can be assigned by end-users without an always-on
-network connection to the CRDS server based on cached information.
-
-Properties of CRDS
-------------------
-
-1. The results produced by CRDS at any given point in time are reproducible
-and bad rules updates can effectively be undone.
-
-2. Human readers require no special tools or skills to inspect or modify CRDS 
-plain text rules files. 
-
-3. CRDS caching mechanisms foster loose coupling with the CRDS server enabling
-end users to compute best references without constant access to a CRDS web service.
 
 Server Functions
 ----------------
@@ -240,6 +211,23 @@ Web Displays
 ++++++++++++
 The CRDS web servers provide an accurate rendition of the current and
 past rules in a tabular format as well as simple text displays of the rules
-files.   Additionally CRDS supports differencing two contexts to review
-changes.
+files.   
+
+CRDS supports differencing two contexts to review changes.
+
+CRDS tracks team activity and file deliveries to support reviewing ongoing work and changes.
+
+Basic Setup
+===========
+
+The CRDS websites document basic client installation and setup suitable for running calibrations:
+
+=======  =================================================
+Project  Setup URL
+=======  =================================================
+HST      https://hst-crds.stsci.edu/docs/cmdline_bestrefs/
+JWST     https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/
+=======  =================================================
+
+More advanced setup is discussed below.
 

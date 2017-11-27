@@ -64,6 +64,8 @@ the current working directory.
 crds.bestrefs
 -------------
 
+.. automodule:: crds.bestrefs.bestrefs
+
 crds.bestrefs computes the best references with respect to a particular context or contexts
 for a set of FITS files, dataset ids,  or instruments::
 
