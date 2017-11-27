@@ -1,124 +1,3 @@
-Overview
-========
-
-**CRDS** is a Python library, set of command line programs,  and family of web 
-servers used to **assign and manage the best reference files** that are used to calibrate HST 
-and JWST data.  
-
-CRDS Matching
--------------
-
-CRDS revolves around a hierarchy of plain text rules files that define reference file assignments:
-
-.. figure:: images/crds_concept.png
-   :scale: 80 %
-   :alt: CRDS Matching Concept
-   
-CRDS Rules
-----------
-
-The CRDS rules hierarchy has 4 tiers corresponding to the overall pipeline configuration,  the current
-rules for each instrument,  the rules for each type of each instrument,  and finally individual reference
-files assigned by instrument configuration and date:
-
-.. figure:: images/file_relationships.png
-   :scale: 80 %
-   :alt: diagram of file relationships, .pmap -> .imap -> .rmap -> .reference
-
-.. table:: Kinds of CRDS Files
-   :widths: auto
-
-Kinds of CRDS Files
--------------------
-
-References are assigned by descending the CRDS rules hierarchy:
-
-======================     ================== ========     ==========================   =================================================
-Class of File              Extension          Quantity     Example Name                 Description
-======================     ================== ========     ==========================   =================================================
-Pipeline Context           .pmap              1            hst_0001.pmap                Governs all instruments for one project             
-Instrument Context         .imap              5-6          hst_acs_0047.imap            Governs all types for one instrument
-Reference Type Mapping     .rmap              100-130      hst_acs_darkfile_0107.rmap   Governs one type for one instrument
-References                 .fits, .asdf, etc. 1000's       lcb12060j_drk.fits           Individual reference files
-======================     ================== ========     ==========================   =================================================
-
-Each calibration requires many types of references that vary by instrument and mode.   Each pipeline context
-defines a specific CRDS configuration (rules version) for the archive pipeline at one point in time.
-
-References are defined by descending the hierarchy based on exposure configuration parameters 
-such as EXP_TYPE, FILTER, etc.
-
-CRDS rules files have a number of properties and implications:
-
- 1. The name of every rules file has a serial number / version
- 2. Rules group reference files into succinct mode-based categories.
- 3. References within a category are generally differentiated by USEAFTER date.
- 4. No database account or SQL queries are required to review or plain text rules files.
- 5. While the websites provide tabular displays,  the rules files are directly readable.
-
-CRDS Tools
-----------
-
-In addition to assigning best reference files based on a hierarchy of rules,  CRDS
-provides tools to check, difference, and generally manage a cache of rules and reference
-files.   Individual programs are managed under the "crds" master script:
-
-    * crds bestrefs
-        - Best references utility for HST FITS files and context-to-context affected datasets computations.
-
-    * crds sync
-        - Downloads and manages a cache of CRDS rules, references, and state information.
-
-    * crds certify
-        - Checks constraints and format for CRDS rules and references.
-
-    * crds diff, crds rowdiff
-        - Difference utility for rules and references,  also FITS table differences.
-
-    * crds list
-        - Lists cache files and configuration,  prints rules files,  dumps database dataset parameter dictionaries.
-
-    * crds matches
-        - Prints out parameter matches for particular references.
-
-    * crds uses
-        - Lists files which refer to (are dependent on) some CRDS rules or reference file.
-
-Each sub-command can also be invoked as follows::
-
-     $ crds sync --help
-
-to print help information,  where --help must be specified as the first parameter to the sub-command.
-
-CRDS Web Sites
---------------
-
-The CRDS web sites manage CRDS rules and reference files and metadata:
-
-	=======        =============    ================================
-	Project        Use Case         URL
-	=======        =============    ================================
-	HST            Operations       https://hst-crds.stsci.edu
-	HST            Pipeline Test    https://hst-crds-test.stsci.edu
-	JWST           Operations       https://jwst-crds.stsci.edu
-	JWST           Pipeline Test    https://jwst-crds-test.stsci.edu
-	=======        =============    ================================
-
-A number of additional servers exist to support development and JWST I&T.
- 
-The CRDS web servers provide these functions:
-
-	1. Cataloging and display of information about CRDS files.
-	2. Tabular display of the current operational rules in the archive pipeline.
-	3. Tracking and display of the history of rules used by the archive pipelines.
-	4. Supporting functions for the CRDS client library.
-	5. File submissions and archiving.
-	6. File and configuration distribution.
-	7. CRDS Rules differencing.
-	8. Team activity and delivery tracking.
-    9. Miscellaneous web services.
-    10. Automatic determination of datasets to reprocess based on new references and/or rules.
-
 Installation
 ============
 
@@ -228,8 +107,8 @@ nose               for running CRDS unit tests
 ===============    =======================================================================
 
 
-Setting up your Environment
-===========================
+Environment Variables
+=====================
 
 Configuring CRDS for pipeline or offsite personal use is accomplished by setting
 shell environment variables.
@@ -237,12 +116,8 @@ shell environment variables.
 Basic Environment
 -----------------
 
-Once the private CRDS cache is synced,  these settings enable CRDS to operate without an
-always-on connection to the CRDS server or */grp/crds/cache*.
-
-In addition, having a local cache of files can reduce the transparent network
-I/O implied by accessing */grp/crds/cache* via a VPN based connection to access
-gigabytes of data.
+CRDS environment configuration reduces to defining a CRDS server (CRDS_SERVER_URL) and CRDS file
+cache directory (CRDS_PATH).
 
 File Cache Location (CRDS_PATH)
 +++++++++++++++++++++++++++++++
@@ -377,6 +252,8 @@ Alternative servers for JWST I&T testing are::
     % setenv CRDS_SERVER_URL https://jwst-crds-b5it.stcsi.edu     # build-5
     % setenv CRDS_SERVER_URL https://jwst-crds-b6it.stcsi.edu     # build-6
     % setenv CRDS_SERVER_URL https://jwst-crds-dit.stcsi.edu      # build-7
+    % setenv CRDS_SERVER_URL https://jwst-crds-bit.stcsi.edu      # build-7
+    % setenv CRDS_SERVER_URL https://jwst-crds-cit.stcsi.edu      # build-7.2
 
 After syncing this will provide access to CRDS test files and rules in a local cache::
 
@@ -410,7 +287,7 @@ JWST calibration code refers to explict cache paths at runtime and does
 not require these additional settings.
 
 Flat Cache Layout for */grp/crds/cache*
-+++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++
 
 The flat cache layout places all references in a single directory.  The
 shared group cache at */grp/crds/cache* has a flat organization::

@@ -9,6 +9,7 @@ CRDS User Manual
 .. toctree::
    :maxdepth: 2
    
+   overview.rst
    installation.rst
    command_line_tools.rst
    rmap_syntax.rst
