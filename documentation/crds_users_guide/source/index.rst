@@ -9,10 +9,10 @@ CRDS User Manual
 .. toctree::
    :maxdepth: 2
    
+   overview.rst
    installation.rst
    basic_use.rst
    environment.rst
-   overview.rst
    command_line_tools.rst
    web_site_use.rst
    web_services.rst

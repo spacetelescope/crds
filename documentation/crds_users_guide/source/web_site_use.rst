@@ -580,7 +580,7 @@ Confirm, Force, Cancel
 ++++++++++++++++++++++
 
 If everything looks good the last step is to click the *Confirm* button.
-Clicking the Confirm button finalizes the submission process,  submits the files
+Confirming finalizes the submission process,  submits the files
 for archive pickup,  and makes them a permanent part of CRDS visible in the 
 database browser and potentially redistributable.   
 
