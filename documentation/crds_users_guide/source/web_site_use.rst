@@ -21,45 +21,27 @@ Operational References
 ----------------------
 
 The *Operational References* table displays the references which are currently in use
-by the pipeline associated with this web site.   The operational context is displayed
-as a link '(under context <link>)' immediately below Operational References.  Clicking
-the link opens a details browser for that CRDS .pmap reference assignment rules file.   
-The operational context is the latest context in the Context History,  the one in 
-active use for pipeline processing by default.
+by the pipeline associated with this web site.   
 
 Each instrument accordion opens into reference type accordions for that instrument.
 
-Each type accordion opens into a table of reference files and the dataset parameters 
-they apply to.   Each reference file link opens into a details browser for that reference
-file.
+Each reference type accordion opens into a table of reference files.
+
+In general,  links to files will either lead to the CRDS catalog details about that
+file or to a context display for a different .pmap.
 
 Context History (more)
 ----------------------
 
 The *Context History* displays the last 4 CRDS contexts which were in operational use by
-the pipeline associated with a CRDS server. Clicking on the *(more)* link will bring up 
-the entire context history as a separate page as shown below:
+the pipeline. Clicking on the *(more)* link will bring up the entire context history as 
+a separate page as shown below:
 
 .. figure:: images/web_context_history.png
    :scale: 50 %
    :alt: History of CRDS operational contexts
    
-Clicking on a *context* link (the .pmap name) opens a page containing the Historical References
-for some point in the past,  similar to the Operational References display:
-
-.. figure:: images/web_context_table.png
-   :scale: 50 %
-   :alt: CRDS historical references display
-   
-References are displayed in accordion panels for each instrument.   Opening the panel for
-an instrument displays the reference types of that instrument.  Opening the panel for a type
-displays particular reference files and matching parameters for that type.   Clicking on a particular
-reference file brings up the CRDS browser page with the known details for that reference.
-
-Differencing contexts
-.....................
-
-Click the *diff* checkbox for any two contexts in the history and then click the diff button
+Click the *diff* check box for any two contexts in the history and then click the diff button
 at the top of the diff column:
 
 .. figure:: images/web_context_diff_1.png
@@ -73,10 +55,20 @@ differed between the two contexts:
    :scale: 50 %
    :alt: CRDS context diff request
 
-Each file accordion opens into two accordions which display different views of the differences,
-logical or textual.  The logical differences display a table of matching parameters and files
-which were added, deleted, or replaced.   The textual differences show raw UNIX diffs of the
+Each file accordion opens into two accordions which alternately display logical and simple 
+textual differences.
+
+The logical differences display a table of matching parameters and files which were added, 
+deleted, or replaced.   The textual differences show raw UNIX diffs of the
 two rules files.
+
+Clicking on any *context* link (the .pmap name) in the history table opens a page containing 
+the Historical References for some point in the past,  similar to the Operational References display:
+
+.. figure:: images/web_context_table.png
+   :scale: 50 %
+   :alt: CRDS historical references display
+
 
 Open Services
 -------------
@@ -260,11 +252,12 @@ When the user performs an action on the website,  their lock timer is reset to i
 Other users who attempt to login for the same instrument while it is locked
 will be denied.
 
-When a file submission is being performed,  it must be *confirmed* within the timeout period
-or the file submission will be cancelled.
+When a file submission is being performed,  it must be *confirmed* within the timeout period.  If
+the lock times out,  the submission is not cancelled,  but other team members have the option to 
+take the lock and then cancel or force the submission.   Forced submissions should be carefully
+coordinated since by definition locking protections are not in place.
 
-When a lock timer expires, any on-going submission is automatically cancelled
-and the lock is dropped to enable another submitter to cut-in.
+After a submission is cancelled, confirmed, or dropped,  the user's lock is also dropped.
 
 Care should be taken with the locking mechanism and file submissions.  **DO NOT**:
 
@@ -329,8 +322,8 @@ context that includes it.  An error is issued for a bad reference only when
 it is actually recommended by CRDS,  it is not an error to use the containing
 context.
 
-By default, recommendation of bad references or use of bad rules  is an error.
-The default behaviour can be overridden by setting environment variables:
+By default, bestrefs assignment of bad references or use of bad rules are errors.
+The default command line behavior can be overridden by setting environment variables:
 *CRDS_ALLOW_BAD_RULES* and/or *CRDS_ALLOW_BAD_REFERENCES*.
 
 Delete References
@@ -349,10 +342,6 @@ Delete References does not remove the files from CRDS, it only removes them
 from the specified set of rules.  The references remain available under any
 contexts which still refer to them.
 
-Once references have been replaced or deleted from the operational context and
-the new context is made operational using Set Context, the deleted or replaced
-references can be marked as scientifically invalid using Mark Files Bad.
-
 Files are specified for Delete References by listing their names in the Deleted
 Files field of the input form, separated by spaces, commas, and/or newlines.
 
@@ -364,7 +353,7 @@ Add References
 
 *Add References* supports adding existing CRDS references to a CRDS context
 which does not contain them already.  Add References is the inverse of Delete
-References and generates new CRDS rules without requiring the resubmission of
+References and generates new CRDS rules without requiring the re-submission of
 files to CRDS.
 
 .. figure:: images/web_add_references.png
@@ -382,10 +371,12 @@ Files field of the input form, separated by spaces, commas, and/or newlines.
 Changes to rules which result from add references are presented on a results
 page which must be confirmed or cancelled as with other file submissions.
 Rules changes from add references should be carefully reviewed to ensure that
-the resulting rmap update is as intended.  In particular, other rmap
-differences from a branched context are not added, so additional test
-parameters or other header and structural changes of any test rmap are not
-carried over by Add References,  only the reference files themselves.
+the resulting rmap update is as intended.  
+
+In particular, other rmap differences from a branched context are not added,
+so additional test parameters or other header and structural changes of any
+test rmap are not carried over by Add References,  only the reference files
+themselves.
 
 Set Context
 ...........
@@ -585,21 +576,26 @@ was derived from.   This fits a work-flow where a reference is first downloaded
 from CRDS, modified under the same name,  and re-uploaded.   Nominally,  submitted
 files are automatically re-named.
 
-Confirm or Discard
-++++++++++++++++++
+Confirm, Force, Cancel
+++++++++++++++++++++++
 
 If everything looks good the last step is to click the *Confirm* button.
 Clicking the Confirm button finalizes the submission process,  submits the files
 for archive pickup,  and makes them a permanent part of CRDS visible in the 
-database browser and potentially redistributable.   A confirmed submission 
-cannot be revoked,  but neither will it go into use until the pipeline or a 
-user explicitly requests it.
+database browser and potentially redistributable.   
 
-*Discarding* a batch submission based on warnings or bad rmap modifications
+A confirmed submission cannot be revoked,  but neither will it go into use until 
+the pipeline or a user requests it either by updating the default context on 
+the CRDS server or by specifying the new rules explicitly.
+
+*Cancelling* a batch submission based on warnings or bad rmap modifications
 removes the submission from CRDS.   In particular temporary database records
 and file copies are removed.
 
-Following any CRDS pipeline mapping submission,  the default *edit* context
+*Forcing* a batch submission can be performed by any team member once the instrument
+lock of the original submitter has been dropped or times out.
+
+Following any CRDS batch reference submission,  the default *edit* context
 is updated to that pipeline mapping making it the default starting point for
 future submissions.
 
@@ -648,10 +644,10 @@ care editing mappings since many aspects of the mapping cannot be verified by
 crds.certify.   Where possible match values are validated against CRDS .tpn
 files or JWST data model schema.
 
-3. Run crds.certify on the resulting mapping, using the current operational
+3. Run crds.certify on the resulting mapping, using the current edit
 context as the point of comparison::
 
-% crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-operational
+	% crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-edit
 
 4. During iteration, run crds.checksum on the mapping to update the internal
 sha1sum if you wish to load the context into Python to do interactive tests 
@@ -666,7 +662,7 @@ The internal checksum can also be used to verify upload integrity when you
 finally submit the file to CRDS, an out-of-date checksum or corrupted file will
 generate a warning.   Alternately:: 
 
-% setenv CRDS_IGNORE_MAPPING_CHECKSUMS 1 
+	% setenv CRDS_IGNORE_MAPPING_CHECKSUMS 1 
 
 to suppress mapping load errors due to invalid checksums during development.
 

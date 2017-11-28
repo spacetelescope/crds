@@ -17,8 +17,13 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
+import datetime
+import importlib
 import sys
+import os
+import sphinx
+from distutils.version import LooseVersion
+
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../../../crds'))
 
@@ -33,13 +38,31 @@ sys.path.insert(0, os.path.abspath('../../../crds'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    # 'numfig',
     'sphinx.ext.autodoc',
+    # 'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
     'sphinx.ext.coverage',
-    'sphinx.ext.imgmath',
+    'sphinx.ext.inheritance_diagram',
     'sphinx.ext.viewcode',
-#    'sphinx.ext.inheritance_diagram',
-#    'sphinx_pyreverse',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',
+    'sphinx_automodapi.automodapi',
+    'sphinx_automodapi.automodsumm',
+    'sphinx_automodapi.autodoc_enhancements',
+    'sphinx_automodapi.smart_resolver',
     ]
+
+
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if on_rtd:
+    extensions.append('sphinx.ext.mathjax')
+
+elif LooseVersion(sphinx.__version__) < LooseVersion('1.4'):
+    extensions.append('sphinx.ext.pngmath')
+else:
+    extensions.append('sphinx.ext.imgmath')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -184,5 +207,116 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
+
+
+# The reST default role (used for this markup: `text`) to use for all
+# documents.
+default_role = 'obj'
+
+# Don't show summaries of the members in each class along with the
+# class' docstring
+numpydoc_show_class_members = False
+
+autosummary_generate = True
+
+automodapi_toctreedirnm = 'api'
+
+# Class documentation should contain *both* the class docstring and
+# the __init__ docstring
+autoclass_content = "both"
+
+# Render inheritance diagrams in SVG
+graphviz_output_format = "svg"
+
+graphviz_dot_args = [
+    '-Nfontsize=10',
+    '-Nfontname=Helvetica Neue, Helvetica, Arial, sans-serif',
+    '-Efontsize=10',
+    '-Efontname=Helvetica Neue, Helvetica, Arial, sans-serif',
+    '-Gfontsize=10',
+    '-Gfontname=Helvetica Neue, Helvetica, Arial, sans-serif'
+]
+
+
+# Add any extra paths that contain custom files (such as robots.txt or
+# .htaccess) here, relative to this directory. These files are copied
+# directly to the root of the documentation.
+# html_extra_path = []
+
+# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
+# using the given strftime format.
+html_last_updated_fmt = '%b %d, %Y'
+
+# If true, SmartyPants will be used to convert quotes and dashes to
+# typographically correct entities.
+# html_use_smartypants = False    DEPRECATED
+
+# Custom sidebar templates, maps document names to template names.
+html_sidebars = {'**': ['globaltoc.html', 'relations.html', 'searchbox.html']}
+
+# Additional templates that should be rendered to pages, maps page names to
+# template names.
+# html_additional_pages = {}
+
+# If false, no module index is generated.
+html_domain_indices = True
+
+# If false, no index is generated.
+html_use_index = True
+
+# If true, the index is split into individual pages for each letter.
+# html_split_index = False
+
+# If true, links to the reST sources are added to the pages.
+# html_show_sourcelink = True
+
+# If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
+# html_show_sphinx = True
+
+# If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
+# html_show_copyright = True
+
+# If true, an OpenSearch description file will be output, and all pages will
+# contain a <link> tag referring to it.  The value of this option must be the
+# base URL from which the finished HTML is served.
+# html_use_opensearch = ''
+
+# This is the file name suffix for HTML files (e.g. ".xhtml").
+# html_file_suffix = None
+
+# Output file base name for HTML help builder.
+# htmlhelp_basename = 'crdsdoc'
+
+
+# -- Options for LaTeX output ---------------------------------------------
+
+latex_elements = {
+    # The paper size ('letterpaper' or 'a4paper').
+    'papersize': 'letterpaper',
+    # The font size ('10pt', '11pt' or '12pt').
+    'pointsize': '14pt',
+    # Additional stuff for the LaTeX preamble.
+    'preamble': r'''\usepackage{enumitem} \setlistdepth{99}'''
+}
+
+# The name of an image file (relative to this directory) to place at the top of
+# the title page.
+latex_logo = '_static/JWSTlogocrop.png'
+
+# For "manual" documents, if this is true, then toplevel headings are parts,
+# not chapters.
+# latex_use_parts = False
+
+# If true, show page references after internal links.
+# latex_show_pagerefs = False
+
+# If true, show URL addresses after external links.
+latex_show_urls = 'True'
+
+# Documents to append as an appendix to all manuals.
+# latex_appendices = []
+
+# If false, no module index is generated.
+latex_domain_indices = True
 
 

@@ -28,8 +28,8 @@ of running pipelines::
 
 The above command will transparently update the reference files specified in the metadata of dataset.fits.
 
-Default Onsite Use:
--------------------
+Default Onsite Use
+------------------
 
 The CRDS default configuration permits CRDS to operate onsite with no explicit
 environment settings.
@@ -40,8 +40,8 @@ server.
 Files and settings in */grp/crds/cache* define the references that CRDS will
 assign to a given dataset.
 
-Offsite and Pipeline Use:
--------------------------
+Offsite and Pipeline Use
+------------------------
 
 CRDS can be configured to operate from private/local CRDS caches.  See the
 instructions below for setting CRDS_PATH and CRDS_SERVER_URL.
