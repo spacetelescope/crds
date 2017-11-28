@@ -33,21 +33,21 @@ The options --files, --datasets, --instruments, and --all determine the source o
 
 1. To find best references for a list of files do something like this:
 
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits
+    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits
 
 the first parameter, hst.pmap,  is the context with respect to which best references are determined.
 
 2. To find best references for a list of catalog dataset ids do something like this:
 
-    % python -m crds.bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
+    % crds bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
 
 3. To do mass scale testing for all cataloged datasets for a particular instrument(s) do:
 
-    % python -m crds.bestrefs --new-context hst.pmap --instruments acs
+    % crds bestrefs --new-context hst.pmap --instruments acs
 
 4. To do mass scale testing for all supported instruments for all cataloged datasets do:
 
-    % python -m crds.bestrefs --new-context hst.pmap --all
+    % crds bestrefs --new-context hst.pmap --all
 
 ----------------
 COMPARISON MODES
@@ -87,7 +87,7 @@ crds.bestrefs supports several output modes for bestrefs and comparison results.
 If --print-affected is specified,  crds.bestrefs will print out the name of any file (or dataset id) for which at least one update for
 one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.
 
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --print-affected
+    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --print-affected
     j8bt05njq_raw.fits
     j8bt06o6q_raw.fits
     j8bt09jcq_raw.fits

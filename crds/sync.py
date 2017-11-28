@@ -4,22 +4,22 @@ mappings required to support a set of contexts from the CRDS server:
 Old references and mappings which are no longer needed can be automatically
 removed by specifying --purge-mappings or --purge-references:
 
-  % python -m crds.sync --range 1:2 --purge-mappings --purge-references
+  % crds sync --range 1:2 --purge-mappings --purge-references
 
 will remove references or mappings not required by hst_0001.pmap or 
 hst_0002.pmap in addition to downloading the required files.
 
 Or explicitly list the files you want cached:
 
-  % python -m crds.sync --files <references or mappings to cache>
+  % crds sync --files <references or mappings to cache>
 
 To sync best references and rules for specific dataset FITS files:
 
-  % python -m crds.sync --contexts hst_0001.pmap hst_0002.pmap --dataset-files *.fits --fetch-references
+  % crds sync --contexts hst_0001.pmap hst_0002.pmap --dataset-files *.fits --fetch-references
 
 To sync best references and rules for specific dataset ids:
 
-  % python -m crds.sync --contexts hst_0001.pmap hst_0002.pmap --dataset-ids J6M915030 --fetch-references
+  % crds sync --contexts hst_0001.pmap hst_0002.pmap --dataset-ids J6M915030 --fetch-references
 
 """
 from __future__ import print_function
@@ -64,7 +64,7 @@ class SyncScript(cmdline.ContextsScript):
     
         Downloading an explicit list of files can be done by like this::
         
-        % python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
+        % crds sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
     
         this will download only those two files.
         
@@ -74,19 +74,19 @@ class SyncScript(cmdline.ContextsScript):
         
         Synced contexts can be explicitly listed::
         
-            % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
+            % crds sync  --contexts hst_0001.pmap hst_0002.pmap
           
         this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
         
         Synced contexts can be specified as a numerical range::
         
-            % python -m crds.sync --range 1:3
+            % crds sync --range 1:3
         
         this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
         
         Synced contexts can be specified as --all contexts::
         
-            % python -m crds.sync --all
+            % crds sync --all
         
         this will recursively download all CRDS mappings for all time.
     
@@ -95,7 +95,7 @@ class SyncScript(cmdline.ContextsScript):
         Because complete reference downloads can be enormous,  you must explicitly specify when
         you wish to fetch the references which are enumerated in particular CRDS rules::
               
-            % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
+            % crds sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
         
         will download all the references mentioned by contexts 0001 and 0002.   
     
@@ -109,11 +109,11 @@ class SyncScript(cmdline.ContextsScript):
               
         CRDS rules from **unspecified** contexts can be removed like this::
         
-            % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
+            % crds sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
         
         while this would remove references which are *not* in contexts 4 or 5::
         
-            % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
+            % crds sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
             
         Again, both of these commands remove cached files which are not specified or implied.
     
@@ -121,7 +121,7 @@ class SyncScript(cmdline.ContextsScript):
     
         References required by particular dataset files can be cached like this::
                 
-            % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-files  <dataset_files...> e.g. acs_J8D219010.fits
+            % crds sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-files  <dataset_files...> e.g. acs_J8D219010.fits
         
         This will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
         
@@ -131,7 +131,7 @@ class SyncScript(cmdline.ContextsScript):
     
         References for particular dataset ids can be cached like this::
                 
-            % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-ids  <ids...>  e.g. J6M915030
+            % crds sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-ids  <ids...>  e.g. J6M915030
         
         This will fetch all the references required to support the listed dataset ids for contexts 0001 and 0002.
               
@@ -139,7 +139,7 @@ class SyncScript(cmdline.ContextsScript):
     
         Large Institutional caches can be checked and/or repaired like this::
         
-            % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-sha1sum --repair-files
+            % crds sync --contexts hst_0001.pmap --fetch-references --check-sha1sum --repair-files
         
         will download all the files in hst_0001.pmap not already present.
         
@@ -158,11 +158,11 @@ class SyncScript(cmdline.ContextsScript):
         after making temporary modifications to cached files to return to the archived version::
         
            % rm -rf $CRDS_PATH
-           % python -m crds.sync  -- ...  # repeat whatever syncs you did to cache files of interest
+           % crds sync  -- ...  # repeat whatever syncs you did to cache files of interest
         
         A more complicated but also more precise approach can operate only on files already in the CRDS cache::
             
-           % python -m crds.sync --repair-files --check-sha1sum --files `python -m crds.list --all --cached-mappings --cached-references`
+           % crds sync --repair-files --check-sha1sum --files `crds list --all --cached-mappings --cached-references`
            
         This approach works by using the crds.list command to dump the file names of all files in the CRDS cache
         and then using the crds.sync command to check exactly those files.
@@ -177,7 +177,7 @@ class SyncScript(cmdline.ContextsScript):
     
         crds.sync can be used to remove the files from specific contexts which have been marked as "bad".
               
-          % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+          % crds sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
         
         would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
         be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
@@ -191,11 +191,11 @@ class SyncScript(cmdline.ContextsScript):
         Newly created caches will default to the *instrument* organization.  To migrate a legacy cache with a flat single
         directory layout to the new structure,  sync with --organize=instrument::  
         
-           % python -m crds.sync --organize=instrument --verbose
+           % crds sync --organize=instrument --verbose
            
         To migrate to the flat structure,  use --organize=flat::
             
-           % python -m crds.sync --organize=flat --verbose
+           % crds sync --organize=flat --verbose
            
         While reorganizing, if CRDS makes note of "junk files" in your cache which are
         obstructing the process of reorganizing, you can allow CRDS to delete the junk

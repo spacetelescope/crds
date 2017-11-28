@@ -811,7 +811,7 @@ class RowDiffScript(cmdline.Script):
 
     An example:
 
-    % python -m crds.rowdiff s9m1329lu_off.fits s9518396u_off.fits
+    % crds rowdiff s9m1329lu_off.fits s9518396u_off.fits
     Row differences for HDU extension #1
 
         Summary:

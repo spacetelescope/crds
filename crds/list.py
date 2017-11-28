@@ -51,7 +51,7 @@ and ids used for CRDS reprocessing recommendations.
     0. Configuration information governing the behavior of CRDS for simple
     configurations can be dumped:
 
-    % python -m crds.list --status
+    % crds list --status
     CRDS Version = '7.0.7, bump-version, 7432326'
     CRDS_MODE = 'auto'
     CRDS_PATH = '/Users/jmiller/crds_cache_ops'
@@ -65,7 +65,7 @@ and ids used for CRDS reprocessing recommendations.
     More comprehensive configuration information is also available for advanced
     configurations:
 
-    % python -m crds.list --config
+    % crds list --config
     ... lots of info ....
 
     --------------------------------------------------------------------------
@@ -79,21 +79,21 @@ and ids used for CRDS reprocessing recommendations.
 
     -- To list the references contained by several contexts
     
-    % python -m crds.list  --references --contexts hst_0001.pmap hst_0002.pmap ...
+    % crds list  --references --contexts hst_0001.pmap hst_0002.pmap ...
     vb41935ij_bia.fits 
     vb41935kj_bia.fits 
     ...
     
     -- To list the references in a numerical range of contexts
 
-    % python -m crds.list --references --range 1:2 --references
+    % crds list --references --range 1:2 --references
     vb41935lj_bia.fits 
     vb41935oj_bia.fits
     ...
 
     -- To list all mappings, even those not referenced by an imap or pmap
     
-    % python -m crds.list --mappings --all
+    % crds list --mappings --all
     hst.pmap 
     hst_0001.pmap 
     hst_0002.pmap 
@@ -108,10 +108,10 @@ and ids used for CRDS reprocessing recommendations.
     --------------------------------------------------------------------------
     2. Locally cached files (files already synced to your computer) can be listed:
     
-    % python -m crds.list --cached-mappings --full-path
+    % crds list --cached-mappings --full-path
     ...
 
-    % python -m crds.list --cached-references --full-path
+    % crds list --cached-references --full-path
     ...
 
     In both cases adding --full-path prints the path of the file within the CRDS cache.
@@ -122,7 +122,7 @@ and ids used for CRDS reprocessing recommendations.
     --------------------------------------------------------------------------
     3. The contents of cached mappings or references (header only) can be printed to stdout like this:
 
-    % python -m crds.list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
+    % crds list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
     CRDS - INFO - Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
     CRDS - INFO - Symbolic context 'jwst-nirspec-linearity-edit' resolves to 'jwst_nirspec_linearity_0009.rmap'
     /cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
@@ -140,7 +140,7 @@ and ids used for CRDS reprocessing recommendations.
     References need to be catted explicitly by name,  but the list can come from the --references command
     explained above:
 
-    % python -m crds.list --cat jwst_nirspec_dark_0036.fits
+    % crds list --cat jwst_nirspec_dark_0036.fits
     CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
     ##########################################################################################
     File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
@@ -154,7 +154,7 @@ and ids used for CRDS reprocessing recommendations.
    4. Information about the dataset IDs and their associated parameters used
    for CRDS reprocessing can be printed:
 
-    % python -m crds.list --dataset-headers jcl403010 --first-id --minimize-header
+    % crds list --dataset-headers jcl403010 --first-id --minimize-header
     CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
     CRDS - INFO - Dataset pars for 'JCL403010:JCL403ECQ' with respect to 'hst_0462.pmap':
     {'APERTURE': 'WFC1',
@@ -196,7 +196,7 @@ and ids used for CRDS reprocessing recommendations.
 
     Sometimes it's desirable to know the individual exposures CRDS associates with a product id:
 
-    % python -m crds.list --dataset-headers jcl403010 --id-expansions-only
+    % crds list --dataset-headers jcl403010 --id-expansions-only
     CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
     JCL403010:JCL403ECQ
     JCL403010:JCL403EEQ

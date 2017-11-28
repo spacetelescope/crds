@@ -175,7 +175,7 @@ def update_header_names(name_map):
 # ============================================================================
 
 class NewContextScript(cmdline.Script):
-    """Defines the command line handler for python -m crds.newcontext."""
+    """Defines the command line handler for crds newcontext."""
     
     description = """Based on `old_pmap`,  generate a new .pmap and .imaps as
 needed in order to support `new_rmaps`.   Currently generated contexts have 

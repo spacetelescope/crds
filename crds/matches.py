@@ -1,7 +1,7 @@
 """This module is a command line script which lists the match tuples associated
 with a reference file.
 
-% python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+% crds matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
 lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' OBSTYPE='IMAGING' FW1OFFST='N/A' FW2OFFST='N/A' FWSOFFST='N/A' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
 
 A number of command line switches control output formatting.
@@ -179,24 +179,24 @@ or all dataset ids for an instrument, according to the appropriate archive catal
     epilog = """
 ** crds.matches can dump reference file match cases with respect to particular contexts:
 
-% python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+% crds matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
 lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
 
-% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
+% crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
 lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
 
-% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
+% crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
 lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
 
 ** crds.matches can dump database matching parameters for specified datasets with respect to specified contexts:
 
-% python -m crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap
+% crds matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap
 JBANJOF3Q : hst_0044.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='UNDEFINED' NUMROWS='UNDEFINED' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
 JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NAXIS1='2070.0' NAXIS2='2046.0' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
 
 ** crds.matches can list all references which satisfy any filter constraints relevant to their bestref lookup.
 
-% python -m crds.matches --contexts jwst-niriss-operational --files-from-contexts --filters META.INSTRUMENT.FILTER='F480M' --brief
+% crds matches --contexts jwst-niriss-operational --files-from-contexts --filters META.INSTRUMENT.FILTER='F480M' --brief
 CRDS - INFO - Symbolic context 'jwst-niriss-operational' resolves to 'jwst_niriss_0028.imap'
 jwst_niriss_dark_0005.fits :  META.INSTRUMENT.DETECTOR='NIS' META.SUBARRAY.NAME='FULL'
 jwst_niriss_gain_0001.fits :  META.INSTRUMENT.DETECTOR='NIS'

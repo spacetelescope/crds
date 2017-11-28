@@ -3,7 +3,7 @@ reference recommendations for a particular context and dataset files.
 
 For more details on the several modes of operations and command line parameters browse the source or run:   
 
-% python -m crds.bestrefs --help
+% crds bestrefs --help
 """
 from __future__ import print_function
 from __future__ import division
@@ -75,7 +75,7 @@ are the 3 main use cases for crds.bestrefs:
   --update-headers to fill in dataset FITS headers with recommended best
   references. 
 
-    % python -m crds.bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
+    % crds bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
 
   The outcome of this command is updating the best references in the FITS
   headers of the specified .fits files.
@@ -88,7 +88,7 @@ are the 3 main use cases for crds.bestrefs:
   mode is used to recommend reprocessing where the bestrefs differ between old
   and new contexts.
 
-    % python -m crds.bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
+    % crds bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
 
   The outcome of this command is to print the IDs of datasets affected by the
   transition from context 0001 to 0002.
@@ -112,14 +112,14 @@ are the 3 main use cases for crds.bestrefs:
   This sub-mode captures all parameter sets for an instrument updated with the
   best refs assigned by --new-context.
 
-    %  python -m crds.bestrefs --new-context hst_0002.pmap --instrument acs --update-bestrefs --update-pickle --save-pickle old-regression.json
+    %  crds bestrefs --new-context hst_0002.pmap --instrument acs --update-bestrefs --update-pickle --save-pickle old-regression.json
 
   b. Regression Test
 
   This sub-mode plays back captured datasets comparing captured prior results
   with the current result.
 
-    %  python -m crds.bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
+    %  crds bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
 
   Unlike reprocessing mode, this mode necessarily runs against all the datasets
   specified by the data source,  in this case a .json parameters file.
@@ -195,7 +195,7 @@ If --print-affected is specified, crds.bestrefs will print out the name of any
 file for which at least one update for one reference type was recommended.
 This is essentially a list of files to be reprocessed with new references.
 
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
+    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
         --compare-source-bestrefs --print-affected
     j8bt05njq_raw.fits
     j8bt06o6q_raw.fits
@@ -208,7 +208,7 @@ Update Modes
 crds.bestrefs initially supports one mode for updating the best reference
 recommendations recorded in data files:
 
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
+    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
         --compare-source-bestrefs --update-bestrefs
 
 ......................

@@ -3,7 +3,7 @@ reference recommendations for a particular context and dataset files.
 
 For more details on the several modes of operations and command line parameters browse the source or run:   
 
-% python -m crds.bestrefs --help
+% crds bestrefs --help
 """
 from __future__ import print_function
 from __future__ import division

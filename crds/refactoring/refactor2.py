@@ -322,11 +322,11 @@ class RefactorScript(cmdline.Script):
 
     1. Insert reference files A B C D... into rmap X creating rmap Y.
 
-    % python -m crds.refactoring.refactor2 insert_reference --old-rmap X --new-rmap Y  --references A B C D...
+    % crds refactoring.refactor2 insert_reference --old-rmap X --new-rmap Y  --references A B C D...
 
     2. Delete references A B C D ... from rmap X creating rmap Y.
 
-    % python -m crds.refactoring.refactor2 delete_reference --old-rmap Y --new-rmap Y  --references A B C D...
+    % crds refactoring.refactor2 delete_reference --old-rmap Y --new-rmap Y  --references A B C D...
 
     The set_header, del_header, del_parameter, set_parkey, and replace commands operate on
     the set of rmaps found under a source context which correspond to the specified instruments and types.
@@ -334,26 +334,26 @@ class RefactorScript(cmdline.Script):
     3. Set header key K to value V in rmap X creating rmap Y.
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
 
-    % python -m crds.refactoring.refactor2 set_header --header-key K --header-value V
+    % crds refactoring.refactor2 set_header --header-key K --header-value V
 
     4. Delete header key K (e.g. description) in all the rmaps found under
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
 
-    % python -m crds.refactoring.refactor2 del_header --header-key K \\
+    % crds refactoring.refactor2 del_header --header-key K \\
            --source-context C --instruments X Y Z ... --types A B C ...
 
     5. Remove single parameter name N (e.g. META.SUBARRAY.NAME) in all the rmaps found under
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This incudes modifying both parkey and all corresponding selector matching patterns.
 
-    % python -m crds.refactoring.refactor2 del_parameter --parameter-name N \\
+    % crds refactoring.refactor2 del_parameter --parameter-name N \\
            --source-context C --instruments X Y Z ... --types A B C ...
 
     6. Set complete parkey in all rmaps found under
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This removes all the existing references and re-inserts them under the new parkey approach.
 
-    % python -m crds.refactoring.refactor2 set_parkey --parkey "(('META.INSTRUMENT.DETECTOR','META.SUBARRAY.NAME',))" \\
+    % crds refactoring.refactor2 set_parkey --parkey "(('META.INSTRUMENT.DETECTOR','META.SUBARRAY.NAME',))" \\
             --source-context jwst-edit --instruments X Y Z ... --types A B C ... \\
             --fixers FGS1:GUIDER1 FGS2:GUIDER2 ANY:GENERIC FULL:GENERIC
      
@@ -361,7 +361,7 @@ class RefactorScript(cmdline.Script):
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This is a simple text substitution.
 
-    % python -m crds.refactoring.refactor2 replace_text --old-text P1  --new-text P2 \\
+    % crds refactoring.refactor2 replace_text --old-text P1  --new-text P2 \\
             --source-context jwst-edit --instruments X Y Z ... --types A B C ...
 
     8. Add an unconditional load-time parameter value substitution to the rmap header.  For this example,
@@ -369,7 +369,7 @@ class RefactorScript(cmdline.Script):
     that match tuples in the rmap are transparently altered at load-time, and SUBARRAY values of GENERIC
     are re-interpreted as N/A for the purposes of matching.
 
-    % python -m crds.refactoring.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
+    % crds refactoring.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
             --source-context jwst-edit --instruments X Y Z ... --types A B C ...
 
     IOW,  this command adds/updates something similar to the following to the specified rmaps:
@@ -381,12 +381,12 @@ class RefactorScript(cmdline.Script):
     9. All of the above commands which elaborate rmaps to refactor based on --source-context can also be
     driven by a direct specification of .rmap names using --rmaps:
     
-    % python -m crds.refactoring.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
+    % crds refactoring.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
             --rmaps jwst_miri_dark_0007.rmap
 
     10. Add the nested UseAfter selector to early JWST rmaps based on Match-only.
 
-    % python -m crds.refactoring.refactor2 add_useafter --rmaps jwst_miri_dark_0007.rmap
+    % crds refactoring.refactor2 add_useafter --rmaps jwst_miri_dark_0007.rmap
 
     11. Mass reference insertion for rehearsing large file deliveries based on --source-context
 
@@ -399,7 +399,7 @@ class RefactorScript(cmdline.Script):
     the baseline rmap for each type.  By falling back to the type declaration specs as baseline rmaps, it 
     supports reference insertion into rmaps not yet officially added to the --source-context.
 
-    % python -m crds.refactoring.refactor2 insert_reference --references ./*.asdf --verbose --certify --diff
+    % crds refactoring.refactor2 insert_reference --references ./*.asdf --verbose --certify --diff
 
     ---------------------------------------------------------------------------------------------------------
 
