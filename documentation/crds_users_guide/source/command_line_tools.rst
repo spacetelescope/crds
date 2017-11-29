@@ -12,7 +12,7 @@ The original DEPRECATED command line syntax, e.g. for the list command was::
 
   % python -m crds.list --status
 
-This was replaced by a dNEW command line syntax, e.g.::
+This was replaced by a NEW more succinct command line syntax, e.g.::
 
   % crds list --status
 
@@ -62,199 +62,268 @@ the current working directory.
 crds.bestrefs
 -------------
 
-crds.bestrefs computes the best references with respect to a particular context or contexts
-for a set of FITS files, dataset ids,  or instruments::
+crds.bestrefs is embedded in the HST archive pipeline to populate dataset headers with best reference files.   
+Other modes of crds.bestrefs are used to support CRDS reprocessing and regression testing for both HST and JWST.   
+Since CRDS is directly integrated with the JWST CAL code,  crds.bestrefs is not the preferred tool for working 
+with JWST datasets.  For HST best dataset header updates,  crds.bestrefs is used::
 
-    usage: /Users/homer/virtenv/ssbdev/lib/python2.7/site-packages/crds/bestrefs.py
-           [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers] [-c]
-           [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
-           [-i INSTRUMENTS [INSTRUMENTS ...]]
-           [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
-           [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
-           [--diffs-only] [--datasets-since DATASETS_SINCE]
-           [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
-           [--update-pickle] [--only-ids [IDS [IDS ...]]] [-u] [--print-affected]
-           [--print-affected-details] [--print-new-references]
-           [--print-update-counts] [-r] [-m SYNC_MAPPINGS] [-s SYNC_REFERENCES]
-           [--differences-are-errors] [--allow-bad-rules] [--allow-bad-references]
-           [-e] [--undefined-differences-matter] [--na-differences-matter]
-           [--compare-cdbs] [--affected-datasets] [-z] [--dump-unique-errors]
-           [--unique-errors-file UNIQUE_ERRORS_FILE]
-           [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
-           [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
-           [--debug-traps]
-    
-    * Determines best references with respect to a context or contexts.   
-    * Optionally compares new results to prior results.
-    * Optionally prints source data names affected by the new context.
-    * Optionally updates the headers of file-based data with new recommendations.
-        
-    
-    optional arguments:
-      -h, --help            show this help message and exit
-      -n NEW_CONTEXT, --new-context NEW_CONTEXT
-                            Compute the updated best references using this context. Uses current operational context by default.
-      -o OLD_CONTEXT, --old-context OLD_CONTEXT
-                            Compare bestrefs recommendations from two contexts.
-      --fetch-old-headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
-      -c, --compare-source-bestrefs
-                            Compare new bestrefs recommendations to recommendations from data source,  files or database.
-      -f FILES [FILES ...], --files FILES [FILES ...]
-                            Dataset files to compute best references for.
-      -d IDs [IDs ...], --datasets IDs [IDs ...]
-                            Dataset ids to consult database for matching parameters and old results.
-      --all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
-      -i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
-                            Instruments to compute best references for, all historical datasets in database.
-      -t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
-                            A list of reference types to process,  defaulting to all types.
-      -k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
-                            A list of reference types which should not be processed,  defaulting to nothing.
-      --diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
-      --datasets-since DATASETS_SINCE
-                            Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.
-      -p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
-                            Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.
-      -a SAVE_PICKLE, --save-pickle SAVE_PICKLE
-                            Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
-      --update-pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
-      --only-ids [IDS [IDS ...]]
-                            If specified, process only the listed dataset ids.
-      -u, --update-bestrefs
-                            Update sources with new best reference recommendations.
-      --print-affected      Print names of products for which the new context would assign new references for some exposure.
-      --print-affected-details
-                            Include instrument and affected types in addition to compound names of affected exposures.
-      --print-new-references
-                            Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
-      --print-update-counts
-                            Prints dictionary of update counts by instrument and type,  status on updated files.
-      -r, --remote-bestrefs
-                            Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
-      -m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
-                            Fetch the required context mappings to the local cache.  Defaults TRUE.
-      -s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
-                            Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
-      --differences-are-errors
-                            Treat recommendation differences between new context and original source as errors.
-      --allow-bad-rules     Only warn if a context which is marked 'bad' is used, otherwise error.
-      --allow-bad-references
-                            Only warn if a reference which is marked bad is recommended, otherwise error.
-      -e, --bad-files-are-errors
-                            DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.
-      --undefined-differences-matter
-                            If not set, a transition from UNDEFINED to anything else is not considered a difference error.
-      --na-differences-matter
-                            If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
-      --compare-cdbs        Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
-      --affected-datasets   Abbreviation for --diffs-only --datasets-since=auto --optimize-tables --print-update-counts --print-affected --dump-unique-errors --stats
-      -z, --optimize-tables
-                            If set, apply row-based optimizations to screen out inconsequential table updates.
-      --dump-unique-errors  Record and dump the first instance of each kind of error.
-      --unique-errors-file UNIQUE_ERRORS_FILE
-                            Write out data names (ids or filenames) for first instance of unique errors to specified file.
-      --all-errors-file ALL_ERRORS_FILE
-                            Write out all err'ing data names (ids or filenames) to specified file.
-      -v, --verbose         Set log verbosity to True,  nominal debug level.
-      --verbosity VERBOSITY
-                            Set log verbosity to a specific level: 0..100.
-      -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-      -I, --ignore-cache    Download required files even if they're already in the cache.
-      -V, --version         Print the software version and exit.
-      -J, --jwst            Force observatory to JWST for determining header conventions.
-      -H, --hst             Force observatory to HST for determining header conventions.
-      --log-time            Add date/time to log messages.
+	usage: /Users/jmiller/anaconda3/envs/dev/lib/python3.6/site-packages/crds/bestrefs/__main__.py
+	       [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers]
+	       [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
+	       [-i INSTRUMENTS [INSTRUMENTS ...]]
+	       [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
+	       [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
+	       [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
+	       [--all-types] [--diffs-only] [--datasets-since DATASETS_SINCE] [-c]
+	       [--update-pickle] [--only-ids [IDS [IDS ...]]]
+	       [--drop-ids [IDS [IDS ...]]] [-u] [--print-affected]
+	       [--print-affected-details] [--print-new-references]
+	       [--print-update-counts] [--print-error-headers] [-r] [-m SYNC_MAPPINGS]
+	       [-s SYNC_REFERENCES] [--differences-are-errors] [--allow-bad-rules]
+	       [--allow-bad-references] [-e] [--undefined-differences-matter]
+	       [--na-differences-matter] [-g] [--affected-datasets] [-z]
+	       [--dump-unique-errors] [--unique-errors-file UNIQUE_ERRORS_FILE]
+	       [--all-errors-file ALL_ERRORS_FILE]
+	       [--unique-threshold UNIQUE_THRESHOLD] [--max-errors-per-class N]
+	       [--unique-delimiter UNIQUE_DELIMITER] [-v] [--verbosity VERBOSITY]
+	       [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE]
+	       [--log-time] [--pdb] [--debug-traps]
+	
+	* Determines best references with respect to a context or contexts.   
+	* Optionally updates the headers of file-based data with new recommendations.
+	* Optionally compares new results to prior results.
+	* Optionally prints source data names affected by the new context.
+	    
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  -n NEW_CONTEXT, --new-context NEW_CONTEXT
+	                        Compute the updated best references using this context. Uses current operational context by default.
+	  -o OLD_CONTEXT, --old-context OLD_CONTEXT
+	                        Compare bestrefs recommendations from two contexts.
+	  --fetch-old-headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
+	  -f FILES [FILES ...], --files FILES [FILES ...]
+	                        Dataset files to compute best references for and optionally update headers.
+	  -d IDs [IDs ...], --datasets IDs [IDs ...]
+	                        Dataset ids to consult database for matching parameters and old results.
+	  --all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
+	  -i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
+	                        Instruments to compute best references for, all historical datasets in database.
+	  -p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
+	                        Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.
+	  -a SAVE_PICKLE, --save-pickle SAVE_PICKLE
+	                        Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
+	  -t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
+	                        Explicitly define the list of reference types to process, --skip-types also still applies.
+	  -k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
+	                        A list of reference types which should not be processed,  defaulting to nothing.
+	  --all-types           Evaluate every reference file type regardless of dataset exposure type.
+	  --diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
+	  --datasets-since DATASETS_SINCE
+	                        Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.  OFF by default.
+	  -c, --compare-source-bestrefs
+	                        Compare new bestrefs recommendations to recommendations from data source,  files or database.
+	  --update-pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
+	  --only-ids [IDS [IDS ...]]
+	                        If specified, process only the listed dataset ids.
+	  --drop-ids [IDS [IDS ...]]
+	                        If specified, skip these dataset ids.
+	  -u, --update-bestrefs
+	                        Update sources with new best reference recommendations.
+	  --print-affected      Print names of products for which the new context would assign new references for some exposure.
+	  --print-affected-details
+	                        Include instrument and affected types in addition to compound names of affected exposures.
+	  --print-new-references
+	                        Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
+	  --print-update-counts
+	                        Prints dictionary of update counts by instrument and type,  status on updated files.
+	  --print-error-headers
+	                        For each tracked error,  print out the corresponding dataset header for offline analysis.
+	  -r, --remote-bestrefs
+	                        Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
+	  -m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
+	                        Fetch the required context mappings to the local cache.  Defaults TRUE.
+	  -s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
+	                        Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
+	  --differences-are-errors
+	                        Treat recommendation differences between new context and original source as errors.
+	  --allow-bad-rules     Only warn if a context which is marked 'bad' is used, otherwise error.
+	  --allow-bad-references
+	                        Only warn if a reference which is marked bad is recommended, otherwise error.
+	  -e, --bad-files-are-errors
+	                        DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.
+	  --undefined-differences-matter
+	                        If not set, a transition from UNDEFINED to anything else is not considered a difference error.
+	  --na-differences-matter
+	                        If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
+	  -g, --regression      Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
+	  --affected-datasets   Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter --na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats
+	  -z, --optimize-tables
+	                        If set, apply row-based optimizations to screen out inconsequential table updates.
+	  --dump-unique-errors  Record and dump the first instance of each kind of error.
+	  --unique-errors-file UNIQUE_ERRORS_FILE
+	                        Write out data names (ids or filenames) for first instance of unique errors to specified file.
+	  --all-errors-file ALL_ERRORS_FILE
+	                        Write out all err'ing data names (ids or filenames) to specified file.
+	  --unique-threshold UNIQUE_THRESHOLD
+	                        Only print unique error classes with this many or more instances.
+	  --max-errors-per-class N
+	                        Only print the first N detailed errors of any particular class.
+	  --unique-delimiter UNIQUE_DELIMITER
+	                        Use the given delimiter (e.g. semicolon) in tracked error messages to make them amenable to spreadsheets.
+	  -v, --verbose         Set log verbosity to True,  nominal debug level.
+	  --verbosity VERBOSITY
+	                        Set log verbosity to a specific level: 0..100.
+	  --dump-cmdline        Dump the command line parameters used to start the script to the log.
+	  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+	  -I, --ignore-cache    Download required files even if they're already in the cache.
+	  -V, --version         Print the software version and exit.
+	  -J, --jwst            Force observatory to JWST for determining header conventions.
+	  -H, --hst             Force observatory to HST for determining header conventions.
+	  --stats               Track and print timing statistics.
+	  --profile PROFILE     Output profile stats to the specified file.
+	  --log-time            Add date/time to log messages.
+	  --pdb                 Run under pdb.
+	  --debug-traps         Bypass exception error message traps and re-raise exception.
 
-.............................
-File Oriented Best References
-.............................
+................
+Processing Modes
+................
 
-The most common end-user use case for crds.bestrefs is to assign best references to the header keywords of
-dataset FITS files.   This can be done as follows::
+crds.bestrefs can be run in 3 distinct processing modes with different inputs, outputs,
+and purposes.   Where possible the input, output, and comparison modes are written to
+be orthogonal features that can be combined in various ways.   The following however
+are the 3 main use cases for crds.bestrefs:
 
-    % crds bestrefs --update-bestrefs --sync-references=1 --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits ...
+  1. File (Pipeline) Mode
 
-which will use the CRDS rules currently operational in the pipeline and download any required CRDS rules and reference files 
-to your CRDS cache automatically.   No download should occur for previously cached files or the default group readonly reference 
-cache.
+  The --files switch can be used to specify a list of FITS dataset files to
+  process.  This is used in the HST pipeline in conjunction with
+  --update-headers to fill in dataset FITS headers with recommended best
+  references. 
 
-A specific historical set of CRDS rules can be used by specifying --new-context::
+    % python -m crds.bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
 
-    % crds bestrefs --new-context hst_0294.pmap --update-bestrefs --sync-references=1 --files j8bt05njq_raw.fits ...
+  The outcome of this command is updating the best references in the FITS
+  headers of the specified .fits files.
+
+  2. Reprocessing Mode
+
+  The --old-context and --new-context switches are used to specify a pair of CRDS
+  contexts to compare results from.  Reprocessing mode runs by fetching matching
+  parameters from the archive database using --instruments or --datasets.  This
+  mode is used to recommend reprocessing where the bestrefs differ between old
+  and new contexts.
+
+    % python -m crds.bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
+
+  The outcome of this command is to print the IDs of datasets affected by the
+  transition from context 0001 to 0002.
+
+  --affected-datasets is a "bundle switch" that captures standard options for
+  reprocessing including the option of printing out the affected datasets en lieu
+  of updating FITS headers.  As an optimization, this mode typically runs against
+  only those datasets implied by the differences in old and new contexts and restricted
+  to those datasets potentially affected by the USEAFTER dates of new references.
+
+3. Regression Mode
+
+  In regression mode, crds.bestrefs compares the bestrefs assigned by --new-context
+  with the bestrefs recorded in the parameter source.  This mode is typically
+  run against CRDS constructed .json or pickle save files known to be updated
+  with bestrefs.   This mode can be used to verify that different versions of CRDS
+  produce the same results relative to a set of saved parameters and best references.
+
+  a. Regression Capture
+
+  This sub-mode captures all parameter sets for an instrument updated with the
+  best refs assigned by --new-context.
+
+    %  python -m crds.bestrefs --new-context hst_0002.pmap --instrument acs --update-bestrefs --update-pickle --save-pickle old-regression.json
+
+  b. Regression Test
+
+  This sub-mode plays back captured datasets comparing captured prior results
+  with the current result.
+
+    %  python -m crds.bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
+
+  Unlike reprocessing mode, this mode necessarily runs against all the datasets
+  specified by the data source,  in this case a .json parameters file.
+
+  This mode can also be used to cache database parameter sets to optimize performance
+  or eliminate the possibility of database parameter variation.
 
 ...........
 New Context
 ...........
 
-crds.bestrefs always computes best references with respect to a context which can be explicitly specified with the 
---new-context parameter.    If --new-context is not specified,  the default operational context is determined by 
-consulting the CRDS server or looking in the local cache.  
+crds.bestrefs always computes best references with respect to a context which
+can be explicitly specified with the --new-context parameter.  If --new-context
+is not specified, the default operational context is determined by consulting
+the CRDS server or looking in the local cache.
 
 ........................
 Lookup Parameter Sources
 ........................
 
-The two primary modes for bestrefs involve the source of reference file matching parameters.   Conceptually 
-lookup parameters are always associated with particular datasets and used to identify the references
-required to process those datasets.
+The following methods can be used to define parameter sets for which to compute
+best references::
 
-The options --files, --datasets, --instruments, and --all-instruments determine the source of lookup parameters:
+  --files can be used to specify a list of FITS files from which to load
+    parameters and optionall update headers.
 
-1. To find best references for a list of files do something like this:
+  --instruments can be used to specify a list of instruments.  Without
+    --diffs-only or --datasets-since this choice selects ALL datasets for the
+    specified instruments.
 
-    % crds bestrefs --new-context hst.pmap --file j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits
+  --all-instruments is shorthand for all --instruments supported by the project.
+    This parameter can be so memory intensive as to be infeasible.
 
-the first parameter, hst.pmap,  is the context with respect to which best references are determined.
+  --datasets is used to specify a list of dataset IDs as would be found under --instruments.
 
-2. To find best references for a list of catalog dataset ids do something like this:
-
-    % crds bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
-
-3. To do mass scale testing for all cataloged datasets for a particular instrument(s) do:
-
-    % crds bestrefs --new-context hst.pmap --instruments acs
-
-4. To do mass scale testing for all supported instruments for all cataloged datasets do:
-
-    % crds bestrefs --new-context hst.pmap --all-instruments
-    
-    or to test for differences between two contexts
-
-    % crds bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all-instruments
+  --load-pickles can be used to specify a list of .pkl or .json files that define parameter
+    sets.  These can most easily be created using --save-pickle.
 
 ................
 Comparison Modes
 ................
 
-The --old-context and --compare-source-bestrefs parameters define the best references comparison mode.  Each names
-the origin of a set of prior recommendations and implicitly requests a comparison to the recommendations from 
-the newly computed bestrefs determined by --new-context.
+The --old-context and --compare-source-bestrefs parameters define the best
+references comparison mode.  Each names the origin of a set of prior
+recommendations and implicitly requests a comparison to the recommendations
+from the newly computed bestrefs determined by --new-context.
 
+::::::::::::::::::
 Context-to-Context
 ::::::::::::::::::
 
---old-context can be used to specify a second context for which bestrefs are dynamically computed; --old-context 
-implies that a bestrefs comparison will be made with --new-context.   If --old-context is not specified,  it 
+--old-context can be used to specify a second context for which bestrefs
+are dynamically computed; --old-context implies that a bestrefs comparison
+will be made with --new-context.  If --old-context is not specified, it
 defaults to None.
 
+::::::::::::::::::::::::::::
 Prior Source Recommendations
 ::::::::::::::::::::::::::::
 
---compare-source-bestrefs requests that the bestrefs from --new-context be compared to the bestrefs which are
-recorded with the lookup parameter data,  either in the file headers of data files,  or in the catalog.   In both
-cases the prior best references are recorded static values,  not dynamically computed bestrefs.
+--compare-source-bestrefs requests that the bestrefs from --new-context be
+compared to the bestrefs which are recorded with the lookup parameter data,
+either in the file headers of data files, or in the catalog.  In both cases
+the prior best references are recorded static values, not dynamically
+computed bestrefs.
     
 ............
 Output Modes
 ............
 
-crds.bestrefs supports several output modes for bestrefs and comparison results to standard out.
+crds.bestrefs supports several output modes for bestrefs and comparison results
+to standard out.
 
-If --print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
-one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.::
+If --print-affected is specified, crds.bestrefs will print out the name of any
+file for which at least one update for one reference type was recommended.
+This is essentially a list of files to be reprocessed with new references.
 
-    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
-        --compare-source-bestrefs --print-affected
+    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --print-affected
     j8bt05njq_raw.fits
     j8bt06o6q_raw.fits
     j8bt09jcq_raw.fits
@@ -263,17 +332,38 @@ one reference type was recommended.   This is essentially a list of files to be 
 Update Modes
 ............
 
-crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files::
+crds.bestrefs initially supports one mode for updating the best reference
+recommendations recorded in data files:
 
-    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
-        --compare-source-bestrefs --update-bestrefs
+    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --update-bestrefs
+
+......................
+Pickle and .json saves
+......................
+
+crds.bestrefs can load parameters and past results from a sequence of .pkl or
+.json files using --load-pickles.  These are combined into a single parameter
+source in command line order, nominally in worst-to-best order where later
+files override earlier files.
+
+crds.bestrefs can save the parameters obtained from various sources into .pkl
+or .json formatted save files using --save-pickle.  The single combined result
+of multiple pickle or instrument parameter sources is saved.   The file extension
+defines the format used.
+
+The preferred  .json format defines a singleton { id: parameters} dictionary/array
+on each line as a series of isolated .json objects.   A less robust single object
+form is also supported { id1: parameters1, id2: parameters2, ...}.
+
+.json format is preferred over .pkl because it is more transparent and robust
+across different versions of Python or typos.
 
 .........
 Verbosity
 .........
 
-crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational 
-and debug output.
+crds.bestrefs has --verbose and --verbosity=N parameters which can increase the
+amount of informational and debug output.
 
 .........
 Bad Files
@@ -575,6 +665,13 @@ the file it replaces looking for new or missing table rows.
 
 * Invoking crds.certify on a context mapping recursively certifies all sub-mappings.
 
+crds.list
+---------
+
+crds.list is a swiss army knife program for dumping various forms of CRDS
+information:
+
+
 crds.diff
 ---------
 
@@ -851,8 +948,8 @@ safe_bestrefs
 The *safe_bestrefs* script is a shim around *crds bestrefs* which configures it for operation in
 the pipeline using a readonly cache and no connection to the server.  Typical usage might be::
 
-	$ export CRDS_PATH=<pipeline's CRDS cache path>
-	$ safe_bestrefs --files <datasets FITS files...>
+    $ export CRDS_PATH=<pipeline's CRDS cache path>
+    $ safe_bestrefs --files <datasets FITS files...>
 
 This script is intended to be run in parallel with multiple pipeline bestrefs
 and a concurrent cron_sync.  The "safe" aspect refers to not modifying the
@@ -861,7 +958,7 @@ another process is updating the cache.
 
 To control when information is received from the server,  and to prevent pipeline stalls
 when the CRDS server is unavailable, safe_bestrefs is configured with a bad server IP address.
-	
+    
 Using a readonly CRDS cache enables the use of bestrefs in a multiprocessing environment
 where multiple copies of bestrefs are running simultaneously.
 
@@ -881,10 +978,10 @@ to fully download file updates.
 
 Typical setup and execution is::
 
-	$ export CRDS_PATH=<pipeline's CRDS cache path>
-	$ export CRDS_SERVER_URL=<project's CRDS server>
-	$ export CRDS_LOCKS=<directory for cron_sync lock files, defaults to $CRDS_PATH>
- 	$ cron_sync --all --check-files --fetch-references
+    $ export CRDS_PATH=<pipeline's CRDS cache path>
+    $ export CRDS_SERVER_URL=<project's CRDS server>
+    $ export CRDS_LOCKS=<directory for cron_sync lock files, defaults to $CRDS_PATH>
+    $ cron_sync --all --check-files --fetch-references
 
 *cron_sync* co-exists with an operating copy of *safe_bestrefs* by writing out the cache configuration 
 information last.   The cache configuration information controls the context switch.  While files
@@ -894,8 +991,8 @@ under the old context.
 The HST and JWST pipeline environments currently further wrap the *cron_sync* script to establish
 the environment settings and required Python stack and eliminate all parameters::
 
-	$ crds_sync_wrapper.csh
+    $ crds_sync_wrapper.csh
 
-Operators typically execute *crds_sync_wrapper.csh* rather than *cron_sync*.	
+Operators typically execute *crds_sync_wrapper.csh* rather than *cron_sync*.    
 
 

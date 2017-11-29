@@ -167,22 +167,24 @@ references comparison mode.  Each names the origin of a set of prior
 recommendations and implicitly requests a comparison to the recommendations
 from the newly computed bestrefs determined by --new-context.
 
-    Context-to-Context
-    ::::::::::::::::::
+::::::::::::::::::
+Context-to-Context
+::::::::::::::::::
+
+--old-context can be used to specify a second context for which bestrefs
+are dynamically computed; --old-context implies that a bestrefs comparison
+will be made with --new-context.  If --old-context is not specified, it
+defaults to None.
     
-    --old-context can be used to specify a second context for which bestrefs
-    are dynamically computed; --old-context implies that a bestrefs comparison
-    will be made with --new-context.  If --old-context is not specified, it
-    defaults to None.
-    
-    Prior Source Recommendations
-    ::::::::::::::::::::::::::::
-    
-    --compare-source-bestrefs requests that the bestrefs from --new-context be
-    compared to the bestrefs which are recorded with the lookup parameter data,
-    either in the file headers of data files, or in the catalog.  In both cases
-    the prior best references are recorded static values, not dynamically
-    computed bestrefs.
+::::::::::::::::::::::::::::
+Prior Source Recommendations
+::::::::::::::::::::::::::::
+
+--compare-source-bestrefs requests that the bestrefs from --new-context be
+compared to the bestrefs which are recorded with the lookup parameter data,
+either in the file headers of data files, or in the catalog.  In both cases
+the prior best references are recorded static values, not dynamically
+computed bestrefs.
     
 ............
 Output Modes
@@ -239,6 +241,16 @@ Verbosity
 crds.bestrefs has --verbose and --verbosity=N parameters which can increase the
 amount of informational and debug output.
 
+.........
+Bad Files
+.........
+
+CRDS files can be designated as scientifically invalid on the CRDS server by the CRDS team.   Knowledge of bad files is
+synchronized to remote caches by crds.bestrefs and crds.sync.  By default, attempting to use bad rules or assign bad
+references will generate errors and fail.   crds.bestrefs supports two command line switches, *---allow-bad-rules* and
+*---allow-bad-references* to override the default handling of bad files and enable their use with warnings.  Environment
+variables **CRDS_ALLOW_BAD_RULES** and **CRDS_ALLOW_BAD_REFERENCES** can also be set to 1 to establish warnings rather
+than errors as the default.
     """
 
     def __init__(self, *args, **keys):
