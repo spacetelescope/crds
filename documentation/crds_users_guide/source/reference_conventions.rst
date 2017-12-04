@@ -68,22 +68,22 @@ define reference file provenance information,  shown here in FITS format for
 simplicity:
 
 .. table:: Boiler Plate Keywords
-   :widths: auto
-
-===============  ====================   =====================
-FITS             DATAMODELS             VALUES
-===============  ====================   =====================
-TELESCOP         META.TELESCOPE         HST, JWST
-INSTRUME         META.INSTRUMENT.NAME   MIRI
-REFTYPE (JWST)   META.REFERENCE.TYPE    DARK
-FILETYPE (HST)                          BIAS
-USEAFTER         META.USEAFTER          2017-10-01T00:00:00
-AUTHOR (JWST)    META.AUTHOR            Homer Simpson
-PEDIGREE         META.PEDIGREE          DUMMY, GROUND, FLIGHT
-HISTORY          META.HISTORY           File creation notes
-COMMENT (HST)                           Additional notes
-DESCRIP          META.DESCRIPTION       Brief description
-===============  ====================   =====================
+        :widths: auto
+		
+        ===============  ====================   =====================
+        FITS             DATAMODELS             VALUES
+        ===============  ====================   =====================
+        TELESCOP         META.TELESCOPE         HST, JWST
+        INSTRUME         META.INSTRUMENT.NAME   MIRI
+        REFTYPE (JWST)   META.REFERENCE.TYPE    DARK
+        FILETYPE (HST)                          BIAS
+        USEAFTER         META.USEAFTER          2017-10-01T00:00:00
+        AUTHOR (JWST)    META.AUTHOR            Homer Simpson
+        PEDIGREE         META.PEDIGREE          DUMMY, GROUND, FLIGHT
+        HISTORY          META.HISTORY           File creation notes
+        COMMENT (HST)                           Additional notes
+        DESCRIP          META.DESCRIPTION       Brief description
+        ===============  ====================   =====================
 
 Matching Keyword Patterns
 .........................
@@ -271,22 +271,22 @@ In terms of datamodels paths, the above value would be specified similarly::
 The following table defines the pattern keywords currently supported for JWST:
 
 .. table:: JWST Pattern Keyword Names
-   :widths: auto
-
-=========   =========== ===========================
-FITS        ``P_`` FITS ``P_`` DATAMODELS
-=========   =========== ===========================
-EXP_TYPE    P_EXP_TY    META.EXPOSURE.P_EXPTYPE
-BAND        P_BAND      META.INSTRUMENT.P_BAND
-DETECTOR    P_DETECT    META.INSTRUMENT.P_DETECTOR
-CHANNEL     P_CHANNE    META.INSTRUMENT.P_CHANNEL
-FILTER      P_FILTER    META.INSTRUMENT.P_FILTER
-GRATING     P_GRATIN    META.INSTRUMENT.P_GRATING
-PUPIL       P_PUPIL     META.INSTRUMENT.P_PUPIL
-MODULE      P_MODULE    META.INSTRUMENT.MODULE
-SUBARRAY    P_SUBARR    META.SUBARRAY.P_SUBARRAY
-READPATT    P_READPA    META.EXPOSURE.P_READPATT
-=========   =========== ===========================
+        :widths: auto
+		
+        =========   =========== ===========================
+        FITS        ``P_`` FITS ``P_`` DATAMODELS
+        =========   =========== ===========================
+        EXP_TYPE    P_EXP_TY    META.EXPOSURE.P_EXPTYPE
+        BAND        P_BAND      META.INSTRUMENT.P_BAND
+        DETECTOR    P_DETECT    META.INSTRUMENT.P_DETECTOR
+        CHANNEL     P_CHANNE    META.INSTRUMENT.P_CHANNEL
+        FILTER      P_FILTER    META.INSTRUMENT.P_FILTER
+        GRATING     P_GRATIN    META.INSTRUMENT.P_GRATING
+        PUPIL       P_PUPIL     META.INSTRUMENT.P_PUPIL
+        MODULE      P_MODULE    META.INSTRUMENT.MODULE
+        SUBARRAY    P_SUBARR    META.SUBARRAY.P_SUBARRAY
+        READPATT    P_READPA    META.EXPOSURE.P_READPATT
+        =========   =========== ===========================
 
 Each ``P_`` keyword is explicitly defined in CRDS code as well as the CAL code
 data models.  Relative to HST substitutions, the advantage of the JWST ``P_``

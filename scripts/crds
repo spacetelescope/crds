@@ -23,20 +23,11 @@ else:
 
 usage("<command> <parameters...>", 1, help="""
 
-'crds' is a command line wrapper that replaces the "python -m" syntax
-for invoking CRDS programs.
+'crds' is a wrapper used to invoke various CRDS sub-programs.
 
-For example,  the new preferred syntax:
+For example,  to assign HST best reference files,  do:
 
-    crds list --status ...
-
-is equivalent to the legacy native Python syntax:
-
-    python -m crds.list --status ...
-
-NOTE: For some commands the package path has changed so the legacy syntax can
-no longer supported.  The "crds" wrapper is aware of the new paths and should
-be used instead universally.
+    $ crds bestrefs --files *.fits  --update-bestrefs
 
 Available commands:
 

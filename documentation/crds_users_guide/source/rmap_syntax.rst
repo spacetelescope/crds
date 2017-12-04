@@ -1,5 +1,5 @@
-About Mappings
-==============
+CRDS Rules (Mappings)
+=====================
 
 CRDS mappings are organized in a 3 tier hierarchy:  pipeline (.pmap),
 instrument (.imap), and reference (.rmap).   Based on dataset parameters,
@@ -92,40 +92,54 @@ Instrument Mappings (.imap)
 A sample instrument mapping for HST's COS instrument looks like::
 
     header = {
-        'derived_from' : 'scraped 2011-12-23 11:57:10',
-        'description' : 'Initially generated on 2011-12-23 11:57:10',
+        'derived_from' : 'hst_cos_0290.imap',
         'instrument' : 'COS',
         'mapping' : 'INSTRUMENT',
-        'name' : 'hst_cos.imap',
+        'name' : 'hst_cos_0291.imap',
         'observatory' : 'HST',
         'parkey' : ('REFTYPE',),
-        'sha1sum' : '800fb1567cb5bed4031402c7396aeb86c5e1db61',
-        'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
+        'sha1sum' : '85184c1656b487e7af686a7ab75262dcefc882e8',
     }
     
     selector = {
-        'badttab' : 'hst_cos_badttab.rmap',
-        'bpixtab' : 'hst_cos_bpixtab.rmap',
-        'brftab' : 'hst_cos_brftab.rmap',
-        'brsttab' : 'hst_cos_brsttab.rmap',
-        'deadtab' : 'hst_cos_deadtab.rmap',
-        'disptab' : 'hst_cos_disptab.rmap',
-        'flatfile' : 'hst_cos_flatfile.rmap',
-        'fluxtab' : 'hst_cos_fluxtab.rmap',
-        'geofile' : 'hst_cos_geofile.rmap',
-        'lamptab' : 'hst_cos_lamptab.rmap',
-        'phatab' : 'hst_cos_phatab.rmap',
-        'spwcstab' : 'hst_cos_spwcstab.rmap',
-        'tdstab' : 'hst_cos_tdstab.rmap',
-        'wcptab' : 'hst_cos_wcptab.rmap',
-        'xtractab' : 'hst_cos_xtractab.rmap',
+        'badttab' : 'hst_cos_badttab_0250.rmap',
+        'bpixtab' : 'hst_cos_bpixtab_0254.rmap',
+        'brftab' : 'hst_cos_brftab_0250.rmap',
+        'brsttab' : 'hst_cos_brsttab_0250.rmap',
+        'deadtab' : 'hst_cos_deadtab_0250.rmap',
+        'dgeofile' : 'hst_cos_dgeofile_0002.rmap',
+        'disptab' : 'hst_cos_disptab_0259.rmap',
+        'flatfile' : 'hst_cos_flatfile_0254.rmap',
+        'fluxtab' : 'hst_cos_fluxtab_0261.rmap',
+        'geofile' : 'hst_cos_geofile_0250.rmap',
+        'gsagtab' : 'hst_cos_gsagtab_0253.rmap',
+        'hvtab' : 'hst_cos_hvtab_0259.rmap',
+        'lamptab' : 'hst_cos_lamptab_0251.rmap',
+        'phatab' : 'hst_cos_phatab_0250.rmap',
+        'proftab' : 'hst_cos_proftab_0265.rmap',
+        'spottab' : 'hst_cos_spottab_0004.rmap',
+        'spwcstab' : 'hst_cos_spwcstab_0251.rmap',
+        'tdstab' : 'hst_cos_tdstab_0254.rmap',
+        'tracetab' : 'hst_cos_tracetab_0265.rmap',
+        'twozxtab' : 'hst_cos_twozxtab_0266.rmap',
+        'wcptab' : 'hst_cos_wcptab_0255.rmap',
+        'xtractab' : 'hst_cos_xtractab_0257.rmap',
+        'xwlkfile' : 'hst_cos_xwlkfile_0002.rmap',
+        'ywlkfile' : 'hst_cos_ywlkfile_0002.rmap',
     }
 
-Instrument mappings match the desired reference file type against the reference mapping which can be used to determine a
+Instrument mappings match the desired reference file type against the reference mapping used to determine a
 best reference recommendation for a particular dataset.  An instrument mapping lists all possible reference types for
-all modes of the instrument,  some of which may not be appropriate for a particular mode.   The selector key of an
-instrument mapping is the value of a reference file header keyword "REFTYPE",  and is the name of the dataset header
-keyword which will record the best reference selection.
+all modes of the instrument,  some of which may not be appropriate for a particular mode.
+
+For HST, the header keywords FILETYPE or CDBSFILE are used to define a reference\'s type and corresponding rmap.
+FILETYPE is in turn translated to the keyword names used to record reference files in datasets 
+(CRDS names these "filekind"),  and these appear directly in rmap names, e.g. FILETYPE=BIAS translates to BIASFILE which
+appears in the rmap hst_acs_biasfile_0250.rmap.  NOTE: the HST .imap\'s incorrectly specify REFTYPE in the .imap\'s
+but the value is unused.
+
+For JWST, the header keyword REFTYPE (META.REFTYPE) is used to select the rmap.   For JWST, the REFTYPE
+appears directly in file names, e.g. REFTYPE=SUPERBIAS is part of the rmap name jwst_nirspec_superbias_0001.rmap.
 
 Reference Mappings (.rmap)
 --------------------------
@@ -133,15 +147,18 @@ Reference Mappings (.rmap)
 A sample reference mapping for HST COS DEADTAB looks like::
 
     header = {
-        'derived_from' : 'scraped 2011-12-23 11:54:56',
-        'description' : 'Initially generated on 2011-12-23 11:54:56',
+        'derived_from' : 'generated from CDBS database 2014-05-09 23:24:57.840119',
         'filekind' : 'DEADTAB',
         'instrument' : 'COS',
         'mapping' : 'REFERENCE',
-        'name' : 'hst_cos_deadtab.rmap',
+        'name' : 'hst_cos_deadtab_0250.rmap',
         'observatory' : 'HST',
         'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-        'sha1sum' : 'e27984a6441d8aaa7cd28ead2267a6be4c3a153b',
+        'reffile_format' : 'TABLE',
+        'reffile_required' : 'NONE',
+        'reffile_switch' : 'DEADCORR',
+        'rmap_relevance' : '(DEADCORR != "OMIT")',
+        'sha1sum' : 'bde314f1848b67891d6309b30eaa5c95611f86e2',
     }
     
     selector = Match({
