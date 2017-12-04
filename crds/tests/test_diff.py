@@ -48,7 +48,7 @@ in the logical differences between two mappings.
     
 For example:
     
-    % python -m crds.diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
+    % crds diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
     
 Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
     

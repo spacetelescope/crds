@@ -122,7 +122,7 @@ IMPORTANT:
     epilog = """
 crds.uses can be invoked like this:
 
-% python -m crds.uses --files n3o1022ij_drk.fits --hst
+% crds uses --files n3o1022ij_drk.fits --hst
 hst.pmap
 hst_0001.pmap
 hst_0002.pmap

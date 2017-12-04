@@ -1,7 +1,7 @@
 """This module is used to generate the SYSTEM CRDSCFG reference file.  The code
 is directly edited and the module itself is run to emit a new reference as in:
 
-$ python -m crds.jwst.gen_system_crdscfg  updated_inputs.yaml  >new_reference.yaml
+$ crds jwst.gen_system_crdscfg  updated_inputs.yaml  >new_reference.yaml
 
 Suggested approach for obtaining updated inputs is downloading the most current
 SYSTEM CRDSCFG reference file and updating MANUAL sections.

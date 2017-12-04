@@ -33,7 +33,7 @@ all contexts, do this:
 
     % setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
     % setenv CRDS_PATH $HOME/crds_cache_ops
-    % python -m crds.list --all --mappings --references >files.b6
+    % crds list --all --mappings --references >files.b6
 
 This captures the file list with respect to the CRDS OPS server which
 during the development period directly distributes files and is a
@@ -43,7 +43,7 @@ complete "reference" copy.
 
     % setenv CRDS_SERVER_URL https://jwst-crds-b6it.stsci.edu
     % setenv CRDS_PATH $HOME/crds_cache_b6it
-    % python -m crds.misc.check_archive --files @files.b6 --dump-good-files --stats > all.b6it.archive
+    % crds misc.check_archive --files @files.b6 --dump-good-files --stats > all.b6it.archive
 
 This checks the file list in files.b6 against the CRDS B6 server
 database and whatever archive URL that server is configured to use,
@@ -62,7 +62,7 @@ ERROR messages for each problem (missing or length) are printed to stderr
 
 3. Once the archive is looking good,  sync all the CRDS rules to a local cache:
     
-    % python -m crds.sync --all --stats --check-sha1sum
+    % crds sync --all --stats --check-sha1sum
 
 which will verify rules download, loadability, and exact contents with respect to 
 the CRDS server database.

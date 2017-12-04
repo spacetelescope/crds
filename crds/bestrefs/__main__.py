@@ -1,7 +1,7 @@
 """
 This module supports running crds.bestrefs from the command line using -m syntax:
 
-% python -m crds.bestrefs ...
+% crds bestrefs ...
 
 """
 from __future__ import print_function

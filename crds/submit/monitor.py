@@ -29,7 +29,7 @@ class MonitorScript(cmdline.Script):
     epilog = """Monitoring is done with respect to a submission id/key and currently
 polls the server for new messages at some periodic rate in seconds:
 
-% python -m crds.monitor --poll-delay 3.0 --key 81323850-9517-416c-ae88-e6481de10a71
+% crds monitor --poll-delay 3.0 --key 81323850-9517-416c-ae88-e6481de10a71
 """
 
     def __init__(self, *args, **keys):
