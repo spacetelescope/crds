@@ -144,7 +144,7 @@ MONTHS = [
 
 # ==============================================================================================
 
-def checksum_exists(filename):
+def has_checksum(filename):
     """Return True IFF `path` names a file which already has FITS checksums.  As a first guess,
     existing checksums should be maintained across file content updates required by the renaming.
     """
@@ -170,7 +170,7 @@ def uniqname(old_path):
 
     Returns  new_cdbs_style_name : str
     """
-    add_checksums = "--add-checksum" if checksum_exists(old_path) else ""
+    add_checksums = "--add-checksum" if has_checksum(old_path) else ""
     new_name = UniqnameScript("crds.misc.uniqname --files {0} --standard --remove-original --fits-errors {1}".format(
         old_path, add_checksums))()
     return new_name

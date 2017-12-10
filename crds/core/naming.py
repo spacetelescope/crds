@@ -89,6 +89,28 @@ def newer(name1, name2):
     False                                                                                                                                    
     >>> newer("hst_cos_deadtab_0002.rmap", "N/A")
     True
+    
+    >>> newer("16n1832tm_tmc.fits", "06n1832tm_tmc.fits")
+    True
+    >>> newer("06n1832tm_tmc.fits", "16n1832tm_tmc.fits")
+    False
+    >>> newer("06n1832tm_tmc.fits", "16n1832tm_tmg.fits")
+    False
+    
+    >>> newer("hst_cos_deadtab_0001.fits", "16n1832tm_tmg.fits")
+    Traceback (most recent call last):
+    ...
+    NameComparisonError: Unhandled name comparison case:  ('crds', 'synphot')
+     
+    >>> newer("07g1700gl_dead.fits", "16n1832tm_tmg.fits")
+    Traceback (most recent call last):
+    ...
+    NameComparisonError: Unhandled name comparison case:  ('newcdbs', 'synphot')    
+    
+    >>> newer("16n1832tm_tmg.fits", "7g1700gl_dead.fits")
+    Traceback (most recent call last):
+    ...
+    NameComparisonError: Unhandled name comparison case:  ('synphot', 'oldcdbs')    
                                                                                                                                     
     >>> newer("hst_cos_deadtab_0001.fits", "17g1700gl_dead.fits")
     Traceback (most recent call last):
@@ -105,20 +127,22 @@ def newer(name1, name2):
         ("crds", "crds")  : "compare_crds",
         ("oldcdbs", "oldcdbs") : "compare",
         ("newcdbs", "newcdbs") : "compare",
-
+        ("oldsynphot", "oldsynphot") : "compare",
+        ("newsynphot", "newsynphot") : "compare",
+        
         ("crds", "oldcdbs") : True,
         ("oldcdbs", "crds") : False,
 
         ("newcdbs", "oldcdbs") : True,
         ("oldcdbs", "newcdbs") : False,
 
-        ("crds", "newcdbs") : "raise",
-        ("newcdbs", "crds") : "raise",
-        }
+        ("newsynphot", "oldsynphot") : True,
+        ("oldsynphot", "newsynphot") : False,
+    }
     name1, name2 = crds_basename(name1), crds_basename(name2)
     class1 = classify_name(name1)
     class2 = classify_name(name2)
-    case = cases[(class1, class2)]
+    case = cases.get((class1, class2), "raise")
     if name1 == "N/A":
         return False
     elif name2 =="N/A":
@@ -133,13 +157,6 @@ def newer(name1, name2):
         result = name1 > name2
     elif case in [True, False]:
         result = case
-    elif case == "query":
-        result = True
-        with log.warn_on_exception("Failed obtaining file activation dates for files", 
-                                   repr(name1), "and", repr(name2), 
-                                   "from server.   can't determine time order."):
-            info_map = api.get_file_info_map("hst", [name1, name2], fields=["activation_date"])
-            result = info_map[name1]["activation_date"] > info_map[name2]["activation_date"]
     else:
         raise NameComparisonError("Unhandled name comparison case: ", repr((class1, class2)))
     log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
@@ -153,7 +170,7 @@ def crds_basename(name):
         return os.path.basename(name)
 
 def classify_name(name):
-    """Classify filename `name` as "crds", "oldcdbs", or "newcdbs".
+    """Classify filename `name` as "crds", "synphot", "oldcdbs", or "newcdbs".
 
     >>> classify_name("jwst_miri_dark_0057.fits")
     'crds'
@@ -163,7 +180,13 @@ def classify_name(name):
 
     >>> classify_name("07g1700gl_dead.fits")
     'newcdbs'
-
+    
+    >>> classify_name("16n1832tm_tmc.fits")
+    'newsynphot'
+    
+    >>> classify_name("z6n1832tm_tmc.fits")
+    'oldsynphot'
+    
     >>> classify_name("bbbbbb.fits")
     Traceback (most recent call last):
     ...
@@ -173,6 +196,10 @@ def classify_name(name):
         return "crds"
     elif crds_name(name):
         return "crds"
+    elif old_synphot_name(name):
+        return "oldsynphot"
+    elif new_synphot_name(name):
+        return "newsynphot"
     elif old_cdbs_name(name):
         return "oldcdbs"
     elif new_cdbs_name(name):
@@ -185,10 +212,14 @@ def crds_name(name):
     
     >>> crds_name("s7g1700gl_dead.fits")
     False
+    >>> crds_name("1c82030ml_dead.fits")
+    False
     >>> crds_name("hst.pmap")
     True
     >>> crds_name("hst_acs_darkfile_0001.fits")
     True
+    >>> crds_name("16n1832tm_tmc.fits")
+    False
     """
     return name.startswith(tuple(ALL_OBSERVATORIES))
 
@@ -196,13 +227,72 @@ OLD_CDBS = re.compile(config.complete_re(r"[A-Za-z][A-Za-z0-9]{8}_[A-Za-z0-9]{1,
 NEW_CDBS = re.compile(config.complete_re(r"[0-9][A-Za-z0-9]{8}_[A-Za-z0-9]{1,8}\.[A-Za-z0-9]{1,6}"))
 
 def old_cdbs_name(name1):
-    """Return True IFF name1 is and original CDBS-style name."""
+    """Return True IFF name1 is and original CDBS-style name.
+    
+    >>> old_cdbs_name("s7g1700gl_dead.fits")
+    True
+    >>> old_cdbs_name("1c82030ml_dead.fits")
+    False
+    >>> old_cdbs_name("16n1832tm_tmc.fits")
+    False
+    >>> old_cdbs_name("z6n1832tm_tmc.fits")
+    True
+    >>> old_cdbs_name("hst.pmap")
+    False
+    >>> old_cdbs_name("hst_acs_darkfile_0001.fits")
+    False
+    """
     return OLD_CDBS.match(name1) is not None
     
 def new_cdbs_name(name1):
-    """Return True IFF name1 is an extended CDBS-style name."""
-    return NEW_CDBS.match(name1) is not None
+    """Return True IFF name1 is an extended CDBS-style name.
     
+    >>> new_cdbs_name("s7g1700gl_dead.fits")
+    False
+    >>> new_cdbs_name("1c82030ml_dead.fits")
+    True
+    >>> new_cdbs_name("16n1832tm_tmc.fits")
+    True
+    >>> new_cdbs_name("z6n1832tm_tmc.fits")
+    False
+    >>> new_cdbs_name("hst.pmap")
+    False
+    >>> new_cdbs_name("hst_acs_darkfile_0001.fits")
+    False
+    """
+    return NEW_CDBS.match(name1) is not None
+
+NEW_SYNPHOT_RE = re.compile(config.complete_re(r"[0-9][a-zA-Za-z0-9]{7}m_(tmc|tmg|tmt)\.[A-Za-z0-9]{1,6}"))
+OLD_SYNPHOT_RE = re.compile(config.complete_re(r"[A-Za-z][a-zA-Za-z0-9]{7}m_(tmc|tmg|tmt)\.[A-Za-z0-9]{1,6}"))
+
+def synphot_name(name):
+    """Return True IFF `name` is the name of an ETC master table file of some kind.
+    
+    >>> synphot_name("s7g1700gl_dead.fits")
+    False
+    >>> synphot_name("1c82030ml_dead.fits")
+    False
+    >>> synphot_name("16n1832tm_tmc.fits")
+    True
+    >>> synphot_name("16n1832tm_tmt.fits")
+    True
+    >>> synphot_name("16n1832tm_tmg.fits")
+    True
+    >>> synphot_name("hst.pmap")
+    False
+    >>> synphot_name("hst_acs_darkfile_0001.fits")
+    False
+    """
+    return old_synphot_name(name) or new_synphot_name(name)
+
+def new_synphot_name(name):
+    """Return True IFF `name` is the name of an ETC master table file of some kind."""
+    return NEW_SYNPHOT_RE.match(name) is not None
+
+def old_synphot_name(name):
+    """Return True IFF `name` is the name of an ETC master table file of some kind."""
+    return OLD_SYNPHOT_RE.match(name) is not None
+
 def extension_rank(filename):
     """Return a date ranking for `filename` based on extension, lowest numbers are oldest.
     

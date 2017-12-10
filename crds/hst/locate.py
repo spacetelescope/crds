@@ -163,9 +163,9 @@ def get_file_properties(filename):
             result = properties_inside_mapping(filename)
         except Exception:
             result = get_reference_properties(filename)[2:4]
-    assert result[0] in INSTRUMENTS+[""], "Bad instrument " + \
+    assert result[0] in INSTRUMENTS+["","synphot"], "Bad instrument " + \
         repr(result[0]) + " in filename " + repr(filename)
-    assert result[1] in FILEKINDS+[""], "Bad filekind " + \
+    assert result[1] in FILEKINDS+[""]+SYNPHOT_TYPES, "Bad filekind " + \
         repr(result[1]) + " in filename " + repr(filename)
     return result
 
@@ -223,13 +223,14 @@ def decompose_newstyle_name(filename):
 
     return path, observatory, instrument, filekind, serial, ext
 
+SYNPHOT_TYPES = ["tmc", "tmt", "tmt"]
 SYNPHOT_ENDINGS = ("tmc.fits","tmt.fits","tmg.fits")
 
 def decompose_synphot_name(filename):
     """Return filename properties for a SYNPHOT file or raises an assertion error.
 
-    >>> decompose_synphot_name("some/path/11q0123nj_tmg.fits")
-    ('some/path', 'hst', 'synphot', 'tmg', None, '.fits')
+    >>> decompose_synphot_name("some/path/11q0123nm_tmg.fits")
+    ('some/path', 'hst', 'synphot', 'tmg', '11q0123n', '.fits')
 
     """
     assert filename.endswith(SYNPHOT_ENDINGS), \
@@ -238,10 +239,9 @@ def decompose_synphot_name(filename):
     observatory = "hst"
     instrument = "synphot"
     ext = os.path.splitext(filename)[-1]
-    filekind = os.path.splitext(os.path.basename(filename).split("_")[-1])[0]
-    serial = None
-    assert filekind in ["tmt","tmg","tmc"], \
-        "Synphot name decomposition error for " + repr(filename)
+    basename = os.path.basename(filename)
+    filekind = os.path.splitext(basename.split("_")[-1])[0]
+    serial = basename[:-len("_tmt.fits")-1]
     return path, observatory, instrument, filekind, serial, ext
 
 def properties_inside_mapping(filename):
@@ -450,8 +450,12 @@ def ref_properties_from_header(filename):
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "hst")
     instrument = header["INSTRUME"].lower()
-    if instrument in INSTRUMENT_FIXERS:
-        instrument = INSTRUMENT_FIXERS[instrument]
+    instrument = INSTRUMENT_FIXERS.get(instrument, instrument)
+    if instrument == "synphot":
+        filetype = header.get("DBTABLE", "DBTABLE not defined for SYNPHOT file.")
+        if filetype not in ["tmt", "tmg", "tmc"]:
+            raise CrdsError("Invalid SYNPHOT filetype / dbtable:", repr(filetype))
+        return path, "hst", instrument, filetype, serial, ext
     try:
         filetype = header["FILETYPE"].lower()
     except KeyError:
@@ -511,14 +515,14 @@ u=WFPC2, n=NICMOS, m=MULTI, m=SYNPHOT]
     if now is None:
         time.sleep(2)
 
+    timeid = generate_timestamp(now)
+
     if instr == "synphot":
         suffix = "_" + filekind
         instr_char = "m"
     else:
         suffix = "_" + filekind_to_suffix(instr, filekind)
         instr_char = siname.instrument_to_id_char(instr)
-
-    timeid = generate_timestamp(now)
 
     return timeid + instr_char + suffix + extension
 
