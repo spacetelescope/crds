@@ -84,9 +84,8 @@ def dt_synphot_uniqname():
     Compute diffs for two .pmap's:
 
     >>> old_state = test_config.setup()
-    >>> name = UniqnameScript("crds.misc.uniqname --standard --files data/16n1832tm_tmc.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Rewriting '.../data/16n1832tm_tmc.fits' --> '.../data/...m_tmc.fits'
-    >>> os.remove(name)
+    >>> name = UniqnameScript("crds.misc.uniqname --dry-run --files data/16n1832tm_tmc.fits")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Would rename '.../data/16n1832tm_tmc.fits' --> '.../data/...m_tmc.fits'
     >>> test_config.cleanup(old_state)
     """
 
@@ -95,10 +94,11 @@ def dt_cdbs_uniqname():
     Compute diffs for two .pmap's:
 
     >>> old_state = test_config.setup()
-    >>> name = UniqnameScript("crds.misc.uniqname --dry-run --files data/s7g1700gl_dead.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Would rename '.../data/s7g1700gl_dead.fits' --> '.../data/..._dead.fits'
-    >>> name = uniqname.uniqname(name)
-    >>> os.remove(name)
+    >>> name = UniqnameScript("crds.misc.uniqname --standard --files data/s7g1700gl_dead.fits")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Rewriting '.../data/s7g1700gl_dead.fits' --> '.../data/..._dead.fits'
+    >>> name1 = uniqname.uniqname(name)
+    CRDS - INFO -  Rewriting '..._dead.fits' --> '..._dead.fits'
+    >>> os.remove(name1)
     >>> test_config.cleanup(old_state)
     """
 
