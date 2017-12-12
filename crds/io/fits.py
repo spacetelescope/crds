@@ -10,6 +10,8 @@ from __future__ import absolute_import
 # ============================================================================
 
 import contextlib
+import uuid
+import os
 
 from astropy.io import fits
 
@@ -138,4 +140,33 @@ class FitsFile(AbstractFile):
     def setval(self, key, value):
         """FITS version of setval() method."""
         fits.setval(self.filepath, key, value=value)
-
+    
+    @hijack_warnings
+    def add_checksum(self):
+        """Add checksums to `filepath`."""
+        output = "crds-" + str(uuid.uuid4()) + ".fits"
+        with fits_open(self.filepath, do_not_scale_image_data=True) as hdus:
+            for hdu in hdus:
+                fits.append(output, hdu.data, hdu.header, checksum=True)
+        os.remove(self.filepath)
+        os.rename(output, self.filepath)
+    
+    @hijack_warnings
+    def remove_checksum(self):
+        """Remove checksums from `filepath`."""
+        output = "crds-" + str(uuid.uuid4()) + ".fits"
+        with fits_open(self.filepath, checksum=False, do_not_scale_image_data=True) as hdus:
+            for hdu in hdus:
+                hdu.header.pop("CHECKSUM",None)
+                hdu.header.pop("DATASUM", None)
+                fits.append(output, hdu.data, hdu.header, checksum=False)
+        os.remove(self.filepath)
+        os.rename(output, self.filepath)
+    
+    @hijack_warnings
+    def verify_checksum(self):
+        """Verify checksums in `filepath`."""
+        with fits.open(self.filepath, do_not_scale_image_data=True, checksum=True) as hdus:
+            for hdu in hdus:
+                hdu.verify("warn")
+                

@@ -610,8 +610,8 @@ def checksum_duplicate_rmap_case_error():
 
     >>> from crds.refactoring import checksum
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
-    >>> checksum.update_checksums(["data/hst_cos_tdstab_duplicate.rmap"])
-    CRDS - INFO -  Updating checksum for data/hst_cos_tdstab_duplicate.rmap
+    >>> checksum.add_checksum("data/hst_cos_tdstab_duplicate.rmap")
+    CRDS - INFO -  Adding checksum for 'data/hst_cos_tdstab_duplicate.rmap'
     CRDS - ERROR -  Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter
     >>> test_config.cleanup(old_state)
     """

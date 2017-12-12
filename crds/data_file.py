@@ -93,6 +93,21 @@ def setval(filepath, key, value):
         key = key.replace("META_", "META.")
     file_obj = file_factory(filepath)
     file_obj.setval(key, value)
+    
+def add_checksum(filepath):
+    """Add checksums to `filepath`."""
+    file_obj = file_factory(filepath)
+    return file_obj.add_checksum()
+
+def remove_checksum(filepath):
+    """Remove checksums to `filepath`."""
+    file_obj = file_factory(filepath)
+    return file_obj.remove_checksum()
+
+def verify_checksum(filepath):
+    """Verify checksums in `filepath`."""
+    file_obj = file_factory(filepath)
+    return file_obj.verify_checksum()
 
 # ================================================================================================================
 
