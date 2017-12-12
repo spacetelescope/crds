@@ -225,16 +225,16 @@ class AbstractFile(object):
                                    "did not define 'is_this_type()'.")
 
     def add_checksum(self):
-        """Add checksum to`filepath`."""
-        self._unsupported_file_op_error("add_checksum")
+        """Add checksum to`self.filepath`."""
+        raise self._unsupported_file_op_error("add_checksum")
     
     def remove_checksum(self):
-        """Add checksum to`filepath`."""
-        self._unsupported_file_op_error("remove_checksum")
+        """Remove checksum from`self.filepath`."""
+        raise self._unsupported_file_op_error("remove_checksum")
     
     def verify_checksum(self):
-        """Add checksum to`filepath`."""
-        self._unsupported_file_op_error("verify_checksum")
+        """Verify checksum in `self.filepath`."""
+        raise self._unsupported_file_op_error("verify_checksum")
     
     def get_format(self):
         """Return a string describing the structure of file at `filepath`,  intended
