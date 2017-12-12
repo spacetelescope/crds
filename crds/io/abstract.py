@@ -219,11 +219,18 @@ class AbstractFile(object):
         return exceptions.UnsupportedFileOpError(
             "Method", repr(method), "is not supported for file format", repr(self.format))
 
-    @classmethod
-    def is_this_type(cls, filepath):
-        return NotImplementedError("CRDS s/w failure.  Filetype", repr(self.__class__.__name__),
-                                   "did not define 'is_this_type()'.")
-
+    def add_checksum(self):
+        """Add checksum to`self.filepath`."""
+        raise self._unsupported_file_op_error("add_checksum")
+    
+    def remove_checksum(self):
+        """Remove checksum from`self.filepath`."""
+        raise self._unsupported_file_op_error("remove_checksum")
+    
+    def verify_checksum(self):
+        """Verify checksum in `self.filepath`."""
+        raise self._unsupported_file_op_error("verify_checksum")
+    
     def get_format(self):
         """Return a string describing the structure of file at `filepath`,  intended
         for file overview describing generic array structure.
