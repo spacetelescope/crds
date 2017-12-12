@@ -170,16 +170,16 @@ def dt_checksum_script_rmap_verify_missing():
 def dt_checksum_script_unsupported_asdf():
     """
     >>> old_state = test_config.setup()
-    >>> ChecksumScript("crds.refactor.checksum ./valid.asdf")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Adding checksum for './valid.asdf'
-    CRDS - ERROR -  Failed updating checksum for './valid.asdf' : Method 'add_checksum' is not supported for file format 'ASDF'
+    >>> ChecksumScript("crds.refactor.checksum data/valid.asdf")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Adding checksum for 'data/valid.asdf'
+    CRDS - ERROR -  Failed updating checksum for 'data/valid.asdf' : Method 'add_checksum' is not supported for file format 'ASDF'
     1
-    >>> ChecksumScript("crds.refactor.checksum --remove ./valid.asdf")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for './valid.asdf'
+    >>> ChecksumScript("crds.refactor.checksum --remove data/valid.asdf")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Removing checksum for 'data/valid.asdf'
     CRDS - ERROR -  Checksum operation FAILED : Method 'remove_checksum' is not supported for file format 'ASDF'
     1
-    >>> ChecksumScript("crds.refactor.checksum --verify ./valid.asdf")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './valid.asdf'
+    >>> ChecksumScript("crds.refactor.checksum --verify data/valid.asdf")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Verifying checksum for 'data/valid.asdf'
     CRDS - ERROR -  Checksum operation FAILED : Method 'verify_checksum' is not supported for file format 'ASDF'
     1
     >>> test_config.cleanup(old_state)
@@ -188,35 +188,35 @@ def dt_checksum_script_unsupported_asdf():
 def dt_checksum_script_unsupported_json():
     """
     >>> old_state = test_config.setup()
-    >>> ChecksumScript("crds.refactor.checksum ./valid.json")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Adding checksum for './valid.json'
-    CRDS - ERROR -  Failed updating checksum for './valid.json' : Method 'add_checksum' is not supported for file format 'JSON'
+    >>> ChecksumScript("crds.refactor.checksum data/valid.json")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Adding checksum for 'data/valid.json'
+    CRDS - ERROR -  Failed updating checksum for 'data/valid.json' : Method 'add_checksum' is not supported for file format 'JSON'
     1
-    >>> ChecksumScript("crds.refactor.checksum --remove ./valid.json")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for './valid.json'
+    >>> ChecksumScript("crds.refactor.checksum --remove data/valid.json")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Removing checksum for 'data/valid.json'
     CRDS - ERROR -  Checksum operation FAILED : Method 'remove_checksum' is not supported for file format 'JSON'
     1
-    >>> ChecksumScript("crds.refactor.checksum --verify ./valid.json")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './valid.json'
+    >>> ChecksumScript("crds.refactor.checksum --verify data/valid.json")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Verifying checksum for 'data/valid.json'
     CRDS - ERROR -  Checksum operation FAILED : Method 'verify_checksum' is not supported for file format 'JSON'
     1
     >>> test_config.cleanup(old_state)
     """
 
-def dt_checksum_script_unsupported_yaml():
+def dt_checksum_script_unsupported_text():
     """
     >>> old_state = test_config.setup()
-    >>> ChecksumScript("crds.refactor.checksum ./valid.yaml")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Adding checksum for './valid.yaml'
-    CRDS - ERROR -  Failed updating checksum for './valid.yaml' : Method 'add_checksum' is not supported for file format 'YAML'
+    >>> ChecksumScript("crds.refactor.checksum data/opaque_fts.tmp")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Adding checksum for 'data/opaque_fts.tmp'
+    CRDS - ERROR -  Checksum operation FAILED : File 'data/opaque_fts.tmp' does not appear to be a CRDS reference or mapping file.
     1
-    >>> ChecksumScript("crds.refactor.checksum --remove ./valid.yaml")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for './valid.yaml'
-    CRDS - ERROR -  Checksum operation FAILED : Method 'remove_checksum' is not supported for file format 'YAML'
+    >>> ChecksumScript("crds.refactor.checksum --remove ddata/opaque_fts.tmp")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Removing checksum for 'ddata/opaque_fts.tmp'
+    CRDS - ERROR -  Checksum operation FAILED : File 'ddata/opaque_fts.tmp' does not appear to be a CRDS reference or mapping file.
     1
-    >>> ChecksumScript("crds.refactor.checksum --verify ./valid.yaml")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './valid.yaml'
-    CRDS - ERROR -  Checksum operation FAILED : Method 'verify_checksum' is not supported for file format 'YAML'
+    >>> ChecksumScript("crds.refactor.checksum --verify data/opaque_fts.tmp")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  Verifying checksum for 'data/opaque_fts.tmp'
+    CRDS - ERROR -  Checksum operation FAILED : File 'data/opaque_fts.tmp' does not appear to be a CRDS reference or mapping file.
     1
     >>> test_config.cleanup(old_state)
     """
