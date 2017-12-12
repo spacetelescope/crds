@@ -37,7 +37,7 @@ def dt_checksum_script_add():
     CRDS - INFO -  Verifying checksum for './added.fits'
     0
     
-    >> os.remove("added.fits")
+    >>> os.remove("added.fits")
     
     >>> test_config.cleanup(old_state)
     """
