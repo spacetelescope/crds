@@ -1,7 +1,15 @@
-"""This script updates the checksums of all the mapping files passed in as 
-command line parameters:
+"""Originally this script was used to update the checksums in CRDS mapping
+files.   It has been extended so that it is capable of:
 
-% crds checksum  hst.pmap
+no switch  adding / updating FITS checksums  (default, logically "reference" checksums)
+--remove   removing FITS checksums  (mappings not supported)
+--verify   verifying FITS or mapping checksums.
+
+% crds checksum  hst.pmap  hst_acs_0020.imap   hst_acs_darkfile_0057.rmap
+
+% crds checksum ./test.fits
+% crds checksum --remove ./*.fits
+% crds checksum --verify ./*.fits
 
 will rewrite the sha1sum of hst.pmap.   
 """
