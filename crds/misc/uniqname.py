@@ -1,4 +1,5 @@
-"""This module is used to generate unique time based file names."""
+"""This module is used to generate unique time based file names for HST
+calibration and synphot references."""
 
 from __future__ import print_function
 from __future__ import division
@@ -22,15 +23,20 @@ class UniqnameScript(cmdline.Script):
 
     """Command line script for renaming references with official CRDS names."""
 
-    description = """This script is used to rename references with unique official CRDS names."""
+    description = """This script is used to rename references with unique official CRDS names for HST."""
         
     epilog = """This program is based loosely on the CDBS program uniqname modified to support
 enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
 
-The CRDS uniqame is nominally run as follows:
+The CRDS uniqame is nominally run as follows::
 
-    % crds misc.uniqname --files s7g1700gl_dead.fits --brief --standard
+    % crds uniqname --files s7g1700gl_dead.fits --brief --standard
     CRDS - INFO - Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
+
+CRDS uniqname also supports renaming synphot files not otherwise managed by CRDS::
+
+    % crds uniqname --files s7g1700gl_tmt.fits --brief --standard
+    CRDS - INFO - Rewriting 's7g1700gl_tmt.fits' --> 'zc52141pl_tmt.fits'
 
 If -s or --standard is added then routinely used switches are added as a
 predefined bundle.   Initially these are --add-keywords and --verify-file.

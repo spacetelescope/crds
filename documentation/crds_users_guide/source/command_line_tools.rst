@@ -199,7 +199,7 @@ are the 3 main use cases for crds.bestrefs:
   The --files switch can be used to specify a list of FITS dataset files to
   process.  This is used in the HST pipeline in conjunction with
   --update-headers to fill in dataset FITS headers with recommended best
-  references. 
+  references::
 
     % python -m crds.bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
 
@@ -212,7 +212,7 @@ are the 3 main use cases for crds.bestrefs:
   contexts to compare results from.  Reprocessing mode runs by fetching matching
   parameters from the archive database using --instruments or --datasets.  This
   mode is used to recommend reprocessing where the bestrefs differ between old
-  and new contexts.
+  and new contexts::
 
     % python -m crds.bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
 
@@ -236,14 +236,14 @@ are the 3 main use cases for crds.bestrefs:
   a. Regression Capture
 
   This sub-mode captures all parameter sets for an instrument updated with the
-  best refs assigned by --new-context.
+  best refs assigned by --new-context::
 
     %  python -m crds.bestrefs --new-context hst_0002.pmap --instrument acs --update-bestrefs --update-pickle --save-pickle old-regression.json
 
   b. Regression Test
 
   This sub-mode plays back captured datasets comparing captured prior results
-  with the current result.
+  with the current result::
 
     %  python -m crds.bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
 
@@ -321,7 +321,7 @@ to standard out.
 
 If --print-affected is specified, crds.bestrefs will print out the name of any
 file for which at least one update for one reference type was recommended.
-This is essentially a list of files to be reprocessed with new references.
+This is essentially a list of files to be reprocessed with new references::
 
     % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --print-affected
     j8bt05njq_raw.fits
@@ -333,7 +333,7 @@ Update Modes
 ............
 
 crds.bestrefs initially supports one mode for updating the best reference
-recommendations recorded in data files:
+recommendations recorded in data files::
 
     % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --update-bestrefs
 
@@ -363,7 +363,9 @@ Verbosity
 .........
 
 crds.bestrefs has --verbose and --verbosity=N parameters which can increase the
-amount of informational and debug output.
+amount of informational and debug output.  Verbosity ranges from 0..100 where 0
+means "no debug output" and 100 means "all debug output".  50 is the default
+for --verbose.
 
 .........
 Bad Files
@@ -559,7 +561,7 @@ optional arguments::
   
 * Removing Blacklisted or Rejected Files
 
-    crds.sync can be used to remove the files from specific contexts which have been marked as "bad".
+    crds.sync can be used to remove the files from specific contexts which have been marked as "bad"::
           
       % crds sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
     
@@ -669,8 +671,270 @@ crds.list
 ---------
 
 crds.list is a swiss army knife program for dumping various forms of CRDS
-information:
+information.
 
+General categories of information driven by switches include:
+
+0. Overall CRDS configuration
+1. CRDS server file lists
+2. CRDS cache file lists and paths
+3. Cached file contents or headers
+4. CRDS reprocessing dataset ids and parameters
+5. Listing global default and installed pipeline contexts
+6. Resolving context specifiers into literal context names
+
+Many crds list services require setting CRDS_SERVER_URL to a valid CRDS 
+server to provide a source for the headers.
+
+For HST::
+
+	% export CRDS_SERVER_URL=https://hst-crds.stsci.edu
+
+or for JWST::
+
+	% export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+
+0. Configuration information governing the behavior of CRDS for simple
+configurations can be dumped::
+
+	% crds list --status
+	CRDS Version = '7.0.7, bump-version, 7432326'
+	CRDS_MODE = 'auto'
+	CRDS_PATH = '/Users/jmiller/crds_cache_ops'
+	CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
+	Effective Context = 'jwst_0204.pmap'
+	Last Synced = '2016-09-20 08:00:09.115330'
+	Python Executable = '/Users/jmiller/anaconda/bin/python'
+	Python Version = '3.5.2.final.0'
+	Readonly Cache = False
+
+More comprehensive configuration information is also available for advanced
+configurations::
+
+	% crds list --config
+	... lots of info ....
+
+1. Files known by the CRDS server to belong to specified contexts can be listed
+even if the files are not installed in a local CRDS Cache.
+
+The --mappings command recursively evaluates and includes all the sub-mappings,
+i.e. imaps and pmaps, of the specified contexts.
+
+Contexts to list can be specified in a variety of ways:
+
+-- To list the references contained by several contexts::
+
+	% crds list  --references --contexts hst_0001.pmap hst_0002.pmap ...
+	vb41935ij_bia.fits 
+	vb41935kj_bia.fits 
+	...
+
+-- To list the references in a numerical range of contexts::
+
+	% crds list --references --range 1:2 --references
+	vb41935lj_bia.fits 
+	vb41935oj_bia.fits
+	...
+
+-- To list all mappings, even those not referenced by an imap or pmap::
+
+	% crds list --mappings --all
+	hst.pmap 
+	hst_0001.pmap 
+	hst_0002.pmap 
+	hst_acs.imap 
+	hst_acs_0001.imap 
+	hst_acs_0002.imap 
+	hst_acs_atodtab.rmap 
+	...
+
+--references, --mappings, or both can be listed.
+
+2. Locally cached files (files already synced to your computer) can be listed::
+
+	% crds list --cached-mappings --full-path
+	...
+	
+	% crds list --cached-references --full-path
+	...
+
+In both cases adding --full-path prints the path of the file within the CRDS cache.
+
+These are merely simple directory listings which ignore the context specifiers
+and can be grep'ed for finer grained answers.
+
+3. The contents of cached mappings or references (header only) can be printed to stdout like this::
+
+	% crds list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
+	CRDS - INFO - Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
+	CRDS - INFO - Symbolic context 'jwst-nirspec-linearity-edit' resolves to 'jwst_nirspec_linearity_0009.rmap'
+	/cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+	/cache/path/mappings/jwst/jwst_nirspec_linearity_0009.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+
+this prints the contents of the specified rmaps.
+
+The -edit specifier above refers to mappings contained by the default starting point (.pmap) of future
+server submissions.  It tracks on-going submission work that precedes the adoption of a new context
+as the default in use by the pipeline.
+
+crds.list --cat can be applied to references and prints out the reference metadata that CRDS views
+abstractly as the file header.
+
+References need to be catted explicitly by name,  but the list can come from the --references command
+explained above::
+
+	% crds list --cat jwst_nirspec_dark_0036.fits
+	CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
+	File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
+	{'A1_COL_C': '8.9600000e+002',
+	'A1_CONF1': '2.1846000e+004',
+	...
+	}
+
+4. Information about the dataset IDs and parameters used for CRDS reprocessing 
+and regressions can be printed or stored.
+
+ Parameter set IDs can be listed for one or more instruments as follows::
+
+	 % crds list --dataset-ids-for-instruments wfc3...
+	 JCL403010:JCL403ECQ
+	 ... hundreds to hundreds of thousands of IDs as shown above ...
+ 
+ IDs can also be captured to a file using UNIX I/O redirection::
+ 
+	% crds list --dataset-ids-for-instruments wfc3   >wfc3.ids    
+ 
+ IDs for HST are of the form <product>:<exposure> where many exposures feed into 
+ the construction of one product and recalibrating any component exposure suggests 
+ recalibrating the combined product.
+
+ CRDS stores dataset parameters for regression testing as a JSON dictionaries 
+ specifying one set of dataset parameters per line of the file::
+ 
+ 	% crds list --dataset-headers @wfc3.ids --json > wfc3.headers.json
+ 
+ NOTE:  while IDs can be specified directly on the command line,  CRDS has an 
+ @-notation that means "take IDs from this file".
+ 
+ The JSON headers are suitable for running through crds.bestrefs to perform 
+ reprocessing checks or single context reference file coverage checks shown  here::
+ 
+	 % crds bestrefs --load-pickle wfc3.headers.json --dump-unique-errors --stats
+	 ...  errors related to looking up references for these parameter sets ...
+ 
+ The script crds_dataset_capture combines the process of dumping all IDs for an 
+ instrument and dumping their corresponding dataset parameters.  IDs files and
+ header files are placed in a dated regression capture directory::
+ 
+	 % crds_dataset_capture wfc3 acs ...
+	 ... downloads IDs and headers for WFC3, ACS to dated directory ...
+
+ The default multi-line format for dataset parameters is more readable than the 
+ --json form::
+
+	 % crds list --dataset-headers jcl403010 --first-id --minimize-header
+	 CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+	 CRDS - INFO - Dataset pars for 'JCL403010:JCL403ECQ' with respect to 'hst_0462.pmap'
+	 {'APERTURE': 'WFC1',
+	  'ATODCORR': 'OMIT',
+	  'BIASCORR': 'COMPLETE',
+	  'CCDAMP': 'ABCD',
+	  'CCDCHIP': '-999.0',
+	  'CCDGAIN': '2.0',
+	  'CRCORR': 'OMIT',
+	  'DARKCORR': 'COMPLETE',
+	  'DATE-OBS': '2016-02-20',
+	  'DETECTOR': 'WFC',
+	  'DQICORR': 'COMPLETE',
+	  'DRIZCORR': 'COMPLETE',
+	  'FILTER1': 'CLEAR1L',
+	  'FILTER2': 'F814W',
+	  'FLASHCUR': 'LOW',
+	  'FLATCORR': 'COMPLETE',
+	  'FLSHCORR': 'OMIT',
+	  'FW1OFFST': '0.0',
+	  'FW2OFFST': '0.0',
+	  'FWSOFFST': '0.0',
+	  'GLINCORR': 'UNDEFINED',
+	  'INSTRUME': 'ACS',
+	  'LTV1': '0.0',
+	  'LTV2': '0.0',
+	  'NAXIS1': '4144.0',
+	  'NAXIS2': '4136.0',
+	  'OBSTYPE': 'IMAGING',
+	  'PCTECORR': 'UNDEFINED',
+	  'PHOTCORR': 'COMPLETE',
+	  'RPTCORR': 'UNDEFINED',
+	  'SHADCORR': 'OMIT',
+	  'SHUTRPOS': 'A',
+	  'TIME-OBS': '17:32:29.666665',
+	  'XCORNER': '0.0',
+	  'YCORNER': '0.0',
+	  'dataset_id': 'JCL403010:JCL403ECQ'}
+
+Sometimes it's desirable to know the individual exposures CRDS associates with a product id::
+
+	 % crds list --dataset-headers jcl403010 --id-expansions-only
+	 CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+	 JCL403010:JCL403ECQ
+	 JCL403010:JCL403EEQ
+	 JCL403010:JCL403EGQ
+	 JCL403010:JCL403EIQ
+	 JCL403010:JCL403EKQ
+	 JCL403010:JCL403EMQ
+	 JCL403010:JCL403EOQ
+	 JCL403010:JCL403EQQ
+	 JCL403010:JCL403ESQ
+	 JCL403010:JCL403EUQ
+
+5. Information about the default context can be printed.  There are two variations and a subtle distinction::
+
+	% python m crds.list --operational-context
+	jwst_0204.pmap 
+
+lists the context which has been *commanded* as default on the CRDS server.
+
+While::
+
+	% crds list --remote-context jwst-ops-pipeline
+	jwst_0101.pmap
+
+lists the context which is *in actual use* in the associated archive pipeline as reported by
+a cache sync echo.
+
+During the interval between commanding a new default on the CRDS server and syncing the pipeline
+CRDS cache,  the commanded and actual pipeline contexts can differ.
+
+6. Resolving context specifiers
+
+Some CRDS tools, including crds.list and crds.sync, support multiple
+mechanisms for specifying context.  The --resolve-contexts command
+interprets those specifiers into a non-recursive list of literal mapping
+names and prints them out.  --resolve-contexts differs from --mappings
+because it does not implicitly include all sub-mappings of the specified
+contexts::
+
+	% crds list --resolve-contexts --all
+	jwst.pmap
+	jwst_0000.pmap
+	jwst_0001.pmap
+	jwst_0002.pmap
+	jwst_0003.pmap
+	...
+	
+	% crds list --resolve-contexts --last 5
+	jwst_0205.pmap
+	jwst_0206.pmap
+	jwst_0207.pmap
+	jwst_0208.pmap
+	jwst_0209.pmap
+	
+	% crds list --resolve-contexts  --contexts jwst-miri-dark-operational 
+	jwst_miri_dark_0012.rmap
+	
+	% crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
+	jwst_niriss_superbias_0005.rmap
+	
 
 crds.diff
 ---------
@@ -940,6 +1204,138 @@ crds.matches can be invoked in various ways with different output formatting::
     
     % crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
     lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
+
+crds checksum
+-------------
+
+crds uniqname
+-------------
+CRDS uniqname is used to rename references with unique official CRDS names for HST.
+It supports renaming both calibration and synphot reference files with modernized
+HST CDBS-style names.
+
+usage::
+	 crds uniqname
+     [-h] [--files FILES [FILES ...]] [--dry-run] [-a] [-f] [-e] [-s] [-r]
+     [-o OUTPUT_PATH] [-b] [--fits-errors] [-v] [--verbosity VERBOSITY]
+     [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE]
+     [--log-time] [--pdb] [--debug-traps]
+
+optional arguments::
+  -h, --help            show this help message and exit
+  --files FILES [FILES ...]
+                        Files to rename.
+  --dry-run             Print how a file would be renamed without modifying it.
+  -a, --add-checksum    Add FITS checksum.  Without, checksums *removed* if header modified.
+  -f, --add-keywords    When renaming, add FILENAME, ROOTNAME, HISTORY keywords for the generated name.
+  -e, --verify-file     Verify FITS compliance and any checksums before changing each file.
+  -s, --standard        Same as --add-keywords --verify-file,  does not add checksums (add -a).
+  -r, --remove-original
+                        After renaming,  remove the orginal file.
+  -o OUTPUT_PATH, --output-path OUTPUT_PATH
+                        Output renamed files to this directory path.
+  -b, --brief           Produce less output.
+  --fits-errors         When set, treat FITS compliance and checksum errors as fatal exceptions.
+  -v, --verbose         Set log verbosity to True,  nominal debug level.
+  --verbosity VERBOSITY
+                        Set log verbosity to a specific level: 0..100.
+  --dump-cmdline        Dump the command line parameters used to start the script to the log.
+  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  -I, --ignore-cache    Download required files even if they're already in the cache.
+  -V, --version         Print the software version and exit.
+  -J, --jwst            Force observatory to JWST for determining header conventions.
+  -H, --hst             Force observatory to HST for determining header conventions.
+  --stats               Track and print timing statistics.
+  --profile PROFILE     Output profile stats to the specified file.
+  --log-time            Add date/time to log messages.
+  --pdb                 Run under pdb.
+  --debug-traps         Bypass exception error message traps and re-raise exception.
+
+This program is based loosely on the CDBS program uniqname modified to support
+enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
+
+The CRDS uniqame is nominally run as follows::
+
+    % crds uniqname --files s7g1700gl_dead.fits --brief --standard
+    CRDS - INFO - Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
+
+CRDS uniqname also supports renaming synphot files not otherwise managed by CRDS::
+
+    % crds uniqname --files s7g1700gl_tmt.fits --brief --standard
+    CRDS - INFO - Rewriting 's7g1700gl_tmt.fits' --> 'zc52141pl_tmt.fits'
+
+If -s or --standard is added then routinely used switches are added as a
+predefined bundle.   Initially these are --add-keywords and --verify-file.
+
+If --add-checksum is specified,  CRDS uniqname will add FITS checksums to the file.
+If --add-checksum is not specified,  CRDS uniqname WILL REMOVE any existing checksum.
+
+If --verify-file is specified,  CRDS uniqname will check the FITS checksum and validate
+the FITS format of renamed files.
+
+If  --add-keywords is specified CRDS uniqname will add/modify the FILENAME, ROOTNAME,
+and HISTORY to document the renaming.
+
+If --remove-original is specified then the original file is deleted after the renamed
+file has been created and modified as specified (checksums, keywords, etc.)
+
+Renamed files can be output to a different directory using --output-path.
+
+--dry-run can be used to demo renaming by printing what the new name would be.
+
+crds checksum
+-------------
+
+usage: crds checksum
+       [-h] [--remove] [--verify] [-v] [--verbosity VERBOSITY]
+       [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE]
+       [--log-time] [--pdb] [--debug-traps]
+       files [files ...]
+
+Add, remove, or verify checksums in CRDS rules or reference files.
+    
+1. Default operation is to ADD checksums::
+    
+    % crds checksum  *.rmap  
+    
+    % crds checksum  *.fits
+    
+2. Reference files may support REMOVING checksums::
+    
+    % crds checksum --remove *.fits
+    
+NOTE: CRDS mapping / rules files do not support removing checksums.
+    
+3. Checksums can be VERIFIED without attempting to update or remove::
+    
+    % crds checksum --verify  *.rmap
+    
+    % crds checksum --verify *.fits
+    
+Currently only FITS references support checksum operations.
+Checksums can be added or verified on all CRDS mapping types.
+    
+positional arguments:
+  files                 Files to operate on, CRDS rule or reference files.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --remove              Remove checksums when specified.  Invalid for CRDS mappings.
+  --verify              Verify checksums when specified.
+  -v, --verbose         Set log verbosity to True,  nominal debug level.
+  --verbosity VERBOSITY
+                        Set log verbosity to a specific level: 0..100.
+  --dump-cmdline        Dump the command line parameters used to start the script to the log.
+  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  -I, --ignore-cache    Download required files even if they're already in the cache.
+  -V, --version         Print the software version and exit.
+  -J, --jwst            Force observatory to JWST for determining header conventions.
+  -H, --hst             Force observatory to HST for determining header conventions.
+  --stats               Track and print timing statistics.
+  --profile PROFILE     Output profile stats to the specified file.
+  --log-time            Add date/time to log messages.
+  --pdb                 Run under pdb.
+  --debug-traps         Bypass exception error message traps and re-raise exception.
 
 
 safe_bestrefs

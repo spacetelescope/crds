@@ -31,18 +31,18 @@ class CrdsSqlQueryScript(cmdline.Script):
     epilog = """
 * Dumping the table names supported can be done as follows:
 
-% crds misc.sql --list-tables
+crds sql --list-tables
 crds_hst_catalog
 crds_hst_context_history
 
 * Dumping the columns of a table can be done as follows:
 
-% crds misc.sql --list-columns
+crds sql --list-columns
 id, name, blob, state, blacklisted, rejected, observatory, instrument, filekind, type, derived_from, sha1sum, delivery_date, activation_date, useafter_date, change_level, pedigree, reference_file_type, size, uploaded_as, creator_name, deliverer_user, deliverer_email, description, catalog_link, replaced_by_filename, comment, aperture
 
 * Executing a SQL query can be done as follows:
 
-% crds misc.sql "select name, state, pedigree from crds_hst_catalog"
+crds sql "select name, state, pedigree from crds_hst_catalog"
 ('h230851po_pfl.fits', 'operational', 'GROUND')
 ('h230851qo_pfl.fits', 'operational', 'GROUND')
 ('h230851so_pfl.fits', 'operational', 'GROUND')
