@@ -1205,9 +1205,6 @@ crds.matches can be invoked in various ways with different output formatting::
     % crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
     lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
 
-crds checksum
--------------
-
 crds uniqname
 -------------
 CRDS uniqname is used to rename references with unique official CRDS names for HST.
