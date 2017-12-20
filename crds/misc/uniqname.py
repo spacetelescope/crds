@@ -28,12 +28,12 @@ class UniqnameScript(cmdline.Script):
     epilog = """This program is based loosely on the CDBS program uniqname modified to support
 enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
 
-The CRDS uniqame is nominally run as follows:
+The CRDS uniqame is nominally run as follows::
 
     % crds uniqname --files s7g1700gl_dead.fits --brief --standard
     CRDS - INFO - Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
 
-CRDS uniqname also supports renaming synphot files not otherwise managed by CRDS:
+CRDS uniqname also supports renaming synphot files not otherwise managed by CRDS::
 
     % crds uniqname --files s7g1700gl_tmt.fits --brief --standard
     CRDS - INFO - Rewriting 's7g1700gl_tmt.fits' --> 'zc52141pl_tmt.fits'

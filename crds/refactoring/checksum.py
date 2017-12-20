@@ -1,17 +1,17 @@
 """Originally this script was used to update the checksums in CRDS mapping
-files.   It has been extended so that it is capable of:
+files.   It has been extended so that it is capable of handling FITS reference
+file checksums as well::
 
-no switch  adding / updating FITS checksums  (default, logically "reference" checksums)
+    % crds checksum  hst.pmap  hst_acs_0020.imap   hst_acs_darkfile_0057.rmap
+    
+    % crds checksum ./test.fits
+    % crds checksum --remove ./*.fits
+    % crds checksum --verify ./*.fits
+
+no switch  adds / updates FITS or CRDS mapping checksums
 --remove   removing FITS checksums  (mappings not supported)
 --verify   verifying FITS or mapping checksums.
 
-% crds checksum  hst.pmap  hst_acs_0020.imap   hst_acs_darkfile_0057.rmap
-
-% crds checksum ./test.fits
-% crds checksum --remove ./*.fits
-% crds checksum --verify ./*.fits
-
-will rewrite the sha1sum of hst.pmap.   
 """
 from __future__ import print_function
 from __future__ import division
@@ -94,19 +94,19 @@ class ChecksumScript(cmdline.Script):
     description = """
     Add, remove, or verify checksums in CRDS rules or reference files.
     
-    1. Default operation is to ADD checksums:
+    1. Default operation is to ADD checksums::
     
     % crds checksum  *.rmap  
-
+    
     % crds checksum  *.fits
     
-    2. Reference files may support REMOVING checksums:
+    2. Reference files may support REMOVING checksums::
     
     % crds checksum --remove *.fits
     
     NOTE: CRDS mapping / rules files do not support removing checksums.
     
-    3. Checksums can be VERIFIED without attempting to update or remove:
+    3. Checksums can be VERIFIED without attempting to update or remove::
     
     % crds checksum --verify  *.rmap
     

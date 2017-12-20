@@ -37,235 +37,269 @@ and ids used for CRDS reprocessing recommendations.
     """
         
     epilog = """
-    General categories of information driven by switches include:
+General categories of information driven by switches include:
 
-    0. Overall CRDS configuration
-    1. CRDS server file lists
-    2. CRDS cache file lists and paths
-    3. Cached file contents or headers
-    4. CRDS reprocessing dataset ids and parameters
-    5. Listing global default and installed pipeline contexts
-    6. Resolving context specifiers into literal context names
+0. Overall CRDS configuration
+1. CRDS server file lists
+2. CRDS cache file lists and paths
+3. Cached file contents or headers
+4. CRDS reprocessing dataset ids and parameters
+5. Listing global default and installed pipeline contexts
+6. Resolving context specifiers into literal context names
 
-    --------------------------------------------------------------------------
-    0. Configuration information governing the behavior of CRDS for simple
-    configurations can be dumped:
+Many crds list services require setting CRDS_SERVER_URL to a valid CRDS 
+server to provide a source for the headers.
 
-    % crds list --status
-    CRDS Version = '7.0.7, bump-version, 7432326'
-    CRDS_MODE = 'auto'
-    CRDS_PATH = '/Users/jmiller/crds_cache_ops'
-    CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
-    Effective Context = 'jwst_0204.pmap'
-    Last Synced = '2016-09-20 08:00:09.115330'
-    Python Executable = '/Users/jmiller/anaconda/bin/python'
-    Python Version = '3.5.2.final.0'
-    Readonly Cache = False
+For HST::
 
-    More comprehensive configuration information is also available for advanced
-    configurations:
+% export CRDS_SERVER_URL=https://hst-crds.stsci.edu
 
-    % crds list --config
-    ... lots of info ....
+or for JWST::
 
-    --------------------------------------------------------------------------
-   1. Files known by the CRDS server to belong to specified contexts can be listed
-    even if the files are not installed in a local CRDS Cache.
+% export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
 
-    The --mappings command recursively evaluates and includes all the sub-mappings,
-    i.e. imaps and pmaps, of the specified contexts.
+0. Configuration information governing the behavior of CRDS for simple
+configurations can be dumped::
 
-    Contexts to list can be specified in a variety of ways:
+crds list --status
+CRDS Version = '7.0.7, bump-version, 7432326'
+CRDS_MODE = 'auto'
+CRDS_PATH = '/Users/jmiller/crds_cache_ops'
+CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
+Effective Context = 'jwst_0204.pmap'
+Last Synced = '2016-09-20 08:00:09.115330'
+Python Executable = '/Users/jmiller/anaconda/bin/python'
+Python Version = '3.5.2.final.0'
+Readonly Cache = False
 
-    -- To list the references contained by several contexts
-    
-    % crds list  --references --contexts hst_0001.pmap hst_0002.pmap ...
-    vb41935ij_bia.fits 
-    vb41935kj_bia.fits 
-    ...
-    
-    -- To list the references in a numerical range of contexts
+More comprehensive configuration information is also available for advanced
+configurations::
 
-    % crds list --references --range 1:2 --references
-    vb41935lj_bia.fits 
-    vb41935oj_bia.fits
-    ...
+% crds list --config
+... lots of info ....
 
-    -- To list all mappings, even those not referenced by an imap or pmap
-    
-    % crds list --mappings --all
-    hst.pmap 
-    hst_0001.pmap 
-    hst_0002.pmap 
-    hst_acs.imap 
-    hst_acs_0001.imap 
-    hst_acs_0002.imap 
-    hst_acs_atodtab.rmap 
-    ...
+1. Files known by the CRDS server to belong to specified contexts can be listed
+even if the files are not installed in a local CRDS Cache.
 
-    --references, --mappings, or both can be listed.
-    
-    --------------------------------------------------------------------------
-    2. Locally cached files (files already synced to your computer) can be listed:
-    
-    % crds list --cached-mappings --full-path
-    ...
+The --mappings command recursively evaluates and includes all the sub-mappings,
+i.e. imaps and pmaps, of the specified contexts.
 
-    % crds list --cached-references --full-path
-    ...
+Contexts to list can be specified in a variety of ways:
 
-    In both cases adding --full-path prints the path of the file within the CRDS cache.
+-- To list the references contained by several contexts::
 
-    These are merely simple directory listings which ignore the context specifiers
-    and can be grep'ed for finer grained answers.
+% crds list  --references --contexts hst_0001.pmap hst_0002.pmap ...
+vb41935ij_bia.fits 
+vb41935kj_bia.fits 
+...
 
-    --------------------------------------------------------------------------
-    3. The contents of cached mappings or references (header only) can be printed to stdout like this:
+-- To list the references in a numerical range of contexts::
 
-    % crds list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
-    CRDS - INFO - Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
-    CRDS - INFO - Symbolic context 'jwst-nirspec-linearity-edit' resolves to 'jwst_nirspec_linearity_0009.rmap'
-    /cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    /cache/path/mappings/jwst/jwst_nirspec_linearity_0009.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+% crds list --references --range 1:2 --references
+vb41935lj_bia.fits 
+vb41935oj_bia.fits
+...
 
-    this prints the contents of the specified rmaps.
+-- To list all mappings, even those not referenced by an imap or pmap::
 
-    The -edit specifier above refers to mappings contained by the default starting point (.pmap) of future
-    server submissions.  It tracks on-going submission work that precedes the adoption of a new context
-    as the default in use by the pipeline.
+% crds list --mappings --all
+hst.pmap 
+hst_0001.pmap 
+hst_0002.pmap 
+hst_acs.imap 
+hst_acs_0001.imap 
+hst_acs_0002.imap 
+hst_acs_atodtab.rmap 
+...
 
-    crds.list --cat can be applied to references and prints out the reference metadata that CRDS views
-    abstractly as the file header.
+--references, --mappings, or both can be listed.
 
-    References need to be catted explicitly by name,  but the list can come from the --references command
-    explained above:
+2. Locally cached files (files already synced to your computer) can be listed::
 
-    % crds list --cat jwst_nirspec_dark_0036.fits
-    CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
-    ##########################################################################################
-    File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
-    ##########################################################################################
-    {'A1_COL_C': '8.9600000e+002',
-    'A1_CONF1': '2.1846000e+004',
-    ...
-    }
+% crds list --cached-mappings --full-path
+...
 
-   --------------------------------------------------------------------------
-   4. Information about the dataset IDs and their associated parameters used
-   for CRDS reprocessing can be printed:
+% crds list --cached-references --full-path
+...
 
-    % crds list --dataset-headers jcl403010 --first-id --minimize-header
-    CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
-    CRDS - INFO - Dataset pars for 'JCL403010:JCL403ECQ' with respect to 'hst_0462.pmap':
-    {'APERTURE': 'WFC1',
-     'ATODCORR': 'OMIT',
-     'BIASCORR': 'COMPLETE',
-     'CCDAMP': 'ABCD',
-     'CCDCHIP': '-999.0',
-     'CCDGAIN': '2.0',
-     'CRCORR': 'OMIT',
-     'DARKCORR': 'COMPLETE',
-     'DATE-OBS': '2016-02-20',
-     'DETECTOR': 'WFC',
-     'DQICORR': 'COMPLETE',
-     'DRIZCORR': 'COMPLETE',
-     'FILTER1': 'CLEAR1L',
-     'FILTER2': 'F814W',
-     'FLASHCUR': 'LOW',
-     'FLATCORR': 'COMPLETE',
-     'FLSHCORR': 'OMIT',
-     'FW1OFFST': '0.0',
-     'FW2OFFST': '0.0',
-     'FWSOFFST': '0.0',
-     'GLINCORR': 'UNDEFINED',
-     'INSTRUME': 'ACS',
-     'LTV1': '0.0',
-     'LTV2': '0.0',
-     'NAXIS1': '4144.0',
-     'NAXIS2': '4136.0',
-     'OBSTYPE': 'IMAGING',
-     'PCTECORR': 'UNDEFINED',
-     'PHOTCORR': 'COMPLETE',
-     'RPTCORR': 'UNDEFINED',
-     'SHADCORR': 'OMIT',
-     'SHUTRPOS': 'A',
-     'TIME-OBS': '17:32:29.666665',
-     'XCORNER': '0.0',
-     'YCORNER': '0.0',
-     'dataset_id': 'JCL403010:JCL403ECQ'}
+In both cases adding --full-path prints the path of the file within the CRDS cache.
 
-    Sometimes it's desirable to know the individual exposures CRDS associates with a product id:
+These are merely simple directory listings which ignore the context specifiers
+and can be grep'ed for finer grained answers.
 
-    % crds list --dataset-headers jcl403010 --id-expansions-only
-    CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
-    JCL403010:JCL403ECQ
-    JCL403010:JCL403EEQ
-    JCL403010:JCL403EGQ
-    JCL403010:JCL403EIQ
-    JCL403010:JCL403EKQ
-    JCL403010:JCL403EMQ
-    JCL403010:JCL403EOQ
-    JCL403010:JCL403EQQ
-    JCL403010:JCL403ESQ
-    JCL403010:JCL403EUQ
+3. The contents of cached mappings or references (header only) can be printed to stdout like this::
 
-    Headers available can possibly vary by CRDS context and will be dumped for
-    every specified or implicit context.  Generally the default context is
-    sufficient.  Often all exposures of an association have identical
-    parameters but CRDS is designed so that this does not have to be the case.
+% crds list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
+CRDS - INFO - Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
+CRDS - INFO - Symbolic context 'jwst-nirspec-linearity-edit' resolves to 'jwst_nirspec_linearity_0009.rmap'
+/cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+/cache/path/mappings/jwst/jwst_nirspec_linearity_0009.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
 
-    These dataset header services require setting CRDS_SERVER_URL to a valid CRDS server to
-    provide a source for the headers.
+this prints the contents of the specified rmaps.
 
-   --------------------------------------------------------------------------
-    5. Information about the default context can be printed.  There are two variations and a subtle distinction:
+The -edit specifier above refers to mappings contained by the default starting point (.pmap) of future
+server submissions.  It tracks on-going submission work that precedes the adoption of a new context
+as the default in use by the pipeline.
 
-    % python m crds.list --operational-context
-    jwst_0204.pmap 
+crds.list --cat can be applied to references and prints out the reference metadata that CRDS views
+abstractly as the file header.
 
-    lists the context which has been *commanded* as default on the CRDS server.
+References need to be catted explicitly by name,  but the list can come from the --references command
+explained above::
 
-    While:
+% crds list --cat jwst_nirspec_dark_0036.fits
+CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
+##########################################################################################
+File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
+##########################################################################################
+{'A1_COL_C': '8.9600000e+002',
+'A1_CONF1': '2.1846000e+004',
+...
+}
 
-    % crds list --remote-context jwst-ops-pipeline
-    jwst_0101.pmap
-    
-    lists the context which is *in actual use* in the associated archive pipeline as reported by
-    a cache sync echo.
+4. Information about the dataset IDs and parameters used for CRDS reprocessing 
+and regressions can be printed or stored.
 
-    During the interval between commanding a new default on the CRDS server and syncing the pipeline
-    CRDS cache,  the commanded and actual pipeline contexts can differ.
+ Parameter set IDs can be listed for one or more instruments as follows::
 
-   --------------------------------------------------------------------------
-    6. Resolving context specifiers
+ % crds list --dataset-ids-for-instruments wfc3...
+ JCL403010:JCL403ECQ
+ ... hundreds to hundreds of thousands of IDs as shown above ...
+ 
+ IDs can also be captured to a file using UNIX I/O redirection::
+ 
+ % crds list --dataset-ids-for-instruments wfc3   >wfc3.ids    
+ 
+ IDs for HST are of the form <product>:<exposure> where many exposures feed into 
+ the construction of one product and recalibrating any component exposure suggests 
+ recalibrating the combined product.
 
-    Some CRDS tools, including crds.list and crds.sync, support multiple
-    mechanisms for specifying context.  The --resolve-contexts command
-    interprets those specifiers into a non-recursive list of literal mapping
-    names and prints them out.  --resolve-contexts differs from --mappings
-    because it does not implicitly include all sub-mappings of the specified
-    contexts.
+ CRDS stores dataset parameters for regression testing as a JSON dictionaries 
+ specifying one set of dataset parameters per line of the file::
+ 
+ % crds list --dataset-headers @wfc3.ids --json > wfc3.headers.json
+ 
+ NOTE:  while IDs can be specified directly on the command line,  CRDS has an 
+ @-notation that means "take IDs from this file".
+ 
+ The JSON headers are suitable for running through crds.bestrefs to perform 
+ reprocessing checks or single context reference file coverage checks shown  here::
+ 
+ % crds bestrefs --load-pickle wfc3.headers.json --dump-unique-errors --stats
+ ...  errors related to looking up references for these parameter sets ...
+ 
+ The script crds_dataset_capture combines the process of dumping all IDs for an 
+ instrument and dumping their corresponding dataset parameters.  IDs files and
+ header files are placed in a dated regression capture directory::
+ 
+ % crds_dataset_capture wfc3 acs ...
+ ... downloads IDs and headers for WFC3, ACS to dated directory ...
 
-    % crds list --resolve-contexts --all
-    jwst.pmap
-    jwst_0000.pmap
-    jwst_0001.pmap
-    jwst_0002.pmap
-    jwst_0003.pmap
-    ...
+ The default multi-line format for dataset parameters is more readable than the 
+ --json form::
 
-    % crds list --resolve-contexts --last 5
-    jwst_0205.pmap
-    jwst_0206.pmap
-    jwst_0207.pmap
-    jwst_0208.pmap
-    jwst_0209.pmap
+ % crds list --dataset-headers jcl403010 --first-id --minimize-header
+ CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+ CRDS - INFO - Dataset pars for 'JCL403010:JCL403ECQ' with respect to 'hst_0462.pmap'
+ {'APERTURE': 'WFC1',
+  'ATODCORR': 'OMIT',
+  'BIASCORR': 'COMPLETE',
+  'CCDAMP': 'ABCD',
+  'CCDCHIP': '-999.0',
+  'CCDGAIN': '2.0',
+  'CRCORR': 'OMIT',
+  'DARKCORR': 'COMPLETE',
+  'DATE-OBS': '2016-02-20',
+  'DETECTOR': 'WFC',
+  'DQICORR': 'COMPLETE',
+  'DRIZCORR': 'COMPLETE',
+  'FILTER1': 'CLEAR1L',
+  'FILTER2': 'F814W',
+  'FLASHCUR': 'LOW',
+  'FLATCORR': 'COMPLETE',
+  'FLSHCORR': 'OMIT',
+  'FW1OFFST': '0.0',
+  'FW2OFFST': '0.0',
+  'FWSOFFST': '0.0',
+  'GLINCORR': 'UNDEFINED',
+  'INSTRUME': 'ACS',
+  'LTV1': '0.0',
+  'LTV2': '0.0',
+  'NAXIS1': '4144.0',
+  'NAXIS2': '4136.0',
+  'OBSTYPE': 'IMAGING',
+  'PCTECORR': 'UNDEFINED',
+  'PHOTCORR': 'COMPLETE',
+  'RPTCORR': 'UNDEFINED',
+  'SHADCORR': 'OMIT',
+  'SHUTRPOS': 'A',
+  'TIME-OBS': '17:32:29.666665',
+  'XCORNER': '0.0',
+  'YCORNER': '0.0',
+  'dataset_id': 'JCL403010:JCL403ECQ'}
 
-    % crds list --resolve-contexts  --contexts jwst-miri-dark-operational 
-    jwst_miri_dark_0012.rmap
+ Sometimes it's desirable to know the individual exposures CRDS associates with a product id::
 
-    % crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
-    jwst_niriss_superbias_0005.rmap
+ % crds list --dataset-headers jcl403010 --id-expansions-only
+ CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+ JCL403010:JCL403ECQ
+ JCL403010:JCL403EEQ
+ JCL403010:JCL403EGQ
+ JCL403010:JCL403EIQ
+ JCL403010:JCL403EKQ
+ JCL403010:JCL403EMQ
+ JCL403010:JCL403EOQ
+ JCL403010:JCL403EQQ
+ JCL403010:JCL403ESQ
+ JCL403010:JCL403EUQ
+
+5. Information about the default context can be printed.  There are two variations and a subtle distinction::
+
+% python m crds.list --operational-context
+jwst_0204.pmap 
+
+lists the context which has been *commanded* as default on the CRDS server.
+
+While::
+
+% crds list --remote-context jwst-ops-pipeline
+jwst_0101.pmap
+
+lists the context which is *in actual use* in the associated archive pipeline as reported by
+a cache sync echo.
+
+During the interval between commanding a new default on the CRDS server and syncing the pipeline
+CRDS cache,  the commanded and actual pipeline contexts can differ.
+
+6. Resolving context specifiers
+
+Some CRDS tools, including crds.list and crds.sync, support multiple
+mechanisms for specifying context.  The --resolve-contexts command
+interprets those specifiers into a non-recursive list of literal mapping
+names and prints them out.  --resolve-contexts differs from --mappings
+because it does not implicitly include all sub-mappings of the specified
+contexts::
+
+% crds list --resolve-contexts --all
+jwst.pmap
+jwst_0000.pmap
+jwst_0001.pmap
+jwst_0002.pmap
+jwst_0003.pmap
+...
+
+% crds list --resolve-contexts --last 5
+jwst_0205.pmap
+jwst_0206.pmap
+jwst_0207.pmap
+jwst_0208.pmap
+jwst_0209.pmap
+
+% crds list --resolve-contexts  --contexts jwst-miri-dark-operational 
+jwst_miri_dark_0012.rmap
+
+% crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
+jwst_niriss_superbias_0005.rmap
     """
     def __init__(self, *args, **keys):
         super(ListScript, self).__init__(*args, **keys)

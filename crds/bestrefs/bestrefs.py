@@ -73,7 +73,7 @@ are the 3 main use cases for crds.bestrefs:
   The --files switch can be used to specify a list of FITS dataset files to
   process.  This is used in the HST pipeline in conjunction with
   --update-headers to fill in dataset FITS headers with recommended best
-  references. 
+  references::
 
     % crds bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
 
@@ -86,7 +86,7 @@ are the 3 main use cases for crds.bestrefs:
   contexts to compare results from.  Reprocessing mode runs by fetching matching
   parameters from the archive database using --instruments or --datasets.  This
   mode is used to recommend reprocessing where the bestrefs differ between old
-  and new contexts.
+  and new contexts::
 
     % crds bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
 
@@ -110,14 +110,14 @@ are the 3 main use cases for crds.bestrefs:
   a. Regression Capture
 
   This sub-mode captures all parameter sets for an instrument updated with the
-  best refs assigned by --new-context.
+  best refs assigned by --new-context::
 
     %  crds bestrefs --new-context hst_0002.pmap --instrument acs --update-bestrefs --update-pickle --save-pickle old-regression.json
 
   b. Regression Test
 
   This sub-mode plays back captured datasets comparing captured prior results
-  with the current result.
+  with the current result::
 
     %  crds bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
 
@@ -195,7 +195,7 @@ to standard out.
 
 If --print-affected is specified, crds.bestrefs will print out the name of any
 file for which at least one update for one reference type was recommended.
-This is essentially a list of files to be reprocessed with new references.
+This is essentially a list of files to be reprocessed with new references::
 
     % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
         --compare-source-bestrefs --print-affected
@@ -208,7 +208,7 @@ Update Modes
 ............
 
 crds.bestrefs initially supports one mode for updating the best reference
-recommendations recorded in data files:
+recommendations recorded in data files::
 
     % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
         --compare-source-bestrefs --update-bestrefs
@@ -239,7 +239,9 @@ Verbosity
 .........
 
 crds.bestrefs has --verbose and --verbosity=N parameters which can increase the
-amount of informational and debug output.
+amount of informational and debug output.  Verbosity ranges from 0..100 where 0
+means "no debug output" and 100 means "all debug output".  50 is the default
+for --verbose.
 
 .........
 Bad Files
