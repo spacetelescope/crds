@@ -79,7 +79,8 @@ class HeaderExpander(object):
         log.verbose("Unexpanded header", self.required_header(header))
         for (var, expr), (expansion, compiled) in self.mapping.items():
             if var not in required_parkeys:
-                log.verbose("Skipping expansion for unused", repr(var))
+                log.verbose("Skipping expansion for unused parkey", repr(var),
+                            "of", repr(expansion))
                 continue
             try:
                 applicable = eval(compiled, {}, header)  # compiled code is from static file.
