@@ -64,17 +64,30 @@ small personal cache of rules and references supporting only the datasets you
 care about:
 
 For **HST**, to fetch the references required to process some FITS datasets::
-	
-	$ export CRDS_SERVER_URL=https://hst-crds.stsci.edu   # or similar
-	$ export CRDS_PATH=${HOME}/crds_cache
-	$ crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
+    
+    $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu   # or similar
+    $ export CRDS_PATH=${HOME}/crds_cache
+    $ crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
 
 For **JWST**, CRDS is directly integrated with the calibration step code and
 will automatically download rules and references.  The only extra setup needed
 is to define CRDS_PATH and CRDS_SERVER_URL appropriately prior to *strun*::
-	
-	$ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu   # or similar
-	$ export CRDS_PATH=${HOME}/crds_cache
-	$ strun calwebb_sloper.cfg dataset.fits
+    
+    $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu   # or similar
+    $ export CRDS_PATH=${HOME}/crds_cache
+    $ strun calwebb_sloper.cfg dataset.fits
 
+
+Overriding the Default Context
+------------------------------
+
+It's possible to use past or future/experimental CRDS contexts rather than
+the pipeline's default operational context as follows for HST::
+
+    $ crds bestrefs --files dataset*.fits --update-bestrefs --new-context hst_0001.pmap
+   
+or as by setting an environment variable for JWST::
+
+    $ export CRDS_CONTEXT=jwst_0001.pmap
+    $ strun calwebb_sloper.cfg dataset.fits
 

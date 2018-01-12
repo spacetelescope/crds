@@ -371,7 +371,7 @@ than errors as the default.
             log.info("No comparison context or source comparison requested.")
 
         if self.args.files and not self.args.update_bestrefs:
-            log.info("No file header updates requested;  dry run.")
+            log.info("No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.")
 
         self.drop_ids = [self.normalize_id(dataset) for dataset in self.args.drop_ids]
         
