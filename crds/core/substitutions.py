@@ -68,12 +68,14 @@ class HeaderExpander(object):
                 self.mapping[(var, expr)] = (replacement, compile(expr, expansion_file, "eval"))  # compiled code is from static file.
         self._required_keys = self.required_keys()
 
-    def expand(self, header, required_parkeys):
+    def expand(self, header, required_parkeys=None):
         """Given a reference matching `header`,  evaluate all the expansion rules with respect
         to it and return a modified copy which include substitutions.
         """
         header = dict(header)
         expanded = dict(header)
+        if required_parkeys is None:
+            required_parkeys = header.keys()
         log.verbose("Unexpanded header", self.required_header(header))
         for (var, expr), (expansion, compiled) in self.mapping.items():
             if var not in required_parkeys:
