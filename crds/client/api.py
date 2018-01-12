@@ -780,16 +780,17 @@ def _get_cache_filelist_and_report_errors(bestrefs):
         elif isinstance(refname, python23.string_types):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
-                    log.verbose("Reference type", repr(filetype),
+                    log.verbose("Reference type", srepr(filetype),
                                 "NOT FOUND.  Skipping reference caching/download.")
                 else:
                     last_error = CrdsLookupError("Error determining best reference for",
-                                                 repr(str(filetype)), " = ", str(refname)[len("NOT FOUND"):])
+                                                 srepr(filetype), " = ", str(refname)[len("NOT FOUND"):])
                     log.error(str(last_error))
             else:
+                log.verbose("Reference type", srepr(filetype), "defined as", srepr(refname))
                 wanted.append(refname)
         else:
-            last_error = CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
+            last_error = CrdsLookupError("Unhandled bestrefs return value type for " + srepr(filetype))
             log.error(str(last_error))
     if last_error is not None:
         raise last_error
