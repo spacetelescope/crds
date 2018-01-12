@@ -1,5 +1,5 @@
 """This module supports conditional substitutions on reference file header parameters
-at reference file submission time.  It's principle function is to expand wildcards into
+at reference file submission time.  It's principle function is to expand wild cards into
 explicit matching patterns in the CRDS rmaps.
 
 CRDS defines a substitutions file with a dictionary of this form:
@@ -68,14 +68,20 @@ class HeaderExpander(object):
                 self.mapping[(var, expr)] = (replacement, compile(expr, expansion_file, "eval"))  # compiled code is from static file.
         self._required_keys = self.required_keys()
 
-    def expand(self, header):
+    def expand(self, header, required_parkeys=None):
         """Given a reference matching `header`,  evaluate all the expansion rules with respect
         to it and return a modified copy which include substitutions.
         """
         header = dict(header)
         expanded = dict(header)
+        if required_parkeys is None:
+            required_parkeys = header.keys()
         log.verbose("Unexpanded header", self.required_header(header))
         for (var, expr), (expansion, compiled) in self.mapping.items():
+            if var not in required_parkeys:
+                log.verbose("Skipping expansion for unused parkey", repr(var),
+                            "of", repr(expansion))
+                continue
             try:
                 applicable = eval(compiled, {}, header)  # compiled code is from static file.
             except Exception as exc:
@@ -83,7 +89,7 @@ class HeaderExpander(object):
                             "failed for", repr(str(exc)))
                 continue
             if applicable:
-                log.verbose("Exapanding", repr(expr), "yields", 
+                log.verbose("Expanding", repr(expr), "yields", 
                             var + "=" + repr(expansion))
                 expanded[var] = expansion
             else:
@@ -138,7 +144,7 @@ class ReferenceHeaderExpanders(dict):
     def expand_wildcards(self, rmapping, header):
         """Transform header values according to expansion rules."""
         try:
-            header = self[rmapping.instrument].expand(header)
+            header = self[rmapping.instrument].expand(header, rmapping.get_required_parkeys())
         except KeyError:
             header = dict(header)
         # log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
