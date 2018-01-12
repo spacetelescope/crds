@@ -89,5 +89,5 @@ the pipeline's default operational context as follows for HST::
 or as by setting an environment variable for JWST::
 
     $ export CRDS_CONTEXT=jwst_0001.pmap
-
+    $ strun calwebb_sloper.cfg dataset.fits
 
