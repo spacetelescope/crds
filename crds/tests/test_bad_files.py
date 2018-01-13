@@ -106,7 +106,7 @@ def dt_bad_references_bestrefs_script_error():
 
     >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits")()
     CRDS - INFO - No comparison context or source comparison requested.
-    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO - ===> Processing data/j8btxxx_raw_bad.fits
     CRDS - ERROR - instrument='ACS' type='PFLTFILE' data='data/j8btxxx_raw_bad.fits' ::  File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
     CRDS - INFO - 1 errors
@@ -127,7 +127,7 @@ def dt_bad_references_bestrefs_script_warning():
 
     >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits --allow-bad-references")() # doctest: +ELLIPSIS
     CRDS - INFO - No comparison context or source comparison requested.
-    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO - ===> Processing data/j8btxxx_raw_bad.fits
     CRDS - WARNING - For data/j8btxxx_raw_bad.fits ACS pfltfile File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
     CRDS - INFO - 0 errors
@@ -146,7 +146,7 @@ def dt_bad_references_bestrefs_script_deprecated():
     
     >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits")() # doctest: +ELLIPSIS
     CRDS - INFO - No comparison context or source comparison requested.
-    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO - ===> Processing data/j8btxxx_raw_bad.fits
     CRDS - ERROR - instrument='ACS' type='PFLTFILE' data='data/j8btxxx_raw_bad.fits' ::  File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
     CRDS - INFO - 1 errors
