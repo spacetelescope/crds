@@ -101,7 +101,7 @@ def dt_bestrefs_3_files():
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
     CRDS - INFO - No comparison context or source comparison requested.
-    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
     CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
     CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
@@ -120,7 +120,7 @@ def dt_bestrefs_compare_source_files():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs")()
-    CRDS - INFO -  No file header updates requested;  dry run.
+    CRDS - INFO -  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO -  ===> Processing data/j8bt05njq_raw.fits
     CRDS - INFO -  instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
     CRDS - INFO -  instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
@@ -158,7 +158,7 @@ def dt_bestrefs_3_files_default_context_from_server():
     
     >>> BestrefsScript(argv="bestrefs.py --new-context=hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
     CRDS - INFO - No comparison context or source comparison requested.
-    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
     CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
     CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
@@ -178,7 +178,7 @@ def dt_bestrefs_broken_dataset_file():
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt05njq_raw_broke.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
     CRDS - INFO - No comparison context or source comparison requested.
-    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
     CRDS - INFO - ===> Processing data/j8bt05njq_raw_broke.fits
     CRDS - ERROR - instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D']
@@ -240,7 +240,7 @@ def dt_bestrefs_context_to_context():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
-    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
     CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
     CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
     CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
