@@ -84,6 +84,7 @@ HERE = os.path.dirname(__file__) or "."
 
 SYSTEM_CRDSCFG_B7_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.yaml")
 SYSTEM_CRDSCFG_B7_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.yaml")
+SYSTEM_CRDSCFG_B7_1_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.1.yaml")
 
 # --------------------------------------------------------------------------------------
 
@@ -181,8 +182,10 @@ def _get_config_refpath(context, cal_ver):
     # and for B7 and earlier.
     if cal_ver < '0.7.7':
         refpath = SYSTEM_CRDSCFG_B7_PATH
-    else:
+    elif cal_ver < '0.9.0':
         refpath = SYSTEM_CRDSCFG_B7_1_PATH
+    else:
+        refpath = SYSTEM_CRDSCFG_B7_1_1_PATH        
     try:  # Use a normal try/except because exceptions are expected.
         header = {
             "META.INSTRUMENT.NAME" : "SYSTEM", 
