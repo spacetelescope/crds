@@ -36,7 +36,7 @@ server using cron_sync.
 
 The commanded default can be obtained using the CRDS client library as follows::
 
-   >>> from CRDS import client
+   >>> from crds import client
    >>> client.get_default_context('jwst')
   'jwst_0101.pmap'
 
@@ -59,7 +59,7 @@ mode.
 
 The actual default context for a pipeline can be obtained as follows::
 
-   >>> from CRDS import client
+   >>> from crds import client
    >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
   'jwst_0101.pmap'
   
