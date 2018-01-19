@@ -36,7 +36,7 @@ server using cron_sync.
 
 The commanded default can be obtained using the CRDS client library as follows::
 
-   >>> from CRDS import client
+   >>> from crds import client
    >>> client.get_default_context('jwst')
   'jwst_0101.pmap'
 
@@ -59,7 +59,7 @@ mode.
 
 The actual default context for a pipeline can be obtained as follows::
 
-   >>> from CRDS import client
+   >>> from crds import client
    >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
   'jwst_0101.pmap'
   
@@ -115,7 +115,8 @@ Single File Metadata
 
 Return a dictionary of CRDS catalog information about `filename`.  For instance::
 
- >>> get_file_info("jwst", "jwst_miri_flat_0023.fits")
+ >>> from crds import client
+ >>> client.get_file_info("jwst", "jwst_miri_flat_0023.fits")
  {'activation_date': '2014-09-25 18:30:27',
   'aperture': 'none',
   'blacklisted': 'false',
@@ -146,11 +147,41 @@ Multiple File Metadata
 
 **get_file_info_map(observatory, files=None, fields=None)**
 
-get_file_info_map() is a multi-file version of get_info_map() whihch returns
+get_file_info_map() is a multi-file version of get_info_map() which returns
 the information for several files with one call.  If `files` is not specified
-then get_file_info_map() returns info for all files.
+then get_file_info_map() returns info for all files::
 
-Return the info::
+ >>> from crds import client
+ >>> client.get_file_info_map("jwst")
+ {'jwst.pmap': {'activation_date': '2012-07-31 00:00:00',
+  'aperture': 'none',
+  'blacklisted': 'false',
+  'change_level': 'severe',
+  'comment': 'none',
+  'creator_name': 'todd miller',
+  'deliverer_user': 'crds',
+  'delivery_date': '2014-03-26 08:49:23',
+  'derived_from': 'created by hand 07-31-2012',
+  'description': 'initial mass file import',
+  'filekind': '',
+  'history': 'none',
+  'instrument': '',
+  'name': 'jwst.pmap',
+  'observatory': 'jwst',
+  'pedigree': '',
+  'reference_file_type': '',
+  'rejected': 'false',
+  'replaced_by_filename': '',
+  'sha1sum': 'caf080abe09236165885f383045c59e8957a80ce',
+  'size': '392',
+  'state': 'archived',
+  'type': 'mapping',
+  'uploaded_as': 'jwst.pmap',
+  'useafter_date': '2012-07-31 00:00:00'},
+  ...
+ }
+
+Returns the info::
     
     { filename : { info, ... }, ... } 
 
