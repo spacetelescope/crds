@@ -504,12 +504,20 @@ class ExpressionValidator(Validator):
             return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))
+        for key in header:
+            if header[key] != "UNDEFINED":
+                continue
+            delimited_key = r"[^A-Za-z0-9_\.]" + key + r"[^A-Za-z0-9_\.]"
+            if re.search(delimited_key, self._expr):
+                log.verbose_warning(
+                    "Skipping ", repr(self._expr), "because", repr(key), "is 'UNDEFINED'", verbosity=10)
+                return True
         try:
             satisfied = eval(self._expr_code, header, dict(globals()))
         except Exception as exc:
-            raise RequiredConditionError("Failed checking condition", repr(self._expr), ":", str(exc))
+            raise RequiredConditionError("Failed checking constraint", repr(self._expr), ":", str(exc))
         if not satisfied:
-            raise RequiredConditionError("Condition", str(self._expr), "is not satisfied.")
+            raise RequiredConditionError("Constraint", str(self._expr), "is not satisfied.")
         return satisfied
 # ---------------------------------------------------------------------------
 
