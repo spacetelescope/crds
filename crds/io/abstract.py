@@ -43,13 +43,15 @@ def hijack_warnings(func):
         with warnings.catch_warnings():
             old_showwarning = warnings.showwarning
             warnings.showwarning = hijacked_showwarning
-            warnings.filterwarnings("always", r".*", UserWarning, r".*jwst.*")
             warnings.simplefilter("always", AstropyUserWarning)
-            # warnings.filterwarnings("error", r".*sum verification failed.*", AstropyUserWarning, r".*astropy.io.fits.*")
-            if not config.ALLOW_SCHEMA_VIOLATIONS:
-                warnings.filterwarnings("error", r".*is not one of.*", UserWarning, r".*jwst.*")
-            # warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*crds.data_file.*")
-            # warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*astropy.io.fits.convenience.*")
+            try:
+                from jwst.datamodels.properties import ValidationWarning
+            except:
+                pass
+            else:
+                warnings.filterwarnings("always", r".*", ValidationWarning, r".*jwst.*")
+                if not config.ALLOW_SCHEMA_VIOLATIONS:
+                    warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, r".*jwst.*")
             try:
                 result = func(*args, **keys)
             finally:

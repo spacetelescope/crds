@@ -584,10 +584,11 @@ def certify_jwst_bad_fits():
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'PIXAR_SR' : Missing required keyword 'PIXAR_SR'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : jwst.datamodels.fits_support : 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']Failed validating 'enum' in schema:    {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',     'description': 'Detector name.',     'enum': ['NRCA1',              'NRCA2',              'NRCA3',              'NRCA4',              'NRCALONG',              'NRCB1',              'NRCB2',              'NRCB3',              'NRCB4',              'NRCBLONG',              'NRS1',              'NRS2',              'ANY',              'MIRIMAGE',              'MIRIFULONG',              'MIRIFUSHORT',              'NIS',              'GUIDER1',              'GUIDER2',              'N/A'],     'fits_keyword': 'DETECTOR',     'title': 'Name of detector used to acquire the data',     'type': 'string'}On instance:    'FOO'
-    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: In data/niriss_ref_photom_bad.fits
-      Invalid values: DETECTOR
+    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
     <BLANKLINE>
+    -ignore-
+    On instance:
+        'FOO'
     >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
     """
