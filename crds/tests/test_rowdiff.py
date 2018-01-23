@@ -87,9 +87,9 @@ Row change
              'yes', 'yes', 2988, -2779.0352, 'coquille'
             -'yes', 'no', 5748, 6357.9727, 'ferly'
             +'yes', 'no', -1, 6357.9727, 'ferly'
-             'yes', 'maybe', 9735, -9132.5322, 'misreliance'
+             'yes', 'maybe', 9735, -9132.532, 'misreliance'
              'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.0254, 'readmittance'
+             'no', 'no', 8989, 9870.025, 'readmittance'
     <BLANKLINE>
 
 Row removal
@@ -110,10 +110,10 @@ Row removal
     <BLANKLINE>
              'yes', 'yes', 2988, -2779.0352, 'coquille'
             -'yes', 'no', 5748, 6357.9727, 'ferly'
-            -'yes', 'maybe', 9735, -9132.5322, 'misreliance'
+            -'yes', 'maybe', 9735, -9132.532, 'misreliance'
             -'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.0254, 'readmittance'
-            -'no', 'maybe', 3537, -8615.0332, 'anacatadidymus'
+             'no', 'no', 8989, 9870.025, 'readmittance'
+            -'no', 'maybe', 3537, -8615.033, 'anacatadidymus'
             -'maybe', 'yes', 1763, -2442.9683, 'monochromat'
             -'maybe', 'no', 8023, 4665.564, 'ranarium'
              'maybe', 'maybe', 7347, 1705.5876, 'Dode'
@@ -137,10 +137,10 @@ Row addition
     <BLANKLINE>
              'yes', 'yes', 2988, -2779.0352, 'coquille'
             +'yes', 'no', 5748, 6357.9727, 'ferly'
-            +'yes', 'maybe', 9735, -9132.5322, 'misreliance'
+            +'yes', 'maybe', 9735, -9132.532, 'misreliance'
             +'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.0254, 'readmittance'
-            +'no', 'maybe', 3537, -8615.0332, 'anacatadidymus'
+             'no', 'no', 8989, 9870.025, 'readmittance'
+            +'no', 'maybe', 3537, -8615.033, 'anacatadidymus'
             +'maybe', 'yes', 1763, -2442.9683, 'monochromat'
             +'maybe', 'no', 8023, 4665.564, 'ranarium'
              'maybe', 'maybe', 7347, 1705.5876, 'Dode'
@@ -168,11 +168,10 @@ Test of switch ignore-fields
              2988, -2779.0352, 'coquille'
             -5748, 6357.9727, 'ferly'
             +-1, 6357.9727, 'ferly'
-             9735, -9132.5322, 'misreliance'
+             9735, -9132.532, 'misreliance'
              425, -2689.2646, 'ogeed'
-             8989, 9870.0254, 'readmittance'
+             8989, 9870.025, 'readmittance'
     <BLANKLINE>
-
 
 Test of switch fields
     >>> case = RowDiffScript(argv="rowdiff.py --fields=modeup data/test-source.fits data/test-change-row1-valueLeft.fits")
@@ -233,12 +232,12 @@ Mode test: No mode changes, but change in rows selected
             From Table A:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-       yes       no      5748    6357.97   ferly
+       yes       no      5748  6357.9727   ferly
     <BLANKLINE>
             To Table B:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-       yes       no        -1    6357.97   ferly
+       yes       no        -1  6357.9727   ferly
     <BLANKLINE>
 
 Mode test: removed modes
@@ -297,12 +296,12 @@ Mode test: duplicate modes
             From Table A:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-        no      yes       425   -2689.26   ogeed
+        no      yes       425 -2689.2646   ogeed
     <BLANKLINE>
             To Table B:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-        no      yes        -1   -2689.26   ogeed
+        no      yes        -1 -2689.2646   ogeed
     <BLANKLINE>
 
 CLEANUP
