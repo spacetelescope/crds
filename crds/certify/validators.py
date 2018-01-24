@@ -504,7 +504,7 @@ class ExpressionValidator(Validator):
             return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))
-        for key in header:
+        for key in sorted(header):
             if header[key] != "UNDEFINED":
                 continue
             delimited_key = r"[^A-Za-z0-9_\.]" + key + r"[^A-Za-z0-9_\.]"

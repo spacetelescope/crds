@@ -900,10 +900,13 @@ For more information on the checks being performed,  use --verbose or --verbosit
             if self.args.comparison_context is None and not self.args.comparison_reference:
                 log.verbose("Defaulting comparison context to latest operational CRDS context.")
                 self.args.comparison_context = self.default_context
+        elif self.args.comparison_context is None and self.args.deep:
+            log.verbose("Defaulting comparison context to latest operational CRDS context because of --deep.")
+            self.args.comparison_context = self.default_context
         elif self.args.comparison_context in [None, "none", "None", "NONE"]:
             log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
             self.args.comparison_context = None
-            
+
         if self.args.comparison_reference:
             comparison_reference = config.locate_reference(self.args.comparison_reference, self.observatory)
         else:
