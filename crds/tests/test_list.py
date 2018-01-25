@@ -592,6 +592,33 @@ def dt_list_cat_mappings():
             '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
         }),
     })
+    --------------------------------------------------------------------------------
+    Catalog Info:
+    ................................................................................
+    {'activation_date': '2014-05-15 15:31:54',
+     'aperture': 'none',
+     'blacklisted': 'false',
+     'change_level': 'severe',
+     'comment': 'none',
+     'creator_name': 'todd miller',
+     'delivery_date': '2014-05-11 08:14:02',
+     'derived_from': 'generated from cdbs database 2014-05-09 23:24:57.840119',
+     'description': 'rebaselined hst rmaps as 250-series for opus 2014.2',
+     'filekind': 'deadtab',
+     'history': 'none',
+     'instrument': 'cos',
+     'name': 'hst_cos_deadtab_0250.rmap',
+     'observatory': 'hst',
+     'pedigree': '',
+     'reference_file_type': '',
+     'rejected': 'false',
+     'replaced_by_filename': '',
+     'sha1sum': '41cbdf620d41586fbc3de3e26d14d14eb42cc244',
+     'size': '711',
+     'state': 'operational',
+     'type': 'mapping',
+     'uploaded_as': 'hst_cos_deadtab_0250.rmap',
+     'useafter_date': '2050-01-01 00:00:00'}
 
     >>> test_config.cleanup(old_state)
     """
