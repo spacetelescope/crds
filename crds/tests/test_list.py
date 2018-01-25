@@ -567,7 +567,7 @@ def dt_list_cat_mappings():
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00")() # doctest: +ELLIPSIS
     ################################################################################
-    File: /Users/jmiller/crds-cache-default-test/mappings/hst/hst_cos_deadtab_0250.rmap
+    File: .../mappings/hst/hst_cos_deadtab_0250.rmap
     --------------------------------------------------------------------------------
     header = {
         'derived_from' : 'generated from CDBS database 2014-05-09 23:24:57.840119',
