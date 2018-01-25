@@ -12,6 +12,7 @@ import os.path
 import sys
 from collections import OrderedDict
 import json
+import pprint
 
 # ============================================================================
 
@@ -304,7 +305,8 @@ jwst_niriss_superbias_0005.rmap
     def __init__(self, *args, **keys):
         super(ListScript, self).__init__(*args, **keys)
         self.show_context_resolution = False
-    
+        self._file_info = {}
+        
     def add_args(self):
         """Add switches unique to crds.list."""
 
@@ -331,7 +333,7 @@ jwst_niriss_superbias_0005.rmap
             help="print out only the first exposure ID (header or expanded) associated with a particular product ID.")
         self.add_argument("--minimize-headers", action="store_true", dest="minimize_headers",
             help="print out only header parameters required by a particular CRDS context.")
-        self.add_argument("--json-headers", action="store_true", dest="json_headers",
+        self.add_argument("--json", action="store_true", dest="json",
             help="print out header parameters in JSON format suited for crds.bestrefs and grepping.")
 
         self.add_argument("--config", action="store_true", dest="config",
@@ -443,6 +445,12 @@ jwst_niriss_superbias_0005.rmap
         references = self.get_context_references() if self.args.list_references else []        
         catted_files = self.get_words(self.args.cat) + mappings + references
 
+        try:
+            self._file_info = api.get_file_info_map(
+                self.observatory, files=[os.path.basename(filename) for filename in catted_files])
+        except Exception:
+            log.verbose_warning("Failed retrieving CRDS server catalog information.  May need to set CRDS_SERVER_URL.")
+
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
             with log.error_on_exception("Failed dumping:", repr(name)):
@@ -456,11 +464,14 @@ jwst_niriss_superbias_0005.rmap
         if config.is_reference(path):
             self._cat_header(path)
             if path.endswith(".fits"):
-                self._cat_banner("Fits Info:", delim="-")
+                self._cat_banner("Fits Info:", delim="-", bottom_delim=".")
                 fits.info(path)
                 self._cat_array_properties(path)
         else:
             self._cat_text(path)
+        if self._file_info:
+            self._cat_banner("Catalog Info:", delim="-", bottom_delim=".")
+            self._cat_catalog_info(path)        
 
     def _cat_banner(self, *args, **keys):
         """Print a banner for --cat for `name` and return the filepath of `name`."""
@@ -480,7 +491,8 @@ jwst_niriss_superbias_0005.rmap
                 with log.warn_on_exception("Can't load array properties for HDU[" + str(i) +"]"):
                     if i > 0:
                         extname = hdu.header["EXTNAME"]
-                        self._cat_banner("CRDS Array Info [" + repr(extname) + "]:", delim="-")
+                        self._cat_banner("CRDS Array Info [" + repr(extname) + "]:",
+                                         delim="-", bottom_delim=".")
                         props = data_file.get_array_properties(path, hdu.header["EXTNAME"])
                         props = { prop:value for (prop,value) in props.items() if value is not None }
                         print(log.PP(props))
@@ -505,6 +517,15 @@ jwst_niriss_superbias_0005.rmap
             header2 = header
         self._print_lines(path, str(log.PP(header2)).splitlines())
         config.ALLOW_SCHEMA_VIOLATIONS.set(old)
+
+    def _cat_catalog_info(self, path):
+        """Dump out all the info contained in the CRDS server file catlog."""
+        try:
+            info = self._file_info[os.path.basename(path)]
+            info.pop("deliverer_user")
+            pprint.pprint(info)
+        except KeyError:
+            print("Server catalog info for", repr(path), "not available.")
 
     def _print_lines(self, path, lines):
         """Print `lines` to stdout,  optionally prefixing each line with `path`."""
@@ -580,7 +601,7 @@ jwst_niriss_superbias_0005.rmap
         header2.pop("REFTYPE", None)
         header2["dataset_id"] = returned_id
         header2["CRDS_CTX"] = context
-        if self.args.json_headers:
+        if self.args.json:
             json_header = { returned_id : header }
             print(json.dumps(json_header))
         else:
