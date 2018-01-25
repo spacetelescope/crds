@@ -348,6 +348,8 @@ jwst_niriss_superbias_0005.rmap
             help="limited list of keywords to be catted from reference headers.")
         self.add_argument("--add-filenames", action="store_true",
             help="prefix each line of a cat'ed file with the filename.")
+        self.add_argument("--no-arrays", action="store_true",
+            help="Don't --cat array properties that are slow to compute. Use for large files.")
 
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
             help="print the name of the operational context on the central CRDS server.")
@@ -462,11 +464,7 @@ jwst_niriss_superbias_0005.rmap
         """Print out information on a single reference or mapping at `path`."""
         self._cat_banner("File:", os.path.abspath(path), delim="#", bottom_delim="-")
         if config.is_reference(path):
-            self._cat_header(path)
-            if path.endswith(".fits"):
-                self._cat_banner("Fits Info:", delim="-", bottom_delim=".")
-                fits.info(path)
-                self._cat_array_properties(path)
+            self._cat_reference(path)
         else:
             self._cat_text(path)
         if self._file_info:
@@ -482,6 +480,15 @@ jwst_niriss_superbias_0005.rmap
         print(*args)
         if bottom_delim:
             print(bottom_delim*80)
+        
+    def _cat_reference(self, path):
+        """Print information on any reference type at `path`."""
+        self._cat_header(path)
+        if path.endswith(".fits"):
+            self._cat_banner("Fits Info:", delim="-", bottom_delim=".")
+            fits.info(path)
+            if not self.args.no_arrays:
+                self._cat_array_properties(path)
         
     def _cat_array_properties(self, path):
         """Print out the CRDS interpretation of every array in `path`,  currently FITS only."""
