@@ -236,6 +236,17 @@ class CrdsCfgManager(object):
                     "determined by", srepr(os.path.basename(self._refpath)),
                     "are", srepr(pipelines))
         return pipelines
+    
+def scan_exp_type_coverage():
+    """Verify that there is some get_reftypes() response for all available exp_types."""
+    from . import schema as crds_schema
+    exp_types = crds_schema.get_exptypes()
+    for exp_type in exp_types:
+        if exp_type in ["ANY","N/A"]:
+            continue
+        with log.warn_on_exception("failed determining reftypes for", repr(exp_type)):
+            reftypes = get_reftypes(exp_type)
+            log.verbose("Reftypes for", repr(exp_type), "=", repr(reftypes))
 
 def test():
     """Run the module doctests."""
