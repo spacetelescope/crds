@@ -73,6 +73,12 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
     log.verbose("Header of", repr(filepath), "=", log.PP(header), verbosity=90)
     return header
 
+def clear_header_cache():
+    """Flush the header cache,  nominally to recover storage taken by array attributes
+    brought in for certify.
+    """
+    get_free_header.cache.clear()
+
 # ================================================================================================================
 
 # @hijack_warnings

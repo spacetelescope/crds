@@ -728,6 +728,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
 
     finally:
         log.set_exception_trap(old_flag)
+        data_file.clear_header_cache()
         gc.collect()
 
 def get_certifier_class(original_name, filepath):
