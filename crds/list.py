@@ -12,7 +12,6 @@ import os.path
 import sys
 from collections import OrderedDict
 import json
-import pprint
 
 # ============================================================================
 
@@ -21,7 +20,7 @@ from astropy.io import fits
 # ============================================================================
 
 import crds
-from crds.core import config, log, python23, rmap, heavy_client, cmdline
+from crds.core import config, log, python23, rmap, heavy_client, cmdline, utils
 from crds.core import crds_cache_locking
 from crds import data_file
 
@@ -486,7 +485,7 @@ jwst_niriss_superbias_0005.rmap
         self._cat_header(path)
         if path.endswith(".fits"):
             self._cat_banner("Fits Info:", delim="-", bottom_delim=".")
-            fits.info(path)
+            self._print_lines(path, _fits_info_lines(path))
             if not self.args.no_arrays:
                 self._cat_array_properties(path)
         
@@ -502,7 +501,7 @@ jwst_niriss_superbias_0005.rmap
                                          delim="-", bottom_delim=".")
                         props = data_file.get_array_properties(path, hdu.header["EXTNAME"])
                         props = { prop:value for (prop,value) in props.items() if value is not None }
-                        print(log.PP(props))
+                        self._print_lines(path, _pp_lines(props))
                 i += 1
 
     def _cat_text(self, path):
@@ -522,7 +521,7 @@ jwst_niriss_superbias_0005.rmap
                         header2[keyword] = header[keyword]
         else:
             header2 = header
-        self._print_lines(path, str(log.PP(header2)).splitlines())
+        self._print_lines(path, _pp_lines(header2))
         config.ALLOW_SCHEMA_VIOLATIONS.set(old)
 
     def _cat_catalog_info(self, path):
@@ -530,7 +529,7 @@ jwst_niriss_superbias_0005.rmap
         try:
             info = self._file_info[os.path.basename(path)]
             info.pop("deliverer_user")
-            pprint.pprint(info)
+            self._print_lines(path, _pp_lines(info))
         except KeyError:
             print("Server catalog info for", repr(path), "not available.")
 
@@ -538,7 +537,7 @@ jwst_niriss_superbias_0005.rmap
         """Print `lines` to stdout,  optionally prefixing each line with `path`."""
         for line in lines:
             if self.args.add_filenames:
-                print(path + ":", line.rstrip())
+                print(os.path.basename(path) + ":", line.rstrip())
             else:
                 print(line.rstrip())
 
@@ -754,6 +753,19 @@ def _print_list(files):
     """Print `files` one file per line."""
     for filename in files:
         print(filename)
+
+def _fits_info_lines(path):
+    """Return the output of fits.info() as a list of line strings"""
+    return _captured_fits_info.outputs(path).splitlines()
+
+@utils.capture_output
+def _captured_fits_info(path):
+    """Return fits info as a string."""
+    fits.info(path)
+
+def _pp_lines(obj):
+    """Pretty print `obj` and return the resulting text as a list of lines."""
+    return str(log.PP(obj)).splitlines()
 
 if __name__ == "__main__":
     sys.exit(ListScript()())
