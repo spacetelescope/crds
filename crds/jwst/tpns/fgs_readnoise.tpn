@@ -2,7 +2,7 @@ include nir_subarray.tpn
 
 include nir_sci_array.tpn
 
-BUNIT    H   C    R   DN
+BUNIT    H   C    W   DN,ADU
 
 SCI    A    X    R   (len(SCI_ARRAY.SHAPE)==2)
 
