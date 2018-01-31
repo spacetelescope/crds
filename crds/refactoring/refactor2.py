@@ -308,7 +308,7 @@ def apply_rmap_fixers(rmapping, new_filename, fixers, *args, **keys):
 
 # ============================================================================
 
-class RefactorScript(cmdline.Script):
+class RefactorScript2(cmdline.Script):
     """Command line script for modifying .rmap files."""
 
     description = """
@@ -644,5 +644,5 @@ class RefactorScript(cmdline.Script):
         self.rmap_apply(insert_rmap_references, categorized=categorized)
             
 if __name__ == "__main__":
-    sys.exit(RefactorScript()())
+    sys.exit(RefactorScript2()())
 
