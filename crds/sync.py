@@ -319,24 +319,31 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.save_pickles:
             self.pickle_contexts(self.contexts)
 
-        if self.args.verify_context_change:
-            old_context = heavy_client.load_server_info(self.observatory).operational_context
-
-        if not log.errors() or self.args.force_config_update:
-            heavy_client.update_config_info(self.observatory)
-        else:
-            log.warning("Errors occurred during sync,  skipping CRDS cache config and context update.")
-
-        if self.args.verify_context_change:
-            self.verify_context_change(old_context)
-
-        if self.args.push_context:
-            self.push_context()
+        self.update_context()
             
         self.report_stats()
         log.standard_status()
         return log.errors()
     # ------------------------------------------------------------------------------------------
+    
+    def update_context(self):
+        """Update the CRDS operational context in the cache.  Handle pipeline-specific
+        targeted features of (a) verifying a context switch as actually recorded in
+        the local CRDS cache and (b) echoing/pushing the pipeline context back up to the
+        CRDS server for tracking using an id/authorization key.
+
+        If errors occurred during the sync and --force_config_update is not set,
+        """
+        if not log.errors() or self.args.force_config_update:
+            if self.args.verify_context_change:
+                old_context = heavy_client.load_server_info(self.observatory).operational_context
+            heavy_client.update_config_info(self.observatory)
+            if self.args.verify_context_change:
+                self.verify_context_change(old_context)
+            if self.args.push_context:
+                self.push_context()
+        else:
+            log.warning("Errors occurred during sync,  skipping CRDS cache config and context update.")
 
     def clear_pickles(self):
         """Remove all pickles."""
