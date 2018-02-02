@@ -873,48 +873,22 @@ For more information on the checks being performed,  use --verbose or --verbosit
         if self.args.allow_schema_violations:
             config.ALLOW_SCHEMA_VIOLATIONS.set(True)
 
-        # String spellings of "none" are from command line,  None is the default which means "use operational context".
-        assert (self.args.comparison_context in [None, "none", "NONE", "None"]) or config.is_mapping_spec(self.args.comparison_context), \
-            "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
-
-        assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
-            "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
-            
-        if self.args.comparison_context and self.args.sync_files:
-            resolved_context = self.resolve_context(self.args.comparison_context)
-            self.sync_files([resolved_context])
-        if self.args.comparison_reference and self.args.sync_files:
-            self.sync_files([self.args.comparison_reference])
-            
+        self._sync_comparison_files()
+        
         if not self.args.dont_recurse_mappings:
             all_files = self.mapping_closure(self.files)
         else:
             all_files = set(self.files)
             
-        if not self.are_all_references(all_files) and not self.are_all_mappings(all_files):
-            if self.args.comparison_context is None and not self.args.comparison_reference:
-                log.info("Mixing references and mappings in one certify run skips any default comparison checks.")
-
-        if self.are_all_references(all_files):
-            # Change original default behavior of None to default operational context,  for references.
-            # For mappings / older contexts the default tends to be the wrong thing,  hence references only.
-            if self.args.comparison_context is None and not self.args.comparison_reference:
-                log.verbose("Defaulting comparison context to latest operational CRDS context.")
-                self.args.comparison_context = self.default_context
-        elif self.args.comparison_context is None and self.args.deep:
-            log.verbose("Defaulting comparison context to latest operational CRDS context because of --deep.")
-            self.args.comparison_context = self.default_context
-        elif self.args.comparison_context in [None, "none", "None", "NONE"]:
-            log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
-            self.args.comparison_context = None
-
+        comparison_context = self._get_comparison_context(all_files)
+        
         if self.args.comparison_reference:
             comparison_reference = config.locate_reference(self.args.comparison_reference, self.observatory)
         else:
             comparison_reference = None
             
         certify_files(sorted(all_files), 
-                      context=self.resolve_context(self.args.comparison_context),
+                      context=self.resolve_context(comparison_context),
                       comparison_reference=comparison_reference,
                       compare_old_reference=self.args.comparison_context or self.args.comparison_reference,
                       dump_provenance=self.args.dump_provenance, 
@@ -926,6 +900,53 @@ For more information on the checks being performed,  use --verbose or --verbosit
     
         self.dump_unique_errors()
         return log.errors()
+    
+    def _sync_comparison_files(self):
+        """Handle and --comparison-context or --comparison-reference switches,  resolving any symbolic names
+        like 'jwst-edit' and  syncing the comparison files to the local cache if --sync-files is specified.
+        """
+        # String spellings of "none" are from command line,  None is the default which means "use operational context".
+        assert (self.args.comparison_context in [None, "none", "NONE", "None"]) or config.is_mapping_spec(self.args.comparison_context), \
+            "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
+        assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
+            "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
+        if self.args.sync_files:    
+            if self.args.comparison_context:
+                resolved_context = self.resolve_context(self.args.comparison_context)
+                self.sync_files([resolved_context])
+            if self.args.comparison_reference:
+                self.sync_files([self.args.comparison_reference])
+    
+    def _get_comparison_context(self, all_files):
+        """Based on `all_files`,  --comparison-context, and --comparison-reference.
+        
+        Return any value for comparison_context (possibly defaulted to ops context) or None.
+        """
+        if self.args.comparison_context is None:  # no switch specified
+            comparison_context = self._get_default_comparison_context(all_files)
+        elif self.args.comparison_context.lower() == "none":    # switch specifies "none"
+            log.info("Comparison context explicitly specified as 'none',  no --comparison-context will be used.")
+            comparison_context = None
+        else:  # an explicit filename
+            comparison_context = self.args.comparison_context
+        return comparison_context
+    
+    def _get_default_comparison_context(self, all_files):
+        """Determine any reasonable commparison context when --comparison-context is not specified."""
+        if not self.args.comparison_reference:
+            if self.are_all_references(all_files):
+                log.info("Certifying only references,  defaulting --comparison-context to operational context.")
+                comparison_context = self.default_context
+            elif self.args.deep:
+                log.info("Certifying mappings with --deep,  defaulting --comparison-context to operational context.")
+                comparison_context = self.default_context
+            else:
+                log.info("Certification includes mappings but is not --deep, no --comparison-context is defined.")
+                comparison_context = None
+        else:
+            log.info("Certifying with --comparison-reference, no default --comparison-context defined.")
+            comparison_context = None
+        return comparison_context
     
     def log_and_track_error(self, filename, *args, **keys):
         """Override log_and_track_error() to compute instrument, filekind automatically."""

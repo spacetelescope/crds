@@ -265,7 +265,7 @@ def certify_missing_keyword():
 def certify_recursive():
     """
     >>> TestCertifyScript("crds.certify hst_cos.imap --exist --dont-parse")() # doctest: +ELLIPSIS
-    CRDS - INFO - No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.
+    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
@@ -348,6 +348,7 @@ def certify_table_comparison_context():
 def certify_table_comparison_reference():
     """
     >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-reference data/y9j16159l_hv.fits")()
+    CRDS - INFO -  Certifying with --comparison-reference, no default --comparison-context defined.
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
     CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
@@ -370,13 +371,14 @@ def certify_table_comparison_reference():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  10 warnings
-    CRDS - INFO -  6 infos
+    CRDS - INFO -  7 infos
     0
     """
 
 def certify_comparison_context_none_all_references():
     """
     >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-context None")()
+    CRDS - INFO -  Comparison context explicitly specified as 'none',  no --comparison-context will be used.
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
     CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
@@ -386,14 +388,14 @@ def certify_comparison_context_none_all_references():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
-    CRDS - INFO -  6 infos
+    CRDS - INFO -  7 infos
     0
     """
 
 def certify_comparison_context_none_all_mappings():
     """
     >>> TestCertifyScript("crds.certify hst_cos_deadtab.rmap --comparison-context None")() # doctest: +ELLIPSIS
-    CRDS - INFO - No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.
+    CRDS - INFO -  Comparison context explicitly specified as 'none',  no --comparison-context will be used.
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_deadtab.rmap' (1/1) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
