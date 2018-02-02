@@ -20,10 +20,15 @@ from collections import Counter, defaultdict
 import datetime
 import ast
 import gc
-
-# from crds import data_file,  import deferred until required
+import json
 
 # ===================================================================
+
+# import yaml
+
+# ===================================================================
+
+# from crds import data_file,  import deferred until required
 
 from . import log, config, pysh
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
@@ -1022,6 +1027,72 @@ def get_reference_paths(observatory):
     locate = get_locator_module(observatory)
     return sorted({locate.locate_dir(instrument) for instrument in pkg.INSTRUMENTS})
 
+# ===================================================================
+
+def param_combinations(key_values):
+    """Recursively combine the value lists that appear in a keyword values dict
+    into dictionaries describing combinations of simple values.
+
+    More directly, it reduces a dict describing valid keyword values to
+    CRDS bestrefs header dicts:
+
+    { valid keyword values dict... } -->
+        [ bestrefs_header1, bestrefs_header2, ...]
+
+    or in more detail:
+
+    { keyword1 : [values_for_keyword1, ...], ...}  -->
+        [{ keyword1 : simple_value_for_keyword1, ...}, ...]
+    """
+    if isinstance(key_values, dict):
+        key_values = list(key_values.items())
+    if key_values:
+        combs = []
+        key, values = key_values[0]
+        for subcomb in param_combinations(key_values[1:]):
+            if len(values):
+                for value in values:
+                    comb = dict(subcomb)
+                    comb[key] = value
+                    combs.append(comb)
+            else:
+                combs.append(subcomb)
+        return combs
+    else:
+        return [{}]
+
+def write_combs_json(outpath, combs):
+    """Write out a list of header dictionaries in JSON format
+    suitable for CRDS bestrefs --load-pickles,  inventing "case"
+    names for each combination.
+    """
+    with open(outpath, "w+") as outfile:
+        for i, comb in enumerate(combs):
+            case = { "CASE_" + str(i) : comb }
+            outfile.write(json.dumps(case) + "\n")
+
+def yaml_pars_to_json_bestrefs(yaml_filename, json_filename=None):
+    """Given an input file describing parameter values that need
+    to be covered,  convert the coverage specification into 
+    discrete parameter combinations (nominally bestrefs headers)
+    and write them out in JSON format suitable for bestrefs.
+
+    META.INSTRUMENT.NAME:
+        [ NIRCAM ]
+    
+    META.EXPOSURE.READPATT: 
+        [DEEP8, DEEP2, MEDIUM8, MEDIUM2, SHALLOW4, SHALLOW2,
+        BRIGHT2, BRIGHT1,RAPID]
+    """
+    import yaml
+    if json_filename is None:
+        json_filename = os.path.splitext(yaml_filename)[0] + ".json"
+    with open(yaml_filename) as yaml_file:
+        pars = yaml.load(yaml_file)
+    combs = param_combinations(pars)
+    write_combs_json(json_filename, combs)
+
+# ===================================================================
 
 def fix_json_strings(source_json):
     """Squash unicode in nested json object `source_json`."""
