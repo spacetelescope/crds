@@ -27,18 +27,18 @@ Default On Site CRDS_PATH
 
 By default,   CRDS behaves as if you set your environment like this::
 
-	$ export CRDS_PATH=/grp/crds/cache
-	
+    $ export CRDS_PATH=/grp/crds/cache
+    
 */grp/crds/cache* is on the Central Store and should be accessible to all users.  It
 is a readonly cache containing all rule and reference files associated with 
 all CRDS projects,  now HST + JWST.   
 
 While it is configuration free and self-maintaining, limitations of the default cache
 include:
-	
-	1. A need for a direct connection to the STScI internal network
-	2. Weak performance when accessed by VPN over the Internet
-	3. Immutable files not well suited for experimentation
+    
+    1. A need for a direct connection to the STScI internal network
+    2. Weak performance when accessed by VPN over the Internet
+    3. Immutable files not well suited for experimentation
 
 User Local CRDS_PATH
 ....................
@@ -65,8 +65,8 @@ provided they have access to an up-to-date CRDS cache.
 
 By **default** CRDS behaves as if you set::
 
-	$ export CRDS_SERVER_URL=https://crds-serverless-mode.stsci.edu
-	
+    $ export CRDS_SERVER_URL=https://crds-serverless-mode.stsci.edu
+    
 Serverless mode limits CRDS to basic functions (bestrefs) but requires no server connection
 once the supporting CRDS cache has been synced.
 
@@ -132,7 +132,7 @@ versions of CRDS will not reflect ongoing type changes.  The test server
 Certify Files function should generally reflect the most up-to-date knowledge
 CRDS has about ongoing type changes.  To see how new reference files stack up
 with changing CRDS code, try submitting the files to Certify Files on the test
-server or ask what the status is on crds_team@stsci.edu.
+server or ask what the status is on redcat@stsci.edu.
 
 **NOTE:** Without VPN or port forwarding, the test servers are not usable offsite.
 
@@ -232,12 +232,12 @@ Single Shell Locking
 By default,  CRDS uses Python's built in multiprocessing locks which are robust and suitable for
 running multiprocesses within a single shell or terminal window::
 
-	$ crds list --status
-	CRDS Version = '7.2.0, 7.2.0, 139bbcb'
-	...
-	Cache Locking = 'enabled, multiprocessing'
-	...
-	Readonly Cache = False
+    $ crds list --status
+    CRDS Version = '7.2.0, 7.2.0, 139bbcb'
+    ...
+    Cache Locking = 'enabled, multiprocessing'
+    ...
+    Readonly Cache = False
 
 However,  this default CRDS cache locking is not suitable for running calibrations in multiple
 terminal windows or for pipeline use.
@@ -248,19 +248,19 @@ File Based Locking
 Since Python's default multiprocessing locks cannot support multiple process trees or terminal windows,  
 CRDS also supports file based locking by setting appropriate configuration variables::
 
-	$ export CRDS_LOCKING_MODE=filelock
+    $ export CRDS_LOCKING_MODE=filelock
     $ crds list --status
-	CRDS Version = '7.2.0, 7.2.0, 139bbcb'
-	...
-	Cache Locking = 'enabled, filelock'
-	...
-	Readonly Cache = False
-	
+    CRDS Version = '7.2.0, 7.2.0, 139bbcb'
+    ...
+    Cache Locking = 'enabled, filelock'
+    ...
+    Readonly Cache = False
+    
 File based locking is not used by default for several reasons::
 
-	1. They introduce a dependency on a 3rd party package.
-	2. File locks created on network or other virtualized file systems may be unreliable.
-	3. File lock behavior is OS dependent.
+    1. They introduce a dependency on a 3rd party package.
+    2. File locks created on network or other virtualized file systems may be unreliable.
+    3. File lock behavior is OS dependent.
     
 Restrictions on Locking
 .......................
