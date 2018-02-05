@@ -25,6 +25,9 @@ To sync best references and rules for specific dataset ids:
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
+# ============================================================================
+
 import sys
 import os
 import os.path
@@ -260,10 +263,52 @@ class SyncScript(cmdline.ContextsScript):
     def main(self):
         """Synchronize files."""
 
+        # clear any mutliprocessing locks associated with the CRDS cache.
         if self.args.clear_locks:
             crds_cache_locking.clear_cache_locks()
             return log.errors()
+
+        self.handle_misc_switches()   # simple side effects only
         
+        # if explicitly requested,  or the cache is suspect or being ignored,  clear
+        # cached context pickles.
+        if self.args.clear_pickles or self.args.ignore_cache or self.args.repair_files:
+            self.clear_pickles()
+
+        # utility to change cache structure, e.g. add instrument subdirs.
+        # do this before syncing anything under the current mode.
+        if self.args.organize:   
+            self.organize_references(self.args.organize)
+
+        # fetching and verifying files both require a server connection.
+        self.require_server_connection()
+
+        # primary sync'ing occurs here,  both mappings and references as well as odd-ball
+        # server sqlite3 database download.
+        verify_file_list = self.file_transfers()
+
+        # verification is relative to sync'ed files,  and can include file replacement if
+        # defects are found.
+        if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
+            self.verify_files(verify_file_list)
+            
+        # context pickles should only be (re)generated after mappings are fully sync'ed and verified
+        if self.args.save_pickles:
+            self.pickle_contexts(self.contexts)
+
+        # update CRDS cache config area,  including stored version of operational context.
+        # implement pipeline support functions of context update verify and echo
+        self.update_context()
+            
+        self.report_stats()
+        log.standard_status()
+        return log.errors()
+    # ------------------------------------------------------------------------------------------
+
+    def handle_misc_switches(self):
+        """Handle command line switches with simple side-effects that should precede
+        other sync operations.
+        """
         if self.args.dry_run:
             config.set_cache_readonly(True)
 
@@ -276,67 +321,83 @@ class SyncScript(cmdline.ContextsScript):
             os.environ["CRDS_CFGPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_PICKLEPATH_SINGLE"] = self.args.output_dir
 
-        if self.args.clear_pickles or self.args.ignore_cache or self.args.repair_files:
-            self.clear_pickles()
-
-        if self.args.organize:   # do this before syncing anything under the current mode.
-            self.organize_references(self.args.organize)
-
-        self.require_server_connection()
-
         if self.readonly_cache:
             log.info("Syncing READONLY cache,  only checking functions are enabled.")
             log.info("All cached updates, context changes, and file downloads are inhibited.")
 
+    def file_transfers(self):
+        """Top level control for the primary function of downloading files specified as:
+        
+        --files ...      (explicit list of CRDS mappings or references)
+        --contexts ...   (many varieties of mapping specifier including --all, --range, etc.)
+        --fetch-sqlite-db ...  (Server catalog download as sqlite3 database file.
+        
+        Returns list of downloaded/cached files for later verification if requested.
+        """
         if self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.files
         elif self.args.fetch_sqlite_db:
             self.fetch_sqlite_db()
+            verify_file_list = []
         elif self.contexts:
-            active_mappings = self.get_context_mappings()
-            verify_file_list = active_mappings
-            if self.args.fetch_references or self.args.purge_references:
-                if self.args.dataset_files or self.args.dataset_ids:
-                    active_references = self.sync_datasets()
-                else:
-                    active_references = self.get_context_references()
-                active_references = sorted(set(active_references + self.get_conjugates(active_references)))
-                if self.args.fetch_references:
-                    self.fetch_files(self.contexts[0], active_references)
-                    verify_file_list += active_references
-                if self.args.purge_references:
-                    self.purge_references(active_references)    
-            if self.args.purge_mappings:
-                self.purge_mappings()
+            verify_file_list = self.interpret_contexts()
         else:
             log.error("Define --all, --contexts, --last, --range, --files, or --fetch-sqlite-db to sync.")
             sys.exit(-1)
+        return verify_file_list
 
-        if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
-            self.verify_files(verify_file_list)
-            
-        if self.args.save_pickles:
-            self.pickle_contexts(self.contexts)
+    def interpret_contexts(self):
+        """Sync the mapping files associated with any context specifiers like 
+        --all, --contexts,  etc...
 
-        if self.args.verify_context_change:
-            old_context = heavy_client.load_server_info(self.observatory).operational_context
+        If --fetch-references or --purge-references are specified, also fetch and/or
+        purge references with respect to the specified contexts.
+        """
+        active_mappings = self.get_context_mappings()
+        verify_file_list = active_mappings
+        if self.args.fetch_references or self.args.purge_references:
+            active_references = self.get_synced_references()
+            if self.args.fetch_references:
+                self.fetch_files(self.contexts[0], active_references)
+                verify_file_list += active_references
+            if self.args.purge_references:
+                self.purge_references(active_references)    
+        if self.args.purge_mappings:
+            self.purge_mappings()
+        return verify_file_list
 
+    def get_synced_references(self):
+        """Return the list of reference names associated with the specified dataset
+        files, dataset ids, or contexts, including any associated GEIS data
+        file names.
+        """
+        if self.args.dataset_files or self.args.dataset_ids:
+            active_references = self.sync_datasets()
+        else:
+            active_references = self.get_context_references()
+        # Handle GEIS paired data files
+        active_references = sorted(set(active_references + self.get_conjugates(active_references)))
+        return active_references
+    
+    def update_context(self):
+        """Update the CRDS operational context in the cache.  Handle pipeline-specific
+        targeted features of (a) verifying a context switch as actually recorded in
+        the local CRDS cache and (b) echoing/pushing the pipeline context back up to the
+        CRDS server for tracking using an id/authorization key.
+
+        If errors occurred during the sync and --force_config_update is not set,
+        """
         if not log.errors() or self.args.force_config_update:
+            if self.args.verify_context_change:
+                old_context = heavy_client.load_server_info(self.observatory).operational_context
             heavy_client.update_config_info(self.observatory)
+            if self.args.verify_context_change:
+                self.verify_context_change(old_context)
+            if self.args.push_context:
+                self.push_context()
         else:
             log.warning("Errors occurred during sync,  skipping CRDS cache config and context update.")
-
-        if self.args.verify_context_change:
-            self.verify_context_change(old_context)
-
-        if self.args.push_context:
-            self.push_context()
-            
-        self.report_stats()
-        log.standard_status()
-        return log.errors()
-    # ------------------------------------------------------------------------------------------
 
     def clear_pickles(self):
         """Remove all pickles."""
@@ -534,12 +595,13 @@ class SyncScript(cmdline.ContextsScript):
         if info["state"] not in ["archived", "operational"]:
             log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
         if info["rejected"] != "false":
-            log.verbose_warning("File", repr(base), "has been explicitly rejected.")
+            log.verbose_warning("File", repr(base), "has been explicitly rejected.", verbosity=60)
             if self.args.purge_rejected:
                 self.remove_files([path], "files")
             return
         if info["blacklisted"] != "false":
-            log.verbose_warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
+            log.verbose_warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.",
+                                verbosity=60)
             if self.args.purge_blacklisted:
                 self.remove_files([path], "files")
             return
