@@ -814,7 +814,6 @@ class InstrumentContext(ContextMapping):
     def __init__(self, filename, header, selector, **keys):
         super(InstrumentContext, self).__init__(filename, header, selector, **keys)
         self.instrument = self.header["instrument"]
-        self._filekinds = [key.upper() for key in self.selections.keys()]
 
     def validate(self):
         """Perform InstrumentContext semantic checks which require can loading sub-mappings."""
@@ -945,7 +944,7 @@ class InstrumentContext(ContextMapping):
         the minimum set associated with `dataset`,  but initially all
         for dataset's instrument,  assumed to be self.instrument.
         """
-        return self._filekinds
+        return list(sorted(self.selections.keys()))
         
     def get_item_key(self, filename):
         """Given `filename` nominally to insert, return the filekind it corresponds to."""

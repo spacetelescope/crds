@@ -510,9 +510,10 @@ class TestRmap(test_config.CRDSTestCase):
     def test_rmap_get_filekind(self):
         r = rmap.get_cached_mapping("hst.pmap")
         self.assertEqual(set(r.get_filekinds("data/j8bt05njq_raw.fits")),
-                         {'PCTETAB', 'CRREJTAB', 'DARKFILE', 'D2IMFILE', 'BPIXTAB', 'ATODTAB', 'BIASFILE',
-                              'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
-                              'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'})
+                         {'atodtab','biasfile','bpixtab','ccdtab','cfltfile','crrejtab',
+                          'd2imfile','darkfile','dgeofile','drkcfile','flshfile','idctab',
+                          'imphttab','mdriztab','mlintab','npolfile','oscntab','pctetab',
+                          'pfltfile','shadfile','spottab'})
 
     def test_rmap_get_equivalent_mapping(self):
         i = rmap.get_cached_mapping("data/hst_acs_0002.imap")
