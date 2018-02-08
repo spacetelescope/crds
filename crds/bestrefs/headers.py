@@ -243,7 +243,7 @@ class DatasetHeaderGenerator(HeaderGenerator):
         matching_two_part_id(<unassociated>)                 -->  <unassociated> : <unassociated>
         matching_two_part_id(<unassociated>:<unassociated>)  -->  <unassociated> : <unassociated>
         """
-        parts = source.split(":")
+        parts = [_normalize_jwst_id_part(part) for part in source.split(":")]
         assert 1 <= len(parts) <= 2, "Invalid dataset id " + repr(source)
         try:    # when specifying datasets with 1-part id, return first of "associated ids"
                 # when specifying datasets with 2-part id,
@@ -254,6 +254,18 @@ class DatasetHeaderGenerator(HeaderGenerator):
         except Exception:
             return source
 
+def _normalize_jwst_id_part(part):
+    """Converts jw88600071001_02101_00001_nrs1  --> jw88600071001_02101_00001.nrs.   The former is
+    common notation for most dataset usages,  the latter is the official form for the web API to
+    the archive parameter service for JWST.
+    """
+    if "_" in part and "." not in part:  # not HST and common JWST parlance
+        bits = part.split("_")
+        fileSetName = "_".join(bits[:-1])
+        detector = bits[-1]
+        return fileSetName + "." + detector   # Formal archive API
+    else:
+        return part
 
 class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
