@@ -152,12 +152,6 @@ class TestRefactor(test_config.CRDSTestCase):
         with self.assertRaises(exceptions.CrdsUnknownInstrumentError):
             r.get_imap("foo")
 
-    def test_get_filekind(self):
-        r = rmap.get_cached_mapping("hst.pmap")
-        self.assertEqual(r.get_filekinds("data/j8bt05njq_raw.fits"),
-                         [ 'PCTETAB', 'CRREJTAB', 'DARKFILE', 'D2IMFILE', 'BPIXTAB', 'ATODTAB', 'BIASFILE',
-                           'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
-                           'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'])
     '''
 
 # ==================================================================================
