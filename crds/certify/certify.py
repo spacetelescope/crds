@@ -545,32 +545,65 @@ class FitsCertifier(ReferenceCertifier):
     def certify(self):
         """Run checks on FITS file."""
         super(FitsCertifier, self).certify()
+        
+        # Add-on fitsverify program from cfitsio authors
         if self.run_fitsverify:
             self.fitsverify()
+        
+        # Project-specific checks,  for JWST instantiates data model.
         self.locator.project_check(self.filename)
    
     def fitsverify(self):
         """Run optional external fitsverify program from cfitsio library, installed separately from CRDS."""
         log.info("Running fitsverify.")
-        err, output = pysh.status_out_err("fitsverify {}".format(self.filename))
-        for line in output.splitlines():
-            if "Error:" in line:
-                log.error(">>", line)
-            elif "Warning:" in line:
-                log.warning(">>", line)
-            else:
-                log.info(">>", line)
-        grade_fitsverify_output(err, output)
+        # subprocess stderr and stdout are combined into output
+        status, output = pysh.status_out_err("fitsverify {}".format(self.filename))
+        interpret_fitsverify_output(status, output)
 
-def grade_fitsverify_output(status, output):
-    """Issue log error or warning messages based on the exit status and output
-    returned by fitsverify.
+# -------------------------------------------------------------------------------------------------
+
+EXEMPT_ERRORS = [
+     'Unregistered XTENSION value',
+     ]
+
+ELEVATED_WARNINGS = [
+     'checksum is not'
+     ]
+
+def interpret_fitsverify_output(status, output):
+    """Re-issue captured fitsverify output as CRDS log messages,  elevating some cherry
+    picked messages from WARNING to ERROR,  and likewise deemphasizing some fitsverify
+    ERROR messages to CRDS WARNING messages.
+     
+    Fitsverify output is prefixed in CRDS log with >> to distinguish it as sub-program output.
+     
+    Integrating with CRDS log adds to ERROR and WARNING counters that ultimately pass/fail
+    certified files and/or a reference file delivery.
     """
-    m = re.search(r"(\d+)\s+error\(s\)", output)
-    if m and m.groups()[0] != "0" or "checksum is not" in output:
-        log.error("Errors or checksum warnings in fitsverify log output.")
-    elif status:
-        log.warning("Errors or warnings indicated by fitsverify exit status.")
+    errors, warnings, _infos = log.status()
+    for line in output.splitlines():
+        if "Error:" in line:
+            for exempt in EXEMPT_ERRORS:
+                if exempt in line:
+                    log.warning(">>", line)
+                    break
+            else:
+                log.error(">>", line)
+        elif "Warning:" in line:
+            for elevate in ELEVATED_WARNINGS:
+                if elevate in line:
+                    log.error(">>", line)
+                    break
+            else:
+                log.warning(">>", line)
+        else:
+            log.info(">>", line)
+    if status != 0:
+        log.warning("Fitsverify returned a nonzero command line error status.")
+    if log.warnings() - warnings:
+        log.warning("Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.")
+    if log.errors() - errors:
+        log.error("Fitsverify output contains errors or warnings CRDS categorizes as ERRORs.")
 
 # ============================================================================
 

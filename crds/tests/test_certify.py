@@ -59,23 +59,59 @@ def certify_bad_checksum():
     >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_508.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_508.pmap'
-    -ignore-
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-    -ignore-
+    CRDS - INFO -  FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  Running fitsverify.
-    -ignore-
-    CRDS - WARNING -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
-    CRDS - WARNING -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.410)              
+    CRDS - INFO -  >>               --------------------------------              
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> File: data/s7g1700gl_dead_bad_xsum.fits
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> 2 Header-Data Units in this file.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  23 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Null data array; NAXIS = 0 
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
+    CRDS - INFO -  >>  
+    CRDS - ERROR -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    CRDS - ERROR -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
     CRDS - ERROR -  >> *** Error:   checking data fill: Data fill area invalid
-    -ignore-
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  31 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    (3 columns x 10 rows)
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Col# Name (Units)       Format
+    CRDS - INFO -  >>    1 SEGMENT              4A        
+    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
+    CRDS - INFO -  >>    3 LIVETIME             D         
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
+    CRDS - INFO -  >>  1                          Primary Array    0         0     
+    CRDS - INFO -  >>  2                          Binary Table     2         1     
+    CRDS - INFO -  >>  
     CRDS - INFO -  >> **** Verification found 2 warning(s) and 1 error(s). ****
-    CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
+    CRDS - WARNING -  Fitsverify returned a nonzero command line error status.
+    CRDS - WARNING -  Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.
+    CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS categorizes as ERRORs.
     CRDS - INFO -  ########################################
-    CRDS - INFO -  2 errors
-    CRDS - INFO -  -ignore- warnings
-    CRDS - INFO -  -ignore- infos
-    2
+    CRDS - INFO -  4 errors
+    CRDS - INFO -  8 warnings
+    CRDS - INFO -  39 infos
+    4
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
@@ -126,8 +162,102 @@ def certify_good_checksum():
     0
     """
 
-GRADE_FITSVERIFY = """
-    CRDS - INFO -  Running fitsverify.
+INTERPRET_FITSVERIFY = """
+Running fitsverify.
+ 
+              fitsverify 4.18 (CFITSIO V3.370)              
+              --------------------------------              
+ 
+ 
+File: ./s7g1700gl_dead_bad_xsum.fits
+
+2 Header-Data Units in this file.
+ 
+=================== HDU 1: Primary Array ===================
+ 
+23 header keywords
+
+Null data array; NAXIS = 0 
+ 
+=================== HDU 2: BINARY Table ====================
+ 
+*** Warning: Data checksum is not consistent with  the DATASUM keyword
+*** Warning: HDU checksum is not in agreement with CHECKSUM.
+
+31 header keywords
+ 
+   (3 columns x 10 rows)
+
+ Col# Name (Units)       Format
+   1 SEGMENT              4A        
+   2 OBS_RATE (count /s / D         
+   3 LIVETIME             D
+ 
+++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+ 
+ HDU#  Name (version)       Type             Warnings  Errors
+ 1                          Primary Array    0         0     
+ 2                          Binary Table     2         1     
+ 
+Verification found 2 warning(s) and 0 error(s). ****
+"""
+
+INTERPRET_FITSVERIFY2 = """
+              fitsverify 4.18 (CFITSIO V3.410)              
+              --------------------------------              
+ 
+ 
+File: jwst_nircam_photom_nrcalong.fits
+
+3 Header-Data Units in this file.
+ 
+=================== HDU 1: Primary Array ===================
+ 
+ 33 header keywords
+ 
+ Null data array; NAXIS = 0 
+ 
+=================== HDU 2: BINARY Table ====================
+ 
+ 27 header keywords
+ 
+ PHOTOM(1)  (8 columns x 41 rows)
+ 
+ Col# Name (Units)       Format
+   1 filter               12A       
+   2 pupil                12A       
+   3 order                E         
+   4 photmjsr             E         
+   5 uncertainty          I         
+   6 nelem                I         
+   7 wavelength           3000E     
+   8 relresponse          3000E     
+ 
+=================== HDU 3: Image Exten. ====================
+ 
+*** Error:   Unregistered XTENSION value "ASDF    ".
+ 
+ 9 header keywords
+ 
+ASDF 8-bit integer pixels,  1 axes (2880), 
+ 
+++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+ 
+ HDU#  Name (version)       Type             Warnings  Errors
+ 1                          Primary Array    0         0     
+ 2     PHOTOM (1)           Binary Table     0         0     
+ 3     ASDF                 Image Array      0         1     
+ 
+**** Verification found 0 warning(s) and 1 error(s). ****
+"""
+    
+def certify_interpret_fitsverify():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+
+    >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY)
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> Running fitsverify.
     CRDS - INFO -  >>  
     CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
     CRDS - INFO -  >>               --------------------------------              
@@ -139,23 +269,23 @@ GRADE_FITSVERIFY = """
     CRDS - INFO -  >>  
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>  23 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
+    CRDS - INFO -  >> 23 header keywords
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> Null data array; NAXIS = 0 
     CRDS - INFO -  >>  
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
     CRDS - INFO -  >>  
-    CRDS - WARNING -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
-    CRDS - WARNING -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  31 header keywords
+    CRDS - ERROR -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    CRDS - ERROR -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> 31 header keywords
     CRDS - INFO -  >>  
     CRDS - INFO -  >>    (3 columns x 10 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >> 
     CRDS - INFO -  >>  Col# Name (Units)       Format
     CRDS - INFO -  >>    1 SEGMENT              4A        
     CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
-    CRDS - INFO -  >>    3 LIVETIME             D         
+    CRDS - INFO -  >>    3 LIVETIME             D
     CRDS - INFO -  >>  
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
     CRDS - INFO -  >>  
@@ -163,23 +293,63 @@ GRADE_FITSVERIFY = """
     CRDS - INFO -  >>  1                          Primary Array    0         0     
     CRDS - INFO -  >>  2                          Binary Table     2         1     
     CRDS - INFO -  >>  
-    CRDS - INFO -  >> **** Verification found 2 warning(s) and 0 error(s). ****
-"""
-    
-def certify_grade_fitsverify():
-    """
-    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    CRDS - INFO -  >> Verification found 2 warning(s) and 0 error(s). ****
+    CRDS - WARNING -  Fitsverify returned a nonzero command line error status.
+    CRDS - WARNING -  Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.
+    CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS categorizes as ERRORs.
 
-    >>> certify.grade_fitsverify_output(0, GRADE_FITSVERIFY)
-    CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
+    >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY2)
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.410)              
+    CRDS - INFO -  >>               --------------------------------              
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> File: jwst_nircam_photom_nrcalong.fits
+    CRDS - INFO -  >> 
+    CRDS - INFO -  >> 3 Header-Data Units in this file.
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  33 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Null data array; NAXIS = 0 
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  27 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  PHOTOM(1)  (8 columns x 41 rows)
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  Col# Name (Units)       Format
+    CRDS - INFO -  >>    1 filter               12A       
+    CRDS - INFO -  >>    2 pupil                12A       
+    CRDS - INFO -  >>    3 order                E         
+    CRDS - INFO -  >>    4 photmjsr             E         
+    CRDS - INFO -  >>    5 uncertainty          I         
+    CRDS - INFO -  >>    6 nelem                I         
+    CRDS - INFO -  >>    7 wavelength           3000E     
+    CRDS - INFO -  >>    8 relresponse          3000E     
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> =================== HDU 3: Image Exten. ====================
+    CRDS - INFO -  >>  
+    CRDS - WARNING -  >> *** Error:   Unregistered XTENSION value "ASDF    ".
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  9 header keywords
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> ASDF 8-bit integer pixels,  1 axes (2880), 
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
+    CRDS - INFO -  >>  1                          Primary Array    0         0     
+    CRDS - INFO -  >>  2     PHOTOM (1)           Binary Table     0         0     
+    CRDS - INFO -  >>  3     ASDF                 Image Array      0         1     
+    CRDS - INFO -  >>  
+    CRDS - INFO -  >> **** Verification found 0 warning(s) and 1 error(s). ****
+    CRDS - WARNING -  Fitsverify returned a nonzero command line error status.
+    CRDS - WARNING -  Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.
 
-    >>> certify.grade_fitsverify_output(1, GRADE_FITSVERIFY)
-    CRDS - ERROR -  Errors or checksum warnings in fitsverify log output.
-
-    >>> certify.grade_fitsverify_output(0, "")
-
-    >>> certify.grade_fitsverify_output(1, "")
-    CRDS - WARNING -  Errors or warnings indicated by fitsverify exit status.
+    >>> certify.interpret_fitsverify_output(0, "")
 
     >>> test_config.cleanup(old_state)
     """

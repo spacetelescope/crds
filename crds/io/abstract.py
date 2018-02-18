@@ -45,7 +45,7 @@ def hijack_warnings(func):
             warnings.showwarning = hijacked_showwarning
             warnings.simplefilter("always", AstropyUserWarning)
             try:
-                from jwst.datamodels.properties import ValidationWarning
+                from jwst.datamodels.util import ValidationWarning
             except:
                 pass
             else:
