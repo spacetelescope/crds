@@ -504,14 +504,11 @@ class ExpressionValidator(Validator):
             return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))
-        for key in sorted(header):
-            if header[key] != "UNDEFINED":
-                continue
-            delimited_key = r"[^A-Za-z0-9_\.]" + key + r"[^A-Za-z0-9_\.]"
-            if re.search(delimited_key, self._expr):
+        for keyword in expr_identifiers(self._expr):
+            if header.get(keyword, "UNDEFINED") == "UNDEFINED":
                 log.verbose_warning(
-                    "Skipping ", repr(self._expr), "because", repr(key), "is 'UNDEFINED'", verbosity=10)
-                return True
+                    "Skipping ", repr(self._expr), "because", repr(keyword), "is 'UNDEFINED'", verbosity=10)
+                return True   # fake satisfied     
         try:
             satisfied = eval(self._expr_code, header, dict(globals()))
         except Exception as exc:
@@ -519,6 +516,33 @@ class ExpressionValidator(Validator):
         if not satisfied:
             raise RequiredConditionError("Constraint", str(self._expr), "is not satisfied.")
         return satisfied
+    
+def expr_identifiers(expr):
+    """Scan `expr` for identifiers,  assume helper functions are in mixed or lowercase.
+
+    Returns [ identifier_in_expr, ...]
+    
+    >>> expr_identifiers("((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))")
+    ['EXP_TYPE']
+    
+    >>> expr_identifiers("(len(SCI_ARRAY.SHAPE)==2)")
+    ['SCI_ARRAY']
+    
+    >>> expr_identifiers("_")
+    []
+    
+    >>> expr_identifiers("200121")
+    []
+    """
+    # First match identifiers including quoted strings and dotted attribute paths.
+    candidates = [ key.group(0) for key in re.finditer(r"['\"\.A-Z0-9_]+", expr)]
+    # Next reject strings with quotes in them.
+    no_quotes = [key for key in candidates if re.match(r"[A-Z0-9_]+", key)]
+    no_dots = [key.split(".")[0] for key in no_quotes]
+    no_numbers = [key for key in no_dots if not re.match(r"\d+", key)]
+    no_underscores = [key for key in no_numbers if key != "_"]
+    return no_underscores 
+
 # ---------------------------------------------------------------------------
 
 class KernelunityValidator(Validator):

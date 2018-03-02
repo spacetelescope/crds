@@ -20,6 +20,7 @@ from crds import client
 from crds import certify
 from crds.certify import CertifyScript
 from crds.certify import generic_tpn
+from crds.certify import validators
 
 from crds.tests import test_config
 
@@ -813,7 +814,22 @@ def checksum_duplicate_rmap_case_error():
     >>> test_config.cleanup(old_state)
     """
 
+def undefined_expr_identifiers():
+    """Some TpnInfos include Python expressions either to make them apply conditionally or to
+    implement and expression constraint.   validators.expr_identifiers() scans a Tpn header
+    expression for the header keywords upon which it depends.   This enables CRDS To short
+    circuit checks for which critical keywords are not defined at all.
     
+    >>> validators.expr_identifiers("((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))")
+    ['EXP_TYPE']
+    
+    >>> validators.expr_identifiers("nir_filter(INSTRUME,REFTYPE,EXP_TYPE)")
+    ['INSTRUME', 'REFTYPE', 'EXP_TYPE']
+    
+    >>> validators.expr_identifiers("(len(SCI_ARRAY.SHAPE)==2)")
+    ['SCI_ARRAY']
+    """
+
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
