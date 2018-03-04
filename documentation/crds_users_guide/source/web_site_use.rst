@@ -670,8 +670,10 @@ The manual rmap update process is to:
    properties correctly. 
 
 Following this process is the key to maintaining the rmap's internal naming
-links so that this "two mappings derived from the same thing" check works
-correctly.
+links.  The internal naming links are used to track the derivation of rmaps
+and generate the Edit Collision Warnings.  Edit Collision warnings indicate
+when two rmaps were derived from the same source and can mean that one of the
+two change sets will be lost if the delivery is not corrected.
 
 Imap and Pmap Differences
 +++++++++++++++++++++++++
