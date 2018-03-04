@@ -1,2 +1,3 @@
 include nir_superbias_arrays.tpn
 
+META.EXPOSURE.GAIN_FACT     H   C   R  1.0:10.0
