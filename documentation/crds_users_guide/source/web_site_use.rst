@@ -627,42 +627,68 @@ submitted this way must also pass through crds.certify.
 Mapping Change Procedure
 ++++++++++++++++++++++++
 
-The nominal process used to modify CRDS mappings is to:
+The manual rmap update process is to:
 
-1. Download the mapping to be used as a baseline for the revised version.
-Leave the name as-is.  The download can be accomplished by using the crds.sync
-tool to download the file to a local cache, or by browsing to the file's
-details page and using the *download* link near the top of the page.  Likewise
-the source file can be copied directly from the shared on site default 
-readonly cache.   This download, don't rename, upload process is used to
-automatically maintain the derivation history of mappings in their headers,
-the name field is progagated down to the derived_from field to track the
-source mapping prior to renaming the new mapping.
+1.  Download the starting rmap from the web site or get it out of /grp/crds/cache/mappings/{hst,jwst}/.
 
-2. Modify the mapping in a text editor implementing required changes.  Use
-care editing mappings since many aspects of the mapping cannot be verified by
-crds.certify.   Where possible match values are validated against CRDS .tpn
-files or JWST data model schema.
+2.  **DO NOT** change the name of the mapping or alter the internal name links
+    like *derived_from* in the mapping header.  Leave the naming properties exactly as-is.
 
-3. Run crds.certify on the resulting mapping, using the current edit
-context as the point of comparison::
+3.  Modify the mapping in any text editor and verify the mapping as best you
+    can.  Use great care, CRDS certify cannot check many of the mapping properties.
 
-	% crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-edit
+4. Run crds.certify on the resulting mapping, using the current edit context as
+   the point of comparison::
 
-4. During iteration, run crds.checksum on the mapping to update the internal
-sha1sum if you wish to load the context into Python to do interactive tests 
-with the .rmap::
+     % crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-edit
 
-    % crds checksum ./jwst_miri_dark_0004.rmap
-    % python
-    >>> import crds
-    >>> r = crds.get_cached_mapping("./jwst_miri_dark_0004.rmap")
+   You may/will see an rmap checksum warning since you modified the contents of
+   the rmap.
 
-The internal checksum can also be used to verify upload integrity when you
-finally submit the file to CRDS, an out-of-date checksum or corrupted file will
-generate a warning.   Alternately:: 
+   Note: the ./ seen in the example command is important,  it tells CRDS to
+   use the file in the current directory instead of attempting to find it in
+   the CRDS cache.
 
-	% setenv CRDS_IGNORE_MAPPING_CHECKSUMS 1 
+   By default, most tools in CRDS will not load a mapping with an incorrect
+   checksum.  Run crds.checksum on the mapping to update the internal sha1sum
+   if you wish to load the context into Python to do other tests with the
+   .rmap::
 
-to suppress mapping load errors due to invalid checksums during development.
+     % crds checksum ./jwst_miri_dark_0004.rmap
+    
+   The internal checksum is also used to verify the upload integrity when you
+   finally submit the file to CRDS.  An out-of-date checksum or corrupted file
+   will generate a warning and the server will automatically fix it.  However,
+   it is then possible for upload errors to go undetected since a warning is
+   expected.
+
+6. Typically for rmaps, **DO** check Generate Contexts as that will derive new a
+   imap and pmap referring to your modified rmap.
+
+7. As you submit, **DO** check Auto-Rename.  In addition to renaming your
+   modified rmap, this automatically handles the internal rmap header naming
+   properties correctly. 
+
+Following this process is the key to maintaining the rmap's internal naming
+links.  The internal naming links are used to track the derivation of rmaps
+and generate the Edit Collision Warnings.  Edit Collision warnings indicate
+when two rmaps were derived from the same source and can mean that one of the
+two change sets will be lost if the delivery is not corrected.
+
+Imap and Pmap Differences
++++++++++++++++++++++++++
+
+Note that submissions of imaps and pmaps do not support Generate Context.  In
+addition, CRDS doesn't accept files that refer to other files not already in
+CRDS.  This means that pmaps and new imaps they refer to cannot be handled in
+one submission.
+
+The general practice of not manually modifying CRDS mapping name properties
+holds for imaps and pmaps as well: it's better to leave filenames unchanged,
+and header naming properties unchanged, and let CRDS do Auto-rename and related
+header updates.
+
+Hence, it is recommended to do imap and pmap work in two phases: First, modify
+and submit the imaps, generating and/or reserving official CRDS names.  Next
+manually modify the pmap as needed to refer to the newly generated imap names.
 
