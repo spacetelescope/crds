@@ -533,11 +533,14 @@ def expr_identifiers(expr):
     
     >>> expr_identifiers("200121")
     []
+
+    >>> expr_identifiers("(not(META_SUBARRAY_NAME)in(['GENERIC','N/A']))")
+    ['META_SUBARRAY_NAME']
     """
     # First match identifiers including quoted strings and dotted attribute paths.
     candidates = [ key.group(0) for key in re.finditer(r"['\"\.A-Z0-9_]+", expr)]
     # Next reject strings with quotes in them.
-    no_quotes = [key for key in candidates if re.match(r"[A-Z0-9_]+", key)]
+    no_quotes = [key for key in candidates if re.match(r"^[A-Z0-9_\.]+$", key)]
     no_dots = [key.split(".")[0] for key in no_quotes]
     no_numbers = [key for key in no_dots if not re.match(r"\d+", key)]
     no_underscores = [key for key in no_numbers if key != "_"]
