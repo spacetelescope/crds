@@ -403,7 +403,7 @@ def get_final_context(info, context):
         info.status = "env var CRDS_CONTEXT"
     else:
         input_context = str(info.operational_context)
-        log.verbose("Using reference selection rules", srepr(input_context), "defined by", info.status + ".")
+        log.verbose("Using reference file selection rules", srepr(input_context), "defined by", info.status + ".")
     final_context = translate_date_based_context(input_context, info.observatory)
     return final_context
 
