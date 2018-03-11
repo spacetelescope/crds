@@ -16,8 +16,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.2.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST B7.2 early development"
+__version__ = "7.2.1"   # XXXX  see also ../setup.cfg
+__rationale__ = "HST pre-2018.2 quick fix release."
 
 # ============================================================================
 
