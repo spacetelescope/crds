@@ -11,27 +11,37 @@ META.INSTRUMENT.NAME        H   C   R                   NIRCAM
 
 # META.INSTRUMENT.PUPIL       H   C   O   CLEAR,F162M,F164N,F323N,F405N,F466N,F470N,GRISMV2,GRISMV3,FLAT,MASKBAR,MASKRND,ANY,N/A
 
-META.INSTRUMENT.DETECTOR    H   C   O   NRCA1,NRCA2,NRCA3,NRCA4,NRCB1,NRCB2,NRCB3,NRCB4,\
+META.INSTRUMENT.PUPIL       H   C   O
+
+META.INSTRUMENT.DETECTOR    H   C   O   NRCA1,NRCA2,NRCA3,NRCA4,\
+                                        NRCB1,NRCB2,NRCB3,NRCB4,\
                                         NRCALONG,NRCBLONG,ANY,N/A
 META.INSTRUMENT.FILTER      H   C   O
 
-META.EXPOSURE.READPATT      H   C   O   DEEP8,DEEP2,MEDIUM8,MEDIUM2,SHALLOW4,SHALLOW2,\
+META.EXPOSURE.READPATT      H   C   O   DEEP8,DEEP2,MEDIUM8,MEDIUM2,\
+                                        SHALLOW4,SHALLOW2,\
                                         BRIGHT2,BRIGHT1,RAPID,ANY,N/A
 
 META.EXPOSURE.TYPE          H   C   O   NRC_IMAGE,NRC_GRISM,NRC_TACQ,NRC_CORON,\
-                                        NRC_FOCUS,NRC_DARK,NRC_FLAT,NRC_LED,NRC_WFSC,NRC_TACONFIRM,\
-                                        NRC_TSIMAGE,NRC_TSGRISM
+                                        NRC_FOCUS,NRC_DARK,NRC_FLAT,NRC_LED,\
+                                        NRC_WFSC,NRC_TACONFIRM,\
+                                        NRC_TSIMAGE,NRC_TSGRISM,ANY,N/A
 
 META.INSTRUMENT.CHANNEL     H   C   O   SHORT,LONG,ANY,N/A
 
-META.SUBARRAY.NAME          H   C   O   SUB160,SUB160P,SUB320,SUB320A335R,SUB320A430R,SUB320ALWB,\
-                                        SUB32TATS,SUB32TATSGRISM,SUB400P,SUB640,SUB640A210R,SUB640ASWB,\
-                                        SUB64FP1A,SUB64FP1B,SUB64P,SUB8FP1A,SUB8FP1B,SUB96DHSPILA,\
-                                        SUB96DHSPILB,SUBFSA210R,SUBFSA335R,SUBFSA430R,SUBFSALWB,SUBFSASWB,\
-                                        SUBGRISM128,SUBGRISM256,SUBGRISM64,SUBNDA210R,SUBNDA335R,\
-                                        SUBNDA430R,SUBNDALWBL,SUBNDALWBS,SUBNDASWBL,SUBNDASWBS,\
-                                        MASKA210R,MASKA335R,MASKA430R,MASKBSWB,MASKBLWB,\
-                                        FULL,GENERIC,ANY,N/A
+META.SUBARRAY.NAME          H   C   O  SUB160,SUB160P,SUB320,SUB320A335R,\
+                                       SUB320A430R,SUB320ALWB,SUB32TATS,\
+                                       SUB32TATSGRISM,SUB400P,SUB640,\
+                                       SUB640A210R,SUB640ASWB,\
+                                       SUB64FP1A,SUB64FP1B,SUB64P,SUB8FP1A,\
+                                       SUB8FP1B,SUB96DHSPILA,\
+                                       SUB96DHSPILB,SUBFSA210R,SUBFSA335R,\
+                                       SUBFSA430R,SUBFSALWB,SUBFSASWB,\
+                                       SUBGRISM128,SUBGRISM256,SUBGRISM64,\
+                                       SUBNDA210R,SUBNDA335R,\
+                                       SUBNDA430R,SUBNDALWBL,SUBNDALWBS,\
+                                       SUBNDASWBL,SUBNDASWBS,\
+                                       FULL,GENERIC,ANY,N/A
 
 include nir_subarray_baseline.tpn
 
