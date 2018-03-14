@@ -7,4 +7,4 @@ include nir_dq_def_array.tpn
 SCI   A   X    R  (len(SCI_ARRAY.SHAPE)==2)
 DQ    A   X    R  (len(DQ_ARRAY.SHAPE)==2)
 
-META.EXPOSURE.GAIN_FACT     H   C   R  1.0:10.0
+META.EXPOSURE.GAIN_FACT     H   C   W  1.0:10.0
