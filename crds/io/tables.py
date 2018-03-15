@@ -21,7 +21,7 @@ def ntables(filename):
         tables = 0
         with data_file.fits_open(filename) as hdus:
             for i,hdu in enumerate(hdus):
-                if hdu.__class__.__name__.upper() == 'BINTABLEHDU':
+                if "TABLEHDU" in hdu.__class__.__name__.upper():
                     tables += 1
         return tables
     else:
@@ -37,8 +37,12 @@ def tables(filename):
         tables = []
         with data_file.fits_open(filename) as hdus:
             for i,hdu in enumerate(hdus):
-                if hdu.__class__.__name__.upper() == 'BINTABLEHDU':
+                classname = hdu.__class__.__name__.upper()
+                if "TABLEHDU" in classname:
                     tables.append(SimpleTable(filename, i))
+                    if classname == "TABLEHDU":
+                        log.warning("ASCII Table detected in HDU#", str(i) +
+                                    ".  Particularly for HST, verify that it should not be a BIN Table HDU.")
         return tables
     else:
         return [ SimpleTable(filename, segment=1) ]
