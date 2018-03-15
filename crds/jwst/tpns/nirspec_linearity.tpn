@@ -5,4 +5,4 @@ include nirspec_opt_err_array.tpn
 include nirspec_dq_array.tpn
 include nir_dq_def_array.tpn
 
-META.EXPOSURE.GAIN_FACT     H   C   W  1.0:10.0
+META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0

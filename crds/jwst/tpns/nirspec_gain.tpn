@@ -4,5 +4,5 @@ include nirspec_sci_array.tpn
 
 SCI    A    X    R   (len(SCI_ARRAY.SHAPE)==2)
 
-META.EXPOSURE.GAIN_FACT     H   C   R  1.0:10.0
+META.EXPOSURE.GAIN_FACTOR     H   R   R  1.0:10.0
 
