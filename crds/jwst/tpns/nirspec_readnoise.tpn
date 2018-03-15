@@ -6,3 +6,5 @@ BUNIT    H   C    W   DN,ADU
 
 SCI    A    X    R   (len(SCI_ARRAY.SHAPE)==2)
 
+META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
+
