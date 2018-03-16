@@ -41,6 +41,8 @@ META.SUBARRAY.NAME          H   C   O  SUB160,SUB160P,SUB320,SUB320A335R,\
                                        SUBNDA210R,SUBNDA335R,\
                                        SUBNDA430R,SUBNDALWBL,SUBNDALWBS,\
                                        SUBNDASWBL,SUBNDASWBS,\
+                                       MASKA210R,MASKA430R,\
+                                       MASKBSWB,MASKBLWB,\
                                        FULL,GENERIC,ANY,N/A
 
 include nir_subarray_baseline.tpn
