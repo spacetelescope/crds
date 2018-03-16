@@ -31,5 +31,5 @@ META.EXPOSURE.GAIN_FACTOR     H   R   O  1.0:10.0
 
 META.SUBARRAY.NAME          H   C   O  ALLSLITS,SUBS200A1,SUBS200A2,SUBS200B1,\
                                        SUBS400A1,SUB1024A,SUB1024B,\
-                                       SUB512,SUB32,SUB512S,SUB2048,\
+                                       SUB512,SUB32,SUB512S,SUB2048,STRIPE,\
                                        FULL,GENERIC,ANY,N/A
