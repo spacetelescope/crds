@@ -188,25 +188,36 @@ class Validator(object):
         ignore it depending on whether this Validator's key is required.
         """
         if self.info.presence in ["R","P"]:
-            raise MissingKeywordError("Missing required keyword " + repr(self.name))
+            raise MissingKeywordError("Missing required", self._keytype_descr, repr(self.name))
         elif self.info.presence in ["W"]:
-            log.warning("Missing suggested keyword " + repr(self.name))
+            log.warning("Missing suggested", self._keytype_descr, repr(self.name))
             return "UNDEFINED"
         elif self.info.presence in ["O"]:
-            log.verbose("Optional parameter " + repr(self.name) + " is missing.", verbosity=70)
+            log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
             return "UNDEFINED"
         elif self.info.presence in ["S","F","A"]:
             log.verbose("Conditional SUBARRAY parameter is not defined.")
             return "UNDEFINED"
         elif self.conditionally_required:
             if header and self.is_applicable(header):
-                raise MissingKeywordError("Missing keyword", repr(self.name), 
+                raise MissingKeywordError("Missing", self._keytype_descr, repr(self.name), 
                                            "required by condition", self.info.presence)
             else:
                 return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      repr(self.info.presence))
+    @property
+    def _keytype_descr(self):
+        descr = self.info._repr_keytype[1:-1]
+        return {
+            "HEADER" : "keyword",
+            "COLUMN" : "table column",
+            "GROUP" : "group",
+            "ARRAY_FORMAT" : "array",
+            "ARRAY_DATA" : "array",
+            "EXPRESSION" : "expression",
+            }.get(descr, descr.lower())
 
     @property
     def optional(self):
