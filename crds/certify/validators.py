@@ -209,7 +209,7 @@ class Validator(object):
                                      repr(self.info.presence))
     @property
     def _keytype_descr(self):
-        descr = self.info._repr_keytype[1:-1]
+        descr = self.info._repr_keytype()[1:-1]
         return {
             "HEADER" : "keyword",
             "COLUMN" : "table column",
