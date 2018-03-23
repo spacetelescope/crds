@@ -19,6 +19,8 @@ from crds.certify import generic_tpn
 from crds import data_file
 from crds.io import abstract
 
+log.info("Initializing JWST locator.")
+
 # =======================================================================
 
 # These two functions decouple the generic reference file certifier program 
@@ -519,6 +521,35 @@ def _get_fits_datamodel_pairs(header):
     return pairs
 
 
+# ============================================================================
+
+DATA_MODEL_RE_STR = r"(META(\.[A-Z][A-Z0-9_]*)+)"
+# DATA_MODEL_RE_STR = r" " + DATA_MODEL_RE_BASE + r" "
+# DATA_MODEL_RE_STR += r"|[']" + DATA_MODEL_RE_BASE + r"[']"
+DATA_MODEL_RE = re.compile(DATA_MODEL_RE_STR)
+
+def add_fits_keywords(log_message):
+    """Process log `message` and annotate data model keywords/paths with
+    their FITS translations if possible like:
+
+    <data_models_keyword> '[' <fits_keyword> ']'
+
+    """
+    matches = list(DATA_MODEL_RE.finditer(log_message))
+    for dm_match in matches:
+        model_key = dm_match.group(0)
+        try:
+            fits_key = schema.dm_to_fits(model_key)
+        except Exception:
+            fits_key = "FITS keyword unknown"
+        annotation = " [" + fits_key + "]"
+        if annotation not in log_message:
+            log_message = log_message.replace(
+                model_key, model_key + annotation)
+    return log_message
+
+log.append_crds_filter(add_fits_keywords)
+    
 # ============================================================================
 
 def test():

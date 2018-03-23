@@ -51,7 +51,6 @@ class Certifier(object):
         self._dump_provenance_flag = dump_provenance
         self.dont_parse = dont_parse     # mapping only
         self.script = script
-        self.observatory = observatory
         self.comparison_reference = comparison_reference
         self.original_name = original_name
         self.trap_exceptions = trap_exceptions
@@ -64,6 +63,7 @@ class Certifier(object):
         self.observatory = observatory or utils.file_to_observatory(filename)
     
         self.provenance_keys = list(provenance_keys or utils.get_observatory_package(self.observatory).PROVENANCE_KEYWORDS)
+        
 
     @property
     def basename(self):
