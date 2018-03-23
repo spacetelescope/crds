@@ -240,26 +240,6 @@ def dm_to_fits(key):
         DM_TO_FITS = _get_dm_to_fits()
     return DM_TO_FITS.get(key.upper(), None)
 
-DATA_MODEL_RE_STR = r"(META(\.[A-Z][A-Z0-9_]*))"
-DATA_MODEL_RE = re.compile(DATA_MODEL_RE_STR)
-
-def add_fits_keywords(log_message):
-    return DATA_MODEL_RE.sub(log_message, add_fits_keyword)
-
-def add_fits_keyword(dm_match):
-    """Given an re match object `dm_match` for a data models keyword/path,
-    return an annotated string of the form:
-
-       <data_models_keyword> [fits_keyword]
-
-    """
-    model_key = dm_match.group(0)
-    try:
-        fits_key = dm_to_fits(model_key) 
-        return r" \[" + dm_to_fits(r"\1") + "\]"
-    except Exception:
-        return model_key + " [FITS unknown]"
-
 def fits_to_dm(key):
     """Return the DM keyword for FITS `key` or None.
     
