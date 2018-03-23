@@ -69,7 +69,7 @@ def certify_bad_checksum():
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.410)              
+    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
