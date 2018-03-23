@@ -72,8 +72,8 @@ def dt_or_bars_refactor_add_file():
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> RefactorScript("crds.refactor insert data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0003.add.rmap data/jwst_miri_ipc_0003.add.fits")()  # doctest: +ELLIPSIS
     CRDS - INFO -  Inserting jwst_miri_ipc_0003.add.fits into 'jwst_miri_ipc_0002.rmap'
-    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'='UNDEFINED' to value of 'P_BAND'='SHORT | MEDIUM |'
-    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFUSHORT|MIRIFULONG|'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'SHORT | MEDIUM |'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
     0
 
     >>> diff.DiffScript("crds.diff data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0003.add.rmap")()
@@ -93,8 +93,8 @@ def dt_or_bars_refactor_replace_file():
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> RefactorScript("crds.refactor insert data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0004.replace.rmap data/jwst_miri_ipc_0004.replace.fits")()  # doctest: +ELLIPSIS
     CRDS - INFO -  Inserting jwst_miri_ipc_0004.replace.fits into 'jwst_miri_ipc_0002.rmap'
-    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'='UNDEFINED' to value of 'P_BAND'='LONG |'
-    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFULONG|'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'LONG |'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFULONG|'
     0
 
     >>> diff.DiffScript("crds.diff data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0004.replace.rmap")()
