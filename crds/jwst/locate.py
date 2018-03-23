@@ -468,7 +468,10 @@ CROSS_STRAPPED_KEYWORDS = {
     "META.PEDIGREE" : ["PEDIGREE"],
     "META.USEAFTER" : ["USEAFTER"],
     "META.HISTORY" : ["HISTORY"],
-    "META.CALIBRATION_SOFTWARE_VERSION" : ["CALIBRATION_SOFTWARE_VERSION", "CAL_VER"],
+    "META.CALIBRATION_SOFTWARE_VERSION" : ["CAL_VER", "CALIBRATION_SOFTWARE_VERSION"],
+    "META.OBSERVATION.DATE" : ["DATE-OBS"],
+    "META.OBSERVATION.TIME" : ["TIME-OBS"],
+    
 
     # These should all be stock DM:FITS,  automatic
     # "META.INSTRUMENT.BAND" : ["BAND"],
@@ -535,13 +538,17 @@ def add_fits_keywords(log_message):
     <data_models_keyword> '[' <fits_keyword> ']'
 
     """
-    matches = list(DATA_MODEL_RE.finditer(log_message))
+    matches = DATA_MODEL_RE.finditer(log_message)
+    if not matches:
+        return log_message
     for dm_match in matches:
         model_key = dm_match.group(0)
-        try:
-            fits_key = schema.dm_to_fits(model_key)
-        except Exception:
-            fits_key = "FITS keyword unknown"
+        fits_key = schema.dm_to_fits(model_key)
+        if fits_key is None:
+            if model_key in CROSS_STRAPPED_KEYWORDS:
+                fits_key = CROSS_STRAPPED_KEYWORDS[model_key][0]
+            else:
+                fits_key = "FITS unknown"
         annotation = " [" + fits_key + "]"
         if annotation not in log_message:
             log_message = log_message.replace(
