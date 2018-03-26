@@ -562,13 +562,10 @@ class FitsCertifier(ReferenceCertifier):
 
 # -------------------------------------------------------------------------------------------------
 
-EXEMPT_ERRORS = [
-     'Unregistered XTENSION value',
-     ]
-
-ELEVATED_WARNINGS = [
-     'checksum is not'
-     ]
+RECATEGORIZED_MESSAGE = {
+     'Unregistered XTENSION value' : log.info,
+     'checksum is not' : log.error,
+     }
 
 def interpret_fitsverify_output(status, output):
     """Re-issue captured fitsverify output as CRDS log messages,  elevating some cherry
@@ -580,30 +577,28 @@ def interpret_fitsverify_output(status, output):
     Integrating with CRDS log adds to ERROR and WARNING counters that ultimately pass/fail
     certified files and/or a reference file delivery.
     """
-    errors, warnings, _infos = log.status()
+    errors, warnings, infos = log.status()
     for line in output.splitlines():
-        if "Error:" in line:
-            for exempt in EXEMPT_ERRORS:
-                if exempt in line:
-                    log.warning(">>", line)
+        if "Error:" in line or "Warning:" in line:
+            for altered in RECATEGORIZED_MESSAGE:
+                if altered in line:
+                    RECATEGORIZED_MESSAGE[altered](">> RECATEGORIZED", line)
                     break
             else:
-                log.error(">>", line)
-        elif "Warning:" in line:
-            for elevate in ELEVATED_WARNINGS:
-                if elevate in line:
-                    log.error(">>", line)
-                    break
-            else:
-                log.warning(">>", line)
+                func = log.error if "Error:" in line else log.warning
+                func(">>", line)
         else:
             log.info(">>", line)
+            infos += 1
     if status != 0:
-        log.warning("Fitsverify returned a nonzero command line error status.")
+        log.info("Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.")
+        infos += 1   #  don't count status info below
     if log.warnings() - warnings:
-        log.warning("Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.")
+        log.warning("Fitsverify output contains errors or warnings CRDS recategorizes as WARNINGs.")
     if log.errors() - errors:
-        log.error("Fitsverify output contains errors or warnings CRDS categorizes as ERRORs.")
+        log.error("Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.")
+    if log.infos() - infos:
+        log.info("Fitsverify output contains errors or warnings CRDS recategorizes as INFOs.")
 
 # ============================================================================
 
