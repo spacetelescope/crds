@@ -69,7 +69,7 @@ def certify_bad_checksum():
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)
+    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -85,8 +85,8 @@ def certify_bad_checksum():
     CRDS - INFO -  >>  
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
     CRDS - INFO -  >>  
-    CRDS - ERROR -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
-    CRDS - ERROR -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    CRDS - ERROR -  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    CRDS - ERROR -  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
     CRDS - ERROR -  >> *** Error:   checking data fill: Data fill area invalid
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  31 header keywords
@@ -105,13 +105,12 @@ def certify_bad_checksum():
     CRDS - INFO -  >>  2                          Binary Table     2         1     
     CRDS - INFO -  >>  
     CRDS - INFO -  >> **** Verification found 2 warning(s) and 1 error(s). ****
-    CRDS - WARNING -  Fitsverify returned a nonzero command line error status.
-    CRDS - WARNING -  Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.
-    CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS categorizes as ERRORs.
+    CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
+    CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
     CRDS - INFO -  ########################################
     CRDS - INFO -  4 errors
-    CRDS - INFO -  8 warnings
-    CRDS - INFO -  39 infos
+    CRDS - INFO -  6 warnings
+    CRDS - INFO -  40 infos
     4
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -254,13 +253,14 @@ ASDF 8-bit integer pixels,  1 axes (2880),
     
 def certify_interpret_fitsverify():
     """
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
 
-    >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY)
+    >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY)  # doctest: +ELLIPSIS
     CRDS - INFO -  >> 
     CRDS - INFO -  >> Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.370)              
+    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -276,8 +276,8 @@ def certify_interpret_fitsverify():
     CRDS - INFO -  >>  
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
     CRDS - INFO -  >>  
-    CRDS - ERROR -  >> *** Warning: Data checksum is not consistent with  the DATASUM keyword
-    CRDS - ERROR -  >> *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    CRDS - ERROR -  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    CRDS - ERROR -  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
     CRDS - INFO -  >> 
     CRDS - INFO -  >> 31 header keywords
     CRDS - INFO -  >>  
@@ -295,13 +295,12 @@ def certify_interpret_fitsverify():
     CRDS - INFO -  >>  2                          Binary Table     2         1     
     CRDS - INFO -  >>  
     CRDS - INFO -  >> Verification found 2 warning(s) and 0 error(s). ****
-    CRDS - WARNING -  Fitsverify returned a nonzero command line error status.
-    CRDS - WARNING -  Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.
-    CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS categorizes as ERRORs.
+    CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
+    CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
 
-    >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY2)
+    >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY2)  # doctest: +ELLIPSIS
     CRDS - INFO -  >> 
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.410)              
+    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -333,7 +332,7 @@ def certify_interpret_fitsverify():
     CRDS - INFO -  >>  
     CRDS - INFO -  >> =================== HDU 3: Image Exten. ====================
     CRDS - INFO -  >>  
-    CRDS - WARNING -  >> *** Error:   Unregistered XTENSION value "ASDF    ".
+    CRDS - INFO -  >> RECATEGORIZED *** Error:   Unregistered XTENSION value "ASDF    ".
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  9 header keywords
     CRDS - INFO -  >>  
@@ -347,12 +346,13 @@ def certify_interpret_fitsverify():
     CRDS - INFO -  >>  3     ASDF                 Image Array      0         1     
     CRDS - INFO -  >>  
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 1 error(s). ****
-    CRDS - WARNING -  Fitsverify returned a nonzero command line error status.
-    CRDS - WARNING -  Fitsverify output contains errors or warnings CRDS categorizes as WARNINGs.
+    CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
+    CRDS - INFO -  Fitsverify output contains errors or warnings CRDS recategorizes as INFOs.
 
     >>> certify.interpret_fitsverify_output(0, "")
 
     >>> test_config.cleanup(old_state)
+    >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
 def certify_dump_provenance_fits():
