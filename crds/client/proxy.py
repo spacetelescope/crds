@@ -19,6 +19,23 @@ from crds.core import python23, exceptions, log, config
 
 # ============================================================================
 
+def init_urlopen():
+    """Call urlopen() once at import time to prepare for possible calls within
+    multiprocessing processes.  This is magic which avoids a segfault on OS-X
+    when urlopen() is called for the first time in a subprocess.
+
+    %time showed this at around 2 msec on OS-X 10.11.67 El Capitain,  fine for
+    a CRDS client unconditional one-off.
+    """
+    try:
+        python23.urlopen('')
+    except Exception:
+        pass
+
+init_urlopen()
+
+# ============================================================================
+
 def apply_with_retries(func, *pars, **keys):
     """Apply function func() as f(*pargs, **keys) and return the result. Retry on any exception as defined in config.py"""
     retries = config.get_client_retry_count()
