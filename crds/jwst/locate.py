@@ -19,8 +19,6 @@ from crds.certify import generic_tpn
 from crds import data_file
 from crds.io import abstract
 
-log.info("Initializing JWST locator.")
-
 # =======================================================================
 
 # These two functions decouple the generic reference file certifier program 
