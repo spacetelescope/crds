@@ -1,0 +1,11 @@
+include nir_sci_array.tpn
+include nir_err_array.tpn
+include nir_dq_array.tpn
+include nir_dq_def_array.tpn
+
+META.EXPOSURE.TYPE    H      C     R     NIS_WFSS
+
+SCI                   A      X     R     (len(SCI_ARRAY.SHAPE)==2)
+ERR                   A      X     R     (len(ERR_ARRAY.SHAPE)==2)
+DQ                    A      X     R     (len(DQ_ARRAY.SHAPE)==2)
+
