@@ -2508,7 +2508,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"f9a0de52cac4aac9a757f35bebbb7e8c39d6cdd0",
+            "sha1sum":"3fa1164a54bf2d68627ee58356347be0c8af30de",
             "suffix":"wfssbkg",
             "text_descr":"WFSS master background reference images",
             "tpn":"niriss_wfssbkg.tpn",
