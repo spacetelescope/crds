@@ -1860,6 +1860,39 @@
             "text_descr":"World Coordinate System Regions",
             "tpn":"nircam_wcsregions.tpn",
             "unique_rowkeys":null
+        },
+        "wfssbkg":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-03-28",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"WFSSBKG",
+            "filetype":"WFSSBKG",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_wfssbkg_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_wfssbkg.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"efad150ddee83aa3b5be12cf3312ffffe6ad9437",
+            "suffix":"wfssbkg",
+            "text_descr":"WFSS master background reference images",
+            "tpn":"nircam_wfssbkg.tpn",
+            "unique_rowkeys":null
         }
     },
     "niriss":{
@@ -2446,6 +2479,39 @@
             "suffix":"wcsregions",
             "text_descr":"World Coordinate System Regions",
             "tpn":"niriss_wcsregions.tpn",
+            "unique_rowkeys":null
+        },
+        "wfssbkg":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-03-28",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"WFSSBKG",
+            "filetype":"WFSSBKG",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_wfssbkg_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_wfssbkg.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"f9a0de52cac4aac9a757f35bebbb7e8c39d6cdd0",
+            "suffix":"wfssbkg",
+            "text_descr":"WFSS master background reference images",
+            "tpn":"niriss_wfssbkg.tpn",
             "unique_rowkeys":null
         }
     },

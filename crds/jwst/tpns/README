@@ -19,3 +19,23 @@ values inserted into the image). So the detector was still commanded to readout
 subarray size keyword values against the actual image size needs to allow for
 this (i.e. it's OK to have meta.subarray.ysize=2048 when data.shape[-2] =
 3200), as long as READPATT has the string "IRS2" somewhere in it.
+
+# -----------------------------------------------------------------------
+# For the JWST detectors all reference pixels are physical pixels that are
+# counted as part of the detector dimensions (unlike virtual overscan regions
+# in CCD's). So the 2048x2048 detector dimensions of the near-IR detectors
+# already includes the reference pixels and the MIRI detectors are always
+# referenced in the full 1032x1024 space that includes their reference
+# pixels. The SUBSTRTn and SUBSIZEn values also always include the reference
+# pixels (i.e. SUBSTRT1 = 1 means the subarray is starting on the first
+# reference pixel. The first "live" pixel is at SUBSTRT1 = 5.) So for MIRI
+# full-frame readouts SUBSIZE1 = 1032, not 1024 (the same as NAXIS1).
+#
+# The only exception to this is the NIRSpec IRS2 readout mode that includes
+# many more columns of reference pixels interspersed within the live pixels,
+# resulting in total image dimensions that are greater than 2048 (at least
+# along the y image axis). So this is the only case where SUBSIZEn != NAXISn,
+# because NAXIS2 2048, while a decision was made to still set SUBSIZE2 = 2048.
+# --------------------------------------------------------------------------
+
+

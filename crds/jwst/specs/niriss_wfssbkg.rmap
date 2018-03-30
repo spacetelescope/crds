@@ -1,0 +1,19 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2018-03-28',
+    'file_ext' : '.fits',
+    'filekind' : 'WFSSBKG',
+    'filetype' : 'WFSSBKG',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_wfssbkg.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'f9a0de52cac4aac9a757f35bebbb7e8c39d6cdd0',
+    'suffix' : 'wfssbkg',
+    'text_descr' : 'WFSS master background reference images',
+}
+
+selector = Match({
+    ('NOT NRC_GRISM', 'ANY', 'ANY', 'ANY') : 'N/A',
+})
