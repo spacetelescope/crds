@@ -13,8 +13,8 @@ META.SUBARRAY.YSIZE         H   I   (is_imaging_mode(EXP_TYPE))
 META.SUBARRAY.FASTAXIS      H   I   (is_imaging_mode(EXP_TYPE))
 META.SUBARRAY.SLOWAXIS      H   I   (is_imaging_mode(EXP_TYPE))
 
-FULLFRAME_XSTART            X   X   (is_full_frame(SUBARRAY)and(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_XSTART==1)
-FULLFRAME_YSTART            X   X   (is_full_frame(SUBARRAY)and(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_YSTART==1)
+FULLFRAME_XSTART            X   X   (full_frame(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_XSTART==1)
+FULLFRAME_YSTART            X   X   (full_frame(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_YSTART==1)
 
 DETECTOR                    H   C   O
 NRCA1_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA1'))    ((FASTAXIS==-1)and(SLOWAXIS==2))

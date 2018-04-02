@@ -9,12 +9,17 @@ META.SUBARRAY.SLOWAXIS      H   I   R
 SUBARRAY_INBOUNDS_X         X   X   A  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=1032)
 SUBARRAY_INBOUNDS_Y         X   X   A  (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=1024)
 
-DETECTOR                    H   C   O
-MIRIMAGE_AXIS               X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
-MIRIFULONG_AXIS             X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
-MIRIFUSHORT_AXIS            X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
+DETECTOR              H   C   O
+MIRIMAGE_AXIS         X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFULONG_AXIS       X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFUSHORT_AXIS      X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
 
-FULLFRAME_XSTART      X           X         F             (META_SUBARRAY_XSTART==1)
-FULLFRAME_YSTART      X           X         F             (META_SUBARRAY_YSTART==1)
-FULLFRAME_XSIZE       X           X         F             (META_SUBARRAY_XSIZE==1032)
-FULLFRAME_YSIZE       X           X         F             (META_SUBARRAY_YSIZE==1024)
+FULLFRAME_XSTART     X           X         F             (META_SUBARRAY_XSTART==1)
+FULLFRAME_YSTART     X           X         F             (META_SUBARRAY_YSTART==1)
+FULLFRAME_XSIZE      X           X         F             (META_SUBARRAY_XSIZE==1032)
+FULLFRAME_YSIZE      X           X         F             (META_SUBARRAY_YSIZE==1024)
+
+SUBARRAY_XSTART      X           X         S             (META_SUBARRAY_XSTART>=1)
+SUBARRAY_YSTART      X           X         S             (META_SUBARRAY_YSTART>=1)
+SUBARRAY_XSIZE       X           X         S             (META_SUBARRAY_XSIZE<=1032)
+SUBARRAY_YSIZE       X           X         S             (META_SUBARRAY_YSIZE<=1024)

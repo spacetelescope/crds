@@ -1,3 +1,4 @@
+# This file applies to only NIRSPEC SCI arrays.
 # This .tpn defines constraints related to array objects vs. header keywords.
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
@@ -7,15 +8,19 @@
 #
 # See crds.cerify.validator_helpers for definitions of condition functions (e.g. nir_filter())
 
+# nir_filter short circuits some checks for FFLAT, SFLAT, and AREA
+
 SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (array_exists(SCI_ARRAY))
 SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (is_image(SCI_ARRAY))
 SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (has_type(SCI_ARRAY,['INT','FLOAT']))
 
-SUBARRAY_INBOUNDS_X         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))          (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
-SUBARRAY_INBOUNDS_Y         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))          (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
-SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))              (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+SUBARRAY_INBOUNDS_X         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+SUBARRAY_INBOUNDS_Y         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                               (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
 # Full width striping is an issue,  array may not match subarray size
-# SCI       A           X         (is_full_frame(SUBARRAY)and(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
-# SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-# SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(irs2_mode(READPATT))))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(irs2_mode(READPATT))))       (SCI_ARRAY.SHAPE[-2:]==(3200,2048))
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(irs2_mode(READPATT)))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(irs2_mode(READPATT)))         (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
+SCI       A           X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                                 (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
