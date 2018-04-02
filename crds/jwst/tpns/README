@@ -36,6 +36,14 @@ this (i.e. it's OK to have meta.subarray.ysize=2048 when data.shape[-2] =
 # resulting in total image dimensions that are greater than 2048 (at least
 # along the y image axis). So this is the only case where SUBSIZEn != NAXISn,
 # because NAXIS2 2048, while a decision was made to still set SUBSIZE2 = 2048.
+
+
 # --------------------------------------------------------------------------
 
+
+Comments about array dimensions and array shape equivalence:
+
+DARK: non-MIRI: SCI=ERR=3D, DQ=2D; MIRI: SCI=ERR=DQ=4D
+
+LINEARITY: COEFFS=3D, DQ=2D
 

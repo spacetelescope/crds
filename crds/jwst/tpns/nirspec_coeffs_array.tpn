@@ -5,5 +5,5 @@
 COEFFS       A           X         R             (len(COEFFS_ARRAY.SHAPE)==3)
 COEFFS       A           X         R             (is_image(COEFFS_ARRAY))
 COEFFS       A           X         R             (has_type(COEFFS_ARRAY,'FLOAT'))
-COEFFS       A           X         R             (COEFFS_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+COEFFS       A           X         R             (SCI_ARRAY.SHAPE[-2:]==COEFFS_ARRAY.SHAPE[-2:])
 

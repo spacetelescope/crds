@@ -5,3 +5,6 @@ include nir_err_array.tpn
 include nir_dq_array.tpn
 include nir_dq_def_array.tpn
 
+SCI   A   X   R   (len(SCI_ARRAY.SHAPE)==3)
+ERR   A   X   R   (len(ERR_ARRAY.SHAPE)==3)
+DQ    A   X   R   (len(DQ_ARRAY.SHAPE)==2)
