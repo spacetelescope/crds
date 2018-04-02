@@ -187,23 +187,26 @@ class Validator(object):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
-        if self.info.presence in ["R","P"]:
-            raise MissingKeywordError("Missing required", self._keytype_descr, repr(self.name))
-        elif self.info.presence in ["W"]:
-            log.warning("Missing suggested", self._keytype_descr, repr(self.name))
-            return "UNDEFINED"
-        elif self.info.presence in ["O"]:
-            log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
-            return "UNDEFINED"
-        elif self.info.presence in ["S","F","A"]:
-            log.verbose("Conditional SUBARRAY parameter is not defined.")
-            return "UNDEFINED"
-        elif self.conditionally_required:
-            if header and self.is_applicable(header):
-                raise MissingKeywordError("Missing", self._keytype_descr, repr(self.name), 
-                                           "required by condition", self.info.presence)
+        presence = self.info.presence
+        if self.conditionally_required:
+            if header: 
+                presence = self.is_applicable(header)
+                if not presence:
+                    raise MissingKeywordError("Missing", self._keytype_descr, repr(self.name), 
+                                              "required by condition", self.info.presence)
             else:
                 return "UNDEFINED"
+        if presence in ["R","P"]:
+            raise MissingKeywordError("Missing required", self._keytype_descr, repr(self.name))
+        elif presence in ["W"]:
+            log.warning("Missing suggested", self._keytype_descr, repr(self.name))
+            return "UNDEFINED"
+        elif presence in ["O"]:
+            log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
+            return "UNDEFINED"
+        elif presence in ["S","F","A"]:
+            log.verbose("Conditional SUBARRAY parameter is not defined.")
+            return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      repr(self.info.presence))
@@ -246,18 +249,21 @@ class Validator(object):
         SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
             try:
-                required = eval(self._presence_condition_code, header, dict(globals()))
+                presence = eval(self._presence_condition_code, header, dict(globals()))
                 log.verbose("Validator", self.info, "is",
                             "applicable." if required else "not applicable.", verbosity=70)
             except Exception as exc:
                 log.warning("Failed checking applicability of", repr(self.info),"skipping check : ", str(exc))
-                required = False
-            return required
-        if self.info.presence == "F": # IF_FULL_FRAME
+                presence = False
+            if presence in [True, False]:
+                return presence
+        else:
+            presence = self.info.presence
+        if presence == "F": # IF_FULL_FRAME
             return is_full_frame(SUBARRAY)
-        elif self.info.presence == "S": # IF_SUBARRAY        
+        elif presence == "S": # IF_SUBARRAY        
             return is_subarray(SUBARRAY)
-        elif self.info.presence == "A":
+        elif presence == "A":
             return subarray_defined(header)
         else:    
             return True
@@ -319,7 +325,6 @@ class CharacterValidator(KeywordValidator):
 
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
-    _values = ["T","F"]
 
 # ----------------------------------------------------------------------------
 
