@@ -251,15 +251,17 @@ class Validator(object):
             try:
                 presence = eval(self._presence_condition_code, header, dict(globals()))
                 log.verbose("Validator", self.info, "is",
-                            "applicable." if required else "not applicable.", verbosity=70)
+                            "applicable." if presence else "not applicable.", verbosity=70)
+                if not presence:
+                    return False
             except Exception as exc:
                 log.warning("Failed checking applicability of", repr(self.info),"skipping check : ", str(exc))
-                presence = False
-            if presence in [True, False]:
-                return presence
+                return False
         else:
             presence = self.info.presence
-        if presence == "F": # IF_FULL_FRAME
+        if presence == "O":
+            return header.get(self.name, False) != "UNDEFINED"
+        elif presence == "F": # IF_FULL_FRAME
             return is_full_frame(SUBARRAY)
         elif presence == "S": # IF_SUBARRAY        
             return is_subarray(SUBARRAY)

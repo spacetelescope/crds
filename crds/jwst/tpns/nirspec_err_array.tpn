@@ -7,8 +7,3 @@ ERR   A    X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))    (is_image(ERR_AR
 ERR   A    X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))    (has_type(ERR_ARRAY,'FLOAT'))
 ERR   A    X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))    (ERR_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
 
-# Full width striping is an issue,  array may not match subarray size
-# ERR   A    X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))                  (ERR_ARRAY.SHAPE[-2:]==(2048,2048))
-# ERR   A    X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[-2]-1<=2048)
-# ERR   A    X         (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                              (1<=META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[-1]-1<=2048)
-

@@ -33,10 +33,10 @@ SCI                        A    X       (all_subarray())                        
 SCI       A           X         (full_frame(EXP_TYPE!='FGS_ID-STACK'))      (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
 SCI       A           X         (full_frame(EXP_TYPE=='FGS_ID-STACK'))      (SCI_ARRAY.SHAPE[-2:]==(2048,2304))
 
-SCI       A           X         (all_subarray())                            (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         (subarray(EXP_TYPE=='FGS_ID-STACK'))        (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-2]-1<=2304)
+SCI       A           X         (subarray(EXP_TYPE!='FGS_ID-STACK'))        (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
 
-SCI       A           X         (all_subarray(EXP_TYPE=='FGS_ID-STACK'))    (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-2]-1<=2304)
-SCI       A           X         (all_subarray(EXP_TYPE!='FGS_ID-STACK'))    (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
 
 
 
