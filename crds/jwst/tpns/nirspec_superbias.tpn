@@ -1,4 +1,4 @@
-include nirspec_subarray.tpn
+include nir_subarray.tpn
 
 include nirspec_sci_array.tpn
 include nirspec_err_array.tpn
