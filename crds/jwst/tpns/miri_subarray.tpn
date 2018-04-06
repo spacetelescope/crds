@@ -19,7 +19,7 @@ FULLFRAME_YSTART     X           X         F             (META_SUBARRAY_YSTART==
 FULLFRAME_XSIZE      X           X         F             (META_SUBARRAY_XSIZE==1032)
 FULLFRAME_YSIZE      X           X         F             (META_SUBARRAY_YSIZE==1024)
 
-SUBARRAY_XSTART      X           X         S             (META_SUBARRAY_XSTART>=1)
-SUBARRAY_YSTART      X           X         S             (META_SUBARRAY_YSTART>=1)
-SUBARRAY_XSIZE       X           X         S             (META_SUBARRAY_XSIZE<=1032)
-SUBARRAY_YSIZE       X           X         S             (META_SUBARRAY_YSIZE<=1024)
+SUBARRAY_XSTART      X           X         S             (1<=META_SUBARRAY_XSTART<=1032)
+SUBARRAY_YSTART      X           X         S             (1<=META_SUBARRAY_YSTART<=1024)
+SUBARRAY_XSIZE       X           X         S             (1<=META_SUBARRAY_XSIZE<=1032)
+SUBARRAY_YSIZE       X           X         S             (1<=META_SUBARRAY_YSIZE<=1024)
