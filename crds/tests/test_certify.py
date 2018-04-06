@@ -740,8 +740,7 @@ def certify_rmap_compare():
     """
 
 def certify_jwst_bad_fits():
-    """
-    
+    """    
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
@@ -1110,7 +1109,7 @@ class TestCertify(test_config.CRDSTestCase):
     # ------------------------------------------------------------------------------
         
     def test_expression_validator_passes(self):
-        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR==\'FOO\')and(SUBARRAY==\'BAR\'))',))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.ExpressionValidator))
         header = { "DETECTOR":"FOO", "SUBARRAY":"BAR" }
@@ -1201,7 +1200,7 @@ class TestCertify(test_config.CRDSTestCase):
 
     def test_tpn_handle_missing_conditional(self):
         # typical subtle expression error, "=" vs. "=="
-        info = certify.TpnInfo('DETECTOR','H', 'C', '(READPATT=="FOO")', ("FOO","BAR","BAZ"))
+        info = certify.TpnInfo('DETECTOR','H', 'C', "(READPATT=='FOO')", ("FOO","BAR","BAZ"))
         checker = certify.validator(info)
         assert_raises(certify.MissingKeywordError, checker._handle_missing, header={"READPATT":"FOO"})
         assert_true(checker._handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED")

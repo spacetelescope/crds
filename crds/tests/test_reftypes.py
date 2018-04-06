@@ -104,14 +104,14 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
     >>> infos = types.reference_name_to_tpninfos("data/jwst_miri_flat_slitlessprism.fits")
     >>> print(log.PP(infos))
     [('DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=()),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'ANY_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'ANY_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_FULL_FRAME', expression='(DQ_ARRAY.SHAPE[-2:]==(1024,1032))'),
-    ...
-     ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', 'ANY_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=1032)'),
-     ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', 'ANY_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=1024)')]
-    >>> len(infos) >= 50
-    True
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(is_image(DQ_ARRAY))'),
+     ...
+     ('SUBARRAY_XSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(META_SUBARRAY_XSIZE<=1032)'),
+     ('SUBARRAY_XSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(META_SUBARRAY_XSTART>=1)'),
+     ('SUBARRAY_YSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(META_SUBARRAY_YSIZE<=1024)'),
+     ('SUBARRAY_YSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(META_SUBARRAY_YSTART>=1)')]
     >>> test_config.cleanup(old_state)
     """
 
