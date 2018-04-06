@@ -192,11 +192,12 @@ class Validator(object):
             if header: 
                 presence = self.is_applicable(header)
                 if not presence:
-                    raise MissingKeywordError("Missing", self._keytype_descr, repr(self.name), 
-                                              "required by condition", self.info.presence)
+                    log.verbose("Conditional constraint", repr(self.info.presence), "is not required.")
+                    return "UNDEFINED"
             else:
+                log.verbose("No header supplied to evaluate conditional constraint", repr(self.info.presence))
                 return "UNDEFINED"
-        if presence in ["R","P"]:
+        if presence in ["R","P",True]:
             raise MissingKeywordError("Missing required", self._keytype_descr, repr(self.name))
         elif presence in ["W"]:
             log.warning("Missing suggested", self._keytype_descr, repr(self.name))
@@ -327,6 +328,8 @@ class CharacterValidator(KeywordValidator):
 
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
+
+    _values = ["T","F"]
 
 # ----------------------------------------------------------------------------
 
