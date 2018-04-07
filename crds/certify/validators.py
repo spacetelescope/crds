@@ -192,25 +192,27 @@ class Validator(object):
             if header: 
                 presence = self.is_applicable(header)
                 if not presence:
-                    log.verbose("Conditional constraint", repr(self.info.presence), "is not required.")
+                    log.verbose("Conditional constraint on", repr(self.name),
+                                "is not required by", repr(self.info.presence), verbosity=70)
                     return "UNDEFINED"
             else:
-                log.verbose("No header supplied to evaluate conditional constraint", repr(self.info.presence))
+                log.verbose("No header supplied to evaluate conditional constraint",
+                            repr(self.name), "based on", repr(self.info.presence),
+                            "  Skipping.")
                 return "UNDEFINED"
         if presence in ["R","P",True]:
             raise MissingKeywordError("Missing required", self._keytype_descr, repr(self.name))
         elif presence in ["W"]:
             log.warning("Missing suggested", self._keytype_descr, repr(self.name))
-            return "UNDEFINED"
         elif presence in ["O"]:
             log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
-            return "UNDEFINED"
         elif presence in ["S","F","A"]:
             log.verbose("Conditional SUBARRAY parameter is not defined.")
-            return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      repr(self.info.presence))
+        return "UNDEFINED"
+    
     @property
     def _keytype_descr(self):
         descr = self.info._repr_keytype()[1:-1]
