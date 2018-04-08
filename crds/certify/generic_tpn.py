@@ -152,7 +152,7 @@ def load_tpn(fname):
     describing keyword requirements including acceptable values.
     """
     tpn = []
-    for line in load_tpn_lines(fname, None):
+    for line in load_tpn_lines(fname):
         line = _fix_quoted_whitespace(line)
         items = line.split()
         items = _restore_embedded_spaces(items)
@@ -177,7 +177,7 @@ def is_expression(tpn_field):
     return tpn_field.startswith("(") and tpn_field.endswith(")")
     
 @utils.cached
-def load_tpn_lines(fname, _include_line):
+def load_tpn_lines(fname, replacements=()):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.  If a line begins with "include",  the
     second word should be a base filename that refers to a file in the same
@@ -192,27 +192,22 @@ def load_tpn_lines(fname, _include_line):
             line = line.strip()
             if line.startswith("#") or not line:
                 continue
-            if line.startswith("include"):
-                lines += _handle_include(dirname, fname, line)
+            if line.startswith("include"):   #  include tpn_file
+                fname2 = os.path.join(dirname, line.split()[1])
+                lines += load_tpn_lines(fname2, replacements)
                 continue
+            elif line.startswith("replace"): #  replace orig_str  new_str
+                orig, new = line.split()[1:]
+                replacements = replacements + ((orig, new),)
+                continue
+            for (orig, new) in replacements:
+                line = re.sub(orig, new, line)
             if append:
                 lines[-1] = lines[-1][:-1].strip() + line
             else:
                 lines.append(line)
             append = line.endswith("\\")
     return lines
-
-def _handle_include(dirname, fname, line):
-    parts = re.sub("\s+", " ", line).split(" ")
-    assert len(parts) in [2,4], "Invalid .tpn include format for: " + repr(line)
-    fname2 = os.path.join(dirname, parts[1])
-    if not os.path.exists(fname2):
-        exceptions.MissingTpnIncludeError("Included .tpn file", repr(fname2), "cannot be found.")
-    lines2 = load_tpn_lines(fname2, line)
-    if len(parts) == 4:
-        orig, subst = parts[2:]
-        lines2 = [re.sub(orig, subst, _line) for _line in lines2]
-    return lines2
 
 SPACE_MAGIC = "@@1324$$" 
 

@@ -1,7 +1,4 @@
+include nir_subarray.tpn
 
-# EXP_TYPE=FGS_ID-STACK weird XDIM makes these checks invalid
-
-# include nir_subarray.tpn
-
-# include nir_dq_array.tpn
-# include nir_dq_def_array.tpn
+include nir_dq_array.tpn
+include nir_dq_def_array.tpn
