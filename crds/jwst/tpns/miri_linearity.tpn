@@ -1,30 +1,21 @@
 include miri_subarray.tpn
 
-COEFFS       X           X         F             (META_SUBARRAY_XSTART==1)
-COEFFS       X           X         F             (META_SUBARRAY_YSTART==1)
-COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[-2:]==(1024,1032))
-
-COEFFS       A           X         R             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[-2]-1<=1024)
-COEFFS       A           X         R             (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[-1]-1<=1032)
-
-COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-
 COEFFS       A           X         R            (has_type(COEFFS_ARRAY,'FLOAT'))
 COEFFS       A           X         R            (is_image(COEFFS_ARRAY))
 COEFFS       A           X         R            (len(COEFFS_ARRAY.SHAPE)==3)
 
+COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[-2:]==(1024,1032))
+COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+COEFFS       A           X         R             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[-2]-1<=1024)
+COEFFS       A           X         R             (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[-1]-1<=1032)
+
 # Optional ERR 
-ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==(1024,1032))
-
-ERR       A           X         O               (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[-2]-1<=1024)
-ERR       A           X         O               (1<=META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[-1]-1<=1032)
-
-ERR       A           X         S               (ERR_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-
 ERR       A           X         R               (has_type(ERR_ARRAY,'FLOAT'))
 ERR       A           X         R               (is_image(ERR_ARRAY))
+ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==COEFFS_ARRAY.SHAPE[-2:])
 
+include miri_dq_array.tpn     SCI   COEFFS
 
-include miri_dq_array.tpn
 include miri_dq_def_array.tpn
 
