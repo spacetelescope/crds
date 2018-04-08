@@ -170,7 +170,7 @@ class ServiceCallBinding(object):
             if isinstance(result, (python23.string_types,int,float,bool)):
                 log.verbose("RPC OK -->", repr(result))
             else:
-                log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
+                log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 75 else "")
             return result
 
     def classify_exception(self, decoded):

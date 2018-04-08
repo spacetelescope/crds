@@ -241,6 +241,8 @@ def is_irs2(readpatt):
     True
     >>> is_irs2("NRSN32R8")
     False
+    >>> is_irs2("ALLIRS2")
+    True
     """
     return 'IRS2' in readpatt
 
