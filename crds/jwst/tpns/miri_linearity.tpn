@@ -15,7 +15,8 @@ ERR       A           X         R               (has_type(ERR_ARRAY,'FLOAT'))
 ERR       A           X         R               (is_image(ERR_ARRAY))
 ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==COEFFS_ARRAY.SHAPE[-2:])
 
-include miri_dq_array.tpn     SCI   COEFFS
+replace SCI COEFFS
+include miri_dq_array.tpn
 
 include miri_dq_def_array.tpn
 

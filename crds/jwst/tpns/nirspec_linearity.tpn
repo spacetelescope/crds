@@ -1,8 +1,11 @@
 include nir_subarray.tpn
 
-include nirspec_coeffs_array.tpn   SCI  COEFFS
-include nirspec_opt_err_array.tpn  SCI  COEFFS
-include nirspec_dq_array.tpn       SCI  COEFFS
+replace SCI COEFFS
+include nirspec_sci_array.tpn
+include nirspec_opt_err_array.tpn
+include nirspec_dq_array.tpn
 include nir_dq_def_array.tpn
+
+COEFFS    A      X      R     (len(COEFFS_ARRAY.SHAPE)==3)
 
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
