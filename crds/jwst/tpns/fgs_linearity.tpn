@@ -2,9 +2,11 @@ include nir_subarray.tpn
 
 # SCI_ARRAY is renamed  PRIMARY_ARRAY for linearity only.  Thanks universe!
 
-include nir_coeffs_array.tpn   SCI  COEFFS
-include nir_opt_err_array.tpn  SCI  COEFFS
-include nir_dq_array.tpn       SCI  COEFFS
+replace SCI COEFFS
+include nir_sci_array.tpn
+include nir_opt_err_array.tpn
+include nir_dq_array.tpn
 
 include nir_dq_def_array.tpn
 
+COEFFS    A      X      R     (len(COEFFS_ARRAY.SHAPE)==3)
