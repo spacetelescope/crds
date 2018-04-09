@@ -261,7 +261,7 @@ Expression Presence Values
 ..........................
 
 A Python expression can be specified to define when a constraint does or
-doesn't apply based on keywords values.  The expression should begin with ( and
+doesn't apply based on keyword values.  The expression should begin with ( and
 end with ) and should contain no spaces.  (Sometimes extra parens are required
 to break up the expression into words using punctuation instead of spaces.)
 
@@ -334,13 +334,15 @@ Custom Constraints
 Custom constraint handlers define new classes of validators and are always
 specified by a value and validator name beginning with &, e.g.::
 
- &PEDIGREE
- &USEAFTER
- &JWSTDATE
+ &PEDIGREE  -- implements algorithm to check simple values and INFLIGHT dates
+ &USEAFTER  -- implements USEAFTER date/time format checking
+ &JWSTDATE  -- implements JWST date/time format checking
 
 Custom constraint validators can perform arbitrary processing to validate a
 single keyword value, i.e. specify precise date formats, etc.  Custom
-constraint validators are defined in the crds.certify.validators module.
+constraint validators are defined in the crds.certify.validators module with
+classes named like e.g.  PedigreeValidator, UseafterValidator,
+JwstdateValidator.
 
 Constraint Expressions
 ......................

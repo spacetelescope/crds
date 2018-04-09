@@ -1,23 +1,7 @@
 # Applies to NIRCAM, NIRISS, FGS (i.e. all NIR instruments except NIRSPEC)
 
-# This .tpn defines constraints related to array objects vs. header keywords.
-# Required relationships between subarray keywords are defined in a subarray .tpn
-# This file pertains to array properties and their relationships to header keywords.
+# See README
 
-# These are X instead of H because they're fundamentally not keyword/header checks,  
-# they're condition checks where the name of the condition is given in place of the keyword.
-# However, in the case of checks requiring arrays, the keyword names the array rather than the condition.
-
-# HDU-name     A-rray-type   eXpression-constraint    R-equired,S-ubarray,F-ull_frame,A-ll-subarray
-# HDU-name     e-X-pression  eXpression-constraint    R-equired,S-ubarray,F-ull_frame,A-ll-subarray
-
-# A-array-type constraints are heavy because they implie loading arrays (HDU data).
-# e-X-pression constraints are lighter weight because they don't require loading numpy arrays.
-# e-X-pression constraints replace the value enumeration with a Python expression which must be True.
-# Array HDU's appear as keywords with the HDU name but in expressions as <hdu>_ARRAY.
-
-# READPATT  H           C         O
- 
 SCI       A           X         R                           (array_exists(SCI_ARRAY))
 SCI       A           X         R                           (is_image(SCI_ARRAY))
 SCI       A           X         R                           (has_type(SCI_ARRAY,['FLOAT','INT']))
