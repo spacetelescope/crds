@@ -19,9 +19,9 @@ SUBARRAY_INBOUNDS_Y         X   X   (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))     
 SCI       A           X             (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
 # Full width striping is an issue,  array may not match subarray size
-SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(irs2_mode(READPATT)))))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
-SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(irs2_mode(READPATT))))        (SCI_ARRAY.SHAPE[-2:]==(3200,2048))
+SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(is_irs2(READPATT)))))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(is_irs2(READPATT))))        (SCI_ARRAY.SHAPE[-2:]==(3200,2048))
 
-SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(irs2_mode(READPATT)))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(irs2_mode(READPATT))))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
+SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(is_irs2(READPATT)))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(is_irs2(READPATT))))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
 SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))                                  (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
