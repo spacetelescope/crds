@@ -718,6 +718,19 @@ def get_instruments_filekinds(observatory, filepaths):
         itmapping[instrument] |= set([filekind])
     return { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
 
+def organize_files(observatory, files):
+    """Given and `observatory` name and list of `files`, return a dictionary
+    that partitions `files` into lists based upon common instrument and
+    filekind.
+
+    Returns:  { (instrument, filekind) : [ file1, file4, ...], ... }
+    """
+    organized = defaultdict(list)
+    for file_ in files:
+        instrument, filekind = get_file_properties(observatory, file_)
+        organized[(instrument,filekind)].append(file_)
+    return dict(organized)
+
 # ===================================================================
 
 MODULE_PATH_RE = re.compile(r"^crds(\.\w{1,64}){0,10}$")
