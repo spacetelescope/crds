@@ -829,10 +829,12 @@ class InstrumentContext(ContextMapping):
         if filekind not in self.selections:
             raise crexc.CrdsUnknownReftypeError("Unknown reference type", repr(filekind))
         if MappingSelectionsDict.is_na_value(self.selections[filekind]):
-            log.verbose("Reference type", repr(filekind), "is declared N/A at the instrument level for", repr(self.instrument))
+            log.verbose("Reference type", repr(filekind),
+                        "is declared N/A at the instrument level for", repr(self.instrument), verbosity=70)
             raise crexc.IrrelevantReferenceTypeError("Type", repr(filekind), "is N/A for", repr(self.instrument))
         if  MappingSelectionsDict.is_omit_value(self.selections[filekind]):
-            log.verbose("Reference type", repr(filekind), "is omitted at the instrument level for", repr(self.instrument))
+            log.verbose("Reference type", repr(filekind),
+                        "is omitted at the instrument level for", repr(self.instrument), verbosity=70)
             raise crexc.OmitReferenceTypeError("Type", repr(filekind), "is OMITTED for", repr(self.instrument))
         return self.selections[filekind]
 
