@@ -1,30 +1,39 @@
-"""This module implements the "heavy" getreferences() top level interface.  
+"""This module implements a number of cache oriented top level interfaces
+including getreferences(), getrecommendations().
 
 The "light" client is defined in the crds.client package and is entirely
 dependent on the server for computing best references.  The advantage of the
-"light" client is that it is comparatively simple code that has shallower
-dependencies on the core library.
+"light" client is that it has minimal dependencies on the core library is
+generally a light shim around JSONRPC web services.
 
 In contrast, the "heavy" client defined here provides a number of advanced 
-features which depend on a full installation of the core library:
+features which depend on a full installation of the core library and manage
+and utilize the CRDS cache,  particularly as it pertains to best refs.
+
+Some of the features are:
 
 1. The ability to compute best references locally as a baseline behavior.
 
-2. The ability to automatically "fall up" to the server when the local code 
-is deemed obsolete.
+2. Automatic demand-based cache management for bestrefs, This includes
+automatically syncing required rules and references when enabled, translating
+symbolic contexts where used (e.g. jwst-edit vs. jwst_0442.pmap), managing
+context pickles when enabled.
 
-3. The ability to "fall back" to local code when the server cannot be reached.
+3. Logging and "firewalling" for incoming parameters on the fundamental
+bestrefs interface, getreferences(), particularly as it pertains to integration
+with JWST CAL code.
 
-4. The ability to make client-vs-server CRDS s/w version comparisons to determine
-when local code is obsolete.
-
-5. The ability to record the last operational context and use it when the 
+4. The ability to record the last operational context and use it when the 
 server cannot be contacted.
 
-6. The ability to define the context based on an env var.
+5. The ability to define the context based on an env var.
 
-7. The ability to fall back to pre-installed contexts if no context is defined
+6. The ability to fall back to pre-installed contexts if no context is defined
 through the network, parameter, or environment variable mechanisms.
+
+7. Implementation of bad files handling,  resulting in an exception or warning
+when bad rules or references are used anyway.
+
 """
 from __future__ import print_function
 from __future__ import division
