@@ -703,7 +703,7 @@ def dump_references3(pipeline_context, baserefs=None, ignore_cache=False, raise_
     baserefs = list(baserefs)
     for refname in baserefs:
         if "NOT FOUND" in refname:
-            log.verbose("Skipping " + srepr(refname))
+            log.verbose("Skipping " + srepr(refname), verbosity=70)
             baserefs.remove(refname)
     baserefs = sorted(set(baserefs))
     return FileCacher(pipeline_context, ignore_cache, raise_exceptions).get_local_files(baserefs)
@@ -781,7 +781,7 @@ def _get_cache_filelist_and_report_errors(bestrefs):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
                     log.verbose("Reference type", srepr(filetype),
-                                "NOT FOUND.  Skipping reference caching/download.")
+                                "NOT FOUND.  Skipping reference caching/download.", verbosity=70)
                 else:
                     last_error = CrdsLookupError("Error determining best reference for",
                                                  srepr(filetype), " = ", str(refname)[len("NOT FOUND"):])
