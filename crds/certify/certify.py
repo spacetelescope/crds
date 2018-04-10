@@ -563,8 +563,9 @@ class FitsCertifier(ReferenceCertifier):
 # -------------------------------------------------------------------------------------------------
 
 RECATEGORIZED_MESSAGE = {
-     'Unregistered XTENSION value' : log.info,
-     'checksum is not' : log.error,
+    'Unregistered XTENSION value' : log.info,
+    'checksum is not' : log.error,
+    'Invalid CHECKSUM' : log.error,
      }
 
 def interpret_fitsverify_output(status, output):
