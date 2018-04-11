@@ -450,6 +450,9 @@ def locate_dir(instrument, mode=None):
 
 # When loading headers,  make sure each keyword in a tuple is represented with
 # the same value enabling any form to be used.  Case insensitive.
+
+# XXXX the first translation should be the FITS keyword assuming there is one!!
+
 CROSS_STRAPPED_KEYWORDS = {
                            
     # META.REF_FILE.X is now obsolete but retained for backward compatibility.
@@ -533,7 +536,17 @@ def add_fits_keywords(log_message):
     their FITS translations if possible like:
 
     <data_models_keyword> '[' <fits_keyword> ']'
+    """
+    try:
+        return _add_fits_keywords(log_message)
+    except Exception:  # if annotation fails,  just return the original message
+        return log_message
 
+def _add_fits_keywords(log_message):
+    """Process log `message` and annotate data model keywords/paths with
+    their FITS translations if possible like:
+
+    <data_models_keyword> '[' <fits_keyword> ']'
     """
     matches = DATA_MODEL_RE.finditer(log_message)
     if not matches:
