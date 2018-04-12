@@ -467,7 +467,6 @@ jwst_niriss_superbias_0005.rmap
         else:
             self._cat_text(path)
         if self._file_info:
-            self._cat_banner("Catalog Info:", delim="-", bottom_delim=".")
             self._cat_catalog_info(path)        
 
     def _cat_banner(self, *args, **keys):
@@ -484,7 +483,7 @@ jwst_niriss_superbias_0005.rmap
         """Print information on any reference type at `path`."""
         self._cat_header(path)
         if path.endswith(".fits"):
-            self._cat_banner("Fits Info:", delim="-", bottom_delim=".")
+            self._cat_banner("Fits Info:", delim="-", bottom_delim=None)
             self._print_lines(path, _fits_info_lines(path))
             if not self.args.no_arrays:
                 self._cat_array_properties(path)
@@ -498,7 +497,7 @@ jwst_niriss_superbias_0005.rmap
                     if i > 0:
                         extname = hdu.header["EXTNAME"]
                         self._cat_banner("CRDS Array Info [" + repr(extname) + "]:",
-                                         delim="-", bottom_delim=".")
+                                         delim="-", bottom_delim=None)
                         props = data_file.get_array_properties(path, hdu.header["EXTNAME"])
                         props = { prop:value for (prop,value) in props.items() if value is not None }
                         self._print_lines(path, _pp_lines(props))
@@ -528,8 +527,10 @@ jwst_niriss_superbias_0005.rmap
         """Dump out all the info contained in the CRDS server file catlog."""
         try:
             info = self._file_info[os.path.basename(path)]
-            info.pop("deliverer_user")
-            self._print_lines(path, _pp_lines(info))
+            if isinstance(info, dict):
+                info.pop("deliverer_user")
+                self._cat_banner("Catalog Info:", delim="-", bottom_delim=".")
+                self._print_lines(path, _pp_lines(info))
         except KeyError:
             print("Server catalog info for", repr(path), "not available.")
 

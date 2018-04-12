@@ -386,32 +386,32 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  EXP_TYPE = 'mir_image'
-    CRDS - INFO -  META.AUTHOR = 'Todd Miller'
-    CRDS - INFO -  META.DESCRIPTION = 'Brief notes on this reference.'
-    CRDS - INFO -  META.EXPOSURE.READPATT = 'any'
-    CRDS - INFO -  META.EXPOSURE.TYPE = 'mir_image'
-    CRDS - INFO -  META.HISTORY = 'How this reference came to be and changed over time.'
-    CRDS - INFO -  META.INSTRUMENT.BAND = 'medium'
-    CRDS - INFO -  META.INSTRUMENT.CHANNEL = '34'
-    CRDS - INFO -  META.INSTRUMENT.DETECTOR = 'mirifulong'
-    CRDS - INFO -  META.INSTRUMENT.FILTER = 'UNDEFINED'
-    CRDS - INFO -  META.INSTRUMENT.GRATING = 'UNDEFINED'
-    CRDS - INFO -  META.INSTRUMENT.NAME = 'miri'
-    CRDS - INFO -  META.INSTRUMENT.PUPIL = 'UNDEFINED'
-    CRDS - INFO -  META.MODEL_TYPE = 'UNDEFINED'
-    CRDS - INFO -  META.PEDIGREE = 'dummy'
-    CRDS - INFO -  META.REFTYPE = 'distortion'
-    CRDS - INFO -  META.SUBARRAY.FASTAXIS = '1'
-    CRDS - INFO -  META.SUBARRAY.NAME = 'MASK1550'
-    CRDS - INFO -  META.SUBARRAY.SLOWAXIS = '2'
-    CRDS - INFO -  META.SUBARRAY.XSIZE = '1032'
-    CRDS - INFO -  META.SUBARRAY.XSTART = '1'
-    CRDS - INFO -  META.SUBARRAY.YSIZE = '4'
-    CRDS - INFO -  META.SUBARRAY.YSTART = '1020'
-    CRDS - INFO -  META.TELESCOPE = 'jwst'
-    CRDS - INFO -  META.USEAFTER = '2015-01-25T12:00:00'
+    CRDS - INFO -  META.AUTHOR [AUTHOR] = 'Todd Miller'
+    CRDS - INFO -  META.DESCRIPTION [DESCRIP] = 'Brief notes on this reference.'
+    CRDS - INFO -  META.EXPOSURE.READPATT [READPATT] = 'any'
+    CRDS - INFO -  META.EXPOSURE.TYPE [EXP_TYPE] = 'mir_image'
+    CRDS - INFO -  META.HISTORY [HISTORY] = 'How this reference came to be and changed over time.'
+    CRDS - INFO -  META.INSTRUMENT.BAND [BAND] = 'medium'
+    CRDS - INFO -  META.INSTRUMENT.CHANNEL [CHANNEL] = '34'
+    CRDS - INFO -  META.INSTRUMENT.DETECTOR [DETECTOR] = 'mirifulong'
+    CRDS - INFO -  META.INSTRUMENT.FILTER [FILTER] = 'UNDEFINED'
+    CRDS - INFO -  META.INSTRUMENT.GRATING [GRATING] = 'UNDEFINED'
+    CRDS - INFO -  META.INSTRUMENT.NAME [INSTRUME] = 'miri'
+    CRDS - INFO -  META.INSTRUMENT.PUPIL [PUPIL] = 'UNDEFINED'
+    CRDS - INFO -  META.MODEL_TYPE [DATAMODL] = 'UNDEFINED'
+    CRDS - INFO -  META.PEDIGREE [PEDIGREE] = 'dummy'
+    CRDS - INFO -  META.REFTYPE [REFTYPE] = 'distortion'
+    CRDS - INFO -  META.SUBARRAY.FASTAXIS [FASTAXIS] = '1'
+    CRDS - INFO -  META.SUBARRAY.NAME [SUBARRAY] = 'MASK1550'
+    CRDS - INFO -  META.SUBARRAY.SLOWAXIS [SLOWAXIS] = '2'
+    CRDS - INFO -  META.SUBARRAY.XSIZE [SUBSIZE1] = '1032'
+    CRDS - INFO -  META.SUBARRAY.XSTART [SUBSTRT1] = '1'
+    CRDS - INFO -  META.SUBARRAY.YSIZE [SUBSIZE2] = '4'
+    CRDS - INFO -  META.SUBARRAY.YSTART [SUBSTRT2] = '1020'
+    CRDS - INFO -  META.TELESCOPE [TELESCOP] = 'jwst'
+    CRDS - INFO -  META.USEAFTER [USEAFTER] = '2015-01-25T12:00:00'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
@@ -596,9 +596,9 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/jwst_miri_ipc_0003.add.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
     CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
-    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND'=None to value of 'P_BAND'='SHORT | MEDIUM |'
-    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'='MIRIMAGE' to value of 'P_DETECT'='MIRIFUSHORT|MIRIFULONG|'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'SHORT | MEDIUM |'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
@@ -688,7 +688,7 @@ def certify_JsonCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.json", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
     CRDS - INFO -  Certifying 'data/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
     """
             
@@ -697,7 +697,7 @@ def certify_YamlCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.yaml", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
     CRDS - INFO -  Certifying 'data/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
     """
             
@@ -707,7 +707,7 @@ def certify_AsdfCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
-    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -726,7 +726,7 @@ def certify_AsdfCertify_opaque_name():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
-    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR'=None to value of 'META.INSTRUMENT.P_DETECTOR'='NRS1|NRS2|'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -749,9 +749,9 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
-    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE'
-    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
+    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
+    CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
