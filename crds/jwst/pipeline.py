@@ -80,14 +80,6 @@ def test_header(calver, exp_type):
 
 # --------------------------------------------------------------------------------------
 
-HERE = os.path.dirname(__file__) or "."
-
-SYSTEM_CRDSCFG_B7_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.yaml")
-SYSTEM_CRDSCFG_B7_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.yaml")
-SYSTEM_CRDSCFG_B7_1_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.1.yaml")
-
-# --------------------------------------------------------------------------------------
-
 def _get_missing_calver(cal_ver=None):
     """If `cal_ver` is None, return the calibration software version for 
     the installed version of calibration code.  Otherwise return `cal_ver`
@@ -174,18 +166,25 @@ def _load_refpath(context, refpath):
         crdscfg =  yaml.load(opened)
     return CrdsCfgManager(context, refpath, crdscfg)
 
+# --------------------------------------------------------------------------------------
+
+HERE = os.path.dirname(__file__) or "."
+
+REFPATHS = [
+    ('0.7.7', "jwst_system_crdscfg_b7.yaml"),
+    ('0.9.0', "jwst_system_crdscfg_b7.1.yaml"),
+    ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
+    ('9.9.9', "jwst_system_crdscfg_b7.1.3.yaml"),   # latest backstop
+]
+    
 def _get_config_refpath(context, cal_ver):
     """Given CRDS `context` and calibration s/w version `cal_ver`,  identify the applicable
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
-    # default enables running if system calver is never delivered as reference file.
-    # and for B7 and earlier.
-    if cal_ver < '0.7.7':
-        refpath = SYSTEM_CRDSCFG_B7_PATH
-    elif cal_ver < '0.9.0':
-        refpath = SYSTEM_CRDSCFG_B7_1_PATH
-    else:
-        refpath = SYSTEM_CRDSCFG_B7_1_1_PATH        
+    i = 0
+    while i < len(REFPATHS) and cal_ver[:6] > REFPATHS[i][0]:
+        i += 1
+    refpath = os.path.join(HERE, REFPATHS[i][1])
     try:  # Use a normal try/except because exceptions are expected.
         header = {
             "META.INSTRUMENT.NAME" : "SYSTEM", 
