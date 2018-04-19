@@ -1,0 +1,79 @@
+#
+# From https://jira.stsci.edu/browse/CRDS-193, MIRI RSCD only
+#
+# TFORM1 = '4A ' /Character string
+# TTYPE1 = 'SUBARRAY' /Label for column 1
+
+# TFORM2 = '4A ' /Character string
+# TTYPE2 = 'READPATT' /Label for column 2
+
+# TFORM3 = '4A ' /Character string
+# TTYPE3 = 'ROWS ' /Label for column 3
+
+# TFORM4 = '1E ' /Real*4 (floating point)
+# TTYPE4 = 'TAU ' /Label for column 4
+# TUNIT4 = 'Frames ' /Units of column 4
+
+# TFORM5 = '1E ' /Real*4 (floating point)
+# TTYPE5 = 'ASCALE ' /Label for column 5
+
+# TFORM6 = '1E ' /Real*4 (floating point)
+# TTYPE6 = 'POW ' /Label for column 6
+
+# TFORM7 = '1E ' /Real*4 (floating point)
+# TTYPE7 = 'ILLUM_ZP' /Label for column 7
+
+# TFORM8 = '1E ' /Real*4 (floating point)
+# TTYPE8 = 'ILLUM_SLOPE' /Label for column 8
+
+# TFORM9 = '1E ' /Real*4 (floating point)
+# TTYPE9 = 'ILLUM2 ' /Label for column 9
+
+# TFORM10 = '1E ' /Real*4 (floating point)
+# TTYPE10 = 'PARAM3 ' /Label for column 10
+
+# TFORM11 = '1E ' /Real*4 (floating point)
+# TTYPE11 = 'CROSSOPT' /Label for column 11
+
+# TFORM12 = '1E ' /Real*4 (floating point)
+# TTYPE12 = 'SAT_ZP ' /Label for column 12
+
+# TFORM13 = '1E ' /Real*4 (floating point)
+# TTYPE13 = 'SAT_SLOPE' /Label for column 13
+
+# TFORM14 = '1E ' /Real*4 (floating point)
+# TTYPE14 = 'SAT_2 ' /Label for column 14
+
+# TFORM15 = '1E ' /Real*4 (floating point)
+# TTYPE15 = 'SAT_MZP ' /Label for column 15
+
+# TFORM16 = '1E ' /Real*4 (floating point)
+# TTYPE16 = 'SAT_ROWTERM' /Label for column 16
+
+# TFORM17 = '1E ' /Real*4 (floating point)
+# TTYPE17 = 'SAT_SCALE' /Label for column 17
+
+REFTYPE    H      C      R      RSCD
+
+RSCD        A     X      R   (is_table(RSCD_ARRAY))
+RSCD        A     X      R   (has_columns(RSCD_ARRAY,['SUBARRAY','READPATT','ROWS','TAU','ASCALE','POW','ILLUM_ZP','ILLUM_SLOPE','ILLUM2','PARAM3','CROSSOPT','SAT_ZP','SAT_SLOPE','SAT_2','SAT_MZP','SAT_ROWTERM','SAT_SCALE']))
+
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SUBARRAY','STRING'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'READPATT','STRING'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ROWS','STRING'))
+
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'TAU','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ASCALE','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'POW','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ILLUM_ZP','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ILLUM_SLOPE','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ILLUM2','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'PARAM3','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'CROSSOPT','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_ZP','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_SLOPE','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_2','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_MZP','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_ROWTERM','FLOAT'))
+RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_SCALE','FLOAT'))
+
