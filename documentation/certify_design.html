@@ -533,13 +533,43 @@ META.INSTRUMENT.PUPIL  H   C   O  CLEAR,CLEARP,F090W,F115W,F140M,F150W,F158M,\
 <li>The third word defines this as a (C)haracter keyword value vs. e.g. (F)loat</li>
 <li>The fourth word defines this as (O)ptional, it may be omitted.  Another
 common value is (R)equired.  An expression may also be used in this slot to
-define if/if-not the constraint should apply at all,  with additional
-semantic refinements added by wrapping helper functions.</li>
+define if/if-not the constraint should apply at all; additional semantic
+refinements may also be added by wrapping helper functions.</li>
 <li>The final &quot;word&quot; is a comma separated list of values.  Multiple lines may be
-used by terminating each line with backslash except the final line.  Spaces
-MAY NOT appear in the value list, expressions, etc.  In some cases the value
-list is replaced by a Python expression which should evaluate to True.</li>
+used by terminating each line with a backslash except the final line. In
+some cases the value list is replaced by a Python expression which should
+evaluate to True.    Literal numerical ranges may also be specified.</li>
 </ol>
+<div class="section" id="whitespace-in-constraint-fields">
+<h3>Whitespace in Constraint Fields</h3>
+<p>Since whitespace is used to delimit fields within a constraint, spaces /
+whitespace MAY NOT appear within any single field, i.e. the value list,
+presence expressions, constraint expressions, etc.  This can be slightly
+awkward at times but the addition of extra parentheses to existing punctuation
+is generally sufficient to write expressions containing no spaces.</p>
+<p>For example, even expressions such as:</p>
+<pre class="literal-block">
+(&quot;IFU&quot; not in EXP_TYPE)
+</pre>
+<p>which contain instrinsic whitespace can often be rephrased in a workable way
+as:</p>
+<pre class="literal-block">
+(not((&quot;IFU&quot;)in(EXP_TYPE)))
+</pre>
+<p>A limitation of this approach is that literal strings containing white space
+are not permitted/straightforward in expressions.  In that area, writing
+additional helper functions or custom validators might provide a way out.</p>
+<p>While the idea of modernizing .tpn syntax is pretty obvious, the downsides of
+switching to more readable file formats like JSON or YAML are a combination of:</p>
+<pre class="literal-block">
+* Up-front work
+* Additional testing for multiple projects
+* Constraints which become more verbose and less dense.
+</pre>
+<p>Since constraints are easier to read and consider en masse when they're
+expressed in a dense format, not even readability is a complete slam dunk as a
+motivation for modernizing formats.</p>
+</div>
 <div class="section" id="name-field">
 <h3>&lt;Name&gt; Field</h3>
 <p>The name field specifies the name of a header keyword, table column, array,
@@ -809,11 +839,14 @@ JwstdateValidator.</p>
 </div>
 <div class="section" id="expressions-constraints">
 <h4>Expressions Constraints</h4>
-<p>Unlike presence expressions which define when a constraint should or should
-not be applied,  expressions constraints define the condition which should
-be satisfied when the constraint is applicable.   In principle the expression
-constraint could do both aspects of this logic,  presence and value,  but in
-practice it's convenient to consider them seperately.</p>
+<p>Unlike presence expressions which define when a constraint should or should not
+be applied, expressions constraints define the condition which should be
+satisfied when the constraint is applicable.</p>
+<p>Someone might briefly wonder if both presence and constraint value expressions
+are needed.  The answer is &quot;yes&quot; because a negative result of a value
+expression is limited to &quot;constraint failed&quot; while a negative result for the
+presence expression is limited to &quot;do not evaluate&quot;,  so the concerns truly
+are separate and two expressions are needed.</p>
 <p>Constraint expressions always begin with '(' and end with ')' and should
 contain no spaces.</p>
 <p>An example expression constraint is:</p>

@@ -144,14 +144,46 @@ The columns of the constraint are interpreted as follows:
 
 4. The fourth word defines this as (O)ptional, it may be omitted.  Another
    common value is (R)equired.  An expression may also be used in this slot to
-   define if/if-not the constraint should apply at all,  with additional
-   semantic refinements added by wrapping helper functions.
+   define if/if-not the constraint should apply at all; additional semantic
+   refinements may also be added by wrapping helper functions.
 
 5. The final "word" is a comma separated list of values.  Multiple lines may be
-   used by terminating each line with backslash except the final line.  Spaces
-   MAY NOT appear in the value list, expressions, etc.  In some cases the value
-   list is replaced by a Python expression which should evaluate to True.
+   used by terminating each line with a backslash except the final line. In
+   some cases the value list is replaced by a Python expression which should
+   evaluate to True.    Literal numerical ranges may also be specified.
 
+Whitespace in Constraint Fields
+...............................
+
+Since whitespace is used to delimit fields within a constraint, spaces /
+whitespace MAY NOT appear within any single field, i.e. the value list,
+presence expressions, constraint expressions, etc.  This can be slightly
+awkward at times but the addition of extra parentheses to existing punctuation
+is generally sufficient to write expressions containing no spaces.
+
+For example, even expressions such as::
+
+  ("IFU" not in EXP_TYPE)
+
+which contain instrinsic whitespace can often be rephrased in a workable way
+as::
+
+  (not(("IFU")in(EXP_TYPE)))
+
+A limitation of this approach is that literal strings containing white space
+are not permitted/straightforward in expressions.  In that area, writing
+additional helper functions or custom validators might provide a way out.
+
+While the idea of modernizing .tpn syntax is pretty obvious, the downsides of
+switching to more readable file formats like JSON or YAML are a combination of::
+  
+  * Up-front work
+  * Additional testing for multiple projects
+  * Constraints which become more verbose and less dense.
+
+Since constraints are easier to read and consider en masse when they're
+expressed in a dense format, not even readability is a complete slam dunk as a
+motivation for modernizing formats.
 
 <Name> Field
 ............
@@ -462,11 +494,15 @@ JwstdateValidator.
 Expressions Constraints
 +++++++++++++++++++++++
 
-Unlike presence expressions which define when a constraint should or should
-not be applied,  expressions constraints define the condition which should
-be satisfied when the constraint is applicable.   In principle the expression
-constraint could do both aspects of this logic,  presence and value,  but in
-practice it's convenient to consider them seperately.
+Unlike presence expressions which define when a constraint should or should not
+be applied, expressions constraints define the condition which should be
+satisfied when the constraint is applicable.
+
+Someone might briefly wonder if both presence and constraint value expressions
+are needed.  The answer is "yes" because a negative result of a value
+expression is limited to "constraint failed" while a negative result for the
+presence expression is limited to "do not evaluate",  so the concerns truly
+are separate and two expressions are needed.
 
 Constraint expressions always begin with '(' and end with ')' and should
 contain no spaces.
