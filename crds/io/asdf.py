@@ -31,7 +31,9 @@ class AsdfFile(AbstractFile):
             header = self.to_simple_types(handle.tree)
             if "history" in handle.tree:
                 histall = []
-                for hist in handle.tree["history"]:
+                history = handle.tree["history"]
+                entries = history["entries"] if "entries" in history else history
+                for hist in entries:
                     histall.append(timestamp.format_date(hist["time"]).split(".")[0] +
                                    " :: " + hist["description"])
                 header["HISTORY"] = "\n".join(histall)
