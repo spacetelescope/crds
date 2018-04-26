@@ -133,7 +133,7 @@ class CrdsCfgGenerator(object):
                 for exptype_pattern in exptypes:
                     if glob_match(exptype_pattern, exp_type):
                         return [pipeline]
-        log.error("Unhandled EXP_TYPE", srepr(exp_type))
+        log.error("Unhandled EXP_TYPE", srepr(exp_type), "for", srepr(level))
         return []
     
         # raise exceptions.CrdsPipelineCfgDeterminationError("Unhandled EXP_TYPE", srepr(exp_type))
