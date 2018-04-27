@@ -102,7 +102,7 @@ level_pipeline_exptypes:
                              FGS_IMAGE, FGS_FOCUS]
 
         - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NRS_AUTOWAVE, FGS_ACQ1, FGS_ACQ2,
-                        FGS_FINEGUIDE, FGS_ID-IMAGE, FGS_ID-STACK, FGS_TRACK]
+                        FGS_FINEGUIDE, FGS_ID-IMAGE, FGS_ID-STACK, FGS_TRACK, NIS_EXTCAL]
 
 # ----------------------------------------------------------------------------------------------
 #
