@@ -42,6 +42,11 @@ True
 >>> _get_missing_context('jwst_0341.pmap')
 'jwst_0341.pmap'
 
+>>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.9.3"))
+'jwst_system_crdscfg_b7.1.3.yaml'
+
+>>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.9.7"))
+'jwst_system_crdscfg_b7.1.3.yaml'
 """
 
 from __future__ import print_function
@@ -174,6 +179,7 @@ REFPATHS = [
     ('0.7.7', "jwst_system_crdscfg_b7.yaml"),
     ('0.9.0', "jwst_system_crdscfg_b7.1.yaml"),
     ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
+    ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
     ('9.9.9', "jwst_system_crdscfg_b7.1.3.yaml"),   # latest backstop
 ]
     
@@ -182,7 +188,7 @@ def _get_config_refpath(context, cal_ver):
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
     i = 0
-    while i < len(REFPATHS) and cal_ver[:6] > REFPATHS[i][0]:
+    while i < len(REFPATHS) and cal_ver[:5] > REFPATHS[i][0]:
         i += 1
     refpath = os.path.join(HERE, REFPATHS[i][1])
     try:  # Use a normal try/except because exceptions are expected.

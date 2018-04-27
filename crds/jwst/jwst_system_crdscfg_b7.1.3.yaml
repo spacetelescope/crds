@@ -33,8 +33,8 @@ meta:
     telescope: JWST
     useafter: 1900-01-01T00:00:00
     calibration_software_version: 0.9.3
-    crds_version: 7.1.5
-    generation_date: 2018-04-27T10:38:25
+    crds_version: 7.2.2
+    generation_date: 2018-04-27T11:15:27
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
