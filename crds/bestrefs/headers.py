@@ -295,7 +295,7 @@ class InstrumentHeaderGenerator(HeaderGenerator):
             instr_ids = api.get_dataset_ids(self.context, instrument, self.datasets_since(instrument))
             log.info("Downloaded ", len(instr_ids), "dataset ids for", repr(instrument), "since", repr(since_date))
             source_ids.extend(instr_ids)
-        return source_ids
+        return sorted(source_ids)  # sort is needed to match generic __iter__() sort. assumes instruments don't shuffle
 
     def _header(self, source):
         """Return the header associated with dataset id `source`,  fetching the surround segment of
