@@ -4,5 +4,5 @@
 
 ERR       A           X         R             (is_image(ERR_ARRAY))
 ERR       A           X         R             (has_type(ERR_ARRAY,'FLOAT'))
-ERR       A           X         R             (SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])
+ERR       A           X         R             (SCI_ARRAY.SHAPE[-2:]==ERR_ARRAY.SHAPE[-2:])
 
