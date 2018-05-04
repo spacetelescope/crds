@@ -7,5 +7,7 @@ include nirspec_dq_array.tpn
 include nir_dq_def_array.tpn
 
 COEFFS    A      X      R     (len(COEFFS_ARRAY.SHAPE)==3)
+DQ        A      X      R     (len(DQ_ARRAY.SHAPE)==2)
 
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
+

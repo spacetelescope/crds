@@ -1,4 +1,5 @@
 # This file applies to only NIRSPEC SCI arrays.
+#
 # This .tpn defines constraints related to array objects vs. header keywords.
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
@@ -20,8 +21,8 @@ SCI       A           X             (nir_filter(INSTRUME,REFTYPE,EXP_TYPE))     
 
 # Full width striping is an issue,  array may not match subarray size
 SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(is_irs2(READPATT)))))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
-SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(is_irs2(READPATT))))        (SCI_ARRAY.SHAPE[-2:]==(3200,2048))
+SCI       A           X         (full_frame(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(is_irs2(READPATT))))        (SCI_ARRAY.SHAPE[-2:]==(YDIM_MAX,2048))
 
 SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(not(is_irs2(READPATT)))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(is_irs2(READPATT))))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
+SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)and(is_irs2(READPATT))))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=YDIM_MAX)
 SCI       A           X         (subarray(nir_filter(INSTRUME,REFTYPE,EXP_TYPE)))                                  (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)

@@ -2,7 +2,6 @@ include miri_subarray.tpn
 
 COEFFS       A           X         R            (has_type(COEFFS_ARRAY,'FLOAT'))
 COEFFS       A           X         R            (is_image(COEFFS_ARRAY))
-COEFFS       A           X         R            (len(COEFFS_ARRAY.SHAPE)==3)
 
 COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[-2:]==(1024,1032))
 COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
@@ -15,8 +14,13 @@ ERR       A           X         R               (has_type(ERR_ARRAY,'FLOAT'))
 ERR       A           X         R               (is_image(ERR_ARRAY))
 ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==COEFFS_ARRAY.SHAPE[-2:])
 
-replace SCI COEFFS
-include miri_dq_array.tpn
 
+# still potentially needed for chaining in DQ and DQ_DEF .tpns,  not just SCI
+replace SCI COEFFS
+
+include miri_dq_array.tpn
 include miri_dq_def_array.tpn
+
+COEFFS       A           X         R            (len(COEFFS_ARRAY.SHAPE)==3)
+DQ           A           X         R            (len(DQ_ARRAY.SHAPE)==2)
 

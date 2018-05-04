@@ -1,0 +1,4 @@
+replace YDIM_MAX 3200
+
+include nirspec_sci_array_both.tpn
+

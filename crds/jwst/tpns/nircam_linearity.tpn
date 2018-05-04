@@ -1,10 +1,11 @@
 include nir_subarray.tpn
 
 replace SCI COEFFS
-include nir_sci_array.tpn
+include nir_sci_array_refpix.tpn
 include nir_opt_err_array.tpn
 include nir_dq_array.tpn
 
 include nir_dq_def_array.tpn
 
 COEFFS    A      X      R     (len(COEFFS_ARRAY.SHAPE)==3)
+DQ        A      X      R     (len(DQ_ARRAY.SHAPE)==2)

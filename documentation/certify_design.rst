@@ -689,3 +689,38 @@ DARK: non-MIRI: SCI=ERR=3D, DQ=2D; MIRI: SCI=ERR=DQ=4D
 
 LINEARITY: COEFFS=3D, DQ=2D
 
+# 4
+---
+
+For NIRSpec data, the DARK step is run (in calwebb_detector1.py) after
+refpix, so the image at that point will be 2048 x 2048, and the dark file will
+have shape (N, 2048, 2048), where N has to do with the number of groups.  So it
+is correct that the darks will be 2048x2048.
+
+Similarly for READNOISE.
+
+# 5
+---
+
+If memory serves, in a conversation we all had with NIRSpec folks about a year
+ago, they need to deliver some subarray ref files with SUBARRAY='GENERIC',
+because the exact placement of the subarray varies from exposure to exposure
+and is tied to the use of different gratings (different gratings result in
+spectra being located in slightly different places on the detector and they
+change the subarray location to match). So for example the "mystery stripe"
+2048x256 subarray is probably used for fixed-slit exposures, where the 256 is
+large enough to cover all the slits. Science exposures taken using a subarray
+for a single slit (which is smaller yet) will use that 2048x256 reference file
+and extract (on the fly) the subarray that matches the smaller science
+subarray, matching both the location and size of the subarray used in the
+science exposure. So that's why SUBARRAY has to be set to 'GENERIC' in those
+ref files, so that CRDS knows to select it when a science exposure uses some
+other specific subarray like "SUBS200A1" or "SUBS400A1" and let the cal
+pipeline do the on-the-fly extraction thing, like it also does when full-frame
+ref files use SUBARRAY='GENERIC'.
+
+The reason they can't just use a full-frame ref file with SUBARRAY='GENERIC'
+for these, is because NIRSpec subarrays are readout using a different gain than
+full-frame, so they have to use subarray-specific reference files (because the
+actual pixel values in the images are different than for full-frame).
+
