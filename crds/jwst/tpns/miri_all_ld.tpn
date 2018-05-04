@@ -24,9 +24,9 @@ META.INSTRUMENT.BAND        H   C   O   SHORT,MEDIUM,LONG,ANY,N/A,\
                                         SHORT-LONG,LONG-SHORT,\
                                         MEDIUM-LONG,LONG-MEDIUM
 
-META.SUBARRAY.XSTART        H   I   O  1:1032
+META.SUBARRAY.XSTART        H   I   O  1:XDIM_MAX
 META.SUBARRAY.YSTART        H   I   O  1:1024
-META.SUBARRAY.XSIZE         H   I   O  1:1032
+META.SUBARRAY.XSIZE         H   I   O  1:XDIM_MAX
 META.SUBARRAY.YSIZE         H   I   O  1:1024
 META.SUBARRAY.FASTAXIS      H   I   O  1,-1,2,-2
 META.SUBARRAY.SLOWAXIS      H   I   O  1,-1,2,-2

@@ -1,11 +1,11 @@
-include nir_subarray.tpn
+include includes/nir_subarray.tpn
 
 # NIR SCI array is used intentionally for NIRSPEC DARK,  doesn't have 2048x3200
-include nir_sci_array_refpix.tpn
+include includes/nir_sci_array_refpix.tpn
 
-include nir_err_array.tpn
-include nir_dq_array.tpn
-include nir_dq_def_array.tpn
+include includes/nir_err_array.tpn
+include includes/nir_dq_array.tpn
+include includes/nir_dq_def_array.tpn
 
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
 

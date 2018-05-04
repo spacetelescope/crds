@@ -27,4 +27,4 @@ META.SUBARRAY.NAME         H    C   O    SUB128CENTER,SUB128DIAGONAL,\
                                          SUB8LLCORNER,\
                                          FULL,GENERIC,ANY,N/A
 
-include nir_subarray_baseline.tpn
+include includes/nir_subarray_baseline.tpn

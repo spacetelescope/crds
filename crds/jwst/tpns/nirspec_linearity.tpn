@@ -1,10 +1,10 @@
-include nir_subarray.tpn
+include includes/nir_subarray.tpn
 
 replace SCI COEFFS
-include nirspec_sci_array.tpn
-include nirspec_opt_err_array.tpn
-include nirspec_dq_array.tpn
-include nir_dq_def_array.tpn
+include includes/nirspec_sci_array.tpn
+include includes/nirspec_opt_err_array.tpn
+include includes/nirspec_dq_array.tpn
+include includes/nir_dq_def_array.tpn
 
 COEFFS    A      X      R     (len(COEFFS_ARRAY.SHAPE)==3)
 DQ        A      X      R     (len(DQ_ARRAY.SHAPE)==2)

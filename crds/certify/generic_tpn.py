@@ -259,16 +259,30 @@ def get_tpninfos(filepath):
 # =============================================================================
 
 def load_all_type_constraints(observatory):
-    """Load all the type constraint files from `observatory` package."""
+    """Load all the type constraint files from `observatory` package.
+
+    There are constraints that apply to:
+
+    ALL instruments and types
+    ALL types of one instrument
+    ALL instruments of one type
+    One instrument and type
+
+    Generally these should be thought of as designed for successive refinement,
+    so all constraints are applied, but as their scope narrows they can become
+    stricter.  Since increasing strictness and refinement require more knowledge,
+    the development order of the constraints mirrored that.
+
+    However, in the (revised) loading below, constraints are loaded by order of
+    decreasing strictness; this makes it possible to define strict
+    constants/replacements early in the loading process and to apply those
+    to customize the more generalized constraints loaded later.
+    """
     from crds.core import rmap, heavy_client
     pmap_name = heavy_client.load_server_info(observatory).operational_context
     pmap = rmap.get_cached_mapping(pmap_name)
     locator = utils.get_locator_module(observatory)
-    locator.get_all_tpninfos("all","all","tpn")
-    locator.get_all_tpninfos("all","all","ld_tpn")
     for instr in pmap.selections:
-        locator.get_all_tpninfos(instr, "all", "tpn")
-        locator.get_all_tpninfos(instr, "all", "ld_tpn")
         imap = pmap.get_imap(instr)
         for filekind in imap.selections:
             if imap.selections[filekind] == "N/A":
@@ -278,10 +292,14 @@ def load_all_type_constraints(observatory):
             except Exception as exc:
                 log.warning("Missing suffix coverage for", repr((instr, filekind)), ":", exc)
             else:
-                locator.get_all_tpninfos("all", suffix, "tpn")  # With core schema,  one type loads all
                 locator.get_all_tpninfos(instr, suffix, "tpn")  # With core schema,  one type loads all
-                locator.get_all_tpninfos("all", suffix, "ld_tpn")  # With core schema,  one type loads all
                 locator.get_all_tpninfos(instr, suffix, "ld_tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "ld_tpn")  # With core schema,  one type loads all
+        locator.get_all_tpninfos(instr, "all", "tpn")
+        locator.get_all_tpninfos(instr, "all", "ld_tpn")
+    locator.get_all_tpninfos("all","all","tpn")
+    locator.get_all_tpninfos("all","all","ld_tpn")
 
 # =============================================================================
 

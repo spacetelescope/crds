@@ -1,2 +1,2 @@
-include nir_subarray.tpn
-include nir_sci_array_refpix.tpn
+include includes/nir_subarray.tpn
+include includes/nir_sci_array_refpix.tpn

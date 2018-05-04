@@ -1,9 +1,9 @@
-include nir_subarray.tpn
+include includes/nir_subarray.tpn
 
-include nirspec_sci_array.tpn
-include nirspec_err_array.tpn
-include nirspec_dq_array.tpn
-include nir_dq_def_array.tpn
+include includes/nirspec_sci_array.tpn
+include includes/nirspec_err_array.tpn
+include includes/nirspec_dq_array.tpn
+include includes/nir_dq_def_array.tpn
 
 WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (is_table(WAVELENGTH_ARRAY))
 WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (has_columns(WAVELENGTH_ARRAY,['WAVELENGTH']))
