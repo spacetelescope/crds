@@ -5,5 +5,5 @@
 
 replace XDIM_MAX 2048
 
-include nir_subarray_both.tpn
+include nir_sci_array_both.tpn
 

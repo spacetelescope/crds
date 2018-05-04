@@ -7,8 +7,3 @@ ERR      A     X  (array_exists(ERR_ARRAY))      (has_type(ERR_ARRAY,'FLOAT'))
 ERR      A     X  (array_exists(ERR_ARRAY))      (len(ERR_ARRAY.SHAPE)==3)
 ERR      A     X  (array_exists(ERR_ARRAY))      (ERR_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
 
-# ERR A     X  (all_subarray(array_exists(ERR_ARRAY)))    (ERR_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-# ERR A     X  (full_frame(array_exists(ERR_ARRAY)))  (ERR_ARRAY.SHAPE[-2:]>=(2048,2048))
-# ERR A     X  (array_exists(ERR_ARRAY))      (1<=META_SUBARRAY_YSTART+ERR_ARRAY.SHAPE[-2]-1<=2048)
-# ERR A     X  (array_exists(ERR_ARRAY))      (1<=META_SUBARRAY_XSTART+ERR_ARRAY.SHAPE[-1]-1<=2048)
-

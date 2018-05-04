@@ -1,5 +1,5 @@
 include includes/nir_subarray.tpn
-include includes/nirspec_sci_array.tpn
+include includes/nirspec_sci_array_refpix.tpn
 include includes/nirspec_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
