@@ -1,4 +1,4 @@
-include includes/miri_subarray.tpn
+include includes/miri_subarray_refpix.tpn
 
 COEFFS       A           X         R            (has_type(COEFFS_ARRAY,'FLOAT'))
 COEFFS       A           X         R            (is_image(COEFFS_ARRAY))
