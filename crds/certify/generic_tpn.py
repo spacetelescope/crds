@@ -183,7 +183,8 @@ def load_tpn_lines(fname, replacements=()):
     second word should be a base filename that refers to a file in the same
     directory as `fname`.  The lines of the include file are recursively included.
     """
-    log.verbose("Loading .tpn lines from", log.srepr(fname), verbosity=80)
+    log.verbose("Loading .tpn lines from", log.srepr(fname), 
+                "with replacements", log.srepr(replacements), verbosity=80)
     lines = []
     append = False
     dirname = os.path.dirname(fname)
@@ -197,8 +198,9 @@ def load_tpn_lines(fname, replacements=()):
                 lines += load_tpn_lines(fname2, replacements)
                 continue
             elif line.startswith("replace"): #  replace orig_str  new_str
-                orig, new = line.split()[1:]
-                replacements = replacements + ((orig, new),)
+                replacement = tuple(line.split()[1:])
+                if replacement not in replacements:
+                    replacements = replacements + (replacement,)
                 continue
             for (orig, new) in replacements:
                 line = re.sub(orig, new, line)
