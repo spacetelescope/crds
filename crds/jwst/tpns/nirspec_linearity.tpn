@@ -6,8 +6,8 @@ include includes/nirspec_opt_err_array.tpn
 include includes/nirspec_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
-COEFFS    A      X      R     (len(COEFFS_ARRAY.SHAPE)==3)
-DQ        A      X      R     (len(DQ_ARRAY.SHAPE)==2)
+COEFFS    A      X      R     (ndim(COEFFS_ARRAY,3))
+DQ        A      X      R     (ndim(DQ_ARRAY,2))
 
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
 

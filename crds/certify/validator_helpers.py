@@ -356,6 +356,11 @@ def all_subarray(flag=True):
                  
 # ----------------------------------------------------------------------------
 
+def ndim(array, dims):
+    return len(array.SHAPE) == dims
+
+# ----------------------------------------------------------------------------
+
 def test():
     import doctest
     from crds.certify import validator_helpers
