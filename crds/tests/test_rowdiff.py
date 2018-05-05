@@ -71,7 +71,7 @@ Basic functionality: No differences
 
 Row change
     >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run()
+    >>> case.run() # doctest: +ELLIPSIS
     Row differences for HDU extension #1
     <BLANKLINE>
         Summary:
@@ -84,17 +84,17 @@ Row change
     <BLANKLINE>
             @@ -1,5 +1,5 @@
     <BLANKLINE>
-             'yes', 'yes', 2988, -2779.0352, 'coquille'
-            -'yes', 'no', 5748, 6357.9727, 'ferly'
-            +'yes', 'no', -1, 6357.9727, 'ferly'
-             'yes', 'maybe', 9735, -9132.532, 'misreliance'
-             'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.025, 'readmittance'
+             'yes', 'yes', 2988, -2779.03..., 'coquille'
+            -'yes', 'no', 5748, 6357.97..., 'ferly'
+            +'yes', 'no', -1, 6357.97..., 'ferly'
+             'yes', 'maybe', 9735, -9132.53..., 'misreliance'
+             'no', 'yes', 425, -2689.26..., 'ogeed'
+             'no', 'no', 8989, 9870.02..., 'readmittance'
     <BLANKLINE>
 
 Row removal
     >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-single-modes.fits")
-    >>> case.run()
+    >>> case.run() # doctest: +ELLIPSIS
     Row differences for HDU extension #1
     <BLANKLINE>
         Summary:
@@ -108,20 +108,20 @@ Row removal
     <BLANKLINE>
             @@ -1,9 +1,3 @@
     <BLANKLINE>
-             'yes', 'yes', 2988, -2779.0352, 'coquille'
-            -'yes', 'no', 5748, 6357.9727, 'ferly'
-            -'yes', 'maybe', 9735, -9132.532, 'misreliance'
-            -'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.025, 'readmittance'
-            -'no', 'maybe', 3537, -8615.033, 'anacatadidymus'
-            -'maybe', 'yes', 1763, -2442.9683, 'monochromat'
-            -'maybe', 'no', 8023, 4665.564, 'ranarium'
-             'maybe', 'maybe', 7347, 1705.5876, 'Dode'
+             'yes', 'yes', 2988, -2779.03..., 'coquille'
+            -'yes', 'no', 5748, 6357.97..., 'ferly'
+            -'yes', 'maybe', 9735, -9132.5..., 'misreliance'
+            -'no', 'yes', 425, -2689.26..., 'ogeed'
+             'no', 'no', 8989, 9870.025..., 'readmittance'
+            -'no', 'maybe', 3537, -8615.03..., 'anacatadidymus'
+            -'maybe', 'yes', 1763, -2442.96..., 'monochromat'
+            -'maybe', 'no', 8023, 4665.56..., 'ranarium'
+             'maybe', 'maybe', 7347, 1705.58..., 'Dode'
     <BLANKLINE>
 
 Row addition
     >>> case = RowDiffScript(argv="rowdiff.py data/test-single-modes.fits data/test-source.fits")
-    >>> case.run()
+    >>> case.run() # doctest: +ELLIPSIS
     Row differences for HDU extension #1
     <BLANKLINE>
         Summary:
@@ -135,15 +135,15 @@ Row addition
     <BLANKLINE>
             @@ -1,3 +1,9 @@
     <BLANKLINE>
-             'yes', 'yes', 2988, -2779.0352, 'coquille'
-            +'yes', 'no', 5748, 6357.9727, 'ferly'
-            +'yes', 'maybe', 9735, -9132.532, 'misreliance'
-            +'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.025, 'readmittance'
-            +'no', 'maybe', 3537, -8615.033, 'anacatadidymus'
-            +'maybe', 'yes', 1763, -2442.9683, 'monochromat'
-            +'maybe', 'no', 8023, 4665.564, 'ranarium'
-             'maybe', 'maybe', 7347, 1705.5876, 'Dode'
+             'yes', 'yes', 2988, -2779.03..., 'coquille'
+            +'yes', 'no', 5748, 6357.97..., 'ferly'
+            +'yes', 'maybe', 9735, -9132.53..., 'misreliance'
+            +'no', 'yes', 425, -2689.26..., 'ogeed'
+             'no', 'no', 8989, 9870.02..., 'readmittance'
+            +'no', 'maybe', 3537, -8615.03..., 'anacatadidymus'
+            +'maybe', 'yes', 1763, -2442.96..., 'monochromat'
+            +'maybe', 'no', 8023, 4665.56..., 'ranarium'
+             'maybe', 'maybe', 7347, 1705.58..., 'Dode'
     <BLANKLINE>
 
 Test of switch ignore-fields
@@ -152,7 +152,7 @@ Test of switch ignore-fields
         HDU extension #1 contains no differences
 
     >>> case = RowDiffScript(argv="rowdiff.py --ignore-fields=modeup,modedown data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run()
+    >>> case.run() # doctest: +ELLIPSIS
     Row differences for HDU extension #1
     <BLANKLINE>
         Summary:
@@ -165,12 +165,12 @@ Test of switch ignore-fields
     <BLANKLINE>
             @@ -1,5 +1,5 @@
     <BLANKLINE>
-             2988, -2779.0352, 'coquille'
-            -5748, 6357.9727, 'ferly'
-            +-1, 6357.9727, 'ferly'
-             9735, -9132.532, 'misreliance'
-             425, -2689.2646, 'ogeed'
-             8989, 9870.025, 'readmittance'
+             2988, -2779.03..., 'coquille'
+            -5748, 6357.97..., 'ferly'
+            +-1, 6357.97..., 'ferly'
+             9735, -9132.53..., 'misreliance'
+             425, -2689.26..., 'ogeed'
+             8989, 9870.02..., 'readmittance'
     <BLANKLINE>
 
 Test of switch fields
@@ -216,7 +216,7 @@ Mode test: no differences
 
 Mode test: No mode changes, but change in rows selected
     >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run()
+    >>> case.run() # doctest: +ELLIPSIS
     Difference for HDU extension #1
     <BLANKLINE>
         Table A has all modes.
@@ -232,12 +232,12 @@ Mode test: No mode changes, but change in rows selected
             From Table A:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-       yes       no      5748  6357.9727   ferly
+       yes       no      5748  6357.97...   ferly
     <BLANKLINE>
             To Table B:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-       yes       no        -1  6357.9727   ferly
+       yes       no        -1  6357.97...   ferly
     <BLANKLINE>
 
 Mode test: removed modes
@@ -270,7 +270,7 @@ Mode test: removed modes
 
 Mode test: duplicate modes
     >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-duplicate-mode.fits")
-    >>> case.run()
+    >>> case.run()  # doctest: +ELLIPSIS
     Difference for HDU extension #1
     <BLANKLINE>
         Table A has all modes.
@@ -296,12 +296,12 @@ Mode test: duplicate modes
             From Table A:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-        no      yes       425 -2689.2646   ogeed
+        no      yes       425 -2689.26...   ogeed
     <BLANKLINE>
             To Table B:
     modeup modedown valueleft valueright wordage
     ------ -------- --------- ---------- -------
-        no      yes        -1 -2689.2646   ogeed
+        no      yes        -1 -2689.26...   ogeed
     <BLANKLINE>
 
 CLEANUP

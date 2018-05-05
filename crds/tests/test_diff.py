@@ -310,12 +310,12 @@ def dt_diff_row_change():
     <BLANKLINE>
             @@ -1,5 +1,5 @@
     <BLANKLINE>
-             'yes', 'yes', 2988, -2779.0352, 'coquille'
-            -'yes', 'no', 5748, 6357.9727, 'ferly'
-            +'yes', 'no', -1, 6357.9727, 'ferly'
-             'yes', 'maybe', 9735, -9132.5322, 'misreliance'
-             'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.0254, 'readmittance'
+             'yes', 'yes', 2988, -2779.03..., 'coquille'
+            -'yes', 'no', 5748, 6357.97..., 'ferly'
+            +'yes', 'no', -1, 6357.97..., 'ferly'
+             'yes', 'maybe', 9735, -9132.53..., 'misreliance'
+             'no', 'yes', 425, -2689.26..., 'ogeed'
+             'no', 'no', 8989, 9870.02..., 'readmittance'
     <BLANKLINE>
     1
 
@@ -430,12 +430,12 @@ def dt_diff_row_change():
     <BLANKLINE>
             @@ -1,5 +1,5 @@
     <BLANKLINE>
-             'yes', 'yes', 2988, -2779.0352, 'coquille'
-            -'yes', 'no', 5748, 6357.9727, 'ferly'
-            +'yes', 'no', -1, 6357.9727, 'ferly'
-             'yes', 'maybe', 9735, -9132.532, 'misreliance'
-             'no', 'yes', 425, -2689.2646, 'ogeed'
-             'no', 'no', 8989, 9870.025, 'readmittance'
+             'yes', 'yes', 2988, -2779.03..., 'coquille'
+            -'yes', 'no', 5748, 6357.97..., 'ferly'
+            +'yes', 'no', -1, 6357.97..., 'ferly'
+             'yes', 'maybe', 9735, -9132.53..., 'misreliance'
+             'no', 'yes', 425, -2689.26..., 'ogeed'
+             'no', 'no', 8989, 9870.02..., 'readmittance'
     <BLANKLINE>
     1
     >>> test_config.cleanup(old_state)
