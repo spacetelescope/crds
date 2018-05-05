@@ -21,7 +21,7 @@ from crds.tests import test_config
 
 # ==================================================================================
 
-def test_get_fits_type():
+def dt_get_fits_type():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/valid.fits")
@@ -29,7 +29,7 @@ def test_get_fits_type():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_fits_type_opaque():
+def dt_get_fits_type_opaque():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/opaque_fts.tmp")
@@ -37,7 +37,7 @@ def test_get_fits_type_opaque():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_asdf_type():
+def dt_get_asdf_type():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/valid.asdf")
@@ -45,7 +45,7 @@ def test_get_asdf_type():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_asdf_type_opaque():
+def dt_get_asdf_type_opaque():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/opaque_asd.tmp")
@@ -53,7 +53,7 @@ def test_get_asdf_type_opaque():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_geis_type():
+def dt_get_geis_type():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/e1b09593u.r1h")
@@ -61,7 +61,7 @@ def test_get_geis_type():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_geis_type_opaque():
+def dt_get_geis_type_opaque():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/opaque_gs.tmp")
@@ -69,7 +69,7 @@ def test_get_geis_type_opaque():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_json_type():
+def dt_get_json_type():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/valid.json")
@@ -77,7 +77,7 @@ def test_get_json_type():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_json_type_opaque():
+def dt_get_json_type_opaque():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/opaque_jsn.tmp")
@@ -85,7 +85,7 @@ def test_get_json_type_opaque():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_yaml_type():
+def dt_get_yaml_type():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/valid.yaml")
@@ -93,7 +93,7 @@ def test_get_yaml_type():
     >>> test_config.cleanup(old_state)
     """
 
-def test_get_yaml_type_opaque():
+def dt_get_yaml_type_opaque():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> factory.get_filetype("data/opaque_yml.tmp")
@@ -101,7 +101,7 @@ def test_get_yaml_type_opaque():
     >>> test_config.cleanup(old_state)
     """
 
-def test_fits_table():
+def dt_fits_table():
     """
     ----------------------------------------------------------------------------------
     Demo and test the basic API for FITS tables:
@@ -118,8 +118,11 @@ def test_fits_table():
     >>> tab.segment
     1
     
-    >>> tab.rows[0]
-    (1, 'FORWARD', 'F475W', 'CLEAR2L', 4096, 2048, 2048.0, 1024.0, 260.8669, 198.3563, 0.05, 0.00226324, 0.04922641, 8.835678e-08, -3.553587e-07, 4.119137e-07, 2.531863e-12, -2.642164e-11, -6.091743e-12, -2.302028e-11, 6.871172e-15, -1.057525e-15, 4.884969e-15, 1.564524e-15, 9.377917e-16, 0.04858401, 0.002128176, -4.700963e-07, 2.949148e-07, -1.257636e-07, -1.890378e-11, -2.340621e-12, -2.209152e-11, 3.51687e-12, -8.410637e-15, 2.246166e-15, -4.855206e-15, -1.634969e-15, -8.085368e-16)
+    >>> tab.rows[0]     # doctest: +ELLIPSIS
+    (1, 'FORWARD', 'F475W', 'CLEAR2L', 4096, 2048, ...
+
+    >>> len(tab.rows[0]) == len(tab.colnames)
+    True
     
     >>> tab.colnames[0]
     'DETCHIP'
@@ -129,7 +132,7 @@ def test_fits_table():
     >>> test_config.cleanup(old_state)
     """
 
-def test_csv_table():
+def dt_csv_table():
     """
     ----------------------------------------------------------------------------------
     Demo and test the API for non-FITS formats using astropy format guessing:    
@@ -146,8 +149,8 @@ def test_csv_table():
     >>> tab.segment
     1
     
-    >>> tab.rows[0]
-    (3102, 0.32, 4167, 4085, 'Q1250+568-A')
+    >>> tab.rows[0]    # doctest: +ELLIPSIS
+    (3102, 0.32..., 4167, 4085, 'Q1250+568-A')
     
     >>> tab.colnames[0]
     'OBSID'
