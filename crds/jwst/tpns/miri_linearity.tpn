@@ -21,6 +21,6 @@ replace SCI COEFFS
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
 
-COEFFS       A           X         R            (len(COEFFS_ARRAY.SHAPE)==3)
-DQ           A           X         R            (len(DQ_ARRAY.SHAPE)==2)
+COEFFS       A           X         R            (ndim(COEFFS_ARRAY,3))
+DQ           A           X         R            (ndim(DQ_ARRAY,2))
 

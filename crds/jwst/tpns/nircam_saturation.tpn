@@ -4,5 +4,5 @@ include includes/nir_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
 
-SCI   A   X    R  (len(SCI_ARRAY.SHAPE)==2)
-DQ    A   X    R  (len(DQ_ARRAY.SHAPE)==2)
+SCI   A   X    R  (ndim(SCI_ARRAY,2))
+DQ    A   X    R  (ndim(DQ_ARRAY,2))
