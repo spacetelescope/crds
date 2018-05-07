@@ -437,7 +437,10 @@ checks.</p>
 <p>For HST, .tpn files were written for every combination of &lt;instrument&gt;_&lt;type&gt;.</p>
 <p>There are two forms of .tpn, one which constraints reference file properties
 (.tpn) and one which constraints rmap properties (_ld.tpn).  The _ld.tpn files
-originally constrained the expanded CDBS database matching parameter values.</p>
+originally constrained the expanded CDBS database matching parameter values.
+While limiting the file structure to &lt;instrument&gt;_&lt;type&gt; combinations was
+simple, there was also an extreme penalty for redundantly specified checks of
+common constraints like PEDIGREE or USEAFTER.</p>
 <p>For JWST, additional broader classes of .tpn are also defined and all
 applicable forms are loaded for any given reference file:</p>
 <pre class="literal-block">
@@ -446,13 +449,16 @@ all _ all .tpn                 (constraints on all instruments and types)
 all _ &lt;type&gt; .tpn              (constraints on one type of all instruments)
 &lt;instrument&gt; _ &lt;type&gt; .tpn     (constraint on one instrument and type)
 </pre>
+<p>For JWST,  the additional file classes permit generalization of constraints
+without added redundancy.   PEDIGREE can defined once in all_all,  etc.</p>
 <div class="section" id="standard-tpn-directives">
 <h2>Standard .tpn directives</h2>
 <p>Typical constraint directives result in a CRDS TpnInfo() object being defined
 in CRDS certify, which corresponds 1:1 to a CRDS Validator() object/subclass.
-Ultimately the outcome of .tpn files is a list of TpnInfo() constraints to
-check, which are tuples of properties, interpreted via appropriate Validator()
-subclassses.</p>
+The TpnInfo() is a bundle of constraint information, a Validator() is a class
+which checks the constraint defined by a TpnInfo.  Ultimately the outcome of
+.tpn files is a list of TpnInfo() constraints to check, which are tuples of
+properties, interpreted via appropriate Validator() subclassses.</p>
 </div>
 <div class="section" id="synthetic-tpn-directives">
 <h2>Synthetic .tpn directives</h2>
@@ -477,6 +483,8 @@ from the core schema for use in CRDS.</p>
 constraint.</p>
 <div class="section" id="include-directive">
 <h2>Include Directive</h2>
+<p>The semantics of 'include' are roughly model'ed after the C pre-processor's
+#include directives.</p>
 <p>The include directive permits one .tpn file to include the text of another as
 if the directive was replaced by the contents of the included file.  This
 permits factoring out common constraints into a single file and using them
@@ -489,8 +497,9 @@ include nir_sci_array.tpn
 'include' (unquoted), a single space, and the name of the included .tpn file
 (also unquoted).  Like many CRDS directives it is space delimited and consists
 of exactly two words,  written on a single line.</p>
-<p>The included file should also be located in the same .tpn directory as the .tpn
-that includes it.</p>
+<p>An included file should also be located in the .tpn includes directory and
+generally will not follow the JWST classes of include files (all_all, fgs_all,
+etc.) or their naming conventions.</p>
 </div>
 <div class="section" id="replace-directive">
 <h2>Replace Directive</h2>
@@ -508,6 +517,9 @@ replace SCI COEFFS
 .tpn (or included .tpns) should be replaced by COEFFS.  In this case, it
 effectively rewrites constraints on the SCI array as constraints on the COEFFS
 array.</p>
+<p>An important limitation of 'replace' to note is that it only applies within the
+textual extent of on particular file class.   At this time,  it's not possible
+to e.g. define a replacement in all_all and have it apply everywhere.</p>
 </div>
 <div class="section" id="constraint-directive">
 <h2>Constraint Directive</h2>
@@ -520,7 +532,7 @@ condition on a reference file and is of the form:</p>
 <pre class="literal-block">
 &lt;name&gt;  &lt;keytype&gt;  &lt;datatype&gt;  &lt;presence&gt;
 </pre>
-<p>Before explaining each field in detail, a typical example (but abbreviated)
+<p>Before explaining each field in detail, a typical (but abbreviated) example
 constraint taken from JWST is:</p>
 <pre class="literal-block">
 META.INSTRUMENT.PUPIL  H   C   O  CLEAR,CLEARP,F090W,F115W,F140M,F150W,F158M,\
@@ -586,9 +598,9 @@ insensitive and specified in all capital letters, numbers, or underscores much
 like FITS keywords.  They should begin with a letter and be valid program
 identifiers.</p>
 <p>Expression constraint names describe the check performed by the value
-expression, they does not describe any physical entity within the reference
-file.  Note that expression here refers to a keytype=X constraint and have no
-relation to expressions used in the &lt;presence&gt; field described below.</p>
+expression, they do not describe any physical entity within the reference file.
+Note that expression here refers to a keytype=X constraint and have no relation
+to expressions used in the &lt;presence&gt; field described below.</p>
 </div>
 <div class="section" id="keytype-field">
 <h3>&lt;Keytype&gt; Field</h3>
@@ -668,7 +680,8 @@ expression written in terms of the reference file header and array properties.
 While A and D array constraints are also generally written as as expressions,
 in contrast, an X constraint loads no new array properties and includes no
 arrays.  The value expression should be written in terms of header keywords
-only.</p>
+only.   Arrays are pre-loaded and remain available to all expressions for the
+duration of a single reference file check.</p>
 </div>
 <div class="section" id="group-g">
 <h4>Group (G)</h4>
@@ -693,7 +706,9 @@ datatypes = {
 }
 </pre>
 <p>The X datatype indicates that the constraint will be a boolean expression and
-hence has no data type.</p>
+hence has no data type;  it is abstract,  referring to no particular keyword
+or array by definition...  although frequently expressions are used to check
+type.</p>
 </div>
 <div class="section" id="presence-field">
 <h3>&lt;Presence&gt; Field</h3>
@@ -732,18 +747,21 @@ defined.</p>
 backwards compatibility with HST CDBS and is generally unused.</p>
 <p>For HST, every instrument and type specified the presence requirement for every
 keyword.  This resulted in value enumerations repeated over and over throughout
-the .tpn files.  For JWST, CRDS support specifying keywords as optional...
-with one twist: if an optional keyword is used by an rmap to perform matching
-(appears in the 'parkey' header field), then every optional constraint on that
-keyword for that particular reftype becomes required.  This permits constraints
-to be specified once as optional at a relatively global level for easier
-maintenance, but then become &quot;required&quot; if a particular type uses the keyword
-directly within CRDS for matching.  (This is a reflection of the &quot;prime
-directive&quot; of the CRDS certifier: while general checks can be implemented, the
-most crucial aspect of CRDS checking is to ensure that files work within CRDS.)</p>
-<p>For even more control, or for keywords not
-used by CRDS matching, additional constraints can be defined in more
-specialized .tpn's.</p>
+the .tpn files.</p>
+<p>For JWST, CRDS support specifying keywords as optional...  with one twist: if
+an optional keyword is used by an rmap to perform matching (appears in the
+'parkey' header field), then every optional constraint on that keyword for that
+particular reftype becomes required.</p>
+<p>This permits constraints to be specified once as optional at a relatively
+global level for easier maintenance, but then become &quot;required&quot; if a particular
+reftype uses the keyword directly within CRDS for matching.  (This is a
+reflection of the &quot;prime directive&quot; of the CRDS certifier: while general checks
+can be implemented, the most crucial aspect of CRDS checking is to ensure that
+files work within CRDS.  Although CRDS does strive to implement additional
+checks, the only real measure that references will work with the CAL code is
+running calibrations.)</p>
+<p>For even more control, or for keywords not used by CRDS matching, additional
+constraints can be defined in more specialized .tpn's.</p>
 </div>
 <div class="section" id="presence-expressions-and-helpers">
 <h4>Presence Expressions and Helpers</h4>
@@ -760,7 +778,7 @@ using punctuation instead of spaces.)</p>
 <p>Keyword names used in presence expressions follow the usual rules and must be
 valid Python identifiers in all caps.  Periods from data model paths are
 replaced by underscores to make the paths into simple identifiers suitable for
-eval().</p>
+Python's eval().</p>
 <p>Presence helpers have been defined to convert the boolean result of a presence
 expression into a simple presence value.  This enables conditional optional
 keywords, conditional warnings, conditional subarray expressions, etc:</p>
@@ -783,9 +801,7 @@ helper arranges things so that the presence field is 'F' if the wrapped
 expression is satisfied.</p>
 <p>Note that an expression return value of False indicates a constraint does not
 apply at all.  An expression return value of True indicates the constraint is
-REQUIRED.  The purpose of the helpers is to mutate True to one of the other
-single character presence specifiers like e.g. 'W',  which creates a
-conditionally applied warning constraint.</p>
+REQUIRED.</p>
 <p>Helper functions in .tpn files are distinguished by being written in all lower
 case; this prevents collisions with keyword, column, or array names which are
 always written in upper case.</p>
@@ -794,8 +810,22 @@ always written in upper case.</p>
 <div class="section" id="values">
 <h3>&lt;Values&gt;</h3>
 <p>The &lt;values&gt; field of each constraint can define a number of things, including
-enumerations of literal values, numerical ranges, constraint expressions,
-custom validator identifiers, or nothing at all.</p>
+enumerations of literal values:</p>
+<pre class="literal-block">
+GUIDER1,GUIDER2
+</pre>
+<p>numerical ranges:</p>
+<pre class="literal-block">
+1:10
+</pre>
+<p>constraint expressions:</p>
+<blockquote>
+()</blockquote>
+<p>custom validator identifiers:</p>
+<pre class="literal-block">
+&amp;PEDIGREE
+</pre>
+<p>or nothing at all.</p>
 <div class="section" id="enumerations">
 <h4>Enumerations</h4>
 <p>Value enumerations list the possible literal values that can be assigned to
@@ -1010,6 +1040,37 @@ because NAXIS2 2048, while a decision was made to still set SUBSIZE2 = 2048.</p>
 <p>Comments about array dimensions and array shape equivalence:</p>
 <p>DARK: non-MIRI: SCI=ERR=3D, DQ=2D; MIRI: SCI=ERR=DQ=4D</p>
 <p>LINEARITY: COEFFS=3D, DQ=2D</p>
+</div>
+<div class="section" id="id4">
+<h2># 4</h2>
+<p>For NIRSpec data, the DARK step is run (in calwebb_detector1.py) after
+refpix, so the image at that point will be 2048 x 2048, and the dark file will
+have shape (N, 2048, 2048), where N has to do with the number of groups.  So it
+is correct that the darks will be 2048x2048.</p>
+<p>Similarly for READNOISE.</p>
+</div>
+<div class="section" id="id5">
+<h2># 5</h2>
+<p>If memory serves, in a conversation we all had with NIRSpec folks about a year
+ago, they need to deliver some subarray ref files with SUBARRAY='GENERIC',
+because the exact placement of the subarray varies from exposure to exposure
+and is tied to the use of different gratings (different gratings result in
+spectra being located in slightly different places on the detector and they
+change the subarray location to match). So for example the &quot;mystery stripe&quot;
+2048x256 subarray is probably used for fixed-slit exposures, where the 256 is
+large enough to cover all the slits. Science exposures taken using a subarray
+for a single slit (which is smaller yet) will use that 2048x256 reference file
+and extract (on the fly) the subarray that matches the smaller science
+subarray, matching both the location and size of the subarray used in the
+science exposure. So that's why SUBARRAY has to be set to 'GENERIC' in those
+ref files, so that CRDS knows to select it when a science exposure uses some
+other specific subarray like &quot;SUBS200A1&quot; or &quot;SUBS400A1&quot; and let the cal
+pipeline do the on-the-fly extraction thing, like it also does when full-frame
+ref files use SUBARRAY='GENERIC'.</p>
+<p>The reason they can't just use a full-frame ref file with SUBARRAY='GENERIC'
+for these, is because NIRSpec subarrays are readout using a different gain than
+full-frame, so they have to use subarray-specific reference files (because the
+actual pixel values in the images are different than for full-frame).</p>
 </div>
 </div>
 </div>

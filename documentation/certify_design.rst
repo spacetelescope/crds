@@ -34,6 +34,10 @@ For HST, .tpn files were written for every combination of <instrument>_<type>.
 There are two forms of .tpn, one which constraints reference file properties
 (.tpn) and one which constraints rmap properties (_ld.tpn).  The _ld.tpn files
 originally constrained the expanded CDBS database matching parameter values.
+While limiting the file structure to <instrument>_<type> combinations was
+simple, there was also an extreme penalty for redundantly specified checks of
+common constraints like PEDIGREE or USEAFTER.
+
 
 For JWST, additional broader classes of .tpn are also defined and all
 applicable forms are loaded for any given reference file::
@@ -43,14 +47,19 @@ applicable forms are loaded for any given reference file::
     all _ <type> .tpn              (constraints on one type of all instruments)
     <instrument> _ <type> .tpn     (constraint on one instrument and type)
 
+For JWST,  the additional file classes permit generalization of constraints
+without added redundancy.   PEDIGREE can defined once in all_all,  etc.
+
+
 Standard .tpn directives
 ------------------------
     
 Typical constraint directives result in a CRDS TpnInfo() object being defined
 in CRDS certify, which corresponds 1:1 to a CRDS Validator() object/subclass.
-Ultimately the outcome of .tpn files is a list of TpnInfo() constraints to
-check, which are tuples of properties, interpreted via appropriate Validator()
-subclassses.
+The TpnInfo() is a bundle of constraint information, a Validator() is a class
+which checks the constraint defined by a TpnInfo.  Ultimately the outcome of
+.tpn files is a list of TpnInfo() constraints to check, which are tuples of
+properties, interpreted via appropriate Validator() subclassses.
 
 Synthetic .tpn directives
 -------------------------
@@ -80,6 +89,9 @@ constraint.
 Include Directive
 -----------------
 
+The semantics of 'include' are roughly model'ed after the C pre-processor's
+#include directives.
+
 The include directive permits one .tpn file to include the text of another as
 if the directive was replaced by the contents of the included file.  This
 permits factoring out common constraints into a single file and using them
@@ -94,8 +106,9 @@ For the sake of simplicity, the line of the directive should begin with
 (also unquoted).  Like many CRDS directives it is space delimited and consists
 of exactly two words,  written on a single line.
 
-The included file should also be located in the same .tpn directory as the .tpn
-that includes it.
+An included file should also be located in the .tpn includes directory and
+generally will not follow the JWST classes of include files (all_all, fgs_all,
+etc.) or their naming conventions.
 
 Replace Directive
 -----------------
@@ -115,6 +128,10 @@ which means that all subsequent instances of the pattern SCI in a particular
 effectively rewrites constraints on the SCI array as constraints on the COEFFS
 array.
 
+An important limitation of 'replace' to note is that it only applies within the
+textual extent of on particular file class.   At this time,  it's not possible
+to e.g. define a replacement in all_all and have it apply everywhere.
+
 
 Constraint Directive
 --------------------
@@ -128,7 +145,7 @@ or sometimes with the values omitted::
 
  <name>  <keytype>  <datatype>  <presence>
 
-Before explaining each field in detail, a typical example (but abbreviated)
+Before explaining each field in detail, a typical (but abbreviated) example
 constraint taken from JWST is::
 
  META.INSTRUMENT.PUPIL  H   C   O  CLEAR,CLEARP,F090W,F115W,F140M,F150W,F158M,\
@@ -204,9 +221,9 @@ like FITS keywords.  They should begin with a letter and be valid program
 identifiers.
 
 Expression constraint names describe the check performed by the value
-expression, they does not describe any physical entity within the reference
-file.  Note that expression here refers to a keytype=X constraint and have no
-relation to expressions used in the <presence> field described below.
+expression, they do not describe any physical entity within the reference file.
+Note that expression here refers to a keytype=X constraint and have no relation
+to expressions used in the <presence> field described below.
 
 <Keytype> Field
 ...............
@@ -296,14 +313,13 @@ expression written in terms of the reference file header and array properties.
 While A and D array constraints are also generally written as as expressions,
 in contrast, an X constraint loads no new array properties and includes no
 arrays.  The value expression should be written in terms of header keywords
-only.
+only.   Arrays are pre-loaded and remain available to all expressions for the
+duration of a single reference file check.
 
 Group (G)
 +++++++++
 
 Not implemented but parsed for the sake of HST CDBS backward compatibility.
-
-
 
 <Datatype> Field
 ................
@@ -325,7 +341,9 @@ The datatype is written as a single character with these translations::
  }
 
 The X datatype indicates that the constraint will be a boolean expression and
-hence has no data type.
+hence has no data type;  it is abstract,  referring to no particular keyword
+or array by definition...  although frequently expressions are used to check
+type.
 
 <Presence> Field
 ................
@@ -375,19 +393,24 @@ backwards compatibility with HST CDBS and is generally unused.
 
 For HST, every instrument and type specified the presence requirement for every
 keyword.  This resulted in value enumerations repeated over and over throughout
-the .tpn files.  For JWST, CRDS support specifying keywords as optional...
-with one twist: if an optional keyword is used by an rmap to perform matching
-(appears in the 'parkey' header field), then every optional constraint on that
-keyword for that particular reftype becomes required.  This permits constraints
-to be specified once as optional at a relatively global level for easier
-maintenance, but then become "required" if a particular type uses the keyword
-directly within CRDS for matching.  (This is a reflection of the "prime
-directive" of the CRDS certifier: while general checks can be implemented, the
-most crucial aspect of CRDS checking is to ensure that files work within CRDS.)
+the .tpn files.
 
-For even more control, or for keywords not
-used by CRDS matching, additional constraints can be defined in more
-specialized .tpn's.
+For JWST, CRDS support specifying keywords as optional...  with one twist: if
+an optional keyword is used by an rmap to perform matching (appears in the
+'parkey' header field), then every optional constraint on that keyword for that
+particular reftype becomes required.
+
+This permits constraints to be specified once as optional at a relatively
+global level for easier maintenance, but then become "required" if a particular
+reftype uses the keyword directly within CRDS for matching.  (This is a
+reflection of the "prime directive" of the CRDS certifier: while general checks
+can be implemented, the most crucial aspect of CRDS checking is to ensure that
+files work within CRDS.  Although CRDS does strive to implement additional
+checks, the only real measure that references will work with the CAL code is
+running calibrations.)
+
+For even more control, or for keywords not used by CRDS matching, additional
+constraints can be defined in more specialized .tpn's.
 
 Presence Expressions and Helpers
 ++++++++++++++++++++++++++++++++
@@ -408,7 +431,7 @@ which means that the constraint only applies when EXP_TYPE is not FGS_ID-STACK.
 Keyword names used in presence expressions follow the usual rules and must be
 valid Python identifiers in all caps.  Periods from data model paths are
 replaced by underscores to make the paths into simple identifiers suitable for
-eval().
+Python's eval().
 
 Presence helpers have been defined to convert the boolean result of a presence
 expression into a simple presence value.  This enables conditional optional
@@ -433,9 +456,7 @@ expression is satisfied.
 
 Note that an expression return value of False indicates a constraint does not
 apply at all.  An expression return value of True indicates the constraint is
-REQUIRED.  The purpose of the helpers is to mutate True to one of the other
-single character presence specifiers like e.g. 'W',  which creates a
-conditionally applied warning constraint.
+REQUIRED.  
    
 Helper functions in .tpn files are distinguished by being written in all lower
 case; this prevents collisions with keyword, column, or array names which are
@@ -445,8 +466,23 @@ always written in upper case.
 ........
 
 The <values> field of each constraint can define a number of things, including
-enumerations of literal values, numerical ranges, constraint expressions,
-custom validator identifiers, or nothing at all.
+enumerations of literal values::
+
+  GUIDER1,GUIDER2
+
+numerical ranges::
+
+  1:10
+  
+constraint expressions:
+
+  ()
+
+custom validator identifiers::
+
+  &PEDIGREE
+  
+or nothing at all.
 
 Enumerations
 ++++++++++++
