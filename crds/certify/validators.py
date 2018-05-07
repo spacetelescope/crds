@@ -523,14 +523,14 @@ class ExpressionValidator(Validator):
         header = data_file.convert_to_eval_header(header)
         if self.info.keytype in ["A","D"] and header.get(self.complex_name, "UNDEFINED") == "UNDEFINED":
             log.verbose_warning("Array", repr(self.name),
-                "is undefined.  Skipping check", str(self._expr))
+                                "is 'UNDEFINED'.  Skipping check", str(self._expr))
             return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))
         for keyword in expr_identifiers(self._expr):
             if header.get(keyword, "UNDEFINED") == "UNDEFINED":
-                log.verbose_warning(
-                    "Skipping ", repr(self._expr), "because", repr(keyword), "is 'UNDEFINED'", verbosity=10)
+                log.verbose_warning("Keyword or Array", repr(keyword), 
+                                    "is 'UNDEFINED'. Skipping ", repr(self._expr))
                 return True   # fake satisfied     
         try:
             satisfied = eval(self._expr_code, header, dict(globals()))
