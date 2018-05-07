@@ -1,7 +1,8 @@
 include includes/nir_subarray.tpn
 
 replace SCI COEFFS
-include includes/nirspec_sci_array_refpix.tpn
+
+include includes/nirspec_sci_array_striped.tpn
 include includes/nirspec_opt_err_array.tpn
 include includes/nirspec_dq_array.tpn
 include includes/nir_dq_def_array.tpn
