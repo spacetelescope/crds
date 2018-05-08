@@ -1,5 +1,7 @@
 include includes/nir_subarray.tpn
 
+replace   NIR_FILTER   ((EXP_TYPE)in["NRS_MSASPEC"])
+
 # include includes/nir_sci_array_refpix.tpn
 # include includes/nir_err_array.tpn
 # include includes/nir_dq_array.tpn

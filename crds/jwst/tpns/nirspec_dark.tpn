@@ -1,5 +1,7 @@
 include includes/nir_subarray.tpn
 
+replace NIR_FILTER True
+
 # NIR SCI array is used intentionally for NIRSPEC DARK,  doesn't have 2048x3200
 include includes/nir_sci_array_refpix.tpn
 

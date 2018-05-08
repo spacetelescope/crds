@@ -1,2 +1,6 @@
 include includes/nir_subarray.tpn
+
+replace NIR_FILTER True
+
 include includes/nirspec_sci_array_refpix.tpn
+

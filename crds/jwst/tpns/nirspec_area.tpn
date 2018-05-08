@@ -1,5 +1,7 @@
 # include includes/nir_subarray.tpn
 
+replace NIR_FILTER (is_imaging_mode(EXP_TYPE))
+
 include includes/nirspec_sci_array_refpix.tpn
 
 # PIXAR_SR = FLOAT / (sr) Nominal pixel area for this detector

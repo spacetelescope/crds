@@ -1,6 +1,7 @@
 include includes/nir_subarray.tpn
 
 replace SCI COEFFS
+replace NIR_FILTER (True)
 
 include includes/nirspec_sci_array_striped.tpn
 include includes/nirspec_opt_err_array.tpn

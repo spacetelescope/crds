@@ -1,5 +1,7 @@
 include includes/nir_subarray.tpn
 
+replace NIR_FILTER (True)
+
 include includes/nirspec_sci_array_striped.tpn
 
 SCI    A    X    R   (ndim(SCI_ARRAY,2))
