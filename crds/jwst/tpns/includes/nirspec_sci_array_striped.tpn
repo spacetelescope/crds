@@ -7,10 +7,10 @@ SUBARRAY_INBOUNDS_Y         X   X   (NIR_FILTER)                           (1<=M
 SCI       A           X             (NIR_FILTER)                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
 
 # Full width striping is an issue,  array may not match subarray size
-SCI       A           X         (full_frame(NIR_FILTERand(not(is_irs2(READPATT)))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])
-SCI       A           X         (full_frame(NIR_FILTERand(is_irs2(READPATT))))        (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       A           X         (full_frame(NIR_FILTER)and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])
+SCI       A           X         (full_frame(NIR_FILTER)and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
 
-SCI       A           X         (subarray(NIR_FILTERand(not(is_irs2(READPATT)))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-SCI       A           X         (subarray(NIR_FILTERand(is_irs2(READPATT))))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
+SCI       A           X         (subarray(NIR_FILTER)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         (subarray(NIR_FILTER)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
 SCI       A           X         (subarray(NIR_FILTER))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
 
