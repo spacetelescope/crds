@@ -16,8 +16,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.2.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST 7.1.3 release,  CRDS 7.2.2"
+__version__ = "7.2.3"   # XXXX  see also ../setup.cfg
+__rationale__ = "JWST 7.1.3 release,  CRDS 7.2.3"
 
 # ============================================================================
 
