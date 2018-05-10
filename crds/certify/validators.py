@@ -365,9 +365,12 @@ class IntValidator(NumericalValidator):
 
 class FloatValidator(NumericalValidator):
     """Validates floats of any precision."""
+    
     epsilon = 1e-7
     
     condition = float
+
+    type_name = "Float"
 
     def _check_value(self, filename, value):
         try:
@@ -376,29 +379,29 @@ class FloatValidator(NumericalValidator):
             if self.is_range: # XXX bug: boundary values don't handle fuzz
                 raise
             for possible in self._values:
-                if possible:
-                    err = (value-possible)/possible
-                elif value:
-                    err = value
-                else:
-                    err = 0
-                if abs(err) < self.epsilon and log.get_verbose():
-                     self.verbose(filename, value, "is within +-", repr(self.epsilon), 
-                                  "of", repr(possible))
-                     return
-            raise ValueError("Float", repr(value), "is not within +-", repr(self.epsilon), 
-                            "of any of", repr(self._values))
+                if np.allclose(value, possible, self.epsilon):
+                    self.verbose(filename, value, "is within +-",
+                                 repr(self.epsilon), "of", repr(possible))
+                    return
+            msg = " ".join([self.type_name, repr(value), "is not within +-",
+                            repr(self.epsilon), "of any of", repr(self._values)])
+            raise ValueError(msg)
  
 # ----------------------------------------------------------------------------
 
 class RealValidator(FloatValidator):
     """Validate 32-bit floats."""
 
+    type_name = "Real"
+
 # ----------------------------------------------------------------------------
 
 class DoubleValidator(FloatValidator):
     """Validate 64-bit floats."""
+    
     epsilon = 1e-14
+
+    type_name = "Double"
 
 # ----------------------------------------------------------------------------
 
