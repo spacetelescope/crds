@@ -1,6 +1,6 @@
-__version__ = '0996eea'
+__version__ = 'fd33e2c'
 
 __full_version_info__ = '''
-branch: 7.2.1
-sha1: 0996eea
+branch: 7.2.2
+sha1: fd33e2c
 '''

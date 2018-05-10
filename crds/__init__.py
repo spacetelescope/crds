@@ -16,8 +16,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.2.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "HST pre-2018.2 quick fix release."
+__version__ = "7.2.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "HST pre-2018.2 quick fix release #2, certify Float fix."
 
 # ============================================================================
 
