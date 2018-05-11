@@ -995,8 +995,8 @@ $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
 </div>
 <div class="section" id="other-notes">
 <h1>Other Notes</h1>
-<div class="section" id="id1">
-<h2>#1</h2>
+<div class="section" id="irs2-readouts-and-2048x3200">
+<h2>#1 - IRS2 readouts and 2048x3200</h2>
 <p>NIRSpec IRS2 readouts produce 3200 pixels in one image dimension. In the native
 detector readout orientation it's nx=3200, ny=2048 (i.e. it's a horizontal
 rectangle). But all science data and all reference data in CRDS always need to
@@ -1018,8 +1018,8 @@ subarray size keyword values against the actual image size needs to allow for
 this (i.e. it's OK to have meta.subarray.ysize=2048 when data.shape[-2] =
 3200), as long as READPATT has the string &quot;IRS2&quot; somewhere in it.</p>
 </div>
-<div class="section" id="id2">
-<h2>#2</h2>
+<div class="section" id="substrt-1-2-reference-pixels">
+<h2>#2 - SUBSTRT 1/2 &amp; reference pixels</h2>
 <p>For the JWST detectors all reference pixels are physical pixels that are
 counted as part of the detector dimensions (unlike virtual overscan regions
 in CCD's). So the 2048x2048 detector dimensions of the near-IR detectors
@@ -1035,22 +1035,22 @@ resulting in total image dimensions that are greater than 2048 (at least
 along the y image axis). So this is the only case where SUBSIZEn != NAXISn,
 because NAXIS2 2048, while a decision was made to still set SUBSIZE2 = 2048.</p>
 </div>
-<div class="section" id="id3">
-<h2># 3</h2>
+<div class="section" id="dark-array-ndim">
+<h2># 3 - DARK array NDIM</h2>
 <p>Comments about array dimensions and array shape equivalence:</p>
 <p>DARK: non-MIRI: SCI=ERR=3D, DQ=2D; MIRI: SCI=ERR=DQ=4D</p>
 <p>LINEARITY: COEFFS=3D, DQ=2D</p>
 </div>
-<div class="section" id="id4">
-<h2># 4</h2>
+<div class="section" id="nirspec-dark-no-reference-pixels">
+<h2># 4 - NIRSPEC DARK no reference pixels</h2>
 <p>For NIRSpec data, the DARK step is run (in calwebb_detector1.py) after
 refpix, so the image at that point will be 2048 x 2048, and the dark file will
 have shape (N, 2048, 2048), where N has to do with the number of groups.  So it
 is correct that the darks will be 2048x2048.</p>
 <p>Similarly for READNOISE.</p>
 </div>
-<div class="section" id="id5">
-<h2># 5</h2>
+<div class="section" id="nirspec-subarray-gain-2-striping">
+<h2># 5 - NIRSPEC SUBARRAY GAIN=2 STRIPING</h2>
 <p>If memory serves, in a conversation we all had with NIRSpec folks about a year
 ago, they need to deliver some subarray ref files with SUBARRAY='GENERIC',
 because the exact placement of the subarray varies from exposure to exposure
@@ -1071,6 +1071,33 @@ ref files use SUBARRAY='GENERIC'.</p>
 for these, is because NIRSpec subarrays are readout using a different gain than
 full-frame, so they have to use subarray-specific reference files (because the
 actual pixel values in the images are different than for full-frame).</p>
+</div>
+<div class="section" id="gain-sci-hdu-and-gainfact">
+<h2># 6 - GAIN SCI HDU and GAINFACT</h2>
+<p>The GainModel schema specifies a single FITS HDU with EXTNAME='SCI'. The jump
+and ramp_fit steps, which use the gain ref file, both load it into a GainModel
+data model, hence if there isn't a SCI extension present I would assume the
+load would fail. Therefore the SCI label should be mandatory.</p>
+<p>The GAINFACT keyword is only used (and hence required) for NIRSpec gain ref
+files that are subarray (like jwst_nirspec_gain_0016.fits and
+jwst_nirspec_gain_0017.fits). So GAINFACT is only needed when the ref data have
+dimensions less than 2048x2048.</p>
+</div>
+<div class="section" id="area-miri-sci-dimensions">
+<h2># 7 - AREA MIRI SCI dimensions</h2>
+<p>Huh, never noticed this before, which is due to the fact that all we do with
+the imaging-mode AREA reference files is attach the data array to an extra
+extension in the science product and that's it - we don't actually use it or
+apply it anywhere. It's information only, for possible use by the user while
+doing analysis. The reference pixels don't get stripped off until level-3
+processing, which combines multiple images. Level-2 products, which is the
+stage where a user might need to use the AREA data, still have the reference
+pixels in the image. So theoretically I guess the AREA array should be the
+original 1032x1024 size that includes the reference pixels, just for ease in
+applying it to the science image, which will still be 1032x1024 at that point.</p>
+<p>AREA ref files for the imaging mode of other instruments, like NIRCam, are the
+full 2048x2048 size, which means they contain reference pixels. Hence for
+consistency we should request that the MIRI IDT deliver theirs the same way.</p>
 </div>
 </div>
 </div>
