@@ -2,6 +2,7 @@ include includes/nir_subarray.tpn
 
 replace NIR_FILTER (True)
 
-include includes/nir_dq_array.tpn
+include includes/nirspec_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
+DQ       A           X        R       (ndim(DQ_ARRAY,2))

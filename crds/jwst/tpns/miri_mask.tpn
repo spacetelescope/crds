@@ -2,3 +2,6 @@ include includes/miri_subarray_refpix.tpn
 
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
+
+DQ       A           X         R   (ndim(DQ_ARRAY,2))
+
