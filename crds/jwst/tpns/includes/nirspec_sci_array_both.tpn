@@ -9,7 +9,7 @@
 #
 SCI       A           X         (NIR_FILTER)                              (array_exists(SCI_ARRAY))
 SCI       A           X         (NIR_FILTER)                              (is_image(SCI_ARRAY))
-SCI       A           X         (NIR_FILTER)                              (has_type(SCI_ARRAY,['INT','FLOAT']))
+SCI       A           X         (NIR_FILTER)                              (has_type(SCI_ARRAY,SCI_TYPE))
 
 SUBARRAY_INBOUNDS_X         X   X   (NIR_FILTER)                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
 SUBARRAY_INBOUNDS_Y         X   X   (NIR_FILTER)                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)

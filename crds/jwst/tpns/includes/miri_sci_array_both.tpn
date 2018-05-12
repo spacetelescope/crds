@@ -3,7 +3,7 @@
 # This file pertains to array properties and their relationships to header keywords.
 
 SCI       A           X         R             (is_image(SCI_ARRAY))
-SCI       A           X         R             (has_type(SCI_ARRAY,'FLOAT'))
+SCI       A           X         R             (has_type(SCI_ARRAY,SCI_TYPE))
 
 SCI       A           X         F             (SCI_ARRAY.SHAPE[-2:]==(1024,XDIM_MAX))
 SCI       A           X         S             (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))

@@ -4,5 +4,9 @@
 
 DQ       A           X         R   (is_image(DQ_ARRAY))
 DQ       A           X         R   (has_type(DQ_ARRAY,'INT'))
-DQ       A           X         R   (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+
+replace XDIM_MAX 2304
+replace SCI DQ
+replace DQ_TYPE 'INT'
+include nir_sci_array_both.tpn
 

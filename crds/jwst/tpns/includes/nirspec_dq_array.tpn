@@ -5,4 +5,9 @@
 DQ       A           X         (NIR_FILTER)                               (array_exists(DQ_ARRAY))
 DQ       A           X         (NIR_FILTER)                               (is_image(DQ_ARRAY))
 DQ       A           X         (NIR_FILTER)                               (has_type(DQ_ARRAY,'INT'))
-DQ       A           X         (NIR_FILTER)                               (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+
+replace YDIM_MAX 3200
+replace SCI DQ
+replace DQ_TYPE 'INT'
+include nirspec_sci_array_both.tpn
+

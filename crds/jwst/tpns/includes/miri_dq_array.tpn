@@ -4,5 +4,10 @@
 
 DQ       A           X         R             (is_image(DQ_ARRAY))
 DQ       A           X         R             (has_type(DQ_ARRAY,'INT'))
-DQ       A           X         R             (SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])
+
+# XXXX same as sci_array_refpix + INT type for DQ
+replace XDIM_MAX 1032
+replace SCI DQ
+replace DQ_TYPE 'INT'
+include miri_sci_array_both.tpn
 
