@@ -13,9 +13,8 @@ META.INSTRUMENT.DETECTOR    H   C   O   NIS,ANY,N/A
 
 META.EXPOSURE.READPATT      H   C   O   NIS,NISRAPID,ANY,N/A
 
-META.EXPOSURE.TYPE          H   C   O   NIS_AMI,NIS_DARK,NIS_FOCUS,NIS_IMAGE,\
-                                        NIS_LAMP,NIS_SOSS,NIS_TACQ,\
-                                        NIS_TACONFIRM,NIS_WFSS,ANY,N/A
+META.EXPOSURE.TYPE          H   C   O   NIS_AMI,NIS_DARK,NIS_EXTCAL,NIS_FOCUS,NIS_IMAGE,NIS_LAMP,\
+                                        NIS_SOSS,NIS_TACQ,NIS_TACONFIRM,NIS_WFSS,ANY,N/A
 
 include includes/nir_subarray_baseline.tpn
 
