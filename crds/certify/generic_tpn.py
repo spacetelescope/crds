@@ -257,7 +257,12 @@ def get_tpninfos(filepath):
     # always trigger since trapped exceptions are expected here,  debugging this
     # is trickier than normal.
     return load_tpn(filepath) if os.path.exists(filepath) else []
-    
+
+def get_tpn_path(tpn, observatory):
+    """Return the absolute path to the `tpn` file belonging to `observatory`."""
+    locator = utils.get_locator_module(observatory)
+    return locator.tpn_path(tpn)
+
 # =============================================================================
 
 def load_all_type_constraints(observatory):

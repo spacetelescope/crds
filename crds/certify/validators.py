@@ -165,7 +165,7 @@ class Validator(object):
                 for i, value in enumerate(tab.columns[self.name]): # compare to TPN values
                     self.check_value(filename + "[" + str(i) +"]", value)
         if not column_seen:
-            self._handle_missing()
+            self.handle_missing()
         return True
         
     def check_group(self, _filename):
@@ -178,12 +178,12 @@ class Validator(object):
         """
         value = header.get(self.complex_name, "UNDEFINED")
         if value in [None, "UNDEFINED"]:
-            return self._handle_missing(header)
+            return self.handle_missing(header)
         elif self.info.presence == "E":
             raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
         return value
     
-    def _handle_missing(self, header=None):
+    def handle_missing(self, header=None):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
@@ -262,8 +262,9 @@ class Validator(object):
                 return False
         else:
             presence = self.info.presence
-        if presence == "O":
-            return header.get(self.name, False) != "UNDEFINED"
+        if presence in ["O","W"]:
+            return presence
+#            return header.get(self.name, False) != "UNDEFINED"
         elif presence == "F": # IF_FULL_FRAME
             return is_full_frame(SUBARRAY)
         elif presence == "S": # IF_SUBARRAY        
@@ -564,8 +565,8 @@ def expr_identifiers(expr):
     ['META_SUBARRAY_NAME']
     """
     # First match identifiers including quoted strings and dotted attribute paths.
-    candidates = [ key.group(0) for key in re.finditer(r"['\"\.A-Z0-9_]+", expr)]
-    # Next reject strings with quotes in them.
+    candidates = [ key.group(0) for key in re.finditer(r"['\"\.A-Z0-9_a-z]+", expr)]
+    # Next reject strings with quotes in them,  or lower case or mixed case
     no_quotes = [key for key in candidates if re.match(r"^[A-Z0-9_\.]+$", key)]
     no_dots = [key.split(".")[0] for key in no_quotes]
     no_numbers = [key for key in no_dots if not re.match(r"\d+", key)]

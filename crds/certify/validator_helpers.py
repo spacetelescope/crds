@@ -25,6 +25,8 @@ def has_columns(array_info, col_names):
     True
     >>> has_columns(utils.Struct(COLUMN_NAMES=["THIS","THAT","ANOTHER"]), ["THAT","ANOTHER","FOO"])
     False
+    
+    NOTE:  does not disallow extra columns not listed.
     """
     if not array_exists(array_info):
         return False
