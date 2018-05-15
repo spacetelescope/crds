@@ -2,10 +2,6 @@
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
 
-DQ       A           X         (NIR_FILTER)                               (array_exists(DQ_ARRAY))
-DQ       A           X         (NIR_FILTER)                               (is_image(DQ_ARRAY))
-DQ       A           X         (NIR_FILTER)                               (has_type(DQ_ARRAY,'INT'))
-
 replace YDIM_MAX 3200
 replace SCI DQ
 replace DQ_TYPE 'INT'
