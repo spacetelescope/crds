@@ -1,5 +1,5 @@
 
-# refpix have been removed, so 1032 not 1024
+# refpix have not been removed, so 1032 not 1024
 
 replace XDIM_MAX 1032
 
