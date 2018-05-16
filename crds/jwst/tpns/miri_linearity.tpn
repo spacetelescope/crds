@@ -17,6 +17,7 @@ ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==COEFFS_AR
 
 # still potentially needed for chaining in DQ and DQ_DEF .tpns,  not just SCI
 replace SCI COEFFS
+replace COEFFS_TYPE 'FLOAT'
 
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
