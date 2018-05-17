@@ -25,7 +25,7 @@ META.EXPOSURE.READPATT      H   C   O   DEEP8,DEEP2,MEDIUM8,MEDIUM2,\
 META.EXPOSURE.TYPE          H   C   O   NRC_IMAGE,NRC_GRISM,NRC_TACQ,NRC_CORON,\
                                         NRC_FOCUS,NRC_DARK,NRC_FLAT,NRC_LED,\
                                         NRC_WFSC,NRC_TACONFIRM,\
-                                        NRC_TSIMAGE,NRC_TSGRISM,ANY,N/A
+                                        NRC_TSIMAGE,NRC_TSGRISM,NRC_WFSS,ANY,N/A
 
 META.INSTRUMENT.CHANNEL     H   C   O   SHORT,LONG,ANY,N/A
 
