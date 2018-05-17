@@ -1,7 +1,13 @@
 include includes/miri_subarray_refpix.tpn
 
-include includes/miri_dq_array.tpn
-include includes/miri_dq_def_array.tpn
+replace SCI DQ
+replace XDIM_MAX 1032
+replace YDIM_MAX 1024
+replace SCI_TYPE 'INT'
+include includes/miri_sci_array_both.tpn
 
 DQ       A           X         R   (ndim(DQ_ARRAY,2))
+
+include includes/miri_dq_def_array.tpn
+
 

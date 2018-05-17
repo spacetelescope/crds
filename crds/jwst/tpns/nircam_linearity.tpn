@@ -1,13 +1,2 @@
-include includes/nir_subarray.tpn
+include includes/nir_linearity.tpn
 
-replace SCI COEFFS
-replace COEFFS_TYPE 'FLOAT'
-
-include includes/nir_sci_array_refpix.tpn
-include includes/nir_opt_err_array.tpn
-include includes/nir_dq_array.tpn
-
-include includes/nir_dq_def_array.tpn
-
-COEFFS    A      X      R     (ndim(COEFFS_ARRAY,3))
-DQ        A      X      R     (ndim(DQ_ARRAY,2))

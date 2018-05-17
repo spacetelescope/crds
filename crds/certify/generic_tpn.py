@@ -198,9 +198,19 @@ def load_tpn_lines(fname, replacements=()):
                 lines += load_tpn_lines(fname2, replacements)
                 continue
             elif line.startswith("replace"): #  replace orig_str  new_str
-                replacement = tuple(line.split()[1:])
+                orig, replaced = replacement = tuple(line.split()[1:])
                 if replacement not in replacements:
-                    replacements = replacements + (replacement,)
+                    for replacement2 in replacements:
+                        orig2, replaced2 = replacement2
+                        if orig == orig2 and replaced != replaced2:
+                            raise exceptions.InconsistentTpnReplaceError(
+                                "In", repr(fname), 
+                                "Tpn replacement directive", repr(replacement), 
+                                "conflicts with directive", repr(replacement2))
+                    else:
+                        replacements = replacements + (replacement,)
+                else:
+                    log.verbose("Duplicate replacement", replacement, verbosity=80)
                 continue
             for (orig, new) in replacements:
                 line = re.sub(orig, new, line)

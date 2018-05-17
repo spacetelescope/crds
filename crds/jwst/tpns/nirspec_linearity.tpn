@@ -3,10 +3,14 @@ include includes/nir_subarray.tpn
 replace SCI COEFFS
 replace NIR_FILTER (True)
 replace COEFFS_TYPE 'FLOAT'
+replace YDIM_MAX 3200
 
 include includes/nirspec_sci_array_striped.tpn
+
 include includes/nirspec_opt_err_array.tpn
+
 include includes/nirspec_dq_array.tpn
+
 include includes/nir_dq_def_array.tpn
 
 COEFFS    A      X      R     (ndim(COEFFS_ARRAY,3))
