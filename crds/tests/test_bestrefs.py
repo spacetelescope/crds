@@ -363,10 +363,9 @@ def dt_bestrefs_multiple_updates_with_error():
     CRDS - DEBUG -  instrument='ACS' type='SHADFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='SNKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='SPOTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-    CRDS - INFO -  Affected products = 1
-    ja9553m3q
+    CRDS - INFO -  Affected products = 0
     CRDS - DEBUG -  1 sources processed
-    CRDS - DEBUG -  1 source updates
+    CRDS - DEBUG -  0 source updates
     CRDS - INFO -  1 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  5 infos
