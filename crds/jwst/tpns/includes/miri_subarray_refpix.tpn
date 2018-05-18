@@ -1,7 +1,6 @@
 # handle SUBARRAY where REFPIX may be present,  i.e. prior to refpix step(?)
 
 replace XDIM_MAX 1032
-replace SCI_TYPE 'FLOAT'
 
 include miri_subarray_both.tpn
 
