@@ -1,6 +1,7 @@
 include includes/nir_subarray.tpn
 
 replace NIR_FILTER (True)
+replace YDIM_MAX 3200
 
 include includes/nirspec_sci_array_striped.tpn
 include includes/nirspec_dq_array.tpn
