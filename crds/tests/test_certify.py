@@ -743,7 +743,6 @@ def certify_rmap_compare():
 def certify_jwst_bad_fits():
     """    
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
     CRDS - INFO -  Potential table unique row selection parameters are ['FILTER', 'PUPIL', 'ORDER']
@@ -755,38 +754,7 @@ def certify_jwst_bad_fits():
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
-    <BLANKLINE>
-    Failed validating 'enum' in schema:
-        {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
-         'description': 'Detector name.',
-         'enum': ['NRCA1',
-                  'NRCA2',
-                  'NRCA3',
-                  'NRCA4',
-                  'NRCALONG',
-                  'NRCB1',
-                  'NRCB2',
-                  'NRCB3',
-                  'NRCB4',
-                  'NRCBLONG',
-                  'NRS1',
-                  'NRS2',
-                  'ANY',
-                  'MIRIMAGE',
-                  'MIRIFULONG',
-                  'MIRIFUSHORT',
-                  'NIS',
-                  'GUIDER1',
-                  'GUIDER2',
-                  'N/A'],
-         'fits_keyword': 'DETECTOR',
-         'title': 'Name of detector used to acquire the data',
-         'type': 'string'}
-    <BLANKLINE>
-    On instance:
-        'FOO'
-    >>> doctest.ELLIPSIS_MARKER = '...'
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels.util : ...
     >>> test_config.cleanup(old_state)
     """
 
@@ -878,21 +846,13 @@ def load_nirspec_staturation_tpn_lines():
     SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
     SCI       A           X             ((True))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
     SCI       A           X         (full_frame((True))and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])
-    SCI       A           X         (full_frame((True))and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+    SCI       A           X         (full_frame((True))and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])
     SCI       A           X         (subarray((True))and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
     SCI       A           X         (subarray((True))and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
     SCI       A           X         (subarray((True)))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
-    DQ       A           X         ((True))                              (array_exists(DQ_ARRAY))
-    DQ       A           X         ((True))                              (is_image(DQ_ARRAY))
-    DQ       A           X         ((True))                              (has_type(DQ_ARRAY,'INT'))
-    SUBARRAY_INBOUNDS_X         X   X   ((True))                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
-    SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
-    DQ       A           X             ((True))                           (DQ_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-    DQ       A           X         (full_frame((True))and(not(is_irs2(READPATT))))   (DQ_ARRAY.SHAPE[-2:]==(2048,2048))
-    DQ       A           X         (full_frame((True))and(is_irs2(READPATT)))        (DQ_ARRAY.SHAPE[-2:]==(3200,2048))
-    DQ       A           X         (subarray((True))and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=2048)
-    DQ       A           X         (subarray((True))and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=3200)
-    DQ       A           X         (subarray((True)))                                (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=2048)
+    DQ   A    X         ((True))    (is_image(DQ_ARRAY))
+    DQ   A    X         ((True))    (has_type(DQ_ARRAY,'INT'))
+    DQ   A    X         (array_exists(DQ_ARRAY))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
     DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (is_table(DQ_DEF_ARRAY))
     DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
     DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
@@ -948,21 +908,13 @@ def load_nirspec_staturation_tpn():
      ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(not(is_irs2(READPATT))))', expression='(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]==(2048,2048))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True)))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(array_exists(DQ_ARRAY))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(DQ_ARRAY))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)'),
-     ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(DQ_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(not(is_irs2(READPATT))))', expression='(DQ_ARRAY.SHAPE[-2:]==(2048,2048))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(is_irs2(READPATT)))', expression='(DQ_ARRAY.SHAPE[-2:]==(3200,2048))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=2048)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=3200)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True)))', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=2048)'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(array_exists(DQ_ARRAY))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression='(is_table(DQ_DEF_ARRAY))'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
@@ -1009,6 +961,7 @@ def load_miri_mask_tpn_lines():
     DQ       A           X         S             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
     DQ       A           X         S             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)
     DQ       A           X         S             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)
+    DQ       A           X         R   (ndim(DQ_ARRAY,2))
     DQ           D           X         R             (has_type(DQ_ARRAY,'INT'))
     DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (is_table(DQ_DEF_ARRAY))
     DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
@@ -1016,7 +969,6 @@ def load_miri_mask_tpn_lines():
     DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
     DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
     DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
-    DQ       A           X         R   (ndim(DQ_ARRAY,2))
     >>> test_config.cleanup(old_state)
     """
 
@@ -1052,14 +1004,14 @@ def load_miri_mask_tpn():
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))'),
      ('DQ', 'ARRAY_DATA', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
      ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression='(is_table(DQ_DEF_ARRAY))'),
      ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
      ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
      ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
      ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))')]
+     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))")]
     >>> test_config.cleanup(old_state)
     """
     
