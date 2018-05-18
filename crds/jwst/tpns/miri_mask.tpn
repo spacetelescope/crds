@@ -3,7 +3,7 @@ include includes/miri_subarray_refpix.tpn
 replace SCI DQ
 replace XDIM_MAX 1032
 replace YDIM_MAX 1024
-replace SCI_TYPE 'INT'
+replace DQ_TYPE 'INT'
 include includes/miri_sci_array_both.tpn
 
 DQ       A           X         R   (ndim(DQ_ARRAY,2))
