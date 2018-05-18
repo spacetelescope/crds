@@ -22,7 +22,7 @@ import numpy as np
 import crds
 
 from crds.core import pysh, log, config, utils, rmap, cmdline
-from crds.core.exceptions import InvalidFormatError, ValidationError
+from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKeywordError
 
 from crds import data_file, diff
 from crds.io import tables
@@ -219,20 +219,25 @@ class ReferenceCertifier(Certifier):
         """
         header = dict(header)
         for checker in self.array_validators:
-            array_name = checker.complex_name
             # None is untried,  UNDEFINED is tried and failed.
-            if header.get(array_name, None) == "UNDEFINED":
+            if header.get(checker.complex_name, None) == "UNDEFINED":
                 continue
-            if ((array_name not in header) or 
+            # Load missing arrays,  or add data to loaded arrays from 'A' prior to 'D'.
+            if ((checker.complex_name not in header) or 
                 (checker.info.keytype=="D" and
-                 header[array_name]["DATA"] is None)):
-                header[array_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
+                 header[checker.complex_name]["DATA"] is None)):
+                header[checker.complex_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
         seen = set()
         for checker in self.array_validators:
-            if checker.is_applicable(header) and header.get(checker.complex_name, "UNDEFINED") == "UNDEFINED":
-                if checker.name not in seen:
-                    self.log_and_track_error("Missing required array", repr(checker.name))
-                    seen.add(checker.name)
+            is_undefined = header.get(checker.complex_name, "UNDEFINED") == "UNDEFINED"
+            if is_undefined:
+                header[checker.complex_name] = "UNDEFINED"
+                if checker.complex_name not in seen:
+                    try:
+                        checker.handle_missing(header)
+                    except MissingKeywordError:
+                        self.log_and_track_error("Missing required array", repr(checker.name))
+                        seen.add(checker.complex_name)
         return header
 
     def dump_provenance(self):

@@ -1,0 +1,4 @@
+replace YDIM_MAX 3200
+replace SCI_TYPE ['INT','FLOAT']
+include nirspec_sci_array_both.tpn
+

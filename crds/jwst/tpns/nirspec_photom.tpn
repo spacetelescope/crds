@@ -1,4 +1,4 @@
-include nir_photom.tpn
+include includes/nir_photom.tpn
 
 PHOTOM     A      X      ((EXP_TYPE)in['NRS_IFU','NRS_MSASPEC'])   (has_columns(PHOTOM_ARRAY,['FILTER','GRATING','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
 PHOTOM     A      X      R                                         (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))

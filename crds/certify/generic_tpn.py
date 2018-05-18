@@ -51,6 +51,7 @@ from __future__ import absolute_import
 
 import os.path
 import collections
+import re
 
 # ============================================================================
 
@@ -176,13 +177,14 @@ def is_expression(tpn_field):
     return tpn_field.startswith("(") and tpn_field.endswith(")")
     
 @utils.cached
-def load_tpn_lines(fname):
+def load_tpn_lines(fname, replacements=()):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.  If a line begins with "include",  the
     second word should be a base filename that refers to a file in the same
     directory as `fname`.  The lines of the include file are recursively included.
     """
-    log.verbose("Loading .tpn lines from", log.srepr(fname), verbosity=80)
+    log.verbose("Loading .tpn lines from", log.srepr(fname), 
+                "with replacements", log.srepr(replacements), verbosity=80)
     lines = []
     append = False
     dirname = os.path.dirname(fname)
@@ -191,13 +193,27 @@ def load_tpn_lines(fname):
             line = line.strip()
             if line.startswith("#") or not line:
                 continue
-            if line.startswith("include"):
-                include = line.split(" ")[1]
-                fname2 = os.path.join(dirname, include)
-                if not os.path.exists(fname2):
-                    exceptions.MissingTpnIncludeError("Included .tpn file", repr(include), "cannot be found.")
-                lines += load_tpn_lines(fname2)
+            if line.startswith("include"):   #  include tpn_file
+                fname2 = os.path.join(dirname, line.split()[1])
+                lines += load_tpn_lines(fname2, replacements)
                 continue
+            elif line.startswith("replace"): #  replace orig_str  new_str
+                orig, replaced = replacement = tuple(line.split()[1:])
+                if replacement not in replacements:
+                    for replacement2 in replacements:
+                        orig2, replaced2 = replacement2
+                        if orig == orig2 and replaced != replaced2:
+                            raise exceptions.InconsistentTpnReplaceError(
+                                "In", repr(fname), 
+                                "Tpn replacement directive", repr(replacement), 
+                                "conflicts with directive", repr(replacement2))
+                    else:
+                        replacements = replacements + (replacement,)
+                else:
+                    log.verbose("Duplicate replacement", replacement, verbosity=80)
+                continue
+            for (orig, new) in replacements:
+                line = re.sub(orig, new, line)
             if append:
                 lines[-1] = lines[-1][:-1].strip() + line
             else:
@@ -251,20 +267,39 @@ def get_tpninfos(filepath):
     # always trigger since trapped exceptions are expected here,  debugging this
     # is trickier than normal.
     return load_tpn(filepath) if os.path.exists(filepath) else []
-    
+
+def get_tpn_path(tpn, observatory):
+    """Return the absolute path to the `tpn` file belonging to `observatory`."""
+    locator = utils.get_locator_module(observatory)
+    return locator.tpn_path(tpn)
+
 # =============================================================================
 
 def load_all_type_constraints(observatory):
-    """Load all the type constraint files from `observatory` package."""
+    """Load all the type constraint files from `observatory` package.
+
+    There are constraints that apply to:
+
+    ALL instruments and types
+    ALL types of one instrument
+    ALL instruments of one type
+    One instrument and type
+
+    Generally these should be thought of as designed for successive refinement,
+    so all constraints are applied, but as their scope narrows they can become
+    stricter.  Since increasing strictness and refinement require more knowledge,
+    the development order of the constraints mirrored that.
+
+    However, in the (revised) loading below, constraints are loaded by order of
+    decreasing strictness; this makes it possible to define strict
+    constants/replacements early in the loading process and to apply those
+    to customize the more generalized constraints loaded later.
+    """
     from crds.core import rmap, heavy_client
     pmap_name = heavy_client.load_server_info(observatory).operational_context
     pmap = rmap.get_cached_mapping(pmap_name)
     locator = utils.get_locator_module(observatory)
-    locator.get_all_tpninfos("all","all","tpn")
-    locator.get_all_tpninfos("all","all","ld_tpn")
     for instr in pmap.selections:
-        locator.get_all_tpninfos(instr, "all", "tpn")
-        locator.get_all_tpninfos(instr, "all", "ld_tpn")
         imap = pmap.get_imap(instr)
         for filekind in imap.selections:
             if imap.selections[filekind] == "N/A":
@@ -274,10 +309,14 @@ def load_all_type_constraints(observatory):
             except Exception as exc:
                 log.warning("Missing suffix coverage for", repr((instr, filekind)), ":", exc)
             else:
-                locator.get_all_tpninfos("all", suffix, "tpn")  # With core schema,  one type loads all
                 locator.get_all_tpninfos(instr, suffix, "tpn")  # With core schema,  one type loads all
-                locator.get_all_tpninfos("all", suffix, "ld_tpn")  # With core schema,  one type loads all
                 locator.get_all_tpninfos(instr, suffix, "ld_tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "tpn")  # With core schema,  one type loads all
+                locator.get_all_tpninfos("all", suffix, "ld_tpn")  # With core schema,  one type loads all
+        locator.get_all_tpninfos(instr, "all", "tpn")
+        locator.get_all_tpninfos(instr, "all", "ld_tpn")
+    locator.get_all_tpninfos("all","all","tpn")
+    locator.get_all_tpninfos("all","all","ld_tpn")
 
 # =============================================================================
 

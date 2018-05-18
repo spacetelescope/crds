@@ -1,10 +1,10 @@
-# include miri_subarray.tpn
+# include includes/miri_subarray_refpix.tpn
 
-include miri_sci_array.tpn
-include miri_err_array.tpn
-include miri_dq_array.tpn
-include miri_dq_def_array.tpn
+include includes/miri_sci_array_refpix.tpn
+include includes/miri_err_array.tpn
+include includes/miri_dq_array.tpn
+include includes/miri_dq_def_array.tpn
 
-SCI    A     X    R   (len(SCI_ARRAY.SHAPE)==2)
-ERR    A     X    R   (len(ERR_ARRAY.SHAPE)==2)
-DQ     A     X    R   (len(DQ_ARRAY.SHAPE)==2)
+SCI    A     X    R   (ndim(SCI_ARRAY,2))
+ERR    A     X    R   (ndim(ERR_ARRAY,2))
+DQ     A     X    R   (ndim(DQ_ARRAY,2))

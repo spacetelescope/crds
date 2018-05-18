@@ -25,6 +25,8 @@ def has_columns(array_info, col_names):
     True
     >>> has_columns(utils.Struct(COLUMN_NAMES=["THIS","THAT","ANOTHER"]), ["THAT","ANOTHER","FOO"])
     False
+    
+    NOTE:  does not disallow extra columns not listed.
     """
     if not array_exists(array_info):
         return False
@@ -178,7 +180,7 @@ def is_imaging_mode(exp_type):
                         "NIS_IMAGE", "NIS_TACQ", "NIS_TACONFIRM", "NIS_AMI", 
                         "NIS_FOCUS", "NIS_DARK", "NIS_LAMP",
                         
-                        "FGS_IMAGE", "FGS_FOCUS", "FGS_SKYFLAT", "FGS_INTFLAT", "FGS_DARK"]
+                        "FGS_IMAGE", "FGS_FOCUS", "FGS_SKYFLAT", "FGS_INTFLAT", "FGS_DARK", "FGS_ID-STACK"]
     
 def is_full_frame(subarray):
     """Return True IFF `subarray` is defined and has a full frame subarray value.
@@ -241,20 +243,10 @@ def is_irs2(readpatt):
     True
     >>> is_irs2("NRSN32R8")
     False
+    >>> is_irs2("ALLIRS2")
+    True
     """
     return 'IRS2' in readpatt
-
-def irs2_dim(readpatt):
-    """Return 3200 if `readpatt` indicates and IRS2 mode else return 2048.
-    
-    >>> irs2_dim("NRSIRS2")
-    3200
-    >>> irs2_dim("NRSIRS2RAPID")
-    3200
-    >>> irs2_dim("NRSN32R8")
-    2048
-    """
-    return 3200 if is_irs2(readpatt) else 2048
 
 def is_defined(value):
     """Return True IFF `value` is not 'UNDEFINED' or None.
@@ -314,9 +306,60 @@ def nir_filter(instrument, reftype, exp_type):
     else:
         return True
     
-def nir_xdim(exp_type):
-    """Handle weird X-dimensions for NIR detectors,  currently FGS_ID-STACK=3200 not 2048."""
-    return 3200 if exp_type.upper() in ["FGS_ID-STACK"] else 2048
+# ----------------------------------------------------------------------------
+
+# These are presence field helpers that mutate a True value of a presence expression
+# into one of the non-boolean presence flags.   This enables combining presence values
+# like "O" with presence expressions.   In general,  when an expression is True then
+# the presence character of the wrapper helper is returned,  e.g.:
+#
+# (OPTIONAL(True)) --> "O"
+# (OPTIONAL(False)) --> False,  constraint not evaluated.
+#
+# The enables having constraints which are conditionally optional,  so e.g. a constraint 
+# on 
+
+def optional(flag=True):
+    """When this flag is True, an exception should be issued if the related keyword/element is
+    defined and the constraint fails.   If the keyword/element is not defined or `flag` is False,  
+    the constraint should be ignored.   Returns "O" or False
+    """
+    return "O" if flag else False
+
+def required(flag=True):
+    """When this flag is True,  an exception should be issued if the related keyword/element is
+    not defined.     Returns "R" or False.
+    """
+    return "R" if flag else False
+
+def warning(flag=True):
+    """When this flag is True,  a warning should be issued if the related keyword/element is
+    not defined.     Returns "W" or False.
+    """
+    return "W" if flag else False
+
+def subarray(flag=True):
+    """When this flag is True,  the related constraint should be applied if
+    is_full_frame(SUBARRAY) is False.     Returns "S" or False.
+    """
+    return "S" if flag else False
+
+def full_frame(flag=True):
+    """When this flag is True,  the related constraint should be applied if
+    is_full_frame(SUBARRAY) is True.     Returns "F" or False.
+    """
+    return "F" if flag else False
+
+def all_subarray(flag=True):
+    """When `flag` is True,  mark this constraint as applying to all SUBARRAY forms,
+    including full frame, as long as SUBARRAY is defined.   Returns "A" or False.
+    """
+    return "A" if flag else False
+                 
+# ----------------------------------------------------------------------------
+
+def ndim(array, dims):
+    return len(array.SHAPE) == dims
 
 # ----------------------------------------------------------------------------
 

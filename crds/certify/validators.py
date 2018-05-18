@@ -165,7 +165,7 @@ class Validator(object):
                 for i, value in enumerate(tab.columns[self.name]): # compare to TPN values
                     self.check_value(filename + "[" + str(i) +"]", value)
         if not column_seen:
-            self._handle_missing()
+            self.handle_missing()
         return True
         
     def check_group(self, _filename):
@@ -178,35 +178,41 @@ class Validator(object):
         """
         value = header.get(self.complex_name, "UNDEFINED")
         if value in [None, "UNDEFINED"]:
-            return self._handle_missing(header)
+            return self.handle_missing(header)
         elif self.info.presence == "E":
             raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
         return value
     
-    def _handle_missing(self, header=None):
+    def handle_missing(self, header=None):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
-        if self.info.presence in ["R","P"]:
-            raise MissingKeywordError("Missing required", self._keytype_descr, repr(self.name))
-        elif self.info.presence in ["W"]:
-            log.warning("Missing suggested", self._keytype_descr, repr(self.name))
-            return "UNDEFINED"
-        elif self.info.presence in ["O"]:
-            log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
-            return "UNDEFINED"
-        elif self.info.presence in ["S","F","A"]:
-            log.verbose("Conditional SUBARRAY parameter is not defined.")
-            return "UNDEFINED"
-        elif self.conditionally_required:
-            if header and self.is_applicable(header):
-                raise MissingKeywordError("Missing", self._keytype_descr, repr(self.name), 
-                                           "required by condition", self.info.presence)
+        presence = self.info.presence
+        if self.conditionally_required:
+            if header: 
+                presence = self.is_applicable(header)
+                if not presence:
+                    log.verbose("Conditional constraint on", repr(self.name),
+                                "is not required by", repr(self.info.presence), verbosity=70)
+                    return "UNDEFINED"
             else:
+                log.verbose("No header supplied to evaluate conditional constraint",
+                            repr(self.name), "based on", repr(self.info.presence),
+                            "  Skipping.")
                 return "UNDEFINED"
+        if presence in ["R","P",True]:
+            raise MissingKeywordError("Missing required", self._keytype_descr, repr(self.name))
+        elif presence in ["W"]:
+            log.warning("Missing suggested", self._keytype_descr, repr(self.name))
+        elif presence in ["O"]:
+            log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
+        elif presence in ["S","F","A"]:
+            log.verbose("Conditional SUBARRAY parameter is not defined.")
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      repr(self.info.presence))
+        return "UNDEFINED"
+    
     @property
     def _keytype_descr(self):
         descr = self.info._repr_keytype()[1:-1]
@@ -246,18 +252,24 @@ class Validator(object):
         SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
             try:
-                required = eval(self._presence_condition_code, header, dict(globals()))
+                presence = eval(self._presence_condition_code, header, dict(globals()))
                 log.verbose("Validator", self.info, "is",
-                            "applicable." if required else "not applicable.", verbosity=70)
+                            "applicable." if presence else "not applicable.", verbosity=70)
+                if not presence:
+                    return False
             except Exception as exc:
                 log.warning("Failed checking applicability of", repr(self.info),"skipping check : ", str(exc))
-                required = False
-            return required
-        if self.info.presence == "F": # IF_FULL_FRAME
+                return False
+        else:
+            presence = self.info.presence
+        if presence in ["O","W"]:
+            return presence
+#            return header.get(self.name, False) != "UNDEFINED"
+        elif presence == "F": # IF_FULL_FRAME
             return is_full_frame(SUBARRAY)
-        elif self.info.presence == "S": # IF_SUBARRAY        
+        elif presence == "S": # IF_SUBARRAY        
             return is_subarray(SUBARRAY)
-        elif self.info.presence == "A":
+        elif presence == "A":
             return subarray_defined(header)
         else:    
             return True
@@ -319,6 +331,7 @@ class CharacterValidator(KeywordValidator):
 
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
+
     _values = ["T","F"]
 
 # ----------------------------------------------------------------------------
@@ -514,14 +527,14 @@ class ExpressionValidator(Validator):
         header = data_file.convert_to_eval_header(header)
         if self.info.keytype in ["A","D"] and header.get(self.complex_name, "UNDEFINED") == "UNDEFINED":
             log.verbose_warning("Array", repr(self.name),
-                "is undefined.  Skipping check", str(self._expr))
+                                "is 'UNDEFINED'.  Skipping check", str(self._expr))
             return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))
         for keyword in expr_identifiers(self._expr):
             if header.get(keyword, "UNDEFINED") == "UNDEFINED":
-                log.verbose_warning(
-                    "Skipping ", repr(self._expr), "because", repr(keyword), "is 'UNDEFINED'", verbosity=10)
+                log.verbose_warning("Keyword or Array", repr(keyword), 
+                                    "is 'UNDEFINED'. Skipping ", repr(self._expr))
                 return True   # fake satisfied     
         try:
             satisfied = eval(self._expr_code, header, dict(globals()))
@@ -552,8 +565,8 @@ def expr_identifiers(expr):
     ['META_SUBARRAY_NAME']
     """
     # First match identifiers including quoted strings and dotted attribute paths.
-    candidates = [ key.group(0) for key in re.finditer(r"['\"\.A-Z0-9_]+", expr)]
-    # Next reject strings with quotes in them.
+    candidates = [ key.group(0) for key in re.finditer(r"['\"\.A-Z0-9_a-z]+", expr)]
+    # Next reject strings with quotes in them,  or lower case or mixed case
     no_quotes = [key for key in candidates if re.match(r"^[A-Z0-9_\.]+$", key)]
     no_dots = [key.split(".")[0] for key in no_quotes]
     no_numbers = [key for key in no_dots if not re.match(r"\d+", key)]

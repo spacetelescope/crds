@@ -1,0 +1,28 @@
+# This is an abstract include parameterized by XDIM_MAX which is 1032 or 1024
+# depending on whether refpix are or are not included.
+
+META.SUBARRAY.NAME          H   C   R
+META.SUBARRAY.XSTART        H   I   R
+META.SUBARRAY.YSTART        H   I   R
+META.SUBARRAY.XSIZE         H   I   R
+META.SUBARRAY.YSIZE         H   I   R
+META.SUBARRAY.FASTAXIS      H   I   R
+META.SUBARRAY.SLOWAXIS      H   I   R
+
+SUBARRAY_INBOUNDS_X         X   X   A  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=XDIM_MAX)
+SUBARRAY_INBOUNDS_Y         X   X   A  (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=1024)
+
+DETECTOR              H   C   O
+MIRIMAGE_AXIS         X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFULONG_AXIS       X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFUSHORT_AXIS      X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
+
+FULLFRAME_XSTART     X           X         F             (META_SUBARRAY_XSTART==1)
+FULLFRAME_YSTART     X           X         F             (META_SUBARRAY_YSTART==1)
+FULLFRAME_XSIZE      X           X         F             (META_SUBARRAY_XSIZE==XDIM_MAX)
+FULLFRAME_YSIZE      X           X         F             (META_SUBARRAY_YSIZE==1024)
+
+SUBARRAY_XSTART      X           X         S             (1<=META_SUBARRAY_XSTART<=XDIM_MAX)
+SUBARRAY_YSTART      X           X         S             (1<=META_SUBARRAY_YSTART<=1024)
+SUBARRAY_XSIZE       X           X         S             (1<=META_SUBARRAY_XSIZE<=XDIM_MAX)
+SUBARRAY_YSIZE       X           X         S             (1<=META_SUBARRAY_YSIZE<=1024)
