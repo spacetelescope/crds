@@ -1,0 +1,13 @@
+# This .tpn defines constraints related to array objects vs. header keywords.
+# Required relationships between subarray keywords are defined in a subarray .tpn
+# This file pertains to array properties and their relationships to header keywords.
+
+SCI       A           X         R             (is_image(SCI_ARRAY))
+SCI       A           X         R             (has_type(SCI_ARRAY,SCI_TYPE))
+
+SCI       A           X         F             (SCI_ARRAY.SHAPE[-2:]==(1024,XDIM_MAX))
+SCI       A           X         S             (SCI_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+SCI       A           X         S             (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=1024)
+SCI       A           X         S             (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=XDIM_MAX)
+

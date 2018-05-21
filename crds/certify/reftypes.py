@@ -263,10 +263,10 @@ class TypeParameters(object):
                 log.verbose_warning("Can't find TPN key for", 
                     (instrument, filekind, field), ":", str(exc),
                                     verbosity=75)
-        append_tpn_level(results, "all", "all")
+        append_tpn_level(results, instrument, filekind)
         append_tpn_level(results, instrument, "all")
         append_tpn_level(results, "all", filekind)
-        append_tpn_level(results, instrument, filekind)
+        append_tpn_level(results, "all", "all")
         return results
 
 # -----------------------------------------------------------------------------

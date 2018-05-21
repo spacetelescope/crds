@@ -7,6 +7,7 @@ from __future__ import absolute_import
 
 import os
 import doctest
+from pprint import pprint as pp
 
 # ==================================================================================
 import numpy as np
@@ -740,10 +741,8 @@ def certify_rmap_compare():
     """
 
 def certify_jwst_bad_fits():
-    """
-    
+    """    
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
     CRDS - INFO -  Potential table unique row selection parameters are ['FILTER', 'PUPIL', 'ORDER']
@@ -755,38 +754,7 @@ def certify_jwst_bad_fits():
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : JWST Data Models: 'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'N/A']
-    <BLANKLINE>
-    Failed validating 'enum' in schema:
-        {'$schema': 'http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema',
-         'description': 'Detector name.',
-         'enum': ['NRCA1',
-                  'NRCA2',
-                  'NRCA3',
-                  'NRCA4',
-                  'NRCALONG',
-                  'NRCB1',
-                  'NRCB2',
-                  'NRCB3',
-                  'NRCB4',
-                  'NRCBLONG',
-                  'NRS1',
-                  'NRS2',
-                  'ANY',
-                  'MIRIMAGE',
-                  'MIRIFULONG',
-                  'MIRIFUSHORT',
-                  'NIS',
-                  'GUIDER1',
-                  'GUIDER2',
-                  'N/A'],
-         'fits_keyword': 'DETECTOR',
-         'title': 'Name of detector used to acquire the data',
-         'type': 'string'}
-    <BLANKLINE>
-    On instance:
-        'FOO'
-    >>> doctest.ELLIPSIS_MARKER = '...'
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels.util : ...
     >>> test_config.cleanup(old_state)
     """
 
@@ -828,8 +796,225 @@ def undefined_expr_identifiers():
     
     >>> validators.expr_identifiers("(len(SCI_ARRAY.SHAPE)==2)")
     ['SCI_ARRAY']
+
+    >>> validators.expr_identifiers("(True)")
+    []
     """
 
+def load_nirspec_staturation_tpn_lines():
+    """Print out the outcome of various .tpn directives like "replace" and
+    "include" and reuse of generic files.
+
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> path = generic_tpn.get_tpn_path("nirspec_saturation.tpn","jwst")
+    >>> lines = generic_tpn.load_tpn_lines(path)   # doctest: +ELLIPSIS
+    >>> text = "\\n".join(lines)
+    >>> print(text)
+    META.SUBARRAY.NAME          H   C   (is_imaging_mode(EXP_TYPE))
+    SUBARRAY                    H   C   O
+    META.SUBARRAY.XSTART        H   I   (is_imaging_mode(EXP_TYPE))
+    META.SUBARRAY.YSTART        H   I   (is_imaging_mode(EXP_TYPE))
+    META.SUBARRAY.XSIZE         H   I   (is_imaging_mode(EXP_TYPE))
+    META.SUBARRAY.YSIZE         H   I   (is_imaging_mode(EXP_TYPE))
+    META.SUBARRAY.FASTAXIS      H   I   (is_imaging_mode(EXP_TYPE))
+    META.SUBARRAY.SLOWAXIS      H   I   (is_imaging_mode(EXP_TYPE))
+    FULLFRAME_XSTART            X   X   (full_frame(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_XSTART==1)
+    FULLFRAME_YSTART            X   X   (full_frame(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_YSTART==1)
+    DETECTOR                    H   C   O
+    NRCA1_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA1'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+    NRCA2_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA2'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+    NRCA3_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA3'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+    NRCA4_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA4'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+    NRCALONG_AXIS               X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCALONG')) ((FASTAXIS==-1)and(SLOWAXIS==2))
+    NRCB1_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB1'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+    NRCB2_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB2'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+    NRCB3_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB3'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+    NRCB4_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB4'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+    NRCBLONG_AXIS               X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCBLONG')) ((FASTAXIS==1)and(SLOWAXIS==-2))
+    MIRIMAGE_AXIS               X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIMAGE'))    ((FASTAXIS==1)and(SLOWAXIS==2))
+    MIRIFULONG_AXIS             X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIFULONG'))  ((FASTAXIS==1)and(SLOWAXIS==2))
+    MIRIFUSHORT_AXIS            X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIFUSHORT')) ((FASTAXIS==1)and(SLOWAXIS==2))
+    NRS1_AXIS                   X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRS1'))    ((FASTAXIS==2)and(SLOWAXIS==1))
+    NRS2_AXIS                   X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRS2'))    ((FASTAXIS==-2)and(SLOWAXIS==-1))
+    NIS_AXIS                    X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NIS'))    ((FASTAXIS==-2)and(SLOWAXIS==-1))
+    GUIDER1_AXIS                X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER1')) ((FASTAXIS==-2)and(SLOWAXIS==-1))
+    GUIDER2_AXIS                X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER2')) ((FASTAXIS==2)and(SLOWAXIS==-1))
+    SCI       A           X         ((True))                              (array_exists(SCI_ARRAY))
+    SCI       A           X         ((True))                              (is_image(SCI_ARRAY))
+    SCI       A           X         ((True))                              (has_type(SCI_ARRAY,['FLOAT']))
+    SUBARRAY_INBOUNDS_X         X   X   ((True))                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+    SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+    SCI       A           X             ((True))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+    SCI       A           X         (full_frame((True))and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])
+    SCI       A           X         (full_frame((True))and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])
+    SCI       A           X         (subarray((True))and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+    SCI       A           X         (subarray((True))and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
+    SCI       A           X         (subarray((True)))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+    DQ   A    X         ((True))    (is_image(DQ_ARRAY))
+    DQ   A    X         ((True))    (has_type(DQ_ARRAY,'INT'))
+    DQ   A    X         (array_exists(DQ_ARRAY))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (is_table(DQ_DEF_ARRAY))
+    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+    SCI   A   X    R  (ndim(SCI_ARRAY,2))
+    DQ    A   X    R  (ndim(DQ_ARRAY,2))
+    META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
+    >>> test_config.cleanup(old_state)
+    """
+
+def load_nirspec_staturation_tpn():
+    """Print out the outcome of various .tpn directives like "replace" and
+    "include" and reuse of generic files as actual .tpn objects.
+
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> path = generic_tpn.get_tpn_path("nirspec_saturation.tpn","jwst")
+    >>> pp(generic_tpn.load_tpn(path))
+    [('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', condition='(is_imaging_mode(EXP_TYPE))', values=()),
+     ('SUBARRAY', 'HEADER', 'CHARACTER', 'OPTIONAL', values=()),
+     ('META.SUBARRAY.XSTART', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=()),
+     ('META.SUBARRAY.YSTART', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=()),
+     ('META.SUBARRAY.XSIZE', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=()),
+     ('META.SUBARRAY.YSIZE', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=()),
+     ('META.SUBARRAY.FASTAXIS', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=()),
+     ('META.SUBARRAY.SLOWAXIS', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=()),
+     ('FULLFRAME_XSTART', 'EXPRESSION', 'EXPRESSION', condition="(full_frame(INSTRUME!='NIRSPEC'))", expression='(META_SUBARRAY_XSTART==1)'),
+     ('FULLFRAME_YSTART', 'EXPRESSION', 'EXPRESSION', condition="(full_frame(INSTRUME!='NIRSPEC'))", expression='(META_SUBARRAY_YSTART==1)'),
+     ('DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=()),
+     ('NRCA1_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA1'))", expression='((FASTAXIS==-1)and(SLOWAXIS==2))'),
+     ('NRCA2_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA2'))", expression='((FASTAXIS==1)and(SLOWAXIS==-2))'),
+     ('NRCA3_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA3'))", expression='((FASTAXIS==-1)and(SLOWAXIS==2))'),
+     ('NRCA4_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA4'))", expression='((FASTAXIS==1)and(SLOWAXIS==-2))'),
+     ('NRCALONG_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCALONG'))", expression='((FASTAXIS==-1)and(SLOWAXIS==2))'),
+     ('NRCB1_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB1'))", expression='((FASTAXIS==1)and(SLOWAXIS==-2))'),
+     ('NRCB2_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB2'))", expression='((FASTAXIS==-1)and(SLOWAXIS==2))'),
+     ('NRCB3_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB3'))", expression='((FASTAXIS==1)and(SLOWAXIS==-2))'),
+     ('NRCB4_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB4'))", expression='((FASTAXIS==-1)and(SLOWAXIS==2))'),
+     ('NRCBLONG_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCBLONG'))", expression='((FASTAXIS==1)and(SLOWAXIS==-2))'),
+     ('MIRIMAGE_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIMAGE'))", expression='((FASTAXIS==1)and(SLOWAXIS==2))'),
+     ('MIRIFULONG_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIFULONG'))", expression='((FASTAXIS==1)and(SLOWAXIS==2))'),
+     ('MIRIFUSHORT_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIFUSHORT'))", expression='((FASTAXIS==1)and(SLOWAXIS==2))'),
+     ('NRS1_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRS1'))", expression='((FASTAXIS==2)and(SLOWAXIS==1))'),
+     ('NRS2_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRS2'))", expression='((FASTAXIS==-2)and(SLOWAXIS==-1))'),
+     ('NIS_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='NIS'))", expression='((FASTAXIS==-2)and(SLOWAXIS==-1))'),
+     ('GUIDER1_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER1'))", expression='((FASTAXIS==-2)and(SLOWAXIS==-1))'),
+     ('GUIDER2_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER2'))", expression='((FASTAXIS==2)and(SLOWAXIS==-1))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(array_exists(SCI_ARRAY))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(SCI_ARRAY))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(SCI_ARRAY,['FLOAT']))"),
+     ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)'),
+     ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(not(is_irs2(READPATT))))', expression='(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True)))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(DQ_ARRAY))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(DQ_ARRAY,'INT'))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(array_exists(DQ_ARRAY))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(SCI_ARRAY,2))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))'),
+     ('META.EXPOSURE.GAIN_FACTOR', 'HEADER', 'REAL', 'WARN', values=('1.0:10.0',))]
+    >>> test_config.cleanup(old_state)
+    """
+
+def load_miri_mask_tpn_lines():
+    """Print out the outcome of various .tpn directives like "replace" and
+    "include" and reuse of generic files.
+
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> path = generic_tpn.get_tpn_path("miri_mask.tpn","jwst")
+    >>> print("\\n".join(generic_tpn.load_tpn_lines(path)))
+    META.SUBARRAY.NAME          H   C   R
+    META.SUBARRAY.XSTART        H   I   R
+    META.SUBARRAY.YSTART        H   I   R
+    META.SUBARRAY.XSIZE         H   I   R
+    META.SUBARRAY.YSIZE         H   I   R
+    META.SUBARRAY.FASTAXIS      H   I   R
+    META.SUBARRAY.SLOWAXIS      H   I   R
+    SUBARRAY_INBOUNDS_X         X   X   A  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=1032)
+    SUBARRAY_INBOUNDS_Y         X   X   A  (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=1024)
+    DETECTOR              H   C   O
+    MIRIMAGE_AXIS         X   X   (DETECTOR=='MIRIMAGE')    ((FASTAXIS==1)and(SLOWAXIS==2))
+    MIRIFULONG_AXIS       X   X   (DETECTOR=='MIRIFULONG')  ((FASTAXIS==1)and(SLOWAXIS==2))
+    MIRIFUSHORT_AXIS      X   X   (DETECTOR=='MIRIFUSHORT') ((FASTAXIS==1)and(SLOWAXIS==2))
+    FULLFRAME_XSTART     X           X         F             (META_SUBARRAY_XSTART==1)
+    FULLFRAME_YSTART     X           X         F             (META_SUBARRAY_YSTART==1)
+    FULLFRAME_XSIZE      X           X         F             (META_SUBARRAY_XSIZE==1032)
+    FULLFRAME_YSIZE      X           X         F             (META_SUBARRAY_YSIZE==1024)
+    SUBARRAY_XSTART      X           X         S             (1<=META_SUBARRAY_XSTART<=1032)
+    SUBARRAY_YSTART      X           X         S             (1<=META_SUBARRAY_YSTART<=1024)
+    SUBARRAY_XSIZE       X           X         S             (1<=META_SUBARRAY_XSIZE<=1032)
+    SUBARRAY_YSIZE       X           X         S             (1<=META_SUBARRAY_YSIZE<=1024)
+    DQ       A           X         R             (is_image(DQ_ARRAY))
+    DQ       A           X         R             (has_type(DQ_ARRAY,'INT'))
+    DQ       A           X         F             (DQ_ARRAY.SHAPE[-2:]==(1024,1032))
+    DQ       A           X         S             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+    DQ       A           X         S             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)
+    DQ       A           X         S             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)
+    DQ       A           X         R   (ndim(DQ_ARRAY,2))
+    DQ           D           X         R             (has_type(DQ_ARRAY,'INT'))
+    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (is_table(DQ_DEF_ARRAY))
+    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+    >>> test_config.cleanup(old_state)
+    """
+
+def load_miri_mask_tpn():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> path = generic_tpn.get_tpn_path("miri_mask.tpn","jwst")
+    >>> pp(generic_tpn.load_tpn(path))
+    [('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('META.SUBARRAY.XSTART', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
+     ('META.SUBARRAY.YSTART', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
+     ('META.SUBARRAY.XSIZE', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
+     ('META.SUBARRAY.YSIZE', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
+     ('META.SUBARRAY.FASTAXIS', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
+     ('META.SUBARRAY.SLOWAXIS', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
+     ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', 'ANY_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=1032)'),
+     ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', 'ANY_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=1024)'),
+     ('DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=()),
+     ('MIRIMAGE_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(DETECTOR=='MIRIMAGE')", expression='((FASTAXIS==1)and(SLOWAXIS==2))'),
+     ('MIRIFULONG_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(DETECTOR=='MIRIFULONG')", expression='((FASTAXIS==1)and(SLOWAXIS==2))'),
+     ('MIRIFUSHORT_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(DETECTOR=='MIRIFUSHORT')", expression='((FASTAXIS==1)and(SLOWAXIS==2))'),
+     ('FULLFRAME_XSTART', 'EXPRESSION', 'EXPRESSION', 'IF_FULL_FRAME', expression='(META_SUBARRAY_XSTART==1)'),
+     ('FULLFRAME_YSTART', 'EXPRESSION', 'EXPRESSION', 'IF_FULL_FRAME', expression='(META_SUBARRAY_YSTART==1)'),
+     ('FULLFRAME_XSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_FULL_FRAME', expression='(META_SUBARRAY_XSIZE==1032)'),
+     ('FULLFRAME_YSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_FULL_FRAME', expression='(META_SUBARRAY_YSIZE==1024)'),
+     ('SUBARRAY_XSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART<=1032)'),
+     ('SUBARRAY_YSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART<=1024)'),
+     ('SUBARRAY_XSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSIZE<=1032)'),
+     ('SUBARRAY_YSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSIZE<=1024)'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(is_image(DQ_ARRAY))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_FULL_FRAME', expression='(DQ_ARRAY.SHAPE[-2:]==(1024,1032))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))'),
+     ('DQ', 'ARRAY_DATA', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
+     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))")]
+    >>> test_config.cleanup(old_state)
+    """
+    
 # ==================================================================================
 
 class TestHSTTpnInfoClass(test_config.CRDSTestCase):
@@ -1110,7 +1295,7 @@ class TestCertify(test_config.CRDSTestCase):
     # ------------------------------------------------------------------------------
         
     def test_expression_validator_passes(self):
-        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
+        tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR==\'FOO\')and(SUBARRAY==\'BAR\'))',))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.ExpressionValidator))
         header = { "DETECTOR":"FOO", "SUBARRAY":"BAR" }
@@ -1162,6 +1347,70 @@ class TestCertify(test_config.CRDSTestCase):
         checker = certify.validator(info)
         assert_true(not checker.conditionally_required)  #
         
+    def test_conditional_warning_true_present(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT", "PIXAR_SR":"999.0"}
+        assert_true(checker.is_applicable(header)=='W')  #
+        checker.handle_missing(header)
+
+    def test_conditional_warning_true_absent(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT", "PIXAR_SR":"999.0"}
+        assert_true(checker.is_applicable(header)=='W')  #
+        checker.handle_missing(header)
+
+    def test_conditional_warning_false_present(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_FLAT-MRS", "PIXAR_SR":"999.0"}
+        assert_true(checker.is_applicable(header)==False)  #
+        checker.handle_missing(header)
+
+    def test_conditional_warning_false_absent(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_FLAT-MRS"}
+        assert_true(checker.is_applicable(header)==False)  #
+        checker.handle_missing(header)
+
+    def test_conditional_optional_true_present(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT", "PIXAR_SR":"999.0"}
+        assert_true(checker.is_applicable(header)=='O')  #
+        checker.handle_missing(header)
+
+    def test_conditional_optional_true_absent(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT"}
+        assert_true(checker.is_applicable(header)=='O')  #
+        checker.handle_missing(header)
+
+    def test_conditional_optional_false_present(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_FLAT-MRS", "PIXAR_SR":"999.0"}
+        assert_true(checker.is_applicable(header)==False)  #
+        checker.handle_missing(header)
+
+    def test_conditional_optional_false_absent(self):
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        checker = certify.validator(info)
+        assert_true(checker.conditionally_required)
+        header = {"EXP_TYPE":"MIR_FLAT-MRS"}
+        assert_true(checker.is_applicable(header)==False)  #
+        checker.handle_missing(header)
+
     def test_tpn_bad_presence(self):
         try:
             certify.TpnInfo('DETECTOR','H', 'C', 'Q', ("FOO","BAR","BAZ"))
@@ -1191,20 +1440,20 @@ class TestCertify(test_config.CRDSTestCase):
         # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('DETECTOR','H', 'C', 'W', ("FOO","BAR","BAZ"))
         checker = certify.validator(info)
-        assert_true(checker._handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
+        assert_true(checker.handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
         info = certify.TpnInfo('DETECTOR','H', 'C', 'S', ("FOO","BAR","BAZ"))
         checker = certify.validator(info)
-        assert_true(checker._handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
+        assert_true(checker.handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
         info = certify.TpnInfo('DETECTOR','H', 'C', 'F', ("FOO","BAR","BAZ"))
         checker = certify.validator(info)
-        assert_true(checker._handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")        
+        assert_true(checker.handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")        
 
     def test_tpn_handle_missing_conditional(self):
         # typical subtle expression error, "=" vs. "=="
-        info = certify.TpnInfo('DETECTOR','H', 'C', '(READPATT=="FOO")', ("FOO","BAR","BAZ"))
+        info = certify.TpnInfo('DETECTOR','H', 'C', "(READPATT=='FOO')", ("FOO","BAR","BAZ"))
         checker = certify.validator(info)
-        assert_raises(certify.MissingKeywordError, checker._handle_missing, header={"READPATT":"FOO"})
-        assert_true(checker._handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED")
+        assert_raises(certify.MissingKeywordError, checker.handle_missing, header={"READPATT":"FOO"})
+        assert_true(checker.handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED")
         
 
     def test_missing_column_validator(self):

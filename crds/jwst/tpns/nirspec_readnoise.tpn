@@ -1,10 +1,13 @@
-include nir_subarray.tpn
+include includes/nir_subarray.tpn
 
-include nirspec_sci_array.tpn
+replace NIR_FILTER (True)
+replace YDIM_MAX 3200
+
+include includes/nirspec_sci_array_striped.tpn
 
 BUNIT    H   C    W   DN,ADU
 
-SCI    A    X    R   (len(SCI_ARRAY.SHAPE)==2)
+SCI    A    X    R   (ndim(SCI_ARRAY,2))
 
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
 
