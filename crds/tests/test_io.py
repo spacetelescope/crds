@@ -167,8 +167,9 @@ def dt_asdf_history_no_entries_description():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> header = data_file.get_header("data/niriss_ref_distortion.asdf")
-    >>> print(header["HISTORY"])
-    This file is being delivered because it is the wcs reference and distortion correction refernce file. This file was created from the python script generate_reference_file.py and pre-flight coefficients. Documentation and scripts can be found in the reposotory at https://grit.stsci.edu/NIRISS/astro_dist_coeff_scripts. The data used to create the file can be found in the text file niriss_siaf_distortion_nis_cen.txt .
+    CRDS - ERROR -  Failed reading ASDF history, see ASDF docs on adding history : string indices must be integers
+    >>> header["HISTORY"]
+    'UNDEFINED'
     >>> test_config.cleanup(old_state)
     """
 

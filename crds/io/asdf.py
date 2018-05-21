@@ -29,17 +29,21 @@ class AsdfFile(AbstractFile):
         import asdf
         with asdf.AsdfFile.open(self.filepath) as handle:
             header = self.to_simple_types(handle.tree)
-            with log.warn_on_exception("Failed reading ASDF history"):
-                if "history" in handle.tree:
-                    histall = []
-                    history = handle.tree["history"]
-                    if "entries" in history or isinstance(history, list):
-                        entries = history["entries"] if "entries" in history else history
-                        for hist in entries:
-                            histall.append(timestamp.format_date(hist["time"]).split(".")[0] +
-                                           " :: " + hist["description"])
-                    else:
-                        histall = [history.get("description", "Unknown history format.")]
-                    header["HISTORY"] = "\n".join(histall)
+            header["HISTORY"] = self.get_history(handle.tree)
         return header
 
+    def get_history(self, tree):
+        """Given and ASDF `tree`, return the history collected into a single string."""
+        history = "UNDEFINED"
+        with log.error_on_exception(
+                "Failed reading ASDF history, see ASDF docs on adding history"):
+            if "history" in tree:
+                histall = []
+                hist = tree["history"]
+                entries = hist["entries"] if "entries" in hist else hist
+                for entry in entries:
+                    time = timestamp.format_date(entry["time"]).split(".")[0]
+                    description = entry["description"]
+                    histall.append(time + " :: " + description)
+                history = "\n".join(histall)
+        return history
