@@ -29,21 +29,28 @@ class AsdfFile(AbstractFile):
         import asdf
         with asdf.AsdfFile.open(self.filepath) as handle:
             header = self.to_simple_types(handle.tree)
-            header["HISTORY"] = self.get_history(handle.tree)
+            header["HISTORY"] = self.get_history(handle)
         return header
 
-    def get_history(self, tree):
-        """Given and ASDF `tree`, return the history collected into a single string."""
-        history = "UNDEFINED"
+    def get_history(self, handle):
+        """Given and ASDF file object `handle`, return the history collected into a
+        single string.
+        """
+        history = "UNDEFINED or BAD FORMAT"
         with log.error_on_exception(
                 "Failed reading ASDF history, see ASDF docs on adding history"):
-            if "history" in tree:
-                histall = []
-                hist = tree["history"]
+            histall = []
+            hist = handle.tree["history"]
+            try:
+                entries = handle.get_history_entries()
+            except Exception:
+                log.verbose_warning(
+                    "Using inlined CRDS ASDF history entry reading interface.")
                 entries = hist["entries"] if "entries" in hist else hist
-                for entry in entries:
-                    time = timestamp.format_date(entry["time"]).split(".")[0]
-                    description = entry["description"]
-                    histall.append(time + " :: " + description)
+            for entry in entries:
+                time = timestamp.format_date(entry["time"]).split(".")[0]
+                description = entry["description"]
+                histall.append(time + " :: " + description)
+            if histall:
                 history = "\n".join(histall)
         return history

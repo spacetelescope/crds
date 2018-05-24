@@ -167,9 +167,8 @@ def dt_asdf_history_no_entries_description():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> header = data_file.get_header("data/niriss_ref_distortion.asdf")
-    CRDS - ERROR -  Failed reading ASDF history, see ASDF docs on adding history : string indices must be integers
     >>> header["HISTORY"]
-    'UNDEFINED'
+    'UNDEFINED or BAD FORMAT'
     >>> test_config.cleanup(old_state)
     """
 
