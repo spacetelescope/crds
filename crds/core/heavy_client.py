@@ -426,6 +426,10 @@ def translate_date_based_context(context, observatory=None):
 
     if context == info.observatory + "-operational":
         return info["operational_context"]
+    elif context == info.observatory + "-edit":
+        return info["edit_context"]
+    elif context == info.observatory + "-versions":
+        return info["versions_context"]
 
     if not info.connected:
         raise CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
