@@ -504,6 +504,9 @@ than errors as the default.
         self.add_argument("--differences-are-errors", action="store_true",
                           help="Treat recommendation differences between new context and original source as errors.")
 
+        self.add_argument("--reduce-to-coverage", action="store_true",
+                          help="Categorize unique results for each dataset as a kind of error...  to reduce a list of datasets to a smaller set with common results.  Replaces normal error counts with coverage counts.")
+
         self.add_argument("--allow-bad-rules", action="store_true",
                           help="Only warn if a context which is marked 'bad' is used, otherwise error.")
 
@@ -793,7 +796,8 @@ than errors as the default.
                 continue
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
-            if new_ok or self.args.update_pickle:                
+
+            if new_ok or self.args.update_pickle or self.args.reduce_to_coverage:
                 self.verbose_with_prefix(dataset, instrument, filekind,
                     "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
@@ -916,6 +920,9 @@ than errors as the default.
         if self.args.print_affected_details:
             self.print_affected_details()
 
+        if self.args.reduce_to_coverage:
+            self.reduce_to_coverage()
+
         self.dump_unique_errors()
 
     def optimize_tables(self, dataset, updates):
@@ -962,9 +969,7 @@ than errors as the default.
         sys.stdout.flush()
 
     def print_update_stats(self):
-        """Print compound ID, instrument, and affected reference types for every exposure with new best references,
-        one line per exposure.
-        """
+        """Print update counts for each instrument and type."""
         stats = dict()
         for dataset in self.updates:
             for update in self.updates[dataset]:
@@ -981,6 +986,23 @@ than errors as the default.
             for update in self.updates[dataset]:
                 print(dataset.lower() + " " + " ".join([str(val).lower() for val in update]))
         sys.stdout.flush()
+
+    def reduce_to_coverage(self):
+        """Special mode to categorize *single context* bestrefs results, good or
+        errors, as unique error strings.
+        """
+        log.reset()
+        self.clear_error_counts()
+        for dataset in self.updates:
+            updates = self.updates[dataset]
+            self.log_and_track_error(
+                dataset, "any", "any", "COVERAGE:", self.updates_repr(updates))
+            
+    def updates_repr(self, updates):
+        """Convert a single dataset's list of update tuples into a string which
+        can be used to define unique CRDS results for coverage purposes.
+        """
+        return str(sorted([tuple(update) for update in updates])).lower()
 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""

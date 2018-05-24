@@ -536,19 +536,35 @@ class Script(object):
 class UniqueErrorsMixin(object):
     """This mixin supports tracking certain errors messages."""
     def __init__(self, *args, **keys):
+        
+        self.ue_mixin = self.get_empty_mixin()
+        
+        # Exception trap context manager for use in "with" blocks
+        # trapping exceptions.
+        self.error_on_exception = log.exception_trap_logger(
+            self.log_and_track_error)  # can be overridden
+
+    def get_empty_mixin(self):
+        """Return a bundle of freshly initialized counters and tracking information.   The
+        bundle is used to isolate mixin parameters from subclass parameters to prevent
+        accidental overrides.
+        """
         class Struct(object):
             pass
-        self.ue_mixin = Struct()
-        self.ue_mixin.messages = {}
-        self.ue_mixin.count = Counter()
-        self.ue_mixin.tracked_errors = 0
-        self.ue_mixin.unique_data_names = set()
-        self.ue_mixin.all_data_names = set()
-        self.ue_mixin.announce_suppressed = Counter()
-        
-        # Exception trap context manager for use in "with" blocks trapping exceptions.
-        self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)  # can be overridden
+        mixin = Struct()
+        mixin.messages = {}
+        mixin.count = Counter()
+        mixin.tracked_errors = 0
+        mixin.unique_data_names = set()
+        mixin.all_data_names = set()
+        mixin.data_names_by_key = defaultdict(list)
+        mixin.announce_suppressed = Counter()
+        return mixin
 
+    def clear_error_counts(self):
+        """Clear the error tracking status by re-initializing/zeroing mixin data structures."""
+        self.ue_mixin = self.get_empty_mixin()
+        
     def add_args(self):
         """Add command line parameters to Script arg parser."""
         self.add_argument("--dump-unique-errors", action="store_true",
@@ -577,6 +593,7 @@ class UniqueErrorsMixin(object):
             self.ue_mixin.unique_data_names.add(data)
         self.ue_mixin.count[key] += 1
         self.ue_mixin.all_data_names.add(data)
+        self.ue_mixin.data_names_by_key[key].append(data)
         # Past a certain max,  supress the error log messages.
         if self.ue_mixin.count[key] < self.args.max_errors_per_class:
             log.error(msg)
@@ -603,14 +620,22 @@ class UniqueErrorsMixin(object):
     def dump_unique_errors(self):
         """Print out the first instance of errors recorded by log_and_track_error().  Write out error list files."""
         if self.args.dump_unique_errors:
-            log.info("="*20, "unique error classes", "="*20)
             if self.args.unique_threshold > 1:
                 log.info("Limiting error class reporting to cases with at least", 
                          self.args.unique_threshold, "instances.")
+            log.info("="*20, "unique error classes", "="*20)
+            messages = dict(self.ue_mixin.messages)
             for key in sorted(self.ue_mixin.messages):
                 if self.ue_mixin.count[key] >= self.args.unique_threshold:
                     log.info("%06d" % self.ue_mixin.count[key], "errors like::", self.ue_mixin.messages[key])
-            log.info("All unique error types:", len(self.ue_mixin.messages))
+                else:
+                    for data in self.ue_mixin.data_names_by_key[key]:
+                        self.ue_mixin.all_data_names = self.ue_mixin.all_data_names - set([data])
+                        self.ue_mixin.unique_data_names = self.ue_mixin.unique_data_names - set([data])
+                        # self.ue_mixin.count[key] -= 1
+                        # self.ue_mixin.tracked_errors -= 1
+                        messages.pop(key,None)
+            log.info("All unique error types:", len(messages))
             log.info("Untracked errors:", log.errors() - self.ue_mixin.tracked_errors)            
             log.info("="*20, "="*len("unique error classes"), "="*20)
 
