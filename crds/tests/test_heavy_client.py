@@ -129,6 +129,10 @@ def dt_get_context_name_symbolic():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> heavy_client.get_context_name("jwst", "jwst-operational")  # doctest: +ELLIPSIS
     'jwst_...pmap'
+    >>> heavy_client.get_context_name("jwst", "jwst-edit")  # doctest: +ELLIPSIS
+    'jwst_...pmap'
+    >>> heavy_client.get_context_name("jwst", "jwst-versions")  # doctest: +ELLIPSIS
+    'jwst_...pmap'
     >>> test_config.cleanup(old_state)
     """
 
