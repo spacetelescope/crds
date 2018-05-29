@@ -192,6 +192,18 @@ def dt_pickled_mappings(mapping):
     CRDS - INFO -  Saved pickled context '.../crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl'
     >>> assert os.path.exists(pickle_file)
     
+    >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=True, use_pickles=True, save_pickles=False)  # doctest: +ELLIPSIS
+     CRDS - INFO -  Loaded pickled context 'jwst_0016.pmap'
+   
+    >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=False, use_pickles=False, save_pickles=False)  # doctest: +ELLIPSIS
+
+    >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=False, use_pickles=True, save_pickles=False)  # doctest: +ELLIPSIS
+     CRDS - INFO -  Loaded pickled context 'jwst_0016.pmap'
+   
+    >>> heavy_client.load_pickled_mapping("jwst_0016.pmap")
+    CRDS - INFO -  Loaded pickled context 'jwst_0016.pmap'
+    PipelineContext('jwst_0016.pmap')
+    
     >>> _ = log.set_verbose()
     >>> os.chmod(pickle_file, 0o444)
     >>> heavy_client.remove_pickled_mapping("jwst_0016.pmap")  # doctest: +ELLIPSIS
