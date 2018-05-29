@@ -219,7 +219,7 @@ def warn_bad_context(observatory, context, instrument=None):
             raise CrdsBadRulesError(msg)
 
 # This is cached because it can be called multiple times for a single dataset,
-# both withing warn_bad_mappings and elsewhere.
+# both within warn_bad_mappings and elsewhere.
 @utils.cached
 def get_bad_mappings_in_context(observatory, context, instrument=None):
     """Return the list of bad files (defined by the server) contained by `context`."""
@@ -700,3 +700,16 @@ def save_pickled_mapping(mapping, loaded):
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
         log.info("Saved pickled context", repr(pickle_file))
 
+def remove_pickled_mapping(mapping):
+    """Delete the pickle for `mapping` from the CRDS cache."""
+    pickle_file = config.locate_pickle(mapping)
+    if not utils.is_writable(pickle_file):  # Don't even bother pickling
+        log.verbose("Pickle file", repr(pickle_file), "is not writable,  skipping pickle remove.")
+        return
+    if not os.path.exists(pickle_file):
+        log.verbose("Pickl file", repr(pickle_file), "does not exist,  skipping pickle remove.")
+        return
+    with log.warn_on_exception("Failed removing pickle for", repr(mapping)):
+        os.remove(pickle_file)
+        log.info("Removed pickle for context", repr(pickle_file))
+    
