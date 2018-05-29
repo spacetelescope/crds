@@ -87,11 +87,11 @@ def dt_getreferences_ignore_cache():
     ...            "META.OBSERVATION.DATE":"2018-05-25", "META.OBSERVATION.TIME":"00:00:00" }
     >>> heavy_client.getreferences(header,
     ...   observatory="jwst", context="jwst_miri.imap", ignore_cache=True, reftypes=["flat"])   # doctest: +ELLIPSIS
-    CRDS - INFO -  Fetching  /Users/jmiller/crds-cache-default-test/mappings/jwst/jwst_miri_photom.rmap      399 bytes  (1 / 3 files) (0 / 1.2 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds-cache-default-test/mappings/jwst/jwst_miri_flat.rmap      427 bytes  (2 / 3 files) (399 / 1.2 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds-cache-default-test/mappings/jwst/jwst_miri.imap      358 bytes  (3 / 3 files) (826 / 1.2 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds-cache-default-test/references/jwst/jwst_miri_flat_0001.fits   42.0 M bytes  (1 / 1 files) (0 / 42.0 M bytes)
-    {'flat': '/Users/jmiller/crds-cache-default-test/references/jwst/jwst_miri_flat_0001.fits'}
+    CRDS - INFO -  Fetching  .../crds-cache-default-test/mappings/jwst/jwst_miri_photom.rmap      399 bytes  (1 / 3 files) (0 / 1.2 K bytes)
+    CRDS - INFO -  Fetching  .../crds-cache-default-test/mappings/jwst/jwst_miri_flat.rmap      427 bytes  (2 / 3 files) (399 / 1.2 K bytes)
+    CRDS - INFO -  Fetching  .../crds-cache-default-test/mappings/jwst/jwst_miri.imap      358 bytes  (3 / 3 files) (826 / 1.2 K bytes)
+    CRDS - INFO -  Fetching  .../crds-cache-default-test/references/jwst/jwst_miri_flat_0001.fits   42.0 M bytes  (1 / 1 files) (0 / 42.0 M bytes)
+    {'flat': '.../crds-cache-default-test/references/jwst/jwst_miri_flat_0001.fits'}
     >>> test_config.cleanup(old_state)
     """
 
@@ -189,13 +189,13 @@ def dt_pickled_mappings(mapping):
     '.../pickles/jwst/jwst_0016.pmap.pkl'
     
     >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=True, use_pickles=True, save_pickles=True)  # doctest: +ELLIPSIS
-    CRDS - INFO -  Saved pickled context '/Users/jmiller/crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl'
+    CRDS - INFO -  Saved pickled context '.../crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl'
     >>> assert os.path.exists(pickle_file)
     
     >>> _ = log.set_verbose()
     >>> os.chmod(pickle_file, 0o444)
     >>> heavy_client.remove_pickled_mapping("jwst_0016.pmap")  # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Pickle file '/Users/jmiller/crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl' is not writable,  skipping pickle remove.
+    CRDS - DEBUG -  Pickle file '.../crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl' is not writable,  skipping pickle remove.
 
     >>> os.chmod(pickle_file, 0o666)
     >>> heavy_client.remove_pickled_mapping("jwst_0016.pmap")  # doctest: +ELLIPSIS
