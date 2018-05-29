@@ -29,6 +29,7 @@ from jwst.stpipe import cmdline as jwst_cmdline
 
 # ----------------------------------------------------------------------------------------------
 
+import crds
 from crds.core import log, exceptions, utils, timestamp
 from crds.core.log import srepr
 
@@ -70,10 +71,13 @@ class CrdsCfgGenerator(object):
         """
         input_body = []
         for line in self.input_yaml.splitlines():
-            if line.strip().startswith("calibration_software_version:"):
+            line2 = line.strip()
+            if line2.startswith("calibration_software_version:"):
                 input_body += ["    calibration_software_version: " + CAL_VER]
-            elif line.strip().startswith("generation_date:"):
+            elif line2.startswith("generation_date:"):
                 input_body += ["    generation_date: " + GENERATION_DATE]
+            elif line2.startswith("crds_version:"):
+                input_body += ["    crds_version: " + crds.__version__]
             else:
                 input_body += [line]
         return "\n".join(input_body).split(REFERENCE_DIVIDER)[0] + "\n" + REFERENCE_DIVIDER + "\n"
@@ -133,7 +137,7 @@ class CrdsCfgGenerator(object):
                 for exptype_pattern in exptypes:
                     if glob_match(exptype_pattern, exp_type):
                         return [pipeline]
-        log.error("Unhandled EXP_TYPE", srepr(exp_type))
+        log.error("Unhandled EXP_TYPE", srepr(exp_type), "for", srepr(level))
         return []
     
         # raise exceptions.CrdsPipelineCfgDeterminationError("Unhandled EXP_TYPE", srepr(exp_type))

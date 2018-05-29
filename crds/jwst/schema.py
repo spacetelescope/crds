@@ -17,6 +17,10 @@ from __future__ import absolute_import
 
 # ====================================================================================
 
+import re
+
+# ====================================================================================
+
 # from jwst import datamodels   # deferred
 # from . import locate  # deferred
 

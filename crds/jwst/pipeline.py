@@ -42,6 +42,11 @@ True
 >>> _get_missing_context('jwst_0341.pmap')
 'jwst_0341.pmap'
 
+>>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.9.3"))
+'jwst_system_crdscfg_b7.1.3.yaml'
+
+>>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.9.7"))
+'jwst_system_crdscfg_b7.1.3.yaml'
 """
 
 from __future__ import print_function
@@ -51,6 +56,7 @@ from __future__ import absolute_import
 # --------------------------------------------------------------------------------------
 
 import os.path
+from collections import defaultdict
 
 # import yaml     DEFERRED
 
@@ -77,14 +83,6 @@ def test_header(calver, exp_type):
         "META.EXPOSURE.TYPE" : exp_type,
         }
     return header
-
-# --------------------------------------------------------------------------------------
-
-HERE = os.path.dirname(__file__) or "."
-
-SYSTEM_CRDSCFG_B7_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.yaml")
-SYSTEM_CRDSCFG_B7_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.yaml")
-SYSTEM_CRDSCFG_B7_1_1_PATH = os.path.join(HERE, "jwst_system_crdscfg_b7.1.1.yaml")
 
 # --------------------------------------------------------------------------------------
 
@@ -153,6 +151,19 @@ def get_pipelines(exp_type, cal_ver=None, context=None):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.exptype_to_pipelines(exp_type)
 
+def reftype_to_pipelines(reftype, cal_ver=None, context=None):
+    """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
+    reference file and determine the sequence of pipeline .cfgs required to process that
+    exp_type.
+    """
+    context = _get_missing_context(context)
+    cal_ver = _get_missing_calver(cal_ver)
+    with log.augment_exception("Failed determining required pipeline .cfgs for",
+                               "EXP_TYPE", srepr(reftype), "CAL_VER", srepr(cal_ver)):
+        config_manager = _get_config_manager(context, cal_ver)
+        return config_manager.reftype_to_pipelines(reftype)
+
+
 def _header_to_exptype_calver(header):
     """Given dataset `header`,  return the EXP_TYPE and CAL_VER values."""
     cal_ver = header.get("META.CALIBRATION_SOFTWARE_VERSION", header.get("CAL_VER"))
@@ -174,18 +185,26 @@ def _load_refpath(context, refpath):
         crdscfg =  yaml.load(opened)
     return CrdsCfgManager(context, refpath, crdscfg)
 
+# --------------------------------------------------------------------------------------
+
+HERE = os.path.dirname(__file__) or "."
+
+REFPATHS = [
+    ('0.7.7', "jwst_system_crdscfg_b7.yaml"),
+    ('0.9.0', "jwst_system_crdscfg_b7.1.yaml"),
+    ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
+    ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
+    ('9.9.9', "jwst_system_crdscfg_b7.1.3.yaml"),   # latest backstop
+]
+    
 def _get_config_refpath(context, cal_ver):
     """Given CRDS `context` and calibration s/w version `cal_ver`,  identify the applicable
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
-    # default enables running if system calver is never delivered as reference file.
-    # and for B7 and earlier.
-    if cal_ver < '0.7.7':
-        refpath = SYSTEM_CRDSCFG_B7_PATH
-    elif cal_ver < '0.9.0':
-        refpath = SYSTEM_CRDSCFG_B7_1_PATH
-    else:
-        refpath = SYSTEM_CRDSCFG_B7_1_1_PATH        
+    i = 0
+    while i < len(REFPATHS) and cal_ver[:5] > REFPATHS[i][0]:
+        i += 1
+    refpath = os.path.join(HERE, REFPATHS[i][1])
     try:  # Use a normal try/except because exceptions are expected.
         header = {
             "META.INSTRUMENT.NAME" : "SYSTEM", 
@@ -236,7 +255,27 @@ class CrdsCfgManager(object):
                     "determined by", srepr(os.path.basename(self._refpath)),
                     "are", srepr(pipelines))
         return pipelines
-    
+
+    def reftype_to_pipelines(self, reftype):
+        pipelines = []
+        reftypes_to_steps = invert_list_mapping(self._crdscfg.steps_to_reftypes)
+        steps_to_pipelines = invert_list_mapping(self._crdscfg.pipeline_cfgs_to_steps)
+        for step in reftypes_to_steps[reftype]:
+            pipelines += steps_to_pipelines[step]
+        return list(sorted(set(pipelines)))
+
+def invert_list_mapping(mapping):
+    """Invert a dictionary of lists into another dictionary of lists such that each
+    element of each original list is a key somewhere in the inversion, and each key is
+    an element of at least one list in the inversion.
+    """
+    inverted = defaultdict(set)
+    for key, values in mapping.items():
+        for value in values:
+            inverted[value].add(key)
+    return { key:list(sorted(values)) 
+             for (key,values) in inverted.items() }
+
 def scan_exp_type_coverage():
     """Verify that there is some get_reftypes() response for all available exp_types."""
     from . import schema as crds_schema

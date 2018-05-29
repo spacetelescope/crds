@@ -12,6 +12,6 @@ META.EXPOSURE.NFRAMES       H   I   R
 META.EXPOSURE.GROUPGAP      H   I   R   
 META.EXPOSURE.NGROUPS       H   I   R                  
 
-# SCI     A     X      R    (len(SCI_ARRAY.SHAPE)==3)
-# ERR     A     X      R    (len(ERR_ARRAY.SHAPE)==3)
-# DQ      A     X      R    (len(DQ_ARRAY.SHAPE)==2)
+# SCI     A     X      R    (ndim(SCI_ARRAY,3))
+# ERR     A     X      R    (ndim(ERR_ARRAY,3))
+# DQ      A     X      R    (ndim(DQ_ARRAY,2))
