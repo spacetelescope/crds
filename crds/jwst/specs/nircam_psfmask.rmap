@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2018-05-30',
+    'file_ext' : '.fits',
+    'filekind' : 'PSFMASK',
+    'filetype' : 'PSFMASK',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_psfmask.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.CORONOGRAPH'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'efad150ddee83aa3b5be12cf3312ffffe6ad9437',
+    'suffix' : 'psfmask',
+    'text_descr' : 'PSF Mask',
+}
+
+selector = Match({
+})

@@ -1,0 +1,10 @@
+include miri_subarray.tpn
+
+replace XDIM_MAX 1024
+replace YDIM_MAX 1032
+replace SCI_TYPE 'FLOAT'
+
+include miri_sci_array_both.tpn
+
+SCI       A           X         R            (ndim(SCI_ARRAY,2))
+
