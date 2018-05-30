@@ -754,7 +754,7 @@ def certify_jwst_bad_fits():
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : jwst.datamodels.util : ...
+    CRDS - WARNING -  ValidationWarning : jwst.datamodels...
     >>> test_config.cleanup(old_state)
     """
 

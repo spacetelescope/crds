@@ -14,6 +14,7 @@ from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
+from crds import data_file
 from crds.core import utils, log, exceptions
 from crds.io import factory, tables
 
@@ -159,6 +160,37 @@ def dt_csv_table():
     3102
     >>> test_config.cleanup(old_state)
     """    
+
+# ==================================================================================
+
+def dt_asdf_history_no_entries_description():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> header = data_file.get_header("data/niriss_ref_distortion.asdf")
+    >>> header["HISTORY"]
+    'UNDEFINED or BAD FORMAT'
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_asdf_history_no_entries_list():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> header = data_file.get_header("data/jwst_miri_distortion_0022.asdf")
+    >>> print(header["HISTORY"])
+    2017-06-02 14:29:39 :: DOCUMENT: MIRI-TN-00001-ETH_Iss2-1_Calibrationproduct_MRS_d2c.  New files created from CDP-6 with updated file structure and V2/V3 instead of XAN/YAN
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_asdf_history_with_entries():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> header = data_file.get_header("data/jwst_nirspec_ifupost_0004.asdf")
+    >>> print(header["HISTORY"])
+    2018-04-17 20:18:32 :: New version created from CV3 with updated file structure
+    >>> test_config.cleanup(old_state)
+    """
+
+
 
 # ==================================================================================
 
