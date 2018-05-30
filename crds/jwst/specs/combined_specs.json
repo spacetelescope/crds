@@ -1021,6 +1021,38 @@
                 "BAND"
             ]
         },
+        "psfmask":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-05-30",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PSFMASK",
+            "filetype":"PSFMASK",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_psfmask_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_psfmask.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.SUBARRAY.NAME",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.CORONOGRAPH"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"1106c35b8e999dd7541847a06718eed92dcf8454",
+            "suffix":"psfmask",
+            "text_descr":"PSF Mask",
+            "tpn":"miri_psfmask.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
             "extra_keys":null,
@@ -1702,6 +1734,38 @@
                 "FILTER",
                 "PUPIL"
             ]
+        },
+        "psfmask":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-05-30",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PSFMASK",
+            "filetype":"PSFMASK",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_psfmask_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_psfmask.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.SUBARRAY.NAME",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.CORONOGRAPH"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"fb07284b983f8255d3e5154bd2523e1125741345",
+            "suffix":"psfmask",
+            "text_descr":"PSF Mask",
+            "tpn":"nircam_psfmask.tpn",
+            "unique_rowkeys":null
         },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
