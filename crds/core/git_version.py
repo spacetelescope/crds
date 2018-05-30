@@ -1,6 +1,6 @@
-__version__ = '2592cad'
+__version__ = 'b5c798d'
 
 __full_version_info__ = '''
-branch: 7.2.4
-sha1: 2592cad
+branch: 7.2.5
+sha1: b5c798d
 '''
