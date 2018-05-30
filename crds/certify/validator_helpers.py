@@ -26,6 +26,9 @@ def has_columns(array_info, col_names):
     >>> has_columns(utils.Struct(COLUMN_NAMES=["THIS","THAT","ANOTHER"]), ["THAT","ANOTHER","FOO"])
     False
     
+    >>> has_columns("UNDEFINED",  ["THAT","ANOTHER","FOO"])
+    False
+    
     NOTE:  does not disallow extra columns not listed.
     """
     if not array_exists(array_info):
@@ -89,6 +92,15 @@ def has_column_type(array_info, col_name, typestr):
     
     >>> has_column_type(utils.Struct(DATA_TYPE={"WAVELENGTH":">f4"}), "WAVELENGTH", "INTEGER")
     False
+ 
+    >>> has_column_type("UNDEFINED", "WAVELENGTH", "INTEGER")
+    False
+
+    >>> has_column_type(utils.Struct(DATA_TYPE={"WAVELENGTH":">f4"}), "WAVELEN", "INTEGER")
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.MissingColumnError: Data type not defined for column 'WAVELEN'
+  
     """
     if not array_exists(array_info):
         return False
@@ -99,7 +111,8 @@ def has_column_type(array_info, col_name, typestr):
                 return True
         return False
     except KeyError:
-        raise exceptions.MissingColumnError("Data type not defined for column", repr(col_name))
+        pass
+    raise exceptions.MissingColumnError("Data type not defined for column", repr(col_name))
         
 def _table_type(typestr):
     """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
@@ -227,7 +240,16 @@ def is_subarray(subarray):
     return  (subarray != "UNDEFINED") and not is_full_frame(subarray)
 
 def subarray_defined(header):
-    """Return True IFF SUBARRAY related keywords are defined."""
+    """Return True IFF SUBARRAY related keywords are defined.
+    
+    >>> header = dict(SUBARRAY="GENERIC",SUBSTRT1="1",SUBSTRT2="1",SUBSIZE1="2048",SUBSIZE2="2048")
+    >>> subarray_defined(header)
+    True
+    
+    >>> header = dict(SUBARRAY="GENERIC",SUBSTRT1="1",SUBSTRT2="1",SUBISIZE2="2048")
+    >>> subarray_defined(header)
+    False
+    """
     for keyword in ["SUBARRAY","SUBSTRT1","SUBSTRT2","SUBSIZE1","SUBSIZE2"]:
         value = header.get(keyword,"UNDEFINED")
         if value == "UNDEFINED":
@@ -262,49 +284,49 @@ def is_defined(value):
     """
     return value not in ["UNDEFINED", None]
 
-# @utils.traced
-def nir_filter(instrument, reftype, exp_type):
-    """Return True if a SCI, ERR, or DQ array is appropriate for the specified
-    JWST NIR instrument, reftype, and exp_type.   This can be used to filter 
-    out NIR SCI,ERR,DQ array definitions for those NIRSPEC modes and types 
-    that don't define them.  The logic is too complex to inline.
-    
-    >>> nir_filter("NIRSPEC", "SFLAT", "NRS_MSASPEC")
-    True
-    >>> nir_filter("NIRSPEC", "SFLAT", "NRS_IFU")
-    True
-    >>> nir_filter("NIRSPEC", "SFLAT", "NRS_FIXEDSLIT")
-    False
-    >>> nir_filter("NIRSPEC", "SFLAT", "NRS_BRIGHTOBJ")
-    False
-    
-    >>> nir_filter("NIRSPEC", "DFLAT", "ANY")
-    True
-    
-    >>> nir_filter("NIRSPEC", "FFLAT", "NRS_MSASPEC")
-    True
-    >>> nir_filter("NIRSPEC", "FFLAT", "NRS_IFU")
-    False
-    >>> nir_filter("NIRSPEC", "FFLAT", "NRS_FIXEDSLIT")
-    False
-    >>> nir_filter("NIRSPEC", "FFLAT", "NRS_BRIGTOBJ")
-    False
-    
-    """
-    assert instrument != "MIRI",  "nir_filter() .tpn function should only be called for NIR-detector based instruments."
-    if instrument == "NIRSPEC":
-        if reftype == "SFLAT":
-            return exp_type in ["NRS_MSASPEC","NRS_IFU"]
-        elif reftype == "DFLAT":
-            return True
-        elif reftype == "FFLAT":
-            return exp_type in ["NRS_MSASPEC"]
-        elif reftype == "AREA":
-            return is_imaging_mode(exp_type)
-        else:
-            return True
-    else:
-        return True
+# # @utils.traced
+# def nir_filter(instrument, reftype, exp_type):
+#     """Return True if a SCI, ERR, or DQ array is appropriate for the specified
+#     JWST NIR instrument, reftype, and exp_type.   This can be used to filter 
+#     out NIR SCI,ERR,DQ array definitions for those NIRSPEC modes and types 
+#     that don't define them.  The logic is too complex to inline.
+#     
+#     >>> nir_filter("NIRSPEC", "SFLAT", "NRS_MSASPEC")
+#     True
+#     >>> nir_filter("NIRSPEC", "SFLAT", "NRS_IFU")
+#     True
+#     >>> nir_filter("NIRSPEC", "SFLAT", "NRS_FIXEDSLIT")
+#     False
+#     >>> nir_filter("NIRSPEC", "SFLAT", "NRS_BRIGHTOBJ")
+#     False
+#     
+#     >>> nir_filter("NIRSPEC", "DFLAT", "ANY")
+#     True
+#     
+#     >>> nir_filter("NIRSPEC", "FFLAT", "NRS_MSASPEC")
+#     True
+#     >>> nir_filter("NIRSPEC", "FFLAT", "NRS_IFU")
+#     False
+#     >>> nir_filter("NIRSPEC", "FFLAT", "NRS_FIXEDSLIT")
+#     False
+#     >>> nir_filter("NIRSPEC", "FFLAT", "NRS_BRIGTOBJ")
+#     False
+#     
+#     """
+#     assert instrument != "MIRI",  "nir_filter() .tpn function should only be called for NIR-detector based instruments."
+#     if instrument == "NIRSPEC":
+#         if reftype == "SFLAT":
+#             return exp_type in ["NRS_MSASPEC","NRS_IFU"]
+#         elif reftype == "DFLAT":
+#             return True
+#         elif reftype == "FFLAT":
+#             return exp_type in ["NRS_MSASPEC"]
+#         elif reftype == "AREA":
+#             return is_imaging_mode(exp_type)
+#         else:
+#             return True
+#     else:
+#         return True
     
 # ----------------------------------------------------------------------------
 
@@ -323,42 +345,83 @@ def optional(flag=True):
     """When this flag is True, an exception should be issued if the related keyword/element is
     defined and the constraint fails.   If the keyword/element is not defined or `flag` is False,  
     the constraint should be ignored.   Returns "O" or False
+
+    >>> optional(True)
+    'O'
+    >>> optional(False)
+    False
     """
     return "O" if flag else False
 
 def required(flag=True):
     """When this flag is True,  an exception should be issued if the related keyword/element is
     not defined.     Returns "R" or False.
+
+    >>> required(True)
+    'R'
+    >>> required(False)
+    False
     """
     return "R" if flag else False
 
 def warning(flag=True):
     """When this flag is True,  a warning should be issued if the related keyword/element is
     not defined.     Returns "W" or False.
+
+    >>> warning(True)
+    'W'
+    >>> warning(False)
+    False
     """
     return "W" if flag else False
 
 def subarray(flag=True):
     """When this flag is True,  the related constraint should be applied if
     is_full_frame(SUBARRAY) is False.     Returns "S" or False.
+
+    >>> subarray(True)
+    'S'
+    >>> subarray(False)
+    False
     """
     return "S" if flag else False
 
 def full_frame(flag=True):
     """When this flag is True,  the related constraint should be applied if
     is_full_frame(SUBARRAY) is True.     Returns "F" or False.
+
+    >>> full_frame(True)
+    'F'
+    >>> full_frame(False)
+    False
     """
     return "F" if flag else False
 
 def all_subarray(flag=True):
     """When `flag` is True,  mark this constraint as applying to all SUBARRAY forms,
     including full frame, as long as SUBARRAY is defined.   Returns "A" or False.
+
+    >>> all_subarray(True)
+    'A'
+    >>> all_subarray(False)
+    False
     """
     return "A" if flag else False
                  
 # ----------------------------------------------------------------------------
 
 def ndim(array, dims):
+    """Return True IFF CRDS `array` object has number of dimensions `dims`.
+    
+    >>> array = utils.Struct({"KIND":"IMAGE", "SHAPE" : (2048,2048), "TYPE": "float32"})
+    
+    >>> ndim(array, 2)
+    True
+    
+    >>> ndim(array, 3)
+    False
+    
+    """
     return len(array.SHAPE) == dims
 
 # ----------------------------------------------------------------------------
