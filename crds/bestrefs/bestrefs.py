@@ -286,6 +286,8 @@ than errors as the default.
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
 
         self.updates = OrderedDict()  # map of reference updates
+        self.kill_list = OrderedDict()
+        
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
 
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
@@ -670,7 +672,7 @@ than errors as the default.
             self.post_processing()
         self.report_stats()
         log.verbose(self.get_stat("datasets"), "sources processed", verbosity=5)
-        log.verbose(len(self.updates), "source updates", verbosity=5)
+        log.verbose(len(self.unkilled_updates), "source updates", verbosity=5)
         log.standard_status()
         return log.errors()
 
@@ -704,15 +706,17 @@ than errors as the default.
                 old_bestrefs = self.get_bestrefs(instrument, dataset, self.old_context, old_header)
             else:
                 old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
-            updates = self.compare_bestrefs(instrument, dataset, old_bestrefs, new_bestrefs)
+            updates, kill_list = self._compare_bestrefs(instrument, dataset, old_bestrefs, new_bestrefs)
             if self.args.optimize_tables:
                 updates = self.optimize_tables(dataset, updates)
         else:
-            updates = self.screen_bestrefs(instrument, dataset, new_bestrefs)
+            updates, kill_list = self._screen_bestrefs(instrument, dataset, new_bestrefs)
         if self.args.update_pickle:  # XX  mutating input bestrefs to support updated pickles
             self.new_headers.update_headers({dataset: new_bestrefs})
         if updates:
             self.updates[dataset] = updates
+        if kill_list:
+            self.kill_list[dataset] = kill_list
 
     def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
@@ -777,15 +781,19 @@ than errors as the default.
             log.verbose(self.format_prefix(dataset, instrument, filekind), *args, **keys)
 
     def screen_bestrefs(self, instrument, dataset, newrefs):
+        """Return only the update tuples of _screen_bestrefs."""
+        return self._screen_bestrefs(instrument, dataset, newrefs)[0]
+    
+    def _screen_bestrefs(self, instrument, dataset, newrefs):
         """Scan best references dict `newrefs` for atypical results and issue errors and warnings.
 
-        Returns [UpdateTuple(), ...]
+        Returns ([UpdateTuple(), ...], [kill list, ...])
         """
         # XX  This is closely related to compare_bestrefs, maintain both!!   See also update_bestrefs()
 
         log.verbose("-" * 120, verbosity=55)
 
-        updates = []
+        updates, kill_list = [], []
 
         for filekind in sorted(newrefs):
 
@@ -796,26 +804,30 @@ than errors as the default.
                 continue
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
-
+            update = UpdateTuple(instrument, filekind, None, new)
             if new_ok or self.args.update_pickle or self.args.reduce_to_coverage:
                 self.verbose_with_prefix(dataset, instrument, filekind,
                     "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
-                updates.append(UpdateTuple(instrument, filekind, None, new))
+                updates.append(update)
             else:  # ERROR's cannot update
-                pass
+                kill_list.append(update)
 
-        return updates
-
+        return updates, kill_list
+    
     def compare_bestrefs(self, instrument, dataset, oldrefs, newrefs):
+        """Return only the update tuples of _compare_bestrefs()."""
+        return self._compare_bestrefs(instrument, dataset, oldrefs, newrefs)[0]
+
+    def _compare_bestrefs(self, instrument, dataset, oldrefs, newrefs):
         """Compare best references dicts `newrefs` and `oldrefs` for `instrument` and `dataset`.
 
-        Returns [UpdateTuple(), ...]
+        Returns ([UpdateTuple(), ...], [Kill list...])
         """
         # XX  This is closely related to screen_bestrefs,  maintain both!!    See also update_bestrefs()
 
         log.verbose("-" * 120, verbosity=55)
 
-        updates = []
+        updates, kill_list = [], []
 
         filekinds = sorted(list(set(list(newrefs.keys()) + list(oldrefs.keys()))))
         for filekind in filekinds:
@@ -830,7 +842,10 @@ than errors as the default.
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
 
+            update = UpdateTuple(instrument, filekind, old, new)
+
             if not (new_ok or self.args.update_pickle):   # ERROR's in new cannot update,  except during regression capture
+                kill_list.append(update)
                 continue
 
             if new != old:
@@ -842,11 +857,11 @@ than errors as the default.
                 elif self.args.print_new_references or log.get_verbose() >= 30 or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind),
                              "New best reference:", sreprlow(old), "-->", sreprlow(new), self.update_promise)
-                updates.append(UpdateTuple(instrument, filekind, old, new))
+                updates.append(update)
             else:
                 self.verbose_with_prefix(dataset, instrument, filekind,
                     "Lookup MATCHES:", sreprlow(old), self.no_update,  verbosity=30)
-        return updates
+        return updates, kill_list
 
     def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind):
         """Fetch the bestref for `filekind` from `bestrefs`, and handle conversions to N/A
@@ -938,13 +953,18 @@ than errors as the default.
                             "-->", repr(update.new_reference), verbosity=25)
         return updates
 
+    @property
+    def unkilled_updates(self):
+        """Return only members of self.updates for which there is no corresponding kill list of failed bestrefs."""
+        return { dataset:updates for (dataset, updates) in self.updates.items() 
+                 if updates and dataset not in self.kill_list }
+
     def print_affected(self):
         """Print the product id for any product which has new bestrefs for any
         of its component exposures.   All components share a common product id.
         """
-        affected_products = {self.dataset_to_product_id(dataset)
-                             for dataset in self.updates
-                             if self.updates[dataset]}
+        affected_products = { self.dataset_to_product_id(dataset)
+                              for dataset in self.unkilled_updates }
         log.info("Affected products =", len(affected_products))
         for product in sorted(affected_products):
             print(product)
