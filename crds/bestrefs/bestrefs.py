@@ -126,7 +126,22 @@ are the 3 main use cases for crds.bestrefs:
 
   This mode can also be used to cache database parameter sets to optimize performance
   or eliminate the possibility of database parameter variation.
+  
+4. Duplicate test elimination hack
 
+The --eliminate-duplicate-cases switch alters the behavior of error handling to classify the 
+overall results for every dataset processed uniquely.  Normal error counting and Id 
+reporting is disabled.   Instead,  all datasets processed are classified by their 
+unique set of file results and/or assignment errors.   The --unique-errors-file 
+outputs a list of dataset IDs which can be used to reduce test cases which are 
+redundant from a CRDS perspective to a smaller representative list.
+
+   % crds bestrefs --all-instruments --eliminate-duplicate-cases --unique-error-ids ids.txt
+
+The above downloads dataset parameters for all instruments and computes bestrefs for each.
+The resulting error classes describe unique CRDS outcomes across all types and can include
+datasets which were 100% successful.   The resultant ids.txt file lists ids which will 
+reproduce every unique CRDS outcome seen exactly once.
 ...........
 New Context
 ...........
@@ -506,6 +521,9 @@ than errors as the default.
         self.add_argument("--differences-are-errors", action="store_true",
                           help="Treat recommendation differences between new context and original source as errors.")
 
+        self.add_argument("--eliminate-duplicate-cases", action="store_true",
+                          help="Categorize unique bestrefs results as errors to determine representative test cases...  Replaces normal error counts with coverage counts and ids.")
+
         self.add_argument("--allow-bad-rules", action="store_true",
                           help="Only warn if a context which is marked 'bad' is used, otherwise error.")
 
@@ -661,6 +679,7 @@ than errors as the default.
     def main(self):
         """Compute bestrefs for datasets."""
         # Finish __init__() inside --pdb
+        self.eliminate_dups_warning()
         if self.complex_init():
             for i, dataset in enumerate(self.new_headers):
                 if i != 0 and i % 1000 == 0:
@@ -668,6 +687,7 @@ than errors as the default.
                 self.process(dataset)
             self.post_processing()
         self.report_stats()
+        self.eliminate_dups_warning()
         log.verbose(self.get_stat("datasets"), "sources processed", verbosity=5)
         log.verbose(len(self.unkilled_updates), "source updates", verbosity=5)
         log.standard_status()
@@ -802,7 +822,7 @@ than errors as the default.
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
             update = UpdateTuple(instrument, filekind, None, new)
-            if new_ok or self.args.update_pickle:                
+            if new_ok or self.args.update_pickle or self.args.eliminate_duplicate_cases:
                 self.verbose_with_prefix(dataset, instrument, filekind,
                     "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
                 updates.append(update)
@@ -932,6 +952,9 @@ than errors as the default.
         if self.args.print_affected_details:
             self.print_affected_details()
 
+        if self.args.eliminate_duplicate_cases:
+            self.eliminate_duplicate_cases()
+
         self.dump_unique_errors()
 
     def optimize_tables(self, dataset, updates):
@@ -983,9 +1006,7 @@ than errors as the default.
         sys.stdout.flush()
 
     def print_update_stats(self):
-        """Print compound ID, instrument, and affected reference types for every exposure with new best references,
-        one line per exposure.
-        """
+        """Print update counts for each instrument and type."""
         stats = dict()
         for dataset in self.updates:
             for update in self.updates[dataset]:
@@ -1002,6 +1023,32 @@ than errors as the default.
             for update in self.updates[dataset]:
                 print(dataset.lower() + " " + " ".join([str(val).lower() for val in update]))
         sys.stdout.flush()
+
+    def eliminate_duplicate_cases(self):
+        """Special mode to categorize *single context* bestrefs results, good or
+        errors, as unique error strings.
+        """
+        log.reset()
+        self.clear_error_counts()
+        self.eliminate_dups_warning()
+        for dataset in self.updates:
+            updates = self.updates[dataset]
+            self.log_and_track_error(
+                dataset, "any", "any", "COVERAGE:", self.updates_repr(updates))
+        self.eliminate_dups_warning()
+    
+    def eliminate_dups_warning(self):
+        """IFF running with --eliminate-duplicate-cases,  issue a warning that all results are mapped to errors
+        to support coverage categorization as "unique error classes".
+        """
+        if self.args.eliminate_duplicate_cases:
+            log.warning("Running in --eliminate-duplicate-cases mode;  even successful bestrefs are categorized as errors for analysis.")
+
+    def updates_repr(self, updates):
+        """Convert a single dataset's list of update tuples into a string which
+        can be used to define unique CRDS results for coverage purposes.
+        """
+        return str(sorted([tuple(update) for update in updates])).lower()
 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""
