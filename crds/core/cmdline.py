@@ -624,25 +624,27 @@ class UniqueErrorsMixin(object):
                 log.info("Limiting error class reporting to cases with at least", 
                          self.args.unique_threshold, "instances.")
             log.info("="*20, "unique error classes", "="*20)
-            messages = dict(self.ue_mixin.messages)
+            classes = len(self.ue_mixin.messages)
             for key in sorted(self.ue_mixin.messages):
                 if self.ue_mixin.count[key] >= self.args.unique_threshold:
                     log.info("%06d" % self.ue_mixin.count[key], "errors like::", self.ue_mixin.messages[key])
                 else:
-                    for data in self.ue_mixin.data_names_by_key[key]:
-                        self.ue_mixin.all_data_names = self.ue_mixin.all_data_names - set([data])
-                        self.ue_mixin.unique_data_names = self.ue_mixin.unique_data_names - set([data])
-                        # self.ue_mixin.count[key] -= 1
-                        # self.ue_mixin.tracked_errors -= 1
-                        messages.pop(key,None)
-            log.info("All unique error types:", len(messages))
+                    self.drop_error_class(key)
+                    classes -= 1
+            log.info("All unique error types:", classes)
             log.info("Untracked errors:", log.errors() - self.ue_mixin.tracked_errors)            
             log.info("="*20, "="*len("unique error classes"), "="*20)
-
         if self.args.all_errors_file:
             self.dump_error_data(self.args.all_errors_file, self.ue_mixin.all_data_names)
         if self.args.unique_errors_file:
             self.dump_error_data(self.args.unique_errors_file, self.ue_mixin.unique_data_names)
+            
+    def drop_error_class(self, key):
+        """Remove the errors classified by `key` from the error classes and counts."""
+        for data in self.ue_mixin.data_names_by_key[key]:
+            self.ue_mixin.all_data_names = self.ue_mixin.all_data_names - set([data])
+            self.ue_mixin.unique_data_names = self.ue_mixin.unique_data_names - set([data])
+            self.ue_mixin.count[key] -= 1
 
     def dump_error_data(self, filename, error_list):
         "Write out list of err'ing filenames or dataset ids to `filename`."""
