@@ -63,49 +63,60 @@ class BestrefsScript(cmdline.Script, cmdline.UniqueErrorsMixin):
 Processing Modes
 ................
 
-crds.bestrefs can be run in 3 distinct processing modes with different inputs, outputs,
-and purposes.   Where possible the input, output, and comparison modes are written to
-be orthogonal features that can be combined in various ways.   The following however
-are the 3 main use cases for crds.bestrefs:
+crds.bestrefs can be run in a number of distinct processing modes with
+different inputs, outputs, and purposes.  Where possible the input, output, and
+comparison modes are written to be orthogonal features that can be combined in
+various ways.  
 
-  1. File (Pipeline) Mode
+The following however are the 3 main use cases for crds.bestrefs::
+
+  1. File (Pipeline) Mode (--files)
 
   The --files switch can be used to specify a list of FITS dataset files to
   process.  This is used in the HST pipeline in conjunction with
   --update-headers to fill in dataset FITS headers with recommended best
   references::
 
-    % crds bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
+    % crds bestrefs --update-headers --files j8bt05njq_raw.fits ...
 
   The outcome of this command is updating the best references in the FITS
   headers of the specified .fits files.
 
-  2. Reprocessing Mode
+  2. Reprocessing Mode  (--affected-datasets)
 
-  The --old-context and --new-context switches are used to specify a pair of CRDS
-  contexts to compare results from.  Reprocessing mode runs by fetching matching
-  parameters from the archive database using --instruments or --datasets.  This
-  mode is used to recommend reprocessing where the bestrefs differ between old
-  and new contexts::
+  The --old-context and --new-context switches are used to specify a pair of
+  CRDS contexts to compare results from.  Where bestrefs differ, an association
+  or product will be recommended for reprocessing.
+
+  Implicitly CRDS repro fetches parameters from an archive database.  It is
+  run like this::
 
     % crds bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
 
-  The outcome of this command is to print the IDs of datasets affected by the
-  transition from context 0001 to 0002.
+  See the description of --affected-datasets for more information on how it
+  configures crds bestrefs to perform the repro computation.
 
-  --affected-datasets is a "bundle switch" that captures standard options for
-  reprocessing including the option of printing out the affected datasets en lieu
-  of updating FITS headers.  As an optimization, this mode typically runs against
-  only those datasets implied by the differences in old and new contexts and restricted
-  to those datasets potentially affected by the USEAFTER dates of new references.
+  3. Context testing mode (--check-context)
 
-3. Regression Mode
+  Assignment checking mode is appropriate for running one CRDS context against
+  some parameters and determining the assignment errors.  This command:
 
-  In regression mode, crds.bestrefs compares the bestrefs assigned by --new-context
-  with the bestrefs recorded in the parameter source.  This mode is typically
-  run against CRDS constructed .json or pickle save files known to be updated
-  with bestrefs.   This mode can be used to verify that different versions of CRDS
-  produce the same results relative to a set of saved parameters and best references.
+    % crds bestrefs --check-context --all-instruments
+
+  is equivalent to:
+
+    % crds bestrefs --all-instruments --na-differences-matter --undefined-differences-matter --dump-unique-errors --unique-errors-file unique_errors.ids --all-errors-file all_errors.ids --stats
+
+Lesser used modes are::
+
+  4. Regression Mode
+
+  In regression mode, crds.bestrefs compares the bestrefs assigned by
+  --new-context with the bestrefs recorded in the parameter source.  This mode
+  is typically run against CRDS constructed .json or pickle save files known to
+  be updated with bestrefs.  This mode can be used to verify that different
+  versions of CRDS produce the same results relative to a set of saved
+  parameters and best references.
 
   a. Regression Capture
 
@@ -124,24 +135,28 @@ are the 3 main use cases for crds.bestrefs:
   Unlike reprocessing mode, this mode necessarily runs against all the datasets
   specified by the data source,  in this case a .json parameters file.
 
-  This mode can also be used to cache database parameter sets to optimize performance
-  or eliminate the possibility of database parameter variation.
-  
-4. Duplicate test elimination hack
+  This mode can also be used to cache database parameter sets to optimize
+  performance or eliminate the possibility of database parameter variation.
 
-The --eliminate-duplicate-cases switch alters the behavior of error handling to classify the 
-overall results for every dataset processed uniquely.  Normal error counting and Id 
-reporting is disabled.   Instead,  all datasets processed are classified by their 
-unique set of file results and/or assignment errors.   The --unique-errors-file 
-outputs a list of dataset IDs which can be used to reduce test cases which are 
-redundant from a CRDS perspective to a smaller representative list.
+  5. Duplicate test elimination hack (--eliminate-duplicate-cases)
+
+  The --eliminate-duplicate-cases switch alters the behavior of error handling
+  to classify the overall results for every dataset processed uniquely.  Normal
+  error counting and ID reporting are disabled.  
+
+  Instead, all datasets processed are classified by their unique set of file
+  results and/or assignment errors.  The --unique-errors-file outputs a list of
+  dataset IDs which can be used to reduce test cases which are redundant from a
+  CRDS perspective to a smaller representative list::
 
    % crds bestrefs --all-instruments --eliminate-duplicate-cases --unique-error-ids ids.txt
 
-The above downloads dataset parameters for all instruments and computes bestrefs for each.
-The resulting error classes describe unique CRDS outcomes across all types and can include
-datasets which were 100% successful.   The resultant ids.txt file lists ids which will 
-reproduce every unique CRDS outcome seen exactly once.
+   The above downloads dataset parameters for all instruments and computes
+   bestrefs for each using the default context.  The resulting error classes
+   describe unique CRDS outcomes across all types and can include datasets
+   which were 100% successful.  The resultant ids.txt file lists ids which will
+   reproduce every unique CRDS outcome seen exactly once.
+
 ...........
 New Context
 ...........
@@ -294,6 +309,16 @@ than errors as the default.
             self.args.stats = True
             self.args.undefined_differences_matter = True
             self.args.na_differences_matter = True
+
+        if self.args.check_assignments:
+            self.args.dump_unique_errors = True
+            self.args.stats = True
+            self.args.undefined_differences_matter = True
+            self.args.na_differences_matter = True
+            if not self.args.all_errors_file:
+                self.args.all_errors_file = "all_errors.ids"
+            if not self.args.unique_errors_file:
+                self.args.unique_errors_file = "unique_errors.ids"
 
         config.ALLOW_BAD_RULES.set(self.args.allow_bad_rules)
         config.ALLOW_BAD_REFERENCES.set(self.args.allow_bad_references)
@@ -521,9 +546,6 @@ than errors as the default.
         self.add_argument("--differences-are-errors", action="store_true",
                           help="Treat recommendation differences between new context and original source as errors.")
 
-        self.add_argument("--eliminate-duplicate-cases", action="store_true",
-                          help="Categorize unique bestrefs results as errors to determine representative test cases...  Replaces normal error counts with coverage counts and ids.")
-
         self.add_argument("--allow-bad-rules", action="store_true",
                           help="Only warn if a context which is marked 'bad' is used, otherwise error.")
 
@@ -542,12 +564,19 @@ than errors as the default.
         self.add_argument("-g", "--regression", action="store_true",
                           help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
 
+        self.add_argument("--check-context", action="store_true",
+                          help="Abbreviation for --undefined-differences-matter "
+                          "--na-differences-matter --dump-unique-errors --stats")
+
         self.add_argument("--affected-datasets", action="store_true",
                           help="Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter "
                           "--na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats")
 
         self.add_argument("-z", "--optimize-tables", action="store_true",
                           help="If set, apply row-based optimizations to screen out inconsequential table updates.")
+
+        self.add_argument("--eliminate-duplicate-cases", action="store_true",
+                          help="Categorize unique bestrefs results as errors to determine representative test cases...  Replaces normal error counts with coverage counts and ids.")
 
         cmdline.UniqueErrorsMixin.add_args(self)
 
