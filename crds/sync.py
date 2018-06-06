@@ -2,7 +2,7 @@
 mappings required to support a set of contexts from the CRDS server:
 
 Old references and mappings which are no longer needed can be automatically
-removed by specifying --purge-mappings or --purge-references:
+removed by specifying --purge-mappings or --purge-references::
 
   % crds sync --range 1:2 --purge-mappings --purge-references
 
@@ -69,7 +69,16 @@ class SyncScript(cmdline.ContextsScript):
         
         % crds sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
     
-        this will download only those two files.
+        this will download only those two files into the appropriate locations
+        in your CRDS cache.
+
+        An output directory outside the CRDS cache can also be specified like
+        this::
+
+        % crds sync --output-dir . --files hst_0001.pmap hst_acs_darkfile_0037.fits
+
+        which will fetch the same files but put them in the current working
+        directory "." instead of at their implicit locations in the CRDS cache.
         
     * Syncing Rules
     
@@ -157,25 +166,24 @@ class SyncScript(cmdline.ContextsScript):
         
     * Checking Smaller Caches,  Identifying Foreign Files
     
-        The simplest approach for "repairing" a small cache is to delete it and resync.   One might do this
-        after making temporary modifications to cached files to return to the archived version::
-        
+        The simplest approach for "repairing" a small cache is to delete it and resync::
+       
            % rm -rf $CRDS_PATH
            % crds sync  -- ...  # repeat whatever syncs you did to cache files of interest
-        
-        A more complicated but also more precise approach can operate only on files already in the CRDS cache::
+       
+        A more complicated but also more precise approach to check all rules and references in your local CRDS cache::
             
-           % crds sync --repair-files --check-sha1sum --files `crds list --all --cached-mappings --cached-references`
+           % crds sync --check-files --files `crds list --all --cached-mappings --cached-references`
            
         This approach works by using the crds.list command to dump the file names of all files in the CRDS cache
         and then using the crds.sync command to check exactly those files.
-        
-        Since crds.list will print the name of any file in the cache,  not just files from CRDS,  the second approach can
-        also be used to detect (most likely test) files which are not from CRDS.
-        
+       
+        Since --cached-mappings and --cached-references will only print the name of rules or references in the cache,
+        not all files from CRDS,  the second approach can also be used to detect files which are not from CRDS.
+       
         For smaller caches *--check-sha1sum* is likekly to be less of a performance/runtime issue and should be used
-        to detect files which have changed in contents but not in length.
-      
+        to detect files which have changed in contents but not in length,  particularly CRDS mapping files.
+     
     * Removing blacklisted or rejected files
     
         crds.sync can be used to remove the files from specific contexts which have been marked as "bad".
