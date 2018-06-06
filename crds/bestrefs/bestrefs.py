@@ -310,7 +310,7 @@ than errors as the default.
             self.args.undefined_differences_matter = True
             self.args.na_differences_matter = True
 
-        if self.args.check_assignments:
+        if self.args.check_context:
             self.args.dump_unique_errors = True
             self.args.stats = True
             self.args.undefined_differences_matter = True
