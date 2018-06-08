@@ -31,8 +31,8 @@ Specifying File Paths
 ---------------------
 
 The command line tools operate on CRDS reference and mapping files both inside
-and outside the CRDS cache.   Files specified without a path are assumed to be
-in the CRDS cache.   Files specified with an explicit absolute or relative
+and outside the CRDS cache.   **Files specified without a path are assumed to be
+in the CRDS cache.**   Files specified with an explicit absolute or relative
 path can be located anywhere.   See examples below.
 
 .................
@@ -62,196 +62,92 @@ the current working directory.
 crds.bestrefs
 -------------
 
-crds.bestrefs is embedded in the HST archive pipeline to populate dataset headers with best reference files.   
-Other modes of crds.bestrefs are used to support CRDS reprocessing and regression testing for both HST and JWST.   
-Since CRDS is directly integrated with the JWST CAL code,  crds.bestrefs is not the preferred tool for working 
-with JWST datasets.  For HST best dataset header updates,  crds.bestrefs is used::
+The crds.bestrefs program runs the CRDS library to interpret CRDS reference
+file assignment rules with respect to dataset parameters.  
 
-    usage: /Users/jmiller/anaconda3/envs/dev/lib/python3.6/site-packages/crds/bestrefs/__main__.py
-           [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers]
-           [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
-           [-i INSTRUMENTS [INSTRUMENTS ...]]
-           [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
-           [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
-           [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
-           [--all-types] [--diffs-only] [--datasets-since DATASETS_SINCE] [-c]
-           [--update-pickle] [--only-ids [IDS [IDS ...]]]
-           [--drop-ids [IDS [IDS ...]]] [-u] [--print-affected]
-           [--print-affected-details] [--print-new-references]
-           [--print-update-counts] [--print-error-headers] [-r] [-m SYNC_MAPPINGS]
-           [-s SYNC_REFERENCES] [--differences-are-errors] [--allow-bad-rules]
-           [--allow-bad-references] [-e] [--undefined-differences-matter]
-           [--na-differences-matter] [-g] [--affected-datasets] [-z]
-           [--dump-unique-errors] [--unique-errors-file UNIQUE_ERRORS_FILE]
-           [--all-errors-file ALL_ERRORS_FILE]
-           [--unique-threshold UNIQUE_THRESHOLD] [--max-errors-per-class N]
-           [--unique-delimiter UNIQUE_DELIMITER] [-v] [--verbosity VERBOSITY]
-           [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE]
-           [--log-time] [--pdb] [--debug-traps]
-    
-    * Determines best references with respect to a context or contexts.   
-    * Optionally updates the headers of file-based data with new recommendations.
-    * Optionally compares new results to prior results.
-    * Optionally prints source data names affected by the new context.
-        
-    optional arguments:
-      -h, --help            show this help message and exit
-      -n NEW_CONTEXT, --new-context NEW_CONTEXT
-                            Compute the updated best references using this context. Uses current operational context by default.
-      -o OLD_CONTEXT, --old-context OLD_CONTEXT
-                            Compare bestrefs recommendations from two contexts.
-      --fetch-old-headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
-      -f FILES [FILES ...], --files FILES [FILES ...]
-                            Dataset files to compute best references for and optionally update headers.
-      -d IDs [IDs ...], --datasets IDs [IDs ...]
-                            Dataset ids to consult database for matching parameters and old results.
-      --all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
-      -i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
-                            Instruments to compute best references for, all historical datasets in database.
-      -p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
-                            Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.
-      -a SAVE_PICKLE, --save-pickle SAVE_PICKLE
-                            Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
-      -t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
-                            Explicitly define the list of reference types to process, --skip-types also still applies.
-      -k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
-                            A list of reference types which should not be processed,  defaulting to nothing.
-      --all-types           Evaluate every reference file type regardless of dataset exposure type.
-      --diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
-      --datasets-since DATASETS_SINCE
-                            Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.  OFF by default.
-      -c, --compare-source-bestrefs
-                            Compare new bestrefs recommendations to recommendations from data source,  files or database.
-      --update-pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
-      --only-ids [IDS [IDS ...]]
-                            If specified, process only the listed dataset ids.
-      --drop-ids [IDS [IDS ...]]
-                            If specified, skip these dataset ids.
-      -u, --update-bestrefs
-                            Update sources with new best reference recommendations.
-      --print-affected      Print names of products for which the new context would assign new references for some exposure.
-      --print-affected-details
-                            Include instrument and affected types in addition to compound names of affected exposures.
-      --print-new-references
-                            Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
-      --print-update-counts
-                            Prints dictionary of update counts by instrument and type,  status on updated files.
-      --print-error-headers
-                            For each tracked error,  print out the corresponding dataset header for offline analysis.
-      -r, --remote-bestrefs
-                            Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
-      -m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
-                            Fetch the required context mappings to the local cache.  Defaults TRUE.
-      -s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
-                            Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
-      --differences-are-errors
-                            Treat recommendation differences between new context and original source as errors.
-      --allow-bad-rules     Only warn if a context which is marked 'bad' is used, otherwise error.
-      --allow-bad-references
-                            Only warn if a reference which is marked bad is recommended, otherwise error.
-      -e, --bad-files-are-errors
-                            DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.
-      --undefined-differences-matter
-                            If not set, a transition from UNDEFINED to anything else is not considered a difference error.
-      --na-differences-matter
-                            If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
-      -g, --regression      Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
-      --affected-datasets   Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter --na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats
-      -z, --optimize-tables
-                            If set, apply row-based optimizations to screen out inconsequential table updates.
-      --dump-unique-errors  Record and dump the first instance of each kind of error.
-      --unique-errors-file UNIQUE_ERRORS_FILE
-                            Write out data names (ids or filenames) for first instance of unique errors to specified file.
-      --all-errors-file ALL_ERRORS_FILE
-                            Write out all err'ing data names (ids or filenames) to specified file.
-      --unique-threshold UNIQUE_THRESHOLD
-                            Only print unique error classes with this many or more instances.
-      --max-errors-per-class N
-                            Only print the first N detailed errors of any particular class.
-      --unique-delimiter UNIQUE_DELIMITER
-                            Use the given delimiter (e.g. semicolon) in tracked error messages to make them amenable to spreadsheets.
-      -v, --verbose         Set log verbosity to True,  nominal debug level.
-      --verbosity VERBOSITY
-                            Set log verbosity to a specific level: 0..100.
-      --dump-cmdline        Dump the command line parameters used to start the script to the log.
-      -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-      -I, --ignore-cache    Download required files even if they're already in the cache.
-      -V, --version         Print the software version and exit.
-      -J, --jwst            Force observatory to JWST for determining header conventions.
-      -H, --hst             Force observatory to HST for determining header conventions.
-      --stats               Track and print timing statistics.
-      --profile PROFILE     Output profile stats to the specified file.
-      --log-time            Add date/time to log messages.
-      --pdb                 Run under pdb.
-      --debug-traps         Bypass exception error message traps and re-raise exception.
+crds.bestrefs has several use cases which have different modes for fetching
+input parameters, evaluating bestrefs and/or doing comparisons, and producing output.
 
-................
-Processing Modes
-................
+crds.bestrefs runs in the HST archive pipeline to populate dataset headers FITS
+keywords (e.g. DARKFILE) with best reference files.
 
-crds.bestrefs can be run in 3 distinct processing modes with different inputs, outputs,
-and purposes.   Where possible the input, output, and comparison modes are written to
-be orthogonal features that can be combined in various ways.   The following however
-are the 3 main use cases for crds.bestrefs:
+Other modes of crds.bestrefs are used to support CRDS reprocessing or to test new
+versions of CRDS rules.
 
-  1. File (Pipeline) Mode
+The crds.bestrefs program is not normally used for JWST and best references 
+are assigned automatically as a consequence of running the CAL code.
+
+* Determines best references with respect to a context or contexts.   
+* Optionally updates the headers of file-based data with new recommendations.
+* Optionally compares new results to prior results.
+* Optionally prints source data names affected by the new context.
+
+.......................
+crds.bestrefs use cases
+.......................
+
+  1. File (HST Pipeline) Mode
 
   The --files switch can be used to specify a list of FITS dataset files to
   process.  This is used in the HST pipeline in conjunction with
   --update-headers to fill in dataset FITS headers with recommended best
   references::
 
-    % python -m crds.bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
+    % crds bestrefs  --update-headers  --files j8bt05njq_raw.fits ...
 
   The outcome of this command is updating the best references in the FITS
   headers of the specified .fits files.
 
+  Omitting --update-headers can be used to evaluate bestrefs without altering
+  the input FITS files::
+
+    % crds bestrefs --print-new-references --files  j8bt05njq_raw.fits ...
+
+  The --new-context switch can be used to choose a context which is not the
+  current default::
+
+    % crds bestrefs --new-context hst_0457.pmap --files ...
+
   2. Reprocessing Mode
 
-  The --old-context and --new-context switches are used to specify a pair of CRDS
-  contexts to compare results from.  Reprocessing mode runs by fetching matching
-  parameters from the archive database using --instruments or --datasets.  This
-  mode is used to recommend reprocessing where the bestrefs differ between old
-  and new contexts::
+  The bestrefs reprocessing mode is used in conjunction with archive databases
+  to determine datasets which should be reprocessed as a consequence of the
+  delivery of new reference files.
 
-    % python -m crds.bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
+  Reprocessing mode evaluates the same dataset parameters with respect to an
+  old context and a new context and recommends reprocessing datasets where some
+  reference file assignment changes.
 
-  The outcome of this command is to print the IDs of datasets affected by the
-  transition from context 0001 to 0002.
+  Bestrefs reprocessing mode is run automatically on the CRDS servers whenever
+  new reference files are delivered, after the new CRDS context is selected for
+  use by the archive pipeline.  It is run e.g. like this::
 
+    % crds bestrefs --affected-datasets --old-context  hst_0001.pmap --new-context hst_0002.pmap  
+  
   --affected-datasets is a "bundle switch" that captures standard options for
-  reprocessing including the option of printing out the affected datasets en lieu
-  of updating FITS headers.  As an optimization, this mode typically runs against
-  only those datasets implied by the differences in old and new contexts and restricted
-  to those datasets potentially affected by the USEAFTER dates of new references.
+  reprocessing.  See *crds bestrefs --help* for more information on individual
+  switches.
 
-3. Regression Mode
+  Running reprocessing mode requires setting *CRDS_SERVER_URL*.
 
-  In regression mode, crds.bestrefs compares the bestrefs assigned by --new-context
-  with the bestrefs recorded in the parameter source.  This mode is typically
-  run against CRDS constructed .json or pickle save files known to be updated
-  with bestrefs.   This mode can be used to verify that different versions of CRDS
-  produce the same results relative to a set of saved parameters and best references.
+  3. Context Testing Mode
 
-  a. Regression Capture
+  CRDS bestrefs and the archive reprocessing parameters can also provide a
+  quick way to evaluate a new context and/or residual errors.  It can answer
+  the question "what classes of errors still exist for the latest context with
+  respect to known parameter sets?"
 
-  This sub-mode captures all parameter sets for an instrument updated with the
-  best refs assigned by --new-context::
+  Context testing mode can be run like this::
 
-    %  python -m crds.bestrefs --new-context hst_0002.pmap --instrument acs --update-bestrefs --update-pickle --save-pickle old-regression.json
+    % crds bestrefs --check-context --new-context jwst-edit
 
-  b. Regression Test
+  Context testing also requires setting *CRDS_SERVER_URL* to obtain archived
+  dataset parameters.  Note that during JWST pre-I&T the archive database often
+  contains parameter sets related to obsolete test cases.
 
-  This sub-mode plays back captured datasets comparing captured prior results
-  with the current result::
+  Undesired test cases can be weeded out like this::
 
-    %  python -m crds.bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
-
-  Unlike reprocessing mode, this mode necessarily runs against all the datasets
-  specified by the data source,  in this case a .json parameters file.
-
-  This mode can also be used to cache database parameter sets to optimize performance
-  or eliminate the possibility of database parameter variation.
+    % crds bestrefs --check-context --new-context jwst-edit --drop-ids JW93135336001_02102_00001.MIRIFUSHORT:JW93135336001_02102_00001.MIRIFUSHORT
 
 ...........
 New Context
@@ -261,6 +157,16 @@ crds.bestrefs always computes best references with respect to a context which
 can be explicitly specified with the --new-context parameter.  If --new-context
 is not specified, the default operational context is determined by consulting
 the CRDS server or looking in the local cache.
+
+...........
+Old Context
+...........
+
+--old-context can be used to specify a second context for which bestrefs
+are dynamically computed; --old-context implies that a bestrefs comparison
+will be made with --new-context.  If --old-context is not specified, it
+defaults to None.  --old-context is only used for context-to-context
+comparisons,  nominally for CRDS repro.
 
 ........................
 Lookup Parameter Sources
@@ -293,49 +199,14 @@ references comparison mode.  Each names the origin of a set of prior
 recommendations and implicitly requests a comparison to the recommendations
 from the newly computed bestrefs determined by --new-context.
 
-::::::::::::::::::
-Context-to-Context
-::::::::::::::::::
+*--old-context CONTEXT* specifies that the reference results should be
+*computed* using the named context.
 
---old-context can be used to specify a second context for which bestrefs
-are dynamically computed; --old-context implies that a bestrefs comparison
-will be made with --new-context.  If --old-context is not specified, it
-defaults to None.
-
-::::::::::::::::::::::::::::
-Prior Source Recommendations
-::::::::::::::::::::::::::::
-
---compare-source-bestrefs requests that the bestrefs from --new-context be
-compared to the bestrefs which are recorded with the lookup parameter data,
-either in the file headers of data files, or in the catalog.  In both cases
-the prior best references are recorded static values, not dynamically
-computed bestrefs.
-    
-............
-Output Modes
-............
-
-crds.bestrefs supports several output modes for bestrefs and comparison results
-to standard out.
-
-If --print-affected is specified, crds.bestrefs will print out the name of any
-file for which at least one update for one reference type was recommended.
-This is essentially a list of files to be reprocessed with new references::
-
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --print-affected
-    j8bt05njq_raw.fits
-    j8bt06o6q_raw.fits
-    j8bt09jcq_raw.fits
-    
-............
-Update Modes
-............
-
-crds.bestrefs initially supports one mode for updating the best reference
-recommendations recorded in data files::
-
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --update-bestrefs
+*--compare-source-bestrefs* directs that prior reference assignments should be
+taken from the same *stored source* which provides matching parameters.  These
+could be from FITS header keywords (e.g. DARKFILE), from live archive
+parameters, or from prior parameter sets that have been stored in CRDS .json or
+Python pickle files.
 
 ......................
 Pickle and .json saves
@@ -343,20 +214,19 @@ Pickle and .json saves
 
 crds.bestrefs can load parameters and past results from a sequence of .pkl or
 .json files using --load-pickles.  These are combined into a single parameter
-source in command line order, nominally in worst-to-best order where later
-files override earlier files.
+source in command line order.
 
 crds.bestrefs can save the parameters obtained from various sources into .pkl
 or .json formatted save files using --save-pickle.  The single combined result
-of multiple pickle or instrument parameter sources is saved.   The file extension
-defines the format used.
+of multiple pickle or instrument parameter sources is saved.  The file
+extension (.json or .pkl) defines the format used.
 
-The preferred  .json format defines a singleton { id: parameters} dictionary/array
-on each line as a series of isolated .json objects.   A less robust single object
-form is also supported { id1: parameters1, id2: parameters2, ...}.
+The preferred .json format defines a singleton { id: parameters}
+dictionary on each line as a series of isolated .json objects.  Strictly
+speaking only each individual line is .json,  but this localizes any errors.
 
 .json format is preferred over .pkl because it is more transparent and robust
-across different versions of Python or typos.
+across different versions of Python.
 
 .........
 Verbosity
@@ -371,155 +241,85 @@ for --verbose.
 Bad Files
 .........
 
-CRDS files can be designated as scientifically invalid on the CRDS server by the CRDS team.   Knowledge of bad
-files is synchronized to remote caches by crds.bestrefs and crds.sync.  By default, attempting to use bad rules or 
-assign bad references will generate errors and fail.   crds.bestrefs supports two command line switches,  
-*---allow-bad-rules* and *---allow-bad-references* to override the default handling of bad files and enable their 
-use with warnings.  Environment variables **CRDS_ALLOW_BAD_RULES** and **CRDS_ALLOW_BAD_REFERENCES** can also be 
-set to 1 to establish warnings rather than errors as the default.
+CRDS files can be designated as scientifically invalid on the CRDS server by
+the CRDS team.  Knowledge of bad files is synchronized to remote caches by
+crds.bestrefs and crds.sync.  By default, attempting to use bad rules or assign
+bad references will generate errors and fail.  crds.bestrefs supports two
+command line switches, *---allow-bad-rules* and *---allow-bad-references* to
+override the default handling of bad files and enable their use with warnings.
+Environment variables **CRDS_ALLOW_BAD_RULES** and
+**CRDS_ALLOW_BAD_REFERENCES** can also be set to 1 to establish warnings rather
+than errors as the default.
 
 
 crds.sync 
 ---------
 
-The CRDS sync tool is used to download CRDS rules and references from the CRDS server::
-    
- usage::
-   crds sync
-       [-h] [--contexts [CONTEXT [CONTEXT ...]] | --range MIN:MAX | --all |
-       --last-n-contexts N | --up-to-context CONTEXT | --after-context
-       CONTEXT] [--files [FILES [FILES ...]]]
-       [--dataset-files [DATASET [DATASET ...]]]
-       [--dataset-ids [DATASET [DATASET ...]]] [--fetch-references]
-       [--purge-references] [--purge-mappings] [--dry-run] [-k] [-s] [-r]
-       [--purge-rejected] [--purge-blacklisted] [--fetch-sqlite-db]
-       [--organize [NEW_SUBDIR_MODE]] [--organize-delete-junk]
-       [--verify-context-change] [--push-context KEY] [--clear-pickles]
-       [--save-pickles] [--output-dir OUTPUT_DIR] [--clear-locks]
-       [--force-config-update] [-v] [--verbosity VERBOSITY] [--dump-cmdline]
-       [-R] [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time]
-       [--pdb] [--debug-traps]
-
-    Synchronize local mapping and reference caches for the given contexts by
-    downloading missing files from the CRDS server and/or archive.
-    
- optional arguments::
-  -h, --help            show this help message and exit
-  --contexts [CONTEXT [CONTEXT ...]]
-                        Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification
-  --range MIN:MAX       Operate for pipeline context ids (.pmaps) between <MIN> and <MAX>.
-  --all                 Operate with respect to all known CRDS contexts.
-  --last-n-contexts N   Operate with respect to the last N contexts.
-  --up-to-context CONTEXT
-                        Operate on all contexts up to and including the specified context.
-  --after-context CONTEXT
-                        Operate on all contexts after and including the specified context.
-  --files [FILES [FILES ...]]
-                        Explicitly list files to be synced.
-  --dataset-files [DATASET [DATASET ...]]
-                        Cache references for the specified datasets FITS files.
-  --dataset-ids [DATASET [DATASET ...]]
-                        Cache references for the specified dataset ids.
-  --fetch-references    Cache all the references for the specified contexts.
-  --purge-references    Remove reference files not referred to by contexts from the cache.
-  --purge-mappings      Remove mapping files not referred to by contexts from the cache.
-  --dry-run             Don't remove purged files, or repair files,  just print out their names.
-  -k, --check-files     Check cached files against the CRDS database and report anomalies.
-  -s, --check-sha1sum   For --check-files,  also verify file sha1sums.
-  -r, --repair-files    Repair or re-download files noted as bad by --check-files
-  --purge-rejected      Purge files noted as rejected by --check-files
-  --purge-blacklisted   Purge files (and their mapping anscestors) noted as blacklisted by --check-files
-  --fetch-sqlite-db     Download a sqlite3 version of the CRDS file catalog.
-  --organize [NEW_SUBDIR_MODE]
-                        Migrate cache to specified structure, 'flat' or 'instrument'. WARNING: perform only on idle caches.
-  --organize-delete-junk
-                        When --organize'ing, delete obstructing files or directories CRDS discovers.
-  --verify-context-change
-                        Make it an error if the context does not update to something new.
-  --push-context KEY    Push the name of the final cached context to the server for the pipeline identified by KEY.
-  --clear-pickles       Remove all context pickles from the CRDS cache. Can precede --save-pickles.
-  --save-pickles        Save pre-compiled versions of the sync'ed contexts in the CRDS cache.  Keep pre-existing pickles.
-  --output-dir OUTPUT_DIR
-                        Directory to output sync'ed files, for simple syncs.
-  --clear-locks         Remove CRDS cache file lock(s).
-  --force-config-update
-                        Even if sync errors occur, attempt to update the CRDS configuration, including the default context.
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
-                        Set log verbosity to a specific level: 0..100.
-  --dump-cmdline        Dump the command line parameters used to start the script to the log.
-  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  -I, --ignore-cache    Download required files even if they're already in the cache.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
-  --stats               Track and print timing statistics.
-  --profile PROFILE     Output profile stats to the specified file.
-  --log-time            Add date/time to log messages.
-  --pdb                 Run under pdb.
-  --debug-traps         Bypass exception error message traps and re-raise exception.
+The CRDS sync tool is used to download CRDS rules and references from the CRDS
+server.  While the sync tool can download files which are specified explicitly,
+it's primary purpose is to download and manage files with respect to specified
+versions of CRDS rules.   While the download directory of files can be
+explicitly specified,  sync is primarily used to download files to a CRDS
+cache which organizes and can locate files in a standard way.
 
 * Dry-Running Cache Changes
-       
-       Since CRDS cache operations can involve significant network downloads,  as a general note,
-       crds.sync can be run with *---readonly-cache ---verbose* switches to better determine what 
-       the effects of any command should be.   This can be used to gauge download sizes or list
-       files before deleting them.
-    
-* Syncing Specific Files
-    
-        Downloading an explicit list of files can be done by like this::
-        
-        % crds sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
-    
-        this will download only those two files into the appropriate locations
-        in your CRDS cache.
+   
+   Since CRDS cache operations can involve significant network downloads, as a
+   general note, crds.sync can be run with *---readonly-cache ---verbose*
+   switches to better determine what the effects of any command should be.
+   This can be used to gauge download sizes or list files before deleting them.
 
-        An output directory outside the CRDS cache can also be specified like
-        this::
-
-        % crds sync --output-dir . --files hst_0001.pmap hst_acs_darkfile_0037.fits
-
-        which will fetch the same files but put them in the current working
-        directory "." instead of at their implicit locations in the CRDS cache.
-        
 * Syncing Rules
+
+    Typically syncing CRDS files is done with respect to particular CRDS
+    contexts:
     
-        Typically syncing CRDS files is done with respect to particular CRDS contexts:
-        
-        Synced contexts can be explicitly listed::
-        
-            % crds sync  --contexts hst_0001.pmap hst_0002.pmap
-          
-        this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
-        
-        Synced contexts can be specified as a numerical range::
-        
-            % crds sync --range 1:3
-        
-        this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
-        
-        Synced contexts can be specified as --all contexts::
-        
-            % crds sync --all
-        
-        this will recursively download all CRDS mappings for all time.
+    Synced contexts can be explicitly listed::
     
+        % crds sync  --contexts hst_0001.pmap hst_0002.pmap
+      
+    this will recursively download all the mappings referred to by .pmaps 0001
+    and 0002.
+    
+    Synced contexts can be specified as a numerical range::
+    
+        % crds sync --range 1:3
+    
+    this will also recursively download all the mappings referred to by .pmaps
+    0001, 002, 0003.
+    
+    Synced contexts can be specified as --all contexts::
+    
+        % crds sync --all
+    
+    this will recursively download all CRDS mappings for all time.
+
 * Syncing References By Context
-        
-        Because complete reference downloads can be enormous,  you must explicitly specify when
-        you wish to fetch the references which are enumerated in particular CRDS rules::
-              
-            % crds sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
-        
-        will download all the references mentioned by contexts 0001 and 0002.   
     
-        This can be a huge (1T+) network download and should generally only be 
-        used by institutions,  not individual researchers.
+    Because complete reference downloads can be enormous, you must explicitly
+    specify when you wish to fetch the references which are enumerated in
+    particular CRDS rules::
+          
+        % crds sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
+    
+    will download all the references mentioned by contexts 0001 and 0002.   
         
-        **NOTE:** the contexts synced can be for particular instruments or types rather than 
-        the entire pipeline,  e.g. hst_cos_0002.imap or hst_cos_proftab_0001.rmap
-            
+* Syncing Specific Files
+
+    Downloading an explicit list of files can be done by like this::
+    
+    % crds sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
+
+    this will download only those two files.
+
+    Specific files can also be downloaded using symbolic names and output
+    to a specified directory,  for example,  like this::
+
+      % crds sync --files jwst-nircam-flat-edit --output-dir .
+
+    Will download the latest NIRCAM FLAT .rmap to the current working
+    directory, which can be useful when doing CRDS rmap adjustments.
+    
 * Removing Unused Files
               
         CRDS rules from **unspecified** contexts can be removed like this::
@@ -529,7 +329,7 @@ The CRDS sync tool is used to download CRDS rules and references from the CRDS s
         while this would remove references which are *not* in contexts 4 or 5::
         
             % crds sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
-            
+
         Again, both of these commands remove cached files which are not specified or implied.
     
 * References for Dataset Files
@@ -538,9 +338,11 @@ The CRDS sync tool is used to download CRDS rules and references from the CRDS s
                 
             % crds sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-files  <dataset_files...> e.g. acs_J8D219010.fits
         
-        This will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
+        This will fetch all the references required to support the listed
+        datasets for contexts 0001 and 0002.
         
-        This mode does not update dataset file headers.  See also crds.bestrefs for similar functionality with header updates.
+        This mode does not update dataset file headers.  See also crds.bestrefs
+        for similar functionality with header updates.
               
 * References for Dataset Ids
     
@@ -551,60 +353,86 @@ The CRDS sync tool is used to download CRDS rules and references from the CRDS s
         This will fetch all the references required to support the listed dataset ids for contexts 0001 and 0002.
               
 * Checking and Repairing Large Caches
+
+    Large Institutional caches can be checked and/or repaired like this::
     
-        Large Institutional caches can be checked and/or repaired like this::
-        
-            % crds sync --contexts hst_0001.pmap --fetch-references --check-sha1sum --repair-files
-        
-        will download all the files in hst_0001.pmap not already present.
-        
-        Both mappings and references would then be checked for correct length, sha1sum, and status.   
-        
-        Any files with bad length or checksum would then be deleted and re-downloaded.   This is really intended 
-        for a large *existing* cache.
-        
-        File checksum verification is optional because it is time consuming.  Verifying the contents of the current
-        HST shared cache requires 8-10 hours.   In contrast, doing simple length, existence, and status checks 
-        takes 5-10 minutes,  sufficient for a quick check but not foolproof.
+        % crds sync --contexts hst_0001.pmap --fetch-references --check-sha1sum --repair-files
+    
+    will download all the files in hst_0001.pmap not already present.
+    
+    Both mappings and references would then be checked for correct length,
+    sha1sum, and status.
+    
+    Any files with bad length or checksum would then be deleted and
+    re-downloaded.  This is really intended for a large *existing* cache.
+    
+    File checksum verification is optional because it is time consuming.
+    Verifying the contents of the current HST shared cache requires 8-10 hours.
+    In contrast, doing simple length, existence, and status checks takes 5-10
+    minutes, sufficient for a quick check but not foolproof.
         
 * Checking Smaller Caches,  Identifying Foreign Files
+
+    The simplest approach for "repairing" a small cache is to delete it and
+    resync.  One might do this after making temporary modifications to cached
+    files to return to the archived version::
     
-        The simplest approach for "repairing" a small cache is to delete it and resync.   One might do this
-        after making temporary modifications to cached files to return to the archived version::
-       
-           % rm -rf $CRDS_PATH
-           % crds sync  -- ...  # repeat whatever syncs you did to cache files of interest
-       
-        A more complicated but also more precise approach can operate only on files already in the CRDS cache::
-            
-           % crds sync --check-files --files `crds list --all --cached-mappings --cached-references`
-           
-        This approach works by using the crds.list command to dump the file names of all files in the CRDS cache
-        and then using the crds.sync command to check exactly those files.
-       
-        Since crds.list will print the name of any rule or reference in the cache,  not just files from CRDS,  
-        the second approach can also be used to detect (most likely test) files which are not from CRDS.
-       
-        For smaller caches *--check-sha1sum* is likekly to be less of a performance/runtime issue and should be used
-        to detect files which have changed in contents but not in length,  particularly CRDS mapping files.
-     
-* Removing blacklisted or rejected files
+       % rm -rf $CRDS_PATH
+       % crds sync  -- ...  # repeat whatever syncs you did to cache files of interest
     
-        crds.sync can be used to remove the files from specific contexts which have been marked as "bad".
-              
-          % crds sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+    A more complicated but also more precise approach can operate only on files
+    already in the CRDS cache::
         
-        would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
-        be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
+       % crds sync --repair-files --check-sha1sum --files `crds list --all --cached-mappings --cached-references`
+       
+    This approach works by using the crds.list command to dump the file names
+    of all files in the CRDS cache and then using the crds.sync command to
+    check exactly those files.
+    
+    Since crds.list will print the name of any file in the cache, not just
+    files from CRDS, the second approach can also be used to detect (most
+    likely test) files which are not from CRDS.
+    
+    For smaller caches *--check-sha1sum* is likekly to be less of a
+    performance/runtime issue and should be used to detect files which have
+    changed in contents but not in length.
+  
+* Removing Blacklisted or Rejected Files
+
+    crds.sync can be used to remove the files from specific contexts which have
+    been marked as "bad"::
+          
+      % crds sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+    
+    would first sync the cache downloading all the files in hst_0001.pmap.
+    Both mappings and references would then be checked for correct length.
+    Files reported as rejected or blacklisted by the server would be removed.
+  
+* Reorganizing Cache Structure
+
+    CRDS now supports two cache structures for organizing references: flat and
+    instrument.  *flat* places all references for a telescope in a single
+    directory, e.g. references/hst.  *instrument* segregates references into
+    subdirectories which name instruments or legacy environment variables,
+    e.g. acs or jref.
+    
+    Newly created caches will default to the *instrument* organization.  To
+    migrate a legacy cache with a flat single directory layout to the new
+    structure, sync with --organize=instrument::
+    
+       % crds sync --organize=instrument --verbose
       
 * Reorganizing cache structure
     
-        CRDS now supports two cache structures for organizing references: flat and instrument.  *flat* places all references
-        for a telescope in a single directory,  e.g. references/hst.   *instrument* segregates references into subdirectories
-        which name instruments or legacy environment variables,  e.g. acs or jref.
+        CRDS now supports two cache structures for organizing references: flat
+        and instrument.  *flat* places all references for a telescope in a
+        single directory, e.g. references/hst.  *instrument* segregates
+        references into subdirectories which name instruments or legacy
+        environment variables, e.g. acs or jref.
         
-        Newly created caches will default to the *instrument* organization.  To migrate a legacy cache with a flat single
-        directory layout to the new structure,  sync with --organize=instrument::  
+        Newly created caches will default to the *instrument* organization.  To
+        migrate a legacy cache with a flat single directory layout to the new
+        structure, sync with --organize=instrument::
         
            % crds sync --organize=instrument --verbose
            
@@ -619,18 +447,17 @@ The CRDS sync tool is used to download CRDS rules and references from the CRDS s
         The --organize switches are intended to be used only on inactive file caches
         when calibration software is not running and actively using CRDS.
 
-
 crds.certify
 ------------
 
 crds.certify checks a reference or mapping file against constraints on legal
-matching parameter values.   For reference files,  crds.certify also performs checks
-of the FITS format and when given a context,  and will compare the given file against
-the file it replaces looking for new or missing table rows. 
+matching parameter values.  For reference files, crds.certify also performs
+checks of the FITS format and when given a context, and will compare the given
+file against the file it replaces looking for new or missing table rows.
 
 * crds certify --help yields::
 
-    usage: /Users/homer/work/workspace_crds/CRDS/crds/certify.py  
+    usage: crds certify ...
        [-h] [-d] [-r] [-a] [-e] [-p] [-x COMPARISON_CONTEXT]
        [-y COMPARISON_REFERENCE] [-s] [--dump-unique-errors]
        [--unique-errors-file UNIQUE_ERRORS_FILE]
@@ -678,24 +505,35 @@ the file it replaces looking for new or missing table rows.
 
   % crds certify --comparison-context=hst_0027.pmap   ./some_reference.fits...
 
-  If some_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
+  If some_reference.fits is a table, a comparison table will be found in the
+  comparison context, if appropriate.
 
 * For recursively checking CRDS rules do this::
 
   % crds certify hst_0311.pmap --comparison-context=hst_0312.pmap
 
-  If a comparison context is defined, checked mappings will be compared against their peers (if they exist) in
-  the comparison context.  Many classes of mapping differences will result in warnings.
+  If a comparison context is defined, checked mappings will be compared against
+  their peers (if they exist) in the comparison context.  Many classes of
+  mapping differences will result in warnings.
 
-* For reference table checks,  a comparison reference can also be specified directly rather than inferred from context::
+* For reference table checks, a comparison reference can also be specified
+  directly rather than inferred from context::
 
   % crds certify ./some_reference.fits --comparison-reference=old_reference_version.fits --run-fitsverify --dump-provenance
 
 * For more information on the checks being performed,  use --verbose or --verbosity=N where N > 50.
     
-  % crds certify ./some_reference.fits --comparison-reference=old_reference_version.fits --run-fitsverify --dump-provenance --verbose
+  % crds certify --verbose ...
 
-* Invoking crds.certify on a context mapping recursively certifies all sub-mappings.
+* Invoking crds.certify on a context mapping recursively certifies all
+  sub-mappings.
+
+* Adding *--deep* when specifying mappings causes CRDS to certify not just the
+  mappings, but every reference file referred to by the mappings::
+
+  % crds certify --deep jwst-edit
+
+  asks CRDS to certify all of the latest CRDS rules and references.
 
 crds.list
 ---------
@@ -730,11 +568,11 @@ configurations can be dumped::
     % crds list --status
     CRDS Version = '7.0.7, bump-version, 7432326'
     CRDS_MODE = 'auto'
-    CRDS_PATH = '/Users/jmiller/crds_cache_ops'
+    CRDS_PATH = '/Users/homer/crds_cache_ops'
     CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
     Effective Context = 'jwst_0204.pmap'
     Last Synced = '2016-09-20 08:00:09.115330'
-    Python Executable = '/Users/jmiller/anaconda/bin/python'
+    Python Executable = '/Users/homer/anaconda/bin/python'
     Python Version = '3.5.2.final.0'
     Readonly Cache = False
 
@@ -1051,7 +889,7 @@ tabular data on a column-by-column basis. Rowdiff compares tabular data
 on a row-by-row basis, producing UNIX diff-like output instead.
 Non-tabular extensions are ignored.
 
-    usage: rowdiff.py [-J] [-H]
+    usage: crds rowdiff [-J] [-H]
            [--ignore-fields IGNORE_FIELDS] 
            [--fields FIELDS]
            [--mode-fields MODE_FIELDS] old_file new_file
@@ -1172,7 +1010,7 @@ crds.matches
 crds.matches reports the match patterns which are associated with the given
 reference files::
 
-    usage: matches.py
+    usage: crds matches ...
            [-h] [--contexts [CONTEXT [CONTEXT ...]]] 
            [--files FILES [FILES ...]] [-b] [-o] [-t] 
     
