@@ -87,7 +87,7 @@ OPTIONAL: Additional 3rd party supporting packages are needed for more advanced 
     Package            Supports Task
     ===============    =======================================================================
     jwst               to run crds certify for JWST
-    firelock           for lock file based CRDS cache locking for multiprocessing (preferred)
+    filelock           for lock file based CRDS cache locking for multiprocessing (preferred)
     lockfile           for lock file based CRDS cache locking for multiprocessing (deprecated)
     fitsverify         for running fitsverify under certify
     lxml               for command line submission interface
