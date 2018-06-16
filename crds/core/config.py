@@ -1,5 +1,6 @@
-"""This module is the interface to CRDS configuration information.  Predominantly
-it is used to define CRDS file cache paths and file location functions.
+"""This module is the interface to CRDS configuration information.
+Predominantly it is used to define CRDS file cache paths and file location
+functions.
 """
 from __future__ import print_function
 from __future__ import division
@@ -279,6 +280,49 @@ class BooleanConfigItem(ConfigItem):
 
     __bool__ = __nonzero__
 
+
+class IntConfigItem(ConfigItem):
+    """Represents a boolean environment setting for CRDS.
+
+    >>> INT = IntConfigItem(
+    ...             "CRDS_INT_ITEM", '57', "Test int config item")
+    >>> if INT:
+    ...    print("True")
+    ... else:
+    ...    print("False")
+    True
+
+    >>> os.environ["CRDS_INT_ITEM"] = "0"
+    >>> if INT:
+    ...    print("True")
+    ... else:
+    ...    print("False")
+    False
+
+    >>> INT.get()
+    57
+    >>> INT.set("42")  # .set() returns old value
+    57
+    >>> INT.get()
+    42
+    """
+    def __init__(self, var, default, *args, **keys):
+        keys = dict(keys)
+        keys["valid_values"] = None
+        super(IntConfigItem, self).__init__(var, str(default), *args, **keys)
+
+    def get(self):
+        """Return the bool value of this config item."""
+        return env_to_int(self.env_var, self.default)
+
+    def set(self, val):
+        """Set the bool value of this config item to `val`,  coercing to bool.  Return old value."""
+        return super(IntConfigItem, self).set(str(int(val)))
+
+    def __nonzero__(self): 
+        """Support using this boolean config item be used as
+        a conditional expression."""
+        return self.get() != 0
 
 # ===========================================================================
 
@@ -659,28 +703,44 @@ def get_download_plugin():
                 return program + " --no-check-certificate --quiet ${SOURCE_URL}  -O ${OUTPUT_PATH}"
     return None
 
+DOWNLOAD_CHECKSUMS = BooleanConfigItem(
+    "CRDS_DOWNLOAD_CHECKSUMS", True, "Verify downloaded files match server's sha1sum.  If false,  allow bad checksums.")
+                        
+DOWNLOAD_LENGTHS = BooleanConfigItem(
+    "CRDS_DOWNLOAD_LENGTHS", True, "Verify downloaded files match server's file length.  If false,  allow bad lengths.")
+                        
 def get_checksum_flag():
     """Return True if the environment is configured for checksums."""
-    return env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
+    return DOWNLOAD_CHECKSUMS.get()
+
+def get_length_flag():
+    """Return True if the environment is configured for verifying downloaded file lengths.
+    """
+    return DOWNLOAD_LENGTHS.get()
+
+CLIENT_RETRY_COUNT = IntConfigItem(
+    "CRDS_CLIENT_RETRY_COUNT", 1, "Integer number of times CRDS should retry download errors.  No retries == 1.")
 
 def get_client_retry_count():
     """Return the integer number of times a network transaction should be attempted.  No retries == 1."""
-    return env_to_int("CRDS_CLIENT_RETRY_COUNT", 1)
+    return CLIENT_RETRY_COUNT.get()
+
+CLIENT_RETRY_DELAY_SECONDS = IntConfigItem(
+    "CRDS_CLIENT_RETRY_DELAY_SECONDS", 0, "Seconds CRDS should wait between retries.  Defaults to 0.")
 
 def get_client_retry_delay_seconds():
     """Return the integer number of seconds CRDS should wait between retrying failed network transactions."""
-    return env_to_int("CRDS_CLIENT_RETRY_DELAY_SECONDS", 0)
+    return CLIENT_RETRY_DELAY_SECONDS.get()
 
 def enable_retries(retry_count=20, delay_seconds=10):
     """Set reasonable defaults for CRDS retries"""
-    os.environ["CRDS_CLIENT_RETRY_COUNT"] = retry_count
-    os.environ["CRDS_CLIENT_RETRY_DELAY_SECONDS"] = delay_seconds
+    CLIENT_RETRY_COUNT.set(retry_count)
+    CLIENT_RETRY_DELAY_SECONDS.set(delay_seconds)
     
 def disable_retries():
     """Set the defaults for only one try for each network transaction."""
-    os.environ["CRDS_CLIENT_RETRY_COUNT"] = 1
-    os.environ["CRDS_CLIENT_RETRY_DELAY_SECONDS"] = 0
-
+    CLIENT_RETRY_COUNT.set(1)
+    CLIENT_RETRY_DELAY_SECONDS.set(0)
     
 CRDS_DEFAULT_SERVERS = {
     "hst" : "https://hst-crds.stsci.edu",

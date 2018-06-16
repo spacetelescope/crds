@@ -652,7 +652,7 @@ class FileCacher(object):
         remote_info = self.info_map[filename]
         local_length = os.stat(localpath).st_size
         original_length = long(remote_info["size"])
-        if original_length != local_length:
+        if original_length != local_length and config.get_length_flag():
             raise CrdsDownloadError("downloaded file size " + str(local_length) +
                                     " does not match server size " + str(original_length))
         if not config.get_checksum_flag():
