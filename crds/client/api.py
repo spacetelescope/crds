@@ -568,7 +568,6 @@ class FileCacher(object):
         except Exception as exc:
             self.remove_file(localpath)
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
-                                    " from context " + srepr(self.pipeline_context) + 
                                     " at CRDS server " + srepr(get_crds_server()) + 
                                     " with mode " + srepr(config.get_download_mode()) +
                                     " : " + str(exc))
