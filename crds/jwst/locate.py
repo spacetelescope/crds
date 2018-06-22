@@ -439,7 +439,8 @@ def locate_dir(instrument, mode=None):
     if mode == "instrument":   # use simple names inside CRDS cache.
         rootdir = os.path.join(crds_refpath, instrument.lower())
         if not os.path.exists(rootdir):
-            utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
+            if config.writable_cache_or_verbose("Skipping making instrument directory link for", repr(instrument)):
+                utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
         rootdir = crds_refpath
     else:
