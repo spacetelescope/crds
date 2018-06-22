@@ -44,8 +44,8 @@ def apply_with_retries(func, *pars, **keys):
         try:
             return func(*pars, **keys)
         except Exception as exc:
-            log.verbose("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
-            log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
+            log.verbose_warning("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
+            log.verbose_warning("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
             time.sleep(delay)
             exc2 = exc
     raise exc2
