@@ -13,7 +13,7 @@ setup_pars = {
         'crds.core',
         'crds.io',
         'crds.submit',
-        
+
         'crds.misc',
         'crds.refactoring',
 
@@ -32,8 +32,8 @@ setup_pars = {
         'crds.io' : 'crds/io',
         'crds.submit' : 'crds/submit',
 
-        'crds.misc' : 'crds/misc', 
-        'crds.refactoring' : 'crds/refactoring', 
+        'crds.misc' : 'crds/misc',
+        'crds.refactoring' : 'crds/refactoring',
 
         'crds.hst' : 'crds/hst',
         'crds.jwst' : 'crds/jwst',
@@ -87,10 +87,15 @@ setup(name="crds",
       author_email="jmiller@stsci.edu",
       url="https://hst-crds.stsci.edu",
       license="BSD",
-      requires=["numpy", "astropy", "filelock", "lockfile"],  # for HST or JWST, absolutely required
+      install_requires=["astropy", "numpy", "filelock", "lockfile"],  # for HST or JWST, absolutely required
       # JWST cal code support:      jwst, lockfile, filelock
       # File submission support:    requests, lxml, parsley, fitsverify
       # Testing:                    nose
+      extras_require={
+          "jwst": ["jwst"],
+          "submission": ["requests", "lxml", "parsley"],
+      },
+      tests_require=["nose"],
       classifiers=[
           'Intended Audience :: Science/Research',
           'License :: OSI Approved :: BSD License',
