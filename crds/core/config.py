@@ -286,23 +286,25 @@ class IntConfigItem(ConfigItem):
 
     >>> INT = IntConfigItem(
     ...             "CRDS_INT_ITEM", '57', "Test int config item")
-    >>> if INT:
+    >>> if INT.get():
     ...    print("True")
     ... else:
     ...    print("False")
     True
 
     >>> os.environ["CRDS_INT_ITEM"] = "0"
-    >>> if INT:
+    >>> if INT.get():
     ...    print("True")
     ... else:
     ...    print("False")
     False
 
     >>> INT.get()
-    57
+    0
+
     >>> INT.set("42")  # .set() returns old value
-    57
+    0
+
     >>> INT.get()
     42
     """
@@ -313,7 +315,7 @@ class IntConfigItem(ConfigItem):
 
     def get(self):
         """Return the bool value of this config item."""
-        return env_to_int(self.env_var, self.default)
+        return int(super(IntConfigItem,self).get())
 
     def set(self, val):
         """Set the bool value of this config item to `val`,  coercing to bool.  Return old value."""
