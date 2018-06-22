@@ -52,6 +52,21 @@ class BestrefsScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """Command line script for determining best references for a sequence of dataset files."""
 
     description = """
+The crds.bestrefs program runs the CRDS library to interpret CRDS reference
+file assignment rules with respect to dataset parameters.  
+
+crds.bestrefs has several use cases which have different modes for fetching
+input parameters, evaluating bestrefs and/or doing comparisons, and producing output.
+
+crds.bestrefs runs in the HST archive pipeline to populate dataset headers FITS
+keywords (e.g. DARKFILE) with best reference files.
+
+Other modes of crds.bestrefs are used to support CRDS reprocessing or to test new
+versions of CRDS rules.
+
+The crds.bestrefs program is not normally used for JWST and best references 
+are assigned automatically as a consequence of running the CAL code.
+
 * Determines best references with respect to a context or contexts.   
 * Optionally updates the headers of file-based data with new recommendations.
 * Optionally compares new results to prior results.
@@ -59,73 +74,72 @@ class BestrefsScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """
 
     epilog = """
-................
-Processing Modes
-................
+.......................
+crds.bestrefs use cases
+.......................
 
-crds.bestrefs can be run in 3 distinct processing modes with different inputs, outputs,
-and purposes.   Where possible the input, output, and comparison modes are written to
-be orthogonal features that can be combined in various ways.   The following however
-are the 3 main use cases for crds.bestrefs:
-
-  1. File (Pipeline) Mode
+  1. File (HST Pipeline) Mode
 
   The --files switch can be used to specify a list of FITS dataset files to
   process.  This is used in the HST pipeline in conjunction with
   --update-headers to fill in dataset FITS headers with recommended best
   references::
 
-    % crds bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
+    % crds bestrefs  --update-headers  --files j8bt05njq_raw.fits ...
 
   The outcome of this command is updating the best references in the FITS
   headers of the specified .fits files.
 
+  Omitting --update-headers can be used to evaluate bestrefs without altering
+  the input FITS files::
+
+    % crds bestrefs --print-new-references --files  j8bt05njq_raw.fits ...
+
+  The --new-context switch can be used to choose a context which is not the
+  current default::
+
+    % crds bestrefs --new-context hst_0457.pmap --files ...
+
   2. Reprocessing Mode
 
-  The --old-context and --new-context switches are used to specify a pair of CRDS
-  contexts to compare results from.  Reprocessing mode runs by fetching matching
-  parameters from the archive database using --instruments or --datasets.  This
-  mode is used to recommend reprocessing where the bestrefs differ between old
-  and new contexts::
+  The bestrefs reprocessing mode is used in conjunction with archive databases
+  to determine datasets which should be reprocessed as a consequence of the
+  delivery of new reference files.
 
-    % crds bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
+  Reprocessing mode evaluates the same dataset parameters with respect to an
+  old context and a new context and recommends reprocessing datasets where some
+  reference file assignment changes.
 
-  The outcome of this command is to print the IDs of datasets affected by the
-  transition from context 0001 to 0002.
+  Bestrefs reprocessing mode is run automatically on the CRDS servers whenever
+  new reference files are delivered, after the new CRDS context is selected for
+  use by the archive pipeline.  It is run e.g. like this::
 
+    % crds bestrefs --affected-datasets --old-context  hst_0001.pmap --new-context hst_0002.pmap  
+  
   --affected-datasets is a "bundle switch" that captures standard options for
-  reprocessing including the option of printing out the affected datasets en lieu
-  of updating FITS headers.  As an optimization, this mode typically runs against
-  only those datasets implied by the differences in old and new contexts and restricted
-  to those datasets potentially affected by the USEAFTER dates of new references.
+  reprocessing.  See *crds bestrefs --help* for more information on individual
+  switches.
 
-3. Regression Mode
+  Running reprocessing mode requires setting *CRDS_SERVER_URL*.
 
-  In regression mode, crds.bestrefs compares the bestrefs assigned by --new-context
-  with the bestrefs recorded in the parameter source.  This mode is typically
-  run against CRDS constructed .json or pickle save files known to be updated
-  with bestrefs.   This mode can be used to verify that different versions of CRDS
-  produce the same results relative to a set of saved parameters and best references.
+  3. Context Testing Mode
 
-  a. Regression Capture
+  CRDS bestrefs and the archive reprocessing parameters can also provide a
+  quick way to evaluate a new context and/or residual errors.  It can answer
+  the question "what classes of errors still exist for the latest context with
+  respect to known parameter sets?"
 
-  This sub-mode captures all parameter sets for an instrument updated with the
-  best refs assigned by --new-context::
+  Context testing mode can be run like this::
 
-    %  crds bestrefs --new-context hst_0002.pmap --instrument acs --update-bestrefs --update-pickle --save-pickle old-regression.json
+    % crds bestrefs --check-context --new-context jwst-edit
 
-  b. Regression Test
+  Context testing also requires setting *CRDS_SERVER_URL* to obtain archived
+  dataset parameters.  Note that during JWST pre-I&T the archive database often
+  contains parameter sets related to obsolete test cases.
 
-  This sub-mode plays back captured datasets comparing captured prior results
-  with the current result::
+  Undesired test cases can be weeded out like this::
 
-    %  crds bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
-
-  Unlike reprocessing mode, this mode necessarily runs against all the datasets
-  specified by the data source,  in this case a .json parameters file.
-
-  This mode can also be used to cache database parameter sets to optimize performance
-  or eliminate the possibility of database parameter variation.
+    % crds bestrefs --check-context --new-context jwst-edit --drop-ids JW93135336001_02102_00001.MIRIFUSHORT:JW93135336001_02102_00001.MIRIFUSHORT
 
 ...........
 New Context
@@ -135,6 +149,16 @@ crds.bestrefs always computes best references with respect to a context which
 can be explicitly specified with the --new-context parameter.  If --new-context
 is not specified, the default operational context is determined by consulting
 the CRDS server or looking in the local cache.
+
+...........
+Old Context
+...........
+
+--old-context can be used to specify a second context for which bestrefs
+are dynamically computed; --old-context implies that a bestrefs comparison
+will be made with --new-context.  If --old-context is not specified, it
+defaults to None.  --old-context is only used for context-to-context
+comparisons,  nominally for CRDS repro.
 
 ........................
 Lookup Parameter Sources
@@ -167,51 +191,14 @@ references comparison mode.  Each names the origin of a set of prior
 recommendations and implicitly requests a comparison to the recommendations
 from the newly computed bestrefs determined by --new-context.
 
-::::::::::::::::::
-Context-to-Context
-::::::::::::::::::
+*--old-context CONTEXT* specifies that the reference results should be
+*computed* using the named context.
 
---old-context can be used to specify a second context for which bestrefs
-are dynamically computed; --old-context implies that a bestrefs comparison
-will be made with --new-context.  If --old-context is not specified, it
-defaults to None.
-    
-::::::::::::::::::::::::::::
-Prior Source Recommendations
-::::::::::::::::::::::::::::
-
---compare-source-bestrefs requests that the bestrefs from --new-context be
-compared to the bestrefs which are recorded with the lookup parameter data,
-either in the file headers of data files, or in the catalog.  In both cases
-the prior best references are recorded static values, not dynamically
-computed bestrefs.
-    
-............
-Output Modes
-............
-
-crds.bestrefs supports several output modes for bestrefs and comparison results
-to standard out.
-
-If --print-affected is specified, crds.bestrefs will print out the name of any
-file for which at least one update for one reference type was recommended.
-This is essentially a list of files to be reprocessed with new references::
-
-    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
-        --compare-source-bestrefs --print-affected
-    j8bt05njq_raw.fits
-    j8bt06o6q_raw.fits
-    j8bt09jcq_raw.fits
-    
-............
-Update Modes
-............
-
-crds.bestrefs initially supports one mode for updating the best reference
-recommendations recorded in data files::
-
-    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
-        --compare-source-bestrefs --update-bestrefs
+*--compare-source-bestrefs* directs that prior reference assignments should be
+taken from the same *stored source* which provides matching parameters.  These
+could be from FITS header keywords (e.g. DARKFILE), from live archive
+parameters, or from prior parameter sets that have been stored in CRDS .json or
+Python pickle files.
 
 ......................
 Pickle and .json saves
@@ -219,20 +206,19 @@ Pickle and .json saves
 
 crds.bestrefs can load parameters and past results from a sequence of .pkl or
 .json files using --load-pickles.  These are combined into a single parameter
-source in command line order, nominally in worst-to-best order where later
-files override earlier files.
+source in command line order.
 
 crds.bestrefs can save the parameters obtained from various sources into .pkl
 or .json formatted save files using --save-pickle.  The single combined result
-of multiple pickle or instrument parameter sources is saved.   The file extension
-defines the format used.
+of multiple pickle or instrument parameter sources is saved.  The file
+extension (.json or .pkl) defines the format used.
 
-The preferred  .json format defines a singleton { id: parameters} dictionary/array
-on each line as a series of isolated .json objects.   A less robust single object
-form is also supported { id1: parameters1, id2: parameters2, ...}.
+The preferred .json format defines a singleton { id: parameters}
+dictionary on each line as a series of isolated .json objects.  Strictly
+speaking only each individual line is .json,  but this localizes any errors.
 
 .json format is preferred over .pkl because it is more transparent and robust
-across different versions of Python or typos.
+across different versions of Python.
 
 .........
 Verbosity
@@ -247,11 +233,14 @@ for --verbose.
 Bad Files
 .........
 
-CRDS files can be designated as scientifically invalid on the CRDS server by the CRDS team.   Knowledge of bad files is
-synchronized to remote caches by crds.bestrefs and crds.sync.  By default, attempting to use bad rules or assign bad
-references will generate errors and fail.   crds.bestrefs supports two command line switches, *---allow-bad-rules* and
-*---allow-bad-references* to override the default handling of bad files and enable their use with warnings.  Environment
-variables **CRDS_ALLOW_BAD_RULES** and **CRDS_ALLOW_BAD_REFERENCES** can also be set to 1 to establish warnings rather
+CRDS files can be designated as scientifically invalid on the CRDS server by
+the CRDS team.  Knowledge of bad files is synchronized to remote caches by
+crds.bestrefs and crds.sync.  By default, attempting to use bad rules or assign
+bad references will generate errors and fail.  crds.bestrefs supports two
+command line switches, *---allow-bad-rules* and *---allow-bad-references* to
+override the default handling of bad files and enable their use with warnings.
+Environment variables **CRDS_ALLOW_BAD_RULES** and
+**CRDS_ALLOW_BAD_REFERENCES** can also be set to 1 to establish warnings rather
 than errors as the default.
     """
 
@@ -279,6 +268,16 @@ than errors as the default.
             self.args.stats = True
             self.args.undefined_differences_matter = True
             self.args.na_differences_matter = True
+
+        if self.args.check_context:
+            self.args.dump_unique_errors = True
+            self.args.stats = True
+            self.args.undefined_differences_matter = True
+            self.args.na_differences_matter = True
+            if not self.args.all_errors_file:
+                self.args.all_errors_file = "all_errors.ids"
+            if not self.args.unique_errors_file:
+                self.args.unique_errors_file = "unique_errors.ids"
 
         config.ALLOW_BAD_RULES.set(self.args.allow_bad_rules)
         config.ALLOW_BAD_REFERENCES.set(self.args.allow_bad_references)
@@ -524,12 +523,19 @@ than errors as the default.
         self.add_argument("-g", "--regression", action="store_true",
                           help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
 
+        self.add_argument("--check-context", action="store_true",
+                          help="Abbreviation for --undefined-differences-matter "
+                          "--na-differences-matter --dump-unique-errors --stats")
+
         self.add_argument("--affected-datasets", action="store_true",
                           help="Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter "
                           "--na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats")
 
         self.add_argument("-z", "--optimize-tables", action="store_true",
                           help="If set, apply row-based optimizations to screen out inconsequential table updates.")
+
+        self.add_argument("--eliminate-duplicate-cases", action="store_true",
+                          help="Categorize unique bestrefs results as errors to determine representative test cases...  Replaces normal error counts with coverage counts and ids.")
 
         cmdline.UniqueErrorsMixin.add_args(self)
 
@@ -661,6 +667,7 @@ than errors as the default.
     def main(self):
         """Compute bestrefs for datasets."""
         # Finish __init__() inside --pdb
+        self.eliminate_dups_warning()
         if self.complex_init():
             for i, dataset in enumerate(self.new_headers):
                 if i != 0 and i % 1000 == 0:
@@ -668,6 +675,7 @@ than errors as the default.
                 self.process(dataset)
             self.post_processing()
         self.report_stats()
+        self.eliminate_dups_warning()
         log.verbose(self.get_stat("datasets"), "sources processed", verbosity=5)
         log.verbose(len(self.unkilled_updates), "source updates", verbosity=5)
         log.standard_status()
@@ -802,7 +810,7 @@ than errors as the default.
 
             new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
             update = UpdateTuple(instrument, filekind, None, new)
-            if new_ok or self.args.update_pickle:                
+            if new_ok or self.args.update_pickle or self.args.eliminate_duplicate_cases:
                 self.verbose_with_prefix(dataset, instrument, filekind,
                     "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
                 updates.append(update)
@@ -932,6 +940,9 @@ than errors as the default.
         if self.args.print_affected_details:
             self.print_affected_details()
 
+        if self.args.eliminate_duplicate_cases:
+            self.eliminate_duplicate_cases()
+
         self.dump_unique_errors()
 
     def optimize_tables(self, dataset, updates):
@@ -983,9 +994,7 @@ than errors as the default.
         sys.stdout.flush()
 
     def print_update_stats(self):
-        """Print compound ID, instrument, and affected reference types for every exposure with new best references,
-        one line per exposure.
-        """
+        """Print update counts for each instrument and type."""
         stats = dict()
         for dataset in self.updates:
             for update in self.updates[dataset]:
@@ -1002,6 +1011,32 @@ than errors as the default.
             for update in self.updates[dataset]:
                 print(dataset.lower() + " " + " ".join([str(val).lower() for val in update]))
         sys.stdout.flush()
+
+    def eliminate_duplicate_cases(self):
+        """Special mode to categorize *single context* bestrefs results, good or
+        errors, as unique error strings.
+        """
+        log.reset()
+        self.clear_error_counts()
+        self.eliminate_dups_warning()
+        for dataset in self.updates:
+            updates = self.updates[dataset]
+            self.log_and_track_error(
+                dataset, "any", "any", "COVERAGE:", self.updates_repr(updates))
+        self.eliminate_dups_warning()
+    
+    def eliminate_dups_warning(self):
+        """IFF running with --eliminate-duplicate-cases,  issue a warning that all results are mapped to errors
+        to support coverage categorization as "unique error classes".
+        """
+        if self.args.eliminate_duplicate_cases:
+            log.warning("Running in --eliminate-duplicate-cases mode;  even successful bestrefs are categorized as errors for analysis.")
+
+    def updates_repr(self, updates):
+        """Convert a single dataset's list of update tuples into a string which
+        can be used to define unique CRDS results for coverage purposes.
+        """
+        return str(sorted([tuple(update) for update in updates])).lower()
 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""

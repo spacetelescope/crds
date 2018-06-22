@@ -16,8 +16,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.2.4"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST DMS 7.1.3 release 2"
+__version__ = "7.2.5"   # XXXX  see also ../setup.cfg
+__rationale__ = "JWST DMS 7.2, HSTDP-2018.3"
 
 # ============================================================================
 
