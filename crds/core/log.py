@@ -372,7 +372,7 @@ def exception_trap_logger(func):
             elif reraise or CRDS_EXCEPTION_TRAP == "test":
                 exc_class = keys.pop("exception_class", exc.__class__)
                 keys["end"] = ""
-                raise exc_class(format(*args + (":", str(exc)), **keys))
+                raise exc_class(format(*args + (":", str(exc)), **keys)) from exc
             else:
                 pass # snuff the exception,  func() probably issued a log message.
     return func_on_exception

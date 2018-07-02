@@ -39,7 +39,8 @@ def dataset(filename):
     if data_file.is_dataset(filename):
         return filename
     else:
-        raise ValueError("Parameter " + repr(filename) + " does not appear to be a dataset filename.")
+        raise ValueError("Parameter", repr(filename),
+                         "does not appear to be a dataset filename.")
 
 def reference_file(filename):
     """Ensure `filename` is a reference file."""
@@ -73,7 +74,8 @@ def reference_mapping(filename):
 #    if api.is_known_mapping(filename):
 #        return filename
 #    else:
-#        raise ValueError("Parameter " + repr(filename) + " is not a known CRDS mapping.")
+#        raise ValueError("Parameter", repr(filename),
+#                         "is not a known CRDS mapping.")
 
 def observatory(obs):
     """Verify that `obs` is the name of an observatory and return it."""
@@ -174,11 +176,11 @@ class Script(object):
                 pdb.runctx("self._main()", globals(), locals())
             else:
                 self._main()
-        except KeyboardInterrupt:
+        except KeyboardInterrupt as exc:
             if self.args.pdb:
                 raise
             else:
-                raise KeyboardInterrupt("Interrupted... quitting.")
+                raise KeyboardInterrupt("Interrupted... quitting.") from exc
         return self._exit_status
 
     @property

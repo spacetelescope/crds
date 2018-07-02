@@ -777,10 +777,10 @@ class Selector(object):
         """
         try:
             return float(value)
-        except ValueError:
+        except ValueError as exc:
             raise ValidationError(
-                self.short_name + " Invalid number for " + repr(parname) + 
-                " value=" + repr(value))
+                self.short_name, "Invalid number for", repr(parname),
+                "value =", repr(value)) from exc
 
     def _validate_datetime(self, pars, value):
         """Convert `value` to CRDS timestamp and return it,  else ValidationError.
@@ -790,8 +790,8 @@ class Selector(object):
             return timestamp.reformat_date(value)
         except Exception as exc:
             raise ValidationError(
-                self.short_name + " Invalid date/time format for " + repr(pars) +
-                " value=" + repr(value) + " exception is " + repr(str(exc)))
+                self.short_name, "Invalid date/time format for", repr(pars),
+                "value =", repr(value), "exception is", repr(str(exc))) from exc
 
     def file_matches(self, filename, sofar=()):
         """Return the nested match keys leading to selections of `filename`.
@@ -1988,10 +1988,10 @@ Restore original debug behavior:
             for key in self.keys():
                 try:
                     values = key[i]
-                except IndexError:
-                    raise ValueError("Match tuple " + repr(key) +
-                                     " wrong length for parameter list " + 
-                                     repr(tuple(self._parameters)))
+                except IndexError as exc:
+                    raise ValueError("Match tuple", repr(key),
+                                     "wrong length for parameter list",
+                                     repr(tuple(self._parameters))) from exc
                 if not isinstance(values, tuple):
                     values = [values]
                 for value in values:
@@ -2743,10 +2743,13 @@ class VersionRelation(ComparableMixin):
                 version = match.group(2).strip()
                 try:
                     self.version = ast.literal_eval(version)
-                except ValueError:
-                    raise ValidationError("Invalid version expression in: " + repr(self.relation_str))
+                except ValueError as exc:
+                    raise ValidationError(
+                        "Invalid version expression in:",
+                        repr(self.relation_str)) from exc
             else:
-                raise ValidationError("Illegal version expression in: " + repr(self.relation_str))
+                raise ValidationError(
+                    "Illegal version expression in:", repr(self.relation_str))
             
     def __repr__(self):
         return 'VersionRelation(%s)' % repr(self.relation_str)
@@ -2768,8 +2771,9 @@ class VersionRelation(ComparableMixin):
         elif isinstance(self.version, type(other.version)):
             return True
         else:
-            raise ValidationError("Incompatible version expression types: " + 
-                                  str(self.version) + " and " + str(other.version))
+            raise ValidationError(
+                "Incompatible version expression types:",
+                str(self.version), "and", str(other.version))
 
 class SelectVersionSelector(Selector):
     """SelectVersion chooses from among it's selections based on a number of

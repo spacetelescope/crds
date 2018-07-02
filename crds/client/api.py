@@ -218,7 +218,7 @@ def get_best_references(pipeline_context, header, reftypes=None):
     try:
         bestrefs = S.get_best_references(pipeline_context, dict(header), reftypes)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     # Due to limitations of jsonrpc,  exception handling is kludged in here.
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
@@ -239,7 +239,7 @@ def get_best_references_by_ids(context, dataset_ids, reftypes=None, include_head
     try:
         bestrefs = S.get_best_references_by_ids(context, dataset_ids, reftypes, include_headers)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     return bestrefs
 
 def get_best_references_by_header_map(context, header_map, reftypes=None):
@@ -253,7 +253,7 @@ def get_best_references_by_header_map(context, header_map, reftypes=None):
     try:
         bestrefs_map = S.get_best_references_by_header_map(context, header_map, reftypes)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     return bestrefs_map
 
 
@@ -266,7 +266,7 @@ def get_aui_best_references(date, dataset_ids):
     try:
         bestrefs_map = S.get_aui_best_references(date, dataset_ids)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     return bestrefs_map
 
 @utils.cached
@@ -303,7 +303,7 @@ def get_server_info():
         info["mapping_url"] = info.pop("mapping_url")["unchecked"]
         return info
     except ServiceError as exc:
-        raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc))
+        raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc)) from exc
 
 get_cached_server_info = get_server_info
 
@@ -371,9 +371,10 @@ def push_remote_context(observatory, kind, key, context):
     """
     try:
         return S.push_remote_context(observatory, kind, key, context)
-    except Exception:
+    except Exception as exc:
         raise CrdsRemoteContextError(
-            "Server error setting pipeline context", (observatory, kind, key, context))
+            "Server error setting pipeline context",
+            (observatory, kind, key, context)) from exc
 
 def get_remote_context(observatory, pipeline_name):
     """Get the name of the default context last pushed from `pipeline_name` and
@@ -381,9 +382,10 @@ def get_remote_context(observatory, pipeline_name):
     """
     try:
         return S.get_remote_context(observatory, pipeline_name)
-    except Exception:
+    except Exception as exc:
         raise CrdsRemoteContextError(
-            "Server error resolving context in use by pipeline", (observatory, pipeline_name))
+            "Server error resolving context in use by pipeline",
+            (observatory, pipeline_name)) from exc
 
 # ==============================================================================
 
@@ -570,7 +572,7 @@ class FileCacher(object):
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                     " at CRDS server " + srepr(get_crds_server()) + 
                                     " with mode " + srepr(config.get_download_mode()) +
-                                    " : " + str(exc))
+                                    " : " + str(exc)) from exc
         except:  #  mainly for control-c,  catch it and throw it.
             self.remove_file(localpath)
             raise
@@ -628,7 +630,7 @@ class FileCacher(object):
                 yield data
                 data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
         except Exception as exc:
-            raise CrdsDownloadError("Failed downloading", srepr(filename), "from url", srepr(url), ":", str(exc))
+            raise CrdsDownloadError("Failed downloading", srepr(filename), "from url", srepr(url), ":", str(exc)) from exc
         finally:
             try:
                 infile.close()
