@@ -127,7 +127,7 @@ def list_references(observatory=None, glob_pattern="*"):
     return [str(x) for x in S.list_references(observatory, glob_pattern)]
 
 def get_mapping_url(pipeline_context, mapping):
-    """Returns a URL for the specified pmap, imap, or rmap file.
+    """Returns a URL for the specified pmap, imap, or rmap file.   DEPRECATED
     """
     return S.get_mapping_url(pipeline_context, mapping)
 
@@ -147,13 +147,26 @@ def get_mapping_names(pipeline_context):
     return [str(x) for x in S.get_mapping_names(pipeline_context)]
 
 def get_reference_url(pipeline_context, reference):
-    """Returns a URL for the specified reference file.
+    """Returns a URL for the specified reference file.    DEPRECATED
     """
     return S.get_reference_url(pipeline_context, reference)
     
 def get_url(pipeline_context, filename):
-    """Return the URL for a CRDS reference or mapping file."""
+    """Return the URL for a CRDS reference or mapping file.   DEPRECATED"""
     return S.get_url(pipeline_context, filename)
+
+def get_root_url(filename):
+    """Based on the server info,  return the base URL the server indicates
+    should be used to download `filename`.
+    """
+    info = get_server_info()
+    if config.is_mapping(filename):
+        url = info["mapping_url"][self.observatory]
+    else:
+        url = info["reference_url"][self.observatory]
+    if not url.endswith("/"):
+            url += "/"
+    return url
 
 def get_file_info(pipeline_context, filename):
     """Return a dictionary of CRDS information about `filename`."""
@@ -637,14 +650,7 @@ class FileCacher(object):
 
     def get_url(self, filename):
         """Return the URL used to fetch `filename` of `pipeline_context`."""
-        info = get_server_info()
-        if config.is_mapping(filename):
-            url = info["mapping_url"][self.observatory]
-        else:
-            url = info["reference_url"][self.observatory]
-        if not url.endswith("/"):
-            url += "/"
-        return url + filename
+        return get_root_url(filename) + filename
 
     def verify_file(self, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""

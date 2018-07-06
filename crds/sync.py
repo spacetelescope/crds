@@ -587,11 +587,18 @@ class SyncScript(cmdline.ContextsScript):
         path = rmap.locate_file(file, observatory=self.observatory)
         base = os.path.basename(file)
         n_bytes = int(info["size"])
-        log.verbose(api.file_progress("Verifying", base, path, n_bytes, bytes_so_far, total_bytes, nth_file, total_files),
-                    verbosity=10)
+        
+        # Only output verification info for slow sha1sum checks by default
+        log.verbose(
+            api.file_progress(
+                "Verifying", base, path, n_bytes, bytes_so_far, total_bytes, nth_file, total_files),
+            verbosity=10 if self.args.check_sha1sum else 60)
+        
         if not os.path.exists(path):
             log.error("File", repr(base), "doesn't exist at", repr(path))
             return
+
+        # Checks which force repairs should do if/else to avoid repeat repair
         size = os.stat(path).st_size
         if int(info["size"]) != size:
             self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + srepr(size), 
@@ -604,13 +611,16 @@ class SyncScript(cmdline.ContextsScript):
             elif info["sha1sum"] != sha1sum:
                 self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]), 
                                       "LOCAL=" + repr(sha1sum))
+
         if info["state"] not in ["archived", "operational"]:
             log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
+
         if info["rejected"] != "false":
             log.verbose_warning("File", repr(base), "has been explicitly rejected.", verbosity=60)
             if self.args.purge_rejected:
                 self.remove_files([path], "files")
             return
+
         if info["blacklisted"] != "false":
             log.verbose_warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.",
                                 verbosity=60)
