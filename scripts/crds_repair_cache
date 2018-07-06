@@ -2,7 +2,9 @@
 #
 # usage:
 #
-# % crds_repair_cache [--all | --last N | --range M:N | --up-to-context <ctx> | --after-context <ctx> | --files <specific files...>] [--readonly-cache] [--check-sha1sum] [--purge-references]
+# % crds_repair_cache [--all | --up-to-context <ctx>] [--readonly-cache] [--check-sha1sum] [--purge-references (with great care, see below)]
+#
+# --------------------------------------------------------------------------
 #
 # This script is one approach for refreshing a CRDS cache (most likely TEST
 # pipeline CRDS cache) to make it consistent with the CRDS server cache and
@@ -19,10 +21,10 @@
 #    to TEST with names identical to OPS.  The TEST pipeline CRDS cache will
 #    likewise diverge from the OPS pipeline CRDS cache.
 #
-# 3. At a later time, the CRDS TEST server is refreshed / rebaselined from OPS
-#    to support more current file regressions.  The TEST pipeline's CRDS cache
-#    is then out of sync with the CRDS TEST server, possibly with like named
-#    rules files with different contents and behavior.
+# 3. At a later time, the CRDS TEST server is refreshed / mirrored from OPS to
+#    support more current file regressions.  The TEST pipeline's CRDS cache is
+#    then out of sync with the CRDS TEST server, possibly with like named rules
+#    files with different contents and behavior.
 #
 # 4. This script is run to resynchronize the TEST pipeline's CRDS cache to match
 #    the current contents of the CRDS TEST server (and OPS server).
@@ -31,6 +33,15 @@
 #    to create appropriate default group permissions.  Users should nominally
 #    specify "umask 2" in their interactive shell to cause synced files to be
 #    created with user and group rwx permissions. 
+#
+# Without experimentation, the files/contexts should probably be selected using
+# --all which will guarantee considering all cached files.  Another untested
+# possibility would be to use --up-to-context <context> where <context> is
+# chosen as the last official context mirrored into the TEST string; this
+# should work well with --purge-mappings and --purge-references where the
+# selected contexts are used to define the files to *keep*, not purge.
+# --purge-references should be used with extreme care since it will wipe out
+# the references of every context which is *not* specified.
 #
 # --------------------------------------------------------------------------
 #
@@ -50,6 +61,14 @@ cron_sync --check-sha1sum --repair-files --purge-mappings $*
 # --check-sha1sum so it is possible that residual files from the last
 # TEST cycle will go uncorrected.
 
+# --purge-references is a potential command line option below, but considered
+# to be risky for large pipeline caches.  if specified, the actual repair
+# should be preceded by a dry run using --dry-run or --readonly-cache to get
+# some estimation of what CRDS is going to do before doing it.   Note that
+# if crds_repair_cache is run without an explicit context or file selection,
+# the context will default to the current operational context and when purging,
+# all archived references would be deleted.
+
 cron_sync --repair-files --fetch-references $*
 
 # 
@@ -57,9 +76,4 @@ cron_sync --repair-files --fetch-references $*
 # suspect files,  perhaps all mappings and config,  and then to resynchronize
 # using cron_sync.   The downside of this approach is that it maskes assumptions
 # about cache design and behavior
-#
-# Yet another approach is to use cron_sync only with respect to particular
-# reference files by specifying --files instead of --all or --last N.   This can
-# enable using --check-sha1sum on suspect references within a reasonable amount
-# of time.
 #

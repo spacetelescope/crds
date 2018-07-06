@@ -13,6 +13,8 @@ pysh.usage("""[-d] [-v] [-h] [--print-affected] <crds_context> <dataset_file(s)>
 -h                     help,  print this help
 --print-affected       print files with updated bestrefs
 
+NOTE:   DEPRECATED,  see safe_bestrefs instead
+
 Updates dataset FITS files with best references recommended by <crds_context>.
 
 <crds_context> is a CRDS context file, explicitly named e.g. hst_0004.pmap

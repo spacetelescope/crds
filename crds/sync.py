@@ -603,8 +603,8 @@ class SyncScript(cmdline.ContextsScript):
         if int(info["size"]) != size:
             self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + srepr(size), 
                                   "CRDS size=" + srepr(info["size"]))
-        elif self.args.check_sha1sum:
-            log.verbose("Computing checksum for", repr(base), "of size", repr(size), verbosity=100)
+        elif self.args.check_sha1sum or config.is_mapping(base):
+            log.verbose("Computing checksum for", repr(base), "of size", repr(size), verbosity=60)
             sha1sum = utils.checksum(path)
             if info["sha1sum"] == "none":
                 log.warning("CRDS doesn't know the checksum for", repr(base))
@@ -633,7 +633,7 @@ class SyncScript(cmdline.ContextsScript):
         """Issue an error message and repair `file` if requested by command line args."""
         log.error(*args, **keys)
         if self.args.repair_files:
-            if config.writable_cache_or_info("Skipping remove and dump of", repr(file)):
+            if config.writable_cache_or_info("Skipping remove and re-download of", repr(file)):
                 log.info("Repairing file", repr(file))
                 utils.remove(file, observatory=self.observatory)
                 self.dump_files(self.default_context, [file]) 

@@ -155,15 +155,17 @@ def get_url(pipeline_context, filename):
     """Return the URL for a CRDS reference or mapping file.   DEPRECATED"""
     return S.get_url(pipeline_context, filename)
 
-def get_root_url(filename):
+def get_root_url(filename, observatory=None):
     """Based on the server info,  return the base URL the server indicates
     should be used to download `filename`.
     """
+    if observatory is None:
+        observatory = get_default_observatory()
     info = get_server_info()
     if config.is_mapping(filename):
-        url = info["mapping_url"][self.observatory]
+        url = info["mapping_url"][observatory]
     else:
-        url = info["reference_url"][self.observatory]
+        url = info["reference_url"][observatory]
     if not url.endswith("/"):
             url += "/"
     return url
@@ -650,7 +652,7 @@ class FileCacher(object):
 
     def get_url(self, filename):
         """Return the URL used to fetch `filename` of `pipeline_context`."""
-        return get_root_url(filename) + filename
+        return get_root_url(filename, self.observatory) + filename
 
     def verify_file(self, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""
