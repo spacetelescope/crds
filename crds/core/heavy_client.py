@@ -65,7 +65,7 @@ import fnmatch
 from . import rmap, log, utils, config, python23
 from .constants import ALL_OBSERVATORIES
 from .log import srepr
-from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError
+from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError, CrdsDownloadError
 from crds.client import api
 # import crds  forward
 
@@ -310,8 +310,8 @@ def check_parameters(header):
         try:
             header[key]
         except Exception as exc:
-            raise ValueError("Can't fetch mapping key " + repr(key) + 
-                             " from parameters: " + repr(str(exc)))
+            raise ValueError("Can't fetch mapping key", repr(key),
+                             "from parameters:", repr(str(exc))) from exc
         if not isinstance(header[key], (python23.string_types, float, int, bool)):
             log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
             del header[key]
@@ -355,7 +355,8 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
             api.dump_mappings(context, ignore_cache=ignore_cache)
         except CrdsError as exc:
             traceback.print_exc()
-            raise CrdsNetworkError("Failed caching mapping files: " + str(exc))
+            raise CrdsDownloadError(
+                "Failed caching mapping files:", str(exc)) from exc
         return hv_best_references(context, parameters, reftypes)
 
 # =============================================================================

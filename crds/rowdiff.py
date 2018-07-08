@@ -94,7 +94,7 @@ def get_hdulist(fits_reference):
             result = fitsopen(fits_reference)
         except Exception as exc:
             raise IOError("error opening file (%s): %s: %s" %
-                          (fits_reference, exc.__class__.__name__, exc.args[0]))
+                          (fits_reference, exc.__class__.__name__, exc.args[0])) from exc
     return result
 
 

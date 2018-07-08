@@ -92,8 +92,10 @@ def month_num(month, initial_date=None):
     """Convert a month name to a month number."""
     try:
         return  MONTHS.index(month[:3].capitalize()) + 1
-    except ValueError:
-        raise ValueError("Invalid month value " + repr(month) + " in base date " + repr(initial_date))
+    except ValueError as exc:
+        raise ValueError(
+            "Invalid month value", repr(month), "in base date",
+            repr(initial_date)) from exc
     
 def parse_alphabetical_date(date):
     """Parse date/time strings with alphabetical months into datetime's.
@@ -366,8 +368,9 @@ class Sybdate(DateParser):
         items = match.groupdict()
         try:
             items["month"] = month_num(match.group("month"))
-        except IndexError:
-            raise ValueError("Illegal month " + repr(match.group("month")))
+        except IndexError as exc:
+            raise ValueError(
+                "Illegal month", repr(match.group("month"))) from exc
         if items["meridian"]:
             hour = int(items["hour"])
             if items["meridian"].lower() == "pm":
@@ -435,8 +438,8 @@ class Anydate(DateParser):
             pass
         try:
             return Sybdate.get_datetime(datestr)
-        except ValueError:
-            raise ValueError("Invalid Anydate format " + repr(datestr))
+        except ValueError as exc:
+            raise ValueError("Invalid Anydate format", repr(datestr)) from exc
     
 
 #class Shortdate(DateParser):
@@ -481,7 +484,7 @@ def is_datetime(datetime_str):
     try:
         parse_date(datetime_str)
     except ValueError as exc:
-        raise exceptions.CrdsError(str(exc))
+        raise exceptions.CrdsError(str(exc)) from exc
     return datetime_str
 
 
@@ -494,13 +497,14 @@ def reformat_useafter(rmapping, header):
     useafter = str(header["USEAFTER"])
     try:
         return reformat_date(useafter)
-    except Exception:
+    except Exception as exc:
         if config.ALLOW_BAD_USEAFTER:
             log.warning("Can't parse USEAFTER =", repr(useafter),
                         "in", repr(rmapping.filename), "faking as '1900-01-01T00:00:00'")
             return reformat_date("1900-01-01T00:00:00")
         else:
-            raise exceptions.InvalidUseAfterFormat("Bad USEAFTER time format =", repr(useafter))
+            raise exceptions.InvalidUseAfterFormat(
+                "Bad USEAFTER time format =", repr(useafter)) from exc
 
 # ============================================================================
 

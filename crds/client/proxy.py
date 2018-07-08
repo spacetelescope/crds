@@ -134,7 +134,7 @@ class ServiceCallBinding(object):
 
         try:
             rval = json.loads(response)
-        except Exception:
+        except Exception as exc:
             log.warning("Invalid CRDS jsonrpc response:\n", response)
             raise
         
@@ -155,7 +155,7 @@ class ServiceCallBinding(object):
             channel = python23.urlopen(url, parameters)
             return channel.read().decode("utf-8")
         except Exception as exc:
-            raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
+            raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc)) from exc
 
  
 

@@ -388,7 +388,7 @@ class FloatValidator(NumericalValidator):
     def _check_value(self, filename, value):
         try:
             NumericalValidator._check_value(self, filename, value)
-        except ValueError:   # not a range or exact match,  handle fp fuzz
+        except ValueError as exc:   # not a range or exact match,  handle fp fuzz
             if self.is_range: # XXX bug: boundary values don't handle fuzz
                 raise
             for possible in self._values:
@@ -398,7 +398,7 @@ class FloatValidator(NumericalValidator):
                     return
             msg = " ".join([self.type_name, repr(value), "is not within +-",
                             repr(self.epsilon), "of any of", repr(self._values)])
-            raise ValueError(msg)
+            raise ValueError(msg) from exc
  
 # ----------------------------------------------------------------------------
 
