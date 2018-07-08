@@ -309,8 +309,8 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         """Return the segment of dataset ids which surrounds id `source`."""
         try:
             index = self.sources.index(source) // self.segment_size
-        except ValueError:
-            raise CrdsError("Unknown dataset id " + repr(source))
+        except ValueError as exc:
+            raise CrdsError("Unknown dataset id " + repr(source)) from exc
         lower = index * self.segment_size
         upper = (index + 1) * self.segment_size
         segment_ids = self.sources[lower:upper]
