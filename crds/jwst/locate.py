@@ -73,7 +73,7 @@ def get_data_model_flat_dict(filepath):
         with datamodels.open(filepath) as d_model:
             flat_dict = d_model.to_flat_dict(include_arrays=False)
     except Exception as exc:
-        raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'"))
+        raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'")) from exc
     return flat_dict
     
 # =======================================================================

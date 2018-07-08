@@ -276,9 +276,10 @@ def locate_dir(instrument, mode=None):
         except KeyError:
             try:
                 rootdir = os.environ[prefix[:-1]]
-            except KeyError:
-                raise KeyError("Reference location not defined for " + repr(instrument) + 
-                               ".  Did you configure " + repr(prefix) + "?")
+            except KeyError as exc:
+                raise KeyError(
+                    "Reference location not defined for", repr(instrument),
+                    ".  Did you configure", repr(prefix) + "?") from exc
     elif mode == "instrument":   # use simple names inside CRDS cache.
         rootdir = os.path.join(crds_refpath, instrument)
         refdir = os.path.join(crds_refpath, prefix[:-1])
