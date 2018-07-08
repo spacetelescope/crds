@@ -587,30 +587,40 @@ class SyncScript(cmdline.ContextsScript):
         path = rmap.locate_file(file, observatory=self.observatory)
         base = os.path.basename(file)
         n_bytes = int(info["size"])
-        log.verbose(api.file_progress("Verifying", base, path, n_bytes, bytes_so_far, total_bytes, nth_file, total_files),
-                    verbosity=10)
+        
+        # Only output verification info for slow sha1sum checks by default
+        log.verbose(
+            api.file_progress(
+                "Verifying", base, path, n_bytes, bytes_so_far, total_bytes, nth_file, total_files),
+            verbosity=10 if self.args.check_sha1sum else 60)
+        
         if not os.path.exists(path):
             log.error("File", repr(base), "doesn't exist at", repr(path))
             return
+
+        # Checks which force repairs should do if/else to avoid repeat repair
         size = os.stat(path).st_size
         if int(info["size"]) != size:
             self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + srepr(size), 
                                   "CRDS size=" + srepr(info["size"]))
-        elif self.args.check_sha1sum:
-            log.verbose("Computing checksum for", repr(base), "of size", repr(size), verbosity=100)
+        elif self.args.check_sha1sum or config.is_mapping(base):
+            log.verbose("Computing checksum for", repr(base), "of size", repr(size), verbosity=60)
             sha1sum = utils.checksum(path)
             if info["sha1sum"] == "none":
                 log.warning("CRDS doesn't know the checksum for", repr(base))
             elif info["sha1sum"] != sha1sum:
                 self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]), 
                                       "LOCAL=" + repr(sha1sum))
+
         if info["state"] not in ["archived", "operational"]:
             log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
+
         if info["rejected"] != "false":
             log.verbose_warning("File", repr(base), "has been explicitly rejected.", verbosity=60)
             if self.args.purge_rejected:
                 self.remove_files([path], "files")
             return
+
         if info["blacklisted"] != "false":
             log.verbose_warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.",
                                 verbosity=60)
@@ -623,7 +633,7 @@ class SyncScript(cmdline.ContextsScript):
         """Issue an error message and repair `file` if requested by command line args."""
         log.error(*args, **keys)
         if self.args.repair_files:
-            if config.writable_cache_or_info("Skipping remove and dump of", repr(file)):
+            if config.writable_cache_or_info("Skipping remove and re-download of", repr(file)):
                 log.info("Repairing file", repr(file))
                 utils.remove(file, observatory=self.observatory)
                 self.dump_files(self.default_context, [file]) 

@@ -2,7 +2,7 @@
 
 # usage:  cron_sync
 #
-#    options:  --check-files --check-sha1sum --fetch-references [context selection]
+#    options:  --check-sha1sum --fetch-references [context selection]
 #
 #    example context selections:
 #        nothing ==  hst-operational
@@ -10,29 +10,37 @@
 #        --last 20
 #        --all
 #
+#   nominal extra switches:    --all --fetch-references --verbose
+#
 #   requires:  
 #        CRDS_PATH        (cache directory)
 #        CRDS_SERVER_URL  (server synced from)
 #        CRDS_LOCKS       (locks directory)
 #
-# This script is intended to be run in a cron job at a relatively high
-# rate, say once every 30 minutes.  
+# The cron_sync script wraps the crds sync tool with a file lock designed to
+# keep multiple cron_sync jobs from updating a CRDS cache at the same time.  It
+# was designed as a cron job, but based on conservative pipeline operations, is
+# run manually in the pipeline by an operator.  cron_sync is further wrapped in
+# the pipeline with shim shell script to configure the environment and Python
+# stack.
 #
-# The contexts which are selected for syncing should be a sufficiently large recent
-# group of contexts that cron_sync is guaranteed to be run between the last and any
-# other preceding context in the group,  i.e.  Set Context is called twice for that
-# group of contexts,  guaranteeing that no new files are missed.   --all is the safest
-# absolute setting but becomes slower as more contexts are created.   --last 20 seemed
-# like a good fixed lenth worst case setting which has constant run time.
+# The fundamental task performed by CRDS syncs is to download new rules and
+# reference files to a local cache.  CRDS sync further maintains a few cached
+# configuration properties like knowledge of bad files and the default
+# contexts.  Because deliveries can range up to 50G of files (at this time),
+# downloads can take lengthy intervals and can exceed the period of a
+# reasonable cron job...  creating the need to block concurrent syncs with the
+# lock.  A cron_sync which fails to obtain the lock just exits.
 #
 # --fetch-references is required to download references to the CRDS cache.
 # Omitting --fetch-references, rapid --check-sha1sum is possible for only the
-# selected contexts / rules, not all their references.  It is not uncommon for
-# different versions of rules to have different contents but identical lengths.
+# selected contexts / rules and not all their references.  It is not uncommon
+# for different versions of rules to have different contents but identical
+# lengths.
 #
-# --check-files is a good idea, it checks length, file status (bad file,
-# undelivered, etc) and file existence in cache.  --verbose, not mentioned,
-# is optional but will produce checking output for 20k+ files.
+# --check-files checks length, file status (bad file, undelivered, etc) and
+# file existence in cache.  --verbose, not mentioned, is optional but will
+# produce checking output for 20k+ files.
 #
 # --check-sha1sum is only suitable for periodic cache checks or without
 # --fetch-references, it requires around 8 hours to check all the references.
@@ -57,7 +65,12 @@ export CRDS_READONLY_CACHE=0
 # Use a plugin downloader,  defaults to wget
 export CRDS_DOWNLOAD_MODE=plugin
 
-#
+# For download errors, wait 10 seconds and try again, up to 60 times.
+# This is primarily designed to support 10 minute server outages without
+# sync failures.
+export CRDS_CLIENT_RETRY_COUNT=60
+export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
+
 # CUSTOM PLUGINS: CRDS will run another program like this filling in for
 # ${SOURCE_URL} and ${OUTPUT_PATH}.  Use that syntax exactly.   You could
 # e.g. use axel instead of wget providing your own command line template.
@@ -65,6 +78,29 @@ export CRDS_DOWNLOAD_MODE=plugin
 # export CRDS_DOWNLOAD_PLUGIN="/usr/bin/wget --no-check-certificate --quiet ${SOURCE_URL}  -O ${OUTPUT_PATH}"
 #
 
+# -------------------------------------------------------------------------
+#
+# NOTE: to ensure atomic mutually supporting updates, multiple cache sync
+# operations should preformed inside a single locking critical region
+# implemented here.  In general, if an operational context is synced into the
+# pipeline, supporting reference files should be synced first to ensure that
+# they're available as soon as the pipeline starts using the new context.
+#
+# A potential pitfall in this regard would be to call cron_sync after updating
+# the operational context on the server but without --fetch-references.  In
+# that instance, CRDS will sync the required rules files but any new supporting
+# references will not be available in the pipeline CRDS cache.
+#
+# There are two work arounds for the pitfall:
+#
+# 1. Only run one sync, and use --fetch-references.  crds sync updates context last.
+#
+# 2. Do a pre-sync,  select a new context on the CRDS server,  do a post-sync.
+#
+# This customizable behavior is done this way to support downloading partial
+# sets of reference files (e.g. demand based on data) supported by complete
+# sets of mappings which are much faster to download or check.
+#
 # -------------------------------------------------------------------------
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks,  cron collision
 
@@ -74,13 +110,7 @@ export CRDS_DOWNLOAD_MODE=plugin
     exit 1
   else
      echo "cron_sync: INFO: obtained crds.sync.lock"
-    
-     # sync doesn't block bestrefs, syncs rules and references,  doesn't update context / config
-     export CRDS_CLIENT_RETRY_COUNT=60
-     export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
-     # override pipeline global readonly setting.
-     export CRDS_READONLY_CACHE=0
-     crds sync $* --stats # nominally --last 10 --fetch-references
+     crds sync $* --check-files --stats # nominally --all --fetch-references --verbose
      exit $?
   fi
     
@@ -93,7 +123,7 @@ exit $status
 #   Summarizing overall design of sync + bestrefs in pipelines:
 #
 #   crds.sync.lock ensures that no two cron_syncs run concurrently.
-#
+#   cron_sync blocks other instances of itself
 #   cron_sync does not block bestrefs
 #   bestrefs does not block bestrefs
 #   sync transfers files then updates the config area last
