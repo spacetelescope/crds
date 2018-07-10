@@ -362,7 +362,7 @@ class Sybdate(DateParser):
             r"(?P<meridian>am|pm|AM|PM)?" + \
             r")?")
 
-    should_be ="e.g. Mar 21 2001 12:00:00 am"
+    should_be ="Mar 21 2001 12:00:00 am"
 
     @classmethod
     def _get_date_dict(cls, match):
@@ -405,7 +405,7 @@ class Jwstdate(DateParser):
             r"(?P<minute>\d\d):" + \
             r"(?P<second>\d\d))?$")
 
-    should_be = "e.g. 2018-12-22T00:00:00"
+    should_be = "2018-12-22T00:00:00"
 
     @classmethod
     def _get_date_dict(cls, match):

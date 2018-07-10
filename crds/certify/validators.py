@@ -208,13 +208,6 @@ class Validator(object):
             log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
         elif presence in ["S","F","A"]:
             log.verbose("Conditional SUBARRAY parameter is not defined.")
-            return "UNDEFINED"
-        elif self.conditionally_required:
-            if header and self.is_applicable(header):
-                raise MissingKeywordError("Missing", self._keytype_descr, repr(self.name), 
-                                          "required by condition", self.info.presence)
-            else:
-                return "UNDEFINED"
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      repr(self.info.presence))
@@ -426,7 +419,7 @@ class DoubleValidator(FloatValidator):
 # ----------------------------------------------------------------------------
 
 class PedigreeValidator(KeywordValidator):
-    """Validates &PREDIGREE fields."""
+    """Validates &PEDIGREE fields."""
 
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
 
@@ -444,6 +437,7 @@ class PedigreeValidator(KeywordValidator):
                 pedigree = value
                 start = stop = None
         pedigree = pedigree.upper()
+        rval = super(PedigreeValidator, self)._check_value(filename, pedigree)
         if start is not None and stop is not None:
             if "T" in start+stop:  # can't appear in either string
                 raise ValueError("Invalid PEDIGREE format: " + repr(value))
@@ -451,11 +445,14 @@ class PedigreeValidator(KeywordValidator):
             stop_dt = self.validate_date(stop)
             if not (start_dt <= stop_dt):
                 raise ValueError("PEDIGREE date order invalid: " + repr(start) + " > " + repr(stop))
-        # else:
-        #     if pedigree == "INFLIGHT":
-        #         raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
-        return super(PedigreeValidator, self)._check_value(filename, pedigree)
+        elif pedigree == "INFLIGHT":
+            self.handle_missing_inflight_dates()
+        self.verbose(filename, (start, stop), "are valid and ordered dates.")
+        return rval
 
+    def handle_missing_inflight_dates(self):
+        """By default (HST) INFLIGHT start + stop dates are not required."""
+    
     def validate_date(self, datestr):
         """Return the datetime corresponding to an HST INFLIGHT PEDIGREE start or stop.
         e.g.  '25/02/1996'  --> datetime()
@@ -467,14 +464,17 @@ class PedigreeValidator(KeywordValidator):
     
 class JwstpedigreeValidator(PedigreeValidator):
     
-    """Validates &JWSTPREDIGREE fields."""
+    """Validates &JWSTPEDIGREE fields."""
+
+    _values = ["INFLIGHT", "GROUND", "DUMMY", "SIMULATION"]
+
+    def handle_missing_inflight_dates(self):
+        """JWST INFLIGHT PEDIGREE must supply start and end dates."""
+        raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
 
     def validate_date(self, datestr):
         """Return the datetime corresponding to a JWST INFLIGHT PEDIGREE start or stop.
-        
         e.g. '2018-01-30'   -->  datetime()
-
-        >>> JwstpedigreeValidator.validate()
         """
         return timestamp.get_dash_date(datestr)
         
