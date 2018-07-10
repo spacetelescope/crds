@@ -127,7 +127,7 @@ def list_references(observatory=None, glob_pattern="*"):
     return [str(x) for x in S.list_references(observatory, glob_pattern)]
 
 def get_mapping_url(pipeline_context, mapping):
-    """Returns a URL for the specified pmap, imap, or rmap file.
+    """Returns a URL for the specified pmap, imap, or rmap file.   DEPRECATED
     """
     return S.get_mapping_url(pipeline_context, mapping)
 
@@ -147,13 +147,28 @@ def get_mapping_names(pipeline_context):
     return [str(x) for x in S.get_mapping_names(pipeline_context)]
 
 def get_reference_url(pipeline_context, reference):
-    """Returns a URL for the specified reference file.
+    """Returns a URL for the specified reference file.    DEPRECATED
     """
     return S.get_reference_url(pipeline_context, reference)
     
 def get_url(pipeline_context, filename):
-    """Return the URL for a CRDS reference or mapping file."""
+    """Return the URL for a CRDS reference or mapping file.   DEPRECATED"""
     return S.get_url(pipeline_context, filename)
+
+def get_root_url(filename, observatory=None):
+    """Based on the server info,  return the base URL the server indicates
+    should be used to download `filename`.
+    """
+    if observatory is None:
+        observatory = get_default_observatory()
+    info = get_server_info()
+    if config.is_mapping(filename):
+        url = info["mapping_url"][observatory]
+    else:
+        url = info["reference_url"][observatory]
+    if not url.endswith("/"):
+            url += "/"
+    return url
 
 def get_file_info(pipeline_context, filename):
     """Return a dictionary of CRDS information about `filename`."""
@@ -218,16 +233,18 @@ def get_best_references(pipeline_context, header, reftypes=None):
     try:
         bestrefs = S.get_best_references(pipeline_context, dict(header), reftypes)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     # Due to limitations of jsonrpc,  exception handling is kludged in here.
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
-            if refname == "NOT FOUND n/a":
-                log.verbose("Reference type", srepr(filetype), "not applicable.", verbosity=80)
+            if refname.upper() == "NOT FOUND N/A":
+                log.verbose("Reference type", srepr(filetype),
+                            "not applicable.", verbosity=80)
             else:
-                raise CrdsLookupError("Error determining best reference for " + 
-                                      srepr(filetype) + " = " + 
-                                      str(refname)[len("NOT FOUND"):])
+                exc_str = str(refname)[len("NOT FOUND"):]
+                raise CrdsLookupError(
+                    "Error determining best reference for", 
+                    srepr(filetype), "=", repr(exc_str))
     return bestrefs
 
 def get_best_references_by_ids(context, dataset_ids, reftypes=None, include_headers=False):
@@ -239,7 +256,7 @@ def get_best_references_by_ids(context, dataset_ids, reftypes=None, include_head
     try:
         bestrefs = S.get_best_references_by_ids(context, dataset_ids, reftypes, include_headers)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     return bestrefs
 
 def get_best_references_by_header_map(context, header_map, reftypes=None):
@@ -253,7 +270,7 @@ def get_best_references_by_header_map(context, header_map, reftypes=None):
     try:
         bestrefs_map = S.get_best_references_by_header_map(context, header_map, reftypes)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     return bestrefs_map
 
 
@@ -266,7 +283,7 @@ def get_aui_best_references(date, dataset_ids):
     try:
         bestrefs_map = S.get_aui_best_references(date, dataset_ids)
     except Exception as exc:
-        raise CrdsLookupError(str(exc))
+        raise CrdsLookupError(str(exc)) from exc
     return bestrefs_map
 
 @utils.cached
@@ -303,7 +320,9 @@ def get_server_info():
         info["mapping_url"] = info.pop("mapping_url")["unchecked"]
         return info
     except ServiceError as exc:
-        raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc))
+        raise CrdsNetworkError(
+            "network connection failed:", srepr(get_crds_server()),
+            ":", srepr(exc)) from exc
 
 get_cached_server_info = get_server_info
 
@@ -371,9 +390,10 @@ def push_remote_context(observatory, kind, key, context):
     """
     try:
         return S.push_remote_context(observatory, kind, key, context)
-    except Exception:
+    except Exception as exc:
         raise CrdsRemoteContextError(
-            "Server error setting pipeline context", (observatory, kind, key, context))
+            "Server error setting pipeline context",
+            (observatory, kind, key, context)) from exc
 
 def get_remote_context(observatory, pipeline_name):
     """Get the name of the default context last pushed from `pipeline_name` and
@@ -381,9 +401,10 @@ def get_remote_context(observatory, pipeline_name):
     """
     try:
         return S.get_remote_context(observatory, pipeline_name)
-    except Exception:
+    except Exception as exc:
         raise CrdsRemoteContextError(
-            "Server error resolving context in use by pipeline", (observatory, pipeline_name))
+            "Server error resolving context in use by pipeline",
+            (observatory, pipeline_name)) from exc
 
 # ==============================================================================
 
@@ -567,11 +588,11 @@ class FileCacher(object):
             return proxy.apply_with_retries(self.download_core, name, localpath)
         except Exception as exc:
             self.remove_file(localpath)
-            raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
-                                    " from context " + srepr(self.pipeline_context) + 
-                                    " at CRDS server " + srepr(get_crds_server()) + 
-                                    " with mode " + srepr(config.get_download_mode()) +
-                                    " : " + str(exc))
+            raise CrdsDownloadError(
+                "Error fetching data for", srepr(name),
+                "at CRDS server", srepr(get_crds_server()),
+                "with mode", srepr(config.get_download_mode()),
+                ":", str(exc)) from exc
         except:  #  mainly for control-c,  catch it and throw it.
             self.remove_file(localpath)
             raise
@@ -611,7 +632,9 @@ class FileCacher(object):
             if status == 2:
                 raise KeyboardInterrupt("Interrupted plugin.")
             else:
-                raise CrdsDownloadError("Plugin download fail status = {} with command: {}".format(status, srepr(plugin_cmd)))
+                raise CrdsDownloadError(
+                    "Plugin download fail status =", repr(status),
+                    "with command:", srepr(plugin_cmd))
         
     def get_data_http(self, filename):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
@@ -629,7 +652,9 @@ class FileCacher(object):
                 yield data
                 data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
         except Exception as exc:
-            raise CrdsDownloadError("Failed downloading", srepr(filename), "from url", srepr(url), ":", str(exc))
+            raise CrdsDownloadError(
+                "Failed downloading", srepr(filename),
+                "from url", srepr(url), ":", str(exc)) from exc
         finally:
             try:
                 infile.close()
@@ -638,31 +663,27 @@ class FileCacher(object):
 
     def get_url(self, filename):
         """Return the URL used to fetch `filename` of `pipeline_context`."""
-        info = get_server_info()
-        if config.is_mapping(filename):
-            url = info["mapping_url"][self.observatory]
-        else:
-            url = info["reference_url"][self.observatory]
-        if not url.endswith("/"):
-            url += "/"
-        return url + filename
+        return get_root_url(filename, self.observatory) + filename
 
     def verify_file(self, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""
         remote_info = self.info_map[filename]
         local_length = os.stat(localpath).st_size
         original_length = long(remote_info["size"])
-        if original_length != local_length:
-            raise CrdsDownloadError("downloaded file size " + str(local_length) +
-                                    " does not match server size " + str(original_length))
+        if original_length != local_length and config.get_length_flag():
+            raise CrdsDownloadError(
+                "downloaded file size", local_length,
+                "does not match server size", original_length)
         if not config.get_checksum_flag():
             log.verbose("Skipping sha1sum with CRDS_DOWNLOAD_CHECKSUMS=False")
         elif remote_info["sha1sum"] not in ["", "none"]:
             original_sha1sum = remote_info["sha1sum"]
             local_sha1sum = utils.checksum(localpath)
             if original_sha1sum != local_sha1sum:
-                raise CrdsDownloadError("downloaded file " + repr(filename) + " sha1sum " + repr(local_sha1sum) +
-                                        " does not match server sha1sum " + repr(original_sha1sum))
+                raise CrdsDownloadError(
+                    "downloaded file", srepr(filename),
+                    "sha1sum", srepr(local_sha1sum),
+                    "does not match server sha1sum", srepr(original_sha1sum))
         else:
             log.verbose("Skipping sha1sum check since server doesn't know it.")
 
@@ -703,7 +724,7 @@ def dump_references3(pipeline_context, baserefs=None, ignore_cache=False, raise_
     baserefs = list(baserefs)
     for refname in baserefs:
         if "NOT FOUND" in refname:
-            log.verbose("Skipping " + srepr(refname))
+            log.verbose("Skipping " + srepr(refname), verbosity=70)
             baserefs.remove(refname)
     baserefs = sorted(set(baserefs))
     return FileCacher(pipeline_context, ignore_cache, raise_exceptions).get_local_files(baserefs)
@@ -781,16 +802,18 @@ def _get_cache_filelist_and_report_errors(bestrefs):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
                     log.verbose("Reference type", srepr(filetype),
-                                "NOT FOUND.  Skipping reference caching/download.")
+                                "NOT FOUND.  Skipping reference caching/download.", verbosity=70)
                 else:
-                    last_error = CrdsLookupError("Error determining best reference for",
-                                                 srepr(filetype), " = ", str(refname)[len("NOT FOUND"):])
+                    last_error = CrdsLookupError(
+                        "Error determining best reference for",
+                        srepr(filetype), " = ", str(refname)[len("NOT FOUND"):])
                     log.error(str(last_error))
             else:
                 log.verbose("Reference type", srepr(filetype), "defined as", srepr(refname))
                 wanted.append(refname)
         else:
-            last_error = CrdsLookupError("Unhandled bestrefs return value type for " + srepr(filetype))
+            last_error = CrdsLookupError(
+                "Unhandled bestrefs return value type for", srepr(filetype))
             log.error(str(last_error))
     if last_error is not None:
         raise last_error
@@ -813,7 +836,8 @@ def _squash_unicode_in_bestrefs(bestrefs, localrefs):
             else:
                 refs[str(filetype)] = str(localrefs[refname])
         else:  # can't really get here.
-            raise CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
+            raise CrdsLookupError(
+                "Unhandled bestrefs return value type for", srepr(filetype))
     return refs
 
 # =====================================================================================================

@@ -11,18 +11,13 @@ META.INSTRUMENT.NAME        H   C   R   MIRI
 
 META.INSTRUMENT.DETECTOR    H   C   O   MIRIFULONG,MIRIFUSHORT,MIRIMAGE,ANY,N/A
 
-META.EXPOSURE.TYPE          H   C   O   MIR_IMAGE,MIR_TACQ,MIR_LYOT,MIR_4QPM,\
-                                        MIR_LRS-FIXEDSLIT,MIR_LRS-SLITLESS,\
-                                        MIR_MRS,MIR_DARK,MIR_FLATIMAGE,\
-                                        MIR_FLATMRS,MIR_FLAT-IMAGE,\
-                                        MIR_FLAT-MRS,MIR_CORONCAL,ANY,N/A
+META.EXPOSURE.TYPE          H   C   O   MIR_4QPM,MIR_CORONCAL,MIR_DARK,MIR_FLAT-IMAGE,MIR_FLATIMAGE,\
+                                        MIR_FLAT-MRS,MIR_FLATMRS,MIR_IMAGE,MIR_LRS-FIXEDSLIT,\
+                                        MIR_LRS-SLITLESS,MIR_LYOT,MIR_MRS,MIR_TACQ,ANY,N/A
 
-META.INSTRUMENT.CHANNEL     H   C   O   1,2,3,4,12,34,ANY,N/A
+META.INSTRUMENT.CHANNEL     H   C   O   1,2,3,4,12,34,1234,123,234,ANY,N/A
 
-META.INSTRUMENT.BAND        H   C   O   SHORT,MEDIUM,LONG,ANY,N/A,\
-                                        SHORT-MEDIUM,MEDIUM-SHORT,\
-                                        SHORT-LONG,LONG-SHORT,\
-                                        MEDIUM-LONG,LONG-MEDIUM
+META.INSTRUMENT.BAND        H   C   O   SHORT,MEDIUM,LONG,MULTIPLE,ANY,N/A
 
 META.SUBARRAY.XSTART        H   I   O  1:1032
 META.SUBARRAY.YSTART        H   I   O  1:1024

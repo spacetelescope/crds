@@ -19,6 +19,23 @@ from crds.core import python23, exceptions, log, config
 
 # ============================================================================
 
+def init_urlopen():
+    """Call urlopen() once at import time to prepare for possible calls within
+    multiprocessing processes.  This is magic which avoids a segfault on OS-X
+    when urlopen() is called for the first time in a subprocess.
+
+    %time showed this at around 2 msec on OS-X 10.11.67 El Capitain,  fine for
+    a CRDS client unconditional one-off.
+    """
+    try:
+        python23.urlopen('')
+    except Exception:
+        pass
+
+init_urlopen()
+
+# ============================================================================
+
 def apply_with_retries(func, *pars, **keys):
     """Apply function func() as f(*pargs, **keys) and return the result. Retry on any exception as defined in config.py"""
     retries = config.get_client_retry_count()
@@ -27,8 +44,8 @@ def apply_with_retries(func, *pars, **keys):
         try:
             return func(*pars, **keys)
         except Exception as exc:
-            log.verbose("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
-            log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
+            log.verbose_warning("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
+            log.verbose_warning("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
             time.sleep(delay)
             exc2 = exc
     raise exc2
@@ -117,7 +134,7 @@ class ServiceCallBinding(object):
 
         try:
             rval = json.loads(response)
-        except Exception:
+        except Exception as exc:
             log.warning("Invalid CRDS jsonrpc response:\n", response)
             raise
         
@@ -138,7 +155,7 @@ class ServiceCallBinding(object):
             channel = python23.urlopen(url, parameters)
             return channel.read().decode("utf-8")
         except Exception as exc:
-            raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
+            raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc)) from exc
 
  
 
@@ -153,7 +170,7 @@ class ServiceCallBinding(object):
             if isinstance(result, (python23.string_types,int,float,bool)):
                 log.verbose("RPC OK -->", repr(result))
             else:
-                log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
+                log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 75 else "")
             return result
 
     def classify_exception(self, decoded):

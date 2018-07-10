@@ -41,8 +41,8 @@ class Struct(dict):
     def __getattr__(self, name):
         try:
             return self[name]
-        except KeyError:
-            raise AttributeError(name)
+        except KeyError as exc:
+            raise AttributeError(name) from exc
 
     def __setattr__(self, name, val):
         self[name] = val
@@ -717,6 +717,19 @@ def get_instruments_filekinds(observatory, filepaths):
         instrument, filekind = get_file_properties(observatory, filepath)
         itmapping[instrument] |= set([filekind])
     return { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
+
+def organize_files(observatory, files):
+    """Given and `observatory` name and list of `files`, return a dictionary
+    that partitions `files` into lists based upon common instrument and
+    filekind.
+
+    Returns:  { (instrument, filekind) : [ file1, file4, ...], ... }
+    """
+    organized = defaultdict(list)
+    for file_ in files:
+        instrument, filekind = get_file_properties(observatory, file_)
+        organized[(instrument,filekind)].append(file_)
+    return dict(organized)
 
 # ===================================================================
 

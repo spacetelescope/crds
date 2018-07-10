@@ -121,28 +121,36 @@ DEFAULT_VERBOSITY_LEVEL = 50
 class CrdsLogger(object):
     def __init__(self, name="CRDS", enable_console=True, level=logging.DEBUG, enable_time=True):
         self.name = name
-        self.handlers = []
+
+        self.handlers = []  # logging handlers, used e.g. to add console or file output streams
+        self.filters = []   # simple CRDS filters, used e.g. to mutate message text
+        
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
         self.formatter = self.set_formatter()
         self.console = None
         if enable_console:
             self.add_console_handler(level)
+
+        # CRDS internal counters of types of messages
         self.errors = 0
         self.warnings = 0
         self.infos = 0
         self.debugs = 0
+
         self.eol_pending = False
+
+        # verbose_level handles CRDS verbosity,  defaulting to 0 for no debug
         try:
-            self.verbose_level =  int(os.environ.get(
-                self.name.replace(".","_").upper() + "_VERBOSITY", 0))
+            verbose_level = os.environ.get("CRDS_VERBOSITY", 0)
+            self.verbose_level =  int(verbose_level)
         except Exception:
+            warning("Bad format for CRDS_VERBOSITY =", repr(verbose_level),
+                        "Use e.g. 0 for no debug,  50 for default debug output. 100 max debug.")
             self.verbose_level = DEFAULT_VERBOSITY_LEVEL
             
     def set_formatter(self, enable_time=False, enable_msg_count=True):
         """Set the formatter attribute of `self` to a logging.Formatter and return it."""
-        # self.formatter = logging.Formatter(
-        #    '{}%(name)s - %(levelname)s - %(message)s'.format("%(asctime)s - " if enable_time else ""))
         self.formatter = logging.Formatter(
             '{}%(name)s - %(levelname)s - %(message)s'.format(
                 "%(asctime)s - " if enable_time else "",
@@ -159,6 +167,8 @@ class CrdsLogger(object):
         end = keys.get("end", "\n")
         sep = keys.get("sep", " ")
         output = sep.join([str(arg) for arg in args]) + end
+        for filter in self.filters:
+            output = filter(output)
         return output
 
     def eformat(self, *args, **keys):
@@ -249,6 +259,21 @@ class CrdsLogger(object):
         error("(FATAL)", *args, **keys)
         sys.exit(-1)  # FATAL == totally unambiguous
 
+    def prepend_crds_filter(self, filter):
+        """Prepend a message `filter` to CRDS log output independent of logging framework."""
+        if filter not in self.filters:
+            self.filters = [filter] + self.filters
+
+    def append_crds_filter(self, filter):
+        """Append a message `filter` to CRDS log output independent of logging framework."""
+        if filter not in self.filters:
+            self.filters = self.filters + [filter]
+
+    def remove_crds_filter(self, filter):
+        """Remove `filter` from the sequence of CRDS message filters."""
+        if filter in self.filters:
+            self.filters.remove(filter)
+
 THE_LOGGER = CrdsLogger("CRDS")
 
 info = THE_LOGGER.info
@@ -268,6 +293,8 @@ add_console_handler = THE_LOGGER.add_console_handler
 remove_console_handler = THE_LOGGER.remove_console_handler
 add_stream_handler = THE_LOGGER.add_stream_handler
 remove_stream_handler = THE_LOGGER.remove_stream_handler
+append_crds_filter = THE_LOGGER.append_crds_filter
+prepend_crds_filter = THE_LOGGER.prepend_crds_filter
 format = THE_LOGGER.format
 
 def increment_errors(N=1):
@@ -281,6 +308,10 @@ def errors():
 def warnings():
     """Return the global count of errors."""
     return THE_LOGGER.warnings
+
+def infos():
+    """Return the global count of infos."""
+    return THE_LOGGER.infos
 
 def set_test_mode():
     """Route log messages to standard output for testing with doctest."""
@@ -341,7 +372,7 @@ def exception_trap_logger(func):
             elif reraise or CRDS_EXCEPTION_TRAP == "test":
                 exc_class = keys.pop("exception_class", exc.__class__)
                 keys["end"] = ""
-                raise exc_class(format(*args + (":", str(exc)), **keys))
+                raise exc_class(format(*args + (":", str(exc)), **keys)) from exc
             else:
                 pass # snuff the exception,  func() probably issued a log message.
     return func_on_exception

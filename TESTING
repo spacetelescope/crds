@@ -21,7 +21,7 @@ sources:
 
 - $CRDS_TEST_ROOT/crds-cache-test           
   Dirty test cache with corrupted/hacked files, used by tests only.
-  Has the dangerous property of like-named files with different contents.
+  Has the dangerous property of like-named files (same as official names) with different contents.
 
 - $CRDS_TEST_ROOT/crds-cache-default-test    
   Used when CRDS_PATH not set,  replaces /grp/crds/cache with minimal reference files for testing
@@ -34,3 +34,29 @@ sources:
   Ad hoc test data files used with explicit paths
   CRDS/crds/test/data is normally omitted from source code distributions.
 
+Notes on crds-cache-default-test bootstrap file CRDS server setup:
+
+      This cache is initialized by setup_test_cache by first downloading a
+      bootstrap file from the HST OPS server.  Without the bootstrap file, the
+      cache setup for this will still occur normally but takes considerably
+      longer due to downloading files one-by-one.
+
+      The crds-cache-default-test download file, crds-cache-default-test.tar.bz2,
+      is constructed from the built-the-hard-way cache like this:
+
+      $ cd $CRDS_TEST_ROOT
+      $ tar jcf crds-cache-default-test.tar.bz2 crds-cache-default-test
+
+      The resulting bzip2 file is copied to the HST OPS VM at the
+      $CRDS/CRDS_server/sources/static directory where the source code of all the other
+      server static files resides.  This will cause it to be re-installed in the Apache
+      static directory whenever the server is re-installed.   Merely placing the bzip2
+      file in the Apache static directory will result in a file life expectancy of 1 day,
+      since it is continually deleted and reinitialized in the final installation dir.
+
+Other notes:
+
+      As files are added to CRDS,  a developer's test caches need to be continually updated
+      or unit test errors will occur.   This makes periodically re-running setup_test_cache
+      a requirement...  which is one reason optimizing the crds-cache-default-test setup
+      time is desirable.

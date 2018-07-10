@@ -18,7 +18,6 @@ env:
         - CRDS_TEST_ROOT=/tmp
 
     matrix:
-        - PYTHON_VERSION=2.7
         - PYTHON_VERSION=3.6
 
 install:

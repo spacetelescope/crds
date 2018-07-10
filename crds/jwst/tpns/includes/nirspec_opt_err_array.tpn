@@ -4,6 +4,6 @@
 
 ERR A     X  (array_exists(ERR_ARRAY))      (is_image(ERR_ARRAY))
 ERR A     X  (array_exists(ERR_ARRAY))      (has_type(ERR_ARRAY,'FLOAT'))
-ERR A     X  (array_exists(ERR_ARRAY))      (len(ERR_ARRAY.SHAPE)==3)
-ERR A     X  (array_exists(ERR_ARRAY))      (ERR_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+ERR A     X  (array_exists(ERR_ARRAY))      (ndim(ERR_ARRAY,3))
+ERR A     X  (array_exists(ERR_ARRAY))      (SCI_ARRAY.SHAP[-2:]==ERR_ARRAY.SHAPE[-2:])
 

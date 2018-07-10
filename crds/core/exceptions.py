@@ -207,6 +207,9 @@ class TpnDefinitionError(CertifyError):
 class MissingTpnIncludeError(CertifyError):
     """Any .tpn include files must exist or it's an error.  This is in contrast to other speculative .tpn loads."""
 
+class InconsistentTpnReplaceError(CertifyError):
+    """Within the closure of a .tpn text stream,  the same value was mentioned by "replace" twice... with different replacements."""
+
 class TypeSetupError(CertifyError):
     """An error occured while trying to locate file constraints and row mode variables."""
     

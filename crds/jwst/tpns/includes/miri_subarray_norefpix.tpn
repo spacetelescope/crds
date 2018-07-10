@@ -1,0 +1,5 @@
+replace XDIM_MAX 1024
+
+include miri_subarray_both.tpn
+
+

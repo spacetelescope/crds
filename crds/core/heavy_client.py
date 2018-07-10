@@ -1,34 +1,58 @@
-"""This module implements the "heavy" getreferences() top level interface.  
+"""This module implements a number of cache oriented top level interfaces
+including getreferences(), getrecommendations().
 
 The "light" client is defined in the crds.client package and is entirely
-dependent on the server for computing best references.  The advantage of the
-"light" client is that it is comparatively simple code that has shallower
-dependencies on the core library.
+dependent on the server for computing best references.  The "light" client has
+minimal dependencies on the core library, generally just a Python interface to
+JSONRPC web services.
 
 In contrast, the "heavy" client defined here provides a number of advanced 
-features which depend on a full installation of the core library:
+features which depend on a full installation of the core library and manage
+and utilize the CRDS cache,  particularly as it pertains to best refs.
+
+Some of the features are:
 
 1. The ability to compute best references locally as a baseline behavior.
 
-2. The ability to automatically "fall up" to the server when the local code 
-is deemed obsolete.
+2. Automatic demand-based cache management for bestrefs, This includes
+automatically syncing required rules and references when enabled.
 
-3. The ability to "fall back" to local code when the server cannot be reached.
+3. Logging and "firewalling" for incoming parameters on the fundamental
+bestrefs interface, getreferences(), particularly as it pertains to integration
+with JWST CAL code.
 
-4. The ability to make client-vs-server CRDS s/w version comparisons to determine
-when local code is obsolete.
-
-5. The ability to record the last operational context and use it when the 
+4. The ability to record the last operational context and use it when the 
 server cannot be contacted.
 
-6. The ability to define the context based on an env var.
+5. The ability to define the context based on an env var.
 
-7. The ability to fall back to pre-installed contexts if no context is defined
+6. The ability to fall back to pre-installed contexts if no context is defined
 through the network, parameter, or environment variable mechanisms.
+
+7. Implementation of bad files handling,  resulting in an exception or warning
+when bad rules or references are used anyway.
+
+8. Implementation of context pickling.
+
+9. Translation of symbolic contexts where used (e.g. jwst-edit
+vs. jwst_0442.pmap).
+
+10. Features related to minimizing or eliminating communication with the CRDS
+server via caching.
+
+The original concept of the CRDS cache was to dynamically update and operate in
+a connected state with the CRDS server.  While that remains a viable mode of
+operation for end users, current archive pipelines operate entirely from their
+CRDS cache during calibrations, connecting to the server only during serial
+cache sync operations.  This module provides some of the fall back mechanisms
+necessary for operating without a server connection at all.
 """
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
+# ============================================================================
+
 import os
 import pprint
 import ast
@@ -36,12 +60,16 @@ import traceback
 import uuid
 import fnmatch 
 
+# ============================================================================
+
 from . import rmap, log, utils, config, python23
 from .constants import ALL_OBSERVATORIES
 from .log import srepr
-from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError
+from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError, CrdsDownloadError
 from crds.client import api
 # import crds  forward
+
+# ============================================================================
 
 __all__ = [
     "getreferences", "getrecommendations",
@@ -50,8 +78,6 @@ __all__ = [
     "version_info",
     "get_bad_mappings_in_context", "list_mappings",
 ]
-
-# ============================================================================
 
 # ============================================================================
 
@@ -219,7 +245,7 @@ def warn_bad_context(observatory, context, instrument=None):
             raise CrdsBadRulesError(msg)
 
 # This is cached because it can be called multiple times for a single dataset,
-# both withing warn_bad_mappings and elsewhere.
+# both within warn_bad_mappings and elsewhere.
 @utils.cached
 def get_bad_mappings_in_context(observatory, context, instrument=None):
     """Return the list of bad files (defined by the server) contained by `context`."""
@@ -284,8 +310,8 @@ def check_parameters(header):
         try:
             header[key]
         except Exception as exc:
-            raise ValueError("Can't fetch mapping key " + repr(key) + 
-                             " from parameters: " + repr(str(exc)))
+            raise ValueError("Can't fetch mapping key", repr(key),
+                             "from parameters:", repr(str(exc))) from exc
         if not isinstance(header[key], (python23.string_types, float, int, bool)):
             log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
             del header[key]
@@ -329,7 +355,8 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
             api.dump_mappings(context, ignore_cache=ignore_cache)
         except CrdsError as exc:
             traceback.print_exc()
-            raise CrdsNetworkError("Failed caching mapping files: " + str(exc))
+            raise CrdsDownloadError(
+                "Failed caching mapping files:", str(exc)) from exc
         return hv_best_references(context, parameters, reftypes)
 
 # =============================================================================
@@ -426,6 +453,10 @@ def translate_date_based_context(context, observatory=None):
 
     if context == info.observatory + "-operational":
         return info["operational_context"]
+    elif context == info.observatory + "-edit":
+        return info["edit_context"]
+    elif context == info.observatory + "-versions":
+        return info["versions_context"]
 
     if not info.connected:
         raise CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
@@ -696,3 +727,16 @@ def save_pickled_mapping(mapping, loaded):
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
         log.info("Saved pickled context", repr(pickle_file))
 
+def remove_pickled_mapping(mapping):
+    """Delete the pickle for `mapping` from the CRDS cache."""
+    pickle_file = config.locate_pickle(mapping)
+    if not utils.is_writable(pickle_file):  # Don't even bother pickling
+        log.verbose("Pickle file", repr(pickle_file), "is not writable,  skipping pickle remove.")
+        return
+    if not os.path.exists(pickle_file):
+        log.verbose("Pickl file", repr(pickle_file), "does not exist,  skipping pickle remove.")
+        return
+    with log.warn_on_exception("Failed removing pickle for", repr(mapping)):
+        os.remove(pickle_file)
+        log.info("Removed pickle for context", repr(pickle_file))
+    

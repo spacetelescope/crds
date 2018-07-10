@@ -73,7 +73,7 @@ def get_data_model_flat_dict(filepath):
         with datamodels.open(filepath) as d_model:
             flat_dict = d_model.to_flat_dict(include_arrays=False)
     except Exception as exc:
-        raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'"))
+        raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'")) from exc
     return flat_dict
     
 # =======================================================================
@@ -311,8 +311,8 @@ def reference_keys_to_dataset_keys(rmapping, header):
             dval = header.get(translations[rkey], None)
             rval = header[rkey]
             if rval not in [None, "UNDEFINED"] and rval != dval:
-                log.info("Setting", repr(dkey) + "=" + repr(dval), 
-                        "to value of", repr(rkey) + "=" + repr(rval))
+                log.info("Setting", repr(dkey), "=", repr(dval), 
+                         "to value of", repr(rkey), "=", repr(rval))
                 header[dkey] = rval
     
     header = abstract.cross_strap_header(header)
@@ -439,7 +439,8 @@ def locate_dir(instrument, mode=None):
     if mode == "instrument":   # use simple names inside CRDS cache.
         rootdir = os.path.join(crds_refpath, instrument.lower())
         if not os.path.exists(rootdir):
-            utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
+            if config.writable_cache_or_verbose("Skipping making instrument directory link for", repr(instrument)):
+                utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
         rootdir = crds_refpath
     else:
@@ -450,6 +451,9 @@ def locate_dir(instrument, mode=None):
 
 # When loading headers,  make sure each keyword in a tuple is represented with
 # the same value enabling any form to be used.  Case insensitive.
+
+# XXXX the first translation should be the FITS keyword assuming there is one!!
+
 CROSS_STRAPPED_KEYWORDS = {
                            
     # META.REF_FILE.X is now obsolete but retained for backward compatibility.
@@ -466,7 +470,10 @@ CROSS_STRAPPED_KEYWORDS = {
     "META.PEDIGREE" : ["PEDIGREE"],
     "META.USEAFTER" : ["USEAFTER"],
     "META.HISTORY" : ["HISTORY"],
-    "META.CALIBRATION_SOFTWARE_VERSION" : ["CALIBRATION_SOFTWARE_VERSION", "CAL_VER"],
+    "META.CALIBRATION_SOFTWARE_VERSION" : ["CAL_VER", "CALIBRATION_SOFTWARE_VERSION"],
+    "META.OBSERVATION.DATE" : ["DATE-OBS"],
+    "META.OBSERVATION.TIME" : ["TIME-OBS"],
+    
 
     # These should all be stock DM:FITS,  automatic
     # "META.INSTRUMENT.BAND" : ["BAND"],
@@ -518,6 +525,62 @@ def _get_fits_datamodel_pairs(header):
     log.verbose("Cal code datamodels keyword equivalencies:\n", log.PP(pairs), verbosity=90)
     return pairs
 
+
+# ============================================================================
+
+# Standard model names
+DATA_MODEL_RE_STR = r"(META(\.[A-Z][A-Z0-9_]*)+)"
+DATA_MODEL_RE = re.compile(DATA_MODEL_RE_STR)
+
+def add_fits_keywords(log_message):
+    """Process log `message` and annotate data model keywords/paths with
+    their FITS translations if possible like:
+
+    <data_models_keyword> '[' <fits_keyword> ']'
+    """
+    try:
+        return _add_fits_keywords(log_message)
+    except Exception:  # if annotation fails,  just return the original message
+        return log_message
+
+def _add_fits_keywords(log_message):
+    """Process log `message` and annotate data model keywords/paths with
+    their FITS translations if possible like:
+
+    <data_models_keyword> '[' <fits_keyword> ']'
+    """
+    matches = DATA_MODEL_RE.finditer(log_message)
+    if not matches:
+        return log_message
+    for dm_match in matches:
+        model_key = dm_match.group(0)
+        fits_key = schema.dm_to_fits(model_key)
+        if fits_key is None:
+            fits_key = _hack_fits_translation(model_key)
+        annotation = " [" + fits_key + "]"
+        if annotation not in log_message:
+            log_message = log_message.replace(
+                model_key, model_key + annotation)
+    return log_message
+
+# P_ keyword model names
+DATA_MODEL_P_RE_STR = r"META(\.[A-Z][A-Z0-9_]*)*\.(P_[A-Z0-9_]+)"
+DATA_MODEL_P_RE = re.compile(DATA_MODEL_P_RE_STR)
+
+def _hack_fits_translation(model_key):
+    """Hack FITS translations for data models keyword/paths not covered
+    by dm_to_fits(), currently anything outside the core schema.
+    """
+    if model_key in CROSS_STRAPPED_KEYWORDS:
+        fits_key = CROSS_STRAPPED_KEYWORDS[model_key][0]
+    elif DATA_MODEL_P_RE.match(model_key):
+        match = DATA_MODEL_P_RE.match(model_key)
+        fits_key = match.group(2)[:8]
+    else:
+        fits_key = "FITS unknown"
+    return fits_key
+
+log.append_crds_filter(add_fits_keywords)
 
 # ============================================================================
 

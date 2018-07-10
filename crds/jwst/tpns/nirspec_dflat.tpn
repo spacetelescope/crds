@@ -1,13 +1,15 @@
-include nir_subarray.tpn
+include includes/nir_subarray.tpn
 
-include nirspec_sci_array.tpn
-include nirspec_err_array.tpn
-include nirspec_dq_array.tpn
-include nir_dq_def_array.tpn
+replace NIR_FILTER (True)
 
-SCI          A           X         R             (len(SCI_ARRAY.SHAPE)==3)
-# ERR          A           X         R             (len(ERR_ARRAY.SHAPE)==3)
-# DQ           A           X         R             (len(DQ_ARRAY.SHAPE)==3)
+include includes/nirspec_sci_array_refpix.tpn
+include includes/nirspec_err_array.tpn
+include includes/nirspec_dq_array.tpn
+include includes/nir_dq_def_array.tpn
+
+SCI          A           X         R             (ndim(SCI_ARRAY,3))
+# ERR          A           X         R             (ndim(ERR_ARRAY,3))
+# DQ           A           X         R             (ndim(DQ_ARRAY,3))
 
 WAVELENGTH   A           X         R             (is_table(WAVELENGTH_ARRAY))
 WAVELENGTH   A           X         R             (has_columns(WAVELENGTH_ARRAY,['WAVELENGTH']))

@@ -135,10 +135,14 @@ Renamed files can be output to a different directory using --output-path.
                 if os.path.exists(uniqname):
                     os.remove(uniqname)
                 if "buffer is too small" in str(exc):
-                    raise CrdsError("Failed to rename/rewrite", repr(basefile), "as", repr(baseuniq), ":", 
-                                    "probable file truncation", ":", str(exc))
+                    raise CrdsError(
+                        "Failed to rename/rewrite", repr(basefile),
+                        "as", repr(baseuniq), ":", 
+                        "probable file truncation", ":", str(exc)) from exc
                 else:
-                    raise CrdsError("Failed to rename/rewrite", repr(basefile), "as", repr(baseuniq), ":", str(exc))
+                    raise CrdsError("Failed to rename/rewrite", repr(basefile),
+                                    "as", repr(baseuniq), ":",
+                                    str(exc)) from exc
 
     def format_file(self, filename):
         """Print absolute path or basename of `filename` depending on command line --brief"""

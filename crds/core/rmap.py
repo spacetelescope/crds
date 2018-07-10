@@ -740,9 +740,9 @@ class PipelineContext(ContextMapping):
             return self.selections[instrument]
         except (crexc.IrrelevantReferenceTypeError, crexc.OmitReferenceTypeError):
             raise
-        except KeyError:
+        except KeyError as exc:
             raise crexc.CrdsUnknownInstrumentError("Unknown instrument " + repr(instrument) +
-                                  " for context " + repr(self.basename))
+                                  " for context " + repr(self.basename)) from exc
 
     def get_filekinds(self, dataset):
         """Return the filekinds associated with `dataset` by examining
@@ -829,10 +829,12 @@ class InstrumentContext(ContextMapping):
         if filekind not in self.selections:
             raise crexc.CrdsUnknownReftypeError("Unknown reference type", repr(filekind))
         if MappingSelectionsDict.is_na_value(self.selections[filekind]):
-            log.verbose("Reference type", repr(filekind), "is declared N/A at the instrument level for", repr(self.instrument))
+            log.verbose("Reference type", repr(filekind),
+                        "is declared N/A at the instrument level for", repr(self.instrument), verbosity=70)
             raise crexc.IrrelevantReferenceTypeError("Type", repr(filekind), "is N/A for", repr(self.instrument))
         if  MappingSelectionsDict.is_omit_value(self.selections[filekind]):
-            log.verbose("Reference type", repr(filekind), "is omitted at the instrument level for", repr(self.instrument))
+            log.verbose("Reference type", repr(filekind),
+                        "is omitted at the instrument level for", repr(self.instrument), verbosity=70)
             raise crexc.OmitReferenceTypeError("Type", repr(filekind), "is OMITTED for", repr(self.instrument))
         return self.selections[filekind]
 
@@ -1087,7 +1089,7 @@ class ReferenceMapping(Mapping):
         try:
             return expr, MAPPING_VERIFIER.compile_and_check(expr, source=self.basename, mode="eval")
         except crexc.MappingFormatError as exc:
-            raise crexc.MappingFormatError("Can't load file " + repr(self.basename) + " : " + str(exc))
+            raise crexc.MappingFormatError("Can't load file " + repr(self.basename) + " : " + str(exc)) from exc
 
     def get_hook(self, name, default):
         """Return plugin hook function generically named `name` or `default` if `name` is not defined in
@@ -1182,7 +1184,7 @@ class ReferenceMapping(Mapping):
                     raise
                 else:
                     log.verbose("No match found but reference is not required:",  str(exc), verbosity=55)
-                    raise crexc.IrrelevantReferenceTypeError("No match found and reference type is not required.")
+                    raise crexc.IrrelevantReferenceTypeError("No match found and reference type is not required.") from exc
         log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=", repr(bestref), verbosity=55)
         if MappingSelectionsDict.is_na_value(bestref):
             raise crexc.IrrelevantReferenceTypeError("Rules define this type as Not Applicable for these observation parameters.")

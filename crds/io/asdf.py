@@ -13,7 +13,7 @@ from __future__ import absolute_import
 
 # ============================================================================
 
-from crds.core import timestamp, utils
+from crds.core import timestamp, utils, log
 
 from .abstract import AbstractFile
 
@@ -29,11 +29,28 @@ class AsdfFile(AbstractFile):
         import asdf
         with asdf.AsdfFile.open(self.filepath) as handle:
             header = self.to_simple_types(handle.tree)
-            if "history" in handle.tree:
-                histall = []
-                for hist in handle.tree["history"]:
-                    histall.append(timestamp.format_date(hist["time"]).split(".")[0] +
-                                   " :: " + hist["description"])
-                header["HISTORY"] = "\n".join(histall)
+            header["HISTORY"] = self.get_history(handle)
         return header
 
+    def get_history(self, handle):
+        """Given and ASDF file object `handle`, return the history collected into a
+        single string.
+        """
+        history = "UNDEFINED or BAD FORMAT"
+        with log.error_on_exception(
+                "Failed reading ASDF history, see ASDF docs on adding history"):
+            histall = []
+            hist = handle.tree["history"]
+            try:
+                entries = handle.get_history_entries()
+            except Exception:
+                log.verbose_warning(
+                    "Using inlined CRDS ASDF history entry reading interface.")
+                entries = hist["entries"] if "entries" in hist else hist
+            for entry in entries:
+                time = timestamp.format_date(entry["time"]).split(".")[0]
+                description = entry["description"]
+                histall.append(time + " :: " + description)
+            if histall:
+                history = "\n".join(histall)
+        return history
