@@ -208,6 +208,16 @@ class Validator(object):
             log.verbose("Optional", self._keytype_descr, repr(self.name), " is missing.", verbosity=70)
         elif presence in ["S","F","A"]:
             log.verbose("Conditional SUBARRAY parameter is not defined.")
+<<<<<<< HEAD
+=======
+            return "UNDEFINED"
+        elif self.conditionally_required:
+            if header and self.is_applicable(header):
+                raise MissingKeywordError("Missing", self._keytype_descr, repr(self.name), 
+                                          "required by condition", self.info.presence)
+            else:
+                return "UNDEFINED"
+>>>>>>> b2a664fd0515e2692df387f1930e8f64d4cd7d4c
         else:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      repr(self.info.presence))
@@ -445,6 +455,7 @@ class PedigreeValidator(KeywordValidator):
             stop_dt = self.validate_date(stop)
             if not (start_dt <= stop_dt):
                 raise ValueError("PEDIGREE date order invalid: " + repr(start) + " > " + repr(stop))
+<<<<<<< HEAD
         elif pedigree == "INFLIGHT":
             self.handle_missing_inflight_dates()
         self.verbose(filename, (start, stop), "are valid and ordered dates.")
@@ -475,6 +486,32 @@ class JwstpedigreeValidator(PedigreeValidator):
     def validate_date(self, datestr):
         """Return the datetime corresponding to a JWST INFLIGHT PEDIGREE start or stop.
         e.g. '2018-01-30'   -->  datetime()
+=======
+        # else:
+        #     if pedigree == "INFLIGHT":
+        #         raise ValueError("INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
+        return super(PedigreeValidator, self)._check_value(filename, pedigree)
+
+    def validate_date(self, datestr):
+        """Return the datetime corresponding to an HST INFLIGHT PEDIGREE start or stop.
+        e.g.  '25/02/1996'  --> datetime()
+        """
+        try:
+            return timestamp.get_slash_date(datestr)
+        except ValueError:
+            return timestamp.get_dash_date(datestr)
+    
+class JwstpedigreeValidator(PedigreeValidator):
+    
+    """Validates &JWSTPREDIGREE fields."""
+
+    def validate_date(self, datestr):
+        """Return the datetime corresponding to a JWST INFLIGHT PEDIGREE start or stop.
+        
+        e.g. '2018-01-30'   -->  datetime()
+
+        >>> JwstpedigreeValidator.validate()
+>>>>>>> b2a664fd0515e2692df387f1930e8f64d4cd7d4c
         """
         return timestamp.get_dash_date(datestr)
         

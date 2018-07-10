@@ -521,6 +521,18 @@ def get_dash_date(datestr):
     """
     return Dashdate.get_datetime(datestr)
 
+def get_slash_date(datestr):
+    """Return the datetime object corresponding to `datestr` which must
+    be in DD/MM/YYYY format.
+    """
+    return Slashdate.get_datetime(datestr)
+
+def get_dash_date(datestr):
+    """Return the datetime object corresponding to `datestr` which must
+    be in YYYY-MM-DD format.
+    """
+    return Dashdate.get_datetime(datestr)
+
 # ============================================================================
 
 def test():
