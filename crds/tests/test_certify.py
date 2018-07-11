@@ -1598,6 +1598,37 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, checker.check, 
                       "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01T00:00:00 2017-01-02"})
         
+    def test_tpn_jwstpedigree_dashdate(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        checker.check(
+            "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 2017-01-02"})
+        
+    def test_tpn_jwstpedigree_ground_dates(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            ValueError, checker.check, "test.fits",
+            {"PEDIGREE":"GROUND 2018-01-01 2018-01-25"})
+        
+    def test_tpn_jwstpedigree_nodate_format_3(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT"})
+        
+    def test_tpn_jwstpedigree_missing_format_3(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            certify.MissingKeywordError, checker.check, "test.fits", {})
+        
+    def test_tpn_jwstpedigree_no_model_3(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            ValueError, checker.check, "test.fits", {"PEDIGREE":"MODEL"})
+        
     def test_tpn_pedigree_missing_column(self):
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
