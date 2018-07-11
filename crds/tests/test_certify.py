@@ -1509,32 +1509,27 @@ class TestCertify(test_config.CRDSTestCase):
         checker.check("test.fits", {"DETECTOR":"NOT_FOO"})                           
                                     
     def test_tpn_pedigree_missing(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(certify.MissingKeywordError, 
             checker.check, "test.fits", {"DETECTOR":"This is a test"})
 
     def test_tpn_pedigree_dummy(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"DUMMY"})
 
     def test_tpn_pedigree_ground(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"GROUND"})
 
     def test_tpn_pedigree_simulation(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"SIMULATION"})
 
     def test_tpn_pedigree_bad_leading(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"xDUMMY"})
@@ -1546,82 +1541,100 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"DUMMYxyz"})
 
     def test_tpn_pedigree_inflight_no_date(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"INFLIGHT"})
 
     def test_tpn_pedigree_equal_start_stop(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"INFLIGHT 02/01/2017 02/01/2017"})
 
     def test_tpn_pedigree_bad_datetime_order(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-02 2017-01-01"})
 
     def test_tpn_pedigree_good_datetime_slash(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"INFLIGHT 02/01/2017 03/01/2017"})
 
     def test_tpn_pedigree_bad_datetime_slash(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 02/25/2017 03/01/2017"})
 
     def test_tpn_pedigree_good_datetime_dash(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 2017-01-02"})
 
     def test_tpn_pedigree_bad_datetime_dash(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 01-02-2017"})
 
     def test_tpn_pedigree_good_datetime_dash_dash(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check("test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02"})
         
     def test_tpn_pedigree_bad_datetime_format_1(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", 
                       {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02 -"})
         
     def test_tpn_pedigree_bad_datetime_format_2(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, 
                       "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017/01/02"})
         
     def test_tpn_pedigree_bad_datetime_format_3(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, 
                       "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01T00:00:00 2017-01-02"})
         
+    def test_tpn_jwstpedigree_dashdate(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        checker.check(
+            "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 2017-01-02"})
+        
+    def test_tpn_jwstpedigree_ground_dates(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            ValueError, checker.check, "test.fits",
+            {"PEDIGREE":"GROUND 2018-01-01 2018-01-25"})
+        
+    def test_tpn_jwstpedigree_nodate_format_3(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT"})
+        
+    def test_tpn_jwstpedigree_missing_format_3(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            certify.MissingKeywordError, checker.check, "test.fits", {})
+        
+    def test_tpn_jwstpedigree_no_model_3(self):
+        info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
+        checker = certify.validator(info)
+        assert_raises(
+            ValueError, checker.check, "test.fits", {"PEDIGREE":"MODEL"})
+        
     def test_tpn_pedigree_missing_column(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(certify.MissingKeywordError, checker.check_column, "data/x2i1559gl_wcp.fits")
 
     def test_tpn_pedigree_ok_column(self):
-        # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         checker.check_column("data/16j16005o_apd.fits")

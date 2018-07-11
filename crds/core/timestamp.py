@@ -270,17 +270,25 @@ def parse_numerical_date(dstr):
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
                              imicrosecond)
 
+# ============================================================================
+
 class DateParser(object):
-    _format = re.compile("")
+    """Abstract baseclass for defining date parsers."""
     
+    format = re.compile("^$")
+    should_be = "DATE FORMAT NOT DEFINED"
+
     def _get_date_dict(self, match):
         raise NotImplementedError("Data Parser is an abstract class.")
     
     @classmethod
     def get_datetime(cls, datestr):
-        match = cls._format.match(datestr)
+        match = cls.format.match(datestr)
         if not match:
-            raise ValueError("Invalid " + repr(cls.__name__) + " format " + repr(datestr))
+            raise ValueError(
+                "Invalid " + repr(cls.__name__) + " format " + repr(datestr) +
+                " should be " + repr(cls.should_be)
+            )
         return datetime.datetime(**cls._get_date_dict(match))
 
 class Slashdate(DateParser):
@@ -293,7 +301,9 @@ class Slashdate(DateParser):
     ...
     ValueError: Invalid 'Slashdate' format '25 / 12 x 2014'
     """
-    _format = re.compile(r"(?P<day>\d+)\s*/\s*(?P<month>\d+)\s*/\s*(?P<year>\d+)")
+    format = re.compile(r"(?P<day>\d\d)\s*/\s*(?P<month>\d\d)\s*/\s*(?P<year>\d\d\d\d)")
+    should_be = "DD/MM/YYYY"
+
     @classmethod
     def _get_date_dict(cls, match):    
         return dict(month=int(match.group("month")),
@@ -311,25 +321,14 @@ class Dashdate(DateParser):
     ...
     ValueError: Invalid 'Ddate' format '25 / 12 x 2014'
     """
-    _format = re.compile(r"(?P<year>\d\d\d\d)\-(?P<month>\d\d)\-(?P<day>\d\d)")
+    format = re.compile(r"(?P<year>\d\d\d\d)\-(?P<month>\d\d)\-(?P<day>\d\d)")
+    should_be = "YYYY-MM-DD"
+    
     @classmethod
     def _get_date_dict(cls, match):    
         return dict(month=int(match.group("month")),
                     day=int(match.group("day")),
                     year=int(match.group("year")))
-
-def slashdate_or_dashdate(datestr):
-    """Return the datetime associated with `datestr` which may be either a Slashdate or Dashdate.
-    
-    e.g. 25/12/2015   (note day,month,year)    HST 
-
-    e.g. 2014-12-25   (note year,month,day)    JWST
-    """
-    try:
-        date = Slashdate.get_datetime(datestr)
-    except Exception:
-        date = Dashdate.get_datetime(datestr)
-    return date
 
 class Sybdate(DateParser):
     """
@@ -353,7 +352,7 @@ class Sybdate(DateParser):
     ...
     ValueError: Invalid month value 'Mxx'
     """
-    _format = re.compile(
+    format = re.compile(
         r"(?P<month>[A-Za-z]{1,10})\s+" + \
             r"(?P<day>\d{1,2}),?\s+" + \
             r"(?P<year>\d{1,4})" + \
@@ -362,6 +361,8 @@ class Sybdate(DateParser):
             r"(?P<second>\d{1,2})\s*" + \
             r"(?P<meridian>am|pm|AM|PM)?" + \
             r")?")
+
+    should_be ="Mar 21 2001 12:00:00 am"
 
     @classmethod
     def _get_date_dict(cls, match):
@@ -396,13 +397,15 @@ class Jwstdate(DateParser):
     ...
     ValueError: Invalid 'Jwstdate' format '2001-03-21 12:00:00'
     """
-    _format = re.compile(
+    format = re.compile(
         r"^(?P<year>\d\d\d\d)\-" + \
             r"(?P<month>\d\d)\-" + \
             r"(?P<day>\d\d)(T" + \
             r"(?P<hour>\d\d):" + \
             r"(?P<minute>\d\d):" + \
             r"(?P<second>\d\d))?$")
+
+    should_be = "2018-12-22T00:00:00"
 
     @classmethod
     def _get_date_dict(cls, match):
@@ -505,6 +508,30 @@ def reformat_useafter(rmapping, header):
         else:
             raise exceptions.InvalidUseAfterFormat(
                 "Bad USEAFTER time format =", repr(useafter)) from exc
+
+def get_slash_date(datestr):
+    """Return the datetime object corresponding to `datestr` which must
+    be in DD/MM/YYYY format.
+    """
+    return Slashdate.get_datetime(datestr)
+
+def get_dash_date(datestr):
+    """Return the datetime object corresponding to `datestr` which must
+    be in YYYY-MM-DD format.
+    """
+    return Dashdate.get_datetime(datestr)
+
+def get_slash_date(datestr):
+    """Return the datetime object corresponding to `datestr` which must
+    be in DD/MM/YYYY format.
+    """
+    return Slashdate.get_datetime(datestr)
+
+def get_dash_date(datestr):
+    """Return the datetime object corresponding to `datestr` which must
+    be in YYYY-MM-DD format.
+    """
+    return Dashdate.get_datetime(datestr)
 
 # ============================================================================
 
