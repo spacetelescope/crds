@@ -431,6 +431,7 @@ class Mapping(object):
         tuples,  prefixing each tuple with context `path`.
         """
         new_mapping = asmapping(new_mapping, cache="readonly")
+        log.verbose("Difference:", self.filename, "vs.",new_mapping.filename)
         differences = self.difference_header(new_mapping, path=path, pars=pars) if include_header_diffs else []
         for key in self.selections:  # Check for deleted or replaced keys in self / old mapping.
             if key not in new_mapping.selections:   # deletions from self
@@ -444,12 +445,21 @@ class Mapping(object):
                         path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                 else: # either no recursion or key is special and cannot be recursed.
                     nested_diffs = []
-            elif (self._value_name(key) != new_mapping._value_name(key) and 
-                  self._value_xsum(key) != new_mapping._value_xsum(key)):   # replacements in self
-                diff = selectors.DiffTuple(
-                    * (path + ((self.filename, new_mapping.filename), (key,), 
-                    "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
-                    parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
+            elif self._value_name(key) != new_mapping._value_name(key):
+                # replacements in self
+                # different basenames identify context-to-context updates
+                # different filenames identify cache-to-cache differences
+                if self._value_xsum(key) != new_mapping._value_xsum(key):
+                    # omit identical files from report of diffs (cache-to-cache)
+                    # if contents are different,  include a diff tuple
+                    # otherwise assume higher level file at different path
+                    diff = selectors.DiffTuple(
+                        * (path + ((self.filename, new_mapping.filename), (key,), 
+                                   "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
+                        parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
+                else:
+                    # higher levels file identical, nested cache-to-cache files may differ
+                    diff = None
                 if self._is_normal_value(key) and new_mapping._is_normal_value(key):   # mapping replacements
                     # recursion needed if both selections are mappings.
                     nested_diffs = self.selections[key].difference( new_mapping.selections[key],  

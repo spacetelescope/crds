@@ -248,8 +248,8 @@ class MappingDifferencer(Differencer):
         mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.
         
         """
-        old_map = rmap.fetch_mapping(self.locate_file(self.old_file), ignore_checksum=True, path=self.mappings_cache1)
-        new_map = rmap.fetch_mapping(self.locate_file(self.new_file), ignore_checksum=True, path=self.mappings_cache2)
+        old_map = rmap.fetch_mapping(self.old_file, ignore_checksum=True, path=self.mappings_cache1)
+        new_map = rmap.fetch_mapping(self.new_file, ignore_checksum=True, path=self.mappings_cache2)
         differences = old_map.difference(new_map, include_header_diffs=self.include_header_diffs,
                                          recurse_added_deleted=self.recurse_added_deleted)
         return differences
