@@ -145,13 +145,25 @@ class Differencer(object):
         self.mappings_cache1 = os.path.join(self.cache1, "mappings", self.observatory) if cache1 else None
         self.mappings_cache2 = os.path.join(self.cache2, "mappings", self.observatory) if cache2 else None
 
-    def locate_file(self, filename):
+    def locate_file(self, filename, cache=None):
         """Return the full path for `filename` implementing default CRDS file cache
-        location behavior,  and verifying that the resulting path is safe.
+        location behavior,  and verifying that the resulting path is safe.  If cache
+        is defined,  override CRDS_PATH and any path included in `filename`.
         """
+        if cache is not None:
+            os.environ["CRDS_PATH"] = cache
+            filename = os.path.basename(filename)
         path = config.locate_file(filename, self.observatory)
         config.check_path(path)  # check_path returns abspath,  bad for listsings.
         return path
+
+    def locate_file1(self, filename):
+        """Locate `filename` inside CRDS cache,  potentially redefining cache as self.cache1."""
+        return self.locate_file(filename, self.cache1)
+
+    def locate_file2(self, filename):
+        """Locate `filename` inside CRDS cache,  potentially redefining cache as self.cache1."""
+        return self.locate_file(filename, self.cache2)
 
     def difference(self):
         """Run diff() method on `old_file` and `new_file` and print() output.
@@ -248,8 +260,9 @@ class MappingDifferencer(Differencer):
         mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.
         
         """
-        old_map = rmap.fetch_mapping(self.locate_file(self.old_file), ignore_checksum=True, path=self.mappings_cache1)
-        new_map = rmap.fetch_mapping(self.locate_file(self.new_file), ignore_checksum=True, path=self.mappings_cache2)
+        # At this time,  the fetch_mapping path parameter appears to exist only to thwart CRDS mapping caching.
+        old_map = rmap.fetch_mapping(self.locate_file1(self.old_file), ignore_checksum=True, path=self.mappings_cache1)
+        new_map = rmap.fetch_mapping(self.locate_file2(self.new_file), ignore_checksum=True, path=self.mappings_cache2)
         differences = old_map.difference(new_map, include_header_diffs=self.include_header_diffs,
                                          recurse_added_deleted=self.recurse_added_deleted)
         return differences
@@ -323,8 +336,8 @@ class FitsDifferencer(Differencer):
         0 no differences
         1 some differences
         """
-        loc_old_file = self.locate_file(self.old_file)
-        loc_new_file = self.locate_file(self.new_file)
+        loc_old_file = self.locate_file1(self.old_file)
+        loc_new_file = self.locate_file2(self.new_file)
         
         # Do the standard diff.
         fdiff = FITSDiff(loc_old_file, loc_new_file)
@@ -351,8 +364,8 @@ class TextDifferencer(Differencer):
 
     def diff(self):
         """Returns the diff status and combined output from stdout and stderr of the diff command."""
-        loc_old_file = self.locate_file(self.old_file)
-        loc_new_file = self.locate_file(self.new_file)
+        loc_old_file = self.locate_file1(self.old_file)
+        loc_new_file = self.locate_file2(self.new_file)
         status, out_err = pysh.status_out_err("diff -b -c ${loc_old_file} ${loc_new_file}", raise_on_error=False)   # secure
         return status, out_err
 
@@ -369,8 +382,8 @@ class AsdfDifferencer(Differencer):
 
     def diff(self):
         """Returns the diff status and combined output from stdout and stderr of the diff command."""
-        loc_old_file = self.locate_file(self.old_file)
-        loc_new_file = self.locate_file(self.new_file)
+        loc_old_file = self.locate_file1(self.old_file)
+        loc_new_file = self.locate_file2(self.new_file)
         status, out_err = pysh.status_out_err("asdftool diff ${loc_old_file} ${loc_new_file}", raise_on_error=False)   # secure
         if not status and len(out_err) != 0:  
             # convert asdftool "no errors" to diff-style "diffs exist"
