@@ -1,0 +1,21 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2018-07-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'TSOPHOT',
+    'filetype' : 'TSOPHOT',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_tsophot.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'cf0b5ae6fcc2e5eae659b2d9a3f5cd27595499e8',
+    'suffix' : 'tsophot',
+    'text_descr' : 'TSO Aperture Photometry Parameters',
+}
+
+selector = Match({
+    ('MIR_IMAGE', 'FALSE') : 'N/A',
+    ('MIR_IMAGE', 'TRUE') : 'N/A',
+    ('NOT MIR_IMAGE', 'ANY') : 'N/A',
+})
