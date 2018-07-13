@@ -1266,6 +1266,37 @@
             "tpn":"miri_trappars.tpn",
             "unique_rowkeys":null
         },
+        "tsophot":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-07-12",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"TSOPHOT",
+            "filetype":"TSOPHOT",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_tsophot_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_tsophot.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TSOVISIT"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"cf0b5ae6fcc2e5eae659b2d9a3f5cd27595499e8",
+            "suffix":"tsophot",
+            "text_descr":"TSO Aperture Photometry Parameters",
+            "tpn":"miri_tsophot.tpn",
+            "unique_rowkeys":null
+        },
         "v2v3":{
             "derived_from":"Hand made 2015-10-09 10:00:00",
             "extra_keys":null,
@@ -1812,6 +1843,37 @@
             "suffix":"trappars",
             "text_descr":"Trap Capture and Decay Parameters",
             "tpn":"nircam_trappars.tpn",
+            "unique_rowkeys":null
+        },
+        "tsophot":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-07-12",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"TSOPHOT",
+            "filetype":"TSOPHOT",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_tsophot_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_tsophot.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TSOVISIT"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"e4089e180b21c7ecea582b58eb25002bb3787049",
+            "suffix":"tsophot",
+            "text_descr":"TSO Aperture Photometry Parameters",
+            "tpn":"nircam_tsophot.tpn",
             "unique_rowkeys":null
         },
         "wavelengthrange":{
