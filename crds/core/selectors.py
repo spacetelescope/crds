@@ -218,7 +218,7 @@ class Selection(tuple):
         self.choice = t[1]
     
     def _cmp_key(self, key):
-        return tuple(str(field) for field in key) if isinstance(key, tuple) else str(key)
+        return tuple(str(field) for field in key) if isinstance(key, tuple) else (str(key),)
 
     def __lt__(self, other):
         return self._cmp_key(self.key) < self._cmp_key(other.key)
