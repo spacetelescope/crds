@@ -194,7 +194,8 @@ REFPATHS = [
     ('0.9.0', "jwst_system_crdscfg_b7.1.yaml"),
     ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
     ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
-    ('9.9.9', "jwst_system_crdscfg_b7.1.3.yaml"),   # latest backstop
+    ('0.9.8', "jwst_system_crdscfg_b7.2.yaml"),
+    ('9.9.9', "jwst_system_crdscfg_b7.2.yaml"),   # latest backstop
 ]
     
 def _get_config_refpath(context, cal_ver):
