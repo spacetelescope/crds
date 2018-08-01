@@ -32,9 +32,9 @@ meta:
     reftype: CRDSCFG
     telescope: JWST
     useafter: 1900-01-01T00:00:00
-    calibration_software_version: 0.9.3
-    crds_version: 7.2.2
-    generation_date: 2018-04-27T13:05:42
+    calibration_software_version: 0.10.1
+    crds_version: 7.2.6
+    generation_date: 2018-08-01T11:13:44
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -158,6 +158,7 @@ steps_to_reftypes_exceptions: []
 
 
 
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg: [dq_init, group_scale, ipc, lastframe, linearity, refpix, rscd,
@@ -172,6 +173,10 @@ pipeline_cfgs_to_steps:
     resample_spec, srctype, straylight]
   calwebb_tso1.cfg: [dark_current, dq_init, firstframe, gain_scale, group_scale, ipc,
     jump, lastframe, linearity, persistence, ramp_fit, refpix, rscd, saturation, superbias]
+  calwebb_tso_image2.cfg: [assign_wcs, bkg_subtract, flat_field, photom, resample]
+  calwebb_tso_spec2.cfg: [assign_wcs, barshadow, bkg_subtract, cube_build, extract_1d,
+    extract_2d, flat_field, fringe, imprint_subtract, msa_flagging, pathloss, photom,
+    resample_spec, srctype, straylight]
   skip_2b.cfg: []
 
 steps_to_reftypes:
@@ -206,7 +211,7 @@ steps_to_reftypes:
   rscd: [rscd]
   saturation: [saturation]
   srctype: []
-  straylight: [regions, straymask]
+  straylight: [straymask]
   superbias: [superbias]
 
 exptypes_to_pipelines:
@@ -230,7 +235,7 @@ exptypes_to_pipelines:
   MIR_FLATMRS: [calwebb_detector1.cfg, skip_2b.cfg]
   MIR_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
   MIR_LRS-FIXEDSLIT: [calwebb_detector1.cfg, calwebb_spec2.cfg]
-  MIR_LRS-SLITLESS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
+  MIR_LRS-SLITLESS: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
   MIR_LYOT: [calwebb_detector1.cfg, calwebb_image2.cfg]
   MIR_MRS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   MIR_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
@@ -240,7 +245,7 @@ exptypes_to_pipelines:
   NIS_FOCUS: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_LAMP: [calwebb_detector1.cfg, skip_2b.cfg]
-  NIS_SOSS: [calwebb_tso1.cfg, calwebb_spec2.cfg]
+  NIS_SOSS: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
   NIS_TACONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_WFSS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
@@ -248,18 +253,18 @@ exptypes_to_pipelines:
   NRC_DARK: [calwebb_dark.cfg, skip_2b.cfg]
   NRC_FLAT: [calwebb_detector1.cfg, skip_2b.cfg]
   NRC_FOCUS: [calwebb_detector1.cfg, calwebb_image2.cfg]
-  NRC_WFSS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   NRC_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRC_LED: [calwebb_detector1.cfg, skip_2b.cfg]
   NRC_TACONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRC_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
-  NRC_TSGRISM: [calwebb_tso1.cfg, calwebb_spec2.cfg]
-  NRC_TSIMAGE: [calwebb_tso1.cfg, calwebb_image2.cfg]
+  NRC_TSGRISM: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
+  NRC_TSIMAGE: [calwebb_tso1.cfg, calwebb_tso_image2.cfg]
   NRC_WFSC: [calwebb_detector1.cfg, calwebb_image2.cfg]
+  NRC_WFSS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   NRS_AUTOFLAT: [calwebb_detector1.cfg, skip_2b.cfg]
   NRS_AUTOWAVE: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   NRS_BOTA: [calwebb_detector1.cfg, calwebb_image2.cfg]
-  NRS_BRIGHTOBJ: [calwebb_tso1.cfg, calwebb_spec2.cfg]
+  NRS_BRIGHTOBJ: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
   NRS_CONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
   NRS_FIXEDSLIT: [calwebb_detector1.cfg, calwebb_spec2.cfg]
@@ -383,11 +388,6 @@ exptypes_to_reftypes:
     fflat, filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc,
     linearity, mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
     sflat, specwcs, superbias, trapdensity, trappars, wavelengthrange, wfssbkg]
-  NRC_WFSS: [area, barshadow, camera, collimator, cubepar, dark, dflat, disperser,
-    distortion, drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe,
-    gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss,
-    persat, photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs,
-    straymask, superbias, trapdensity, trappars, wavecorr, wavelengthrange, wfssbkg]
   NRC_IMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, drizpars,
     fflat, filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc,
     linearity, mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
@@ -415,6 +415,11 @@ exptypes_to_reftypes:
     fflat, filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc,
     linearity, mask, msa, ote, persat, photom, readnoise, refpix, regions, rscd, saturation,
     sflat, specwcs, superbias, trapdensity, trappars, wavelengthrange, wfssbkg]
+  NRC_WFSS: [area, barshadow, camera, collimator, cubepar, dark, dflat, disperser,
+    distortion, drizpars, extract1d, fflat, filteroffset, flat, fore, fpa, fringe,
+    gain, ifufore, ifupost, ifuslicer, ipc, linearity, mask, msa, msaoper, ote, pathloss,
+    persat, photom, readnoise, refpix, regions, resol, rscd, saturation, sflat, specwcs,
+    straymask, superbias, trapdensity, trappars, wavecorr, wavelengthrange, wfssbkg]
   NRS_AUTOFLAT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
   NRS_AUTOWAVE: [area, barshadow, camera, collimator, cubepar, dark, dflat, disperser,
