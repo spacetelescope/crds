@@ -47,6 +47,22 @@ True
 
 >>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.9.7"))
 'jwst_system_crdscfg_b7.1.3.yaml'
+
+>>> os.path.basename(_get_config_refpath("jwst_0477.pmap", "0.10.1"))
+'jwst_system_crdscfg_b7.2.yaml'
+
+>>> _versions_greaterthan("0.9.7", "0.10.0")
+False
+
+>>> _versions_greaterthan("0.9.2", "0.10.1dev20000")
+False
+
+>>> _versions_greaterthan("0.99.7", "0.10.1dev20000")
+True
+
+>>> _versions_greaterthan("0.10.1", "0.10.1dev20000")
+False
+
 """
 
 from __future__ import print_function
@@ -57,6 +73,7 @@ from __future__ import absolute_import
 
 import os.path
 from collections import defaultdict
+import re
 
 # import yaml     DEFERRED
 
@@ -194,7 +211,7 @@ REFPATHS = [
     ('0.9.0', "jwst_system_crdscfg_b7.1.yaml"),
     ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
     ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
-    ('0.9.8', "jwst_system_crdscfg_b7.2.yaml"),
+    ('0.10.0', "jwst_system_crdscfg_b7.2.yaml"),
     ('9.9.9', "jwst_system_crdscfg_b7.2.yaml"),   # latest backstop
 ]
     
@@ -203,7 +220,8 @@ def _get_config_refpath(context, cal_ver):
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
     i = 0
-    while i < len(REFPATHS) and cal_ver[:5] > REFPATHS[i][0]:
+    while (i < len(REFPATHS) and
+           _versions_greaterthan(cal_ver, REFPATHS[i][0])):
         i += 1
     refpath = os.path.join(HERE, REFPATHS[i][1])
     try:  # Use a normal try/except because exceptions are expected.
@@ -225,6 +243,25 @@ def _get_config_refpath(context, cal_ver):
     log.verbose("Using", srepr(os.path.basename(refpath)),
                 "to determine applicable default reftypes for", srepr(cal_ver))
     return refpath
+
+def _digits_only(version):
+    match  = re.match("(\d+).*", version)
+    return match.group(1)
+
+def _versions_greaterthan(v1, v2):
+    """Compare two semantic version numbers and account for issues 
+    like '10' < '9'.
+    """
+    v1_parts, v2_parts = v1.split("."), v2.split(".")
+    for p1, p2 in zip(v1_parts, v2_parts):
+        p1, p2 = int(_digits_only(p1)), int(_digits_only(p2))
+        if p1 >= p2:
+            continue
+        else:
+            return False
+    if p1 == p2:
+        return False
+    return True
 
 class CrdsCfgManager(object):
     """The CrdsCfgManager handles using SYSTEM CRDSCFG information to compute things."""
