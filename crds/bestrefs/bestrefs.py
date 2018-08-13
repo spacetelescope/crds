@@ -19,7 +19,6 @@ from collections import namedtuple, OrderedDict
 
 import crds
 from crds.core import log, config, utils, timestamp, cmdline, heavy_client
-from crds.core.log import srepr
 from crds import diff, matches
 from . import table_effects, headers
 from crds.client import api
