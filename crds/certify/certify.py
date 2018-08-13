@@ -13,7 +13,6 @@ from __future__ import absolute_import
 import os
 from collections import defaultdict
 import gc
-import re
 
 import numpy as np
 

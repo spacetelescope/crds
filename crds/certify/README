@@ -6,6 +6,8 @@ reference types or parameter constraints.  Probably the best way to do this is
 by using example files from closely related reference types but this explains
 the overall design, history, and capabilities.
 
+See also:  crds/documentation/certify_design.rst or .html
+
 History
 -------
 
