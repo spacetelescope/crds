@@ -10,7 +10,6 @@ import datetime
 import re
 
 from . import python23, config, exceptions, log
-from . import exceptions
 
 # =======================================================================
 
@@ -508,18 +507,6 @@ def reformat_useafter(rmapping, header):
         else:
             raise exceptions.InvalidUseAfterFormat(
                 "Bad USEAFTER time format =", repr(useafter)) from exc
-
-def get_slash_date(datestr):
-    """Return the datetime object corresponding to `datestr` which must
-    be in DD/MM/YYYY format.
-    """
-    return Slashdate.get_datetime(datestr)
-
-def get_dash_date(datestr):
-    """Return the datetime object corresponding to `datestr` which must
-    be in YYYY-MM-DD format.
-    """
-    return Dashdate.get_datetime(datestr)
 
 def get_slash_date(datestr):
     """Return the datetime object corresponding to `datestr` which must
