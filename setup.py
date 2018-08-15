@@ -4,8 +4,6 @@ import glob
 
 from distutils.core import setup
 
-import setuptools
-
 setup_pars = {
     "packages" : [
         'crds',
