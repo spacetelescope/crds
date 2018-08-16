@@ -622,6 +622,16 @@ class UnknownCertifier(Certifier):
             contents = handle.read()
         return contents
     
+class AsdfCertifier(ReferenceCertifier):
+    """Certifier for ADSF type,  invoke data models checks."""
+    
+    def certify(self):
+        """Certify an unknown format file."""
+        super(AsdfCertifier, self).certify()
+        
+        # Project-specific checks,  for JWST instantiates data model.
+        self.locator.project_check(self.filename)
+   
 # ============================================================================
 
 class MappingCertifier(Certifier):
@@ -773,7 +783,7 @@ def get_certifier_class(original_name, filepath):
         "fits" : FitsCertifier,
         "json" : ReferenceCertifier,
         "yaml" : ReferenceCertifier,
-        "asdf" : ReferenceCertifier,
+        "asdf" : AsdfCertifier,
         "geis" : ReferenceCertifier,
         "unknown" : UnknownCertifier,
     }
