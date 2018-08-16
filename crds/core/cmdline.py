@@ -682,10 +682,14 @@ class ContextsScript(Script):
         log.verbose("Determining contexts.", verbosity=55)
         if self.args.contexts:
             # permit instrument and reference mappings,  not just pipelines:
-            contexts = []
+            _contexts2 = []
             for ctx in self.args.contexts:
-                contexts.extend(expand_all_instruments(self.observatory, ctx)) 
-            contexts = [self.resolve_context(ctx) for ctx in contexts]
+                _contexts2.extend(expand_all_instruments(self.observatory, ctx))
+            contexts = []
+            for ctx in _contexts2:
+                resolved = self.resolve_context(ctx)
+                if resolved != 'N/A':
+                    contexts.append(resolved)
         elif self.args.all:
             contexts = self._list_mappings("*.pmap")
         elif self.args.last_n_contexts:
