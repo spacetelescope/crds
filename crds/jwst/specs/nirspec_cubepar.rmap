@@ -12,8 +12,15 @@ header = {
     'sha1sum' : '8c68a2f89e0579452af3e4150b7e6f9ea4cfa925',
     'suffix' : 'cubepar',
     'text_descr' : 'IFU Cube defaults',
-    'unique_rowkeys' : ('GRATING', 'FILTER'),
+    'unique_rowkeys' : ('DISPERSER', 'FILTER', 'WAVELENGTH'),
 }
+
+comment = """
+
+For table row checking,  unique_rowkeys is intersected with actual table
+column names to produce the final definition of modes.
+
+"""
 
 selector = Match({
 })
