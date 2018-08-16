@@ -2774,13 +2774,14 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"8c68a2f89e0579452af3e4150b7e6f9ea4cfa925",
+            "sha1sum":"aa2fdb9023440ac8f69d83aa37b3c29a0500bd31",
             "suffix":"cubepar",
             "text_descr":"IFU Cube defaults",
             "tpn":"nirspec_cubepar.tpn",
             "unique_rowkeys":[
-                "GRATING",
-                "FILTER"
+                "DISPERSER",
+                "FILTER",
+                "WAVELENGTH"
             ]
         },
         "dark":{
