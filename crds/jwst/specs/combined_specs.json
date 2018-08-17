@@ -79,6 +79,19 @@
             "text_descr":"Throughput constraints for all instruments.",
             "tpn":"all_throughput.tpn",
             "unique_rowkeys":null
+        },
+        "trappars":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"TRAPPARS",
+            "filetype":"TRAPPARS",
+            "instrument":"ALL",
+            "ld_tpn":"all_trappars_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"TRAPPARS",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"all_trappars.tpn",
+            "unique_rowkeys":null
         }
     },
     "fgs":{
