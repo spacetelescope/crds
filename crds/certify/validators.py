@@ -21,7 +21,7 @@ import numpy as np
 from crds.core import log, utils, timestamp, selectors
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
-from crds.core.exceptions import BadKernelSumError
+from crds.core.exceptions import BadKernelSumError, BadKernelCenterPixelTooSmall
 from crds.io import tables
 from crds import data_file
 
@@ -637,6 +637,14 @@ class KernelunityValidator(Validator):
         log.verbose("File=" + repr(os.path.basename(filename)),
                    "Checking", len(images_data), repr(array_name), "kernel(s) of size", 
                     images_data[0].shape, "for individual sums of 1+-1e-6.")
+
+        center_0 = all_data.shape[-2]//2 + 1
+        center_1 = all_data.shape[-1]//2 + 1
+        center_pixels = all_data[..., center_0, center_1]
+        if not np.all(center_pixels > 1.0):
+            raise BadKernelCenterPixelTooSmall(
+                "One or more kernel center pixel value(s) too small,  should be > 1.0")
+                                 
         for (i, image) in enumerate(images_data):
             if abs(image.sum()-1.0) > 1.0e-6:
                 raise BadKernelSumError("Kernel sum", image.sum(),
