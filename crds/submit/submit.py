@@ -1,11 +1,4 @@
 """This module provides a command line interface for doing CRDS file submissions."""
-
-# ===================================================================
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import os
 import os.path
