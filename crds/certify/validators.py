@@ -60,9 +60,6 @@ class Validator(object):
         self.name = info.name
         self._presence_condition_code = None
 
-        self._eval_namespace = dict(globals())
-        self._eval_namespace.update(validator_helpers.__dict__)
-        
         if self.info.datatype not in generic_tpn.TpnInfo.datatypes:
             raise ValueError("Bad TPN datatype field " + repr(self.info.presence))
 
@@ -75,6 +72,13 @@ class Validator(object):
 
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(info.values)
+
+    @property
+    def _eval_namespace(self):
+        """Namespace in which various validator expressions and conditions are evaluated."""
+        space = dict(globals())
+        space.update(validator_helpers.__dict__)
+        return space
             
     @property
     def complex_name(self):
