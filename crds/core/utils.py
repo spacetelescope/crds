@@ -733,7 +733,7 @@ def organize_files(observatory, files):
 
 # ===================================================================
 
-MODULE_PATH_RE = re.compile(r"^crds(\.\w{1,64}){0,10}$")
+MODULE_PATH_RE = re.compile(r"^crds(_server)?(\.\w{1,64}){0,10}$")
 
 @cached
 def get_object(*args):
