@@ -107,7 +107,7 @@ class FitsFile(AbstractFile):
         """Return a Struct defining the properties of the FITS array in extension named `array_name`."""
         with fits_open(self.filepath) as hdulist:
             for (i, hdu) in enumerate(hdulist):
-                if hdu.name == array_name:
+                if str(array_name) in [hdu.name, str(i), "EXTENSION"+str(i), "EXT"+str(i)]:
                     break
             else:
                 return 'UNDEFINED'
