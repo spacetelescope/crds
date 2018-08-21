@@ -25,9 +25,8 @@ from crds.core.exceptions import BadKernelSumError
 from crds.io import tables
 from crds import data_file
 
-from . import generic_tpn
+from . import generic_tpn, validator_helpers
 from .generic_tpn import TpnInfo   # generic TpnInfo code
-from .validator_helpers import *
 
 # ============================================================================
 
@@ -60,7 +59,7 @@ class Validator(object):
         self.info = info
         self.name = info.name
         self._presence_condition_code = None
-        
+
         if self.info.datatype not in generic_tpn.TpnInfo.datatypes:
             raise ValueError("Bad TPN datatype field " + repr(self.info.presence))
 
@@ -73,6 +72,13 @@ class Validator(object):
 
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(info.values)
+
+    @property
+    def _eval_namespace(self):
+        """Namespace in which various validator expressions and conditions are evaluated."""
+        space = dict(globals())
+        space.update(validator_helpers.__dict__)
+        return space
             
     @property
     def complex_name(self):
@@ -252,7 +258,7 @@ class Validator(object):
         SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
             try:
-                presence = eval(self._presence_condition_code, header, dict(globals()))
+                presence = eval(self._presence_condition_code, header, self._eval_namespace)
                 log.verbose("Validator", self.info, "is",
                             "applicable." if presence else "not applicable.", verbosity=70)
                 if not presence:
@@ -266,11 +272,11 @@ class Validator(object):
             return presence
 #            return header.get(self.name, False) != "UNDEFINED"
         elif presence == "F": # IF_FULL_FRAME
-            return is_full_frame(SUBARRAY)
+            return validator_helpers.is_full_frame(SUBARRAY)
         elif presence == "S": # IF_SUBARRAY        
-            return is_subarray(SUBARRAY)
+            return validator_helpers.is_subarray(SUBARRAY)
         elif presence == "A":
-            return subarray_defined(header)
+            return validator_helpers.subarray_defined(header)
         else:    
             return True
 
@@ -575,7 +581,7 @@ class ExpressionValidator(Validator):
                                     "is 'UNDEFINED'. Skipping ", repr(self._expr))
                 return True   # fake satisfied     
         try:
-            satisfied = eval(self._expr_code, header, dict(globals()))
+            satisfied = eval(self._expr_code, header, self._eval_namespace)
         except Exception as exc:
             raise RequiredConditionError("Failed checking constraint", repr(self._expr), ":", str(exc))
         if not satisfied:

@@ -22,7 +22,6 @@ from __future__ import absolute_import
 import sys
 import os.path
 
-import crds
 from crds.core import config, cmdline, utils, log, rmap
 
 @utils.cached

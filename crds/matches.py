@@ -15,10 +15,10 @@ from __future__ import absolute_import
 import sys
 import os.path
 from collections import defaultdict
-from pprint import pprint as pp
+from pprint import pprint as pp   # doctests
 
 import crds
-from crds.core import python23, log, utils, config, cmdline, selectors
+from crds.core import python23, log, utils, cmdline, selectors
 from crds.client import api
 
 # ===================================================================
