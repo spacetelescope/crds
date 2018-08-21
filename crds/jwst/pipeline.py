@@ -42,6 +42,9 @@ True
 >>> _get_missing_context('jwst_0341.pmap')
 'jwst_0341.pmap'
 
+>>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.7.7"))
+'jwst_system_crdscfg_b7.yaml'
+
 >>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.9.3"))
 'jwst_system_crdscfg_b7.1.3.yaml'
 
@@ -50,19 +53,6 @@ True
 
 >>> os.path.basename(_get_config_refpath("jwst_0477.pmap", "0.10.1"))
 'jwst_system_crdscfg_b7.2.yaml'
-
->>> _versions_greaterthan("0.9.7", "0.10.0")
-False
-
->>> _versions_greaterthan("0.9.2", "0.10.1dev20000")
-False
-
->>> _versions_greaterthan("0.99.7", "0.10.1dev20000")
-True
-
->>> _versions_greaterthan("0.10.1", "0.10.1dev20000")
-False
-
 """
 
 from __future__ import print_function
@@ -212,7 +202,7 @@ REFPATHS = [
     ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
     ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
     ('0.10.0', "jwst_system_crdscfg_b7.2.yaml"),
-    ('9.9.9', "jwst_system_crdscfg_b7.2.yaml"),   # latest backstop
+    ('999.0.0', "jwst_system_crdscfg_b7.2.yaml"),   # latest backstop
 ]
     
 def _get_config_refpath(context, cal_ver):
@@ -220,8 +210,7 @@ def _get_config_refpath(context, cal_ver):
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
     i = 0
-    while (i < len(REFPATHS) and
-           _versions_greaterthan(cal_ver, REFPATHS[i][0])):
+    while (i < len(REFPATHS)-1 and not _versions_lt(cal_ver, REFPATHS[i+1][0])):
         i += 1
     refpath = os.path.join(HERE, REFPATHS[i][1])
     try:  # Use a normal try/except because exceptions are expected.
@@ -245,23 +234,58 @@ def _get_config_refpath(context, cal_ver):
     return refpath
 
 def _digits_only(version):
-    match  = re.match("(\d+).*", version)
-    return match.group(1)
-
-def _versions_greaterthan(v1, v2):
-    """Compare two semantic version numbers and account for issues 
-    like '10' < '9'.
     """
-    v1_parts, v2_parts = v1.split("."), v2.split(".")
-    for p1, p2 in zip(v1_parts, v2_parts):
-        p1, p2 = int(_digits_only(p1)), int(_digits_only(p2))
-        if p1 >= p2:
-            continue
-        else:
-            return False
-    if p1 == p2:
-        return False
-    return True
+    >>> _digits_only("0.7.7")
+    (0, 7, 7)
+    >>> _digits_only("0.10.1a1")
+    (0, 10, 1)
+    """
+    match  = re.match("([0-9.]+).*", version)
+    return tuple([int(dig) for dig in match.group(1).split(".")])
+
+def _versions_lt(v1, v2):
+    """Compare two semantic version numbers and account for issues like '10' < '9'.
+    Return True IFF `v1` < `v2`.
+
+    >>> _versions_gte("0.7.7", "0.7.7")
+    True
+    >>> _versions_gte("0.7.8", "0.7.7")
+    True
+    >>> _versions_gte("0.7.6", "0.7.7")
+    False
+    >>> _versions_gte("0.7.7", "0.7.8")
+    False
+    >>> _versions_gte("0.7.7", "0.7.6")
+    True
+    >>> _versions_gte("0.10.1", "0.7.7")
+    True
+    >>> _versions_gte("0.10.1", "0.10.0")
+    True
+    >>> _versions_gte("0.10.0", "0.10.1")
+    False
+    >>> _versions_gte("0.10.1", "0.10.1")
+    True
+    >>> _versions_gte("0.10.1", "0.10.1a1")
+    True
+    >>> _versions_gte("0.10.2", "0.10.1a1")
+    True
+    >>> _versions_gte("0.10.1", "0.11.1a1")
+    False
+    >>> _versions_gte("0.9.7", "0.10.0")
+    False
+    >>> _versions_gte("0.9.2", "0.10.1dev20000")
+    False
+    >>> _versions_gte("0.99.7", "0.10.1dev20000")
+    True
+    >>> _versions_gte("0.10.1", "0.10.1dev20000")
+    True
+    """
+    v1, v2 = _digits_only(v1), _digits_only(v2)
+    return v1 < v2
+
+def _versions_gte(v1, v2):
+    """"""
+    return not _versions_lt(v1, v2)
 
 class CrdsCfgManager(object):
     """The CrdsCfgManager handles using SYSTEM CRDSCFG information to compute things."""
