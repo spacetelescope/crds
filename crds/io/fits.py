@@ -7,11 +7,14 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+import re
+
 # ============================================================================
 
 import contextlib
 import uuid
 import os
+import io
 
 from astropy.io import fits
 
@@ -80,13 +83,40 @@ class FitsFile(AbstractFile):
         info_string = "\n".join(s.read().splitlines()[1:])
         return info_string
 
-    def get_array(self, array_name_or_ext):
+    def _array_name_to_hdu_index(self, array_name):
+        array_name = str(array_name)
+        ext_match = re.match(r"(EXT(ENSION)?)?(\d+)", array_name)
+        if ext_match:
+            i = ext_match.group(3)
+            return i, int(i)
+        ver_match = re.match(r"(.*)__(\d+)", array_name)
+        if ver_match:
+            name, ver = ver_match.group(1), int(ver_match.group(2))
+            return (name, ver), self._extension_number((name, ver))
+        return array_name, self._extension_number(array_name)
+
+    def _extension_number(self, index):
+        with fits_open(self.filepath) as hdus:
+            for i, hdu in enumerate(hdus):
+                if isinstance(index, str):
+                    if hdu.name == index:
+                        return i
+                elif isinstance(index, tuple):
+                    if hdu.name == index[0] and hdu.ver == index[1]:
+                        return i
+                else:
+                    raise ValueError(
+                        "Unrecognized HDU index format: " + str(index))
+            raise ValueError("Can't find HDU: " + str(index))
+
+    def get_array(self, array_name):
         """Return the `name`d array data from `filepath`,  alternately indexed
         by `extension` number.
         """
+        index = self._array_name_to_hdu_index(array_name)
         with fits_open(self.filepath) as hdus:
-            return hdus[array_name_or_ext].data
-            
+            return hdus[index[1]].data
+
     def get_raw_header(self, needed_keys=(), **keys):
         """Get the union of keywords from all header extensions of FITS
         file `fname`.  In the case of collisions, keep the first value
@@ -106,19 +136,19 @@ class FitsFile(AbstractFile):
     def get_array_properties(self, array_name, keytype="A"):
         """Return a Struct defining the properties of the FITS array in extension named `array_name`."""
         with fits_open(self.filepath) as hdulist:
-            for (i, hdu) in enumerate(hdulist):
-                if str(array_name) in [hdu.name, str(i), "EXTENSION"+str(i), "EXT"+str(i)]:
-                    break
-            else:
+            try:
+                array_name = self._array_name_to_hdu_index(array_name)
+                hdu = hdulist[array_name[1]]
+            except Exception:
                 return 'UNDEFINED'
             generic_class = {
                 "IMAGEHDU" : "IMAGE",
                 "BINTABLEHDU" : "TABLE", 
             }.get(hdu.__class__.__name__.upper(), "UNKNOWN")
-            if generic_class == "IMAGE":
+            if generic_class in ["IMAGE","UNKNOWN"]:
                 typespec = hdu.data.dtype.name
                 column_names = None
-            else:
+            else: # TABLE
                 dtype = hdu.data.dtype
                 typespec = {name.upper():str(dtype.fields[name][0]) for name in dtype.names}
                 column_names = [name.upper() for name in hdu.data.dtype.names]
@@ -127,7 +157,8 @@ class FitsFile(AbstractFile):
                         KIND = generic_class,
                         DATA_TYPE = typespec,
                         COLUMN_NAMES = column_names,
-                        EXTENSION = i,
+                        NAME = array_name[0],
+                        EXTENSION = array_name[1],
                         DATA = hdu.data if (keytype == "D") else None
                     )
 

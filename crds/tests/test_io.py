@@ -212,6 +212,7 @@ def dt_get_array_properties_hdu_name():
                    'XD_RANGE': '>i4'},
      'EXTENSION': 1,
      'KIND': 'TABLE',
+     'NAME': '_WCP',
      'SHAPE': (4,)}
     >>> test_config.cleanup(old_state)
     """
@@ -237,6 +238,7 @@ def dt_get_array_properties_extension_number1():
                    'XD_RANGE': '>i4'},
      'EXTENSION': 1,
      'KIND': 'TABLE',
+     'NAME': '1',
      'SHAPE': (4,)}
     >>> test_config.cleanup(old_state)
     """
@@ -262,6 +264,7 @@ def dt_get_array_properties_extension_number2():
                    'XD_RANGE': '>i4'},
      'EXTENSION': 1,
      'KIND': 'TABLE',
+     'NAME': '1', 
      'SHAPE': (4,)}
     >>> test_config.cleanup(old_state)
     """
@@ -288,6 +291,7 @@ def dt_get_array_properties_extension_number3():
                    'XD_RANGE': '>i4'},
      'EXTENSION': 1,
      'KIND': 'TABLE',
+     'NAME': '1',
      'SHAPE': (4,)}
     >>> test_config.cleanup(old_state)
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
@@ -309,6 +313,7 @@ def dt_get_array_properties_extension_number3():
                    'XD_RANGE': '>i4'},
      'EXTENSION': 1,
      'KIND': 'TABLE',
+     'NAME': '1',
      'SHAPE': (4,)}
     >>> test_config.cleanup(old_state)
     """
