@@ -208,17 +208,39 @@ motivation for modernizing formats.
 The name field specifies the name of a header keyword, table column, array,
 or expression constraint.
 
+Header Keyword Names
+++++++++++++++++++++
+
 Header and table keyword names correspond roughly to FITS keywords or JWST CAL
 data models paths flattened into a single string, e.g.::
 
   READPATT
   META.EXPOSURE.READPATT
 
+ Array Names
+ +++++++++++
+  
 Array names are specified as the bare HDU name in the <name> field, e.g. SCI.
 These are referenced within expressions as <name>_ARRAY.  These are case
 insensitive and specified in all capital letters, numbers, or underscores much
 like FITS keywords.  They should begin with a letter and be valid program
 identifiers.
+
+There are two additional specification cases for array names:
+
+1. FITS extensions can also named by number, e.g.  EXT1 or EXTENSION1 refers to
+   the data of HDU #1.  In constraint expressions these are referred to as
+   e.g. EXT1_ARRAY.  These can be discriminated from normal header keywords by
+   the keytype, which will be array vs. header.
+
+2. FITS extensions can be named by (name, ver), in CRDS this is denoted as
+   <name>__<ver>, which corresponds to e.g. ('SCI', 1).  In constraint
+   expressions they are referred to as as <name>__<ver>_ARRAY,
+   e.g. SCI__1_ARRAY.  These can be differentiated from normal array extension
+   names by the double-underscore-digit convention,  an imperfect compromise.
+
+Expression Constraint Names
++++++++++++++++++++++++++++
 
 Expression constraint names describe the check performed by the value
 expression, they do not describe any physical entity within the reference file.
