@@ -601,9 +601,10 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found. Opening jwst_miri_ipc_0003.add.fits as a ReferenceImageModel
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  1 warnings
+    CRDS - INFO -  2 warnings
     CRDS - INFO -  7 infos
     0
     >>> test_config.cleanup(old_state)
