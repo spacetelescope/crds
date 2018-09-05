@@ -3,5 +3,5 @@
 APERTURE  H    C   R
 
 PS   A   X   R   (ndim(PS_ARRAY,3))
-
+PS   A   X   R   (has_type(PS_ARRAY,'FLOAT'))
 
