@@ -46,6 +46,12 @@ def get_extra_tpninfos(refpath):
 def project_check(refpath):
     return
 
+def get_exptypes(instrument=None):
+    """Return the list of EXP_TYPE values for instrument,  or for all 
+    instruments if instrument is not specified.
+    """
+    raise NotImplementedError("TOBS has not defined get_exptypes().")
+    
 # =======================================================================
 
 # When loading headers,  make sure each keyword in a tuple is represented with
