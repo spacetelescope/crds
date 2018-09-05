@@ -9,10 +9,11 @@ header = {
     'name' : 'jwst_niriss_pathloss.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '69994ee55fa75fdd1b551647c87490e2d719b466',
+    'sha1sum' : '8ee5519e4612b9fdac2234e30340f6b4c6db26b8',
     'suffix' : 'pathloss',
     'text_descr' : 'Path loss correction',
 }
 
 selector = Match({
+    ('NOT NIS_SOSS',) : 'N/A',
 })
