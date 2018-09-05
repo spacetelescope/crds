@@ -1,5 +1,7 @@
+
+# Technically part of PS HDU
 APERTURE  H    C   R
 
 PS   A   X   R   (ndim(PS_ARRAY,3))
-PS   A   X   R   &FitsVerSimilar
+
 
