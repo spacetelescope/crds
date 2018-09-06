@@ -744,36 +744,23 @@ jwst_niriss_superbias_0005.rmap
                     rmap_name = i_loaded.selections[filekind]
                     if rmap_name == 'N/A':
                         if filekind in reftypes:
-                            log.verbose("Reftype rmap", repr(ufilekind),
-                                        "is defined as N/A for",
-                                        repr(exp_type))
+                            log.verbose("Reftype rmap", repr(ufilekind), "is defined as N/A for", repr(exp_type))
                     else:
                         r_loaded = i_loaded.get_rmap(filekind)
                         r_exp_types = r_loaded.get_parkey_map().get("META.EXPOSURE.TYPE", None)
                         if r_exp_types is None:   # ???
-                            log.verbose("Reftype", repr(ufilekind),
-                                        "does not match using EXP_TYPE.")
+                            log.verbose("Reftype", repr(ufilekind), "does not match using EXP_TYPE.")
                         elif exp_type in r_exp_types:
                             if filekind in reftypes:
-                                log.verbose("Reftype", repr(ufilekind),
-                                            "explicitly mentions",
-                                            repr(exp_type))
+                                log.verbose("Reftype", repr(ufilekind), "explicitly mentions", repr(exp_type))
                             else:
-                                log.verbose("Reftype", repr(ufilekind),
-                                            "has unexpected coverage for",
-                                            repr(exp_type))
+                                log.warning("Reftype", repr(ufilekind), "has unexpected coverage for", repr(exp_type))
                         elif "ANY" in r_exp_types or "N/A" in r_exp_types:
-                            log.verbose("Reftype", repr(ufilekind),
-                                        "is satisfied by ANY or N/A for",
-                                        repr(exp_type))
+                            log.verbose("Reftype", repr(ufilekind), "is satisfied by ANY or N/A for", repr(exp_type))
                         elif filekind in reftypes:
-                            log.info("Reftype", repr(ufilekind),
-                                     "is missing coverage for",
-                                     repr(exp_type))
+                            log.info("Reftype", repr(ufilekind), "is missing coverage for", repr(exp_type))
                         else:
-                            log.verbose("Reftype", repr(ufilekind),
-                                        "has no expected coverage for",
-                                        repr(exp_type))
+                            log.verbose("Reftype", repr(ufilekind), "has no expected coverage for", repr(exp_type))
 def _get_python_info():
     """Collect and return information about the Python environment"""
     pyinfo = {
