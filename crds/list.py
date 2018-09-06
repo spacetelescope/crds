@@ -361,13 +361,13 @@ jwst_niriss_superbias_0005.rmap
             help="print the names of the parkeys required to compute bestrefs for the specified mappings.")
 
         self.add_argument("--required-reftypes", dest="required_reftypes", default=None,
-                          help="print reference type names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.")
+                          help="print reference type names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted. (EXPERIMENTAL, may be dropped.)")
 
         self.add_argument("--required-pipelines", dest="required_pipelines", default=None,
-                          help="print CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.")
+                          help="print CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.  (EXPERIMENTAL,  may be dropped.)")
 
         self.add_argument("--check-exptypes", action="store_true", 
-            help="print exp_type coverage of specified imaps (use --contexts or --files).")
+                          help="print exp_type coverage of specified imaps (use --contexts or --files).  (EXPERIMENTAL, may be dropped.)")
         
         super(ListScript, self).add_args()
         
