@@ -361,11 +361,14 @@ jwst_niriss_superbias_0005.rmap
             help="print the names of the parkeys required to compute bestrefs for the specified mappings.")
 
         self.add_argument("--required-reftypes", dest="required_reftypes", default=None,
-                          help="print reference type names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.")
+                          help="print reference type names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted. (EXPERIMENTAL, may be dropped.)")
 
         self.add_argument("--required-pipelines", dest="required_pipelines", default=None,
-                          help="print CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.")
+                          help="print CAL s/w pipeline .cfg names nominally used to calibrate EXP_TYPE,CAL_VER under a given CRDS context. ,CAL_VER may be omitted.  (EXPERIMENTAL,  may be dropped.)")
 
+        self.add_argument("--check-exptypes", action="store_true", 
+                          help="print exp_type coverage of specified imaps (use --contexts or --files).  (EXPERIMENTAL, may be dropped.)")
+        
         super(ListScript, self).add_args()
         
     def main(self):
@@ -412,6 +415,9 @@ jwst_niriss_superbias_0005.rmap
 
         if self.args.required_pipelines:
             self.list_required_pipelines()
+
+        if self.args.check_exptypes:
+            self.check_exptypes()
 
     def list_resolved_contexts(self):
         """Print out the literal interpretation of the contexts implied by the script's
@@ -723,7 +729,38 @@ jwst_niriss_superbias_0005.rmap
         except Exception:
             exp_type, cal_ver = parameter, None
         return exp_type, cal_ver
-            
+
+    def check_exptypes(self):
+        """Based on EXP_TYPEs defined by CAL schema and the specified instrument
+        contexts, print out log info on missing or unexpected coverage.
+        """
+        for imap_name in self.contexts:
+            i_loaded = crds.get_cached_mapping(imap_name)
+            s_exp_types = self.locator.get_exptypes(i_loaded.instrument)
+            for exp_type in s_exp_types:
+                reftypes = self.locator.get_reftypes(exp_type)
+                for filekind in i_loaded.selections:
+                    ufilekind = (i_loaded.instrument.upper(), filekind.upper())
+                    rmap_name = i_loaded.selections[filekind]
+                    if rmap_name == 'N/A':
+                        if filekind in reftypes:
+                            log.verbose("Reftype rmap", repr(ufilekind), "is defined as N/A for", repr(exp_type))
+                    else:
+                        r_loaded = i_loaded.get_rmap(filekind)
+                        r_exp_types = r_loaded.get_parkey_map().get("META.EXPOSURE.TYPE", None)
+                        if r_exp_types is None:   # ???
+                            log.verbose("Reftype", repr(ufilekind), "does not match using EXP_TYPE.")
+                        elif exp_type in r_exp_types:
+                            if filekind in reftypes:
+                                log.verbose("Reftype", repr(ufilekind), "explicitly mentions", repr(exp_type))
+                            else:
+                                log.warning("Reftype", repr(ufilekind), "has unexpected coverage for", repr(exp_type))
+                        elif "ANY" in r_exp_types or "N/A" in r_exp_types:
+                            log.verbose("Reftype", repr(ufilekind), "is satisfied by ANY or N/A for", repr(exp_type))
+                        elif filekind in reftypes:
+                            log.info("Reftype", repr(ufilekind), "is missing coverage for", repr(exp_type))
+                        else:
+                            log.verbose("Reftype", repr(ufilekind), "has no expected coverage for", repr(exp_type))
 def _get_python_info():
     """Collect and return information about the Python environment"""
     pyinfo = {

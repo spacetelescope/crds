@@ -94,6 +94,13 @@ def get_pipelines(exp_type, cal_ver=None, context=None):
     """
     raise NotImplementedError("HST has not defined pipeline .cfg files.")
 
+def get_exptypes(instrument=None):
+    """Return the list of EXP_TYPE values for instrument,  or for all 
+    instruments if instrument is not specified.
+    """
+    raise NotImplementedError("HST has not defined get_exptypes().")
+    
+
 # =======================================================================
 
 def match_context_key(key):
