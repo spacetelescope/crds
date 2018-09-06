@@ -28,6 +28,8 @@ from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXE
 
 from . import schema
 
+# definitively lists possible exp_types by instrument, or all instruments
+from .schema import get_exptypes
 
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
