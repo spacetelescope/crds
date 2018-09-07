@@ -644,6 +644,56 @@ class KernelunityValidator(Validator):
 
 # ----------------------------------------------------------------------------
 
+class IsomorphicfitsverValidator(Validator):
+    """Ensure that every image in a (HDU, ver*) stack has the same shape
+    and type as (HDU,1).   Subclass to set expected maximum HDU ver.
+    """
+
+    max_ver = None
+    
+    def _check_value(self, *args, **keys):  
+        return True
+
+    def check_header(self, filename, header):
+        """Evalutate the header expression associated with this validator (as its sole value)
+        with respect to the given `header`.  Read `header` from `filename` if `header` is None.
+        """
+        array_name = self.complex_name
+        max_ver = 0
+        with data_file.fits_open(filename) as hdus:
+            first = dict()
+            for hdu in hdus:
+                if hdu.name != self.name:
+                    continue
+                self.verbose(filename, f"ver={hdu.ver}",
+                             f"Array has shape={hdu.data.shape} and dtype={repr(str(hdu.data.dtype))}).")
+                if hdu.name not in first:
+                    first[hdu.name] = (hdu.data.shape, hdu.data.dtype)
+                else:
+                    expected = first[hdu.name][0]
+                    got = hdu.data.shape
+                    assert expected == got, \
+                        f"Shape mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                    expected = first[hdu.name][1]
+                    got = hdu.data.dtype
+                    assert expected == got, \
+                        f"Data type mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                max_ver = hdu.ver
+            if self.max_ver is not None:
+                assert self.max_ver == max_ver, \
+                    f"Bad maximum HDU ver for '{self.name}'. Expected {self.max_ver}, got {max_ver}."
+
+class Isomorphicfitsver4Validator(IsomorphicfitsverValidator):
+    max_ver = 4
+
+class Isomorphicfitsver2Validator(IsomorphicfitsverValidator):
+    max_ver = 2
+
+class Isomorphicfitsver1Validator(IsomorphicfitsverValidator):
+    max_ver = 1
+    
+# ----------------------------------------------------------------------------
+
 def validator(info):
     """Given TpnInfo object `info`, construct and return a Validator for it."""
     if len(info.values) == 1 and len(info.values[0]) and \
