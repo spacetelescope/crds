@@ -24,6 +24,19 @@
             "tpn":"all_dark.tpn",
             "unique_rowkeys":null
         },
+        "gain":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"GAIN",
+            "filetype":"GAIN",
+            "instrument":"ALL",
+            "ld_tpn":"all_gain_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"GAIN",
+            "text_descr":"Gain",
+            "tpn":"all_gain.tpn",
+            "unique_rowkeys":null
+        },
         "ipc":{
             "extra_keys":null,
             "file_ext":".fits",
