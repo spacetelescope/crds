@@ -1,5 +1,6 @@
 
-# Technically part of PS HDU
+# Technically part of PS HDU and required for all ver with different values
+# this latter aspect is not checked.
 APERTURE  H    C   R
 
 PS      A   X   R (ndim(PS_ARRAY,3))
