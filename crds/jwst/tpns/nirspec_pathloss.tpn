@@ -1,30 +1,20 @@
-
 # Technically part of PS HDU and required for all ver with different values
 # this latter aspect is not checked.
 APERTURE  H    C   R
 
 PS      A   X   R (ndim(PS_ARRAY,3))
 PS      A   X   R (has_type(PS_ARRAY,'FLOAT'))
+PS      A   X   R  &IsomorphicFitsVer
+
 PSVAR   A   X   R (ndim(PS_ARRAY,3))
 PSVAR   A   X   R (has_type(PS_ARRAY,'FLOAT'))
+PSVAR   A   X   R  &IsomorphicFitsVer
+
 UNI     A   X   R (ndim(UNI_ARRAY,1))
 UNI     A   X   R (has_type(UNI_ARRAY,'FLOAT'))
+UNI     A   X   R  &IsomorphicFitsVer
+
 UNIVAR  A   X   R (ndim(UNIVAR_ARRAY,1))
 UNIVAR  A   X   R (has_type(UNIVAR_ARRAY,'FLOAT'))
-
-# Nominally this is NRS_FIXEDSLIT|NRS_BRIGHTOBJ
-PS      A   X   ("NRS_FIXEDSLIT"in(EXP_TYPE.split("|")))  &IsomorphicFitsVer4
-PSVAR   A   X   ("NRS_FIXEDSLIT"in(EXP_TYPE.split("|")))  &IsomorphicFitsVer4
-UNI     A   X   ("NRS_FIXEDSLIT"in(EXP_TYPE.split("|")))  &IsomorphicFitsVer4
-UNIVAR  A   X   ("NRS_FIXEDSLIT"in(EXP_TYPE.split("|")))  &IsomorphicFitsVer4
-
-PS      A   X   ((EXP_TYPE)in["NRS_MSASPEC"])  &IsomorphicFitsVer2
-PSVAR   A   X   ((EXP_TYPE)in["NRS_MSASPEC"])  &IsomorphicFitsVer2
-UNI     A   X   ((EXP_TYPE)in["NRS_MSASPEC"])  &IsomorphicFitsVer2
-UNIVAR  A   X   ((EXP_TYPE)in["NRS_MSASPEC"])  &IsomorphicFitsVer2
-
-PS      A   X   ((EXP_TYPE)in["NRS_IFU"])  &IsomorphicFitsVer1
-PSVAR   A   X   ((EXP_TYPE)in["NRS_IFU"])  &IsomorphicFitsVer1
-UNI     A   X   ((EXP_TYPE)in["NRS_IFU"])  &IsomorphicFitsVer1
-UNIVAR  A   X   ((EXP_TYPE)in["NRS_IFU"])  &IsomorphicFitsVer1
+UNIVAR  A   X   R  &IsomorphicFitsVer
 
