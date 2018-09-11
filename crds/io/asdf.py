@@ -36,7 +36,7 @@ class AsdfFile(AbstractFile):
         """Given and ASDF file object `handle`, return the history collected into a
         single string.
         """
-        history = "UNDEFINED or BAD FORMAT"
+        history = "UNDEFINED"   # or BAD FORMAT
         with log.error_on_exception(
                 "Failed reading ASDF history, see ASDF docs on adding history"):
             histall = []
