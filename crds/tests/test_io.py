@@ -264,7 +264,7 @@ def dt_get_array_properties_extension_number2():
                    'XD_RANGE': '>i4'},
      'EXTENSION': 1,
      'KIND': 'TABLE',
-     'NAME': '1', 
+     'NAME': '1',
      'SHAPE': (4,)}
     >>> test_config.cleanup(old_state)
     """
@@ -273,7 +273,7 @@ def dt_get_array_properties_extension_number2():
 def dt_get_array_properties_extension_number3():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> pprint( data_file.get_array_properties("data/x2i1559gl_wcp.fits", 1))
+    >>> pprint( data_file.get_array_properties("data/x2i1559gl_wcp.fits", "_WCP__1"))
     {'COLUMN_NAMES': ['OPT_ELEM',
                       'XC_RANGE',
                       'RESWIDTH',
@@ -291,9 +291,10 @@ def dt_get_array_properties_extension_number3():
                    'XD_RANGE': '>i4'},
      'EXTENSION': 1,
      'KIND': 'TABLE',
-     'NAME': '1',
+     'NAME': ('_WCP', 1),
      'SHAPE': (4,)}
     >>> test_config.cleanup(old_state)
+
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "1"))
     {'COLUMN_NAMES': ['OPT_ELEM',
