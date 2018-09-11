@@ -168,7 +168,7 @@ def dt_asdf_history_no_entries_description():
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> header = data_file.get_header("data/niriss_ref_distortion.asdf")
     >>> header["HISTORY"]
-    'UNDEFINED or BAD FORMAT'
+    'UNDEFINED'
     >>> test_config.cleanup(old_state)
     """
 

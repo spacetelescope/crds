@@ -489,30 +489,40 @@ def certify_table_comparison_context():
 
     >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying '.../references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
-    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
-    CRDS - INFO -  Final combination is intersection with available table columns.
+    CRDS - INFO -  Certifying '.../crds-cache-default-test/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
     CRDS - INFO -  Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
-    CRDS - WARNING -  Table mode (('DATE', 56923.58...),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56964.0...),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56921.83...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56922.0...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.58...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.04...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.20...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.31...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56925.0...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56959.45...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56959.66...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56961.83...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56962.83...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'yas2005el_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'yas2005el_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - WARNING -  Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'yas2005el_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'yas2005el_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - WARNING -  Table mode (('DATE', 56921.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.0417),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.2084),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56959.4584),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56959.6667),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56961.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  15 warnings
-    CRDS - INFO -  7 infos
+    CRDS - INFO -  17 infos
     0
     >>> test_config.cleanup(old_state)
     """
@@ -523,27 +533,37 @@ def certify_table_comparison_reference():
     CRDS - INFO -  Certifying with --comparison-reference, no default --comparison-context defined.
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
-    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
-    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - WARNING -  Table mode (('DATE', 56923.58...),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.04...),) :
-     (129, (('DATE', 56924.04...), ('HVLEVELB', 169)))
-    (131, (('DATE', 56924.04...), ('HVLEVELB', 169)))
-    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0...),) :
-     (132, (('DATE', 56925.0...), ('HVLEVELB', 175)))
-    (134, (('DATE', 56925.0...), ('HVLEVELB', 175)))
-    CRDS - WARNING -  Table mode (('DATE', 56921.83...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56922.0...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.04...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.31...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56925.0...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - WARNING -  Table mode (('DATE', 56923.5834),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
+     (129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    (131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
+     (132, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    (134, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - WARNING -  Table mode (('DATE', 56921.8334),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.0417),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  10 warnings
-    CRDS - INFO -  7 infos
+    CRDS - INFO -  17 infos
     0
     """
 
@@ -553,14 +573,18 @@ def certify_comparison_context_none_all_references():
     CRDS - INFO -  Comparison context explicitly specified as 'none',  no --comparison-context will be used.
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
-    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
-    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'DATE'}
     CRDS - WARNING -  No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
-    CRDS - INFO -  7 infos
+    CRDS - INFO -  11 infos
     0
     """
 
@@ -748,16 +772,18 @@ def certify_jwst_bad_fits():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
-    CRDS - INFO -  Potential table unique row selection parameters are ['FILTER', 'PUPIL', 'ORDER']
-    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - INFO -  Mode columns defined by spec for new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  All column names for this table new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
+    CRDS - INFO -  Checking for duplicate modes using intersection {'FILTER', 'PUPIL'}
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - WARNING -  ValidationWarning : jwst.datamodels...
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels...
     >>> test_config.cleanup(old_state)
     """
 
@@ -848,11 +874,11 @@ def load_nirspec_staturation_tpn_lines():
     SUBARRAY_INBOUNDS_X         X   X   ((True))                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
     SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
     SCI       A           X             ((True))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-    SCI       A           X         (full_frame((True))and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])
-    SCI       A           X         (full_frame((True))and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])
-    SCI       A           X         (subarray((True))and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-    SCI       A           X         (subarray((True))and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
-    SCI       A           X         (subarray((True)))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+    SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])
+    SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])
+    SCI       A           X         (is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+    SCI       A           X         (is_subarray(SUBARRAY)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
+    SCI       A           X         (is_subarray(SUBARRAY))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
     DQ   A    X         ((True))    (is_image(DQ_ARRAY))
     DQ   A    X         ((True))    (has_type(DQ_ARRAY,'INT'))
     DQ   A    X         (array_exists(DQ_ARRAY))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
@@ -910,11 +936,11 @@ def load_nirspec_staturation_tpn():
      ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)'),
      ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(not(is_irs2(READPATT))))', expression='(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True)))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(DQ_ARRAY))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(DQ_ARRAY,'INT'))"),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(array_exists(DQ_ARRAY))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
