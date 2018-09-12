@@ -642,8 +642,9 @@ class KernelunityValidator(Validator):
         center_1 = images_data.shape[-1]//2
         center_pixels = images_data[..., center_0, center_1]
         if not np.all(center_pixels >= 1.0):
-            raise BadKernelCenterPixelTooSmall(
-                "One or more kernel center pixel value(s) too small,  should be >= 1.0")
+            log.warning("Possible bad IPC Kernel:  One or more kernel center pixel value(s) too small, should be >= 1.0")
+            # raise BadKernelCenterPixelTooSmall(
+            #    "One or more kernel center pixel value(s) too small,  should be >= 1.0")
                                  
         for (i, image) in enumerate(images_data):
             if abs(image.sum()-1.0) > 1.0e-6:
