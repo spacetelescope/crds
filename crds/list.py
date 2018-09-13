@@ -496,18 +496,16 @@ jwst_niriss_superbias_0005.rmap
         
     def _cat_array_properties(self, path):
         """Print out the CRDS interpretation of every array in `path`,  currently FITS only."""
-        i = 0
         with data_file.fits_open(path) as hdulist:
-            for hdu in hdulist:
+            for i, hdu in enumerate(hdulist):
                 with log.warn_on_exception("Can't load array properties for HDU[" + str(i) +"]"):
                     if i > 0:
-                        extname = hdu.header["EXTNAME"]
+                        extname = hdu.header.get("EXTNAME",str(i))
                         self._cat_banner("CRDS Array Info [" + repr(extname) + "]:",
                                          delim="-", bottom_delim=None)
-                        props = data_file.get_array_properties(path, hdu.header["EXTNAME"])
+                        props = data_file.get_array_properties(path, extname)
                         props = { prop:value for (prop,value) in props.items() if value is not None }
                         self._print_lines(path, _pp_lines(props))
-                i += 1
 
     def _cat_text(self, path):
         """Dump out the contexts of a text file."""
