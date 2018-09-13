@@ -20,11 +20,20 @@ with open("simplified") as file:
            organized[instrument].add(subarray)
            instrument = file.readline().strip()
 
+% rm simplified
+
 reorganized = dict()
 for instrument in organized:
-     reorganized[instrument] = sorted(list(organized[instrument]))
+     reorganized[instrument] = sorted(list(organized[instrument])) + \
+                               ["GENERIC","ANY","N/A"]
 
-pprint(reorganized)
+with open("subarrays.tpn", "w+") as file_:
+     for instrument in reorganized:
+          print(instrument.upper(), "---",  ",".join(reorganized[instrument]),
+                file = file_)
 
-% rm simplified
+with open("extracted_subarrays.dict", "w+") as file_:
+          pprint(reorganized, stream=file_)
+
+
 
