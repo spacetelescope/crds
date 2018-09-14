@@ -19,5 +19,6 @@ COMPNAME            C        C         R
 INNODE	            C        I         R
 OUTNODE             C        I         R
 KEYWORD             C        C         R
+THCOMPNAME          C        C         R
 COMMENT             C        C         R
 
