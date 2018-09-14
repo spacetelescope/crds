@@ -273,7 +273,8 @@ class DateParser:
     format = re.compile("^$")
     should_be = "DATE FORMAT NOT DEFINED"
 
-    def _get_date_dict(self, match):
+    @classmethod
+    def _get_date_dict(cls, match):
         raise NotImplementedError("Data Parser is an abstract class.")
     
     @classmethod
@@ -487,18 +488,18 @@ def is_datetime(datetime_str):
 
 
 # ============================================================================
-def reformat_useafter(rmapping, header):
+def reformat_useafter(filename, header):
     """Reformat a USEAFTER date in a standard CRDS form which can be split into
     DATE-OBS and TIME-OBS.   Honor the ALLOW_BAD_USEAFTER to provide a safe default
     for early junk USEAFTER values;  1900-01-01T00:00:00.
     """
-    useafter = str(header["USEAFTER"])
+    useafter = str(header.get("USEAFTER", "UNDEFINED"))
     try:
         return reformat_date(useafter)
     except Exception as exc:
         if config.ALLOW_BAD_USEAFTER:
             log.warning("Can't parse USEAFTER =", repr(useafter),
-                        "in", repr(rmapping.filename), "faking as '1900-01-01T00:00:00'")
+                        "for", repr(filename), "faking as '1900-01-01T00:00:00'")
             return reformat_date("1900-01-01T00:00:00")
         else:
             raise exceptions.InvalidUseAfterFormat(
