@@ -1,0 +1,26 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Initial hand made version 2018-09-10. Jira CCD-148.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'COMP',
+    'filetype' : 'COMPONENT THROUGHPUT',
+    'instrument' : 'SYNPHOT',
+    'ld_tpn' : 'synphot_comp_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_synphot_comp.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('INSTRUME', 'COMPNAME'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(False)',
+    'sha1sum' : '6e95f272e248d1839b933234ab749b31f9232d58',
+    'suffix' : 'syn',
+    'text_descr' : 'Component Throughput Tables',
+    'tpn' : 'synphot_comp.tpn',
+    'unique_rowkeys' : ('XXXXX',),
+}
+
+selector = Match({
+})

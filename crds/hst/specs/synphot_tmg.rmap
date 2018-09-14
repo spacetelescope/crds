@@ -1,0 +1,26 @@
+header = {
+    'classes' : ('Match',),
+    'derived_from' : 'Initial hand made version 2018-09-13. Jira CRDS-148.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'TMGTAB',
+    'filetype' : 'GRAPH TABLE',
+    'instrument' : 'SYNPHOT',
+    'ld_tpn' : 'symphot_tmg_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_synphot_tmg.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((),),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(False)',
+    'sha1sum' : '298aedabaa8b5ba0d12f936db2df8e015e80bcd8',
+    'suffix' : 'tmg',
+    'text_descr' : '',
+    'tpn' : 'synphot_tmg.tpn',
+    'unique_rowkeys' : ('COMPNAME', 'KEYWORD', 'THCOMPNAME'),
+}
+
+selector = Match({
+})
