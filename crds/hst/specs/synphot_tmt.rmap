@@ -15,11 +15,11 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(False)',
-    'sha1sum' : '7a600dca0580e06e8e843d25364e2658386922cf',
+    'sha1sum' : '52074921bb1f5c092b2def3edec4be706cc5d25e',
     'suffix' : 'tmt',
     'text_descr' : 'Thermal Component Lookup Table',
     'tpn' : 'synphot_tmt.tpn',
-    'unique_rowkeys' : ('TIME', 'COMPONENT'),
+    'unique_rowkeys' : ('TIME', 'COMPNAME'),
 }
 
 selector = Match({
