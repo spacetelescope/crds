@@ -124,13 +124,20 @@ def reference_keys_to_dataset_keys(rmapping, header):
     result = dict(header)
     
     #  XXXXX TODO   Add/consolidate logic to handle P_ pattern keywords
-    
-    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
-        reformatted = timestamp.reformat_useafter(rmapping, header).split()
+
+    # If USEAFTER is defined,  or we're configured to fake it...
+    #   don't invent one if its missing and we're not faking it.
+    if "USEAFTER" in header or config.ALLOW_BAD_USEAFTER:
+
+        # Identify reference involved as best as possible
+        filename = header.get("FILENAME", None) or rmapping.filename
+
+        reformatted = timestamp.reformat_useafter(filename, header).split()
         result["DATE-OBS"] = reformatted[0]
         result["DATE_OBS"] = reformatted[0]
         result["TIME-OBS"] = reformatted[1]
         result["TIME_OBS"] = reformatted[1]
+    
     return result
 
 # =======================================================================
