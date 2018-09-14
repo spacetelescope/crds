@@ -2151,7 +2151,7 @@
         }
     },
     "synphot":{
-        "comp":{
+        "comptab":{
             "classes":[
                 "Match",
                 "UseAfter"
@@ -2160,7 +2160,7 @@
             "extra_keys":[],
             "file_ext":".fits",
             "filekind":"COMPTAB",
-            "filetype":"COMPONENT THROUGHPUT",
+            "filetype":"CRTHROUGHPUT",
             "instrument":"SYNPHOT",
             "ld_tpn":"synphot_syn_ld.tpn",
             "mapping":"REFERENCE",
@@ -2180,15 +2180,15 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"fcd95f6e2d9c4ca0e447e7b0778a3d52eb376a75",
+            "sha1sum":"174afeec0925c161b56d9e39ccad8208f775e37d",
             "suffix":"syn",
             "text_descr":"Component Throughput Tables",
             "tpn":"synphot_syn.tpn",
             "unique_rowkeys":[
-                "XXXXX"
+                "WAVELENGTH"
             ]
         },
-        "tmc":{
+        "tmctab":{
             "classes":[
                 "Match"
             ],
@@ -2196,11 +2196,11 @@
             "extra_keys":[],
             "file_ext":".fits",
             "filekind":"TMCTAB",
-            "filetype":"MASTER COMPONENT LOOKUP TABLE",
+            "filetype":"CRCOMPLIST",
             "instrument":"SYNPHOT",
-            "ld_tpn":"synphot_tmctab_ld.tpn",
+            "ld_tpn":"synphot_tmc_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"hst_synphot_tmctab.rmap",
+            "name":"synphot_tmctab.rmap",
             "observatory":"HST",
             "parkey":[
                 []
@@ -2209,16 +2209,16 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"1c6792f1b94d5d33c13402573801b64ec0fb2a75",
+            "sha1sum":"52c76f8f7df3f8cbba05cc8a8bd112e483c8a33e",
             "suffix":"tmc",
             "text_descr":"Master Component Lookup Table",
-            "tpn":"synphot_tmctab.tpn",
+            "tpn":"synphot_tmc.tpn",
             "unique_rowkeys":[
                 "TIME",
-                "COMPONENT"
+                "COMPNAME"
             ]
         },
-        "tmg":{
+        "tmgtab":{
             "classes":[
                 "Match"
             ],
@@ -2226,7 +2226,7 @@
             "extra_keys":[],
             "file_ext":".fits",
             "filekind":"TMGTAB",
-            "filetype":"GRAPH TABLE",
+            "filetype":"CRGRAPH",
             "instrument":"SYNPHOT",
             "ld_tpn":"symphot_tmg_ld.tpn",
             "mapping":"REFERENCE",
@@ -2239,7 +2239,7 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"a4325e9c4bd49a012b57b475f0a2b80f2a41d14c",
+            "sha1sum":"7447d1ec76f0b9f0f11c7c71b1e4d64a8160f966",
             "suffix":"tmg",
             "text_descr":"",
             "tpn":"synphot_tmg.tpn",
@@ -2251,7 +2251,7 @@
                 "THCOMPNAME"
             ]
         },
-        "tmt":{
+        "tmttab":{
             "classes":[
                 "Match"
             ],
@@ -2259,7 +2259,7 @@
             "extra_keys":[],
             "file_ext":".fits",
             "filekind":"TMTTAB",
-            "filetype":"THERMAL COMPONENT LOOKUP TABLE",
+            "filetype":"CRTHERMLIST",
             "instrument":"SYNPHOT",
             "ld_tpn":"synphot_tmt_ld.tpn",
             "mapping":"REFERENCE",
@@ -2272,7 +2272,7 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"52074921bb1f5c092b2def3edec4be706cc5d25e",
+            "sha1sum":"b0cc1ca6c47943f1dbab24ce66bb13056e08b9af",
             "suffix":"tmt",
             "text_descr":"Thermal Component Lookup Table",
             "tpn":"synphot_tmt.tpn",
