@@ -47,14 +47,14 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     Return new ReferenceMapping named `new_rmap`
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
+    new.header["derived_from"] = old.basename
     for reference in inserted_references:
         baseref = os.path.basename(reference)
         with log.augment_exception("In reference", srepr(baseref)):
             log.info("Inserting", srepr(baseref), "into", srepr(new.name))
             new = new.insert_reference(reference)
-    new.header["derived_from"] = old.basename
-    log.verbose("Writing", srepr(new_rmap))
-    new.write(new_rmap)
+            log.verbose("Writing", srepr(new_rmap))
+            new.write(new_rmap)
     formatted = new.format()
     for reference in inserted_references:
         reference = os.path.basename(reference)
