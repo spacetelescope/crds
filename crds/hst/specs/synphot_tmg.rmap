@@ -15,11 +15,11 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(False)',
-    'sha1sum' : '298aedabaa8b5ba0d12f936db2df8e015e80bcd8',
+    'sha1sum' : 'a4325e9c4bd49a012b57b475f0a2b80f2a41d14c',
     'suffix' : 'tmg',
     'text_descr' : '',
     'tpn' : 'synphot_tmg.tpn',
-    'unique_rowkeys' : ('COMPNAME', 'KEYWORD', 'THCOMPNAME'),
+    'unique_rowkeys' : ('COMPNAME', 'KEYWORD', 'INNODE', 'OUTNODE', 'THCOMPNAME'),
 }
 
 selector = Match({

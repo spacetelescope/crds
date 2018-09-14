@@ -2159,10 +2159,10 @@
             "derived_from":"Initial hand made version 2018-09-10. Jira CCD-148.",
             "extra_keys":[],
             "file_ext":".fits",
-            "filekind":"COMP",
+            "filekind":"COMPTAB",
             "filetype":"COMPONENT THROUGHPUT",
             "instrument":"SYNPHOT",
-            "ld_tpn":"synphot_comp_ld.tpn",
+            "ld_tpn":"synphot_syn_ld.tpn",
             "mapping":"REFERENCE",
             "name":"hst_synphot_comp.rmap",
             "observatory":"HST",
@@ -2180,10 +2180,10 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"6e95f272e248d1839b933234ab749b31f9232d58",
+            "sha1sum":"fcd95f6e2d9c4ca0e447e7b0778a3d52eb376a75",
             "suffix":"syn",
             "text_descr":"Component Throughput Tables",
-            "tpn":"synphot_comp.tpn",
+            "tpn":"synphot_syn.tpn",
             "unique_rowkeys":[
                 "XXXXX"
             ]
@@ -2239,13 +2239,15 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"298aedabaa8b5ba0d12f936db2df8e015e80bcd8",
+            "sha1sum":"a4325e9c4bd49a012b57b475f0a2b80f2a41d14c",
             "suffix":"tmg",
             "text_descr":"",
             "tpn":"synphot_tmg.tpn",
             "unique_rowkeys":[
                 "COMPNAME",
                 "KEYWORD",
+                "INNODE",
+                "OUTNODE",
                 "THCOMPNAME"
             ]
         },
@@ -2270,13 +2272,13 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"7a600dca0580e06e8e843d25364e2658386922cf",
+            "sha1sum":"52074921bb1f5c092b2def3edec4be706cc5d25e",
             "suffix":"tmt",
             "text_descr":"Thermal Component Lookup Table",
             "tpn":"synphot_tmt.tpn",
             "unique_rowkeys":[
                 "TIME",
-                "COMPONENT"
+                "COMPNAME"
             ]
         }
     },
