@@ -448,7 +448,7 @@ def ref_properties_from_header(filename):
                 raise CrdsError("CRDS is configured for 'HST' but file", repr(os.path.basename(filename)),
                                 "is for the", repr(observatory), "telescope.  Reconfigure CRDS_PATH or CRDS_SEVER_URL.")
             else:
-                raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
+                raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  or DBTABLE,  type not identifiable.".format(os.path.basename(filename)))
     filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
     try:
         filekind = TYPES.filetype_to_filekind(instrument, filetype)
@@ -498,12 +498,13 @@ u=WFPC2, n=NICMOS, m=MULTI, m=SYNPHOT]
 
     timeid = generate_timestamp(now)
 
-    if instr == "synphot":
-        suffix = "_" + filekind
-        instr_char = "m"
-    else:
-        suffix = "_" + filekind_to_suffix(instr, filekind)
-        instr_char = siname.instrument_to_id_char(instr)
+    # if instr == "synphot":
+    #     suffix = "_" + filekind
+    #    instr_char = "m"
+    # else:
+    
+    suffix = "_" + filekind_to_suffix(instr, filekind)
+    instr_char = siname.instrument_to_id_char(instr)
 
     return timeid + instr_char + suffix + extension
 

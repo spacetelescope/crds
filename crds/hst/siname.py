@@ -73,7 +73,7 @@ ID_CHAR_TO_INSTRUMENT = {
   "u": "WFPC2",
   "i": "WFC3",
   "l": "COS",
-  "m" : "MULTI",
+  "m" : "SYNPHOT",
   }
 
 INSTRUMENT_TO_ID_CHAR = { 
