@@ -4,7 +4,7 @@ header = {
     'extra_keys' : (),
     'file_ext' : '.fits',
     'filekind' : 'COMPTAB',
-    'filetype' : 'COMPONENT THROUGHPUT',
+    'filetype' : 'CRTHROUGHPUT',
     'instrument' : 'SYNPHOT',
     'ld_tpn' : 'synphot_syn_ld.tpn',
     'mapping' : 'REFERENCE',
@@ -15,11 +15,11 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(False)',
-    'sha1sum' : 'fcd95f6e2d9c4ca0e447e7b0778a3d52eb376a75',
+    'sha1sum' : '174afeec0925c161b56d9e39ccad8208f775e37d',
     'suffix' : 'syn',
     'text_descr' : 'Component Throughput Tables',
     'tpn' : 'synphot_syn.tpn',
-    'unique_rowkeys' : ('XXXXX',),
+    'unique_rowkeys' : ('WAVELENGTH',),
 }
 
 selector = Match({
