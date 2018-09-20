@@ -586,6 +586,9 @@ class ExpressionValidator(Validator):
             raise RequiredConditionError("Failed checking constraint", repr(self._expr), ":", str(exc))
         if not satisfied:
             raise RequiredConditionError("Constraint", str(self._expr), "is not satisfied.")
+        elif satisfied == "W":  # from warn_only() helper
+            log.warning("Constraint", str(self._expr), "is not satisfied.")
+            satisfied = True
         return satisfied
     
 def expr_identifiers(expr):

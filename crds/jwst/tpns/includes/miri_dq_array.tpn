@@ -12,8 +12,8 @@
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
 
-DQ       A           X         R                                 (is_image(DQ_ARRAY))
-DQ       A           X         R                                 (has_type(DQ_ARRAY,'INT'))
-DQ       A           X         (array_exists(SCI_ARRAY))         (SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])
+DQ       A           X         W                                 (is_image(DQ_ARRAY))
+DQ       A           X         O                                 (warn_only(has_type(DQ_ARRAY,'INT')))
+DQ       A           X         ((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))         (SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])
 
 

@@ -12,7 +12,7 @@
 # This file pertains to array properties and their relationships to header keywords.
 
 DQ   A    X         (NIR_FILTER)    (is_image(DQ_ARRAY))
-DQ   A    X         (NIR_FILTER)    (has_type(DQ_ARRAY,'INT'))
-DQ   A    X         (array_exists(DQ_ARRAY))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+DQ   A    X         (NIR_FILTER)    (warn_only(has_type(DQ_ARRAY,'INT')))
+DQ   A    X         ((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
 
 

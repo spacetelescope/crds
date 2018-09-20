@@ -3,7 +3,7 @@
 # This file pertains to array properties and their relationships to header keywords.
 
 ERR A     X  (array_exists(ERR_ARRAY))      (is_image(ERR_ARRAY))
-ERR A     X  (array_exists(ERR_ARRAY))      (has_type(ERR_ARRAY,'FLOAT'))
-ERR A     X  (array_exists(ERR_ARRAY))      (ndim(ERR_ARRAY,3))
+ERR A     X  (array_exists(ERR_ARRAY))      (warn_only(has_type(ERR_ARRAY,'FLOAT')))
+ERR A     X  (array_exists(ERR_ARRAY))      (warn_only(ndim(ERR_ARRAY,3)))
 ERR A     X  (array_exists(ERR_ARRAY))      (SCI_ARRAY.SHAPE[-2:]==ERR_ARRAY.SHAPE[-2:])
 
