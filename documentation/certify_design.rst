@@ -498,7 +498,7 @@ numerical ranges::
   
 constraint expressions:
 
-  ()
+  (not("IRS2")in(READPATT))
 
 custom validator identifiers::
 
@@ -574,7 +574,7 @@ the detector's 2048 X-dimension.
   
 When specified within CRDS .tpn files, JWST CAL data models paths (ie. keyword
 names) are flattened to simple strings that resemble FITS keywords in all upper
-case:
+case::
 
   meta.subarray.xstart -->  META.SUBARRAY.XSTART
 
@@ -590,6 +590,27 @@ to the SCI HDU properties.  In this case SCI_ARRAY is a true utils.Struct()
 object so it refers to Struct() properties within the eval() expression using
 normal Python object attribute access, e.g. SCI_ARRAY.SHAPE not
 SCI_ARRAY_SHAPE.
+
+Expression warn_only() Mutator/Wrapper
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Expression constraints have the unique property that they can be mutated to
+generate warnings instead of errors.  In contrast, there is no such mechanism
+for value enumerations or ranges.  Custom validators can be written to issue
+warnings as needed.
+
+The example constraint expression above can be mutated to a warning like this::
+
+  (warn_only(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048))
+
+If the constraint fails, a log ERROR which would fail the file submission is
+replaced with a WARNING which can be investigated and/or ignored.   Warnings
+truly are warnings,  they can flag fatal conditions but may not be applicable
+in all cases.
+
+Note that this is distinct from the *Presence* field "W" designator and related
+warning() mutator which only alter the "required" status of a
+constraint/keyword,  not the result of a constraint failure.
 
 Table Expression Helpers
 ,,,,,,,,,,,,,,,,,,,,,,,,

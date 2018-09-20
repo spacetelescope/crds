@@ -875,13 +875,13 @@ def load_nirspec_staturation_tpn_lines():
     SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
     SCI       A           X             ((True))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
     SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])
-    SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])
+    SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)])
     SCI       A           X         (is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
     SCI       A           X         (is_subarray(SUBARRAY)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
     SCI       A           X         (is_subarray(SUBARRAY))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
     DQ   A    X         ((True))    (is_image(DQ_ARRAY))
-    DQ   A    X         ((True))    (has_type(DQ_ARRAY,'INT'))
-    DQ   A    X         (array_exists(DQ_ARRAY))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+    DQ   A    X         ((True))    (warn_only(has_type(DQ_ARRAY,'INT')))
+    DQ   A    X         ((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
     DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (is_table(DQ_DEF_ARRAY))
     DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
     DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
@@ -937,13 +937,13 @@ def load_nirspec_staturation_tpn():
      ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)])'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(DQ_ARRAY))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(array_exists(DQ_ARRAY))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(warn_only(has_type(DQ_ARRAY,'INT')))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression='(is_table(DQ_DEF_ARRAY))'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
