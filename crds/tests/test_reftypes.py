@@ -107,13 +107,12 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))', expression='(SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(warn_only(has_type(DQ_ARRAY,'INT')))"),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'WARN', expression='(is_image(DQ_ARRAY))'),
-     ('DQ', 'ARRAY_DATA', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
      ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(SCI_ARRAY.SHAPE[-2:]==ERR_ARRAY.SHAPE[-2:])'),
      ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression="(has_type(ERR_ARRAY,'FLOAT'))"),
      ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(is_image(ERR_ARRAY))'),
@@ -169,6 +168,7 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
      ('SUBARRAY_XSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART<=1032)'),
      ('SUBARRAY_YSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSIZE<=1024)'),
      ('SUBARRAY_YSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART<=1024)')]
+    >>> test_config.cleanup(old_state)
     """
 
 def reftypes_hst_get_filekinds():
