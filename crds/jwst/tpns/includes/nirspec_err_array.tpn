@@ -4,6 +4,6 @@
 
 ERR   A    X         (NIR_FILTER)    (array_exists(ERR_ARRAY))
 ERR   A    X         (NIR_FILTER)    (is_image(ERR_ARRAY))
-ERR   A    X         (NIR_FILTER)    (has_type(ERR_ARRAY,'FLOAT'))
+ERR   A    X         (NIR_FILTER)    (warn_only(has_type(ERR_ARRAY,'FLOAT')))
 ERR   A    X         (NIR_FILTER)    (ERR_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
 

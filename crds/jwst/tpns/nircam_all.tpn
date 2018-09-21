@@ -35,7 +35,7 @@ META.SUBARRAY.NAME          H   C   O  SUB160,SUB160P,SUB320,SUB320A335R,SUB320A
                                        SUBGRISM128,SUBGRISM256,SUBGRISM64,SUBNDA210R,SUBNDA335R,\
                                        MASKA210R,MASKA430R,MASKBSWB,MASKBLWB,\
                                        FULL,GENERIC,ANY,N/A
-META.INSTRUMENT.MODULE      H    C  O  A,B
+# META.INSTRUMENT.MODULE      H    C  O  A,B
 
 include includes/nir_subarray_baseline.tpn
 

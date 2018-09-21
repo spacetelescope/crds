@@ -874,22 +874,22 @@ def load_nirspec_staturation_tpn_lines():
     SUBARRAY_INBOUNDS_X         X   X   ((True))                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
     SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
     SCI       A           X             ((True))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-    SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])
-    SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])
+    SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])
+    SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (warn_only(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)])
     SCI       A           X         (is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
     SCI       A           X         (is_subarray(SUBARRAY)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
     SCI       A           X         (is_subarray(SUBARRAY))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
-    DQ   A    X         ((True))    (is_image(DQ_ARRAY))
-    DQ   A    X         ((True))    (has_type(DQ_ARRAY,'INT'))
-    DQ   A    X         (array_exists(DQ_ARRAY))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (is_table(DQ_DEF_ARRAY))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+    DQ   A    X         (optional((True)))                                    (is_image(DQ_ARRAY))
+    DQ   A    X         (optional((True)))                                    (warn_only(has_type(DQ_ARRAY,'INT')))
+    DQ   A    X         ((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+    DQ_DEF       A           X         O             (is_table(DQ_DEF_ARRAY))
+    DQ_DEF       A           X         O             (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
     SCI   A   X    R  (ndim(SCI_ARRAY,2))
-    DQ    A   X    R  (ndim(DQ_ARRAY,2))
+    DQ    A   X    O  (ndim(DQ_ARRAY,2))
     META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
     >>> test_config.cleanup(old_state)
     """
@@ -936,22 +936,22 @@ def load_nirspec_staturation_tpn():
      ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)'),
      ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)])'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(is_irs2(READPATT)))', expression='(warn_only(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)])'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(DQ_ARRAY))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(array_exists(DQ_ARRAY))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression='(is_table(DQ_DEF_ARRAY))'),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(optional((True)))', expression='(is_image(DQ_ARRAY))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(optional((True)))', expression="(warn_only(has_type(DQ_ARRAY,'INT')))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(SCI_ARRAY,2))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
      ('META.EXPOSURE.GAIN_FACTOR', 'HEADER', 'REAL', 'WARN', values=('1.0:10.0',))]
     >>> test_config.cleanup(old_state)
     """
@@ -990,14 +990,13 @@ def load_miri_mask_tpn_lines():
     DQ       A           X         S             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
     DQ       A           X         S             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)
     DQ       A           X         S             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)
-    DQ       A           X         R   (ndim(DQ_ARRAY,2))
-    DQ           D           X         R             (has_type(DQ_ARRAY,'INT'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (is_table(DQ_DEF_ARRAY))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+    DQ       A           X         O   (ndim(DQ_ARRAY,2))
+    DQ_DEF       A           X         O             (is_table(DQ_DEF_ARRAY))
+    DQ_DEF       A           X         O             (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
     >>> test_config.cleanup(old_state)
     """
 
@@ -1033,14 +1032,13 @@ def load_miri_mask_tpn():
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))'),
-     ('DQ', 'ARRAY_DATA', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression='(is_table(DQ_DEF_ARRAY))'),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))")]
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))")]
     >>> test_config.cleanup(old_state)
     """
     

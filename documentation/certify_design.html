@@ -841,7 +841,7 @@ GUIDER1,GUIDER2
 </pre>
 <p>constraint expressions:</p>
 <blockquote>
-()</blockquote>
+(not(&quot;IRS2&quot;)in(READPATT))</blockquote>
 <p>custom validator identifiers:</p>
 <pre class="literal-block">
 &amp;PEDIGREE
@@ -909,8 +909,9 @@ the detector's 2048 X-dimension.</p>
 <p>When specified within CRDS .tpn files, JWST CAL data models paths (ie. keyword
 names) are flattened to simple strings that resemble FITS keywords in all upper
 case:</p>
-<blockquote>
-meta.subarray.xstart --&gt;  META.SUBARRAY.XSTART</blockquote>
+<pre class="literal-block">
+meta.subarray.xstart --&gt;  META.SUBARRAY.XSTART
+</pre>
 <p>Within expressions,  the periods are replaced with underscores:</p>
 <blockquote>
 META.SUBARRAY.XSTART --&gt;  META_SUBARRAY_XSIZE</blockquote>
@@ -921,6 +922,24 @@ to the SCI HDU properties.  In this case SCI_ARRAY is a true utils.Struct()
 object so it refers to Struct() properties within the eval() expression using
 normal Python object attribute access, e.g. SCI_ARRAY.SHAPE not
 SCI_ARRAY_SHAPE.</p>
+<div class="section" id="expression-warn-only-mutator-wrapper">
+<h5>Expression warn_only() Mutator/Wrapper</h5>
+<p>Expression constraints have the unique property that they can be mutated to
+generate warnings instead of errors.  In contrast, there is no such mechanism
+for value enumerations or ranges.  Custom validators can be written to issue
+warnings as needed.</p>
+<p>The example constraint expression above can be mutated to a warning like this:</p>
+<pre class="literal-block">
+(warn_only(1&lt;=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1&lt;=2048))
+</pre>
+<p>If the constraint fails, a log ERROR which would fail the file submission is
+replaced with a WARNING which can be investigated and/or ignored.   Warnings
+truly are warnings,  they can flag fatal conditions but may not be applicable
+in all cases.</p>
+<p>Note that this is distinct from the <em>Presence</em> field &quot;W&quot; designator and related
+warning() mutator which only alter the &quot;required&quot; status of a
+constraint/keyword,  not the result of a constraint failure.</p>
+</div>
 <div class="section" id="table-expression-helpers">
 <h5>Table Expression Helpers</h5>
 <p>Expression helper functions were added to check basic table properties based

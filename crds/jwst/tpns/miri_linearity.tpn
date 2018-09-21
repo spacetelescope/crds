@@ -1,3 +1,5 @@
+replace SCI COEFFS
+
 include includes/miri_subarray_refpix.tpn
 
 COEFFS       A           X         R            (has_type(COEFFS_ARRAY,'FLOAT'))
@@ -10,14 +12,14 @@ COEFFS       A           X         R             (1<=META_SUBARRAY_YSTART+COEFFS
 COEFFS       A           X         R             (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[-1]-1<=1032)
 
 # Optional ERR 
-ERR       A           X         R               (has_type(ERR_ARRAY,'FLOAT'))
-ERR       A           X         R               (is_image(ERR_ARRAY))
-ERR       A           X         F               (ERR_ARRAY.SHAPE[-2:]==COEFFS_ARRAY.SHAPE[-2:])
+ERR       A           X         O                                         (has_type(ERR_ARRAY,'FLOAT'))
+ERR       A           X         O                                         (is_image(ERR_ARRAY))
+ERR       A           X         (optional(is_full_frame(SUBARRAY)))       (ERR_ARRAY.SHAPE[-2:]==COEFFS_ARRAY.SHAPE[-2:])
 
 
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
 
 COEFFS       A           X         R            (ndim(COEFFS_ARRAY,3))
-DQ           A           X         R            (ndim(DQ_ARRAY,2))
+DQ           A           X         O            (ndim(DQ_ARRAY,2))
 
