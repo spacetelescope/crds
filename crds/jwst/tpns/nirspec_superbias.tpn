@@ -1,3 +1,5 @@
+replace YDIM_MAX 3200
+
 include includes/nir_subarray.tpn
 
 replace NIR_FILTER  (True)
