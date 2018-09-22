@@ -617,7 +617,7 @@ def certify_jwst_valid():
 def certify_jwst_missing_optional_parkey():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap")()
+    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/jwst_miri_ipc_0003.add.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
     CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
@@ -625,7 +625,7 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found. Opening jwst_miri_ipc_0003.add.fits as a ReferenceImageModel
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found...
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  2 warnings
