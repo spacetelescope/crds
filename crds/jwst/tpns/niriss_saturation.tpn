@@ -1,4 +1,7 @@
 include includes/nir_subarray.tpn
+
+replace 'FLOAT'  'FLOAT','INT'
+
 include includes/nir_sci_array_refpix.tpn
 include includes/nir_dq_array.tpn
 include includes/nir_dq_def_array.tpn

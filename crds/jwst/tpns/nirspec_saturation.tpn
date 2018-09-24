@@ -1,7 +1,10 @@
 include includes/nir_subarray.tpn
 
+# Replace the normal SCI array FLOAT restriction with either FLOAT or INT
+
 replace NIR_FILTER (True)
 replace YDIM_MAX 3200
+replace 'FLOAT'  'FLOAT','INT'
 
 include includes/nirspec_sci_array_striped.tpn
 include includes/nirspec_dq_array.tpn

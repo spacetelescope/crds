@@ -1,5 +1,7 @@
 include includes/miri_subarray_refpix.tpn
 
+replace 'FLOAT'  'FLOAT','INT'
+
 include includes/miri_sci_array_refpix.tpn
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
