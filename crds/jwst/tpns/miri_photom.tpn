@@ -20,20 +20,20 @@ SCI    A      X      (('MRS')in(EXP_TYPE))  (array_exists(SCI_ARRAY))
 SCI    A      X      (('MRS')in(EXP_TYPE))  (ndim(SCI_ARRAY,2))
 SCI    A      X      (('MRS')in(EXP_TYPE))  (has_type(SCI_ARRAY,'FLOAT'))
 
-ERR    A      X      (('MRS')in(EXP_TYPE))  (array_exists(ERR_ARRAY))
-ERR    A      X      (('MRS')in(EXP_TYPE))  (ndim(ERR_ARRAY,2))
-ERR    A      X      (('MRS')in(EXP_TYPE))  (has_type(ERR_ARRAY,'FLOAT'))
+ERR    A      X      (optional(('MRS')in(EXP_TYPE)))  (array_exists(ERR_ARRAY))
+ERR    A      X      (optional(('MRS')in(EXP_TYPE)))  (ndim(ERR_ARRAY,2))
+ERR    A      X      (optional(('MRS')in(EXP_TYPE)))  (has_type(ERR_ARRAY,'FLOAT'))
 
 PIXSIZ    A   X      (('MRS')in(EXP_TYPE))  (array_exists(PIXSIZ_ARRAY))
 PIXSIZ    A   X      (('MRS')in(EXP_TYPE))  (ndim(PIXSIZ_ARRAY,2))
 PIXSIZ    A   X      (('MRS')in(EXP_TYPE))  (has_type(PIXSIZ_ARRAY,'FLOAT'))
 
-DQ    A       X       (('MRS')in(EXP_TYPE))  (array_exists(DQ_ARRAY))
-DQ    A       X       (('MRS')in(EXP_TYPE))  (ndim(DQ_ARRAY,2))
-DQ    A       X       (('MRS')in(EXP_TYPE))  (has_type(DQ_ARRAY,'INT'))
+DQ    A       X      (optional(('MRS')in(EXP_TYPE)))  (array_exists(DQ_ARRAY))
+DQ    A       X      (optional(('MRS')in(EXP_TYPE)))  (ndim(DQ_ARRAY,2))
+DQ    A       X      (optional(('MRS')in(EXP_TYPE)))  (has_type(DQ_ARRAY,'INT'))
 
-DQ_DEF  A     X       (('MRS')in(EXP_TYPE))  (array_exists(DQ_DEF_ARRAY))
-DQ_DEF  A     X       (('MRS')in(EXP_TYPE))  (is_table(DQ_DEF_ARRAY))
+DQ_DEF  A     X      (optional(('MRS')in(EXP_TYPE)))  (array_exists(DQ_DEF_ARRAY))
+DQ_DEF  A     X      (optional(('MRS')in(EXP_TYPE)))  (is_table(DQ_DEF_ARRAY))
 
 PHOTMJSR    H      R  (warning(('MRS')in(EXP_TYPE)))
 PHOTUJA2    H      R  (warning(('MRS')in(EXP_TYPE)))

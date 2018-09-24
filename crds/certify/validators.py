@@ -21,7 +21,7 @@ import numpy as np
 from crds.core import log, utils, timestamp, selectors
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
-from crds.core.exceptions import BadKernelSumError
+from crds.core.exceptions import BadKernelSumError, BadKernelCenterPixelTooSmall
 from crds.io import tables
 from crds import data_file
 
@@ -586,6 +586,9 @@ class ExpressionValidator(Validator):
             raise RequiredConditionError("Failed checking constraint", repr(self._expr), ":", str(exc))
         if not satisfied:
             raise RequiredConditionError("Constraint", str(self._expr), "is not satisfied.")
+        elif satisfied == "W":  # from warn_only() helper
+            log.warning("Constraint", str(self._expr), "is not satisfied.")
+            satisfied = True
         return satisfied
     
 def expr_identifiers(expr):
@@ -636,12 +639,71 @@ class KernelunityValidator(Validator):
         images_data = np.reshape(all_data, images_shape)
         log.verbose("File=" + repr(os.path.basename(filename)),
                    "Checking", len(images_data), repr(array_name), "kernel(s) of size", 
-                    images_data[0].shape, "for individual sums of 1+-1e-6.")
+                    images_data[0].shape, "for individual sums of 1+-1e-6.   Center pixels >= 1.")
+
+        center_0 = images_data.shape[-2]//2
+        center_1 = images_data.shape[-1]//2
+        center_pixels = images_data[..., center_0, center_1]
+        if not np.all(center_pixels >= 1.0):
+            log.warning("Possible bad IPC Kernel:  One or more kernel center pixel value(s) too small, should be >= 1.0")
+            # raise BadKernelCenterPixelTooSmall(
+            #    "One or more kernel center pixel value(s) too small,  should be >= 1.0")
+                                 
         for (i, image) in enumerate(images_data):
             if abs(image.sum()-1.0) > 1.0e-6:
                 raise BadKernelSumError("Kernel sum", image.sum(),
                     "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
 
+# ----------------------------------------------------------------------------
+
+class IsomorphicfitsverValidator(Validator):
+    """Ensure that every image in a (HDU, ver*) stack has the same shape
+    and type as (HDU,1).   Subclass to set expected maximum HDU ver.
+    """
+
+    max_ver = None
+    
+    def _check_value(self, *args, **keys):  
+        return True
+
+    def check_header(self, filename, header):
+        """Evalutate the header expression associated with this validator (as its sole value)
+        with respect to the given `header`.  Read `header` from `filename` if `header` is None.
+        """
+        array_name = self.complex_name
+        max_ver = 0
+        with data_file.fits_open(filename) as hdus:
+            first = dict()
+            for hdu in hdus:
+                if hdu.name != self.name:
+                    continue
+                self.verbose(filename, f"ver={hdu.ver}",
+                             f"Array has shape={hdu.data.shape} and dtype={repr(str(hdu.data.dtype))}).")
+                if hdu.name not in first:
+                    first[hdu.name] = (hdu.data.shape, hdu.data.dtype)
+                else:
+                    expected = first[hdu.name][0]
+                    got = hdu.data.shape
+                    assert expected == got, \
+                        f"Shape mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                    expected = first[hdu.name][1]
+                    got = hdu.data.dtype
+                    assert expected == got, \
+                        f"Data type mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                max_ver = hdu.ver
+            if self.max_ver is not None:
+                assert self.max_ver == max_ver, \
+                    f"Bad maximum HDU ver for '{self.name}'. Expected {self.max_ver}, got {max_ver}."
+
+class Isomorphicfitsver4Validator(IsomorphicfitsverValidator):
+    max_ver = 4
+
+class Isomorphicfitsver2Validator(IsomorphicfitsverValidator):
+    max_ver = 2
+
+class Isomorphicfitsver1Validator(IsomorphicfitsverValidator):
+    max_ver = 1
+    
 # ----------------------------------------------------------------------------
 
 def validator(info):

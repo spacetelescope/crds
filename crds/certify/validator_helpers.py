@@ -365,7 +365,9 @@ def required(flag=True):
     return "R" if flag else False
 
 def warning(flag=True):
-    """When this flag is True,  a warning should be issued if the related keyword/element is
+    """Presence condition mutator/wrapper:
+
+    When flag is True,  a warning should be issued if the related keyword/element is
     not defined.     Returns "W" or False.
 
     >>> warning(True)
@@ -374,6 +376,24 @@ def warning(flag=True):
     False
     """
     return "W" if flag else False
+
+def warn_only(flag):
+    """Expression constraint mutator/wrapper:
+
+    When flag is True,  the wrapped expression was satisifed, so return True
+    signaling a passed validator expression.
+
+    If the flag is False, the expression evaluated successfully but was not
+    satisified.  Return the value "W" signaling that only a warning should be
+    issued rather than an exception or error.
+
+    >>> warn_only(True)
+    True
+
+    >>> warn_only(False)
+    'W'
+    """
+    return "W" if not flag else True
 
 def subarray(flag=True):
     """When this flag is True,  the related constraint should be applied if

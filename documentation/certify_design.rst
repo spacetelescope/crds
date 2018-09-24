@@ -208,17 +208,39 @@ motivation for modernizing formats.
 The name field specifies the name of a header keyword, table column, array,
 or expression constraint.
 
+Header Keyword Names
+++++++++++++++++++++
+
 Header and table keyword names correspond roughly to FITS keywords or JWST CAL
 data models paths flattened into a single string, e.g.::
 
   READPATT
   META.EXPOSURE.READPATT
 
+ Array Names
+ +++++++++++
+  
 Array names are specified as the bare HDU name in the <name> field, e.g. SCI.
 These are referenced within expressions as <name>_ARRAY.  These are case
 insensitive and specified in all capital letters, numbers, or underscores much
 like FITS keywords.  They should begin with a letter and be valid program
 identifiers.
+
+There are two additional specification cases for array names:
+
+1. FITS extensions can also named by number, e.g.  EXT1 or EXTENSION1 refers to
+   the data of HDU #1.  In constraint expressions these are referred to as
+   e.g. EXT1_ARRAY.  These can be discriminated from normal header keywords by
+   the keytype, which will be array vs. header.
+
+2. FITS extensions can be named by (name, ver), in CRDS this is denoted as
+   <name>__<ver>, which corresponds to e.g. ('SCI', 1).  In constraint
+   expressions they are referred to as as <name>__<ver>_ARRAY,
+   e.g. SCI__1_ARRAY.  These can be differentiated from normal array extension
+   names by the double-underscore-digit convention,  an imperfect compromise.
+
+Expression Constraint Names
++++++++++++++++++++++++++++
 
 Expression constraint names describe the check performed by the value
 expression, they do not describe any physical entity within the reference file.
@@ -476,7 +498,7 @@ numerical ranges::
   
 constraint expressions:
 
-  ()
+  (not("IRS2")in(READPATT))
 
 custom validator identifiers::
 
@@ -552,7 +574,7 @@ the detector's 2048 X-dimension.
   
 When specified within CRDS .tpn files, JWST CAL data models paths (ie. keyword
 names) are flattened to simple strings that resemble FITS keywords in all upper
-case:
+case::
 
   meta.subarray.xstart -->  META.SUBARRAY.XSTART
 
@@ -568,6 +590,27 @@ to the SCI HDU properties.  In this case SCI_ARRAY is a true utils.Struct()
 object so it refers to Struct() properties within the eval() expression using
 normal Python object attribute access, e.g. SCI_ARRAY.SHAPE not
 SCI_ARRAY_SHAPE.
+
+Expression warn_only() Mutator/Wrapper
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Expression constraints have the unique property that they can be mutated to
+generate warnings instead of errors.  In contrast, there is no such mechanism
+for value enumerations or ranges.  Custom validators can be written to issue
+warnings as needed.
+
+The example constraint expression above can be mutated to a warning like this::
+
+  (warn_only(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048))
+
+If the constraint fails, a log ERROR which would fail the file submission is
+replaced with a WARNING which can be investigated and/or ignored.   Warnings
+truly are warnings,  they can flag fatal conditions but may not be applicable
+in all cases.
+
+Note that this is distinct from the *Presence* field "W" designator and related
+warning() mutator which only alter the "required" status of a
+constraint/keyword,  not the result of a constraint failure.
 
 Table Expression Helpers
 ,,,,,,,,,,,,,,,,,,,,,,,,

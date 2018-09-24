@@ -1,7 +1,10 @@
 include includes/nir_subarray.tpn
 
+# Replace the normal SCI array FLOAT restriction with either FLOAT or INT
+
 replace NIR_FILTER (True)
 replace YDIM_MAX 3200
+replace 'FLOAT'  'FLOAT','INT'
 
 include includes/nirspec_sci_array_striped.tpn
 include includes/nirspec_dq_array.tpn
@@ -9,6 +12,6 @@ include includes/nir_dq_def_array.tpn
 
 
 SCI   A   X    R  (ndim(SCI_ARRAY,2))
-DQ    A   X    R  (ndim(DQ_ARRAY,2))
+DQ    A   X    O  (ndim(DQ_ARRAY,2))
 
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0

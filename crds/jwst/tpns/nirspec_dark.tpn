@@ -12,6 +12,6 @@ include includes/nir_dq_def_array.tpn
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
 
 SCI   A   X   R   (ndim(SCI_ARRAY,3))
-ERR   A   X   R   (ndim(ERR_ARRAY,3))
-DQ    A   X   R   (ndim(DQ_ARRAY,2))
+ERR   A   X   O   (ndim(ERR_ARRAY,3))
+DQ    A   X   O   (ndim(DQ_ARRAY,2))
 

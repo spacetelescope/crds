@@ -24,6 +24,19 @@
             "tpn":"all_dark.tpn",
             "unique_rowkeys":null
         },
+        "gain":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"GAIN",
+            "filetype":"GAIN",
+            "instrument":"ALL",
+            "ld_tpn":"all_gain_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"GAIN",
+            "text_descr":"Gain",
+            "tpn":"all_gain.tpn",
+            "unique_rowkeys":null
+        },
         "ipc":{
             "extra_keys":null,
             "file_ext":".fits",
@@ -78,6 +91,19 @@
             "suffix":"THROUGHPUT",
             "text_descr":"Throughput constraints for all instruments.",
             "tpn":"all_throughput.tpn",
+            "unique_rowkeys":null
+        },
+        "trappars":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"TRAPPARS",
+            "filetype":"TRAPPARS",
+            "instrument":"ALL",
+            "ld_tpn":"all_trappars_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"TRAPPARS",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"all_trappars.tpn",
             "unique_rowkeys":null
         }
     },
@@ -452,7 +478,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"FGS",
-            "ld_tpn":"fgs_sbias_ld.tpn",
+            "ld_tpn":"fgs_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"fgs_superbias.rmap",
             "observatory":"JWST",
@@ -463,10 +489,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"6a8036af5271839a76827be860a86f5f6cba1cca",
-            "suffix":"sbias",
+            "sha1sum":"6a8da130521d8f12ae0422e063758c99bef7186d",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"fgs_sbias.tpn",
+            "tpn":"fgs_superbias.tpn",
             "unique_rowkeys":null
         },
         "trapdensity":{
@@ -1784,7 +1810,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"NIRCAM",
-            "ld_tpn":"nircam_sbias_ld.tpn",
+            "ld_tpn":"nircam_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"nircam_superbias.rmap",
             "observatory":"JWST",
@@ -1795,10 +1821,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"e0acc692172dcade1c6575e0843988d939360524",
-            "suffix":"sbias",
+            "sha1sum":"5e84ec306a612226ea74898089c859763246a2c7",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"nircam_sbias.tpn",
+            "tpn":"nircam_superbias.tpn",
             "unique_rowkeys":null
         },
         "trapdensity":{
@@ -2248,7 +2274,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"69994ee55fa75fdd1b551647c87490e2d719b466",
+            "sha1sum":"8ee5519e4612b9fdac2234e30340f6b4c6db26b8",
             "suffix":"pathloss",
             "text_descr":"Path loss correction",
             "tpn":"niriss_pathloss.tpn",
@@ -2413,7 +2439,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"NIRISS",
-            "ld_tpn":"niriss_sbias_ld.tpn",
+            "ld_tpn":"niriss_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"niriss_superbias.rmap",
             "observatory":"JWST",
@@ -2424,10 +2450,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"832ad7a6be6ccf3a35a426539affca9e0141d640",
-            "suffix":"sbias",
+            "sha1sum":"0362495f85b090c86e8b9fa5fa3ca71bc1181092",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"niriss_sbias.tpn",
+            "tpn":"niriss_superbias.tpn",
             "unique_rowkeys":null
         },
         "throughput":{
@@ -2446,11 +2472,13 @@
                     "META.INSTRUMENT.FILTER"
                 ]
             ],
-            "sha1sum":"d8c838f8bec6c62d190f7e8b204fc888f19007a8",
+            "sha1sum":"290f2c6abdbf63c1cb7d6875b2fd103c7976c65d",
             "suffix":"throughput",
             "text_descr":"Throughput",
             "tpn":"niriss_throughput.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "WAVELENGTH"
+            ]
         },
         "trapdensity":{
             "derived_from":"handmade spec 06-22-2017",
@@ -2774,13 +2802,14 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"8c68a2f89e0579452af3e4150b7e6f9ea4cfa925",
+            "sha1sum":"aa2fdb9023440ac8f69d83aa37b3c29a0500bd31",
             "suffix":"cubepar",
             "text_descr":"IFU Cube defaults",
             "tpn":"nirspec_cubepar.tpn",
             "unique_rowkeys":[
-                "GRATING",
-                "FILTER"
+                "DISPERSER",
+                "FILTER",
+                "WAVELENGTH"
             ]
         },
         "dark":{
@@ -3544,7 +3573,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"NIRSPEC",
-            "ld_tpn":"nirspec_sbias_ld.tpn",
+            "ld_tpn":"nirspec_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"nirspec_superbias.rmap",
             "observatory":"JWST",
@@ -3555,10 +3584,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"0e450528863c8b320ee56bf45b547f8a3943f64e",
-            "suffix":"sbias",
+            "sha1sum":"4fffd429805063af03840bc13a3ae18ee9a6fc9c",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"nirspec_sbias.tpn",
+            "tpn":"nirspec_superbias.tpn",
             "unique_rowkeys":null
         },
         "trapdensity":{
