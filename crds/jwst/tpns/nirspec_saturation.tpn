@@ -7,6 +7,7 @@ replace YDIM_MAX 3200
 replace 'FLOAT'  'FLOAT','INT'
 
 include includes/nirspec_sci_array_striped.tpn
+
 include includes/nirspec_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
