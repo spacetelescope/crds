@@ -396,6 +396,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.HISTORY [HISTORY] = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.INSTRUMENT.BAND [BAND] = 'medium'
     CRDS - INFO -  META.INSTRUMENT.CHANNEL [CHANNEL] = '34'
+    CRDS - INFO -  META.INSTRUMENT.CORONAGRAPH [CORONMSK] = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR [DETECTOR] = 'mirifulong'
     CRDS - INFO -  META.INSTRUMENT.FILTER [FILTER] = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.GRATING [GRATING] = 'UNDEFINED'
@@ -416,7 +417,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
-    CRDS - INFO -  28 infos
+    CRDS - INFO -  29 infos
     0
     >>> test_config.cleanup(old_state)
     """
