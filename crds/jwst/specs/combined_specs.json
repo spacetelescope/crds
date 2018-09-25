@@ -1039,7 +1039,7 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.CORONOGRAPH",
+                    "META.INSTRUMENT.CORONAGRAPH",
                     "META.SUBARRAY.NAME"
                 ],
                 [
@@ -1047,7 +1047,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"9bbace753cb2df98ee62dd8a8875d1a00c17875e",
+            "sha1sum":"111f266d7d955d7a5601db12430faaaf214b55de",
             "suffix":"psfmask",
             "text_descr":"PSF Mask",
             "tpn":"miri_psfmask.tpn",
@@ -1753,7 +1753,7 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.CORONOGRAPH",
+                    "META.INSTRUMENT.CORONAGRAPH",
                     "META.SUBARRAY.NAME"
                 ],
                 [
@@ -1761,7 +1761,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"bec7ba5dd8700f65ee6f6aa06d2b53c608635e75",
+            "sha1sum":"5922314a450a53e5d0fc7ea2f9f486ab4a2be125",
             "suffix":"psfmask",
             "text_descr":"PSF Mask",
             "tpn":"nircam_psfmask.tpn",
