@@ -1,7 +1,7 @@
-include nir_subarray.tpn
+include includes/nir_subarray_baseline.tpn
+include includes/nir_subarray.tpn
 
 replace XDIM_MAX 2048
-replace YDIM_MAX 2048
 replace SCI_TYPE 'FLOAT'
 
 include nir_sci_array_both.tpn

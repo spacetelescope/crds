@@ -5,13 +5,15 @@ header = {
     'filekind' : 'PSFMASK',
     'filetype' : 'PSFMASK',
     'instrument' : 'MIRI',
+    'ld_tpn' : 'miri_psfmask_ld.tpn',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_psfmask.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.CORONOGRAPH'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '1106c35b8e999dd7541847a06718eed92dcf8454',
+    'parkey' : (('META.INSTRUMENT.FILTER', 'META.INSTRUMENT.CORONOGRAPH', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '9bbace753cb2df98ee62dd8a8875d1a00c17875e',
     'suffix' : 'psfmask',
     'text_descr' : 'PSF Mask',
+    'tpn' : 'miri_psfmask.tpn',
 }
 
 selector = Match({
