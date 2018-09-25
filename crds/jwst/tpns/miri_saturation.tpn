@@ -1,8 +1,9 @@
 include includes/miri_subarray_refpix.tpn
 
-replace 'FLOAT'  'FLOAT','INT'
+replace SCI_TYPE  ['FLOAT','INT']
+replace XDIM_MAX  1032
 
-include includes/miri_sci_array_refpix.tpn
+include includes/miri_sci_array_both.tpn
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
 

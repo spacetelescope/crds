@@ -1,8 +1,9 @@
 include includes/nir_subarray.tpn
 
-replace 'FLOAT'  'FLOAT','INT'
+replace SCI_TYPE  ['FLOAT','INT']
+replace XDIM_MAX  2304
 
-include includes/nir_sci_array_refpix.tpn
+include includes/nir_sci_array_both.tpn
 
 include includes/nir_dq_array.tpn
 include includes/nir_dq_def_array.tpn
