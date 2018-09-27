@@ -39,8 +39,8 @@ CRDS to be installed.  It is not run during setup.
 __version__ = '{git_version}'
 
 __full_version_info__ = '''
-branch: '{git_branch}'
-sha1: '{git_sha1}'
+branch: {git_branch}
+sha1: {git_sha1}
 '''
     """)
 
@@ -52,13 +52,13 @@ sha1: '{git_sha1}'
             r'version\s*=\s*\d+\.\d+\.\d+',
             f"version = {semantic_version}")
 
-    rewrite("crds/core/git_version.py",
-            r"__version__\s*=\s*\"(\d+\.\d+.\d+)",
-            f"__version__ = {git_version}")
+    rewrite("crds/__init__.py",
+            r"__version__\s*=\s*\"(\d+\.\d+\.\d+)\"",
+            f'__version__ = "{semantic_version}"')
 
-    rewrite("crds/core/git_version.py",
-            r"__rationale__\s*=\s*'\w+'",
-            f"__rationale__ = '{rationale}'")
+    rewrite("crds/__init__.py",
+            r'__rationale__\s*=\s*"(\w|\s|[-,.%$&*()!@#~])+"',
+            f'__rationale__ = "{rationale}"')
 
 # -----------------------------------------------------------------
 
