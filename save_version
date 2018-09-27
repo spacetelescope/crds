@@ -45,7 +45,7 @@ sha1: {git_sha1}
     """)
 
     rewrite("setup.py", 
-            r'version\s*=\s*"\d+\.\d+\.\d+"',
+            r"version\s*=\s*'\d+\.\d+\.\d+'",
             f"version = '{semantic_version}'")
     
     rewrite("setup.cfg", 
