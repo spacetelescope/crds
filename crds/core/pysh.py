@@ -208,7 +208,7 @@ ENV_VAR_STAR = re.compile(r"([$][*])")
 
 def _replace_dollar(match):
     """Return the substituion for a local, global, or environment variable."""
-    return "{" + match.group(1) + "}"
+    return "%(" + match.group(1) + ")s"
 
 def _replace_sysarg(match):
     """Return the substitution for the $<n> syntax,  .e.g. $1 for the 
@@ -235,7 +235,7 @@ def expand_vars(string, context=None):
     """
     if context is None:
         context = _context(2)
-    return _env_to_percent_var(string).format(context)
+    return _env_to_percent_var(string) % context
 
 # =========================================================================
 

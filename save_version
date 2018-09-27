@@ -15,6 +15,9 @@ def rewrite(filename, regex, replacement):
     with open(filename, "w+") as file:
         file.write(contents)
 
+def indirect_out(command):
+    return pysh.out("${command}").strip()
+
 def main():
     
     pysh.usage("<x.y.z>  'rationale for this version.'", 2, 2, """
@@ -31,9 +34,9 @@ CRDS to be installed.  It is not run during setup.
     rationale = pysh.arg(2)
 
     with open("crds/core/git_version.py", "w+") as file:
-        git_version = pysh.out("git show -s --pretty=\\%h").strip()
-        git_branch = pysh.out("git rev-parse --abbrev-ref HEAD").strip()
-        git_sha1 = pysh.out("git show -s --pretty=\\%h").strip()
+        git_version = indirect_out("git show -s --pretty=%h")
+        git_branch = indirect_out("git rev-parse --abbrev-ref HEAD")
+        git_sha1 = indirect_out("git show -s --pretty=%h")
         file.write(f"""
 
 __version__ = '{git_version}'
