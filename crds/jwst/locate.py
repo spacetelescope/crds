@@ -280,6 +280,10 @@ def reference_keys_to_dataset_keys(rmapping, header):
             "META.EXPOSURE.PREADPATT" : "META.EXPOSURE.READPATT",
             "META.EXPOSURE.P_READPATT" : "META.EXPOSURE.READPATT",
             "P_READPA" : "META.EXPOSURE.READPATT",
+
+            # vvvv Speculative,  not currently defined or required by CAL vvvvv 
+            "META.INSTRUMENT.PCORONAGRAPH" : "META.INSTRUMENT.CORONAGRAPH",
+            "P_CORONM" : "META.INSTRUMENT.CORONAGRAPH",
         }
 
     # Rmap header reference_to_dataset field tranlations,  can override basic!

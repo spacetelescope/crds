@@ -20,11 +20,9 @@ include includes/nir_subarray_baseline.tpn
 
 # META.INSTRUMENT.FILTER      H   C   O
 
-META.INSTRUMENT.PUPIL       H   C   O   CLEARP,F090W,F115W,F140M,F150W,F158M,\
-                                        F200W,GR700XD,NRM,ANY,N/A
+# META.INSTRUMENT.PUPIL       H   C   O   CLEARP,F090W,F115W,F140M,F150W,F158M,\
+#                                         F200W,GR700XD,NRM,ANY,N/A
 
-META.SUBARRAY.NAME          H   C   O   SUB64,SUB80,SUB128,SUB256,SUBAMPCAL,\
-                                        SUBSTRIP96,SUBSTRIP256,SUBTAAMI,\
-                                        SUBTASOSS,WFSS64C,WFSS64R,WFSS128C,\
-                                        WFSS128R,\
-                                        FULL,GENERIC,ANY,N/A
+META.SUBARRAY.NAME          H   C   O     SUB64,SUB80,SUB128,SUB256,SUBAMPCAL,SUBSTRIP96,\
+                                          SUBSTRIP256,SUBTAAMI,SUBTASOSS,WFSS64C,WFSS64R,\
+                                          WFSS128C,WFSS128R,FULL,GENERIC,ANY,N/A

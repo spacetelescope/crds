@@ -49,15 +49,6 @@ if [ $dont_skip_types = 1 ]; then
     python -m crds.tobs
 fi
 
-# The CRDS git_version file is updated with every ./install, but
-# is typically reverted by the ./clean script once the install 
-# has been completed.  For doing releases,  save_version should
-# be run manually and the results committed prior to tagging the
-# release on GitHub.
-if (test -e save_version) 
-then 
-    ./save_version >crds/core/git_version.py;  
-fi
 python setup.py install $* --force  >> install.log
 st=$st$?
 

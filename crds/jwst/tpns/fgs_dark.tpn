@@ -10,6 +10,6 @@ SCI       A           X         O             (SCI_ARRAY.DATA_TYPE=='float32')
 ERR       A           X         O             (SCI_ARRAY.DATA_TYPE=='float32')
 
 SCI   A   X   R   (ndim(SCI_ARRAY,3))
-ERR   A   X   R   (ndim(ERR_ARRAY,3))
-DQ    A   X   R   (ndim(DQ_ARRAY,2))
+ERR   A   X   O   (ndim(ERR_ARRAY,3))
+DQ    A   X   O   (ndim(DQ_ARRAY,2))
 
