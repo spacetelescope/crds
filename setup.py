@@ -78,8 +78,6 @@ setup_pars = {
     "scripts" : glob.glob("scripts/*"),
     }
 
-import crds   #  local subdirectory...  ew...
-
 setup(name="crds",
       provides=["crds"],
       version = '7.2.6',
