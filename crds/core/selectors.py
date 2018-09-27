@@ -218,7 +218,7 @@ class Selection(tuple):
         self.choice = t[1]
     
     def _cmp_key(self, key):
-        return tuple(str(field) for field in key) if isinstance(key, tuple) else str(key)
+        return tuple(str(field) for field in key) if isinstance(key, tuple) else (str(key),)
 
     def __lt__(self, other):
         return self._cmp_key(self.key) < self._cmp_key(other.key)
@@ -893,7 +893,7 @@ class Selector(object):
                 else:
                     log.verbose("Selector replaces terminal at", repr(key), "adding new selector.")
                     new_value = self._create_path(header, value, parkey[1:], classes[1:])
-                    self._add_item(old_key, new_value)
+                    self._replace_item(old_key, new_value)
         else:  # add or replace primitive result
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))

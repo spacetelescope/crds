@@ -53,7 +53,6 @@ import os
 import re
 import glob
 import os.path
-import io
 import inspect
 
 if sys.version_info >= (3,0,0):

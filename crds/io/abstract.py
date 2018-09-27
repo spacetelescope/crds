@@ -266,6 +266,8 @@ class AbstractFile(object):
         raw_header = self.get_raw_header(needed_keys, **keys)
         reduced_header = self._reduce_header(raw_header, needed_keys)
         crossed_header = cross_strap_header(reduced_header)
+        crossed_header["FILE_FORMAT"] = \
+            self.__class__.__name__[:-len("File")].upper()
         return crossed_header
     
     def get_raw_header(self, needed_keys, **keys):

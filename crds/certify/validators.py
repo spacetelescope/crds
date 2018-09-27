@@ -21,13 +21,12 @@ import numpy as np
 from crds.core import log, utils, timestamp, selectors
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
-from crds.core.exceptions import BadKernelSumError
+from crds.core.exceptions import BadKernelSumError, BadKernelCenterPixelTooSmall
 from crds.io import tables
 from crds import data_file
 
-from . import generic_tpn
+from . import generic_tpn, validator_helpers
 from .generic_tpn import TpnInfo   # generic TpnInfo code
-from .validator_helpers import *
 
 # ============================================================================
 
@@ -60,7 +59,7 @@ class Validator(object):
         self.info = info
         self.name = info.name
         self._presence_condition_code = None
-        
+
         if self.info.datatype not in generic_tpn.TpnInfo.datatypes:
             raise ValueError("Bad TPN datatype field " + repr(self.info.presence))
 
@@ -73,6 +72,13 @@ class Validator(object):
 
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(info.values)
+
+    @property
+    def _eval_namespace(self):
+        """Namespace in which various validator expressions and conditions are evaluated."""
+        space = dict(globals())
+        space.update(validator_helpers.__dict__)
+        return space
             
     @property
     def complex_name(self):
@@ -252,7 +258,7 @@ class Validator(object):
         SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
             try:
-                presence = eval(self._presence_condition_code, header, dict(globals()))
+                presence = eval(self._presence_condition_code, header, self._eval_namespace)
                 log.verbose("Validator", self.info, "is",
                             "applicable." if presence else "not applicable.", verbosity=70)
                 if not presence:
@@ -266,11 +272,11 @@ class Validator(object):
             return presence
 #            return header.get(self.name, False) != "UNDEFINED"
         elif presence == "F": # IF_FULL_FRAME
-            return is_full_frame(SUBARRAY)
+            return validator_helpers.is_full_frame(SUBARRAY)
         elif presence == "S": # IF_SUBARRAY        
-            return is_subarray(SUBARRAY)
+            return validator_helpers.is_subarray(SUBARRAY)
         elif presence == "A":
-            return subarray_defined(header)
+            return validator_helpers.subarray_defined(header)
         else:    
             return True
 
@@ -575,11 +581,14 @@ class ExpressionValidator(Validator):
                                     "is 'UNDEFINED'. Skipping ", repr(self._expr))
                 return True   # fake satisfied     
         try:
-            satisfied = eval(self._expr_code, header, dict(globals()))
+            satisfied = eval(self._expr_code, header, self._eval_namespace)
         except Exception as exc:
             raise RequiredConditionError("Failed checking constraint", repr(self._expr), ":", str(exc))
         if not satisfied:
             raise RequiredConditionError("Constraint", str(self._expr), "is not satisfied.")
+        elif satisfied == "W":  # from warn_only() helper
+            log.warning("Constraint", str(self._expr), "is not satisfied.")
+            satisfied = True
         return satisfied
     
 def expr_identifiers(expr):
@@ -630,12 +639,71 @@ class KernelunityValidator(Validator):
         images_data = np.reshape(all_data, images_shape)
         log.verbose("File=" + repr(os.path.basename(filename)),
                    "Checking", len(images_data), repr(array_name), "kernel(s) of size", 
-                    images_data[0].shape, "for individual sums of 1+-1e-6.")
+                    images_data[0].shape, "for individual sums of 1+-1e-6.   Center pixels >= 1.")
+
+        center_0 = images_data.shape[-2]//2
+        center_1 = images_data.shape[-1]//2
+        center_pixels = images_data[..., center_0, center_1]
+        if not np.all(center_pixels >= 1.0):
+            log.warning("Possible bad IPC Kernel:  One or more kernel center pixel value(s) too small, should be >= 1.0")
+            # raise BadKernelCenterPixelTooSmall(
+            #    "One or more kernel center pixel value(s) too small,  should be >= 1.0")
+                                 
         for (i, image) in enumerate(images_data):
             if abs(image.sum()-1.0) > 1.0e-6:
                 raise BadKernelSumError("Kernel sum", image.sum(),
                     "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
 
+# ----------------------------------------------------------------------------
+
+class IsomorphicfitsverValidator(Validator):
+    """Ensure that every image in a (HDU, ver*) stack has the same shape
+    and type as (HDU,1).   Subclass to set expected maximum HDU ver.
+    """
+
+    max_ver = None
+    
+    def _check_value(self, *args, **keys):  
+        return True
+
+    def check_header(self, filename, header):
+        """Evalutate the header expression associated with this validator (as its sole value)
+        with respect to the given `header`.  Read `header` from `filename` if `header` is None.
+        """
+        array_name = self.complex_name
+        max_ver = 0
+        with data_file.fits_open(filename) as hdus:
+            first = dict()
+            for hdu in hdus:
+                if hdu.name != self.name:
+                    continue
+                self.verbose(filename, f"ver={hdu.ver}",
+                             f"Array has shape={hdu.data.shape} and dtype={repr(str(hdu.data.dtype))}).")
+                if hdu.name not in first:
+                    first[hdu.name] = (hdu.data.shape, hdu.data.dtype)
+                else:
+                    expected = first[hdu.name][0]
+                    got = hdu.data.shape
+                    assert expected == got, \
+                        f"Shape mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                    expected = first[hdu.name][1]
+                    got = hdu.data.dtype
+                    assert expected == got, \
+                        f"Data type mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                max_ver = hdu.ver
+            if self.max_ver is not None:
+                assert self.max_ver == max_ver, \
+                    f"Bad maximum HDU ver for '{self.name}'. Expected {self.max_ver}, got {max_ver}."
+
+class Isomorphicfitsver4Validator(IsomorphicfitsverValidator):
+    max_ver = 4
+
+class Isomorphicfitsver2Validator(IsomorphicfitsverValidator):
+    max_ver = 2
+
+class Isomorphicfitsver1Validator(IsomorphicfitsverValidator):
+    max_ver = 1
+    
 # ----------------------------------------------------------------------------
 
 def validator(info):

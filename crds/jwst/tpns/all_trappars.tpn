@@ -1,0 +1,17 @@
+TRAPPARS   A    X    R    (is_table(TRAPPARS_ARRAY))
+TRAPPARS   A    X    R    (has_columns(TRAPPARS_ARRAY,['CAPTURE0','CAPTURE1','CAPTURE2','DECAY_PARAM']))
+
+# Strictly speaking all of these columns are >f8, double precision.
+
+#  the coefficient of the exponential capture term
+TRAPPARS   A    X    R    (has_column_type(TRAPPARS_ARRAY,'CAPTURE0','FLOAT'))
+
+# minus the reciprocal of the capture e-folding time
+TRAPPARS   A    X    R    (has_column_type(TRAPPARS_ARRAY,'CAPTURE1','FLOAT'))
+
+#  the “instantaneous” capture coefficient
+TRAPPARS   A    X    R    (has_column_type(TRAPPARS_ARRAY,'CAPTURE2','FLOAT'))
+
+#  the “instantaneous” capture coefficient
+TRAPPARS   A    X    R    (has_column_type(TRAPPARS_ARRAY,'DECAY_PARAM','FLOAT'))
+

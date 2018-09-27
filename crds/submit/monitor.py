@@ -3,17 +3,13 @@ process which communicates via client log messages.
 """
 
 # ===================================================================
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import time
+import html
 
 import numpy as np
 
-from crds.core import exceptions, python23, log, cmdline
+from crds.core import exceptions, log, cmdline
 from crds.core.log import srepr
 from crds.client import api
 
@@ -75,7 +71,7 @@ polls the server for new messages at some periodic rate in seconds:
         """Format tuple of message `params` in a standardized way for messages 
         coming from the remote process being monitored.
         """
-        text = python23.unescape(" ".join(params))
+        text = html.unescape(" ".join(params))
         return log.format(">>", text).strip()
 
     def handle_log_message(self, message):

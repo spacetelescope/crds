@@ -8,9 +8,10 @@ header = {
     'name' : 'jwst_niriss_filter.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.FILTER',),),
-    'sha1sum' : 'd8c838f8bec6c62d190f7e8b204fc888f19007a8',
+    'sha1sum' : '290f2c6abdbf63c1cb7d6875b2fd103c7976c65d',
     'suffix' : 'throughput',
     'text_descr' : 'Throughput',
+    'unique_rowkeys' : ('WAVELENGTH',),
 }
 
 selector = Match({

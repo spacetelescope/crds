@@ -65,7 +65,7 @@ import fnmatch
 from . import rmap, log, utils, config, python23
 from .constants import ALL_OBSERVATORIES
 from .log import srepr
-from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError, CrdsConfigError, CrdsDownloadError
+from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsConfigError, CrdsDownloadError
 from crds.client import api
 # import crds  forward
 

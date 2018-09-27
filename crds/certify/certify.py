@@ -13,7 +13,6 @@ from __future__ import absolute_import
 import os
 from collections import defaultdict
 import gc
-import re
 
 import numpy as np
 
@@ -297,8 +296,9 @@ class ReferenceCertifier(Certifier):
             mode_columns = self.types.get_row_keys(instrument, filekind)
             if mode_columns:
                 if tables.ntables(self.filename):
-                    log.info("Potential table unique row selection parameters are", repr(mode_columns))
-                    log.info("Final combination is intersection with available table columns.")
+                    pass
+                    # log.info("Potential table unique row selection parameters are", repr(mode_columns))
+                    # log.info("Final combination is intersection with available table columns.")
                 else:
                     log.verbose("No tables defined in reference.   Skipping row checks.")
             else:
@@ -476,9 +476,9 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
     """
     all_cols = [name.upper() for name in tab.colnames]
     basename = repr(os.path.basename(tab.filename) + "[{}]".format(tab.segment))
-    log.verbose("Mode columns defined by spec for", generic_name, basename, "are:", repr(mode_keys))
-    log.verbose("All column names for this table", generic_name, basename, "are:", repr(all_cols))
-    log.verbose("Checking for duplicate modes using intersection", set(mode_keys)&set(all_cols))
+    log.info("Mode columns defined by spec for", generic_name, basename, "are:", repr(mode_keys))
+    log.info("All column names for this table", generic_name, basename, "are:", repr(all_cols))
+    log.info("Checking for duplicate modes using intersection", sorted(list(set(mode_keys)&set(all_cols))))
     modes = defaultdict(list)
     for i, row in enumerate(tab.rows):
         new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
@@ -623,6 +623,16 @@ class UnknownCertifier(Certifier):
             contents = handle.read()
         return contents
     
+class AsdfCertifier(ReferenceCertifier):
+    """Certifier for ADSF type,  invoke data models checks."""
+    
+    def certify(self):
+        """Certify an unknown format file."""
+        super(AsdfCertifier, self).certify()
+        
+        # Project-specific checks,  for JWST instantiates data model.
+        self.locator.project_check(self.filename)
+   
 # ============================================================================
 
 class MappingCertifier(Certifier):
@@ -774,7 +784,7 @@ def get_certifier_class(original_name, filepath):
         "fits" : FitsCertifier,
         "json" : ReferenceCertifier,
         "yaml" : ReferenceCertifier,
-        "asdf" : ReferenceCertifier,
+        "asdf" : AsdfCertifier,
         "geis" : ReferenceCertifier,
         "unknown" : UnknownCertifier,
     }

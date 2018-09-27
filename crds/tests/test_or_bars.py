@@ -39,9 +39,10 @@ def dt_or_bars_certify_bad_keyword():
     CRDS - INFO -  If this is not a pattern keyword, adding a translation to 'not-a-pattern' will suppress this warning.
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found... 
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  2 warnings
+    CRDS - INFO -  3 warnings
     CRDS - INFO -  8 infos
     0
     >>> test_config.cleanup(old_state)
@@ -59,9 +60,10 @@ def dt_or_bars_certify_bad_value():
     CRDS - ERROR -  instrument='MIRI' type='IPC' data='data/jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found...
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
-    CRDS - INFO -  1 warnings
+    CRDS - INFO -  2 warnings
     CRDS - INFO -  7 infos
     1
     >>> test_config.cleanup(old_state)

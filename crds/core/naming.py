@@ -12,7 +12,6 @@ import re
 from . import python23, config, log, utils
 from .exceptions import NameComparisonError
 from .constants import ALL_OBSERVATORIES
-from crds.client import api
 
 # =============================================================================================================
 

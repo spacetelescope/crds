@@ -24,6 +24,19 @@
             "tpn":"all_dark.tpn",
             "unique_rowkeys":null
         },
+        "gain":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"GAIN",
+            "filetype":"GAIN",
+            "instrument":"ALL",
+            "ld_tpn":"all_gain_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"GAIN",
+            "text_descr":"Gain",
+            "tpn":"all_gain.tpn",
+            "unique_rowkeys":null
+        },
         "ipc":{
             "extra_keys":null,
             "file_ext":".fits",
@@ -78,6 +91,19 @@
             "suffix":"THROUGHPUT",
             "text_descr":"Throughput constraints for all instruments.",
             "tpn":"all_throughput.tpn",
+            "unique_rowkeys":null
+        },
+        "trappars":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"TRAPPARS",
+            "filetype":"TRAPPARS",
+            "instrument":"ALL",
+            "ld_tpn":"all_trappars_ld.tpn",
+            "observatory":"JWST",
+            "suffix":"TRAPPARS",
+            "text_descr":"Trap Capture and Decay Parameters",
+            "tpn":"all_trappars.tpn",
             "unique_rowkeys":null
         }
     },
@@ -452,7 +478,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"FGS",
-            "ld_tpn":"fgs_sbias_ld.tpn",
+            "ld_tpn":"fgs_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"fgs_superbias.rmap",
             "observatory":"JWST",
@@ -463,10 +489,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"6a8036af5271839a76827be860a86f5f6cba1cca",
-            "suffix":"sbias",
+            "sha1sum":"6a8da130521d8f12ae0422e063758c99bef7186d",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"fgs_sbias.tpn",
+            "tpn":"fgs_superbias.tpn",
             "unique_rowkeys":null
         },
         "trapdensity":{
@@ -995,6 +1021,38 @@
                 "BAND"
             ]
         },
+        "psfmask":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-05-30",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PSFMASK",
+            "filetype":"PSFMASK",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_psfmask_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_psfmask.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.CORONAGRAPH",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"111f266d7d955d7a5601db12430faaaf214b55de",
+            "suffix":"psfmask",
+            "text_descr":"PSF Mask",
+            "tpn":"miri_psfmask.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
             "extra_keys":null,
@@ -1264,6 +1322,37 @@
             "suffix":"trappars",
             "text_descr":"Trap Capture and Decay Parameters",
             "tpn":"miri_trappars.tpn",
+            "unique_rowkeys":null
+        },
+        "tsophot":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-07-12",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"TSOPHOT",
+            "filetype":"TSOPHOT",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_tsophot_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_tsophot.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TSOVISIT"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"cf0b5ae6fcc2e5eae659b2d9a3f5cd27595499e8",
+            "suffix":"tsophot",
+            "text_descr":"TSO Aperture Photometry Parameters",
+            "tpn":"miri_tsophot.tpn",
             "unique_rowkeys":null
         },
         "v2v3":{
@@ -1646,6 +1735,38 @@
                 "PUPIL"
             ]
         },
+        "psfmask":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-05-30",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PSFMASK",
+            "filetype":"PSFMASK",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_psfmask_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_psfmask.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.CORONAGRAPH",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"5922314a450a53e5d0fc7ea2f9f486ab4a2be125",
+            "suffix":"psfmask",
+            "text_descr":"PSF Mask",
+            "tpn":"nircam_psfmask.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
             "extra_keys":null,
@@ -1753,7 +1874,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"NIRCAM",
-            "ld_tpn":"nircam_sbias_ld.tpn",
+            "ld_tpn":"nircam_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"nircam_superbias.rmap",
             "observatory":"JWST",
@@ -1764,10 +1885,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"e0acc692172dcade1c6575e0843988d939360524",
-            "suffix":"sbias",
+            "sha1sum":"5e84ec306a612226ea74898089c859763246a2c7",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"nircam_sbias.tpn",
+            "tpn":"nircam_superbias.tpn",
             "unique_rowkeys":null
         },
         "trapdensity":{
@@ -1812,6 +1933,37 @@
             "suffix":"trappars",
             "text_descr":"Trap Capture and Decay Parameters",
             "tpn":"nircam_trappars.tpn",
+            "unique_rowkeys":null
+        },
+        "tsophot":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2018-07-12",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"TSOPHOT",
+            "filetype":"TSOPHOT",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_tsophot_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_tsophot.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TSOVISIT"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"e4089e180b21c7ecea582b58eb25002bb3787049",
+            "suffix":"tsophot",
+            "text_descr":"TSO Aperture Photometry Parameters",
+            "tpn":"nircam_tsophot.tpn",
             "unique_rowkeys":null
         },
         "wavelengthrange":{
@@ -2186,7 +2338,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"69994ee55fa75fdd1b551647c87490e2d719b466",
+            "sha1sum":"8ee5519e4612b9fdac2234e30340f6b4c6db26b8",
             "suffix":"pathloss",
             "text_descr":"Path loss correction",
             "tpn":"niriss_pathloss.tpn",
@@ -2351,7 +2503,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"NIRISS",
-            "ld_tpn":"niriss_sbias_ld.tpn",
+            "ld_tpn":"niriss_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"niriss_superbias.rmap",
             "observatory":"JWST",
@@ -2362,10 +2514,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"832ad7a6be6ccf3a35a426539affca9e0141d640",
-            "suffix":"sbias",
+            "sha1sum":"0362495f85b090c86e8b9fa5fa3ca71bc1181092",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"niriss_sbias.tpn",
+            "tpn":"niriss_superbias.tpn",
             "unique_rowkeys":null
         },
         "throughput":{
@@ -2384,11 +2536,13 @@
                     "META.INSTRUMENT.FILTER"
                 ]
             ],
-            "sha1sum":"d8c838f8bec6c62d190f7e8b204fc888f19007a8",
+            "sha1sum":"290f2c6abdbf63c1cb7d6875b2fd103c7976c65d",
             "suffix":"throughput",
             "text_descr":"Throughput",
             "tpn":"niriss_throughput.tpn",
-            "unique_rowkeys":null
+            "unique_rowkeys":[
+                "WAVELENGTH"
+            ]
         },
         "trapdensity":{
             "derived_from":"handmade spec 06-22-2017",
@@ -2712,13 +2866,14 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"8c68a2f89e0579452af3e4150b7e6f9ea4cfa925",
+            "sha1sum":"aa2fdb9023440ac8f69d83aa37b3c29a0500bd31",
             "suffix":"cubepar",
             "text_descr":"IFU Cube defaults",
             "tpn":"nirspec_cubepar.tpn",
             "unique_rowkeys":[
-                "GRATING",
-                "FILTER"
+                "DISPERSER",
+                "FILTER",
+                "WAVELENGTH"
             ]
         },
         "dark":{
@@ -3482,7 +3637,7 @@
             "filekind":"superbias",
             "filetype":"SUPERBIAS",
             "instrument":"NIRSPEC",
-            "ld_tpn":"nirspec_sbias_ld.tpn",
+            "ld_tpn":"nirspec_superbias_ld.tpn",
             "mapping":"REFERENCE",
             "name":"nirspec_superbias.rmap",
             "observatory":"JWST",
@@ -3493,10 +3648,10 @@
                     "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"0e450528863c8b320ee56bf45b547f8a3943f64e",
-            "suffix":"sbias",
+            "sha1sum":"4fffd429805063af03840bc13a3ae18ee9a6fc9c",
+            "suffix":"superbias",
             "text_descr":"Super Bias",
-            "tpn":"nirspec_sbias.tpn",
+            "tpn":"nirspec_superbias.tpn",
             "unique_rowkeys":null
         },
         "trapdensity":{

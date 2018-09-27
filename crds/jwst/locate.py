@@ -28,6 +28,8 @@ from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXE
 
 from . import schema
 
+# definitively lists possible exp_types by instrument, or all instruments
+from .schema import get_exptypes
 
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
@@ -278,6 +280,10 @@ def reference_keys_to_dataset_keys(rmapping, header):
             "META.EXPOSURE.PREADPATT" : "META.EXPOSURE.READPATT",
             "META.EXPOSURE.P_READPATT" : "META.EXPOSURE.READPATT",
             "P_READPA" : "META.EXPOSURE.READPATT",
+
+            # vvvv Speculative,  not currently defined or required by CAL vvvvv 
+            "META.INSTRUMENT.PCORONAGRAPH" : "META.INSTRUMENT.CORONAGRAPH",
+            "P_CORONM" : "META.INSTRUMENT.CORONAGRAPH",
         }
 
     # Rmap header reference_to_dataset field tranlations,  can override basic!

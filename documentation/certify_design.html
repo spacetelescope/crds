@@ -586,21 +586,42 @@ motivation for modernizing formats.</p>
 <h3>&lt;Name&gt; Field</h3>
 <p>The name field specifies the name of a header keyword, table column, array,
 or expression constraint.</p>
+<div class="section" id="header-keyword-names">
+<h4>Header Keyword Names</h4>
 <p>Header and table keyword names correspond roughly to FITS keywords or JWST CAL
 data models paths flattened into a single string, e.g.:</p>
 <pre class="literal-block">
-READPATT
-META.EXPOSURE.READPATT
+ READPATT
+ META.EXPOSURE.READPATT
+
+Array Names
++++++++++++
 </pre>
 <p>Array names are specified as the bare HDU name in the &lt;name&gt; field, e.g. SCI.
 These are referenced within expressions as &lt;name&gt;_ARRAY.  These are case
 insensitive and specified in all capital letters, numbers, or underscores much
 like FITS keywords.  They should begin with a letter and be valid program
 identifiers.</p>
+<p>There are two additional specification cases for array names:</p>
+<ol class="arabic simple">
+<li>FITS extensions can also named by number, e.g.  EXT1 or EXTENSION1 refers to
+the data of HDU #1.  In constraint expressions these are referred to as
+e.g. EXT1_ARRAY.  These can be discriminated from normal header keywords by
+the keytype, which will be array vs. header.</li>
+<li>FITS extensions can be named by (name, ver), in CRDS this is denoted as
+&lt;name&gt;__&lt;ver&gt;, which corresponds to e.g. ('SCI', 1).  In constraint
+expressions they are referred to as as &lt;name&gt;__&lt;ver&gt;_ARRAY,
+e.g. SCI__1_ARRAY.  These can be differentiated from normal array extension
+names by the double-underscore-digit convention,  an imperfect compromise.</li>
+</ol>
+</div>
+<div class="section" id="expression-constraint-names">
+<h4>Expression Constraint Names</h4>
 <p>Expression constraint names describe the check performed by the value
 expression, they do not describe any physical entity within the reference file.
 Note that expression here refers to a keytype=X constraint and have no relation
 to expressions used in the &lt;presence&gt; field described below.</p>
+</div>
 </div>
 <div class="section" id="keytype-field">
 <h3>&lt;Keytype&gt; Field</h3>
@@ -820,7 +841,7 @@ GUIDER1,GUIDER2
 </pre>
 <p>constraint expressions:</p>
 <blockquote>
-()</blockquote>
+(not(&quot;IRS2&quot;)in(READPATT))</blockquote>
 <p>custom validator identifiers:</p>
 <pre class="literal-block">
 &amp;PEDIGREE
@@ -888,8 +909,9 @@ the detector's 2048 X-dimension.</p>
 <p>When specified within CRDS .tpn files, JWST CAL data models paths (ie. keyword
 names) are flattened to simple strings that resemble FITS keywords in all upper
 case:</p>
-<blockquote>
-meta.subarray.xstart --&gt;  META.SUBARRAY.XSTART</blockquote>
+<pre class="literal-block">
+meta.subarray.xstart --&gt;  META.SUBARRAY.XSTART
+</pre>
 <p>Within expressions,  the periods are replaced with underscores:</p>
 <blockquote>
 META.SUBARRAY.XSTART --&gt;  META_SUBARRAY_XSIZE</blockquote>
@@ -900,6 +922,24 @@ to the SCI HDU properties.  In this case SCI_ARRAY is a true utils.Struct()
 object so it refers to Struct() properties within the eval() expression using
 normal Python object attribute access, e.g. SCI_ARRAY.SHAPE not
 SCI_ARRAY_SHAPE.</p>
+<div class="section" id="expression-warn-only-mutator-wrapper">
+<h5>Expression warn_only() Mutator/Wrapper</h5>
+<p>Expression constraints have the unique property that they can be mutated to
+generate warnings instead of errors.  In contrast, there is no such mechanism
+for value enumerations or ranges.  Custom validators can be written to issue
+warnings as needed.</p>
+<p>The example constraint expression above can be mutated to a warning like this:</p>
+<pre class="literal-block">
+(warn_only(1&lt;=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1&lt;=2048))
+</pre>
+<p>If the constraint fails, a log ERROR which would fail the file submission is
+replaced with a WARNING which can be investigated and/or ignored.   Warnings
+truly are warnings,  they can flag fatal conditions but may not be applicable
+in all cases.</p>
+<p>Note that this is distinct from the <em>Presence</em> field &quot;W&quot; designator and related
+warning() mutator which only alter the &quot;required&quot; status of a
+constraint/keyword,  not the result of a constraint failure.</p>
+</div>
 <div class="section" id="table-expression-helpers">
 <h5>Table Expression Helpers</h5>
 <p>Expression helper functions were added to check basic table properties based
