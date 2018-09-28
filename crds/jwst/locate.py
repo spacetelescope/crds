@@ -42,11 +42,21 @@ from crds.jwst.pipeline import get_reftypes, get_pipelines
 
 # =======================================================================
 
-try:
-    from jwst.datamodels import DataModel
-    MODEL = DataModel()
-except Exception:
-    MODEL = None
+MODEL = None
+
+def get_datamodels():
+    try:
+        from jwst import datamodels  # this is fatal.
+    except ImportError:
+        log.error(
+            "CRDS requires installation of the 'jwst' package to operate on JWST files.")
+        raise
+    global MODEL
+    if MODEL is None:
+        with log.error_on_exception(
+                "Failed constructing basic JWST DataModel"):
+            MODEL = datamodels.DataModel()
+    return datamodels
 
 # =============================================================================
 
@@ -68,7 +78,7 @@ def project_check(refpath):
 
 def get_data_model_flat_dict(filepath):
     """Get the header from `filepath` using the jwst data model."""
-    from jwst import datamodels
+    datamodels = get_datamodels()
     log.info("Checking JWST datamodels.")
     # with log.error_on_exception("JWST Data Model (jwst.datamodels)"):
     try:
