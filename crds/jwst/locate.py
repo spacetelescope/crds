@@ -398,6 +398,7 @@ def cached_dm_find_fits_keyword(key):
     """Return the SSB JWST data model path for the specified non-path keyword,  nominally
     a FITS or json or ASDF bare keyword.
     """
+    get_datamodels()
     return MODEL.find_fits_keyword(key.upper(), return_result=True)
 # ============================================================================
 
