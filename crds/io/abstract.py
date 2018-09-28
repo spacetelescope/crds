@@ -45,9 +45,12 @@ def hijack_warnings(func):
             warnings.showwarning = hijacked_showwarning
             warnings.simplefilter("always", AstropyUserWarning)
             try:
-                from jwst.datamodels.util import ValidationWarning
+                from jwst.datamodels.validate import ValidationWarning
             except:
-                pass
+                log.verbose_warning(
+                    "JWST ValidationWarning import failed.  "
+                    "Not a problem for HST.",
+                    verbosity=70)
             else:
                 warnings.filterwarnings("always", r".*", ValidationWarning, r".*jwst.*")
                 if not config.ALLOW_SCHEMA_VIOLATIONS:

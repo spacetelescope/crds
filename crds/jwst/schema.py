@@ -28,7 +28,6 @@ import crds
 from crds.core import log, utils, heavy_client, config
 from crds.certify import TpnInfo
 
-
 # ====================================================================================
 
 INSTR_PREFIX = {
@@ -111,7 +110,8 @@ def refpath_to_parkeys(refpath):
 
 def _load_schema(schema_name=None):
     """Return the core data model schema."""
-    from jwst import datamodels
+    from . import locate
+    datamodels = locate.get_datamodels()
     model = datamodels.DataModel(schema=schema_name)
     return model.schema
 
