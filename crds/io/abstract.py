@@ -172,9 +172,10 @@ def _destringize_numbers(header):
 
 def _convert_dotted_paths(header):
     """Convert header dotted-path keys into valid Python identifiers 
-    (for eval()) by using underscores instead of periods.
+    (for eval()) by using underscores instead of periods and add to
+    existing contents of `header`.
     """
-    cleaned = {}
+    cleaned = dict(header)
     for key, val in header.items():
         clean = re.sub(r"([A-Za-z][A-Za-z0-9_]*)\.", r"\1_", key)
         cleaned[clean] = val
