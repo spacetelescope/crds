@@ -179,12 +179,16 @@ class ReferenceCertifier(Certifier):
                 checker.check(self.filename, self.header)                
                 log.verbose("Checked", checker, verbosity=70)
             except Exception as exc:
-                if checker.presence == "W":  # note: excludes 'O' keywords
+                presence = checker.is_applicable(self.header)
+                if presence == "W":
+                    # note: intentionally excludes 'O' keywords
                     log.warning("Checking", repr(checker.info.name), "failed:",
                                 repr(str(exc)))
                 else:
-                    raise exc.__class__(
-                        "Checking " + repr(checker.info.name) + ": " + str(exc))
+                    # raise exc.__class__(
+                    #    "Checking " + repr(checker.info.name) + ": " + str(exc))
+                    self.log_and_track_error(
+                        "Checking", repr(checker.info.name),":", str(exc))
 
         # Table checks and provenance not associated with a single TpnInfo
         with self.error_on_exception("Checking", repr(self.filename)):

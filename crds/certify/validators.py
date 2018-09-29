@@ -241,9 +241,15 @@ class Validator(object):
             return False
 
     def is_applicable(self, header):
-        """Return True IFF the conditional presence expression for this validator,  not always
-        defined,  returns False indicating that the validator is not applicable to the situation
-        defined by `header`.
+        """Return True IFF this Validator is applicable based upon header and the
+        presence field of the TpnInfo.   The presence field can contain an expression
+        which is evaluated in the context of `header`.
+
+        There are variations of "True" which can be returned.  Some checks are
+        designated optional (O), warning (W), or as only applying to FULL (F)
+        frame or true SUBARRAY (S) cases.  These cases return the presence
+        character which as a non-zero length string also evaluates to True but
+        carries extra information,  particularly "optional" or "warning".
         """
         SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
@@ -271,7 +277,7 @@ class Validator(object):
             return True
 
     def get_required_copy(self):
-        """Return a copy of this validator with self.presence overridden to R/required."""
+        """Return a copy of this validator with self.info.presence overridden to R/required."""
         required = copy.deepcopy(self)
         idict = required.info._asdict()  # returns OrderedDict,  method is public despite _
         idict["presence"] = "R"
