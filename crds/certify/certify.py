@@ -180,20 +180,21 @@ class ReferenceCertifier(Certifier):
                 log.verbose("Checked", checker, verbosity=70)
             except Exception as exc:
                 presence = checker.is_applicable(self.header)
-                if presence == "W":
-                    # note: intentionally excludes 'O' keywords
+                if presence == "W":  # excludes "O"
                     log.warning("Checking", repr(checker.info.name), "failed:",
                                 repr(str(exc)))
                 else:
-                    # raise exc.__class__(
-                    #    "Checking " + repr(checker.info.name) + ": " + str(exc))
                     self.log_and_track_error(
                         "Checking", repr(checker.info.name),":", str(exc))
 
         # Table checks and provenance not associated with a single TpnInfo
-        with self.error_on_exception("Checking", repr(self.filename)):
+        # NOTE: "W" doesn't downgrade colum checking exceptions to warning.
+        with self.error_on_exception(
+                "Checking reference modes for", repr(self.filename)):
             if self.mode_columns:
                 self.certify_reference_modes()
+        with self.error_on_exception(
+                "Dumping provenance for", repr(self.filename)):
             if self._dump_provenance_flag:
                 self.dump_provenance()
     
