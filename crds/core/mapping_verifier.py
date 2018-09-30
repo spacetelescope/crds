@@ -3,7 +3,6 @@ restrict the allowable Python constructs to the declarative forms permissible
 in rmaps.  Verfication is part of basic checking which is executed whenever and
 Mapping is loaded, and is non-recursive.
 """
-
 import ast
 import sys
 

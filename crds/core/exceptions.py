@@ -1,7 +1,4 @@
 """This module defines CRDS specific exceptions."""
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 
 class CrdsError(Exception):
     """Baseclass for all client exceptions."""

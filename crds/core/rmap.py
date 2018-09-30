@@ -51,12 +51,6 @@ Active instrument references are also broken down by filetype:
 >>> len(r.reference_names())  > 500
 True
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 import os.path
 import glob
 import json

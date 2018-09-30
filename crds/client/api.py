@@ -2,12 +2,6 @@
 remote service calls to the CRDS server to obtain mapping or reference files and
 cache them locally.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ==============================================================================
-
 import os
 import os.path
 import base64

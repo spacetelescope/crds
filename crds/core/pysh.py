@@ -41,13 +41,6 @@ alone any of the more powerful features of Python such as modules,
 classes, functions, lists, mappings, sets, strings, exception handling,
 etc.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# =========================================================================
-
 import sys
 import os
 import re

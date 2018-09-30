@@ -13,12 +13,6 @@ no switch  adds / updates FITS or CRDS mapping checksums
 --verify   verifying FITS or mapping checksums.
 
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import sys
 
 # ============================================================================

@@ -8,9 +8,6 @@ Added "hooks" to newly generated rmap headers provided acs_biasfile_filter is im
 
 Simplified rmap generation process.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 import copy
 
 from .acs_common import *

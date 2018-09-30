@@ -3,13 +3,6 @@ Tests for crds.core.crds_cache_locking which is nominally used to synchronize
 access to the CRDS cache but is actually general purpose locking integrated
 with
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 import sys
 import os
 import time

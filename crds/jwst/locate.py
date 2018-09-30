@@ -6,9 +6,6 @@ specific policies for JWST:
 2. How to manage parameters for reference file Validator objects used
 in the certification of reference files. 
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 import os.path
 import re
 

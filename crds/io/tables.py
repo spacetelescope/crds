@@ -3,9 +3,7 @@ and bestrefs table effects determinations.  In both cases it basically provides 
 SimpleTable objects,  one per segment/hdu for a table file and a simple object which gives 
 readonly row acess to each segment.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
+
 import os.path
 
 from astropy import table

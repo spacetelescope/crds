@@ -11,11 +11,6 @@ second instance.
 A number of configuration env var settings control locking behavior, see
 crds.core.config for more info.
 """
-
-from __future__ import print_function, absolute_import
-
-# =========================================================================
-
 import os
 import multiprocessing
 

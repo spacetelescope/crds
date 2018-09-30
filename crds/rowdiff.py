@@ -2,10 +2,6 @@
 FITS files or HDU lists. This can be a command-line module or class in a
 script. Written to add this functionality to crds.diff.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 
 import difflib

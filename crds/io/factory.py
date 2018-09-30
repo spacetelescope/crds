@@ -4,11 +4,6 @@ determining fundamental properties of a file (get_filetype, get_observatory) or
 related to instantiating a specialized file handler object (file_factory) appropriate
 for the given observatory and file format.
 '''
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
 
 import os
 

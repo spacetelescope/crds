@@ -9,12 +9,6 @@ a dataset to be processed.
 
 If the rows are different,  then the dataset should be reprocessed.  
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 from crds.core import rmap, log
 from crds.core.python23 import *
 from crds.io import tables

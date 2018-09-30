@@ -1,9 +1,4 @@
 """Generic utility routines used by a variety of modules."""
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
 
 #  XXXX lots of bogus pylint warnings here,  verify before removing imports.
 

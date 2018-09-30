@@ -1,11 +1,6 @@
 """This module contains functions related to generating and comparing the time order
 of CRDS file names.   Different projects have different naming conventions.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os
 import re
 

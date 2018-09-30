@@ -8,10 +8,6 @@ A number of command line switches control output formatting.
 
 The api function find_full_match_paths() returns a list of "match paths",  lists of parkey value assignment tuples:
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import os.path
 from collections import defaultdict

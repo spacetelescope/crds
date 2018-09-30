@@ -4,9 +4,6 @@ organized around loading type specs or prototype rmaps from the "specs" subdirec
 an observatory/subsystem package.   For HST this reduces defining new types to adding 
 a prototype rmap and defining .tpn files in the observatory package.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 import os.path
 import collections
 import glob

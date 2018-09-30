@@ -4,12 +4,6 @@ files in multiple formats (FITS, json, yaml, ...) define required parameters and
 they have legal values.    It is also used to verify that CRDS mapping files are 
 consistent with outside systems.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os
 from collections import defaultdict
 import gc

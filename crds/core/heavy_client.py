@@ -47,12 +47,6 @@ CRDS cache during calibrations, connecting to the server only during serial
 cache sync operations.  This module provides some of the fall back mechanisms
 necessary for operating without a server connection at all.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os
 import pprint
 import ast

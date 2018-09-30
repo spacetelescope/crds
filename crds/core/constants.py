@@ -1,9 +1,3 @@
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 # List of all the observatory package names
 ALL_OBSERVATORIES = ["hst", "jwst", "tobs"]
 

@@ -309,9 +309,6 @@ CLEANUP
     >>> test_config.cleanup(old_state)
 
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 
 def main():
     """Run module tests,  for now just doctests only."""

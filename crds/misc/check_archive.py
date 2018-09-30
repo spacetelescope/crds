@@ -1,11 +1,6 @@
 """This module is used to verify the availability of a list of CRDS files
 at the archive web server.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os.path
 import sys
 

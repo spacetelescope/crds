@@ -2,12 +2,6 @@
 w/getattr. Converts service errors into ServiceError exceptions,  otherwise 
 call returns the jsonrpc "result" field.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import sys
 import uuid
 import json

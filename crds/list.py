@@ -2,12 +2,6 @@
 mapping files associated with the specified contexts by consulting the CRDS
 server.   More generally it's for printing out information on CRDS files.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os.path
 import sys
 from collections import OrderedDict

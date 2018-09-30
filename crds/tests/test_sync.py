@@ -1,12 +1,6 @@
 """This module contains doctests that exercise the crds.sync module used to update and manage
 a CRDS cache of rules and references.
 """
-
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
 import os
 
 import crds

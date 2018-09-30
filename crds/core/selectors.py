@@ -83,10 +83,6 @@ and complexity.   Here we add time to the selection criteria:
 Note that the context variables used by some Selector's are implicit,
 with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 # ==============================================================================
 
 import re
