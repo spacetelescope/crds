@@ -374,8 +374,6 @@ class MissingDependencyError(Exception):
 
 def fits_to_parkeys(fits_header):
     """Map a FITS header onto rmap parkeys appropriate for JWST."""
-    if MODEL is None:
-        raise MissingDependencyError("JWST data models are not installed.   Cannot fits_to_parkeys().")
     parkeys = {}
     for key, value in fits_header.items():
         key, value = str(key), str(value)
