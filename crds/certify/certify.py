@@ -179,6 +179,8 @@ class ReferenceCertifier(Certifier):
                 checker.check(self.filename, self.header)                
                 log.verbose("Checked", checker, verbosity=70)
             except Exception as exc:
+                if not self.trap_exceptions:
+                    raise
                 presence = checker.is_applicable(self.header)
                 if presence == "W":  # excludes "O"
                     log.warning("Checking", repr(checker.info.name), "failed:",
