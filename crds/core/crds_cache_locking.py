@@ -33,7 +33,7 @@ def _warn_required(locking_module):
 
 # =========================================================================
 
-class CrdsAbstractLock(object):
+class CrdsAbstractLock:
     """At a design level this also serves as an abstract class defining the API."""
     
     _lock = None  # Overridden in most cases
@@ -111,7 +111,7 @@ class CrdsFakeLock(CrdsAbstractLock):
     
 # =========================================================================
 
-class failed_module_proxy(object):
+class failed_module_proxy:
     """Generate an exception only when module is actually used by runtime lock
     instantiation.
     """

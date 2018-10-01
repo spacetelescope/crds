@@ -130,7 +130,7 @@ def from_package_file(observatory, pkg):
     unified_defs = load_specs(specs_path)
     return TypeParameters(observatory, unified_defs)
 
-class TypeParameters(object):
+class TypeParameters:
     """Inialized from a dictionary of TypeSpec's from load_specs(), compute observatory enumerations
     and type field inter-relationships and cache them as attributes.
     """

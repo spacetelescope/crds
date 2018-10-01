@@ -92,7 +92,7 @@ def get_debug():
 
 # =========================================================================
 
-class Shell(object):
+class Shell:
     """Shell performs sh-like variable substitutions and returns a callable
     object which runs `args` as a subprocess when called.   The shell object
     records the final command line and manages program I/O,  capturing output

@@ -99,7 +99,7 @@ def decolorize(output):
 
 # ==============================================================================================================
     
-class Differencer(object):
+class Differencer:
     """This baseclass provides a standard set of (largely optional) parameters to subclasses.
     
     observatory           str  nominally hst or jwst

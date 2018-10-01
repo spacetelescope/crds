@@ -237,7 +237,7 @@ DEFAULT_SUBSTITUTIONS = {
 
 # ==============================================================================
 
-class Selector(object):
+class Selector:
     """Baseclass for CRDS file selectors defining the basic protocol
     of a Selector:
 
@@ -1225,7 +1225,7 @@ def different_match_weight(subkey, superkey):
             super_count -= 1
     return sub_count != super_count
 
-class Matcher(object):
+class Matcher:
     """Matches a single key of a matching tuple to a dataset value.  Every
     key of a MatchSelector will have a tuple of corresponding Matchers.
     """
@@ -2623,7 +2623,7 @@ class BracketSelector(Selector):
 
 # ==============================================================================
 
-class ComparableMixin(object):
+class ComparableMixin:
     
     def _compare(self, other, method):
         if not isinstance(other, self.__class__):
@@ -2865,7 +2865,7 @@ def abs_time_delta(time1, time2):
 
 # ==============================================================================
 
-class Parameters(object):
+class Parameters:
     """Parameters are a place to stash Selector parameters while an entire rmap
     is being read so that the header can be used to help instantiate the 
     selectors.

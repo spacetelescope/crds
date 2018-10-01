@@ -121,7 +121,7 @@ class LowerCaseDict(dict):
 
 # ===================================================================
 
-class Mapping(object):
+class Mapping:
     """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
     """

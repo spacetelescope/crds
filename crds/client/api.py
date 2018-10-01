@@ -485,7 +485,7 @@ def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_fi
 
 # ==============================================================================
 
-class FileCacher(object):
+class FileCacher:
     """FileCacher gets remote files with simple names into a local cache."""
     def __init__(self, pipeline_context, ignore_cache=False, raise_exceptions=True):
         self.pipeline_context = pipeline_context

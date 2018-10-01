@@ -34,7 +34,7 @@ MAX_DATE = "9999-01-01 23:59:59"
 # both consistency/control and to take a load off the database.)
 
 
-class HeaderGenerator(object):
+class HeaderGenerator:
     """Generic source for lookup parameters and historical comparison results."""
 
     def __init__(self, context, sources, datasets_since):

@@ -45,7 +45,7 @@ def array_name(rootname):
     
 # ============================================================================
 
-class Validator(object):
+class Validator:
     """Validator is an Abstract class that applies TpnInfo objects to reference files.  Each
     Validator handles a single constraint defined in a .tpn file.
     """

@@ -40,7 +40,7 @@ REFERENCE_DIVIDER = "# vvvvvvvv GENERATED vvvvvvvv"
 
 # --------------------------------------------------------------------------------------
 
-class CrdsCfgGenerator(object):
+class CrdsCfgGenerator:
     """Used to re-generate SYSTEM CRDSCFG reference files based on modified
     versions of previous reference files.
     """

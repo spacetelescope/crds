@@ -271,7 +271,7 @@ class Test_01_Insert(TobsTestCase):
 
 # =============================================================================
 
-class RecursiveModify(object):
+class RecursiveModify:
     """Tests for checking automatic rmap update logic for adding new references."""
     
     result_filename = None

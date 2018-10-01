@@ -50,7 +50,7 @@ def clear_cache():
     tables.cache.clear()
 
 
-class SimpleTable(object):
+class SimpleTable:
     """A simple class to encapsulate astropy tables for basic CRDS readonly table row and colname access."""
     def __init__(self, filename, segment=1):
         self.filename = filename

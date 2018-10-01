@@ -195,7 +195,7 @@ def cached(func):
     """
     return CachedFunction(func)
 
-class xcached(object):
+class xcached:
     """Caching decorator which supports auxilliary caching parameters.
     
     omit_from_key lists keywords or positional indices to be excluded from cache
@@ -230,7 +230,7 @@ class xcached(object):
         cached.__name__ = cached.uncached.__name__ + " [xcached]"
         return cached
 
-class CachedFunction(object):
+class CachedFunction:
     """Class to support the @cached function decorator.   Called at runtime
     for typical caching version of function.
     """
@@ -332,7 +332,7 @@ def capture_output(func):
     True
 
     """
-    class CapturedFunction(object):
+    class CapturedFunction:
         """Closure on `func` which supports various forms of output capture."""
         
         def __repr__(self):
@@ -387,7 +387,7 @@ def compare_dicts(dict1, dict2):
         
 # ===================================================================
 
-class TimingStats(object):
+class TimingStats:
     """Track and compute counts and counts per second."""
     def __init__(self, output=None):
         self.counts = Counter()

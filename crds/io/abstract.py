@@ -194,7 +194,7 @@ def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
 
 # ================================================================================================
 
-class AbstractFile(object):
+class AbstractFile:
     
     format = "ABSTRACT"
     

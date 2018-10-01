@@ -28,7 +28,7 @@ from . import reftypes
 
 # ============================================================================
 
-class Certifier(object):
+class Certifier:
     """Baseclass for all certifiers: references, mappings, etc."""
 
     def __init__(self, filename, context=None, check_references=False, 

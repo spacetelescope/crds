@@ -68,7 +68,7 @@ def _request_id():
     MSG_NO += 1
     return "%08x" % MSG_NO
 
-class CheckingProxy(object):
+class CheckingProxy:
     """CheckingProxy converts calls to undefined methods into JSON RPC service 
     calls bindings.   If the JSON rpc returns an error,  CheckingProxy raises a 
     ServiceError exception containing the error's message.
@@ -89,7 +89,7 @@ class CheckingProxy(object):
         return self.__class__.__name__ + "(url='%s', version='%s')" % \
             (self.__service_url, self.__version)
         
-class ServiceCallBinding(object):
+class ServiceCallBinding:
     """When called,  ServiceCallBinding issues a JSONRPC call to the associated
     service URL.
     """

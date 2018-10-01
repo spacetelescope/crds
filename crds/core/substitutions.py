@@ -33,7 +33,7 @@ HERE = os.path.dirname(__file__) or "."
     
 # ============================================================================    
 
-class HeaderExpander(object):
+class HeaderExpander:
     """HeaderExpander applies a set of expansion rules to a header.  It 
     compiles the applicability expression of each rule.
 

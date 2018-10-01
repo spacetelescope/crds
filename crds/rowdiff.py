@@ -279,7 +279,7 @@ def selected(element, wanted):
 
 
 #==========================================================================
-class RowDiff(object):
+class RowDiff:
     """Perform FITS table difference by rows
 
     Modules that are based on FITSDiff, such as Diff, compare

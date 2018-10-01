@@ -103,7 +103,7 @@ def env_str_to_int(varname, val):
 
 # ===========================================================================
 
-class ConfigItem(object):
+class ConfigItem:
     """CRDS environment control item base class.  These are driven by environment variables
     but conceptually could extend to a CRDS .rc file of some kind.
 

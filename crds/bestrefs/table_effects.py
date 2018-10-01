@@ -247,7 +247,7 @@ class DeepLookError(Exception):
     def __str__(self):
         return repr(self.message)
 
-class DeepLook(object):
+class DeepLook:
     """Base class to define how reference tables are deep-checked
     for differences between references
     """

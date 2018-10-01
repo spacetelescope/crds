@@ -267,7 +267,7 @@ def parse_numerical_date(dstr):
 
 # ============================================================================
 
-class DateParser(object):
+class DateParser:
     """Abstract baseclass for defining date parsers."""
     
     format = re.compile("^$")
