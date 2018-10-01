@@ -158,20 +158,39 @@ class ReferenceCertifier(Certifier):
         ValidationError exceptions.
         """
         self.complex_init()
+
         with self.error_on_exception("Error loading"):
             self.header = self.load()
         if not self.header:
             return
+
         display_header = dict(self.header)
         display_header.pop("__builtins__", None)
         log.verbose("Header:", log.PP(display_header), verbosity=55)
+
         for checker in self.validators:
-            with self.error_on_exception("Checking", repr(checker.info.name)):
+            try:
                 checker.check(self.filename, self.header)                
                 log.verbose("Checked", checker, verbosity=70)
-        with self.error_on_exception("Checking", repr(checker.info.name)):
+            except Exception as exc:
+                if not self.trap_exceptions:
+                    raise
+                presence = checker.is_applicable(self.header)
+                if presence == "W":  # excludes "O"
+                    log.warning("Checking", repr(checker.info.name), "failed:",
+                                repr(str(exc)))
+                else:
+                    self.log_and_track_error(
+                        "Checking", repr(checker.info.name),":", str(exc))
+
+        # Table checks and provenance not associated with a single TpnInfo
+        # NOTE: "W" doesn't downgrade colum checking exceptions to warning.
+        with self.error_on_exception(
+                "Checking reference modes for", repr(self.filename)):
             if self.mode_columns:
                 self.certify_reference_modes()
+        with self.error_on_exception(
+                "Dumping provenance for", repr(self.filename)):
             if self._dump_provenance_flag:
                 self.dump_provenance()
     
@@ -181,13 +200,14 @@ class ReferenceCertifier(Certifier):
         # needed_keys=tuple([checker.complex_name for checker in self.validators])
         header = data_file.get_header(
             self.filename, (), self.original_name, self.observatory)
-        header = self.map_reference_keywords_to_dataset_keywords(header)
+        header = self.map_ref_keys_to_dataset_keys(header)
         # header = self.cross_strap_instrument_keywords(header)
         header = self.add_array_keywords(header)
+        header = data_file.convert_to_eval_header(header)
         header = abstract.ensure_keys_defined(header, needed_keys=[checker.complex_name for checker in self.validators])
         return header
     
-    def map_reference_keywords_to_dataset_keywords(self, header):
+    def map_ref_keys_to_dataset_keys(self, header):
         """Based on the rmap corresponding to this reference filename a`header`,  map keywords
         in `header` from the names used in reference files to the corresponding names matched in
         datasets.   Returns new `header`.
@@ -208,7 +228,9 @@ class ReferenceCertifier(Certifier):
 
     def add_array_keywords(self, header):
         """Add synthetic array keywords based on properties of the arrays mentioned in
-        array validators to header.   Muates `header`.
+        array validators to header.   
+
+        Mutates `header`.
         """
         header = dict(header)
         for checker in self.array_validators:
@@ -217,8 +239,7 @@ class ReferenceCertifier(Certifier):
                 continue
             # Load missing arrays,  or add data to loaded arrays from 'A' prior to 'D'.
             if ((checker.complex_name not in header) or 
-                (checker.info.keytype=="D" and
-                 header[checker.complex_name]["DATA"] is None)):
+                (checker.info.keytype=="D" and header[checker.complex_name]["DATA"] is None)):
                 header[checker.complex_name] = data_file.get_array_properties(self.filename, checker.name, checker.info.keytype)
         seen = set()
         for checker in self.array_validators:
@@ -262,8 +283,7 @@ class ReferenceCertifier(Certifier):
             if self.interesting_value(hval):
                 log.info(key, "=", repr(hval))
             return True
-        else:
-            return False
+        return False
 
     def interesting_value(self, value):
         """Return True IFF `value` isn't uninteresting."""
@@ -565,7 +585,7 @@ RECATEGORIZED_MESSAGE = {
     'Unregistered XTENSION value' : log.info,
     'checksum is not' : log.error,
     'Invalid CHECKSUM' : log.error,
-     }
+}
 
 def interpret_fitsverify_output(status, output):
     """Re-issue captured fitsverify output as CRDS log messages,  elevating some cherry
@@ -700,8 +720,7 @@ def find_old_mapping(comparison_context, new_mapping):
         comparison_mapping = crds.get_pickled_mapping(comparison_context)  # reviewed
         old_mapping = comparison_mapping.get_equivalent_mapping(new_mapping)
         return old_mapping
-    else:
-        return None
+    return None
 
 def banner(char='#'):
     """Print a standard divider."""

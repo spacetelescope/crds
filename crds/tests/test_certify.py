@@ -11,6 +11,7 @@ from nose.tools import assert_raises, assert_true
 
 from crds.core import utils, log, exceptions
 from crds import client
+from crds import data_file
 from crds import certify
 from crds.certify import CertifyScript
 from crds.certify import generic_tpn
@@ -388,7 +389,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.EXPOSURE.TYPE [EXP_TYPE] = 'mir_image'
     CRDS - INFO -  META.HISTORY [HISTORY] = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.INSTRUMENT.BAND [BAND] = 'medium'
-    CRDS - INFO -  META.INSTRUMENT.CHANNEL [CHANNEL] = '34'
+    CRDS - INFO -  META.INSTRUMENT.CHANNEL [CHANNEL] = 34
     CRDS - INFO -  META.INSTRUMENT.CORONAGRAPH [CORONMSK] = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR [DETECTOR] = 'mirifulong'
     CRDS - INFO -  META.INSTRUMENT.FILTER [FILTER] = 'UNDEFINED'
@@ -398,13 +399,13 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.MODEL_TYPE [DATAMODL] = 'UNDEFINED'
     CRDS - INFO -  META.PEDIGREE [PEDIGREE] = 'dummy'
     CRDS - INFO -  META.REFTYPE [REFTYPE] = 'distortion'
-    CRDS - INFO -  META.SUBARRAY.FASTAXIS [FASTAXIS] = '1'
+    CRDS - INFO -  META.SUBARRAY.FASTAXIS [FASTAXIS] = 1
     CRDS - INFO -  META.SUBARRAY.NAME [SUBARRAY] = 'MASK1550'
-    CRDS - INFO -  META.SUBARRAY.SLOWAXIS [SLOWAXIS] = '2'
-    CRDS - INFO -  META.SUBARRAY.XSIZE [SUBSIZE1] = '1032'
-    CRDS - INFO -  META.SUBARRAY.XSTART [SUBSTRT1] = '1'
-    CRDS - INFO -  META.SUBARRAY.YSIZE [SUBSIZE2] = '4'
-    CRDS - INFO -  META.SUBARRAY.YSTART [SUBSTRT2] = '1020'
+    CRDS - INFO -  META.SUBARRAY.SLOWAXIS [SLOWAXIS] = 2
+    CRDS - INFO -  META.SUBARRAY.XSIZE [SUBSIZE1] = 1032
+    CRDS - INFO -  META.SUBARRAY.XSTART [SUBSTRT1] = 1
+    CRDS - INFO -  META.SUBARRAY.YSIZE [SUBSIZE2] = 4
+    CRDS - INFO -  META.SUBARRAY.YSTART [SUBSTRT2] = 1020
     CRDS - INFO -  META.TELESCOPE [TELESCOP] = 'jwst'
     CRDS - INFO -  META.USEAFTER [USEAFTER] = '2015-01-25T12:00:00'
     CRDS - INFO -  ########################################
@@ -1035,29 +1036,26 @@ def load_miri_mask_tpn():
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))")]
     >>> test_config.cleanup(old_state)
     """
+
+def dt_acs_idctab_char_plus_column():
+    """
+    >>> TestCertifyScript("crds.certify data/acs_new_idc.fits --comparison-context hst_508.pmap")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_508.pmap'
+    CRDS - INFO -  FITS file 'acs_new_idc.fits' conforms to FITS standards.
+    CRDS - WARNING -  Failed resolving comparison reference for table checks : [Errno 2] No such file or directory: '/Users/jmiller/crds-cache-default-test/mappings/hst/hst_508.pmap'
+    CRDS - INFO -  Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    CRDS - INFO -  All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    CRDS - WARNING -  No comparison reference for 'acs_new_idc.fits' in context 'hst_508.pmap'. Skipping tables comparison.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  2 warnings
+    CRDS - INFO -  7 infos
+    0
+    """
     
 # ==================================================================================
-
-class TestHSTTpnInfoClass(test_config.CRDSTestCase):
-
-    def setUp(self, *args, **keys):
-        super(TestHSTTpnInfoClass, self).setUp(*args, **keys)
-        hstlocator = utils.get_locator_module("hst")
-        self.tpninfos = hstlocator.get_all_tpninfos("acs","idctab","tpn")
-        self.validators = [certify.validator(info) for info in self.tpninfos]
-        client.set_crds_server('https://crds-serverless-mode.stsci.edu')
-        os.environ['CRDS_MAPPATH'] = self.hst_mappath
-        os.environ['CRDS_PATH'] = "/grp/crds/hst"
-        os.environ["CRDS_CONTEXT"] ="hst.pmap"
-
-    def test_character_validator(self):
-        assert self.validators[2].check(self.data('acs_new_idc.fits'))
-
-    def test_column_validator(self):
-        assert self.validators[-2].check(self.data('acs_new_idc.fits'))
-
-# ==================================================================================
-
 class TestCertify(test_config.CRDSTestCase):
 
     def setUp(self, *args, **keys):
@@ -1082,7 +1080,8 @@ class TestCertify(test_config.CRDSTestCase):
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
-        cval.check(self.data('acs_new_idc.fits'))
+        header = {"DETECTOR": "HRC"}
+        cval.check(self.data('acs_new_idc.fits'), header)
 
     def test_character_validator_bad(self):
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
@@ -1487,7 +1486,7 @@ class TestCertify(test_config.CRDSTestCase):
         # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('DETECTOR','H', 'C', 'E', ())
         checker = certify.validator(info)
-        assert_raises(certify.IllegalKeywordError, checker.get_header_value, {"DETECTOR":"SHOULDNT_DEFINE"})
+        assert_raises(certify.IllegalKeywordError, checker.check, "test.fits", {"DETECTOR":"SHOULDNT_DEFINE"})
 
     def test_tpn_not_value(self):
         # typical subtle expression error, "=" vs. "=="
@@ -1653,12 +1652,13 @@ class TestCertify(test_config.CRDSTestCase):
     def test_tpn_pedigree_missing_column(self):
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        assert_raises(certify.MissingKeywordError, checker.check_column, "data/x2i1559gl_wcp.fits")
+        assert_raises(certify.MissingKeywordError, checker.check_column, "data/x2i1559gl_wcp.fits", {})
 
     def test_tpn_pedigree_ok_column(self):
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        checker.check_column("data/16j16005o_apd.fits")
+        header = data_file.get_header(self.data("16j16005o_apd.fits"))
+        checker.check_column("data/16j16005o_apd.fits", header)
         
 # ------------------------------------------------------------------------------
         
@@ -1666,7 +1666,8 @@ class TestCertify(test_config.CRDSTestCase):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval,certify.SybdateValidator))
-        cval.check(self.data('acs_new_idc.fits'))
+        header = data_file.get_header(self.data("acs_new_idc.fits"))
+        cval.check(self.data('acs_new_idc.fits'), header)
 
     def test_slashdate_validator(self):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SLASHDATE',))

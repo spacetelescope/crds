@@ -106,21 +106,18 @@ class Validator:
         """Represent Validator instance as a string."""
         return self.__class__.__name__ + repr(self.info) 
 
-    def check(self, filename, header=None):
+    def check(self, filename, header):
         """Pull the value(s) corresponding to this Validator out of it's
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
         """
-        if header is None:
-            header = data_file.get_header(filename)
-
         if not self.is_applicable(header):
             return True
         
         if self.info.keytype == "C":
-            return self.check_column(filename)
+            return self.check_column(filename, header)
         elif self.info.keytype == "G":
-            return self.check_group(filename)
+            return self.check_group(filename, header)
         elif self.info.keytype in ["H","X","A","D"]:
             return self.check_header(filename, header)
         else:
@@ -131,7 +128,11 @@ class Validator:
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
         """
-        value = self.get_header_value(header)
+        value = header.get(self.complex_name, "UNDEFINED")
+        if value in [None, "UNDEFINED"]:
+            return self.handle_missing(header)
+        elif self.info.presence == "E":
+            raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
         return self.check_value(filename, value)
 
     def check_value(self, filename, value):
@@ -153,7 +154,7 @@ class Validator:
         raise NotImplementedError(
             "Validator is an abstract class.  Sub-class and define _check_value().")
     
-    def check_column(self, filename):
+    def check_column(self, filename, header):
         """Extract a column of new_values from `filename` and check them all against
         the legal values for this Validator.   This checks a single column,  not a row/mode.
         """
@@ -165,25 +166,14 @@ class Validator:
                 for i, value in enumerate(tab.columns[self.name]): # compare to TPN values
                     self.check_value(filename + "[" + str(i) +"]", value)
         if not column_seen:
-            self.handle_missing()
+            self.handle_missing(header)
         return True
         
-    def check_group(self, _filename):
+    def check_group(self, _filename, _header):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
         log.warning("Group keys are not currently supported by CRDS.")
 
-    def get_header_value(self, header):
-        """Pull this Validator's value out of `header` and return it.
-        Handle the cases where the value is missing or excluded.
-        """
-        value = header.get(self.complex_name, "UNDEFINED")
-        if value in [None, "UNDEFINED"]:
-            return self.handle_missing(header)
-        elif self.info.presence == "E":
-            raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
-        return value
-    
-    def handle_missing(self, header=None):
+    def handle_missing(self, header):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
@@ -245,9 +235,15 @@ class Validator:
             return False
 
     def is_applicable(self, header):
-        """Return True IFF the conditional presence expression for this validator,  not always
-        defined,  returns False indicating that the validator is not applicable to the situation
-        defined by `header`.
+        """Return True IFF this Validator is applicable based upon header and the
+        presence field of the TpnInfo.   The presence field can contain an expression
+        which is evaluated in the context of `header`.
+
+        There are variations of "True" which can be returned.  Some checks are
+        designated optional (O), warning (W), or as only applying to FULL (F)
+        frame or true SUBARRAY (S) cases.  These cases return the presence
+        character which as a non-zero length string also evaluates to True but
+        carries extra information,  particularly "optional" or "warning".
         """
         SUBARRAY = header.get('SUBARRAY','UNDEFINED')
         if self._presence_condition_code:
@@ -275,7 +271,7 @@ class Validator:
             return True
 
     def get_required_copy(self):
-        """Return a copy of this validator with self.presence overridden to R/required."""
+        """Return a copy of this validator with self.info.presence overridden to R/required."""
         required = copy.deepcopy(self)
         idict = required.info._asdict()  # returns OrderedDict,  method is public despite _
         idict["presence"] = "R"
@@ -559,14 +555,11 @@ class ExpressionValidator(Validator):
 
     def check_header(self, filename, header):
         """Evalutate the header expression associated with this validator (as its sole value)
-        with respect to the given `header`.  Read `header` from `filename` if `header` is None.
+        with respect to the given `header`.
+
+        Note that array-based checkers are not automatically loaded during a classic header
+        fetch and expressions can involve operations on multiple keywords or arrays.
         """
-        # super(ExpressionValidator, self).check_header(filename, header)
-        header = data_file.convert_to_eval_header(header)
-        if self.info.keytype in ["A","D"] and header.get(self.complex_name, "UNDEFINED") == "UNDEFINED":
-            log.verbose_warning("Array", repr(self.name),
-                                "is 'UNDEFINED'.  Skipping check", str(self._expr))
-            return
         log.verbose("File=" + repr(os.path.basename(filename)), "Checking",
                     repr(self.name), "condition", str(self._expr))
         for keyword in expr_identifiers(self._expr):
