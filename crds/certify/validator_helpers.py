@@ -8,7 +8,7 @@ are restricted to pigeon-Python that does not allow spaces.  See the JWST .tpn f
 (particularly *array*.tpn) for examples of presence or constraint expressions,  grep
 those files for these functions.
 """
-from crds.core import utils, exceptions, python23
+from crds.core import utils, exceptions
 
 # ----------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ def has_type(array_info, typestr):
     >>> has_type(utils.Struct({"DATA_TYPE" : "complex64"}), ["COMPLEX","INT"])
     True
     """
-    possible_types = [typestr] if isinstance(typestr, python23.string_types) else typestr
+    possible_types = [typestr] if isinstance(typestr, str) else typestr
     for possible_type in possible_types:
         itype = _image_type(possible_type)
         if array_exists(array_info) and itype in array_info.DATA_TYPE:

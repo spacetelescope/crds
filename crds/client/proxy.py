@@ -8,8 +8,11 @@ import json
 import time
 import os
 
+from urllib import request
+import html
+
 # import crds
-from crds.core import python23, exceptions, log, config
+from crds.core import exceptions, log, config
 
 # ============================================================================
 
@@ -22,7 +25,7 @@ def init_urlopen():
     a CRDS client unconditional one-off.
     """
     try:
-        python23.urlopen('')
+        request.urlopen('')
     except Exception:
         pass
 
@@ -146,7 +149,7 @@ class ServiceCallBinding(object):
         if not isinstance(parameters, bytes):
             parameters = parameters.encode("utf-8")
         try:
-            channel = python23.urlopen(url, parameters)
+            channel = request.urlopen(url, parameters)
             return channel.read().decode("utf-8")
         except Exception as exc:
             raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc)) from exc
@@ -156,12 +159,12 @@ class ServiceCallBinding(object):
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
-            decoded = str(python23.unescape(jsonrpc["error"]["message"]))
+            decoded = str(html.unescape(jsonrpc["error"]["message"]))
             raise self.classify_exception(decoded)
         else:
             result = crds_decode(jsonrpc["result"])
             result = fix_strings(result)
-            if isinstance(result, (python23.string_types,int,float,bool)):
+            if isinstance(result, (str,int,float,bool)):
                 log.verbose("RPC OK -->", repr(result))
             else:
                 log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 75 else "")
@@ -179,7 +182,7 @@ class ServiceCallBinding(object):
 
 def fix_strings(rval):
     """Convert unicode to strings."""
-    if isinstance(rval, python23.string_types):
+    if isinstance(rval, str):
         return str(rval)
     elif isinstance(rval, tuple):
         return tuple([fix_strings(x) for x in rval])

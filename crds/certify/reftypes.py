@@ -9,7 +9,7 @@ import collections
 import glob
 import json
 
-from crds.core import python23, rmap, log, utils
+from crds.core import rmap, log, utils
 from . import generic_tpn
 
 # =============================================================================
@@ -81,7 +81,6 @@ def load_specs(spec_path):
     combined_specs_path = os.path.join(spec_path, "combined_specs.json")
     if os.path.exists(combined_specs_path):
         headers = load_json_specs(combined_specs_path)
-        headers = python23.unicode_to_str(headers)
     else:
         headers = load_raw_specs(spec_path)
         with log.warn_on_exception("Failed to save type specs .json at", repr(combined_specs_path)):

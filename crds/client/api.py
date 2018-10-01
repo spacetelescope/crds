@@ -7,19 +7,20 @@ import os.path
 import base64
 import re
 import zlib
+import html
+from urllib import request
 
 # ==============================================================================
 
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
 # import crds
-from crds.core import utils, log, config, python23
+from crds.core import utils, log, config
 from crds.core.log import srepr
 
 from crds.core.exceptions import ServiceError, CrdsLookupError
 from crds.core.exceptions import CrdsNetworkError, CrdsDownloadError
 from crds.core.exceptions import CrdsRemoteContextError
-from crds.core.python23 import *
 
 from . import proxy
 from .proxy import CheckingProxy
@@ -187,7 +188,7 @@ def _get_file_info_map(observatory, files, fields):
 def get_total_bytes(info_map):
     """Return the total byte count of file info map `info_map`."""
     try:
-        return sum([long(info_map[name]["size"]) for name in info_map if "NOT FOUND" not in info_map[name]])
+        return sum([int(info_map[name]["size"]) for name in info_map if "NOT FOUND" not in info_map[name]])
     except Exception as exc:
         log.error("Error computing total byte count: ", str(exc))
         return -1
@@ -416,7 +417,7 @@ def jpoll_pull_messages(key, since_id=None):
     messages = []
     for msg in S.jpoll_pull_messages(key, since_id):
         decoded = utils.Struct(msg)
-        decoded.data = python23.unescape(decoded.data)
+        decoded.data = html.unescape(decoded.data)
         messages.append(decoded)
     return messages
 
@@ -544,7 +545,7 @@ class FileCacher(object):
 
     def catalog_file_size(self, name):
         """Return the size of file `name` based on the server catalog."""
-        return long(self.info_map[os.path.basename(name)]["size"])
+        return int(self.info_map[os.path.basename(name)]["size"])
 
     def download_files(self, downloads, localpaths):
         """Serial file-by-file download."""
@@ -634,7 +635,7 @@ class FileCacher(object):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
         url = self.get_url(filename)
         try:
-            infile = urlopen(url)
+            infile = request.urlopen(url)
             file_size = utils.human_format_number(self.catalog_file_size(filename)).strip()
             stats = utils.TimingStats()
             data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
@@ -663,7 +664,7 @@ class FileCacher(object):
         """Check that the size and checksum of downloaded `filename` match the server."""
         remote_info = self.info_map[filename]
         local_length = os.stat(localpath).st_size
-        original_length = long(remote_info["size"])
+        original_length = int(remote_info["size"])
         if original_length != local_length and config.get_length_flag():
             raise CrdsDownloadError(
                 "downloaded file size", local_length,
@@ -792,7 +793,7 @@ def _get_cache_filelist_and_report_errors(bestrefs):
             wanted.extend(list(refname))
         elif isinstance(refname, dict):
             wanted.extend(refname.values())
-        elif isinstance(refname, python23.string_types):
+        elif isinstance(refname, str):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
                     log.verbose("Reference type", srepr(filetype),
@@ -824,7 +825,7 @@ def _squash_unicode_in_bestrefs(bestrefs, localrefs):
             refs[str(filetype)] = tuple([str(localrefs[name]) for name in refname])
         elif isinstance(refname, dict):
             refs[str(filetype)] = { name : str(localrefs[name]) for name in refname }
-        elif isinstance(refname, python23.string_types):
+        elif isinstance(refname, str):
             if "NOT FOUND" in refname:
                 refs[str(filetype)] = str(refname)
             else:

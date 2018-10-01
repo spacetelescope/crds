@@ -10,7 +10,6 @@ a dataset to be processed.
 If the rows are different,  then the dataset should be reprocessed.  
 """
 from crds.core import rmap, log
-from crds.core.python23 import *
 from crds.io import tables
 from crds.client import api
 
@@ -56,7 +55,7 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
                 verbosity=100)
                 
     # no old_context means "single context" mode,  always reprocess.
-    if old_context == None:   
+    if old_context is None:   
         return True
     
     # NOTE: non-tables are treated in DeepLook as filekinds which aren't (or maybe someday are) handled,  
@@ -124,7 +123,7 @@ def str_to_number(val, strip=True):
     will not parse for any type,  return it as-is,  optionally stripping whitespace.
     """
     
-    types = [int, long, float, complex]
+    types = [int, float, complex]
 
     result = None
     for typ in types:

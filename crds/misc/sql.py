@@ -7,7 +7,7 @@ import os
 import os.path
 import sqlite3
 
-from crds.core import log, cmdline, config, python23
+from crds.core import log, cmdline, config
 from crds.client import api
 
 # ===================================================================
@@ -145,7 +145,7 @@ def squash_unicode(row):
     """Convert unicode strings in row to ordinary strings."""
     row2 = []
     for field in row:
-        if isinstance(field, python23.string_types):
+        if isinstance(field, str):
             row2.append(str(field))
         else:
             row2.append(field)

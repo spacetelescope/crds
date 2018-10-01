@@ -8,7 +8,7 @@ import pstats
 # ==============================================================================
 
 import crds
-from crds.core import log, utils, config, python23
+from crds.core import log, utils, config
 
 # ==============================================================================
 

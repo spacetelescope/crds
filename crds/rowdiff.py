@@ -13,7 +13,7 @@ from astropy.io.fits import TableDataDiff
 from astropy.io.fits.hdu.hdulist import fitsopen
 from astropy.io.fits.hdu.table import _TableLikeHDU
 
-from crds.core  import python23, rmap, cmdline
+from crds.core  import rmap, cmdline
 
 #==========================================================================
 # Utilities
@@ -85,7 +85,7 @@ def get_hdulist(fits_reference):
     """
     # If the reference is a string, presume its a file path
     result = fits_reference
-    if isinstance(fits_reference, python23.string_types):
+    if isinstance(fits_reference, str):
         try:
             result = fitsopen(fits_reference)
         except Exception as exc:

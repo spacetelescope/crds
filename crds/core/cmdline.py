@@ -12,7 +12,7 @@ from collections import Counter, defaultdict
 
 from argparse import RawTextHelpFormatter
 
-from . import python23, log, heavy_client, constants
+from . import log, heavy_client, constants
 from . import config, utils, exceptions, rmap
 from crds.client import api
 
@@ -116,7 +116,7 @@ class Script(object):
     def __init__(self, argv=None, parser_pars=None, reset_log=True, print_status=False):
         self.stats = utils.TimingStats()
         self._already_reported_stats = False
-        if isinstance(argv, python23.string_types):
+        if isinstance(argv, str):
             argv = argv.split()
         elif argv is None:
             argv = sys.argv

@@ -16,7 +16,7 @@ from astropy.utils.exceptions import AstropyUserWarning
 
 # ================================================================================================
 
-from crds.core import exceptions, python23, config, log, utils, timestamp
+from crds.core import exceptions, config, log, utils, timestamp
 
 # ================================================================================================
 
@@ -308,7 +308,7 @@ class AbstractFile(object):
         """Convert a tree structure to a flat dictionary of simple types with dotted path tree keys."""
         result = dict()
         for key in tree:
-            if not isinstance(key, python23.string_types):  # skip non-string keys
+            if not isinstance(key, str):  # skip non-string keys
                 continue
             value = tree[key]
             if isinstance(value, (type(tree), dict)):
@@ -321,7 +321,7 @@ class AbstractFile(object):
     
     def _simple_type(self, value):
         """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
-        if isinstance(value, (python23.string_types, int, float, complex)):
+        if isinstance(value, (str, int, float, complex)):
             rval = str(value)
         elif isinstance(value, (list, tuple)):
             rval = tuple(self._simple_type(val) for val in value)

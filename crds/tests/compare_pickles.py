@@ -1,5 +1,6 @@
+import pickle
+
 import crds
-from crds.core.python23 import pickle
 from crds.core import log
 
 def main():

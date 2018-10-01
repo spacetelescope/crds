@@ -27,7 +27,6 @@ import json
 
 from . import log, config, pysh
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
-from .python23 import *
 
 # ===================================================================
 
@@ -505,12 +504,12 @@ def human_format_number(number):
         (1e3 , "K"),
         ]
     for limit, sym in convert:
-        if isinstance(number, (float, int, long)) and number > limit:
+        if isinstance(number, (float, int)) and number > limit:
             number /= limit
             break
     else:
         sym = ""
-    if isinstance(number, (int, long)):
+    if isinstance(number, int):
         # numstr = "%d" % number
         numstr = "{}".format(number)
     else:
@@ -1114,7 +1113,7 @@ def fix_json_strings(source_json):
         result = []
         for val in source_json:
             result.append(fix_json_strings(val))
-    elif isinstance(source_json, string_types):
+    elif isinstance(source_json, str):
         result = str(source_json)
     else:
         result = source_json

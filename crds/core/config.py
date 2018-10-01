@@ -7,9 +7,11 @@ import os.path
 import re
 import glob
 import getpass 
+import configparser
+
+# ===========================================================================
 
 from crds.core import log, exceptions
-from crds.core import python23
 
 # ===========================================================================
 
@@ -26,7 +28,7 @@ def _get_crds_ini_parser():
     """Load and return the environment from the CRDS rc file."""
     global CRDS_INI_PARSER
     if CRDS_INI_PARSER is None:
-        parser = python23.configparser.SafeConfigParser()
+        parser = configparser.SafeConfigParser()
         with log.warn_on_exception("Failed reading CRDS rc file"):
             ini_path = _get_crds_ini_path()
             if os.path.exists(ini_path):
@@ -51,9 +53,9 @@ def get_crds_env_str(section, varname, default):
         ini_parser = _get_crds_ini_parser()
         try:
             ini_val = ini_parser.get(section, varname)
-        except python23.configparser.NoSectionError:
+        except configparser.NoSectionError:
             ini_val = None
-        except python23.configparser.NoOptionError:
+        except configparser.NoOptionError:
             ini_val = None
     else:
         ini_val = None
@@ -157,7 +159,7 @@ class ConfigItem(object):
 
     def _set(self, value):
         """Set the value of the control item,  for the sake of this runtime session only."""
-        if self.lower and isinstance(value, python23.string_types):
+        if self.lower and isinstance(value, str):
             value = value.lower()
         self.check_value(value)
         os.environ[self.env_var] = str(value)
@@ -1106,7 +1108,7 @@ MAPPING_RE = re.compile(complete_re(MAPPING_RE_STR))
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
-    return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
+    return isinstance(mapping, str) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
 def is_simple_crds_mapping(mapping):
     """Return True IFF `mapping` implicitly or explicitly exists in the CRDS cache.
@@ -1157,7 +1159,7 @@ def is_simple_crds_mapping(mapping):
     >>> is_simple_crds_mapping("hst-foo")
     False
     """
-    if isinstance(mapping, python23.string_types):
+    if isinstance(mapping, str):
         basename = os.path.basename(mapping)
         return is_valid_mapping_name(basename) and (locate_mapping(mapping) == locate_mapping(basename))
     else:
@@ -1207,11 +1209,11 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst-foo")
     False
     """
-    return is_mapping(mapping) or (isinstance(mapping, python23.string_types) and bool(CONTEXT_RE.match(mapping)))
+    return is_mapping(mapping) or (isinstance(mapping, str) and bool(CONTEXT_RE.match(mapping)))
 
 def is_context(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS CONTEXT, i.e. .pmap."""
-    return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap",))
+    return isinstance(mapping, str) and mapping.endswith((".pmap",))
 
 def is_context_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
@@ -1238,7 +1240,7 @@ def is_context_spec(mapping):
     >>> is_context_spec("hst-acs-2040-01-29T12:00:00")
     False
     """
-    return is_context(mapping) or (isinstance(mapping, python23.string_types) and bool(PIPELINE_CONTEXT_RE.match(mapping)))
+    return is_context(mapping) or (isinstance(mapping, str) and bool(PIPELINE_CONTEXT_RE.match(mapping)))
 
 def is_date_based_mapping_spec(mapping):
     """Return True IFF `mapping` is a date based specification (not a filename).

@@ -98,7 +98,7 @@ from pprint import pprint as pp
 
 # ==============================================================================
 
-from . import log, utils, timestamp, config, python23
+from . import log, utils, timestamp, config
 
 from .exceptions import (ValidationError, CrdsLookupError,
                          AmbiguousMatchError, 
@@ -476,7 +476,7 @@ class Selector(object):
         """Change special match cases with singleton parameters which remove the tuple notation
         into standard tuple parameters.
         """
-        return (case,) if isinstance(case, (python23.string_types, int, float, bool)) else case
+        return (case,) if isinstance(case, (str, int, float, bool)) else case
 
     def delete_match_param(self, parameter):
         """Delete the value of `parameter` name in every match case,  recursively
@@ -606,7 +606,7 @@ class Selector(object):
         for choice in self.choices():
             if isinstance(choice, Selector):
                 new_files = choice.reference_names()
-            elif isinstance(choice, python23.string_types):
+            elif isinstance(choice, str):
                 new_files = [choice]
             elif isinstance(choice, tuple):
                 new_files = list(choice)
@@ -658,20 +658,20 @@ class Selector(object):
         with log.augment_exception(repr(key)):
             if isinstance(choice, Selector):
                 choice.validate_selector(valid_values_map)
-            elif isinstance(choice, python23.string_types):
+            elif isinstance(choice, str):
                 pass
             elif isinstance(choice, tuple):
                 for val in choice:
-                    if not isinstance(val, python23.string_types): 
+                    if not isinstance(val, str): 
                         raise ValidationError("Non-string tuple value for choice " + repr(choice) + 
                                               " at " + repr(key))
             elif isinstance(choice, dict):
                 for val in choice:
-                    if not isinstance(val, python23.string_types):
+                    if not isinstance(val, str):
                         raise ValidationError("Non-string dictionary key for choice " + repr(choice) +  
                                               " at " + repr(key))
                 for val in choice.values():
-                    if not isinstance(val, python23.string_types):
+                    if not isinstance(val, str):
                         raise ValidationError("Non-string dictionary value for choice " + repr(choice)  + 
                                               " at " + repr(key))
             else:
@@ -1108,7 +1108,7 @@ class DiffTuple(tuple):
         pars2 = []
         vals2 = []
         for i, par in enumerate(self.parameter_names):
-            if isinstance(par, python23.string_types):
+            if isinstance(par, str):
                 pars2.append(par)
                 vals2.append(self[i])
             else:
@@ -2011,7 +2011,7 @@ Restore original debug behavior:
         values in `valid_values_map`.   Note that each `key` is 
         nominally a tuple with values for multiple parkeys.
         """
-        if isinstance(key, (python23.string_types, int, float)):
+        if isinstance(key, (str, int, float)):
             key = (key,)
         if len(key) != len(self._parameters):
             raise ValidationError("wrong length for parameter list " + 

@@ -4,6 +4,7 @@ complex features of the basic rmap infrastructure.
 import os
 import json
 from pprint import pprint as pp
+import pickle
 
 from crds import rmap, log, config, tests
 from crds.client import api
@@ -462,7 +463,6 @@ def dt_imap_match_omit():
 
 def dt_pickling():
     """
-    >>> from crds.python23 import pickle
     >>> from crds import data_file
 
     >>> old_state = test_config.setup()

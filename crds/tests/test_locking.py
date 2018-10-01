@@ -11,7 +11,7 @@ import tempfile
 
 # ===================================================================
 
-from crds.core import python23, log, config, crds_cache_locking
+from crds.core import log, config, crds_cache_locking
 
 # ===================================================================
 

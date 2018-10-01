@@ -4,7 +4,7 @@ of CRDS file names.   Different projects have different naming conventions.
 import os
 import re
 
-from . import python23, config, log, utils
+from . import config, log, utils
 from .exceptions import NameComparisonError
 from .constants import ALL_OBSERVATORIES
 
@@ -329,7 +329,7 @@ def newstyle_serial(name):
     >>> newstyle_serial("hst.pmap")
     -1
     """
-    assert isinstance(name, python23.string_types)
+    assert isinstance(name, str)
     serial_search = re.search(r"_(\d+)\.\w+", name)
     if serial_search:
         return int(serial_search.groups()[0], 10)

@@ -13,7 +13,7 @@ import tempfile
 
 # ===================================================================
 
-from crds.core import python23, log, config
+from crds.core import log, config
 from crds.misc import check_archive
 
 # ===================================================================
