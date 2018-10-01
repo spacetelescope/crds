@@ -237,12 +237,12 @@ class TypeParameters(object):
         reference file.
         """
         tpns = []
-        for tpn_file in self.reference_name_to_validator_keys(instrument, filekind, field=field):
+        for tpn_file in self.reference_props_to_validator_keys(instrument, filekind, field=field):
             tpns.extend(generic_tpn.get_tpninfos(self.locator.tpn_path(tpn_file)))
         return sorted(list(set(tpns)))
     
 
-    def reference_name_to_validator_keys(self, instrument, filekind, field="tpn"):
+    def reference_props_to_validator_keys(self, instrument, filekind, field="tpn"):
         """Return the sequence of validator keys associated with `filename`.   A validator key
         is nominally a .tpn filename and can vary by observatory, instrument, and type as well
         as by functions on the header of `filename`.

@@ -17,17 +17,11 @@ Originally the CDBS .tpn files for STIS LFL and PFL varied by OBSMODE.  This des
 was later simplified by the addition of "presence expressions" which activate or deactivate
 individual .tpn constraints based on the reference file header.
 
->>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
-('stis_lfl_ld.tpn',)
+>>> TYPES.reference_props_to_validator_keys("stis", "lfltfile", "tpn")
+['stis_lfl.tpn']
 
->>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
-('stis_lfl_ld.tpn',)
-
->>> TYPES.reference_name_to_validator_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
-('stis_lfl.tpn',)
-
->>> TYPES.reference_name_to_validator_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
-('stis_lfl.tpn',)
+>>> TYPES.reference_props_to_validator_keys("stis", "lfltfile", "ld_tpn")
+['stis_lfl_ld.tpn']
 
 """
 
