@@ -22,12 +22,6 @@ To sync best references and rules for specific dataset ids:
   % crds sync --contexts hst_0001.pmap hst_0002.pmap --dataset-ids J6M915030 --fetch-references
 
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import sys
 import os
 import os.path

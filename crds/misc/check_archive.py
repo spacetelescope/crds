@@ -1,15 +1,10 @@
 """This module is used to verify the availability of a list of CRDS files
 at the archive web server.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os.path
 import sys
 
-from crds.core import python23, log, config, utils, cmdline
+from crds.core import log, config, utils, cmdline
 from crds.client import api
 
 DISABLED = []
@@ -141,8 +136,8 @@ the archive and appropriate CRDS server.
 
     def check_length(self, filename, response):
         """Check the content-length reported by HEAD against the CRDS database's file size."""
-        archive_size = python23.long(response.headers["content-length"])
-        crds_size = python23.long(self.file_info[filename]["size"])
+        archive_size = int(response.headers["content-length"])
+        crds_size = int(self.file_info[filename]["size"])
         if archive_size != crds_size:
             log.error("File", repr(filename), "available but length bad.  crds size:", crds_size,
                       "archive size:", archive_size)

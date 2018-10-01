@@ -2,14 +2,10 @@
 HTML tables and HST FITS data sets.   It contains a formatting function which will render
 a date and time in a sortable string representation (isoformat).
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import datetime
 import re
 
-from . import python23, config, exceptions, log
+from . import config, exceptions, log
 
 # =======================================================================
 
@@ -24,7 +20,7 @@ def format_date(date, sep=" "):
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
     """
-    if isinstance(date, python23.string_types):
+    if isinstance(date, str):
         date = parse_date(date)
     return date.isoformat(sep)
 
@@ -271,7 +267,7 @@ def parse_numerical_date(dstr):
 
 # ============================================================================
 
-class DateParser(object):
+class DateParser:
     """Abstract baseclass for defining date parsers."""
     
     format = re.compile("^$")

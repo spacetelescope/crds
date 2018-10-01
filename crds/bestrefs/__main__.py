@@ -4,10 +4,6 @@ This module supports running crds.bestrefs from the command line using -m syntax
 % crds bestrefs ...
 
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 
 from crds.bestrefs import bestrefs

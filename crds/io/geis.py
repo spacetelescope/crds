@@ -3,19 +3,11 @@ Created on Feb 15, 2017
 
 @author: jmiller
 '''
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import re
 import os.path
 
 # ================================================================================================================
 
-from crds.core import python23
 from .abstract import AbstractFile
 
 # ================================================================================================================
@@ -56,7 +48,7 @@ class GeisFile(AbstractFile):
         """Return the header dictionary containing `needed_keys` from GEIS file at `name`."""
         
         filepath = self.filepath
-        if isinstance(filepath, python23.string_types):
+        if isinstance(filepath, str):
             if filepath.endswith("d"):
                 filepath = filepath[:-1] + "h"
             with open(filepath) as pfile:
@@ -164,7 +156,7 @@ True
 >>> is_geis("bar.fits")
 False
 
->>> from crds.core.python23 import StringIO
+>>> from io import StringIO
 >>> header = get_geis_header(StringIO(_GEIS_TEST_DATA))
 
 >> import pprint

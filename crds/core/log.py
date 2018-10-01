@@ -105,10 +105,6 @@ CRDS - WARNING -  Testing expected verbose warning : Force verbose warning.
 
 >>> _ = log.set_verbose(old_verbose)
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import os
 import optparse
@@ -118,7 +114,7 @@ import contextlib
 
 DEFAULT_VERBOSITY_LEVEL = 50
 
-class CrdsLogger(object):
+class CrdsLogger:
     def __init__(self, name="CRDS", enable_console=True, level=logging.DEBUG, enable_time=True):
         self.name = name
 
@@ -427,7 +423,7 @@ def get_add_log_msg_count():
 
 # ===========================================================================
 
-class PP(object):
+class PP:
     """A wrapper to defer pretty printing until after it's known a verbose 
     message will definitely be output.
     """
@@ -437,7 +433,7 @@ class PP(object):
     def __str__(self):
         return pprint.pformat(self.ppobj)
 
-class Deferred(object):
+class Deferred:
     """A wrapper to delay calling a callable until after it's known a verbose 
     message will definitely be output.
     """

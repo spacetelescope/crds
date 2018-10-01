@@ -1,9 +1,4 @@
 """Generic utility routines used by a variety of modules."""
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
 
 #  XXXX lots of bogus pylint warnings here,  verify before removing imports.
 
@@ -32,7 +27,6 @@ import json
 
 from . import log, config, pysh
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
-from .python23 import *
 
 # ===================================================================
 
@@ -201,7 +195,7 @@ def cached(func):
     """
     return CachedFunction(func)
 
-class xcached(object):
+class xcached:
     """Caching decorator which supports auxilliary caching parameters.
     
     omit_from_key lists keywords or positional indices to be excluded from cache
@@ -236,7 +230,7 @@ class xcached(object):
         cached.__name__ = cached.uncached.__name__ + " [xcached]"
         return cached
 
-class CachedFunction(object):
+class CachedFunction:
     """Class to support the @cached function decorator.   Called at runtime
     for typical caching version of function.
     """
@@ -338,7 +332,7 @@ def capture_output(func):
     True
 
     """
-    class CapturedFunction(object):
+    class CapturedFunction:
         """Closure on `func` which supports various forms of output capture."""
         
         def __repr__(self):
@@ -393,7 +387,7 @@ def compare_dicts(dict1, dict2):
         
 # ===================================================================
 
-class TimingStats(object):
+class TimingStats:
     """Track and compute counts and counts per second."""
     def __init__(self, output=None):
         self.counts = Counter()
@@ -510,12 +504,12 @@ def human_format_number(number):
         (1e3 , "K"),
         ]
     for limit, sym in convert:
-        if isinstance(number, (float, int, long)) and number > limit:
+        if isinstance(number, (float, int)) and number > limit:
             number /= limit
             break
     else:
         sym = ""
-    if isinstance(number, (int, long)):
+    if isinstance(number, int):
         # numstr = "%d" % number
         numstr = "{}".format(number)
     else:
@@ -1119,7 +1113,7 @@ def fix_json_strings(source_json):
         result = []
         for val in source_json:
             result.append(fix_json_strings(val))
-    elif isinstance(source_json, string_types):
+    elif isinstance(source_json, str):
         result = str(source_json)
     else:
         result = source_json

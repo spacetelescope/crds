@@ -1,9 +1,4 @@
 """This tests, through the use of bestrefs, the functioning of table effects."""
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import doctest
 
 from crds import tests

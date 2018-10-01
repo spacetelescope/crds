@@ -11,12 +11,6 @@ The primary functions provided by this module are:
 See the tpn.py and locator.py modules,  as well as crds.certify and crds.rmap,
 and crds.selectors for more information.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ====================================================================================
-
 import re
 
 # ====================================================================================

@@ -1,9 +1,3 @@
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ==============================================================================
-
 import os, os.path
 import shutil
 import tempfile
@@ -14,7 +8,7 @@ import pstats
 # ==============================================================================
 
 import crds
-from crds.core import log, utils, config, python23
+from crds.core import log, utils, config
 
 # ==============================================================================
 

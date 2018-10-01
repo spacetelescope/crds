@@ -10,10 +10,6 @@ Current calibration code must be available in order to automatically
 regenerates since CRDS will inspect the installed .cfg files to determine Step
 configurations and required reference types.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import re
 import fnmatch
@@ -44,7 +40,7 @@ REFERENCE_DIVIDER = "# vvvvvvvv GENERATED vvvvvvvv"
 
 # --------------------------------------------------------------------------------------
 
-class CrdsCfgGenerator(object):
+class CrdsCfgGenerator:
     """Used to re-generate SYSTEM CRDSCFG reference files based on modified
     versions of previous reference files.
     """

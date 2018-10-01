@@ -4,9 +4,6 @@
 """Defines 'smart' convenience wrapper for invoking CRDS tools that
 hides internal package structure.
 """
-
-from __future__ import print_function
-
 import sys
 import shlex
 import subprocess

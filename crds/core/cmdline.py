@@ -2,10 +2,6 @@
 
 MAYBE integrate rc, environment, and command line parameters.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import os
 import argparse
@@ -16,7 +12,7 @@ from collections import Counter, defaultdict
 
 from argparse import RawTextHelpFormatter
 
-from . import python23, log, heavy_client, constants
+from . import log, heavy_client, constants
 from . import config, utils, exceptions, rmap
 from crds.client import api
 
@@ -105,7 +101,7 @@ def user_name(string):
 # =============================================================================
 # =============================================================================
 
-class Script(object):
+class Script:
     """Base class for CRDS command line scripts with standard properties.
     
     `args` is either a string of command line parameters or a parameter list of command line words.  If
@@ -120,7 +116,7 @@ class Script(object):
     def __init__(self, argv=None, parser_pars=None, reset_log=True, print_status=False):
         self.stats = utils.TimingStats()
         self._already_reported_stats = False
-        if isinstance(argv, python23.string_types):
+        if isinstance(argv, str):
             argv = argv.split()
         elif argv is None:
             argv = sys.argv
@@ -535,7 +531,7 @@ class Script(object):
 
 # =============================================================================
 
-class UniqueErrorsMixin(object):
+class UniqueErrorsMixin:
     """This mixin supports tracking certain errors messages."""
     def __init__(self, *args, **keys):
         
@@ -551,7 +547,7 @@ class UniqueErrorsMixin(object):
         bundle is used to isolate mixin parameters from subclass parameters to prevent
         accidental overrides.
         """
-        class Struct(object):
+        class Struct:
             pass
         mixin = Struct()
         mixin.messages = {}

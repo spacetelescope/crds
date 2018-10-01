@@ -22,10 +22,6 @@ CRDS defines a function:
 
 which will interpret the rules to expand appropriate values in header.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os.path
 
 from . import log, utils, selectors
@@ -37,7 +33,7 @@ HERE = os.path.dirname(__file__) or "."
     
 # ============================================================================    
 
-class HeaderExpander(object):
+class HeaderExpander:
     """HeaderExpander applies a set of expansion rules to a header.  It 
     compiles the applicability expression of each rule.
 

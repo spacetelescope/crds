@@ -5,22 +5,18 @@ For more details on the several modes of operations and command line parameters 
 
 % crds bestrefs --help
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 import json
 import gc
 
 # ===================================================================
 
 import crds
-from crds.core import log, utils, python23, heavy_client
+from crds.core import log, utils, heavy_client
 from crds.core.exceptions import CrdsError
 from crds import data_file, matches
 from crds.client import api
+
+import pickle
 
 # ===================================================================
 
@@ -38,7 +34,7 @@ MAX_DATE = "9999-01-01 23:59:59"
 # both consistency/control and to take a load off the database.)
 
 
-class HeaderGenerator(object):
+class HeaderGenerator:
     """Generic source for lookup parameters and historical comparison results."""
 
     def __init__(self, context, sources, datasets_since):
@@ -124,7 +120,7 @@ class HeaderGenerator(object):
                     pick.write(json.dumps({dataset: header}) + "\n")
         elif outpath.endswith(".pkl"):
             with open(outpath, "wb+") as pick:
-                python23.pickle.dump(only_hdrs, pick)
+                pickle.dump(only_hdrs, pick)
         log.info("Done writing", repr(outpath))
 
     def update_headers(self, headers2, only_ids=None):
@@ -137,7 +133,7 @@ class HeaderGenerator(object):
 
         items = headers2.items()
         for dataset_id, header in items:
-            if isinstance(header, python23.string_types):
+            if isinstance(header, str):
                 log.warning("Skipping bad dataset", dataset_id, ":", headers2[dataset_id])
                 del headers2[dataset_id]
 
@@ -368,7 +364,7 @@ def load_bestrefs_headers(path):
                 headers = json.load(pick)
     elif path.endswith(".pkl"):
         with open(path, "rb") as pick:
-            headers = python23.pickle.load(pick)
+            headers = pickle.load(pick)
     else:
         raise ValueError("Valid serialization formats are .json and .pkl")
     return headers

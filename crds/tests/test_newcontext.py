@@ -2,12 +2,6 @@
 module responsible for automatically generating imaps and pmaps given a list
 of new rmaps.
 """
-
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
 import os, os.path
 from pprint import pprint as pp
 

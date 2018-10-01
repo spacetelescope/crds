@@ -3,10 +3,6 @@ Created on Feb 15, 2017
 
 @author: jmiller
 '''
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import re
 
 # ============================================================================
@@ -20,7 +16,7 @@ from astropy.io import fits
 
 # ============================================================================
 
-from crds.core import python23, config, utils, log
+from crds.core import config, utils, log
 
 from .abstract import AbstractFile, hijack_warnings
 
@@ -77,7 +73,7 @@ class FitsFile(AbstractFile):
 
     def get_info(self):
         """Capture the output from the fits info() function."""
-        s = python23.StringIO()
+        s = io.StringIO()
         fits.info(self.filepath, s)
         s.seek(0)
         info_string = "\n".join(s.read().splitlines()[1:])

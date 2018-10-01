@@ -2,12 +2,6 @@
 mapping files associated with the specified contexts by consulting the CRDS
 server.   More generally it's for printing out information on CRDS files.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os.path
 import sys
 from collections import OrderedDict
@@ -20,7 +14,7 @@ from astropy.io import fits
 # ============================================================================
 
 import crds
-from crds.core import config, log, python23, rmap, heavy_client, cmdline, utils
+from crds.core import config, log, rmap, heavy_client, cmdline, utils
 from crds.core import crds_cache_locking
 from crds import data_file
 
@@ -585,7 +579,7 @@ jwst_niriss_superbias_0005.rmap
                                         "for", repr(self.args.dataset_headers)):
                 for returned_id, header in api.get_dataset_headers_unlimited(context, ids):
                     product, exposure = returned_id.split(":")
-                    if isinstance(header, python23.string_types):
+                    if isinstance(header, str):
                         log.error("No header for", repr(returned_id), ":", repr(header)) # header is reason
                         continue
                     if self.args.first_id_expansion_only and product in products_seen:

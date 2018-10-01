@@ -26,12 +26,6 @@ pipelines used to process the given dataset filepath or dataset with a particula
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
    
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# --------------------------------------------------------------------------------------
-
 from crds.core import utils
 from crds import data_file
 
