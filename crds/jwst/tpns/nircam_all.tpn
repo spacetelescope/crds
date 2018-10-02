@@ -28,14 +28,32 @@ META.EXPOSURE.TYPE          H   C   O   NRC_CORON,NRC_DARK,NRC_FLAT,NRC_FOCUS,NR
 
 META.INSTRUMENT.CHANNEL     H   C   O   SHORT,LONG,12,34,1,2,3,4,1234,123,234,ANY,N/A
 
+
+# Obsolete:  MASKA210R,MASKA430R,MASKBLWB,MASKBSWB
+
 META.SUBARRAY.NAME          H   C   O   SUB160,SUB160P,SUB320,SUB320A335R,SUB320A430R,\
-                                        SUB320ALWB,SUB32TATS,SUB32TATSGRISM,SUB400P,SUB640,\
-                                        SUB640A210R,SUB640ASWB,SUB64FP1A,SUB64FP1B,SUB64P,\
-                                        SUB8FP1A,SUB8FP1B,SUB96DHSPILA,SUB96DHSPILB,SUBFSA210R,\
-                                        SUBFSA335R,SUBFSA430R,SUBFSALWB,SUBFSASWB,SUBGRISM128,\
-                                        SUBGRISM256,SUBGRISM64,SUBNDA210R,SUBNDA335R,SUBNDA430R,\
+                                        SUB320ALWB,SUB320B335R,SUB320B430R,SUB320BLWB,\
+                                        SUB32TATS,SUB32TATSGRISM,SUB400P,\
+                                        SUB640,SUB640A210R,SUB640ASWB,SUB640B210R,SUB640BSWB,\
+                                        SUB64FP1A,SUB64FP1B,SUB64P,\
+                                        SUB8FP1A,SUB8FP1B,\
+                                        SUB96DHSPILA,SUB96DHSPILB,\
+                                        SUBFSA210R,SUBFSA335R,SUBFSA430R,SUBFSALWB,SUBFSASWB,\
+                                        SUBGRISM128,SUBGRISM256,SUBGRISM64,\
+                                        \
+                                        SUBNDA210R,SUBNDA335R,SUBNDA430R,\
                                         SUBNDALWBL,SUBNDALWBS,SUBNDASWBL,SUBNDASWBS,\
-                                        MASKA210R,MASKA430R,MASKBLWB,MASKBSWB,FULL,GENERIC,ANY,N/A
+                                        \
+                                        SUBNDB210R,SUBNDB335R,SUBNDB430R,\
+                                        SUBNDBLWBL,SUBNDBLWBS,SUBNDBSWBL,SUBNDBSWBS,\
+                                        \
+                                        MASK210R,MASK335R,MASK430R,MASKLWB,MASKSWB,\
+                                        \
+                                        MASKA210R,MASKA430R,MASKBLWB,MASKBSWB,\
+                                        \
+                                        FULL,ANY,GENERIC,N/A
+
+
 
 include includes/nir_subarray_baseline.tpn
 

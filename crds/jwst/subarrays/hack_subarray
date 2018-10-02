@@ -4,14 +4,28 @@
 from collections import defaultdict
 from pprint import pprint
 
-usage("<PRD subarray file>", 1,  1,"""
+from crds.core.pysh import *
+
+usage("[<PRD subarray file>]", 0, 1,"""
 
 Reduce a PRD subarray file into a dictionary of valid subarrays
 which are organized by instrument.
 """)
 
-% grep -E 'Instrument\>|Subarray\>' $* | cut -d '>' -f 2 | cut -d '<' -f 1 > simplified
+prd_xml = arg(1)
 
+def extract_item(line):
+     return line.split(">")[1].split("<")[0]
+
+with open("simplified","w+") as file:
+     for line in open(prd_xml):
+          if "InstrumentName" in line:
+               INSTRUMENT = extract_item(line)
+          if "SubarrayName" in line:
+               SUBARRAY = extract_item(line)
+               file.write(INSTRUMENT+"\n")
+               file.write(SUBARRAY+"\n")
+          
 organized = defaultdict(set)
 with open("simplified") as file:
      instrument = file.readline().strip()
@@ -20,7 +34,7 @@ with open("simplified") as file:
            organized[instrument].add(subarray)
            instrument = file.readline().strip()
 
-% rm simplified
+# % rm simplified
 
 reorganized = dict()
 for instrument in organized:
