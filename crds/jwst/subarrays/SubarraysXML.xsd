@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="SubarrayValues">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" ref="Instrument"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Instrument">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="InstrumentName" type="InstrumentName"/>
+				<xs:element maxOccurs="unbounded" ref="Subarray"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Subarray">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SubarrayName" type="SubarrayName"/>
+				<xs:element name="Rows" type="xs:unsignedInt"/>
+				<xs:element name="Columns" type="xs:unsignedInt"/>
+				<xs:element maxOccurs="unbounded" ref="FrameTime"/>
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="DisperserCorners"/>
+				<xs:element name="USEAFTERDATE" type="UTCDateType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FrameTime">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" name="ReadoutPattern" type="ReadoutPatternType"/>
+				<xs:element minOccurs="0" name="NumOutputs" type="NumOutputsType"/>
+				<xs:element name="FrameReadTime" type="FrameReadTimeType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DisperserCorners">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="NRSDisperser" type="xs:string"/>
+				<xs:element name="RowCorner" type="DisperserCornerType"/>
+				<xs:element name="NRS1ColumnCorner" type="DisperserCornerType"/>
+				<xs:element name="NRS2ColumnCorner" type="DisperserCornerType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="InstrumentName">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FGS"/>
+			<xs:enumeration value="MIRI"/>
+			<xs:enumeration value="NIRCAM"/>
+			<xs:enumeration value="NIRSPEC"/>
+			<xs:enumeration value="NIRISS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SubarrayName">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumOutputsType">
+		<xs:restriction base="xs:unsignedInt">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="4"/>
+			<xs:enumeration value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReadoutPatternType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FrameReadTimeType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value=".000001"/>
+			<xs:maxInclusive value="50.00000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DisperserCornerType">
+		<xs:restriction base="xs:unsignedInt">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="2048"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UTCDateType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{4}-\d{3}/([01]\d|2[0-3]):[0-5]\d:[0-5]\d"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
