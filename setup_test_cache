@@ -10,7 +10,7 @@ export CRDS_TESTING_CACHE=$CRDS_TEST_ROOT/crds-cache-test
 
 export CRDS_SERVER_URL=https://hst-crds.stsci.edu
 python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
-python -m crds.sync --files l2d0959cj_pfl.fits n7p1032ao_apt.fits q5417413o_pct.fits xaf1429el_wcp.fits y2r1559to_apt.fits y2r16006o_pct.fits y951738kl_hv.fits yas2005el_hv.fits --stats --log-time
+python -m crds.sync --files l2d0959cj_pfl.fits n7p1032ao_apt.fits q5417413o_pct.fits xaf1429el_wcp.fits y2r1559to_apt.fits y2r16006o_pct.fits y951738kl_hv.fits yas2005el_hv.fits p7d1548qj_idc.fits --stats --log-time
 python -m crds.sync --contexts hst_cos.imap --fetch-references --log-time --stats
 
 export CRDS_SERVER_URL=https://jwst-crds.stsci.edu

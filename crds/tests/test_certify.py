@@ -52,9 +52,9 @@ def certify_truncated_file():
 def certify_bad_checksum():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
-    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_508.pmap")()  # doctest: +ELLIPSIS
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_508.pmap'
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
@@ -1039,19 +1039,25 @@ def load_miri_mask_tpn():
 
 def dt_acs_idctab_char_plus_column():
     """
-    >>> TestCertifyScript("crds.certify data/acs_new_idc.fits --comparison-context hst_508.pmap")()  # doctest: +ELLIPSIS
+    >>> TestCertifyScript("crds.certify data/acs_new_idc.fits --comparison-context hst_0508.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_508.pmap'
+    CRDS - INFO -  Certifying 'data/acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     CRDS - INFO -  FITS file 'acs_new_idc.fits' conforms to FITS standards.
-    CRDS - WARNING -  Failed resolving comparison reference for table checks : [Errno 2] No such file or directory: '/Users/jmiller/crds-cache-default-test/mappings/hst/hst_508.pmap'
+    CRDS - INFO -  Comparing reference 'acs_new_idc.fits' against 'p7d1548qj_idc.fits'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    CRDS - INFO -  All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    CRDS - WARNING -  Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', 207.082), ('V3REF', 471.476)) :
+     (29, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ...('V2REF', 207.082), ('V3REF', 471.476), ...)))
+    (35, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ...('V2REF', 207.082), ('V3REF', 471.476), ...)))
     CRDS - INFO -  Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
     CRDS - INFO -  All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
     CRDS - INFO -  Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
-    CRDS - WARNING -  No comparison reference for 'acs_new_idc.fits' in context 'hst_508.pmap'. Skipping tables comparison.
+    CRDS - WARNING -  Change in row format betwween 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  2 warnings
-    CRDS - INFO -  7 infos
+    CRDS - INFO -  11 infos
     0
     """
     
