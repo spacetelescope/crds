@@ -354,12 +354,11 @@ def pysh_execfile(fname, globals=None, locals=None):
     try:
         (handle, fname) = tempfile.mkstemp()
         for line in lines:
-            os.write(handle, line)
+            os.write(handle, line.encode("utf-8"))
     finally:
         os.close(handle)
-
     try:
-        exec(compile(open(fname).read(), fname, 'exec'), globals, locals)
+        exec(open(fname).read(), globals, locals)
     finally:
         os.remove(fname)
 
