@@ -55,12 +55,6 @@ True
 'jwst_system_crdscfg_b7.2.yaml'
 """
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# --------------------------------------------------------------------------------------
-
 import os.path
 from collections import defaultdict
 import re
@@ -287,7 +281,7 @@ def _versions_gte(v1, v2):
     """"""
     return not _versions_lt(v1, v2)
 
-class CrdsCfgManager(object):
+class CrdsCfgManager:
     """The CrdsCfgManager handles using SYSTEM CRDSCFG information to compute things."""
     def __init__(self, context, refpath, crdscfg):
         self._context = context

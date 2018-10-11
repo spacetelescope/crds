@@ -17,7 +17,7 @@ COMMENT             H        C         R
 INSTRUMENT      H        C         R    COS
 REFERENCE_FILE_TYPE H        C         R    TDS
 DETECTOR            C        C         R    FUV,NUV
-CENWAVE             H        C         R    "BETWEEN 1105 1624",800,1105,1230,1280,1222,1223,1291,1300,1309,1318,1327,1533,1577,1589,1600,1611,1623,N/A
+CENWAVE             H        C         R    "BETWEEN 1105 1624",800,1055,1096,1105,1230,1280,1222,1223,1291,1300,1309,1318,1327,1533,1577,1589,1600,1611,1623,N/A
 OBSTYPE             C        C         R    SPECTROSCOPIC
 PEDIGREE           C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
 SEGMENT             C        C         R    FUVA,FUVB,NUVA,NUVB,NUVC

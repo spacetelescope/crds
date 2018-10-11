@@ -4,15 +4,12 @@ organized around loading type specs or prototype rmaps from the "specs" subdirec
 an observatory/subsystem package.   For HST this reduces defining new types to adding 
 a prototype rmap and defining .tpn files in the observatory package.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 import os.path
 import collections
 import glob
 import json
 
-from crds.core import python23, rmap, log, utils
+from crds.core import rmap, log, utils
 from . import generic_tpn
 
 # =============================================================================
@@ -84,7 +81,6 @@ def load_specs(spec_path):
     combined_specs_path = os.path.join(spec_path, "combined_specs.json")
     if os.path.exists(combined_specs_path):
         headers = load_json_specs(combined_specs_path)
-        headers = python23.unicode_to_str(headers)
     else:
         headers = load_raw_specs(spec_path)
         with log.warn_on_exception("Failed to save type specs .json at", repr(combined_specs_path)):
@@ -134,7 +130,7 @@ def from_package_file(observatory, pkg):
     unified_defs = load_specs(specs_path)
     return TypeParameters(observatory, unified_defs)
 
-class TypeParameters(object):
+class TypeParameters:
     """Inialized from a dictionary of TypeSpec's from load_specs(), compute observatory enumerations
     and type field inter-relationships and cache them as attributes.
     """
@@ -240,12 +236,12 @@ class TypeParameters(object):
         reference file.
         """
         tpns = []
-        for tpn_file in self.reference_name_to_validator_keys(instrument, filekind, field=field):
+        for tpn_file in self.reference_props_to_validator_keys(instrument, filekind, field=field):
             tpns.extend(generic_tpn.get_tpninfos(self.locator.tpn_path(tpn_file)))
         return sorted(list(set(tpns)))
     
 
-    def reference_name_to_validator_keys(self, instrument, filekind, field="tpn"):
+    def reference_props_to_validator_keys(self, instrument, filekind, field="tpn"):
         """Return the sequence of validator keys associated with `filename`.   A validator key
         is nominally a .tpn filename and can vary by observatory, instrument, and type as well
         as by functions on the header of `filename`.

@@ -7,10 +7,6 @@ dictionary entries which normally collide silently eliminating one
 item.  This is principally intended to detect rmap cut-and-paste
 errors in hand edited rmaps.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 from collections import namedtuple
 
 from crds.core import rmap, selectors, log, exceptions

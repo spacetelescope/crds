@@ -1,9 +1,4 @@
 """This module is used to profile getrecommendations() and bestreds.BestrefsScript()."""
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 from crds.core import utils, log, heavy_client
 from crds import bestrefs
 from crds.tests.test_config import run_and_profile

@@ -2,12 +2,6 @@
 code,  modules used to automatically update mappings.
 
 """
-
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
 import os
 from pprint import pprint as pp
 
@@ -39,7 +33,7 @@ def dt_or_bars_certify_bad_keyword():
     CRDS - INFO -  If this is not a pattern keyword, adding a translation to 'not-a-pattern' will suppress this warning.
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found. Opening jwst_miri_ipc.bad-keyword.fits as a ReferenceImageModel
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found... 
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  3 warnings
@@ -60,7 +54,7 @@ def dt_or_bars_certify_bad_value():
     CRDS - ERROR -  instrument='MIRI' type='IPC' data='data/jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found. Opening jwst_miri_ipc.bad-value.fits as a ReferenceImageModel
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found...
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
     CRDS - INFO -  2 warnings

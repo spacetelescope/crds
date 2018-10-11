@@ -8,8 +8,8 @@ header = {
     'name' : 'nircam_superbias.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),),
-    'sha1sum' : 'e0acc692172dcade1c6575e0843988d939360524',
-    'suffix' : 'sbias',
+    'sha1sum' : '5e84ec306a612226ea74898089c859763246a2c7',
+    'suffix' : 'superbias',
     'text_descr' : 'Super Bias',
 }
 

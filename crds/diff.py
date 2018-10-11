@@ -2,13 +2,6 @@
 system.   It supports specification of the files using only the basenames or
 a full path.   Currently it operates on mapping, FITS, or text files.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os
 import sys
 from collections import defaultdict
@@ -24,7 +17,7 @@ from astropy.io.fits import FITSDiff
 # ============================================================================
 
 import crds
-from crds.core import python23, config, log, pysh, utils, rmap
+from crds.core import config, log, pysh, utils, rmap
 from crds.core import cmdline, naming
 from crds import rowdiff, sync
 
@@ -106,7 +99,7 @@ def decolorize(output):
 
 # ==============================================================================================================
     
-class Differencer(object):
+class Differencer:
     """This baseclass provides a standard set of (largely optional) parameters to subclasses.
     
     observatory           str  nominally hst or jwst
@@ -453,11 +446,11 @@ def simplify_to_lowest_mapping(diff):
     log.verbose("simplify_to_lowest_mapping:", diff)
     lowest_ranked_mapping = None
     for tup in diff:
-        if isinstance(tup, tuple) and  len(tup) == 2 and isinstance(tup[0], python23.string_types) and tup[0].endswith("map"):
+        if isinstance(tup, tuple) and  len(tup) == 2 and isinstance(tup[0], str) and tup[0].endswith("map"):
             lowest_ranked_mapping = tup[0]
     simplified = []
     for tup in diff:
-        if len(tup) == 2 and isinstance(tup[0], python23.string_types) and tup[0].endswith("map"):
+        if len(tup) == 2 and isinstance(tup[0], str) and tup[0].endswith("map"):
             if tup[0] != lowest_ranked_mapping:
                 continue
         simplified.append(tup)
@@ -467,7 +460,7 @@ def remove_diff_paths(diff):
     """Remove the paths from leading diff file names."""
     simplified = []
     for tup in diff:
-        if len(tup) == 2 and isinstance(tup[0], python23.string_types) and tup[0].endswith("map"):
+        if len(tup) == 2 and isinstance(tup[0], str) and tup[0].endswith("map"):
             tup = tuple([os.path.basename(t) for t in tup])
         simplified.append(tup)
     return tuple(simplified)

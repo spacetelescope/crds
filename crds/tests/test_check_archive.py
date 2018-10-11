@@ -5,13 +5,6 @@ archive when their processing is complete.  Also supplies a function API
 used by the server to determine and cache file availability status in the
 CRDS catalog.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 import sys
 import os
 import time
@@ -20,7 +13,7 @@ import tempfile
 
 # ===================================================================
 
-from crds.core import python23, log, config
+from crds.core import log, config
 from crds.misc import check_archive
 
 # ===================================================================

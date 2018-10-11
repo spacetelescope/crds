@@ -41,13 +41,6 @@ alone any of the more powerful features of Python such as modules,
 classes, functions, lists, mappings, sets, strings, exception handling,
 etc.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# =========================================================================
-
 import sys
 import os
 import re
@@ -99,7 +92,7 @@ def get_debug():
 
 # =========================================================================
 
-class Shell(object):
+class Shell:
     """Shell performs sh-like variable substitutions and returns a callable
     object which runs `args` as a subprocess when called.   The shell object
     records the final command line and manages program I/O,  capturing output
@@ -361,12 +354,11 @@ def pysh_execfile(fname, globals=None, locals=None):
     try:
         (handle, fname) = tempfile.mkstemp()
         for line in lines:
-            os.write(handle, line)
+            os.write(handle, line.encode("utf-8"))
     finally:
         os.close(handle)
-
     try:
-        exec(compile(open(fname).read(), fname, 'exec'), globals, locals)
+        exec(open(fname).read(), globals, locals)
     finally:
         os.remove(fname)
 

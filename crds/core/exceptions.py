@@ -1,7 +1,4 @@
 """This module defines CRDS specific exceptions."""
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 
 class CrdsError(Exception):
     """Baseclass for all client exceptions."""
@@ -218,6 +215,9 @@ class MissingReferenceError(CertifyError):
 
 class RequiredConditionError(CertifyError):
     """An ExpressionValidator evaluated to False with respect to a file header."""
+
+class BadKernelCenterPixelTooSmall(CertifyError):
+    """A convolution kernel array had a center pixel <= 1.0."""  
 
 class BadKernelSumError(CertifyError):
     """A convolution kernel array had a sum too far from 1.0, or similar."""  

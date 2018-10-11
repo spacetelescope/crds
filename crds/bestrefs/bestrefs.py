@@ -5,12 +5,6 @@ For more details on the several modes of operations and command line parameters 
 
 % crds bestrefs --help
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 import sys
 import os
 from collections import namedtuple, OrderedDict

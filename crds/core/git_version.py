@@ -1,6 +1,9 @@
-__version__ = '44aa309'
+
+
+__version__ = 'b9e66e3'
 
 __full_version_info__ = '''
-branch: 7.2.6
-sha1: 44aa309
+branch: heads/7.2.6
+sha1: b9e66e3
 '''
+    

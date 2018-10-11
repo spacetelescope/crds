@@ -1,10 +1,3 @@
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
-# ==================================================================================
-
 import os
 import tempfile
 
@@ -104,16 +97,15 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
     >>> infos = types.reference_name_to_tpninfos("data/jwst_miri_flat_slitlessprism.fits")
     >>> print(log.PP(infos))
     [('DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=()),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(array_exists(SCI_ARRAY))', expression='(SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(is_image(DQ_ARRAY))'),
-     ('DQ', 'ARRAY_DATA', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))', expression='(SCI_ARRAY.SHAPE[-2:]==DQ_ARRAY.SHAPE[-2:])'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(warn_only(has_type(DQ_ARRAY,'INT')))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'WARN', expression='(is_image(DQ_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
      ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(SCI_ARRAY.SHAPE[-2:]==ERR_ARRAY.SHAPE[-2:])'),
      ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression="(has_type(ERR_ARRAY,'FLOAT'))"),
      ('ERR', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(is_image(ERR_ARRAY))'),
@@ -124,23 +116,24 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
      ('FULLFRAME_YSTART', 'EXPRESSION', 'EXPRESSION', 'IF_FULL_FRAME', expression='(META_SUBARRAY_YSTART==1)'),
      ('META.AUTHOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.DESCRIPTION', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.EXPOSURE.READPATT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('ACQ1', 'ACQ2', 'ALLIRS2', 'BRIGHT1', 'BRIGHT2', 'DEEP2', 'DEEP8', 'FAST', 'FASTGRPAVG', 'FASTINTAVG', 'FGS', 'FGS60', 'FGS8370', 'FGS840', 'FGSRAPID', 'FINEGUIDE', 'ID', 'MEDIUM2', 'MEDIUM8', 'NIS', 'NISRAPID', 'NRS', 'NRSIRS2', 'NRSN16R4', 'NRSN32R8', 'NRSN8R2', 'NRSRAPID', 'NRSIRS2RAPID', 'ALLIRS2', 'NRSSLOW', 'RAPID', 'SHALLOW2', 'SHALLOW4', 'SLOW', 'TRACK', 'ANY', 'N/A')),
-     ('META.EXPOSURE.READPATT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('SLOW', 'FAST', 'FASTGRPAVG', 'FASTINTAVG', 'ANY', 'N/A')),
+     ('META.EXPOSURE.READPATT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('ACQ1', 'ACQ2', 'ALLIRS2', 'BRIGHT1', 'BRIGHT2', 'DEEP2', 'DEEP8', 'FAST', 'FASTGRPAVG', 'FGS', 'FGS60', 'FGS8370', 'FGS840', 'FGSRAPID', 'FINEGUIDE', 'ID', 'MEDIUM2', 'MEDIUM8', 'NIS', 'NISRAPID', 'NRS', 'NRSIRS2', 'NRSN16R4', 'NRSN32R8', 'NRSN8R2', 'NRSRAPID', 'NRSIRS2RAPID', 'NRSSLOW', 'RAPID', 'SHALLOW2', 'SHALLOW4', 'SLOW', 'TRACK', 'ANY', 'N/A')),
+     ('META.EXPOSURE.READPATT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('SLOW', 'FAST', 'FASTGRPAVG', 'ANY', 'N/A')),
      ('META.EXPOSURE.TYPE', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('MIR_4QPM', 'MIR_CORONCAL', 'MIR_DARK', 'MIR_FLAT-IMAGE', 'MIR_FLATIMAGE', 'MIR_FLAT-MRS', 'MIR_FLATMRS', 'MIR_IMAGE', 'MIR_LRS-FIXEDSLIT', 'MIR_LRS-SLITLESS', 'MIR_LYOT', 'MIR_MRS', 'MIR_TACQ', 'ANY', 'N/A')),
      ('META.HISTORY', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.INSTRUMENT.BAND', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('SHORT', 'MEDIUM', 'LONG', 'MULTIPLE', 'ANY', 'N/A')),
      ('META.INSTRUMENT.CHANNEL', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('1', '2', '3', '4', '12', '34', '1234', '123', '234', 'ANY', 'N/A')),
+     ('META.INSTRUMENT.CORONAGRAPH', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('4QPM', '4QPM_1065', '4QPM_1140', '4QPM_1550', 'LYOT', 'LYOT_2300', 'MASK210R', 'MASKSWB', 'MASK335R', 'MASK430R', 'MASKLWB', 'NONE', 'ANY', 'N/A')),
      ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'ANY', 'N/A')),
-     ('META.INSTRUMENT.FILTER', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('CLEAR', 'F070LP', 'F070W', 'F090W', 'F1000W', 'F100LP', 'F1065C', 'F110W', 'F1130W', 'F1140C', 'F115W', 'F1280W', 'F140M', 'F140X', 'F1500W', 'F150W', 'F150W2', 'F1550C', 'F170LP', 'F1800W', 'F182M', 'F187N', 'F200W', 'F2100W', 'F210M', 'F212N', 'F227W', 'F2300C', 'F250M', 'F2550W', 'F2550WR', 'F277W', 'F290LP', 'F300M', 'F322W2', 'F335M', 'F356W', 'F360M', 'F380M', 'F410M', 'F430M', 'F444W', 'F460M', 'F480M', 'F560W', 'F770W', 'FLENS', 'FND', 'FNDP750L', 'GR150C', 'GR150R', 'OPAQUE', 'P750L', 'WL3', 'WLP4', 'MULTIPLE', 'ANY', 'N/A')),
-     ('META.INSTRUMENT.GRATING', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('G140M', 'G235M', 'G395M', 'G140H', 'G235H', 'G395H', 'PRISM', 'MIRROR', 'NULL', 'MULTIPLE', 'N/A', 'ANY')),
+     ('META.INSTRUMENT.FILTER', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('CLEAR', 'F070LP', 'F070W', 'F090W', 'F1000W', 'F100LP', 'F1065C', 'F110W', 'F1130W', 'F1140C', 'F115W', 'F1280W', 'F140M', 'F140X', 'F1500W', 'F150W', 'F150W2', 'F1550C', 'F170LP', 'F1800W', 'F182M', 'F187N', 'F200W', 'F2100W', 'F210M', 'F212N', 'F2300C', 'F250M', 'F2550W', 'F2550WR', 'F277W', 'F290LP', 'F300M', 'F322W2', 'F335M', 'F356W', 'F360M', 'F380M', 'F410M', 'F430M', 'F444W', 'F460M', 'F480M', 'F560W', 'F770W', 'FLENS', 'FND', 'GR150C', 'GR150R', 'OPAQUE', 'P750L', 'WLP4', 'MULTIPLE', 'ANY', 'N/A')),
+     ('META.INSTRUMENT.GRATING', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('G140M', 'G235M', 'G395M', 'G140H', 'G235H', 'G395H', 'PRISM', 'MIRROR', 'UNKNOWN', 'MULTIPLE', 'N/A', 'ANY')),
      ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('MIRI',)),
-     ('META.INSTRUMENT.PUPIL', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('CLEAR', 'CLEARP', 'F090W', 'F115W', 'F140M', 'F150W', 'F158M', 'F162M', 'F164N', 'F200W', 'F323N', 'F405N', 'F466N', 'F470N', 'FLAT', 'GDHS', 'GDHS0', 'GDHS60', 'GR700XD', 'GRISMC', 'GRISMR', 'GRISMV2', 'GRISMV3', 'MASKBAR', 'MASKIPR', 'MASKRND', 'NRM', 'PINHOLES', 'WLM8', 'WLP4', 'WLP8', 'ANY', 'N/A')),
+     ('META.INSTRUMENT.PUPIL', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('CLEAR', 'CLEARP', 'F090W', 'F115W', 'F140M', 'F150W', 'F158M', 'F162M', 'F164N', 'F200W', 'F323N', 'F405N', 'F466N', 'F470N', 'FLAT', 'GDHS0', 'GDHS60', 'GR700XD', 'GRISMC', 'GRISMR', 'GRISMV2', 'GRISMV3', 'MASKBAR', 'MASKIPR', 'MASKRND', 'NRM', 'PINHOLES', 'WLM8', 'WLP8', 'ANY', 'N/A')),
      ('META.MODEL_TYPE', 'HEADER', 'CHARACTER', 'WARN', values=()),
      ('META.PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTPEDIGREE',)),
      ('META.REFTYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.SUBARRAY.FASTAXIS', 'HEADER', 'INTEGER', 'OPTIONAL', values=('1', '-1', '2', '-2')),
      ('META.SUBARRAY.FASTAXIS', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
-     ('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('FULL', 'GENERIC', 'MASK1140', 'MASK1550', 'MASK1065', 'MASKLYOT', 'BRIGHTSKY', 'SUB256', 'SUB128', 'SUB64', 'SUBPRISM', 'SLITLESSPRISM', 'ANY', 'N/A')),
+     ('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('BRIGHTSKY', 'MASK1065', 'MASK1140', 'MASK1550', 'MASKLYOT', 'SLITLESSPRISM', 'SUBPRISM', 'SUB128', 'SUB256', 'SUB64', 'FULL', 'GENERIC', 'ANY', 'N/A')),
      ('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.SUBARRAY.SLOWAXIS', 'HEADER', 'INTEGER', 'OPTIONAL', values=('1', '-1', '2', '-2')),
      ('META.SUBARRAY.SLOWAXIS', 'HEADER', 'INTEGER', 'REQUIRED', values=()),
@@ -169,6 +162,7 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
      ('SUBARRAY_XSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART<=1032)'),
      ('SUBARRAY_YSIZE', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSIZE<=1024)'),
      ('SUBARRAY_YSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART<=1024)')]
+    >>> test_config.cleanup(old_state)
     """
 
 def reftypes_hst_get_filekinds():

@@ -11,12 +11,6 @@ The primary functions provided by this module are:
 See the tpn.py and locator.py modules,  as well as crds.certify and crds.rmap,
 and crds.selectors for more information.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ====================================================================================
-
 import re
 
 # ====================================================================================
@@ -27,7 +21,6 @@ import re
 import crds
 from crds.core import log, utils, heavy_client, config
 from crds.certify import TpnInfo
-
 
 # ====================================================================================
 
@@ -111,7 +104,8 @@ def refpath_to_parkeys(refpath):
 
 def _load_schema(schema_name=None):
     """Return the core data model schema."""
-    from jwst import datamodels
+    from . import locate
+    datamodels = locate.get_datamodels()
     model = datamodels.DataModel(schema=schema_name)
     return model.schema
 

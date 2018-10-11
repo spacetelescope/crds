@@ -78,11 +78,9 @@ setup_pars = {
     "scripts" : glob.glob("scripts/*"),
     }
 
-import crds   #  local subdirectory...  ew...
-
 setup(name="crds",
       provides=["crds"],
-      version=crds.__version__,
+      version = '7.2.6',
       description="Calibration Reference Data System,  HST/JWST reference file management",
       long_description=open('README.rst').read(),
       author="Todd Miller",

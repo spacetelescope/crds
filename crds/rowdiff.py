@@ -2,10 +2,6 @@
 FITS files or HDU lists. This can be a command-line module or class in a
 script. Written to add this functionality to crds.diff.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 
 import difflib
@@ -17,7 +13,7 @@ from astropy.io.fits import TableDataDiff
 from astropy.io.fits.hdu.hdulist import fitsopen
 from astropy.io.fits.hdu.table import _TableLikeHDU
 
-from crds.core  import python23, rmap, cmdline
+from crds.core  import rmap, cmdline
 
 #==========================================================================
 # Utilities
@@ -89,7 +85,7 @@ def get_hdulist(fits_reference):
     """
     # If the reference is a string, presume its a file path
     result = fits_reference
-    if isinstance(fits_reference, python23.string_types):
+    if isinstance(fits_reference, str):
         try:
             result = fitsopen(fits_reference)
         except Exception as exc:
@@ -283,7 +279,7 @@ def selected(element, wanted):
 
 
 #==========================================================================
-class RowDiff(object):
+class RowDiff:
     """Perform FITS table difference by rows
 
     Modules that are based on FITSDiff, such as Diff, compare

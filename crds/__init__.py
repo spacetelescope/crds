@@ -1,9 +1,3 @@
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os
 import os.path
 import sys
@@ -17,7 +11,7 @@ warnings.filterwarnings(
 # ============================================================================
 
 __version__ = "7.2.6"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST DMS 7.2,  end-of-August release"
+__rationale__ = "JWST B7.2, Oct. Baseline"
 
 # ============================================================================
 

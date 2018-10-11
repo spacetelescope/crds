@@ -1,11 +1,8 @@
 """This module is used to profile getrecommendations() and bestreds.BestrefsScript()."""
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
+
+import pickle
 
 import crds
-
-from crds.core import python23
 
 from crds.tests.test_config import run_and_profile
 from crds import data_file
@@ -15,8 +12,8 @@ def pickle_unpickle(context, data):
     p.get_required_parkeys()
     header = data_file.get_header(data)
     prefs = p.get_best_references(header)
-    q = python23.pickle.dumps(p)
-    r = python23.pickle.loads(q) 
+    q = pickle.dumps(p)
+    r = pickle.loads(q) 
     rrefs = r.get_best_references(header)
     diffs = p.difference(r, include_header_diffs=True, recurse_added_deleted=True)
     assert prefs == rrefs

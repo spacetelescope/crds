@@ -5,12 +5,6 @@ focuses on JSONRPC calls and file downloads.   The heavy_client extends those
 primitive functions to provide higher level APIs that are dependent on the 
 core library to implement.
 """
-
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
 import os
 import json
 from pprint import pprint as pp

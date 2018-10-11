@@ -1,12 +1,6 @@
 """This module defines limited facilities for extracting information from 
 reference and datasets,  generally in the form of header dictionaries.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# =============================================================================
-
 from crds.core  import utils, log
 
 # =============================================================================

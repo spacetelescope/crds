@@ -1,12 +1,6 @@
 """This module is used to generate unique time based file names for HST
-calibration and synphot references."""
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ==============================================================================================
-
+calibration and synphot references.
+"""
 import os.path
 import sys
 import datetime
