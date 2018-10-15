@@ -25,6 +25,7 @@ from crds.client import api
 from . import mapping_parser
 from . import validators
 from . import reftypes
+from . import check_rmap_update
 
 # ============================================================================
 
@@ -809,7 +810,7 @@ def get_certifier_class(original_name, filepath):
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
-                  comparison_reference=None, run_fitsverify=False):
+                  comparison_reference=None, run_fitsverify=False, check_rmap_updates=False):
     """certify_files() core function with error trapping set."""
     
     for fnum, filename in enumerate(files):
@@ -825,6 +826,15 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
             dont_parse=dont_parse, script=script, observatory=observatory,
             comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify)
         
+    if check_rmap_updates:
+        try:
+            check_rmap_update.check_rmap_updates(observatory, context, files)
+        except Exception as exc:
+            if trap_exceptions:
+                log.error("Failed updating rmaps for", repr(context), ":", repr(str(exc)))
+            else:
+                raise
+
     tables.clear_cache()
     if not skip_banner:
         banner()
@@ -911,6 +921,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
                           help="Report jwst.datamodels schema violations as warnings rather than as errors.")
         self.add_argument("-f", "--run-fitsverify", action="store_true",
                           help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
+        self.add_argument("-u", "--check-rmap-updates", action="store_true",
+                          help="Do a dry-run of adding reference files to the appropriate rmaps to detect errors.")
+
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
@@ -959,7 +972,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
                       dont_parse=self.args.dont_parse,
                       trap_exceptions = not self.args.debug_traps,
                       script=self, observatory=self.observatory,
-                      run_fitsverify=self.args.run_fitsverify)
+                      run_fitsverify=self.args.run_fitsverify,
+                      check_rmap_updates=self.args.check_rmap_updates)
     
         self.dump_unique_errors()
         return log.errors()
