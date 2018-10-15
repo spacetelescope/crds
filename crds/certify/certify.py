@@ -20,12 +20,12 @@ from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKey
 from crds import data_file, diff
 from crds.io import tables
 from crds.client import api
+from crds.refactoring import refactor
 # from crds.io import abstract
 
 from . import mapping_parser
 from . import validators
 from . import reftypes
-from . import check_rmap_update
 
 # ============================================================================
 
@@ -78,8 +78,12 @@ class Certifier:
     
     def log_and_track_error(self, *args, **keys):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
+        try:
+            instrument, filekind = utils.get_file_properties(self.observatory, self.filename)
+        except Exception:
+            instrument = filekind = "unknown"
         if self.script:
-            self.script.log_and_track_error(self.filename, *args, **keys)
+            self.script.log_and_track_error(self.filename, instrument, filekind, *args, **keys)
         else:
             log.error("In", repr(self.basename), ":", *args, **keys)
             
@@ -827,23 +831,71 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
             comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify)
         
     if check_rmap_updates:
-        try:
-            check_rmap_update.check_rmap_updates(observatory, context, files)
-        except Exception as exc:
-            if trap_exceptions:
-                log.error("Failed updating rmaps for", repr(context), ":", repr(str(exc)))
-            else:
-                raise
+        _check_rmap_updates(observatory, context, files, script, trap_exceptions)
 
     tables.clear_cache()
     if not skip_banner:
         banner()
 
-def test():
-    """Run doctests in this module.  See also certify unittests."""
-    import doctest
-    from crds import certify
-    return doctest.testmod(certify)
+# ============================================================================
+
+def _check_rmap_updates(observatory, context, filepaths, script, trap_exceptions):
+    """Do a test insertion of list of reference file paths `filepaths` into 
+    the appropriate rmaps under CRDS `context` for the purpose of detecting
+    problems adding the references to `context` as a group.
+
+    The primary problem detected by the test insertion will be overlapping
+    match cases which can happen between two references of `filepaths` or 
+    between a new reference and an existing reference in the rmap.
+
+    Overlaps come in two forms:
+
+    1. In the extreme, a perfectly overlapping category will result in only 
+    one of two equivalent references being added to the rmap.   This only 
+    applies to two new references since replacements of old references is normal.
+
+    2. A more pernicious case occurs when two categories overlap but one is
+    a proper subset of the other.  In this instance,  because the categories
+    are different,  a replacement does not occur,  but at runtime whenever a
+    dataset satisfying the more restrictive category occurs,  both categories
+    match with equal weight;  this results in an undesirable search ambiguity.
+    For JWST these aren't permitted by default,  for HST the result is a need
+    to merge the UseAfter lists of the two categories at runtime...  and in all
+    likelihood,  matching nobody understands.
+    """
+    organized = _organize_files(observatory, filepaths)
+    pmap = crds.get_cached_mapping(context)
+    for instrument, filekind in organized:
+        filepaths2 = organized[(instrument, filekind)]
+        try:
+            old_rmap = pmap.get_imap(instrument).get_rmap(filekind)
+            new_rmap = "/tmp/" + old_rmap.basename
+            log.info("Checking rmap update for", (instrument, filekind), 
+                     "inserting files", filepaths2)
+            refactor.rmap_insert_references(old_rmap.filename, new_rmap, filepaths2)
+        except Exception as exc:
+            if trap_exceptions:
+                if script:
+                    script.log_and_track_error(
+                        "NONE", instrument, filekind, "Failed updating rmaps for", repr(context), ":", repr(str(exc)))
+                else:
+                    log.error("Failed updating rmaps for", repr(old_rmap.basename), 
+                              "of", repr(context), ":", repr(str(exc)))                        
+            else:
+                raise
+
+def _organize_files(observatory, filepaths):
+    """Group list of reference file paths `files` by (instrument,filekind) so 
+    that hey can be inserted into the appopriate rmaps.
+
+    Returns { (instrument, filekind) : [ reference, ...], ... }
+    """
+    organized = defaultdict(list)
+    for file in filepaths:
+        if config.is_reference(file):
+            instr, filekind = utils.get_file_properties(observatory, file)
+            organized[(instr, filekind)].append(file)
+    return organized
 
 # ============================================================================
 
@@ -1016,13 +1068,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
             comparison_context = None
         return comparison_context
     
-    def log_and_track_error(self, filename, *args, **keys):
+    def log_and_track_error(self, *args, **keys):
         """Override log_and_track_error() to compute instrument, filekind automatically."""
-        try:
-            instrument, filekind = utils.get_file_properties(self.observatory, filename)
-        except Exception:
-            instrument = filekind = "unknown"
-        super(CertifyScript, self).log_and_track_error(filename, instrument, filekind, *args, **keys)
+        super(CertifyScript, self).log_and_track_error(*args, **keys)
         return None  # to suppress re-raise
     
     def mapping_closure(self, files):
@@ -1039,3 +1087,12 @@ For more information on the checks being performed,  use --verbose or --verbosit
                     more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files
         return sorted(closure_files)
+
+# ============================================================================
+
+def test():
+    """Run doctests in this module.  See also certify unittests."""
+    import doctest
+    from crds import certify
+    return doctest.testmod(certify)
+
