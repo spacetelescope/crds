@@ -8,17 +8,13 @@ A number of command line switches control output formatting.
 
 The api function find_full_match_paths() returns a list of "match paths",  lists of parkey value assignment tuples:
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import os.path
 from collections import defaultdict
 from pprint import pprint as pp   # doctests
 
 import crds
-from crds.core import python23, log, utils, cmdline, selectors
+from crds.core import log, utils, cmdline, selectors
 from crds.client import api
 
 # ===================================================================
@@ -116,7 +112,7 @@ def _flatten_items_to_dict(match_path):
     """
     result = {}
     for par in match_path:
-        if len(par) == 2 and isinstance(par[0], python23.string_types) and isinstance(par[1], python23.string_types):
+        if len(par) == 2 and isinstance(par[0], str) and isinstance(par[1], str):
             result[par[0]] = par[1]
         else:
             result.update(_flatten_items_to_dict(par))

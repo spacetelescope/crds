@@ -11,9 +11,6 @@ in the certification of reference files.
 The intentions is that a similar module with different policies could
 be implemented for JWST.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 import os.path
 import datetime
 import time
@@ -93,6 +90,13 @@ def get_pipelines(exp_type, cal_ver=None, context=None):
     with the given parameters.
     """
     raise NotImplementedError("HST has not defined pipeline .cfg files.")
+
+def get_exptypes(instrument=None):
+    """Return the list of EXP_TYPE values for instrument,  or for all 
+    instruments if instrument is not specified.
+    """
+    raise NotImplementedError("HST has not defined get_exptypes().")
+    
 
 # =======================================================================
 

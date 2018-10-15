@@ -1,9 +1,5 @@
 """Higher level mapping based tests for selectors not covered by hst.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import sys
 import os
 import unittest
@@ -275,7 +271,7 @@ class Test_01_Insert(TobsTestCase):
 
 # =============================================================================
 
-class RecursiveModify(object):
+class RecursiveModify:
     """Tests for checking automatic rmap update logic for adding new references."""
     
     result_filename = None

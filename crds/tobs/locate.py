@@ -7,9 +7,6 @@ specific policies for TOBS:
 in the certification of reference files. 
 
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 import os.path
 import re
 
@@ -46,6 +43,12 @@ def get_extra_tpninfos(refpath):
 def project_check(refpath):
     return
 
+def get_exptypes(instrument=None):
+    """Return the list of EXP_TYPE values for instrument,  or for all 
+    instruments if instrument is not specified.
+    """
+    raise NotImplementedError("TOBS has not defined get_exptypes().")
+    
 # =======================================================================
 
 # When loading headers,  make sure each keyword in a tuple is represented with

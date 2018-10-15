@@ -1,11 +1,5 @@
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
-# ==================================================================================
-
 import os
+from pprint import pprint
 
 # ==================================================================================
 import numpy as np
@@ -168,7 +162,7 @@ def dt_asdf_history_no_entries_description():
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> header = data_file.get_header("data/niriss_ref_distortion.asdf")
     >>> header["HISTORY"]
-    'UNDEFINED or BAD FORMAT'
+    'UNDEFINED'
     >>> test_config.cleanup(old_state)
     """
 
@@ -190,7 +184,233 @@ def dt_asdf_history_with_entries():
     >>> test_config.cleanup(old_state)
     """
 
+def dt_get_array_properties_hdu_name():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "_WCP"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '_WCP',
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    """
 
+def dt_get_array_properties_extension_number1():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "EXT1"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '1',
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_get_array_properties_extension_number2():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "EXTENSION1"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '1',
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_get_array_properties_extension_number1():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "EXT1"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '1',
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_get_array_properties_extension_number2():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "EXTENSION1"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '1', 
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    """
+
+
+def dt_get_array_properties_extension_number3():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint( data_file.get_array_properties("data/x2i1559gl_wcp.fits", 1))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '1',
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "1"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '1',
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_get_array_properties_extension_number3():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint( data_file.get_array_properties("data/x2i1559gl_wcp.fits", "_WCP__1"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': ('_WCP', 1),
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    >>> pprint(data_file.get_array_properties("data/x2i1559gl_wcp.fits", "1"))
+    {'COLUMN_NAMES': ['OPT_ELEM',
+                      'XC_RANGE',
+                      'RESWIDTH',
+                      'MAX_TIME_DIFF',
+                      'STEPSIZE',
+                      'XD_RANGE',
+                      'BOX'],
+     'DATA': None,
+     'DATA_TYPE': {'BOX': '>i4',
+                   'MAX_TIME_DIFF': '>f8',
+                   'OPT_ELEM': '|S8',
+                   'RESWIDTH': '>f8',
+                   'STEPSIZE': '>i4',
+                   'XC_RANGE': '>i4',
+                   'XD_RANGE': '>i4'},
+     'EXTENSION': 1,
+     'KIND': 'TABLE',
+     'NAME': '1',
+     'SHAPE': (4,)}
+    >>> test_config.cleanup(old_state)
+    """
 
 # ==================================================================================
 

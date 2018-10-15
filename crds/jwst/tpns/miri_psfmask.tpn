@@ -1,0 +1,6 @@
+include includes/miri_subarray_refpix.tpn
+
+include includes/miri_sci_array_refpix.tpn
+
+SCI       A           X         R            (ndim(SCI_ARRAY,2))
+

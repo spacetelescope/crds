@@ -1,15 +1,10 @@
 """This module contains doctests and unit tests which exercise some of the more
 complex features of the basic rmap infrastructure.
 """
-
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
 import os
 import json
 from pprint import pprint as pp
+import pickle
 
 from crds import rmap, log, config, tests
 from crds.client import api
@@ -468,7 +463,6 @@ def dt_imap_match_omit():
 
 def dt_pickling():
     """
-    >>> from crds.python23 import pickle
     >>> from crds import data_file
 
     >>> old_state = test_config.setup()

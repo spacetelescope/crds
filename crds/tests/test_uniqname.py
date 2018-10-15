@@ -65,10 +65,6 @@ Renamed files can be output to a different directory using --output-path.
 --dry-run can be used to demo renaming by printing what the new name would be.
     
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os
 import doctest
 

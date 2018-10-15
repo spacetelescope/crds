@@ -51,12 +51,6 @@ Active instrument references are also broken down by filetype:
 >>> len(r.reference_names())  > 500
 True
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 import os.path
 import glob
 import json
@@ -65,14 +59,13 @@ from collections import namedtuple
 
 # ===================================================================
 
-from . import python23, log, utils, config, selectors, substitutions
+from . import log, utils, config, selectors, substitutions
 
 # XXX For backward compatability until refactored away.
 from .config import locate_file, locate_mapping, locate_reference
 from .config import mapping_exists, is_mapping
 
 from . import exceptions as crexc
-from . import python23
 from .custom_dict import LazyFileDict
 from .mapping_verifier import MAPPING_VERIFIER
 from .log import srepr
@@ -109,7 +102,7 @@ class LowerCaseDict(dict):
         val = super(LowerCaseDict, self).__getitem__(key)
         # Return string values as lower case,  but exclude literal expressions surrounded by ()
         # for case-sensitive HST rmap relevance expressions.
-        if isinstance(val, python23.string_types) and not (val.startswith("(") and val.endswith(")")):
+        if isinstance(val, str) and not (val.startswith("(") and val.endswith(")")):
             val = val.lower()
         return val
     
@@ -128,7 +121,7 @@ class LowerCaseDict(dict):
 
 # ===================================================================
 
-class Mapping(object):
+class Mapping:
     """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
     """
@@ -760,7 +753,7 @@ class PipelineContext(ContextMapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.  `dataset` can be a filename or a header dictionary.
         """
-        if isinstance(dataset, python23.string_types):
+        if isinstance(dataset, str):
             from crds import data_file
             instrument = data_file.getval(dataset,  self.instrument_key)
         elif isinstance(dataset, dict):
@@ -1580,7 +1573,7 @@ def asmapping(filename_or_mapping, cached=False, **keys):
     """
     if isinstance(filename_or_mapping, Mapping):
         return filename_or_mapping
-    elif isinstance(filename_or_mapping, python23.string_types):
+    elif isinstance(filename_or_mapping, str):
         if cached in [False, "uncached"]:
             return load_mapping(filename_or_mapping, **keys)
         elif cached in [True, "cached"]:
@@ -1703,7 +1696,7 @@ def mapping_type(mapping):
     >>> mapping_type(get_cached_mapping('hst_acs_darkfile.rmap'))
     'rmap'
     """
-    if isinstance(mapping, python23.string_types):
+    if isinstance(mapping, str):
         if config.is_mapping(mapping):
             return os.path.splitext(mapping)[1][1:]
         else:

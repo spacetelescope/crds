@@ -1,9 +1,6 @@
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
+import pickle
 
 import crds
-from crds.core.python23 import pickle
 from crds.core import log
 
 def main():

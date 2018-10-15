@@ -32,9 +32,9 @@ meta:
     reftype: CRDSCFG
     telescope: JWST
     useafter: 1900-01-01T00:00:00
-    calibration_software_version: 0.10.1
+    calibration_software_version: 0.12.0
     crds_version: 7.2.6
-    generation_date: 2018-08-01T11:13:44
+    generation_date: 2018-10-04T19:39:43
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -44,8 +44,8 @@ meta:
 # ----------------------------------------------------------------------------------------------
 
 pipeline_cfgs: [calwebb_dark.cfg, calwebb_detector1.cfg, calwebb_spec2.cfg, calwebb_image2.cfg,
-                calwebb_guider.cfg, calwebb_tso1.cfg, calwebb_tso_image2.cfg,
-                calwebb_tso_spec2.cfg]
+                calwebb_guider.cfg, calwebb_tso1.cfg, calwebb_tso-image2.cfg,
+                calwebb_tso-spec2.cfg]
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -95,7 +95,7 @@ level_pipeline_exptypes:
         - calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_MRS, NRS_FIXEDSLIT, NRS_MSASPEC, NRS_IFU,
                              NRS_AUTOWAVE, NIS_WFSS, NRC_WFSS]
 
-        - calwebb_tso_spec2.cfg: [MIR_LRS-SLITLESS, NRC_TSGRISM, NIS_SOSS, NRS_BRIGHTOBJ]
+        - calwebb_tso-spec2.cfg: [MIR_LRS-SLITLESS, NRC_TSGRISM, NIS_SOSS, NRS_BRIGHTOBJ]
 
         - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, NRC_WFSC, NRC_TACONFIRM,
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
@@ -103,7 +103,7 @@ level_pipeline_exptypes:
                              NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
-        - calwebb_tso_image2.cfg: [NRC_TSIMAGE]
+        - calwebb_tso-image2.cfg: [NRC_TSIMAGE]
 
         - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NRS_AUTOWAVE, FGS_ACQ1, FGS_ACQ2,
                         FGS_FINEGUIDE, FGS_ID-IMAGE, FGS_ID-STACK, FGS_TRACK, NIS_EXTCAL]
@@ -159,6 +159,7 @@ steps_to_reftypes_exceptions: []
 
 
 
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg: [dq_init, group_scale, ipc, lastframe, linearity, refpix, rscd,
@@ -171,12 +172,12 @@ pipeline_cfgs_to_steps:
   calwebb_spec2.cfg: [assign_wcs, barshadow, bkg_subtract, cube_build, extract_1d,
     extract_2d, flat_field, fringe, imprint_subtract, msa_flagging, pathloss, photom,
     resample_spec, srctype, straylight]
-  calwebb_tso1.cfg: [dark_current, dq_init, firstframe, gain_scale, group_scale, ipc,
-    jump, lastframe, linearity, persistence, ramp_fit, refpix, rscd, saturation, superbias]
-  calwebb_tso_image2.cfg: [assign_wcs, bkg_subtract, flat_field, photom, resample]
-  calwebb_tso_spec2.cfg: [assign_wcs, barshadow, bkg_subtract, cube_build, extract_1d,
+  calwebb_tso-image2.cfg: [assign_wcs, bkg_subtract, flat_field, photom, resample]
+  calwebb_tso-spec2.cfg: [assign_wcs, barshadow, bkg_subtract, cube_build, extract_1d,
     extract_2d, flat_field, fringe, imprint_subtract, msa_flagging, pathloss, photom,
     resample_spec, srctype, straylight]
+  calwebb_tso1.cfg: [dark_current, dq_init, firstframe, gain_scale, group_scale, ipc,
+    jump, lastframe, linearity, persistence, ramp_fit, refpix, rscd, saturation, superbias]
   skip_2b.cfg: []
 
 steps_to_reftypes:
@@ -235,7 +236,7 @@ exptypes_to_pipelines:
   MIR_FLATMRS: [calwebb_detector1.cfg, skip_2b.cfg]
   MIR_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
   MIR_LRS-FIXEDSLIT: [calwebb_detector1.cfg, calwebb_spec2.cfg]
-  MIR_LRS-SLITLESS: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
+  MIR_LRS-SLITLESS: [calwebb_tso1.cfg, calwebb_tso-spec2.cfg]
   MIR_LYOT: [calwebb_detector1.cfg, calwebb_image2.cfg]
   MIR_MRS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   MIR_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
@@ -245,7 +246,7 @@ exptypes_to_pipelines:
   NIS_FOCUS: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_LAMP: [calwebb_detector1.cfg, skip_2b.cfg]
-  NIS_SOSS: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
+  NIS_SOSS: [calwebb_tso1.cfg, calwebb_tso-spec2.cfg]
   NIS_TACONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NIS_WFSS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
@@ -257,14 +258,14 @@ exptypes_to_pipelines:
   NRC_LED: [calwebb_detector1.cfg, skip_2b.cfg]
   NRC_TACONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRC_TACQ: [calwebb_detector1.cfg, calwebb_image2.cfg]
-  NRC_TSGRISM: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
-  NRC_TSIMAGE: [calwebb_tso1.cfg, calwebb_tso_image2.cfg]
+  NRC_TSGRISM: [calwebb_tso1.cfg, calwebb_tso-spec2.cfg]
+  NRC_TSIMAGE: [calwebb_tso1.cfg, calwebb_tso-image2.cfg]
   NRC_WFSC: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRC_WFSS: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   NRS_AUTOFLAT: [calwebb_detector1.cfg, skip_2b.cfg]
   NRS_AUTOWAVE: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   NRS_BOTA: [calwebb_detector1.cfg, calwebb_image2.cfg]
-  NRS_BRIGHTOBJ: [calwebb_tso1.cfg, calwebb_tso_spec2.cfg]
+  NRS_BRIGHTOBJ: [calwebb_tso1.cfg, calwebb_tso-spec2.cfg]
   NRS_CONFIRM: [calwebb_detector1.cfg, calwebb_image2.cfg]
   NRS_DARK: [calwebb_dark.cfg, skip_2b.cfg]
   NRS_FIXEDSLIT: [calwebb_detector1.cfg, calwebb_spec2.cfg]

@@ -8,11 +8,7 @@ are restricted to pigeon-Python that does not allow spaces.  See the JWST .tpn f
 (particularly *array*.tpn) for examples of presence or constraint expressions,  grep
 those files for these functions.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-from crds.core import utils, exceptions, python23
+from crds.core import utils, exceptions
 
 # ----------------------------------------------------------------------------
 
@@ -64,7 +60,7 @@ def has_type(array_info, typestr):
     >>> has_type(utils.Struct({"DATA_TYPE" : "complex64"}), ["COMPLEX","INT"])
     True
     """
-    possible_types = [typestr] if isinstance(typestr, python23.string_types) else typestr
+    possible_types = [typestr] if isinstance(typestr, str) else typestr
     for possible_type in possible_types:
         itype = _image_type(possible_type)
         if array_exists(array_info) and itype in array_info.DATA_TYPE:
@@ -365,7 +361,9 @@ def required(flag=True):
     return "R" if flag else False
 
 def warning(flag=True):
-    """When this flag is True,  a warning should be issued if the related keyword/element is
+    """Presence condition mutator/wrapper:
+
+    When flag is True,  a warning should be issued if the related keyword/element is
     not defined.     Returns "W" or False.
 
     >>> warning(True)
@@ -374,6 +372,24 @@ def warning(flag=True):
     False
     """
     return "W" if flag else False
+
+def warn_only(flag):
+    """Expression constraint mutator/wrapper:
+
+    When flag is True,  the wrapped expression was satisifed, so return True
+    signaling a passed validator expression.
+
+    If the flag is False, the expression evaluated successfully but was not
+    satisified.  Return the value "W" signaling that only a warning should be
+    issued rather than an exception or error.
+
+    >>> warn_only(True)
+    True
+
+    >>> warn_only(False)
+    'W'
+    """
+    return "W" if not flag else True
 
 def subarray(flag=True):
     """When this flag is True,  the related constraint should be applied if

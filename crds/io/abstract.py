@@ -2,10 +2,6 @@
 This module defines the generic functions and abstract class used to manage
 file access in CRDS.
 '''
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import functools
 import warnings
 import re
@@ -20,7 +16,7 @@ from astropy.utils.exceptions import AstropyUserWarning
 
 # ================================================================================================
 
-from crds.core import exceptions, python23, config, log, utils, timestamp
+from crds.core import exceptions, config, log, utils, timestamp
 
 # ================================================================================================
 
@@ -45,9 +41,12 @@ def hijack_warnings(func):
             warnings.showwarning = hijacked_showwarning
             warnings.simplefilter("always", AstropyUserWarning)
             try:
-                from jwst.datamodels.util import ValidationWarning
+                from jwst.datamodels.validate import ValidationWarning
             except:
-                pass
+                log.verbose_warning(
+                    "JWST ValidationWarning import failed.  "
+                    "Not a problem for HST.",
+                    verbosity=70)
             else:
                 warnings.filterwarnings("always", r".*", ValidationWarning, r".*jwst.*")
                 if not config.ALLOW_SCHEMA_VIOLATIONS:
@@ -169,9 +168,10 @@ def _destringize_numbers(header):
 
 def _convert_dotted_paths(header):
     """Convert header dotted-path keys into valid Python identifiers 
-    (for eval()) by using underscores instead of periods.
+    (for eval()) by using underscores instead of periods and add to
+    existing contents of `header`.
     """
-    cleaned = {}
+    cleaned = dict(header)
     for key, val in header.items():
         clean = re.sub(r"([A-Za-z][A-Za-z0-9_]*)\.", r"\1_", key)
         cleaned[clean] = val
@@ -195,7 +195,7 @@ def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
 
 # ================================================================================================
 
-class AbstractFile(object):
+class AbstractFile:
     
     format = "ABSTRACT"
     
@@ -266,6 +266,8 @@ class AbstractFile(object):
         raw_header = self.get_raw_header(needed_keys, **keys)
         reduced_header = self._reduce_header(raw_header, needed_keys)
         crossed_header = cross_strap_header(reduced_header)
+        crossed_header["FILE_FORMAT"] = \
+            self.__class__.__name__[:-len("File")].upper()
         return crossed_header
     
     def get_raw_header(self, needed_keys, **keys):
@@ -307,7 +309,7 @@ class AbstractFile(object):
         """Convert a tree structure to a flat dictionary of simple types with dotted path tree keys."""
         result = dict()
         for key in tree:
-            if not isinstance(key, python23.string_types):  # skip non-string keys
+            if not isinstance(key, str):  # skip non-string keys
                 continue
             value = tree[key]
             if isinstance(value, (type(tree), dict)):
@@ -320,7 +322,7 @@ class AbstractFile(object):
     
     def _simple_type(self, value):
         """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
-        if isinstance(value, (python23.string_types, int, float, complex)):
+        if isinstance(value, (str, int, float, complex)):
             rval = str(value)
         elif isinstance(value, (list, tuple)):
             rval = tuple(self._simple_type(val) for val in value)

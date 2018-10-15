@@ -47,22 +47,17 @@ CRDS cache during calibrations, connecting to the server only during serial
 cache sync operations.  This module provides some of the fall back mechanisms
 necessary for operating without a server connection at all.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os
 import pprint
 import ast
 import traceback
 import uuid
 import fnmatch 
+import pickle
 
 # ============================================================================
 
-from . import rmap, log, utils, config, python23
+from . import rmap, log, utils, config
 from .constants import ALL_OBSERVATORIES
 from .log import srepr
 from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsConfigError, CrdsDownloadError
@@ -305,14 +300,14 @@ def check_parameters(header):
     header = dict(header)
     keys = list(header.keys())
     for key in keys:
-        assert isinstance(key, python23.string_types), \
+        assert isinstance(key, str), \
             "Non-string key " + repr(key) + " in parameters."
         try:
             header[key]
         except Exception as exc:
             raise ValueError("Can't fetch mapping key", repr(key),
                              "from parameters:", repr(str(exc))) from exc
-        if not isinstance(header[key], (python23.string_types, float, int, bool)):
+        if not isinstance(header[key], (str, float, int, bool)):
             log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
             del header[key]
     return header
@@ -323,7 +318,7 @@ def check_reftypes(reftypes):
         "reftypes must be a list or tuple of strings, or sub-class of those."
     if reftypes is not None:
         for reftype in reftypes:
-            assert isinstance(reftype, python23.string_types), \
+            assert isinstance(reftype, str), \
                 "each reftype must be a string, .e.g. biasfile or darkfile."
                 
 def check_context(context):
@@ -582,7 +577,7 @@ def cache_atomic_write(replace_path, contents, fail_warning):
             log.verbose("CACHE updating:", repr(replace_path))
             utils.ensure_dir_exists(replace_path)
             temp_path = os.path.join(os.path.dirname(replace_path), str(uuid.uuid4()))
-            mode = "w+" if isinstance(contents, python23.string_types) else "wb+"
+            mode = "w+" if isinstance(contents, str) else "wb+"
             with open(temp_path, mode) as file_:
                 file_.write(contents)
             os.rename(temp_path, replace_path)
@@ -711,7 +706,7 @@ def load_pickled_mapping(mapping):
     """
     pickle_file = config.locate_pickle(mapping)
     pickled = open(pickle_file, "rb").read()
-    loaded = python23.pickle.loads(pickled)
+    loaded = pickle.loads(pickled)
     log.info("Loaded pickled context", repr(mapping))
     return loaded
 
@@ -723,7 +718,7 @@ def save_pickled_mapping(mapping, loaded):
         return
     with log.verbose_warning_on_exception("Failed saving pickle for", repr(mapping), "to", repr(pickle_file)):
         loaded.force_load()
-        pickled = python23.pickle.dumps(loaded)
+        pickled = pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
         log.info("Saved pickled context", repr(pickle_file))
 

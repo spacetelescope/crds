@@ -11,12 +11,6 @@ The primary functions provided by this module are:
 See the tpn.py and locator.py modules,  as well as crds.certify and crds.rmap,
 and crds.selectors for more information.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ====================================================================================
-
 import re
 
 # ====================================================================================
@@ -28,10 +22,17 @@ import crds
 from crds.core import log, utils, heavy_client, config
 from crds.certify import TpnInfo
 
-
 # ====================================================================================
 
-def get_exptypes():
+INSTR_PREFIX = {
+    "fgs" : "FGS_",
+    "miri" : "MIR_",
+    "nircam" : "NRC_",
+    "niriss" : "NIS_",
+    "nirspec" : "NRS_",
+    }
+
+def get_exptypes(instrument=None):
     """Using an arbitrary reference from an instrument that matches using EXP_TYPE,  return
     the set of all EXP_TYPE values defined in the JWST schema.   XXX kludged
     """
@@ -40,7 +41,11 @@ def get_exptypes():
     for info in tpninfos:
         if info.name in ["EXP_TYPE", "META.EXPOSURE.TYPE"]:
             values = values | set(info.values)
-    return sorted(list(values))
+    if instrument is None:
+        return sorted(list(values))
+    else:
+        return sorted([value for value in values
+                       if value.startswith(INSTR_PREFIX[instrument.lower()])])
 
 def get_schema_tpninfos(refpath):
     """Load the list of TPN info tuples corresponding to `instrument` and 
@@ -99,7 +104,8 @@ def refpath_to_parkeys(refpath):
 
 def _load_schema(schema_name=None):
     """Return the core data model schema."""
-    from jwst import datamodels
+    from . import locate
+    datamodels = locate.get_datamodels()
     model = datamodels.DataModel(schema=schema_name)
     return model.schema
 

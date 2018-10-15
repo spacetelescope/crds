@@ -1,10 +1,3 @@
-from __future__ import division # confidence high
-from __future__ import with_statement
-from __future__ import print_function
-from __future__ import absolute_import
-
-# ==================================================================================
-
 import os
 import doctest
 from pprint import pprint as pp
@@ -18,6 +11,7 @@ from nose.tools import assert_raises, assert_true
 
 from crds.core import utils, log, exceptions
 from crds import client
+from crds import data_file
 from crds import certify
 from crds.certify import CertifyScript
 from crds.certify import generic_tpn
@@ -58,9 +52,9 @@ def certify_truncated_file():
 def certify_bad_checksum():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
-    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_508.pmap")()  # doctest: +ELLIPSIS
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_508.pmap'
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
@@ -395,7 +389,8 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.EXPOSURE.TYPE [EXP_TYPE] = 'mir_image'
     CRDS - INFO -  META.HISTORY [HISTORY] = 'How this reference came to be and changed over time.'
     CRDS - INFO -  META.INSTRUMENT.BAND [BAND] = 'medium'
-    CRDS - INFO -  META.INSTRUMENT.CHANNEL [CHANNEL] = '34'
+    CRDS - INFO -  META.INSTRUMENT.CHANNEL [CHANNEL] = 34
+    CRDS - INFO -  META.INSTRUMENT.CORONAGRAPH [CORONMSK] = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.DETECTOR [DETECTOR] = 'mirifulong'
     CRDS - INFO -  META.INSTRUMENT.FILTER [FILTER] = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.GRATING [GRATING] = 'UNDEFINED'
@@ -404,19 +399,19 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.MODEL_TYPE [DATAMODL] = 'UNDEFINED'
     CRDS - INFO -  META.PEDIGREE [PEDIGREE] = 'dummy'
     CRDS - INFO -  META.REFTYPE [REFTYPE] = 'distortion'
-    CRDS - INFO -  META.SUBARRAY.FASTAXIS [FASTAXIS] = '1'
+    CRDS - INFO -  META.SUBARRAY.FASTAXIS [FASTAXIS] = 1
     CRDS - INFO -  META.SUBARRAY.NAME [SUBARRAY] = 'MASK1550'
-    CRDS - INFO -  META.SUBARRAY.SLOWAXIS [SLOWAXIS] = '2'
-    CRDS - INFO -  META.SUBARRAY.XSIZE [SUBSIZE1] = '1032'
-    CRDS - INFO -  META.SUBARRAY.XSTART [SUBSTRT1] = '1'
-    CRDS - INFO -  META.SUBARRAY.YSIZE [SUBSIZE2] = '4'
-    CRDS - INFO -  META.SUBARRAY.YSTART [SUBSTRT2] = '1020'
+    CRDS - INFO -  META.SUBARRAY.SLOWAXIS [SLOWAXIS] = 2
+    CRDS - INFO -  META.SUBARRAY.XSIZE [SUBSIZE1] = 1032
+    CRDS - INFO -  META.SUBARRAY.XSTART [SUBSTRT1] = 1
+    CRDS - INFO -  META.SUBARRAY.YSIZE [SUBSIZE2] = 4
+    CRDS - INFO -  META.SUBARRAY.YSTART [SUBSTRT2] = 1020
     CRDS - INFO -  META.TELESCOPE [TELESCOP] = 'jwst'
     CRDS - INFO -  META.USEAFTER [USEAFTER] = '2015-01-25T12:00:00'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
-    CRDS - INFO -  28 infos
+    CRDS - INFO -  29 infos
     0
     >>> test_config.cleanup(old_state)
     """
@@ -490,29 +485,39 @@ def certify_table_comparison_context():
     >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying '.../references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
-    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
-    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
     CRDS - INFO -  Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
-    CRDS - WARNING -  Table mode (('DATE', 56923.58...),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56964.0...),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56921.83...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56922.0...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.58...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.04...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.20...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.31...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56925.0...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56959.45...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56959.66...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56961.83...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56962.83...),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'yas2005el_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'yas2005el_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - WARNING -  Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'yas2005el_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'yas2005el_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - WARNING -  Table mode (('DATE', 56921.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.0417),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.2084),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56959.4584),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56959.6667),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56961.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  15 warnings
-    CRDS - INFO -  7 infos
+    CRDS - INFO -  17 infos
     0
     >>> test_config.cleanup(old_state)
     """
@@ -523,27 +528,37 @@ def certify_table_comparison_reference():
     CRDS - INFO -  Certifying with --comparison-reference, no default --comparison-context defined.
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
-    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
-    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - WARNING -  Table mode (('DATE', 56923.58...),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.04...),) :
-     (129, (('DATE', 56924.04...), ('HVLEVELB', 169)))
-    (131, (('DATE', 56924.04...), ('HVLEVELB', 169)))
-    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0...),) :
-     (132, (('DATE', 56925.0...), ('HVLEVELB', 175)))
-    (134, (('DATE', 56925.0...), ('HVLEVELB', 175)))
-    CRDS - WARNING -  Table mode (('DATE', 56921.83...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56922.0...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56923.62...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.04...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56924.31...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    CRDS - WARNING -  Table mode (('DATE', 56925.0...),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - WARNING -  Table mode (('DATE', 56923.5834),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
+     (129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    (131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
+     (132, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    (134, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - WARNING -  Table mode (('DATE', 56921.8334),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.0417),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS - WARNING -  Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  10 warnings
-    CRDS - INFO -  7 infos
+    CRDS - INFO -  17 infos
     0
     """
 
@@ -553,14 +568,18 @@ def certify_comparison_context_none_all_references():
     CRDS - INFO -  Comparison context explicitly specified as 'none',  no --comparison-context will be used.
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
-    CRDS - INFO -  Potential table unique row selection parameters are ['DATE']
-    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
     CRDS - WARNING -  No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
-    CRDS - INFO -  7 infos
+    CRDS - INFO -  11 infos
     0
     """
 
@@ -593,7 +612,7 @@ def certify_jwst_valid():
 def certify_jwst_missing_optional_parkey():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
-    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap")()
+    >>> TestCertifyScript("crds.certify data/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/jwst_miri_ipc_0003.add.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
     CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
@@ -601,7 +620,7 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found. Opening jwst_miri_ipc_0003.add.fits as a ReferenceImageModel
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found...
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  2 warnings
@@ -710,6 +729,7 @@ def certify_AsdfCertify_valid():
     >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
+    CRDS - INFO -  Checking JWST datamodels.
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -729,6 +749,7 @@ def certify_AsdfCertify_opaque_name():
     >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
+    CRDS - INFO -  Checking JWST datamodels.
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -746,16 +767,18 @@ def certify_jwst_bad_fits():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
-    CRDS - INFO -  Potential table unique row selection parameters are ['FILTER', 'PUPIL', 'ORDER']
-    CRDS - INFO -  Final combination is intersection with available table columns.
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Missing required array 'PHOTOM'
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - INFO -  Mode columns defined by spec for new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
+    CRDS - INFO -  All column names for this table new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - WARNING -  ValidationWarning : jwst.datamodels...
+    CRDS - WARNING -  NoTypeWarning : jwst.datamodels...
     >>> test_config.cleanup(old_state)
     """
 
@@ -842,26 +865,26 @@ def load_nirspec_staturation_tpn_lines():
     GUIDER2_AXIS                X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER2')) ((FASTAXIS==2)and(SLOWAXIS==-1))
     SCI       A           X         ((True))                              (array_exists(SCI_ARRAY))
     SCI       A           X         ((True))                              (is_image(SCI_ARRAY))
-    SCI       A           X         ((True))                              (has_type(SCI_ARRAY,['FLOAT']))
+    SCI       A           X         ((True))                              (has_type(SCI_ARRAY,['FLOAT','INT']))
     SUBARRAY_INBOUNDS_X         X   X   ((True))                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
     SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
     SCI       A           X             ((True))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-    SCI       A           X         (full_frame((True))and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])
-    SCI       A           X         (full_frame((True))and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])
-    SCI       A           X         (subarray((True))and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
-    SCI       A           X         (subarray((True))and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
-    SCI       A           X         (subarray((True)))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
-    DQ   A    X         ((True))    (is_image(DQ_ARRAY))
-    DQ   A    X         ((True))    (has_type(DQ_ARRAY,'INT'))
-    DQ   A    X         (array_exists(DQ_ARRAY))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (is_table(DQ_DEF_ARRAY))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
-    DQ_DEF       A           X           (is_defined(DQ_DEF_ARRAY))  (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+    SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)]))
+    SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (warn_only(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)]))
+    SCI       A           X         (is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+    SCI       A           X         (is_subarray(SUBARRAY)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
+    SCI       A           X         (is_subarray(SUBARRAY))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+    DQ   A    X         (optional((True)))                                    (is_image(DQ_ARRAY))
+    DQ   A    X         (optional((True)))                                    (warn_only(has_type(DQ_ARRAY,'INT')))
+    DQ   A    X         ((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+    DQ_DEF       A           X         O             (is_table(DQ_DEF_ARRAY))
+    DQ_DEF       A           X         O             (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
     SCI   A   X    R  (ndim(SCI_ARRAY,2))
-    DQ    A   X    R  (ndim(DQ_ARRAY,2))
+    DQ    A   X    O  (ndim(DQ_ARRAY,2))
     META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
     >>> test_config.cleanup(old_state)
     """
@@ -904,26 +927,26 @@ def load_nirspec_staturation_tpn():
      ('GUIDER2_AXIS', 'EXPRESSION', 'EXPRESSION', condition="(is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER2'))", expression='((FASTAXIS==2)and(SLOWAXIS==-1))'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(array_exists(SCI_ARRAY))'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(SCI_ARRAY))'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(SCI_ARRAY,['FLOAT']))"),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(SCI_ARRAY,['FLOAT','INT']))"),
      ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)'),
      ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(not(is_irs2(READPATT))))', expression='(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(256,2048)])'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(full_frame((True))and(is_irs2(READPATT)))', expression='(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(256,2048)])'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True))and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(subarray((True)))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(is_image(DQ_ARRAY))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(array_exists(DQ_ARRAY))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression='(is_table(DQ_DEF_ARRAY))'),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
-     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_defined(DQ_DEF_ARRAY))', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)]))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(is_irs2(READPATT)))', expression='(warn_only(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)]))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY))', expression='(1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(optional((True)))', expression='(is_image(DQ_ARRAY))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='(optional((True)))', expression="(warn_only(has_type(DQ_ARRAY,'INT')))"),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', condition='((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))', expression='(DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(SCI_ARRAY,2))'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))'),
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
      ('META.EXPOSURE.GAIN_FACTOR', 'HEADER', 'REAL', 'WARN', values=('1.0:10.0',))]
     >>> test_config.cleanup(old_state)
     """
@@ -962,14 +985,13 @@ def load_miri_mask_tpn_lines():
     DQ       A           X         S             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
     DQ       A           X         S             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)
     DQ       A           X         S             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)
-    DQ       A           X         R   (ndim(DQ_ARRAY,2))
-    DQ           D           X         R             (has_type(DQ_ARRAY,'INT'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (is_table(DQ_DEF_ARRAY))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
-    DQ_DEF       D           X         (DQ_ARRAY.DATA.sum())   (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+    DQ       A           X         O   (ndim(DQ_ARRAY,2))
+    DQ_DEF       A           X         O             (is_table(DQ_DEF_ARRAY))
+    DQ_DEF       A           X         O             (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+    DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
     >>> test_config.cleanup(old_state)
     """
 
@@ -1005,39 +1027,41 @@ def load_miri_mask_tpn():
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)'),
-     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(DQ_ARRAY,2))'),
-     ('DQ', 'ARRAY_DATA', 'EXPRESSION', 'REQUIRED', expression="(has_type(DQ_ARRAY,'INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression='(is_table(DQ_DEF_ARRAY))'),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
-     ('DQ_DEF', 'ARRAY_DATA', 'EXPRESSION', condition='(DQ_ARRAY.DATA.sum())', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))")]
+     ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'BIT','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
+     ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))")]
     >>> test_config.cleanup(old_state)
+    """
+
+def dt_acs_idctab_char_plus_column():
+    """
+    >>> TestCertifyScript("crds.certify data/acs_new_idc.fits --comparison-context hst_0508.pmap")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    CRDS - INFO -  FITS file 'acs_new_idc.fits' conforms to FITS standards.
+    CRDS - INFO -  Comparing reference 'acs_new_idc.fits' against 'p7d1548qj_idc.fits'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    CRDS - INFO -  All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    CRDS - WARNING -  Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', 207.082), ('V3REF', 471.476)) :
+     (29, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ...('V2REF', 207.082), ('V3REF', 471.476), ...)))
+    (35, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ...('V2REF', 207.082), ('V3REF', 471.476), ...)))
+    CRDS - INFO -  Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    CRDS - INFO -  All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    CRDS - WARNING -  Change in row format betwween 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  2 warnings
+    CRDS - INFO -  11 infos
+    0
     """
     
 # ==================================================================================
-
-class TestHSTTpnInfoClass(test_config.CRDSTestCase):
-
-    def setUp(self, *args, **keys):
-        super(TestHSTTpnInfoClass, self).setUp(*args, **keys)
-        hstlocator = utils.get_locator_module("hst")
-        self.tpninfos = hstlocator.get_all_tpninfos("acs","idctab","tpn")
-        self.validators = [certify.validator(info) for info in self.tpninfos]
-        client.set_crds_server('https://crds-serverless-mode.stsci.edu')
-        os.environ['CRDS_MAPPATH'] = self.hst_mappath
-        os.environ['CRDS_PATH'] = "/grp/crds/hst"
-        os.environ["CRDS_CONTEXT"] ="hst.pmap"
-
-    def test_character_validator(self):
-        assert self.validators[2].check(self.data('acs_new_idc.fits'))
-
-    def test_column_validator(self):
-        assert self.validators[-2].check(self.data('acs_new_idc.fits'))
-
-# ==================================================================================
-
 class TestCertify(test_config.CRDSTestCase):
 
     def setUp(self, *args, **keys):
@@ -1062,7 +1086,8 @@ class TestCertify(test_config.CRDSTestCase):
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval, certify.CharacterValidator))
-        cval.check(self.data('acs_new_idc.fits'))
+        header = {"DETECTOR": "HRC"}
+        cval.check(self.data('acs_new_idc.fits'), header)
 
     def test_character_validator_bad(self):
         tinfo = certify.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
@@ -1467,7 +1492,7 @@ class TestCertify(test_config.CRDSTestCase):
         # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('DETECTOR','H', 'C', 'E', ())
         checker = certify.validator(info)
-        assert_raises(certify.IllegalKeywordError, checker.get_header_value, {"DETECTOR":"SHOULDNT_DEFINE"})
+        assert_raises(certify.IllegalKeywordError, checker.check, "test.fits", {"DETECTOR":"SHOULDNT_DEFINE"})
 
     def test_tpn_not_value(self):
         # typical subtle expression error, "=" vs. "=="
@@ -1633,12 +1658,13 @@ class TestCertify(test_config.CRDSTestCase):
     def test_tpn_pedigree_missing_column(self):
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        assert_raises(certify.MissingKeywordError, checker.check_column, "data/x2i1559gl_wcp.fits")
+        assert_raises(certify.MissingKeywordError, checker.check_column, "data/x2i1559gl_wcp.fits", {})
 
     def test_tpn_pedigree_ok_column(self):
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        checker.check_column("data/16j16005o_apd.fits")
+        header = data_file.get_header(self.data("16j16005o_apd.fits"))
+        checker.check_column("data/16j16005o_apd.fits", header)
         
 # ------------------------------------------------------------------------------
         
@@ -1646,7 +1672,8 @@ class TestCertify(test_config.CRDSTestCase):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
         cval = certify.validator(tinfo)
         assert_true(isinstance(cval,certify.SybdateValidator))
-        cval.check(self.data('acs_new_idc.fits'))
+        header = data_file.get_header(self.data("acs_new_idc.fits"))
+        cval.check(self.data('acs_new_idc.fits'), header)
 
     def test_slashdate_validator(self):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SLASHDATE',))

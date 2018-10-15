@@ -43,12 +43,6 @@ In addition, JWST processes the calibration code data model schema and converts
 schema entries into optional TpnInfo objects; this enables CRDS to expose the
 checks being applied by the data model and apply them directly in CRDS as well.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ============================================================================
-
 import os.path
 import collections
 import re

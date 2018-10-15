@@ -5,12 +5,6 @@ For more details on the several modes of operations and command line parameters 
 
 % crds bestrefs --help
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# ===================================================================
-
 import sys
 import os
 from collections import namedtuple, OrderedDict
@@ -509,9 +503,6 @@ than errors as the default.
 
         self.add_argument("--allow-bad-references", action="store_true",
                           help="Only warn if a reference which is marked bad is recommended, otherwise error.")
-
-        self.add_argument("-e", "--bad-files-are-errors", action="store_true",
-                          help="DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.")
 
         self.add_argument("--undefined-differences-matter", action="store_true",
                           help="If not set, a transition from UNDEFINED to anything else is not considered a difference error.")

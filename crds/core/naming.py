@@ -1,15 +1,10 @@
 """This module contains functions related to generating and comparing the time order
 of CRDS file names.   Different projects have different naming conventions.
 """
-
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os
 import re
 
-from . import python23, config, log, utils
+from . import config, log, utils
 from .exceptions import NameComparisonError
 from .constants import ALL_OBSERVATORIES
 
@@ -334,7 +329,7 @@ def newstyle_serial(name):
     >>> newstyle_serial("hst.pmap")
     -1
     """
-    assert isinstance(name, python23.string_types)
+    assert isinstance(name, str)
     serial_search = re.search(r"_(\d+)\.\w+", name)
     if serial_search:
         return int(serial_search.groups()[0], 10)
