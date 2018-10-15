@@ -6,9 +6,13 @@ the rmap and each other.
 
 from collections import defaultdict
 
+# =========================================================================
+
 import crds
-from crds.core import config, utils
+from crds.core import config, utils, log
 from crds.refactoring import refactor
+
+# =========================================================================
 
 def organize_files(observatory, filepaths):
     """Group list of reference file paths `files` by (instrument,filekind) so 
@@ -47,7 +51,10 @@ def check_rmap_updates(observatory, context, filepaths):
     organized = organize_files(observatory, filepaths)
     pmap = crds.get_cached_mapping(context)
     for instrument, filekind in organized:
-        for filepaths2 in organized[instrument, filekind]:
-            old_rmap = pmap.get_imap(instrument).get_rmap(filekind)
-            new_rmap = "/tmp/" + old_rmap
-            refactor.rmap_insert_references(old_rmap, new_rmap, filepaths2)
+        filepaths2 = organized[(instrument, filekind)]
+        old_rmap = pmap.get_imap(instrument).get_rmap(filekind)
+        new_rmap = "/tmp/" + old_rmap.basename
+        log.info("Checking rmap update for", (instrument, filekind), 
+                 "inserting files", filepaths2)
+        refactor.rmap_insert_references(old_rmap.filename, new_rmap, filepaths2)
+
