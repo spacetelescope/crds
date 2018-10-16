@@ -2151,7 +2151,44 @@
         }
     },
     "synphot":{
-        "comptab":{
+        "thermal":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Initial hand made version 2018-10-14. Jira CCD-148.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"THERMAL",
+            "filetype":"CRTHERMAL",
+            "instrument":"SYNPHOT",
+            "ld_tpn":"synphot_th_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_synphot_thermal.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "INSTRUME",
+                    "THCMPNAM"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"NONE",
+            "rmap_relevance":"(False)",
+            "sha1sum":"9a20deb66fd864d54219b8269a373c404cbb966f",
+            "suffix":"th",
+            "text_descr":"Component Thermal Tables",
+            "tpn":"synphot_th.tpn",
+            "unique_rowkeys":[
+                "WAVELENGTH"
+            ]
+        },
+        "throughput":{
             "classes":[
                 "Match",
                 "UseAfter"
@@ -2159,12 +2196,12 @@
             "derived_from":"Initial hand made version 2018-09-10. Jira CCD-148.",
             "extra_keys":[],
             "file_ext":".fits",
-            "filekind":"COMPTAB",
+            "filekind":"THROUGHPUT",
             "filetype":"CRTHROUGHPUT",
             "instrument":"SYNPHOT",
             "ld_tpn":"synphot_syn_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"hst_synphot_comp.rmap",
+            "name":"hst_synphot_throughput.rmap",
             "observatory":"HST",
             "parkey":[
                 [
@@ -2180,7 +2217,7 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"174afeec0925c161b56d9e39ccad8208f775e37d",
+            "sha1sum":"bdfb6850f0d46a4080a68a3d745d25bc3ef48416",
             "suffix":"syn",
             "text_descr":"Component Throughput Tables",
             "tpn":"synphot_syn.tpn",

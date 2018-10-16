@@ -362,6 +362,9 @@ jwst_niriss_superbias_0005.rmap
 
         self.add_argument("--check-exptypes", action="store_true", 
                           help="print exp_type coverage of specified imaps (use --contexts or --files).  (EXPERIMENTAL, may be dropped.)")
+
+        self.add_argument("--file-properties", nargs="*", default=None,
+                          help="print the instrument, filekind, filename for each of the files specified.")
         
         super(ListScript, self).add_args()
         
@@ -369,6 +372,9 @@ jwst_niriss_superbias_0005.rmap
         """List files."""
         if self.args.cat is not None: # including []
             return self.cat_files()
+
+        if self.args.file_properties is not None: # including []
+            return self.list_file_properties()
 
         if self.args.operational_context:
             print(self.default_context)
@@ -430,6 +436,25 @@ jwst_niriss_superbias_0005.rmap
         with log.error_on_exception("Failed resolving remote context"):
             return api.get_remote_context(self.observatory, self.args.remote_context)
 
+    @property
+    def implied_files(self):
+        """Return the filenames implied by a combination of the specified contexts
+        and whether or not --mappings or --references are set.
+        """
+        mappings = self.get_context_mappings() if self.args.list_mappings else []
+        references = self.get_context_references() if self.args.list_references else []        
+        return [filename for filename in mappings + references if filename != 'N/A']
+
+    def list_file_properties(self):
+        """Print out the (instrument, filekind, filename) information for each of the
+        files implied by --files, and any contexts plus --mappings and/or --references.
+        """
+        for filename in self.args.file_properties + self.implied_files:
+            with log.error_on_exception("Failed dumping file properties for", repr(filename)):
+                filepath = self.locate_file(filename)
+                instrument, filekind = self.get_file_properties(filepath)
+                print(instrument, filekind, os.path.basename(filepath))
+
     def cat_files(self):
         """Print out the files listed after --cat or implied by a combination of 
         explicitly specified contexts and --mappings or --references.
@@ -442,10 +467,7 @@ jwst_niriss_superbias_0005.rmap
         # context specifiers can be symbolic and will be resolved.
         # --cat @file is allowed
 
-        mappings = self.get_context_mappings() if self.args.list_mappings else []
-        references = self.get_context_references() if self.args.list_references else []        
-        catted_files = self.get_words(self.args.cat) + mappings + references
-
+        catted_files = self.get_words(self.args.cat) + self.implied_files
         try:
             self._file_info = api.get_file_info_map(
                 self.observatory, files=[os.path.basename(filename) for filename in catted_files])
@@ -456,8 +478,7 @@ jwst_niriss_superbias_0005.rmap
         for name in catted_files:
             with log.error_on_exception("Failed dumping:", repr(name)):
                 path = self.locate_file(name) 
-                if path != "N/A":
-                    self._cat_file(path)
+                self._cat_file(path)
                     
     def _cat_file(self, path):
         """Print out information on a single reference or mapping at `path`."""
