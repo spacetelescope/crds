@@ -235,7 +235,7 @@ def _digits_only(version):
     (0, 10, 1)
     """
     match  = re.match("([0-9.]+).*", version)
-    return tuple([int(dig) for dig in match.group(1).split(".")])
+    return tuple([int(dig) for dig in match.group(1).split(".") if dig])
 
 def _versions_lt(v1, v2):
     """Compare two semantic version numbers and account for issues like '10' < '9'.
