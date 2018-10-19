@@ -525,10 +525,6 @@ Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
 u=WFPC2, n=NICMOS, m=MULTI, m=SYNPHOT]
     """
-    if instrument == "synphot":
-        raise exceptions.CrdsNamingError(
-            "CRDS cannot generate synphot filenames.  Name file manually.")
-
     if now is None:   # delay to ensure timestamp is unique.
         time.sleep(2)
 
