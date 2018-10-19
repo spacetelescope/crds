@@ -229,6 +229,7 @@ class RefactorScript(cmdline.Script):
                 del_header_value(self.args.old_rmap, self.args.new_rmap, self.args.references[0])
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
+        log.standard_status()
         return log.errors()
 
 if __name__ == "__main__":
