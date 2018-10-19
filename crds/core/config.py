@@ -546,6 +546,8 @@ AUTO_PICKLE_CONTEXTS = BooleanConfigItem("CRDS_AUTO_PICKLE_CONTEXTS", False,
 FORCE_COMPLETE_LOAD = BooleanConfigItem("CRDS_FORCE_COMPLETE_LOAD", False,
     "When True, force CRDS contexts to load in their entirety rather than based on what is actually used.")
 
+EXPLICIT_GARBAGE_COLLECTION = BooleanConfigItem("CRDS_EXPLICIT_GARBAGE_COLLECTION", True,
+    "When False, the @gc_collected function decorator skips garbage collection.")
 # -------------------------------------------------------------------------------------
 
 def get_sqlite3_db_path(observatory):

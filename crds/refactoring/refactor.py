@@ -55,7 +55,7 @@ def update_derivation(new_path, old_basename=None):
     
 # ============================================================================
 
-REFACTOR_SAVE_COUNT = 20
+REFACTOR_SAVE_COUNT = 100
 
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
@@ -82,29 +82,15 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
         try:
             new = new.insert_reference(reference)
         except Exception as exc:
-            exc2 = exceptions.MappingInsertionError(
+            exc = exceptions.MappingInsertionError(
                 "Failed inserting", repr(baseref), "into rmap", 
                 repr(old_rmap), ":", srepr(exc))
-            log.error(str(exc2))
+            log.error(str(exc))
             continue
 
-        cases = []
-        with log.warn_on_exception("Failed capturing matching diagnostics for",
-                                   repr(baseref)):
-            cases = new.file_matches(baseref)
-        for fullcase in cases:
-            case = fullcase[1:]
-            if case not in inserted_cases:
-                inserted_cases[case] = baseref
-            else:
-                exc = exceptions.OverlappingMatchError(
-                    "Matching case for", srepr(baseref),
-                    "exactly overlaps", srepr(inserted_cases[case]),
-                    "at case", repr(case), "replacing it.")
-                log.error(str(exc))
+        exc, inserted_cases = _check_rmap_overlaps(exc, inserted_cases, new, baseref)
 
-        # Attempt to recover memory resources consumed with each reference
-        # and periodically save work,  relatively slow.
+        # Periodically save work and recover memory resources.
         if i != 0 and i % REFACTOR_SAVE_COUNT == 0:
             _write_rmap(old, new, new_rmap)
 
@@ -115,6 +101,35 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
 
     return new
 
+def _check_rmap_overlaps(exc, inserted_cases, new, baseref):
+    """Check that the matching cases of `baseref` don't overlap the match
+    cases for any other reference files exactly.
+
+    exc obj or None   Exception subclass tracking last exception for deferred raise
+    inserted_cases    { match_case_parameter_tuple : baseref, ... }
+    new               loaded rmap being built up insert-by-insert
+    baseref           basename of reference file
+
+    returns           exception obj or None, updated inserted_cases
+    """
+    cases = []
+    with log.warn_on_exception("Failed capturing matching diagnostics for",
+                               repr(baseref) + ".", 
+                               "Match overlap detection is disabled."):
+        cases = new.file_matches(baseref)
+    for fullcase in cases:
+        case = fullcase[1:]
+        if case not in inserted_cases:
+            inserted_cases[case] = baseref
+        else:
+            exc = exceptions.OverlappingMatchError(
+                "Matching case for", srepr(baseref),
+                "exactly overlaps", srepr(inserted_cases[case]),
+                "at case", repr(case), "replacing it.")
+            log.error(str(exc))
+    return exc, inserted_cases
+
+@utils.gc_collected
 def _write_rmap(old, new, new_rmap):
     """Write out ReferenceMapping `new` to filepath `new_rmap` after attempting to
     free memory and setting it's "derived_from" field to the name of
@@ -126,7 +141,6 @@ def _write_rmap(old, new, new_rmap):
     Returns   None
     """
     log.info("Writing", repr(new_rmap))
-    gc.collect()
     utils.clear_function_caches()
     new.header["derived_from"] = old.basename
     new.write(new_rmap)
