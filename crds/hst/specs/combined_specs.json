@@ -2153,8 +2153,7 @@
     "synphot":{
         "thermal":{
             "classes":[
-                "Match",
-                "UseAfter"
+                "Match"
             ],
             "derived_from":"Initial hand made version 2018-10-14. Jira CCD-148.",
             "extra_keys":[],
@@ -2170,17 +2169,13 @@
                 [
                     "INSTRUME",
                     "THCMPNAM"
-                ],
-                [
-                    "DATE-OBS",
-                    "TIME-OBS"
                 ]
             ],
             "reffile_format":"TABLE",
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"9a20deb66fd864d54219b8269a373c404cbb966f",
+            "sha1sum":"306cc8b531caca7f2b4e6351eec8c649e76a33c6",
             "suffix":"th",
             "text_descr":"Component Thermal Tables",
             "tpn":"synphot_th.tpn",
@@ -2190,8 +2185,7 @@
         },
         "throughput":{
             "classes":[
-                "Match",
-                "UseAfter"
+                "Match"
             ],
             "derived_from":"Initial hand made version 2018-09-10. Jira CCD-148.",
             "extra_keys":[],
@@ -2207,17 +2201,13 @@
                 [
                     "INSTRUME",
                     "COMPNAME"
-                ],
-                [
-                    "DATE-OBS",
-                    "TIME-OBS"
                 ]
             ],
             "reffile_format":"TABLE",
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"bdfb6850f0d46a4080a68a3d745d25bc3ef48416",
+            "sha1sum":"690ead9b4514be3b18c89dbd08714a98796bf2aa",
             "suffix":"syn",
             "text_descr":"Component Throughput Tables",
             "tpn":"synphot_syn.tpn",
