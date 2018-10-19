@@ -11,11 +11,13 @@
 #--------------------------------------------------------------------------
 USEAFTER            H        C         R    &SYBDATE
 INSTRUME            H        C         R    HST,SYNPHOT
-DBTABLE             C        C         R    CRTHERMLIST
+DBTABLE             H        C         R    CRTHERMLIST
 COMMENT             H        C         R
 HISTORY             H        C         R
 DESCRIP             H        C         R
 PEDIGREE            H        C         R    &PEDIGREE
-TIME                C        C         R    &ANYDATE
+
+TIME                C        C         R    &SYBDATE
 COMPNAME            C        C         R
+FILENAME            C        C         R
 COMMENT             C        C         R

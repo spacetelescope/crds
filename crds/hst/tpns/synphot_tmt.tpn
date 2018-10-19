@@ -19,4 +19,5 @@ PEDIGREE            H        C         R    &PEDIGREE
 
 TIME                C        C         R    &SYBDATE
 COMPNAME            C        C         R
+FILENAME            C        C         R
 COMMENT             C        C         R
