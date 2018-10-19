@@ -456,15 +456,15 @@ def ref_properties_from_header(filename):
     path, _parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "hst")
-    if "DBTABLE" not in header:
+    if "DBTABLE" not in header or header["DBTABLE"] in ["IMPHTTAB"]:
         instrument = header["INSTRUME"].lower()
     else:
         instrument = "synphot"
     instrument = INSTRUMENT_FIXERS.get(instrument, instrument)
     try:
         filetype = header.get(
-            "DBTABLE", header.get(
-                "FILETYPE", header.get(
+            "FILETYPE", header.get(
+                "DBTABLE", header.get(
                     "CDBSFILE"))).lower()
     except KeyError:
         observatory = header.get(
