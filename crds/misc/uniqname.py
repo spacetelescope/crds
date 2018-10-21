@@ -121,7 +121,7 @@ Renamed files can be output to a different directory using --output-path.
                 hdus[0].header["HISTORY"] = "{0} renamed to {1} on {2} {3} {4}".format(
                     basefile, baseuniq, MONTHS[now.month - 1], now.day, now.year)
             if self.args.output_path:
-                uniqname = os.path.join(self.args.outpath, baseuniq)
+                uniqname = os.path.join(self.args.output_path, baseuniq)
             try:
                 log.info("Rewriting", self.format_file(filename), "-->", self.format_file(uniqname))
                 hdus.writeto(uniqname, output_verify=verify_mode, checksum=self.args.add_checksum)
