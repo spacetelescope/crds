@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.2.8"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST DMS 7.2, October release #3,  final?"
+__version__ = "7.2.9"   # XXXX  see also ../setup.cfg
+__rationale__ = "Post JWST B7.2"
 
 # ============================================================================
 
