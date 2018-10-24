@@ -399,7 +399,7 @@ def ref_properties_from_cdbs_path(filename):
     instrument = siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
     if instrument == "synphot":
         if filename.endswith("_syn.fits"):
-            filekind = "throughput"
+            filekind = "thruput"
         elif filename.endswith("_th.fits"):
             filekind = "thermal"
         elif filename.endswith("_tmt.fits"):
