@@ -230,14 +230,24 @@ class TypeParameters:
 # =============================================================================
 
     @utils.cached
+    def get_all_tpn_paths(self, instrument, filekind, field):
+        """Return all the TpnInfo objects defined by the specified parameters.
+        Doesn't include "extra" TpnInfo's defined by a project for a specific
+        reference file.
+        """
+        return [ self.locator.tpn_path(tpn_file)
+                 for tpn_file in self.reference_props_to_validator_keys(
+                         instrument, filekind, field=field) ]
+
+    @utils.cached
     def get_all_tpninfos(self, instrument, filekind, field):
         """Return all the TpnInfo objects defined by the specified parameters.
         Doesn't include "extra" TpnInfo's defined by a project for a specific
         reference file.
         """
         tpns = []
-        for tpn_file in self.reference_props_to_validator_keys(instrument, filekind, field=field):
-            tpns.extend(generic_tpn.get_tpninfos(self.locator.tpn_path(tpn_file)))
+        for tpn_path in self.get_all_tpn_paths(instrument, filekind, field):
+            tpns.extend(generic_tpn.get_tpninfos(tpn_path))
         return sorted(list(set(tpns)))
     
 
@@ -279,21 +289,21 @@ class TypeParameters:
 
 # -----------------------------------------------------------------------------
 
-    def reference_name_to_tpn_text(self, filename):
+    def reference_name_to_tpn_text(self, filename, field="tpn"):
         """Given reference `filename`,  return the text of the corresponding .tpn"""
-        infos = self.reference_name_to_tpninfos(filename)
-        return self.get_tpn_text(infos)
+        instrument, filekind = self.locator.get_file_properties(filename)
+        lines = []
+        for tpn in reversed(self.get_all_tpn_paths(instrument, filekind, field)):
+            label = "From TPN: " + os.path.basename(tpn)
+            underline = len(label) * "-"
+            lines += [ label, underline ]
+            lines += generic_tpn.load_tpn_lines(tpn)
+            lines += [""]
+        return "\n".join(lines)
 
     def reference_name_to_ld_tpn_text(self, filename):
         """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
-        infos = self.reference_name_to_tpninfos(filename, field="ld_tpn")
-        return self.get_tpn_text(infos)
-
-    def get_tpn_text(self, infos):
-        """Given a list of TpnInfo objects `infos`,  concatenate the text of their reprs
-        into a single string that can be used to expose the constraints on web sites, etc.
-        """
-        return str(log.PP(infos))
+        return reference_name_to_tpn_text(filename, "ld_tpn")
 
 # =============================================================================
 
