@@ -19,5 +19,5 @@ DESCRIP             H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
 
 WAVELENGTH	    C        R             R
-THROUGHPUT      C        R             W   0:1
+THROUGHPUT      C        R             R
 
