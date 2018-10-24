@@ -15,9 +15,9 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(False)',
-    'sha1sum' : '7447d1ec76f0b9f0f11c7c71b1e4d64a8160f966',
+    'sha1sum' : '6e04ff15987f041b693e2a6ad49df02e6e9eb98e',
     'suffix' : 'tmg',
-    'text_descr' : '',
+    'text_descr' : 'Graph Table',
     'tpn' : 'synphot_tmg.tpn',
     'unique_rowkeys' : ('COMPNAME', 'KEYWORD', 'INNODE', 'OUTNODE', 'THCOMPNAME'),
 }
