@@ -2183,19 +2183,19 @@
                 "WAVELENGTH"
             ]
         },
-        "throughput":{
+        "thruput":{
             "classes":[
                 "Match"
             ],
-            "derived_from":"Initial hand made version 2018-09-10. Jira CCD-148.",
+            "derived_from":"Initial hand made version 2018-11-24. Jira CCD-148.",
             "extra_keys":[],
             "file_ext":".fits",
-            "filekind":"THROUGHPUT",
+            "filekind":"THRUPUT",
             "filetype":"CRTHROUGHPUT",
             "instrument":"SYNPHOT",
             "ld_tpn":"synphot_syn_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"hst_synphot_throughput.rmap",
+            "name":"hst_synphot_thruput.rmap",
             "observatory":"HST",
             "parkey":[
                 [
@@ -2207,7 +2207,7 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"690ead9b4514be3b18c89dbd08714a98796bf2aa",
+            "sha1sum":"cb9a7f09ff6f3f1cf71f8d710ffe008f9caa61f3",
             "suffix":"syn",
             "text_descr":"Component Throughput Tables",
             "tpn":"synphot_syn.tpn",
