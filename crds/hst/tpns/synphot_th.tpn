@@ -19,4 +19,4 @@ DESCRIP             H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
 
 WAVELENGTH	        C        R         R
-EMISSIVITY	        C        R         W    0:1
+EMISSIVITY	        C        R         R
