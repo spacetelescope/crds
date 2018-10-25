@@ -19,5 +19,5 @@ PEDIGREE            H        C         R    &PEDIGREE
 
 TIME                C        C         R    &SYBDATE
 COMPNAME            C        C         R
-FILENAME            C        C         R
+FILENAME            C        C         R    &FileExists
 COMMENT             C        C         R
