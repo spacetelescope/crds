@@ -80,7 +80,7 @@ setup_pars = {
 
 setup(name="crds",
       provides=["crds"],
-      version = '7.2.9',
+      version = '7.x',
       description="Calibration Reference Data System,  HST/JWST reference file management",
       long_description=open('README.rst').read(),
       author="Todd Miller",
