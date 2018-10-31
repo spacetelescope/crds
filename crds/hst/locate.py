@@ -612,7 +612,7 @@ def locate_dir(instrument, mode=None):
             except KeyError:
                 raise KeyError("Reference location not defined for " + repr(instrument) + 
                                ".  Did you configure " + repr(prefix) + "?")
-    elif mode == "instrument":   # use simple names inside CRDS cache.
+    elif mode == "instrument" and instrument != "synphot":   # use simple names inside CRDS cache.
         rootdir = os.path.join(crds_refpath, instrument)
         refdir = os.path.join(crds_refpath, prefix[:-1])
         if not os.path.exists(refdir):
@@ -621,6 +621,8 @@ def locate_dir(instrument, mode=None):
                 with log.verbose_warning_on_exception("Failed creating legacy symlink:", refdir, "-->", rootdir):
                     utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
                     os.symlink(rootdir, refdir)
+    elif mode == "instrument" and instrument == "synphot":
+        rootdir = os.path.join(crds_refpath, instrument)        
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
         rootdir = crds_refpath
     else:
