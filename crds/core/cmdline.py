@@ -2,6 +2,8 @@
 
 MAYBE integrate rc, environment, and command line parameters.
 """
+# -----------------------------------------------------------------------------
+
 import sys
 import os
 import argparse
@@ -10,13 +12,17 @@ import cProfile, pstats
 import re
 from collections import Counter, defaultdict
 
+# -----------------------------------------------------------------------------
+
 from argparse import RawTextHelpFormatter
+
+# -----------------------------------------------------------------------------
 
 from . import log, heavy_client, constants
 from . import config, utils, exceptions, rmap
 from crds.client import api
 
-# from crds import data_file
+# from crds import data_file  :   deferred,  see below
 
 # =============================================================================
 
