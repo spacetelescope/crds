@@ -408,20 +408,6 @@ cache which organizes and can locate files in a standard way.
     Both mappings and references would then be checked for correct length.
     Files reported as rejected or blacklisted by the server would be removed.
   
-* Reorganizing Cache Structure
-
-    CRDS now supports two cache structures for organizing references: flat and
-    instrument.  *flat* places all references for a telescope in a single
-    directory, e.g. references/hst.  *instrument* segregates references into
-    subdirectories which name instruments or legacy environment variables,
-    e.g. acs or jref.
-    
-    Newly created caches will default to the *instrument* organization.  To
-    migrate a legacy cache with a flat single directory layout to the new
-    structure, sync with --organize=instrument::
-    
-       % crds sync --organize=instrument --verbose
-      
 * Reorganizing cache structure
     
         CRDS now supports two cache structures for organizing references: flat

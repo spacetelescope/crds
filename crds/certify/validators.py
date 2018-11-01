@@ -664,23 +664,32 @@ class IsomorphicfitsverValidator(Validator):
             for hdu in hdus:
                 if hdu.name != self.name:
                     continue
-                self.verbose(filename, f"ver={hdu.ver}",
-                             f"Array has shape={hdu.data.shape} and dtype={repr(str(hdu.data.dtype))}).")
+                self.verbose(filename, "ver=" + str(hdu.ver),
+                             "Array has shape=" + str(hdu.data.shape),
+                             "and dtype=" + repr(str(hdu.data.dtype)) + ".")
                 if hdu.name not in first:
                     first[hdu.name] = (hdu.data.shape, hdu.data.dtype)
                 else:
                     expected = first[hdu.name][0]
                     got = hdu.data.shape
                     assert expected == got, \
-                        f"Shape mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                        "Shape mismtatch for " + repr((hdu.name, hdu.ver)) + \
+                        "relative to" + repr((self.name,1)) + ". Expected " + \
+                        str(expected) + " but got " + str(got) + "."
                     expected = first[hdu.name][1]
                     got = hdu.data.dtype
                     assert expected == got, \
-                        f"Data type mismtatch for ('{hdu.name}',{hdu.ver}) relative to ('{self.name}',1). Expected {expected} but got {got}."
+                        "Data type mismtatch for " + \
+                        repr((hdu.name,hdu.ver)) + \
+                        " relative to " + repr((self.name,1)) + \
+                        ". Expected " + str(expected) + \
+                        " but got " + str(got) + "."
                 max_ver = hdu.ver
             if self.max_ver is not None:
                 assert self.max_ver == max_ver, \
-                    f"Bad maximum HDU ver for '{self.name}'. Expected {self.max_ver}, got {max_ver}."
+                    "Bad maximum HDU ver for " + repr(self.name) + \
+                    ". Expected " +  str(self.max_ver) + \
+                    ", got " + str(max_ver) + "."
 
 class Isomorphicfitsver4Validator(IsomorphicfitsverValidator):
     max_ver = 4

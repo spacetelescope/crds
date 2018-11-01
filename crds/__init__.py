@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.2.6"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST B7.2, Oct. Baseline"
+__version__ = "7.2.9"   # XXXX  see also ../setup.cfg
+__rationale__ = "JWST B7.2 + CAL 0.12.1 + NRS_MSATA,WATA"
 
 # ============================================================================
 
