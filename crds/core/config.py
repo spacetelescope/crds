@@ -521,6 +521,18 @@ def locate_config(cfg, observatory):
         return cfg
     return os.path.join(get_crds_cfgpath(observatory), cfg)
 
+def override_crds_paths(crds_path):
+    """Overrides all CRDS PATH definition environment variables
+    (e.g. CRDS_MAPPATH, CRDS_MAPPATH_SINGLE, CRDS_REFPATH, ...)
+    as if the user had only specified CRDS_PATH=crds_path and let
+    all other cache subpaths be defined at default locations.
+    """
+    for name in os.environ:
+        if "CRDS_" in name and "PATH" in name:
+            del os.environ[name]
+    os.environ["CRDS_PATH"] = crds_path
+    
+
 # -------------------------------------------------------------------------------------
 
 def get_crds_picklepath(observatory):
