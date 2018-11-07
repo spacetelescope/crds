@@ -23,8 +23,8 @@ DETECTOR            C        C         R    FUV
 OBSTYPE             C        C         R    SPECTROSCOPIC
 SEGMENT             C        C         R    FUVA,FUVB
 OPT_ELEM            C        C         R    G130M,G160M,G140L
-CENWAVE             C        I         R    1222,1223,1291,1300,1309,1318,1327,\
-                                            1577,1589,1600,1611,1623,\
+CENWAVE             C        I         R    800,1222,1223,1291,1300,1309,1318,1327,\
+                                            1533,1577,1589,1600,1611,1623,\
                                             1105,1230,1280,1055,1096
 LIFE_ADJ            H        I         R    -1,0,1,-11,2,3,4
 APERTURE            C        C         R    PSA,BOA,ANY
