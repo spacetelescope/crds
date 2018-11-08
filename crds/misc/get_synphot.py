@@ -179,7 +179,7 @@ NOTE: --keep-crds and --keep-cdbs are mutually incompatible because it creates
         syn_name_map.update(self.get_comptab_info("tmc"))
         syn_name_map.update(self.get_mtab_info("tmc"))
         syn_name_map.update(self.get_mtab_info("tmt"))
-        syn_name_map.update(self.get_mtab_info("tmg"))        
+        syn_name_map.update(self.get_mtab_info("tmg"))
         return syn_name_map
 
     def get_comptab_info(self, synname):
@@ -221,10 +221,8 @@ NOTE: --keep-crds and --keep-cdbs are mutually incompatible because it creates
             dollar_syn_name = syn_name.split("[")[0]
             
             # Use pysynphot to interpret iraf_path
-            cdbsdir = os.path.abspath(
+            cdbs_filepath = os.path.abspath(
                 locations.irafconvert(dollar_syn_name))
-
-            cdbs_filepath = os.path.join(cdbsdir, name)
 
             fileinfo[name] = cdbs_filepath
             
@@ -279,7 +277,8 @@ NOTE: --keep-crds and --keep-cdbs are mutually incompatible because it creates
         subdir    string    subdirectory of <synphot_dir> to remove.
         """
         path = os.path.join(self.args.synphot_dir, subdir)
-        if os.path.exists(path):
+        log.verbose("rmdir: ", repr(path))
+        with log.verbose_warning_on_exception("Failed removing", repr(path)):
             shutil.rmtree(path)        
 
 # -----------------------------------------------------------------------------
