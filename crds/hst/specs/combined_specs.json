@@ -2167,16 +2167,18 @@
             "observatory":"HST",
             "parkey":[
                 [
-                    "COMPNAME",
-                    "TIME",
-                    "COMMENT"
+                    "COMPNAME"
                 ]
             ],
+            "parkey_relevance":{
+                "RMAPCMNT":"False",
+                "RMAPTIME":"False"
+            },
             "reffile_format":"TABLE",
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"41bd038b7312aef79998106dea415bc54fd02895",
+            "sha1sum":"ee0ffe48d80ef57b0fae76f3dc92a94f73bb0661",
             "suffix":"th",
             "text_descr":"Component Thermal Tables",
             "tpn":"synphot_th.tpn",
@@ -2201,19 +2203,19 @@
             "parkey":[
                 [
                     "COMPNAME",
-                    "TIME",
-                    "COMMENT"
+                    "RMAPTIME",
+                    "RMAPCMNT"
                 ]
             ],
             "parkey_relevance":{
-                "COMMENT":"False",
-                "TIME":"False"
+                "RMAPCMNT":"False",
+                "RMAPTIME":"False"
             },
             "reffile_format":"TABLE",
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"c135de51b65e2600a063d77201971917e3341e22",
+            "sha1sum":"db6fdb6ce7a00ae6a53df5914d9c3dd4fb6017ba",
             "suffix":"syn",
             "text_descr":"Component Throughput Tables",
             "tpn":"synphot_syn.tpn",
