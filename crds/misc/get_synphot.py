@@ -18,6 +18,12 @@ import warnings
 
 # from pysynphot import locations
 
+SYNPHOT_IGNORE = [
+    "Extinction files not found",
+    "No graph or component tables found",
+    "No thermal tables found"
+    ]
+
 # =============================================================================
 
 import crds
@@ -194,7 +200,8 @@ NOTE: --keep-crds and --keep-cdbs are mutually incompatible because it creates
 
         Returns  { component_basename : abs_pysyn_path, ...}
         """
-        warnings.filterwarnings("ignore", "Extinction files not found")
+        for msg in SYNPHOT_IGNORE:
+            warnings.filterwarnings("ignore",msg)
         from pysynphot import locations
         
         filekind = synname + "tab"
