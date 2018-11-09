@@ -21,7 +21,7 @@ class AsdfFile(AbstractFile):
     def get_raw_header(self, needed_keys=(), **keys):
         """Return the flattened header associated with an ASDF file."""
         import asdf
-        with asdf.AsdfFile.open(self.filepath) as handle:
+        with asdf.open(self.filepath) as handle:
             header = self.to_simple_types(handle.tree)
             header["HISTORY"] = self.get_history(handle)
         return header
