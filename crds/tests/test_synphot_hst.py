@@ -64,8 +64,6 @@ def dt_synphot_newcontext():
     COMP  rmap
 
     >>> test_config.cleanup(old_state)
-
-    >>> test_config.cleanup(old_state)
     """
 
 def dt_synphot_bestrefs():
