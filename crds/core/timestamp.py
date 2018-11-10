@@ -181,7 +181,10 @@ def parse_time(time):
         hour, minute = time.split(":")
         second = "00"
     except ValueError:
-        hour, minute, second = time.split(":")
+        try:
+            hour, minute, second = time.split(":")
+        except ValueError:
+            hour, minute, second, subsec = time.split(":")
     ihour = int(hour)
     iminute = int(minute)
     second = float(second)
