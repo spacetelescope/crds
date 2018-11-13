@@ -713,7 +713,8 @@ class FileexistsValidator(Validator):
         observatory = utils.file_to_observatory(self.condition(filename))
         checked_path = config.locate_file(value, observatory)
         log.verbose("Checking file path", repr(checked_path), "for existence in CRDS cache.")
-        return os.path.exists(checked_path)
+        if not os.path.exists(checked_path):
+            raise ValueError("Required CRDS file " + repr(checked_path) + " does not exist in CRDS cache.")
 
     def condition(self, value):
         crds_name = value
