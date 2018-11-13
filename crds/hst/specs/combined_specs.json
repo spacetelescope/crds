@@ -2246,12 +2246,11 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"52c76f8f7df3f8cbba05cc8a8bd112e483c8a33e",
+            "sha1sum":"a7cf6097df2fa5690e572d4030e119cdb0d59d88",
             "suffix":"tmc",
             "text_descr":"Master Component Lookup Table",
             "tpn":"synphot_tmc.tpn",
             "unique_rowkeys":[
-                "TIME",
                 "COMPNAME"
             ]
         },
@@ -2309,12 +2308,11 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_relevance":"(False)",
-            "sha1sum":"b0cc1ca6c47943f1dbab24ce66bb13056e08b9af",
+            "sha1sum":"377b9ccfabf209e0514a07f17f29e7feabe7100f",
             "suffix":"tmt",
             "text_descr":"Thermal Component Lookup Table",
             "tpn":"synphot_tmt.tpn",
             "unique_rowkeys":[
-                "TIME",
                 "COMPNAME"
             ]
         }
