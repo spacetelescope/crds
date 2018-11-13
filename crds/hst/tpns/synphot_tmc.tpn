@@ -16,6 +16,6 @@ HISTORY             H        C         R
 
 TIME                C        C         R   &ANYDATE
 COMPNAME            C        C         R
-FILENAME            C        C         R   &FileExists
+FILENAME            C        C         W   &FileExists
 COMMENT             C        C         R
 
