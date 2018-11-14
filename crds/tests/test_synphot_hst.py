@@ -1,6 +1,8 @@
 """This module tests the synphot pseudo-instrument support for HST."""
 
 # ==============================================================
+from crds.core import config, naming, timestamp
+from crds.hst import locate as hst_locate
 
 from crds.tests import test_config
 
@@ -10,10 +12,82 @@ def dt_synphot_naming():
     """
     >>> old_state = test_config.setup()
 
-    TMC   rmap + reference
-    TMG   rmap + reference
-    TMT   rmap + reference
-    COMP  rmap + reference
+    >>> NOW = timestamp.parse_date("2018-11-14T00:00:00")
+    
+    THERMAL
+
+    >>> config.is_crds_name("wfc3_ir_f098m_002_th.fits")
+    False
+    >>> config.is_cdbs_name("wfc3_ir_f098m_002_th.fits")
+    True
+    >>> config.is_reference("wfc3_ir_f098m_002_th.fits")
+    True
+    >>> config.is_mapping("wfc3_ir_f098m_002_th.fits")
+    False
+    >>> hst_locate.get_file_properties("wfc3_ir_f098m_002_th.fits")
+    ('synphot', 'thermal')
+    >>> naming.generate_unique_name("wfc3_ir_f098m_002_th.fits", "hst", NOW)
+    '2be00000m_th.fits'
+
+    THRUPUT
+
+    >>> config.is_crds_name("wfc3_uvis_f469nf2_003_syn.fits")
+    False
+    >>> config.is_cdbs_name("wfc3_uvis_f469nf2_003_syn.fits")
+    True
+    >>> config.is_reference("wfc3_uvis_f469nf2_003_syn.fits")
+    True
+    >>> config.is_mapping("wfc3_uvis_f469nf2_003_syn.fits")
+    False
+    >>> hst_locate.get_file_properties("wfc3_uvis_f469nf2_003_syn.fits")
+    ('synphot', 'thruput')
+    >>> naming.generate_unique_name("wfc3_uvis_f469nf2_003_syn.fits", "hst", NOW)
+    '2be00000m_syn.fits'
+
+    TMGTAB
+
+    >>> config.is_crds_name("2381905mm_tmg.fits")
+    False
+    >>> config.is_cdbs_name("2381905mm_tmg.fits")
+    True
+    >>> config.is_reference("2381905mm_tmg.fits")
+    True
+    >>> config.is_mapping("2381905mm_tmg.fits")
+    False
+    >>> hst_locate.get_file_properties("2381905mm_tmg.fits")
+    ('synphot', 'tmgtab')
+    >>> naming.generate_unique_name("2381905mm_tmg.fits", "hst", NOW)
+    '2be00000m_tmg.fits'
+
+    TMCTAB
+
+    >>> config.is_crds_name("2b516556m_tmc.fits")
+    False
+    >>> config.is_cdbs_name("2b516556m_tmc.fits")
+    True
+    >>> config.is_reference("2b516556m_tmc.fits")
+    True
+    >>> config.is_mapping("2b516556m_tmc.fits")
+    False
+    >>> hst_locate.get_file_properties("2b516556m_tmc.fits")
+    ('synphot', 'tmctab')
+    >>> naming.generate_unique_name("2b516556m_tmc.fits", "hst", NOW)
+    '2be00000m_tmc.fits'
+    
+    TMTTAB
+
+    >>> config.is_crds_name("tae17277m_tmt.fits")
+    False
+    >>> config.is_cdbs_name("tae17277m_tmt.fits")
+    True
+    >>> config.is_reference("tae17277m_tmt.fits")
+    True
+    >>> config.is_mapping("tae17277m_tmt.fits")
+    False
+    >>> hst_locate.get_file_properties("tae17277m_tmt.fits")
+    ('synphot', 'tmttab')
+    >>> naming.generate_unique_name("tae17277m_tmt.fits", "hst", NOW)
+    '2be00000m_tmt.fits'
 
     >>> test_config.cleanup(old_state)
     """
