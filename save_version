@@ -48,19 +48,19 @@ sha1: {git_sha1}
     """)
 
     rewrite("setup.py", 
-            r"version\s*=\s*'\d+\.\d+\.\d+'",
+            r"version\s*=\s*'(\d+\.)*\d+'",
             f"version = '{semantic_version}'")
     
     rewrite("setup.cfg", 
-            r'version\s*=\s*\d+\.\d+\.\d+',
+            r'version\s*=\s*(\d+\.)*\d+',
             f"version = {semantic_version}")
 
     rewrite("crds/__init__.py",
-            r"__version__\s*=\s*\"(\d+\.\d+\.\d+)\"",
+            r"__version__\s*=\s*\"(\d+\.)*\d+\"",
             f'__version__ = "{semantic_version}"')
 
     rewrite("crds/__init__.py",
-            r'__rationale__\s*=\s*"(\w|\s|[-,.%$&*()!@#~])+"',
+            r'__rationale__\s*=\s*"(\w|\s|[-+,.%$&*()!@#~])+"',
             f'__rationale__ = "{rationale}"')
 
 # -----------------------------------------------------------------
