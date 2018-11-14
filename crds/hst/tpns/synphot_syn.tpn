@@ -18,6 +18,6 @@ COMPNAME            H        C         R
 DESCRIP             H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
 
-WAVELENGTH	    C        R             R
-THROUGHPUT      C        R             R
+WAVELENGTH      C        R             R
+THROUGHPUT      C        R             O
 

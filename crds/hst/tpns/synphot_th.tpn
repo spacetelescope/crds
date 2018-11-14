@@ -18,5 +18,5 @@ COMPNAME            H        C         R
 DESCRIP             H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
 
-WAVELENGTH	        C        R         R
-EMISSIVITY	        C        R         R
+WAVELENGTH          C        R         R
+EMISSIVITY          C        R         O
