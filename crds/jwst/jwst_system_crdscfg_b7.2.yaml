@@ -32,9 +32,9 @@ meta:
     reftype: CRDSCFG
     telescope: JWST
     useafter: 1900-01-01T00:00:00
-    calibration_software_version: 0.12.0
-    crds_version: 7.2.6
-    generation_date: 2018-10-04T19:39:43
+    calibration_software_version: 0.12.2
+    crds_version: 7.2.9
+    generation_date: 2018-11-12T11:13:50
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -57,8 +57,8 @@ pipeline_cfgs: [calwebb_dark.cfg, calwebb_detector1.cfg, calwebb_spec2.cfg, calw
 exp_types: [FGS_ACQ1, FGS_ACQ2, FGS_DARK, FGS_FINEGUIDE, FGS_FOCUS,
               FGS_ID-IMAGE, FGS_ID-STACK, FGS_IMAGE, FGS_INTFLAT, FGS_SKYFLAT, FGS_TRACK,
               MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_LRS-FIXEDSLIT,
-              MIR_LRS-SLITLESS, MIR_MRS, MIR_DARK, MIR_FLAT-IMAGE, MIR_FLATIMAGE,
-              MIR_FLAT-MRS, MIR_FLATMRS, MIR_CORONCAL, NIS_AMI, NIS_DARK, NIS_EXTCAL,
+              MIR_LRS-SLITLESS, MIR_MRS, MIR_DARK, MIR_FLAT-IMAGE, MIR_FLATIMAGE, MIR_FLATIMAGE-EXT,
+              MIR_FLAT-MRS, MIR_FLATMRS, MIR_FLATMRS-EXT, MIR_CORONCAL, NIS_AMI, NIS_DARK, NIS_EXTCAL,
               NIS_FOCUS, NIS_IMAGE, NIS_LAMP, NIS_SOSS, NIS_TACQ, NIS_TACONFIRM,
               NIS_WFSS, NRC_IMAGE, NRC_WFSS, NRC_TACQ, NRC_CORON,
               NRC_FOCUS, NRC_DARK, NRC_FLAT, NRC_LED, NRC_WFSC, NRC_TACONFIRM,
@@ -160,10 +160,11 @@ steps_to_reftypes_exceptions: []
 
 
 
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
-  calwebb_dark.cfg: [dq_init, group_scale, ipc, lastframe, linearity, refpix, rscd,
-    saturation, superbias]
+  calwebb_dark.cfg: [dq_init, firstframe, group_scale, ipc, lastframe, linearity,
+    refpix, rscd, saturation, superbias]
   calwebb_detector1.cfg: [dark_current, dq_init, firstframe, gain_scale, group_scale,
     ipc, jump, lastframe, linearity, persistence, ramp_fit, refpix, rscd, saturation,
     superbias]
@@ -233,7 +234,9 @@ exptypes_to_pipelines:
   MIR_FLAT-IMAGE: [calwebb_detector1.cfg, skip_2b.cfg]
   MIR_FLAT-MRS: [calwebb_detector1.cfg, skip_2b.cfg]
   MIR_FLATIMAGE: [calwebb_detector1.cfg, skip_2b.cfg]
+  MIR_FLATIMAGE-EXT: [calwebb_detector1.cfg, skip_2b.cfg]
   MIR_FLATMRS: [calwebb_detector1.cfg, skip_2b.cfg]
+  MIR_FLATMRS-EXT: [calwebb_detector1.cfg, skip_2b.cfg]
   MIR_IMAGE: [calwebb_detector1.cfg, calwebb_image2.cfg]
   MIR_LRS-FIXEDSLIT: [calwebb_detector1.cfg, calwebb_spec2.cfg]
   MIR_LRS-SLITLESS: [calwebb_tso1.cfg, calwebb_tso-spec2.cfg]
@@ -314,7 +317,11 @@ exptypes_to_reftypes:
     saturation, superbias, trapdensity, trappars]
   MIR_FLATIMAGE: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
+  MIR_FLATIMAGE-EXT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix,
+    rscd, saturation, superbias, trapdensity, trappars]
   MIR_FLATMRS: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
+    saturation, superbias, trapdensity, trappars]
+  MIR_FLATMRS-EXT: [dark, gain, ipc, linearity, mask, persat, readnoise, refpix, rscd,
     saturation, superbias, trapdensity, trappars]
   MIR_IMAGE: [area, camera, collimator, dark, dflat, disperser, distortion, drizpars,
     fflat, filteroffset, flat, fore, fpa, gain, ifufore, ifupost, ifuslicer, ipc,
