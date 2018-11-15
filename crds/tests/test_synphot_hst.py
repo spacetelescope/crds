@@ -26,6 +26,10 @@ def dt_synphot_naming():
     False
     >>> hst_locate.get_file_properties("wfc3_ir_f098m_002_th.fits")
     ('synphot', 'thermal')
+    >>> hst_locate.ref_properties_from_cdbs_path("data/wfc3_ir_f098m_002_th.fits")
+    ('data', 'hst', 'synphot', 'thermal', 'wfc3_ir_f098m_002_th', '.fits')
+    >>> hst_locate.ref_properties_from_header("data/wfc3_ir_f098m_002_th.fits")
+    ('data', 'hst', 'synphot', 'thermal', 'wfc3_ir_f098m_002_th', '.fits')
     >>> naming.generate_unique_name("wfc3_ir_f098m_002_th.fits", "hst", NOW)
     '2be00000m_th.fits'
 
@@ -41,6 +45,10 @@ def dt_synphot_naming():
     False
     >>> hst_locate.get_file_properties("wfc3_uvis_f469nf2_003_syn.fits")
     ('synphot', 'thruput')
+    >>> hst_locate.ref_properties_from_cdbs_path("data/wfc3_uvis_f469nf2_003_syn.fits")
+    ('data', 'hst', 'synphot', 'thruput', 'wfc3_uvis_f469nf2_003_syn', '.fits')
+    >>> hst_locate.ref_properties_from_header("data/wfc3_uvis_f469nf2_003_syn.fits")
+    ('data', 'hst', 'synphot', 'thruput', 'wfc3_uvis_f469nf2_003_syn', '.fits')
     >>> naming.generate_unique_name("wfc3_uvis_f469nf2_003_syn.fits", "hst", NOW)
     '2be00000m_syn.fits'
 
@@ -56,6 +64,10 @@ def dt_synphot_naming():
     False
     >>> hst_locate.get_file_properties("2381905mm_tmg.fits")
     ('synphot', 'tmgtab')
+    >>> hst_locate.ref_properties_from_cdbs_path("data/2381905mm_tmg.fits")
+    ('data', 'hst', 'synphot', 'tmgtab', '2381905mm_tmg', '.fits')
+    >>> hst_locate.ref_properties_from_header("data/2381905mm_tmg.fits")
+    ('data', 'hst', 'synphot', 'tmgtab', '2381905mm_tmg', '.fits')
     >>> naming.generate_unique_name("2381905mm_tmg.fits", "hst", NOW)
     '2be00000m_tmg.fits'
 
@@ -71,6 +83,10 @@ def dt_synphot_naming():
     False
     >>> hst_locate.get_file_properties("2b516556m_tmc.fits")
     ('synphot', 'tmctab')
+    >>> hst_locate.ref_properties_from_cdbs_path("data/2b516556m_tmc.fits")
+    ('data', 'hst', 'synphot', 'tmctab', '2b516556m_tmc', '.fits')
+    >>> hst_locate.ref_properties_from_header("data/2b516556m_tmc.fits")
+    ('data', 'hst', 'synphot', 'tmctab', '2b516556m_tmc', '.fits')
     >>> naming.generate_unique_name("2b516556m_tmc.fits", "hst", NOW)
     '2be00000m_tmc.fits'
     
@@ -86,6 +102,10 @@ def dt_synphot_naming():
     False
     >>> hst_locate.get_file_properties("tae17277m_tmt.fits")
     ('synphot', 'tmttab')
+    >>> hst_locate.ref_properties_from_header("data/tae17277m_tmt.fits")
+    ('data', 'hst', 'synphot', 'tmttab', 'tae17277m_tmt', '.fits')
+    >>> hst_locate.ref_properties_from_cdbs_path("data/tae17277m_tmt.fits")
+    ('data', 'hst', 'synphot', 'tmttab', 'tae17277m_tmt', '.fits')
     >>> naming.generate_unique_name("tae17277m_tmt.fits", "hst", NOW)
     '2be00000m_tmt.fits'
 
