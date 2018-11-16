@@ -5,6 +5,7 @@ from crds.core import config, naming, timestamp
 from crds.hst import locate as hst_locate
 from crds import certify
 from crds import diff
+from crds import refactor
 
 from crds.tests import test_config
 
@@ -120,19 +121,18 @@ def dt_synphot_certify():
 
     TMC   rmap + reference
 
-    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/2b516556m_tmc.fits --comparison-context hst_0672.pmap")()
+    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/2b516556m_tmc.fits --comparison-context hst_0672.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/2b516556m_tmc.fits' (1/1) as 'FITS' relative to context 'hst_0672.pmap'
     CRDS - INFO -  FITS file '2b516556m_tmc.fits' conforms to FITS standards.
-    CRDS - WARNING -  Checking 'FILENAME' failed: Required CRDS file 'acs_block1_002_syn.fits' does not exist in CRDS cache.
-    CRDS - WARNING -  Failed resolving comparison reference for table checks : Unknown instrument 'synphot' for context 'hst_0672.pmap'
+    CRDS - WARNING -  Failed to obtain reference comparison file '2ao1836nm_tmc.fits' : file is not known to CRDS server.
     CRDS - INFO -  Mode columns defined by spec for new reference '2b516556m_tmc.fits[1]' are: ['COMPNAME']
     CRDS - INFO -  All column names for this table new reference '2b516556m_tmc.fits[1]' are: ['TIME', 'COMPNAME', 'FILENAME', 'COMMENT']
     CRDS - INFO -  Checking for duplicate modes using intersection ['COMPNAME']
     CRDS - WARNING -  No comparison reference for '2b516556m_tmc.fits' in context 'hst_0672.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.440)              
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -174,22 +174,22 @@ def dt_synphot_certify():
     CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
     CRDS - INFO -  ########################################
     CRDS - INFO -  5 errors
-    CRDS - INFO -  3 warnings
+    CRDS - INFO -  2 warnings
     CRDS - INFO -  44 infos
     5
 
-    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/2381905mm_tmg.fits --comparison-context hst_0672.pmap")()
+    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/2381905mm_tmg.fits --comparison-context hst_0672.pmap")()   # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/2381905mm_tmg.fits' (1/1) as 'FITS' relative to context 'hst_0672.pmap'
     CRDS - INFO -  FITS file '2381905mm_tmg.fits' conforms to FITS standards.
-    CRDS - WARNING -  Failed resolving comparison reference for table checks : Unknown instrument 'synphot' for context 'hst_0672.pmap'
+    CRDS - WARNING -  Failed to obtain reference comparison file '2ao1836lm_tmg.fits' : file is not known to CRDS server.
     CRDS - INFO -  Mode columns defined by spec for new reference '2381905mm_tmg.fits[1]' are: ['COMPNAME', 'KEYWORD', 'INNODE', 'OUTNODE', 'THCOMPNAME']
     CRDS - INFO -  All column names for this table new reference '2381905mm_tmg.fits[1]' are: ['COMPNAME', 'KEYWORD', 'INNODE', 'OUTNODE', 'THCOMPNAME', 'COMMENT']
     CRDS - INFO -  Checking for duplicate modes using intersection ['COMPNAME', 'INNODE', 'KEYWORD', 'OUTNODE', 'THCOMPNAME']
     CRDS - WARNING -  No comparison reference for '2381905mm_tmg.fits' in context 'hst_0672.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.440)              
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -232,19 +232,19 @@ def dt_synphot_certify():
 
     TMT   rmap + reference
 
-    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/tae17277m_tmt.fits --comparison-context hst_0672.pmap")()
+    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/tae17277m_tmt.fits --comparison-context hst_0672.pmap")()   # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/tae17277m_tmt.fits' (1/1) as 'FITS' relative to context 'hst_0672.pmap'
     CRDS - INFO -  FITS file 'tae17277m_tmt.fits' conforms to FITS standards.
-    CRDS - WARNING -  Checking 'FILENAME' failed: Required CRDS file 'nic2_bend_001_th.fits' does not exist in CRDS cache.
-    CRDS - WARNING -  Failed resolving comparison reference for table checks : Unknown instrument 'synphot' for context 'hst_0672.pmap'
+    CRDS - WARNING -  Checking 'FILENAME' failed: Required CRDS file 'nic_blank_001_th.fits' does not exist in CRDS cache.
+    CRDS - WARNING -  Failed to obtain reference comparison file '2ao1836pm_tmt.fits' : file is not known to CRDS server.
     CRDS - INFO -  Mode columns defined by spec for new reference 'tae17277m_tmt.fits[1]' are: ['COMPNAME']
     CRDS - INFO -  All column names for this table new reference 'tae17277m_tmt.fits[1]' are: ['TIME', 'COMPNAME', 'FILENAME', 'COMMENT']
     CRDS - INFO -  Checking for duplicate modes using intersection ['COMPNAME']
     CRDS - WARNING -  No comparison reference for 'tae17277m_tmt.fits' in context 'hst_0672.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.440)              
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -285,18 +285,17 @@ def dt_synphot_certify():
 
     THERMAL rmap + reference
 
-    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/wfc3_ir_f098m_002_th.fits --comparison-context hst_0672.pmap")()
+    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/wfc3_ir_f098m_002_th.fits --comparison-context hst_0672.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/wfc3_ir_f098m_002_th.fits' (1/1) as 'FITS' relative to context 'hst_0672.pmap'
     CRDS - INFO -  FITS file 'wfc3_ir_f098m_002_th.fits' conforms to FITS standards.
-    CRDS - WARNING -  Failed resolving comparison reference for table checks : Unknown instrument 'synphot' for context 'hst_0672.pmap'
     CRDS - INFO -  Mode columns defined by spec for new reference 'wfc3_ir_f098m_002_th.fits[1]' are: ['WAVELENGTH']
     CRDS - INFO -  All column names for this table new reference 'wfc3_ir_f098m_002_th.fits[1]' are: ['WAVELENGTH', 'EMISSIVITY']
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
     CRDS - WARNING -  No comparison reference for 'wfc3_ir_f098m_002_th.fits' in context 'hst_0672.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.440)              
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -306,7 +305,7 @@ def dt_synphot_certify():
     CRDS - INFO -  >>  
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>  15 header keywords
+    CRDS - INFO -  >>  16 header keywords
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  Null data array; NAXIS = 0 
     CRDS - INFO -  >>  
@@ -329,24 +328,23 @@ def dt_synphot_certify():
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  2 warnings
+    CRDS - INFO -  1 warnings
     CRDS - INFO -  40 infos
     0
 
     THRUPUT rmap + reference
 
-    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/wfc3_uvis_f469nf2_003_syn.fits --comparison-context hst_0672.pmap")()
+    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/wfc3_uvis_f469nf2_003_syn.fits --comparison-context hst_0672.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/wfc3_uvis_f469nf2_003_syn.fits' (1/1) as 'FITS' relative to context 'hst_0672.pmap'
     CRDS - INFO -  FITS file 'wfc3_uvis_f469nf2_003_syn.fits' conforms to FITS standards.
-    CRDS - WARNING -  Failed resolving comparison reference for table checks : Unknown instrument 'synphot' for context 'hst_0672.pmap'
     CRDS - INFO -  Mode columns defined by spec for new reference 'wfc3_uvis_f469nf2_003_syn.fits[1]' are: ['WAVELENGTH']
     CRDS - INFO -  All column names for this table new reference 'wfc3_uvis_f469nf2_003_syn.fits[1]' are: ['WAVELENGTH', 'THROUGHPUT']
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
     CRDS - WARNING -  No comparison reference for 'wfc3_uvis_f469nf2_003_syn.fits' in context 'hst_0672.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify 4.18 (CFITSIO V3.440)              
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
     CRDS - INFO -  >>               --------------------------------              
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  
@@ -356,7 +354,7 @@ def dt_synphot_certify():
     CRDS - INFO -  >>  
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
     CRDS - INFO -  >>  
-    CRDS - INFO -  >>  22 header keywords
+    CRDS - INFO -  >>  23 header keywords
     CRDS - INFO -  >>  
     CRDS - INFO -  >>  Null data array; NAXIS = 0 
     CRDS - INFO -  >>  
@@ -379,7 +377,7 @@ def dt_synphot_certify():
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  2 warnings
+    CRDS - INFO -  1 warnings
     CRDS - INFO -  40 infos
     0
 
@@ -391,11 +389,74 @@ def dt_synphot_refactor():
     >>> old_state = test_config.setup()
 
     TMC   rmap
+
+    >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap data/2b516556m_tmc.fits")()
+    CRDS - INFO -  Inserting 2b516556m_tmc.fits into 'synphot_tmctab.rmap'
+    CRDS - INFO -  Writing '/tmp/synphot_tmctab.test.rmap'
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 infos
+    0
+
+    >>> diff.DiffScript("crds.diff  data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap")()
+    (('data/synphot_tmctab.rmap', '/tmp/synphot_tmctab.test.rmap'), 'added Match rule for 2b516556m_tmc.fits')
+    1
+
     TMG   rmap
+
+    >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmgtab.rmap /tmp/synphot_tmgtab.test.rmap data/2381905mm_tmg.fits")()
+    CRDS - INFO -  Inserting 2381905mm_tmg.fits into 'hst_synphot_tmg.rmap'
+    CRDS - INFO -  Writing '/tmp/synphot_tmgtab.test.rmap'
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 infos
+    0
+
+    >>> diff.DiffScript("crds.diff  data/synphot_tmgtab.rmap /tmp/synphot_tmgtab.test.rmap")()
+    (('data/synphot_tmgtab.rmap', '/tmp/synphot_tmgtab.test.rmap'), 'added Match rule for 2381905mm_tmg.fits')
+    1
+
     TMT   rmap
+
+    >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmttab.rmap /tmp/synphot_tmttab.test.rmap data/tae17277m_tmt.fits")()
+    CRDS - INFO -  Inserting tae17277m_tmt.fits into 'synphot_tmt.rmap'
+    CRDS - INFO -  Writing '/tmp/synphot_tmttab.test.rmap'
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 infos
+    0
+
+    >>> diff.DiffScript("crds.diff  data/synphot_tmttab.rmap /tmp/synphot_tmttab.test.rmap")()
+    (('data/synphot_tmttab.rmap', '/tmp/synphot_tmttab.test.rmap'), 'added Match rule for tae17277m_tmt.fits')
+    1
+
     THERMAL rmap
+
+    >>> refactor.RefactorScript("crds.refactor insert data/synphot_thermal.rmap /tmp/synphot_thermal.test.rmap data/wfc3_ir_f098m_002_th.fits")()
+    CRDS - INFO -  Inserting wfc3_ir_f098m_002_th.fits into 'hst_synphot_thermal.rmap'
+    CRDS - INFO -  Writing '/tmp/synphot_thermal.test.rmap'
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 infos
+    0
+
+    >>> diff.DiffScript("crds.diff  data/synphot_thermal.rmap /tmp/synphot_thermal.test.rmap")()
+    (('data/synphot_thermal.rmap', '/tmp/synphot_thermal.test.rmap'), ('WFC3_IR_F098M', 'NOV 16 2018', 'UPDATED TO CONVERT AIR WAVELENGTHS TO VACUUM.'), 'added Match rule for wfc3_ir_f098m_002_th.fits')
+    1
+
     THRUPUT rmap
-    COMP  rmap
+
+    >>> refactor.RefactorScript("crds.refactor insert data/synphot_thruput.rmap /tmp/synphot_thruput.test.rmap data/wfc3_uvis_f469nf2_003_syn.fits")()
+    CRDS - INFO -  Inserting wfc3_uvis_f469nf2_003_syn.fits into 'hst_synphot_thruput.rmap'
+    CRDS - INFO -  Writing '/tmp/synphot_thruput.test.rmap'
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 infos
+    0
+
+    >>> diff.DiffScript("crds.diff  data/synphot_thruput.rmap /tmp/synphot_thruput.test.rmap")()
+    (('data/synphot_thruput.rmap', '/tmp/synphot_thruput.test.rmap'), ('WFC3_UVIS_F469NF2', 'NOV 16 2018', 'NORMALIZATION OF F469N FLAT CHIP 2---------------------------------'), 'added Match rule for wfc3_uvis_f469nf2_003_syn.fits')
+    1
 
     >>> test_config.cleanup(old_state)
     """
@@ -409,19 +470,6 @@ def dt_synphot_bestrefs():
 def dt_synphot_sync():
     """
     >>> old_state = test_config.setup()
-    >>> test_config.cleanup(old_state)
-    """
-
-def dt_synphot_diff():
-    """
-    >>> old_state = test_config.setup()
-
-    TMC   rmap + reference
-    TMG   rmap + reference
-    TMT   rmap + reference
-    THERMAL rmap + reference
-    THRUPUT rmap + reference
-
     >>> test_config.cleanup(old_state)
     """
 

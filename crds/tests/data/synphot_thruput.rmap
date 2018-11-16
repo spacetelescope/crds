@@ -1,0 +1,30 @@
+header = {
+    'classes' : ('Match',),
+    'derived_from' : 'Initial hand made version 2018-11-24. Jira CCD-148.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'THRUPUT',
+    'filetype' : 'CRTHROUGHPUT',
+    'instrument' : 'SYNPHOT',
+    'ld_tpn' : 'synphot_syn_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_synphot_thruput.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('COMPNAME', 'CREATED', 'DESCRIP'),),
+    'parkey_relevance' : {
+        'CREATED' : 'False',
+        'DESCRIP' : 'False',
+    },
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(False)',
+    'sha1sum' : '42afb6fe2f585fda33d688c9a13f9783964540b0',
+    'suffix' : 'syn',
+    'text_descr' : 'Component Throughput Tables',
+    'tpn' : 'synphot_syn.tpn',
+    'unique_rowkeys' : ('WAVELENGTH',),
+}
+
+selector = Match({
+})
