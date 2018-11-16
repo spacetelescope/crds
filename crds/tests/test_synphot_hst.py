@@ -115,11 +115,11 @@ def dt_synphot_naming():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_synphot_certify():
+def dt_synphot_certify_refs():
     """
     >>> old_state = test_config.setup()
 
-    TMC   rmap + reference
+    TMC   reference
 
     >>> certify.CertifyScript("crds.certify  --run-fitsverify data/2b516556m_tmc.fits --comparison-context hst_0672.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
@@ -230,7 +230,7 @@ def dt_synphot_certify():
     CRDS - INFO -  44 infos
     0
 
-    TMT   rmap + reference
+    TMT   reference
 
     >>> certify.CertifyScript("crds.certify  --run-fitsverify data/tae17277m_tmt.fits --comparison-context hst_0672.pmap")()   # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
@@ -283,7 +283,7 @@ def dt_synphot_certify():
     CRDS - INFO -  42 infos
     0
 
-    THERMAL rmap + reference
+    THERMAL reference
 
     >>> certify.CertifyScript("crds.certify  --run-fitsverify data/wfc3_ir_f098m_002_th.fits --comparison-context hst_0672.pmap")()  # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
@@ -332,7 +332,7 @@ def dt_synphot_certify():
     CRDS - INFO -  40 infos
     0
 
-    THRUPUT rmap + reference
+    THRUPUT reference
 
     >>> certify.CertifyScript("crds.certify  --run-fitsverify data/wfc3_uvis_f469nf2_003_syn.fits --comparison-context hst_0672.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
@@ -379,6 +379,72 @@ def dt_synphot_certify():
     CRDS - INFO -  0 errors
     CRDS - INFO -  1 warnings
     CRDS - INFO -  40 infos
+    0
+
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_synphot_certify_rmaps():
+    """
+    >>> old_state = test_config.setup()
+
+    TMC   rmap
+
+    >>> certify.CertifyScript("crds.certify  data/synphot_tmctab.rmap")() # doctest: +ELLIPSIS
+    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/synphot_tmctab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
+    0
+
+    TMG   rmap
+
+    >>> certify.CertifyScript("crds.certify  data/synphot_tmgtab.rmap")() # doctest: +ELLIPSIS
+    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/synphot_tmgtab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
+    0
+
+    TMT   rmap
+
+    >>> certify.CertifyScript("crds.certify  data/synphot_tmttab.rmap")() # doctest: +ELLIPSIS
+    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/synphot_tmttab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
+    0
+
+    THERMAL rmap
+
+    >>> certify.CertifyScript("crds.certify  data/synphot_thermal.rmap")() # doctest: +ELLIPSIS
+    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/synphot_thermal.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
+    0
+
+    THRUPUT rmap
+    >>> certify.CertifyScript("crds.certify  data/synphot_thruput.rmap")() # doctest: +ELLIPSIS
+    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/synphot_thruput.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
     0
 
     >>> test_config.cleanup(old_state)
@@ -477,7 +543,7 @@ def dt_synphot_diff():
     """
     >>> old_state = test_config.setup()
 
-    TMC   rmap + reference
+    TMC   reference
 
     >>> diff.DiffScript("crds.diff data/16n1832tm_tmc.fits data/2b516556m_tmc.fits")()   # doctest: +ELLIPSIS
     <BLANKLINE>
