@@ -12,18 +12,19 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('COMPNAME', 'CREATED', 'DESCRIP'),),
     'parkey_relevance' : {
-        'CREATED' : 'False',
-        'DESCRIP' : 'False',
+        'CREATED' : '(False)',
+        'DESCRIP' : '(False)',
     },
     'reffile_format' : 'TABLE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(False)',
-    'sha1sum' : '42afb6fe2f585fda33d688c9a13f9783964540b0',
+    'sha1sum' : '7f70e1efaa2d86085249cd519391ad60c98a59c5',
     'suffix' : 'syn',
     'text_descr' : 'Component Throughput Tables',
     'tpn' : 'synphot_syn.tpn',
     'unique_rowkeys' : ('WAVELENGTH',),
+    'update_raw_parkeys' : 'TRUE',
 }
 
 selector = Match({

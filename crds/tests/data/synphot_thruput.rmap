@@ -12,21 +12,25 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('COMPNAME', 'CREATED', 'DESCRIP'),),
     'parkey_relevance' : {
-        'CREATED' : 'False',
-        'DESCRIP' : 'False',
+        'CREATED' : '(False)',
+        'DESCRIP' : '(False)',
     },
     'reffile_format' : 'TABLE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
-    'rmap_relevance' : '(False)',
-    'sha1sum' : '00ae2def59f96831e56bff60f98ff7a8c8f9c3b2',
+    'rmap_relevance' : '(True)',
+    'sha1sum' : 'f4346bf1b23aed7c0ac72f76cd8d5823f43d5133',
     'suffix' : 'syn',
     'text_descr' : 'Component Throughput Tables',
     'tpn' : 'synphot_syn.tpn',
     'unique_rowkeys' : ('WAVELENGTH',),
+    'update_raw_parkeys' : 'TRUE',
 }
 
 comment = """
+
+NOTE:  rmap_relevance is set to True for bestrefs test purposes.
+
 ----------------------------------------------------------------------
 [0]: SIMPLE     True             conforms to FITS standard
 [0]: BITPIX     8                array data type
@@ -66,10 +70,12 @@ updated.  The files being delivered are copies of their _mjd counterpart
 s, with the COMPNAME for each of the files being: acs_wfc_ccd1, acs_wfc_
 ccd2, and acs_hrc_ccd.  The names of the files were changed, removing th
 
+Updated on Jun 23 2017 18:1:27
+
 """
 
 selector = Match({
-    ('acs_block1', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block1 filter--------------------') : 'acs_block1_002_syn.fits',
-    ('acs_block2', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block2 filter--------------------') : 'acs_block2_002_syn.fits',
-    ('acs_block3', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block3 filter--------------------') : 'acs_block3_002_syn.fits',
+    ('ACS_BLOCK1', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block1 filter--------------------') : 'acs_block1_002_syn.fits',
+    ('ACS_BLOCK2', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block2 filter--------------------') : 'acs_block2_002_syn.fits',
+    ('ACS_BLOCK3', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block3 filter--------------------') : 'acs_block3_002_syn.fits',
 })

@@ -1,6 +1,7 @@
 """This module tests the synphot pseudo-instrument support for HST."""
 
 # ==============================================================
+import crds
 from crds.core import config, naming, timestamp
 from crds.hst import locate as hst_locate
 from crds import certify
@@ -530,6 +531,15 @@ def dt_synphot_refactor():
 def dt_synphot_bestrefs():
     """
     >>> old_state = test_config.setup()
+    
+    >>> r = crds.get_cached_mapping("data/synphot_thermal.rmap")
+    >>> r.get_best_references({'COMPNAME':'NIC1_F110W', 'CREATED':'NO MATCH', 'DESCRIP':'NO MATCH'})
+    {'thermal': 'nic1_f110w_002_th.fits'}
+
+    >>> r = crds.get_cached_mapping("data/synphot_thruput.rmap")
+    >>> r.get_best_references({'COMPNAME':'ACS_BLOCK1', 'CREATED':'NO MATCH', 'DESCRIP':'NO MATCH'})
+    {'thruput': 'acs_block1_002_syn.fits'}
+
     >>> test_config.cleanup(old_state)
     """
 
