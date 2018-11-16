@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.2.6"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST B7.2, Oct. Baseline"
+__version__ = "7.3.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "Add HST SYNPHOT, HSTDP-2018.4 or 2019.1"
 
 # ============================================================================
 

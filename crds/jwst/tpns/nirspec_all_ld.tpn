@@ -11,9 +11,10 @@ META.INSTRUMENT.NAME        H   C   R                   NIRSPEC
 
 META.INSTRUMENT.DETECTOR    H   C   O                   NRS1,NRS2,ANY,N/A
 
-META.EXPOSURE.TYPE          H   C   O   NRS_AUTOFLAT,NRS_AUTOWAVE,NRS_BOTA,NRS_BRIGHTOBJ,NRS_CONFIRM,\
-                                        NRS_DARK,NRS_FIXEDSLIT,NRS_FOCUS,NRS_IFU,NRS_IMAGE,NRS_LAMP,\
-                                        NRS_MIMF,NRS_MSASPEC,NRS_TACONFIRM,NRS_TACQ,NRS_TASLIT,ANY,N/A
+META.EXPOSURE.TYPE          H   C   O   NRS_AUTOFLAT,NRS_AUTOWAVE,NRS_BRIGHTOBJ,NRS_CONFIRM,NRS_DARK,\
+                                        NRS_FIXEDSLIT,NRS_FOCUS,NRS_IFU,NRS_IMAGE,NRS_LAMP,NRS_MIMF,\
+                                        NRS_MSASPEC,NRS_MSATA,NRS_TACONFIRM,NRS_TACQ,NRS_TASLIT,NRS_WATA,\
+                                        ANY,N/A
 
 
 include includes/nirspec_subarray_baseline.tpn
