@@ -1061,7 +1061,7 @@ class ReferenceMapping(Mapping):
         self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))
         self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
         self._parkey_relevance_exprs = { 
-            name : self.get_expr(expr) for (name, expr) in  self.header.get("parkey_relevance", {}).items()
+            name.lower() : self.get_expr(expr) for (name, expr) in  self.header.get("parkey_relevance", {}).items()
             }
         self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
