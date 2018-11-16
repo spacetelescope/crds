@@ -1414,7 +1414,8 @@ class ReferenceMapping(Mapping):
         # Evaluate parkey relevance rules in the context of header to map
         # mode irrelevant parameters to N/A.
         # XXX not clear if/how this works with expanded wildcard or-patterns.
-        header = self.map_irrelevant_parkeys_to_na(header)
+        if not self.header.get("update_raw_parkeys", "FALSE").upper() == "TRUE":
+            header = self.map_irrelevant_parkeys_to_na(header)
     
         # The "extra" parkeys always appear in the rmap with values of "N/A".
         # The dataset value of the parkey is typically used to compute other parkeys
