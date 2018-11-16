@@ -77,10 +77,16 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
                 inserted_cases[case] = baseref
             else:
                 exc = exceptions.OverlappingMatchError(
-                    "Matching case for", srepr(baseref),
-                    "overlaps", srepr(inserted_cases[case]),
-                    "at case", repr(case))
+                    "Both", srepr(baseref),
+                    "and", srepr(inserted_cases[case]),
+                    "identically match case:\n", log.PP(case))
+                log.info("-"*40)
                 log.error(str(exc))
+                log.info("Each reference would replace the other in the rmap.")
+                log.info("Either reference file matching parameters need correction")
+                log.info("or additional matching parameters should be added to the rmap")
+                log.info("to enable CRDS to differentiate between the two files.")
+                log.info("-"*40)
     if exc is not None:
         raise exc
     new.header["derived_from"] = old.basename
