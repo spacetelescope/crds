@@ -769,7 +769,7 @@ DONT_CARE_RE = re.compile(r"^" + r"|".join([
     r"-2147483648.0",
     r"\(\)","N/A","NOT APPLICABLE", "NOT_APPLICABLE"]) + "$")
 
-NUMBER_RE = re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
+NUMBER_RE = re.compile(r"^([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?|[+-]?[0-9]+\.)$")
 
 def condition_value(value):
     """Condition `value`,  ostensibly taken from a FITS header or CDBS
@@ -803,6 +803,7 @@ def condition_value(value):
     'F'
     >>> condition_value(True)
     'T'
+
     >>> condition_value(1)
     '1.0'
     >>> condition_value('-9')
@@ -811,10 +812,15 @@ def condition_value(value):
     '1.0'
     >>> condition_value('1.')
     '1.0'
+
     >>> condition_value('foo')
     'FOO'
+
     >>> condition_value('iref$uaf12559i_drk.fits')
     'IREF$UAF12559I_DRK.FITS'
+
+    >>> condition_value('2013-11-05 15:21:34')
+    '2013-11-05 15:21:34'
     """
     value = str(value).strip().upper()
     if NUMBER_RE.match(value):
