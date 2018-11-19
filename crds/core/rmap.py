@@ -1058,15 +1058,22 @@ class ReferenceMapping(Mapping):
 
     def _init_compiled(self):
         """Initialize object fields which contain compiled code objects, special handling for pickling."""        
+        self._comment_parkeys = tuple(name.lower() for name in self.header.get("comment_parkeys", ()))
         self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))
         self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
+        
+        relevant  = dict(self.header.get("parkey_relevance", {}))
+        relevant.update({
+            name : "False" for name in self._comment_parkeys
+        })
         self._parkey_relevance_exprs = { 
-            name.lower() : self.get_expr(expr) for (name, expr) in  self.header.get("parkey_relevance", {}).items()
+            name.lower() : self.get_expr(expr) for (name, expr) in relevant.items()
             }
+        
         self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
-
+                
     def validate(self):
         """Validate the contents of this rmap against the TPN for this
         filekind / reftype.   Each field of each Match tuple must have a value
@@ -1078,7 +1085,7 @@ class ReferenceMapping(Mapping):
         self.check_filekind()
         if "reference_to_dataset" in self.header:
             parkeys = self.get_required_parkeys()
-            for reference, dataset in self.reference_to_dataset.items():
+            for _reference, dataset in self.reference_to_dataset.items():
                 assert dataset.upper() in parkeys, \
                     "reference_to_dataset dataset keyword not in parkey keywords."
         with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
@@ -1341,12 +1348,22 @@ class ReferenceMapping(Mapping):
             if omit:
                 raise crexc.OmitReferenceTypeError("rmap_omit expression indicates this type should be omitted.")
 
-    def map_irrelevant_parkeys_to_na(self, header):
+    def map_irrelevant_parkeys_to_na(self, header, keep_comments=False):
         """Evaluate any relevance expression for each parkey, and if it's
-        false,  then change the value to N/A.
+        false,  then change the value to N/A.   Changing a parkey to N/A effectively
+        removes it as a consideration for bestrefs.   Changing a parkey to N/A during
+        rmap updates facilitates exact case matches (replacements) ignoring irrelevant
+        parameters while defining the case.   If `keep_comments` is set to True then
+        irrelevant_parkeys which are also comments are not converted to N/A.
+        
+        COME FROM: This function is called both on dataset headers during bestrefs and
+        on reference file headers during rmap updates with the presumption that any 
+        parameter required by the relevance expressions is defined in both datasets and
+        reference files.
         """
+        from crds import data_file
         expr_header = dict(header)
-        expr_header.update({key:"UNDEFINED" for key in self._required_parkeys if key not in header})
+        expr_header = data_file.ensure_keys_defined(expr_header, needed_keys=self._required_parkeys)
         expr_header = utils.condition_header_keys(expr_header)
         header = dict(header)  # copy
         for parkey in self._required_parkeys:  # Only add/overwrite irrelevant
@@ -1356,7 +1373,7 @@ class ReferenceMapping(Mapping):
                 relevant = eval(compiled, {}, expr_header)  # secured
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
                             "is relevant:", relevant, repr(source), verbosity=55)
-                if not relevant:
+                if not (relevant or keep_comments):
                     header[parkey] = "N/A"
         return header
     
@@ -1377,8 +1394,7 @@ class ReferenceMapping(Mapping):
         from crds import data_file
         header = data_file.get_header(reffile, observatory=self.observatory)
         needed_keys = tuple(self.get_reference_parkeys()) + tuple(extra_keys)
-        header = data_file.ensure_keys_defined(header, needed_keys=needed_keys,
-                                               define_as=self.obs_package.UNDEFINED_PARKEY_SUBST_VALUE)    
+        header = data_file.ensure_keys_defined(header, needed_keys=needed_keys)
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
         log.verbose("insert_reference raw reffile header:\n", 
                     log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
@@ -1414,8 +1430,7 @@ class ReferenceMapping(Mapping):
         # Evaluate parkey relevance rules in the context of header to map
         # mode irrelevant parameters to N/A.
         # XXX not clear if/how this works with expanded wildcard or-patterns.
-        if not self.header.get("update_raw_parkeys", "FALSE").upper() == "TRUE":
-            header = self.map_irrelevant_parkeys_to_na(header)
+        header = self.map_irrelevant_parkeys_to_na(header, keep_comments=True)
     
         # The "extra" parkeys always appear in the rmap with values of "N/A".
         # The dataset value of the parkey is typically used to compute other parkeys

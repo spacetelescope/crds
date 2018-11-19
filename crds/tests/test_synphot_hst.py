@@ -2,11 +2,11 @@
 
 # ==============================================================
 import crds
-from crds.core import config, naming, timestamp
+from crds.core import config, log, naming, timestamp
 from crds.hst import locate as hst_locate
 from crds import certify
 from crds import diff
-from crds import refactor
+from crds.refactoring import refactor
 
 from crds.tests import test_config
 
@@ -455,6 +455,29 @@ def dt_synphot_refactor():
     """
     >>> old_state = test_config.setup()
 
+    >>> r = crds.get_cached_mapping("data/synphot_thermal.rmap")
+    >>> header = dict(COMPNAME="NIC1_BEND", CREATED="2002-03-06 04:51:00",  DESCRIP="Use NIC2 values")
+    
+    >>> v = log.set_verbose(55)
+
+    For classic irrelevant parkey matching where values are normalized to N/A and ignored
+
+    >>> print(log.PP(r.map_irrelevant_parkeys_to_na(header)))
+    CRDS - DEBUG -  Parkey synphot thermal created is relevant: False 'False'
+    CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: False 'False'
+    {'COMPNAME': 'NIC1_BEND', 'CREATED': 'N/A', 'DESCRIP': 'N/A'}
+    
+    For rmap updates which add comment keywords to the match tuples for web display
+
+    >>> print(log.PP(r.map_irrelevant_parkeys_to_na(header, keep_comments=True)))
+    CRDS - DEBUG -  Parkey synphot thermal created is relevant: False 'False'
+    CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: False 'False'
+    {'COMPNAME': 'NIC1_BEND',
+     'CREATED': '2002-03-06 04:51:00',
+     'DESCRIP': 'Use NIC2 values'}
+
+    >>> _ = log.set_verbose(v)
+    
     TMC   rmap
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap data/2b516556m_tmc.fits")()
@@ -508,6 +531,7 @@ def dt_synphot_refactor():
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_thermal.rmap /tmp/synphot_thermal.test.rmap")()
+    (('data/synphot_thermal.rmap', '/tmp/synphot_thermal.test.rmap'), ('WFC3_IR_F098M', '2019-08-15 08:00:00', 'Filter transmission for F098M XXX YYY ZZZ'), 'deleted Match rule for wfc3_ir_f098m_001_th.fits')
     (('data/synphot_thermal.rmap', '/tmp/synphot_thermal.test.rmap'), ('WFC3_IR_F098M', 'NOV 16 2018', 'UPDATED TO CONVERT AIR WAVELENGTHS TO VACUUM.'), 'added Match rule for wfc3_ir_f098m_002_th.fits')
     1
 
@@ -543,11 +567,6 @@ def dt_synphot_bestrefs():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_synphot_sync():
-    """
-    >>> old_state = test_config.setup()
-    >>> test_config.cleanup(old_state)
-    """
 
 def dt_synphot_diff():
     """

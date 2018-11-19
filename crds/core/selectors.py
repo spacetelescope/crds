@@ -283,6 +283,7 @@ class Selector:
             self._raw_selections = merge_selections  # XXX not really,  nominally unused XXXX
             self._selections = merge_selections
         self._parkey_map = self.get_parkey_map()
+        self._comment_parkeys = tuple(name.upper() for name in self._rmap_header.get("comment_parkeys",()))
 
     def _trace_compare(self, other, show_equal=False):
         utils.trace_compare(self, other, show_equal)
@@ -897,7 +898,7 @@ class Selector:
             else:
                 old_key, old_value = self._raw_selections[i]
                 log.verbose("Modify found", repr(key), "as primitive", repr(old_value), "replacing with", repr(value))
-                self._replace_item(old_key, value)
+                self._replace_item(key, value)
         
     def _create_path(self, header, value, parkey, classes):
         """Create the Selector tree corresponding to `header` and `value` based on the
@@ -941,19 +942,29 @@ class Selector:
             return None
 
     def _equal_keys(self, key1, key2):
-        """Return True IFF `key1` is equivalent to `key2` for rmap modification."""
-        return self._normalize_key(key1) == self._normalize_key(key2)
+        """Return True IFF `key1` is equivalent to `key2` for rmap modification.  Ignore comment pars."""
+        if len(key1) != len(key2):
+            return False
+        key1, key2 = self._normalize_key(key1), self._normalize_key(key2)
+        for i, v1 in enumerate(key1):
+            v2 = key2[i]
+            if self._parameters[i].upper() in self._comment_parkeys:
+                continue
+            if v1 != v2:
+                return False
+        return True
     
     def _normalize_key(self, key):
         """Return the simple version of single element keys.   Include key
         conditioning so that numbers are matched as float strings, times are
         uniform, etc.
         
-        e.g.   ('something',) -->   'something'
+        e.g.   'something' -->   ('something',)
+        e.g.   1 -->   (1,)
         e.g.   ('something','else') --> ('something','else')
         """
-        if isinstance(key, tuple) and len(key) == 1:
-            key = key[0]
+        if isinstance(key, (str,int,float,bool)):
+            key = (key,)
         return self.condition_key(key)
     
     @classmethod    
@@ -2017,6 +2028,9 @@ Restore original debug behavior:
             raise ValidationError("wrong length for parameter list " + 
                                   repr(self._parameters) + " for key " + repr(key))
         for i, name in enumerate(self._parameters):
+            if name in self._comment_parkeys:
+                log.verbose("Ignoring comment parameter", repr(name), "=", repr(key[i]))
+                continue
             if name not in valid_values_map:
                 log.verbose("Unchecked", repr(name), "=", repr(key[i]))
                 continue
