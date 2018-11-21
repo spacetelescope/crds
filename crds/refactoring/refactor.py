@@ -61,7 +61,8 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     inserted_cases = {}
-    exc = None
+    error_output = []
+
     for reference in inserted_references:
         log.info("Inserting", os.path.basename(reference), "into",
                  repr(new.name))
@@ -76,19 +77,23 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
             if case not in inserted_cases:
                 inserted_cases[case] = baseref
             else:
-                exc = exceptions.OverlappingMatchError(
+                err = str(exceptions.OverlappingMatchError(
                     "Both", srepr(baseref),
                     "and", srepr(inserted_cases[case]),
-                    "identically match case:\n", log.PP(case))
+                    "identically match case:\n", log.PP(case)))
+                err += """
+ Each reference would replace the other in the rmap.
+ Either reference file matching parameters need correction
+ or additional matching parameters should be added to the rmap
+ to enable CRDS to differentiate between the two files."""
                 log.info("-"*40)
-                log.error(str(exc))
-                log.info("Each reference would replace the other in the rmap.")
-                log.info("Either reference file matching parameters need correction")
-                log.info("or additional matching parameters should be added to the rmap")
-                log.info("to enable CRDS to differentiate between the two files.")
+                log.error(err)
                 log.info("-"*40)
-    if exc is not None:
-        raise exc
+                error_output.append(err)
+
+    if error_output:
+        return error_output
+
     new.header["derived_from"] = old.basename
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
