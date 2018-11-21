@@ -576,7 +576,7 @@ def dt_synphot_diff():
 
     >>> diff.DiffScript("crds.diff data/16n1832tm_tmc.fits data/2b516556m_tmc.fits")()   # doctest: +ELLIPSIS
     <BLANKLINE>
-     fitsdiff: 3.2.dev23244
+     fitsdiff: ...
      a: data/16n1832tm_tmc.fits
      b: data/2b516556m_tmc.fits
      Maximum number of different data values to be reported: 10
