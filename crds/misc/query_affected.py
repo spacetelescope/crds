@@ -305,6 +305,8 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
 
     def log_all_ids(self, effects, ids):
         """PLUGIN: Summary output after all contexts processed."""
+        if not ids:
+            log.info("No ids were affected.")
         if self.args.quiet:
             return 
         if not effects:
