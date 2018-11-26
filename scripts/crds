@@ -38,6 +38,7 @@ matches             -- list matching criteria relative to particular rules
 checksum            -- update rmap checksum
 query_affected      -- download CRDS new reference files affected dataset IDs
 uniqname            -- rename HST files with new CDBS-style names
+get_synphot         -- download synphot references
 
 For more detail about individual commands use --help:
 
@@ -59,6 +60,7 @@ REMAPPED_MODULES = {
     "refactor2" : "crds.refactoring.refactor2",
     "newcontext" : "crds.refactoring.newcontext",
     "checksum" : "crds.refactoring.checksum",
+    "get_synphot" : "crds.misc.get_synphot",
 }
 
 remapped = REMAPPED_MODULES.get(sys.argv[1], "crds." + sys.argv[1])

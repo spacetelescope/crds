@@ -19,7 +19,7 @@ import time
 
 from crds.core import log, rmap, config, utils, timestamp
 from crds import data_file
-from crds.core.exceptions import CrdsError
+from crds.core.exceptions import CrdsError, CrdsNamingError
 from crds.hst import siname
 from crds.io import abstract
 
@@ -121,13 +121,20 @@ def reference_keys_to_dataset_keys(rmapping, header):
     result = dict(header)
     
     #  XXXXX TODO   Add/consolidate logic to handle P_ pattern keywords
-    
-    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
-        reformatted = timestamp.reformat_useafter(rmapping, header).split()
+
+    # If USEAFTER is defined,  or we're configured to fake it...
+    #   don't invent one if its missing and we're not faking it.
+    if "USEAFTER" in header or config.ALLOW_BAD_USEAFTER:
+
+        # Identify reference involved as best as possible
+        filename = header.get("FILENAME", None) or rmapping.filename
+
+        reformatted = timestamp.reformat_useafter(filename, header).split()
         result["DATE-OBS"] = reformatted[0]
         result["DATE_OBS"] = reformatted[0]
         result["TIME-OBS"] = reformatted[1]
         result["TIME_OBS"] = reformatted[1]
+    
     return result
 
 # =======================================================================
@@ -167,9 +174,9 @@ def get_file_properties(filename):
             result = properties_inside_mapping(filename)
         except Exception:
             result = get_reference_properties(filename)[2:4]
-    assert result[0] in INSTRUMENTS+["","synphot"], "Bad instrument " + \
+    assert result[0] in INSTRUMENTS+[""], "Bad instrument " + \
         repr(result[0]) + " in filename " + repr(filename)
-    assert result[1] in FILEKINDS+[""]+SYNPHOT_TYPES, "Bad filekind " + \
+    assert result[1] in FILEKINDS+[""], "Bad filekind " + \
         repr(result[1]) + " in filename " + repr(filename)
     return result
 
@@ -225,27 +232,6 @@ def decompose_newstyle_name(filename):
 
     # extension may vary for upload temporary files.
 
-    return path, observatory, instrument, filekind, serial, ext
-
-SYNPHOT_TYPES = ["tmc", "tmt", "tmt"]
-SYNPHOT_ENDINGS = ("tmc.fits","tmt.fits","tmg.fits")
-
-def decompose_synphot_name(filename):
-    """Return filename properties for a SYNPHOT file or raises an assertion error.
-
-    >>> decompose_synphot_name("some/path/11q0123nm_tmg.fits")
-    ('some/path', 'hst', 'synphot', 'tmg', '11q0123n', '.fits')
-
-    """
-    assert filename.endswith(SYNPHOT_ENDINGS), \
-        "{} does not have one of the supported SYNPHOT endings " + repr(SYNPHOT_ENDINGS)
-    path = os.path.dirname(filename)
-    observatory = "hst"
-    instrument = "synphot"
-    ext = os.path.splitext(filename)[-1]
-    basename = os.path.basename(filename)
-    filekind = os.path.splitext(basename.split("_")[-1])[0]
-    serial = basename[:-len("_tmt.fits")-1]
     return path, observatory, instrument, filekind, serial, ext
 
 def properties_inside_mapping(filename):
@@ -373,10 +359,10 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
             
 def get_reference_properties(filename):
     """Figure out FITS (instrument, filekind, serial) based on `filename`."""
-    try:
-        return decompose_synphot_name(filename)
-    except AssertionError:
-        pass
+    # try:
+    #     return decompose_synphot_name(filename)
+    # except AssertionError:
+    #    pass
     try:   # Hopefully it's a nice new standard filename, easy
         return decompose_newstyle_name(filename)
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
@@ -411,7 +397,21 @@ def ref_properties_from_cdbs_path(filename):
     serial = os.path.basename(os.path.splitext(filename)[0])
     # First try to figure everything out by decoding filename. fast
     instrument = siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
-    if extension == ".fits":
+    if instrument == "synphot":
+        if filename.endswith("_syn.fits"):
+            filekind = "thruput"
+        elif filename.endswith("_th.fits"):
+            filekind = "thermal"
+        elif filename.endswith("_tmt.fits"):
+            filekind = "tmttab"
+        elif filename.endswith("_tmg.fits"):
+            filekind = "tmgtab"
+        elif filename.endswith("_tmc.fits"):
+            filekind = "tmctab"
+        else:
+            assert False, "Uknown synphot filetype for: " + repr(filename)
+        suffix = filename.split("_")[-1][:-len(".fits")]
+    elif extension == ".fits":
         suffix = fields[1]
     else:
         suffix = GEIS_EXT_TO_SUFFIX[extension[1:3]]
@@ -440,7 +440,10 @@ def instrument_from_refname(filename):
         return decompose_newstyle_name(filename)[2]
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
         try:
-            return siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
+            instrument = siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
+            if instrument == "multi":
+                instrument = "synphot"
+            return instrument
         except Exception:
             assert False, "Cannot determine instrument for filename '{}'".format(filename)
 
@@ -453,30 +456,36 @@ def ref_properties_from_header(filename):
     path, _parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "hst")
-    instrument = header["INSTRUME"].lower()
+    if "DBTABLE" not in header or header["DBTABLE"] in ["IMPHTTAB"]:
+        instrument = header["INSTRUME"].lower()
+    else:
+        instrument = "synphot"
     instrument = INSTRUMENT_FIXERS.get(instrument, instrument)
-    if instrument == "synphot":
-        filetype = header.get("DBTABLE", "DBTABLE not defined for SYNPHOT file.")
-        if filetype not in ["tmt", "tmg", "tmc"]:
-            raise CrdsError("Invalid SYNPHOT filetype / dbtable:", repr(filetype))
-        return path, "hst", instrument, filetype, serial, ext
     try:
-        filetype = header["FILETYPE"].lower()
+        filetype = header.get(
+            "FILETYPE", header.get(
+                "DBTABLE", header.get(
+                    "CDBSFILE"))).lower()
     except KeyError:
-        try:
-            filetype = header["CDBSFILE"].lower()
-        except KeyError:
-            observatory = header.get("TELESCOP", header.get("TELESCOPE", None))
-            if observatory and observatory.upper() != "HST":
-                raise CrdsError("CRDS is configured for 'HST' but file", repr(os.path.basename(filename)),
-                                "is for the", repr(observatory), "telescope.  Reconfigure CRDS_PATH or CRDS_SEVER_URL.")
-            else:
-                raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
+        observatory = header.get(
+        "TELESCOP", header.get(
+            "TELESCOPE", None))
+        if observatory is not None and observatory.upper() != "HST":
+            raise CrdsNamingError(
+                "CRDS is configured for 'HST' but file", 
+                repr(os.path.basename(filename)),
+                "is for the", repr(observatory), 
+                "telescope.  Reconfigure CRDS_PATH or CRDS_SEVER_URL.")
+        else:
+            raise CrdsNamingError(
+                "File", repr(os.path.basename(filename)),
+                "is missing FILETYPE, CDBSFILE, DBTABLE, TELESCOP, and TELESCOPE;",
+                "CRDS cannot identify HST file type.")
     filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
     try:
         filekind = TYPES.filetype_to_filekind(instrument, filetype)
     except KeyError:
-        raise CrdsError("Invalid FILETYPE (or CDBSFILE) of '{}' for instrument '{}'." .format(filetype, instrument))
+        raise CrdsNamingError(f"Invalid FILETYPE (or CDBSFILE) of '{filetype}' for instrument '{instrument}'.")
     return path, "hst", instrument, filekind, serial, ext
 
 # ============================================================================
@@ -516,17 +525,13 @@ Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
 u=WFPC2, n=NICMOS, m=MULTI, m=SYNPHOT]
     """
-    if now is None:
+    if now is None:   # delay to ensure timestamp is unique.
         time.sleep(2)
 
     timeid = generate_timestamp(now)
 
-    if instr == "synphot":
-        suffix = "_" + filekind
-        instr_char = "m"
-    else:
-        suffix = "_" + filekind_to_suffix(instr, filekind)
-        instr_char = siname.instrument_to_id_char(instr)
+    suffix = "_" + filekind_to_suffix(instr, filekind)
+    instr_char = siname.instrument_to_id_char(instr)
 
     return timeid + instr_char + suffix + extension
 
@@ -607,7 +612,7 @@ def locate_dir(instrument, mode=None):
             except KeyError:
                 raise KeyError("Reference location not defined for " + repr(instrument) + 
                                ".  Did you configure " + repr(prefix) + "?")
-    elif mode == "instrument":   # use simple names inside CRDS cache.
+    elif mode == "instrument" and instrument != "synphot":   # use simple names inside CRDS cache.
         rootdir = os.path.join(crds_refpath, instrument)
         refdir = os.path.join(crds_refpath, prefix[:-1])
         if not os.path.exists(refdir):
@@ -616,6 +621,8 @@ def locate_dir(instrument, mode=None):
                 with log.verbose_warning_on_exception("Failed creating legacy symlink:", refdir, "-->", rootdir):
                     utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
                     os.symlink(rootdir, refdir)
+    elif mode == "instrument" and instrument == "synphot":
+        rootdir = os.path.join(crds_refpath, instrument)        
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
         rootdir = crds_refpath
     else:

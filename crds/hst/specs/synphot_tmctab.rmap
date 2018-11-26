@@ -1,0 +1,26 @@
+header = {
+    'classes' : ('Match',),
+    'derived_from' : 'Initial hand made version 2018-09-13.  Jira CCD-148.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'TMCTAB',
+    'filetype' : 'CRCOMPLIST',
+    'instrument' : 'SYNPHOT',
+    'ld_tpn' : 'synphot_tmc_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'synphot_tmctab.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((),),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_omit' : 'True',
+    'sha1sum' : '513aa126c3526679b27c0c0d09349d09d94dafe1',
+    'suffix' : 'tmc',
+    'text_descr' : 'Master Component Lookup Table',
+    'tpn' : 'synphot_tmc.tpn',
+    'unique_rowkeys' : ('COMPNAME',),
+}
+
+selector = Match({
+})

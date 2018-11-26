@@ -188,14 +188,18 @@ def reftypes_reference_name_to_tpn_text():
     >>> old_state = test_config.setup()
     >>> types = reftypes.get_types_object("hst")
     >>> print(types.reference_name_to_tpn_text("data/s7g1700gl_dead.fits"))
-    [('DESCRIP', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=('FUV', 'NUV')),
-     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('DEADTIME REFERENCE TABLE',)),
-     ('INSTRUME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('COS',)),
-     ('PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&PEDIGREE',)),
-     ('SEGMENT', 'COLUMN', 'CHARACTER', 'REQUIRED', values=('FUVA', 'FUVB', 'ANY')),
-     ('USEAFTER', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&SYBDATE',)),
-     ('VCALCOS', 'HEADER', 'CHARACTER', 'REQUIRED', values=())]
+    From TPN: cos_dead.tpn
+    ----------------------
+    INSTRUME            H        C         R    COS
+    FILETYPE            H        C         R    "DEADTIME REFERENCE TABLE"
+    DETECTOR            H        C         R    FUV,NUV
+    VCALCOS             H        C         R
+    USEAFTER            H        C         R    &SYBDATE
+    PEDIGREE            H        C         R    &PEDIGREE
+    DESCRIP             H        C         R
+    SEGMENT             C        C         R    FUVA,FUVB,ANY
+    <BLANKLINE>
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -204,14 +208,17 @@ def reftypes_reference_name_to_ld_tpn_text():
     >>> old_state = test_config.setup()
     >>> types = reftypes.get_types_object("hst")
     >>> print(types.reference_name_to_tpn_text("data/s7g1700gl_dead.fits"))
-    [('DESCRIP', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=('FUV', 'NUV')),
-     ('FILETYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('DEADTIME REFERENCE TABLE',)),
-     ('INSTRUME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('COS',)),
-     ('PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&PEDIGREE',)),
-     ('SEGMENT', 'COLUMN', 'CHARACTER', 'REQUIRED', values=('FUVA', 'FUVB', 'ANY')),
-     ('USEAFTER', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&SYBDATE',)),
-     ('VCALCOS', 'HEADER', 'CHARACTER', 'REQUIRED', values=())]
+    From TPN: cos_dead.tpn
+    ----------------------
+    INSTRUME            H        C         R    COS
+    FILETYPE            H        C         R    "DEADTIME REFERENCE TABLE"
+    DETECTOR            H        C         R    FUV,NUV
+    VCALCOS             H        C         R
+    USEAFTER            H        C         R    &SYBDATE
+    PEDIGREE            H        C         R    &PEDIGREE
+    DESCRIP             H        C         R
+    SEGMENT             C        C         R    FUVA,FUVB,ANY
+    <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
     

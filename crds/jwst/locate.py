@@ -349,8 +349,15 @@ def reference_keys_to_dataset_keys(rmapping, header):
         header["USEAFTER"] = header["META.USEAFTER"]
     if "USEAFTER" not in header and "META.USEAFTER" in header:
         header["USEAFTER"] = header["META.USEAFTER"]
-    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
-        reformatted = timestamp.reformat_useafter(rmapping, header).split()
+
+    # If USEAFTER is defined,  or we're configured to fake it...
+    #   don't invent one if its missing and we're not faking it.
+    if "USEAFTER" in header or config.ALLOW_BAD_USEAFTER:
+
+        # Identify this as best as possible,
+        filename = header.get("FILENAME", None) or rmapping.filename
+
+        reformatted = timestamp.reformat_useafter(filename, header).split()
         header["DATE-OBS"] = header["META.OBSERVATION.DATE"] = reformatted[0]
         header["TIME-OBS"] = header["META.OBSERVATION.TIME"] = reformatted[1]
 

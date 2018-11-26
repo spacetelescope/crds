@@ -344,7 +344,7 @@ than errors as the default.
             self.instruments = self.args.instruments
         elif self.args.all_instruments:
             instruments = list(self.obs_pkg.INSTRUMENTS)
-            for instr in ("all","system"):
+            for instr in ("all","system","synphot"):
                 if instr in instruments:
                     instruments.remove(instr)
             self.instruments = instruments
@@ -657,7 +657,6 @@ than errors as the default.
     def main(self):
         """Compute bestrefs for datasets."""
         # Finish __init__() inside --pdb
-        self.eliminate_dups_warning()
         if self.complex_init():
             for i, dataset in enumerate(self.new_headers):
                 if i != 0 and i % 1000 == 0:
@@ -665,7 +664,8 @@ than errors as the default.
                 self.process(dataset)
             self.post_processing()
         self.report_stats()
-        self.eliminate_dups_warning()
+        if self.args.eliminate_duplicate_cases:
+            log.warning("Running in --eliminate-duplicate-cases mode;  even successful bestrefs are categorized as errors for analysis.")
         log.verbose(self.get_stat("datasets"), "sources processed", verbosity=5)
         log.verbose(len(self.unkilled_updates), "source updates", verbosity=5)
         log.standard_status()
@@ -1008,19 +1008,10 @@ than errors as the default.
         """
         log.reset()
         self.clear_error_counts()
-        self.eliminate_dups_warning()
         for dataset in self.updates:
             updates = self.updates[dataset]
             self.log_and_track_error(
-                dataset, "any", "any", "COVERAGE:", self.updates_repr(updates))
-        self.eliminate_dups_warning()
-    
-    def eliminate_dups_warning(self):
-        """IFF running with --eliminate-duplicate-cases,  issue a warning that all results are mapped to errors
-        to support coverage categorization as "unique error classes".
-        """
-        if self.args.eliminate_duplicate_cases:
-            log.warning("Running in --eliminate-duplicate-cases mode;  even successful bestrefs are categorized as errors for analysis.")
+                dataset, "any", "any", "COVERAGE:", self.updates_repr(updates))  
 
     def updates_repr(self, updates):
         """Convert a single dataset's list of update tuples into a string which

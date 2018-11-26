@@ -178,7 +178,7 @@ class ReferenceCertifier(Certifier):
                 presence = checker.is_applicable(self.header)
                 if presence == "W":  # excludes "O"
                     log.warning("Checking", repr(checker.info.name), "failed:",
-                                repr(str(exc)))
+                                str(exc))
                 else:
                     self.log_and_track_error(
                         "Checking", repr(checker.info.name),":", str(exc))

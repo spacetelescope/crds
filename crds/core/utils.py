@@ -113,16 +113,25 @@ def traced(func):
 # ===================================================================
 
 def gc_collected(func):
-    """Run Python's gc.collect() before and after the decorated function."""
+    """Run Python's gc.collect() before and after the decorated function.
+
+    This is pretty slow and may be overkill but was motivated by file 
+    submission use cases such as "certify" and "insert_references" which
+    iterate over large numbers of reference files and,  particularly when
+    examining arrays,  may easily exhaust memory,  sometimes leading to 
+    silent OS or shell level crashes with no traceback.
+    """
     @functools.wraps(func)
     def func2(*args, **keys):
         "Decoration wrapper for @gc_collected."
-        gc.collect()
+        if config.EXPLICIT_GARBAGE_COLLECTION:
+            gc.collect()
         result = None
         try:
             result = func(*args, **keys)
         finally:
-            gc.collect()
+            if config.EXPLICIT_GARBAGE_COLLECTION:
+                gc.collect()
         return result
     func2.__name__ = func.__name__ + " [gc_collected]"
     func2._gc_collected = True
@@ -760,7 +769,7 @@ DONT_CARE_RE = re.compile(r"^" + r"|".join([
     r"-2147483648.0",
     r"\(\)","N/A","NOT APPLICABLE", "NOT_APPLICABLE"]) + "$")
 
-NUMBER_RE = re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
+NUMBER_RE = re.compile(r"^([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?|[+-]?[0-9]+\.)$")
 
 def condition_value(value):
     """Condition `value`,  ostensibly taken from a FITS header or CDBS
@@ -794,6 +803,7 @@ def condition_value(value):
     'F'
     >>> condition_value(True)
     'T'
+
     >>> condition_value(1)
     '1.0'
     >>> condition_value('-9')
@@ -802,10 +812,15 @@ def condition_value(value):
     '1.0'
     >>> condition_value('1.')
     '1.0'
+
     >>> condition_value('foo')
     'FOO'
+
     >>> condition_value('iref$uaf12559i_drk.fits')
     'IREF$UAF12559I_DRK.FITS'
+
+    >>> condition_value('2013-11-05 15:21:34')
+    '2013-11-05 15:21:34'
     """
     value = str(value).strip().upper()
     if NUMBER_RE.match(value):

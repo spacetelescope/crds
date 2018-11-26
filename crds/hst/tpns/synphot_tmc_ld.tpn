@@ -5,18 +5,17 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
-# 05/17/2007 58081  MSwam  change PEDIGREE validation by request
-#
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #--------------------------------------------------------------------------
-DBTABLE             H        C         R    CRTHROUGHPUT
 USEAFTER            H        C         R    &SYBDATE
-INSTRUME            H        C         R
+INSTRUME            H        C         R    HST,SYNPHOT
+DBTABLE             H        C         R    CRCOMPLIST
+DESCRIP             H        C         R
 COMMENT             H        C         R
 HISTORY             H        C         R
-COMPNAME            H        C         R
-DESCRIP             H        C         R
-PEDIGREE            H        C         R    &PEDIGREE
-WAVELENGTH	    C        R         R
 
+TIME                C        C         R   &ANYDATE
+COMPNAME            C        C         R
+FILENAME            C        C         R  
+COMMENT             C        C         R
 

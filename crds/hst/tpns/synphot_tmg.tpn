@@ -7,15 +7,18 @@
 #
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #--------------------------------------------------------------------------
+USEAFTER            H        C         R    &SYBDATE
+INSTRUME            H        C         R    HST,SYNPHOT
 DBTABLE             H        C         R    CRGRAPH
-DESCRIP             H        C         P
-USEAFTER            H        C         R    &ANYDATE
+DESCRIP             H        C         R
 GENERATI            H        I         R
-INSTRUME            H        C         R    HST
-COMMENT             H        C         P
+COMMENT             H        C         R
 HISTORY             H        C         R
+
 COMPNAME            C        C         R
 INNODE	            C        I         R
 OUTNODE             C        I         R
 KEYWORD             C        C         R
-COMMENT             C        C         P
+THCOMPNAME          C        C         R
+COMMENT             C        C         R
+
