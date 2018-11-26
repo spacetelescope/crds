@@ -112,6 +112,8 @@ class ChecksumScript(cmdline.Script):
     
     epilog = """    
     """
+
+    locate_file = cmdline.Script.locate_file_outside_cache
     
     def add_args(self):
         self.add_argument(

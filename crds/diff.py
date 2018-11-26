@@ -806,6 +806,8 @@ Mutually Exclusive Modes
         self.old_file = None
         self.new_file = None
     
+    locate_file = cmdline.Script.locate_file_outside_cache
+    
     def add_args(self):
         """Add diff-specific command line parameters."""
         self.add_argument("old_file",  help="Prior file of difference.""")
@@ -859,8 +861,6 @@ Mutually Exclusive Modes
             help="Simplify formatting of difference results (remove tuple notations)")
         self.add_argument("-F", "--brief", dest="brief", action="store_true",
             help="Switch alias for --lowest-mapping-only --remove-paths --hide-boring-diffs --include-headers")
-
-    # locate_file = cmdline.Script.locate_file_outside_cache
 
     def main(self):
         """Perform the differencing."""

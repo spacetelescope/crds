@@ -148,6 +148,8 @@ class RefactorScript(cmdline.Script):
     
     epilog = """    
     """
+
+    locate_file = cmdline.Script.locate_file_outside_cache
     
     def add_args(self):
         self.add_argument("command", choices=("insert", "delete", "set_header", "del_header"),
@@ -158,18 +160,32 @@ class RefactorScript(cmdline.Script):
             help="Name of modified reference mapping output file.")        
         self.add_argument('references', type=str, nargs="+",
             help="Reference files to insert into (or delete from) `old_rmap` to produce `new_rmap`.")
+
+    @property
+    def old_rmap(self):
+        return self.locate_file(self.args.old_rmap)
+
+    @property
+    def new_rmap(self):
+        return self.locate_file(self.args.new_rmap)
+
+    @property
+    def ref_paths(self):
+        self.args.files = self.args.references
+        return self.files  # standard file location and @-handling for self.args.files
         
     def main(self):
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert":
-                rmap_insert_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+                rmap_insert_references(self.old_rmap, self.new_rmap, self.ref_paths)
             elif self.args.command == "delete":
-                rmap_delete_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+                rmap_delete_references(self.old_rmap, self.new_rmap, self.ref_paths)
             elif self.args.command == "set_header":
-                set_header_value(self.args.old_rmap, self.args.new_rmap, self.args.references[0], 
-                                 " ".join(self.args.references[1:]))
+                field, setting = self.args.references[0], " ".join(self.args.references[1:])
+                set_header_value(self.old_rmap, self.new_rmap, field, setting)
             elif self.args.command == "del_header":
-                del_header_value(self.args.old_rmap, self.args.new_rmap, self.args.references[0])
+                field = self.args.references[0]
+                del_header_value(self.old_rmap, self.new_rmap, field)
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
         return log.errors()
