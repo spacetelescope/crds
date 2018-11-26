@@ -22,7 +22,7 @@ def dt_refactor_add_files():
 
     >>> RefactorScript("crds.refactor insert data/hst_cos_deadtab.rmap hst_cos_deadtab_insert.rmap data/s7g1700hl_dead.fits")()  # doctest: +ELLIPSIS
     CRDS - INFO -  Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
-    CRDS - INFO -  Writing 'hst_cos_deadtab_insert.rmap'
+    CRDS - INFO -  Writing './hst_cos_deadtab_insert.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  2 infos
