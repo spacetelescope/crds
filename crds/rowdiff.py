@@ -912,13 +912,15 @@ class RowDiffScript(cmdline.Script):
                           help="List of fields to do a mode compare",
                           type=str)
 
+    locate_file = cmdline.Script.locate_file_outside_cache
+
     # Main program
     def main(self):
         """Perform the differencing"""
 
         # Get the path to the fits files.
-        tableA_path = rmap.locate_file(self.args.tableA, self.observatory)
-        tableB_path = rmap.locate_file(self.args.tableB, self.observatory)
+        tableA_path = self.locate_file(self.args.tableA)
+        tableB_path = self.locate_file(self.args.tableB)
 
         # Expand out the input field lists.
         fields = []

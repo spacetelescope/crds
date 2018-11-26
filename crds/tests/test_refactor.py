@@ -21,7 +21,11 @@ def dt_refactor_add_files():
     >>> log.set_test_mode()
 
     >>> RefactorScript("crds.refactor insert data/hst_cos_deadtab.rmap hst_cos_deadtab_insert.rmap data/s7g1700hl_dead.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO - Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
+    CRDS - INFO -  Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
+    CRDS - INFO -  Writing 'hst_cos_deadtab_insert.rmap'
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  2 infos
     0
 
     >>> diff.DiffScript("crds.diff data/hst_cos_deadtab.rmap ./hst_cos_deadtab_insert.rmap").run()
@@ -45,7 +49,10 @@ def dt_refactor_delete_files():
     >>> log.set_test_mode()
 
     >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete.rmap data/s7g1700gl_dead.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO - Deleting 'data/s7g1700gl_dead.fits' from 'hst_cos_deadtab.rmap'
+    CRDS - INFO -  Deleting 'data/s7g1700gl_dead.fits' from 'hst_cos_deadtab.rmap'
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_delete.rmap").run()
@@ -56,8 +63,11 @@ def dt_refactor_delete_files():
     True
 
     >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete2.rmap data/foobar.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO - Deleting 'data/foobar.fits' from 'hst_cos_deadtab.rmap'
-    CRDS - ERROR - Refactoring operation FAILED : Terminal 'foobar.fits' could not be found and deleted.
+    CRDS - INFO -  Deleting 'data/foobar.fits' from 'hst_cos_deadtab.rmap'
+    CRDS - ERROR -  Refactoring operation FAILED : Terminal 'foobar.fits' could not be found and deleted.
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  1 infos
     1
 
     >>> os.path.exists("./hst_cos_deadtab_delete2.rmap")
@@ -70,6 +80,9 @@ def dt_refactor_add_header():
     >>> log.set_test_mode()
 
     >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap new_key some new value")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  0 infos
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap --include-header-diffs --hide-boring-diffs").run()
@@ -87,6 +100,9 @@ def dt_refactor_replace_header():
     >>> log.set_test_mode()
 
     >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap reffile_format something new")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  0 infos
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap --include-header-diffs --hide-boring-diffs").run()
@@ -104,6 +120,9 @@ def dt_refactor_del_header():
     >>> log.set_test_mode()
 
     >>> RefactorScript("refactor.py del_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap reffile_format")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  0 infos
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap --include-header-diffs --hide-boring-diffs").run()

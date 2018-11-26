@@ -431,7 +431,7 @@ def certify_missing_keyword():
 
 def certify_recursive():
     """
-    >>> TestCertifyScript("crds.certify hst_cos.imap --exist --dont-parse")() # doctest: +ELLIPSIS
+    >>> TestCertifyScript("crds.certify crds://hst_cos.imap --exist --dont-parse")() # doctest: +ELLIPSIS
     CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context None
@@ -482,7 +482,7 @@ def certify_table_comparison_context():
     """
     >>> old_state = test_config.setup()
 
-    >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
+    >>> TestCertifyScript("crds.certify crds://y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying '.../references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
@@ -585,7 +585,7 @@ def certify_comparison_context_none_all_references():
 
 def certify_comparison_context_none_all_mappings():
     """
-    >>> TestCertifyScript("crds.certify hst_cos_deadtab.rmap --comparison-context None")() # doctest: +ELLIPSIS
+    >>> TestCertifyScript("crds.certify crds://hst_cos_deadtab.rmap --comparison-context None")() # doctest: +ELLIPSIS
     CRDS - INFO -  Comparison context explicitly specified as 'none',  no --comparison-context will be used.
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_deadtab.rmap' (1/1) as 'MAPPING' relative to context None

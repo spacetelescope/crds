@@ -39,8 +39,6 @@ EXTENSIONS = TYPES.extensions
 TEXT_DESCR = TYPES.text_descr
 FILEKINDS = TYPES.filekinds
 
-UNDEFINED_PARKEY_SUBST_VALUE = "UNDEFINED"
-
 INSTRUMENT_FIXERS = {
     "hst" : "synphot",
     "wfii": "wfpc2",

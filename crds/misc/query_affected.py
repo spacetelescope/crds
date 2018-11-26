@@ -310,6 +310,8 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         if not effects:
             log.info("No new results are available.")
         else:
+            if not ids:
+                log.info("No ids were affected.")
             print("#"*100, file=sys.stderr)
             log.info("Contributing context switches =", len(effects))
             log.info("Total products affected =", len(ids))

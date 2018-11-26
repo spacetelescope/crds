@@ -1,0 +1,78 @@
+header = {
+    'classes' : ('Match',),
+    'comment_parkeys' : ('CREATED', 'DESCRIP'),
+    'derived_from' : 'Initial hand made version 2018-11-24. Jira CCD-148.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'THRUPUT',
+    'filetype' : 'CRTHROUGHPUT',
+    'instrument' : 'SYNPHOT',
+    'ld_tpn' : 'synphot_syn_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_synphot_thruput.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('COMPNAME', 'CREATED', 'DESCRIP'),),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(True)',
+    'sha1sum' : 'b60c5794215b3089151066cb12f9fd61d3819942',
+    'suffix' : 'syn',
+    'text_descr' : 'Component Throughput Tables',
+    'tpn' : 'synphot_syn.tpn',
+    'unique_rowkeys' : ('WAVELENGTH',),
+    'update_raw_parkeys' : 'TRUE',
+}
+
+comment = """
+
+NOTE:  rmap_relevance is set to True for bestrefs test purposes.
+
+----------------------------------------------------------------------
+[0]: SIMPLE     True             conforms to FITS standard
+[0]: BITPIX     8                array data type
+[0]: NAXIS      0                number of array dimensions
+[0]: EXTEND     True             
+[0]: USEAFTER   Nov 05 2018 11:55:10 
+[0]: INSTRUME   HST              
+[0]: DBTABLE    CRCOMPLIST       
+[0]: DESCRIP    The lookup table for HST component throughputs--------------------- 
+[0]: PEDIGREE   INFLIGHT 04/18/2000 11/05/2018 
+[0]: COMMENT    Reference file created by ReDCaT Team 
+[0]: HISTORY    = Reference file created by COS Team
+2381442LM_TMC
+ZD8Xh96XZC6Xf96X
+0
+= 'Reference file created by Sean Lockwood'
+
+Updated on Apr 4 2017 15:51:8
+
+Updated on Apr 7 2017 14:59:1
+
+Throughputs for the latest STIS time dependent sensitivity trends.-
+
+Updated on Jun 22 2017 20:20:51
+
+It was discovered that while running PYSYNPHOT and using an ACS OBSMODE
+which contained an MJD, the expected ccd throughput table was selected.
+ However, if the OBSMODE did not contain an MJD, the previous version of
+ the throughput file was used instead.  It appears that the previous ver
+sion of the script which generated the TMC was able to have the same fil
+e used for two different values of COMNAME (e.g., acs_wfc_ccd1_mjd_021_s
+yn.fits for both acs_wfc_ccd1_mjd and acs_wfc_ccd1); it may have has som
+ething to do with the values of INNODE and OUTNODE in the TMG.  The curr
+ent version of the script depends only on the value of the COMPNAME keyw
+ord, resulting in only the _mjd COMPNAME entry for ACS in the TMC being
+updated.  The files being delivered are copies of their _mjd counterpart
+s, with the COMPNAME for each of the files being: acs_wfc_ccd1, acs_wfc_
+ccd2, and acs_hrc_ccd.  The names of the files were changed, removing th
+
+Updated on Jun 23 2017 18:1:27
+
+"""
+
+selector = Match({
+    ('ACS_BLOCK1', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block1 filter--------------------') : 'acs_block1_002_syn.fits',
+    ('ACS_BLOCK2', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block2 filter--------------------') : 'acs_block2_002_syn.fits',
+    ('ACS_BLOCK3', '2013-11-05 15:21:34', 'throughput curve (all zeroes) for block3 filter--------------------') : 'acs_block3_002_syn.fits',
+})

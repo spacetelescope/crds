@@ -2,6 +2,8 @@
 
 MAYBE integrate rc, environment, and command line parameters.
 """
+# -----------------------------------------------------------------------------
+
 import sys
 import os
 import argparse
@@ -10,13 +12,17 @@ import cProfile, pstats
 import re
 from collections import Counter, defaultdict
 
+# -----------------------------------------------------------------------------
+
 from argparse import RawTextHelpFormatter
+
+# -----------------------------------------------------------------------------
 
 from . import log, heavy_client, constants
 from . import config, utils, exceptions, rmap
 from crds.client import api
 
-# from crds import data_file
+# from crds import data_file  :   deferred,  see below
 
 # =============================================================================
 
@@ -403,10 +409,14 @@ class Script:
         """
         filename2 = config.pop_crds_uri(filename)   # nominally crds://
         filename2 = self.resolve_context(filename2) # e.g. hst-operational -->  hst_0320.pmap
-        if filename != filename2:  # Had crds:// or was date based copnt
+        if filename != filename2:  # Had crds:// or was date based
             return config.locate_file(filename2, self.observatory)
         else:
-            return os.path.abspath(filename2)
+            if not os.path.dirname(filename2):
+                return "./" + filename2
+            else:
+                return filename2
+            # return os.path.abspath(filename2)
     
     def _profile(self):
         """Run _main() under the Python profiler."""

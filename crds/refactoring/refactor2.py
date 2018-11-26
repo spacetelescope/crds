@@ -4,7 +4,7 @@ the transformations required to automate rmap maintenance on the CRDS website.
 import os.path
 import sys
 
-from crds.core import (log, utils, rmap, cmdline)
+from crds.core import (log, utils, rmap, cmdline, config)
 from crds.core import exceptions as crexc
 from crds.core.log import srepr
 from crds import (diff, sync, certify, matches)
@@ -44,14 +44,14 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     Return new ReferenceMapping named `new_rmap`
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
+    new.header["derived_from"] = old.basename
     for reference in inserted_references:
         baseref = os.path.basename(reference)
         with log.augment_exception("In reference", srepr(baseref)):
             log.info("Inserting", srepr(baseref), "into", srepr(new.name))
             new = new.insert_reference(reference)
-    new.header["derived_from"] = old.basename
-    log.verbose("Writing", srepr(new_rmap))
-    new.write(new_rmap)
+            log.verbose("Writing", srepr(new_rmap))
+            new.write(new_rmap)
     formatted = new.format()
     for reference in inserted_references:
         reference = os.path.basename(reference)
@@ -449,10 +449,10 @@ class RefactorScript2(cmdline.Script):
     def main(self):
 
         if self.args.best_effort:
-            os.environ["PASS_INVALID_VALUES"] = "1"           # JWST SSB cal code data model
-            os.environ["CRDS_ALLOW_BAD_USEAFTER"] = "1"       # Don't fail for bad USEAFTER values
-            os.environ["CRDS_ALLOW_SCHEMA_VIOLATIONS"] = "1"  # Don't fail for data model bad value errors
-            os.environ["CRDS_ALLOW_BAD_PARKEY_VALUES"] = "1"  # Don't fail for values which don't pass DM + .tpn checking
+            config.PASS_INVALID_VALUES.set(True)           # JWST SSB cal code data model
+            config.ALLOW_BAD_USEAFTER.set(True)            # Don't fail for bad USEAFTER values
+            config.ALLOW_SCHEMA_VIOLATIONS.set(True)       # Don't fail for data model bad value errors
+            config.ALLOW_BAD_PARKEY_VALUES.set(True)       # Don't fail for values which don't pass DM + .tpn checking
         
         if self.args.rmaps:   # clean up dead lines from file lists
             self.args.rmaps = [ self.resolve_context(mapping) for mapping in self.args.rmaps if mapping.strip() ]

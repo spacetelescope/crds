@@ -233,6 +233,9 @@ class MissingColumnError(CrdsError):
 class NameComparisonError(CrdsError):
     """Failed to determine the time order of two names."""
 
+class CrdsNamingError(CrdsError):
+    """CRDS enountered an error(s) while trying to name a file."""
+
 # -------------------------------------------------------------------------------------------
 
 class CrdsPipelineCfgDeterminationError(CrdsError):

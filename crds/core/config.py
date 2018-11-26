@@ -521,6 +521,18 @@ def locate_config(cfg, observatory):
         return cfg
     return os.path.join(get_crds_cfgpath(observatory), cfg)
 
+def override_crds_paths(crds_path):
+    """Overrides all CRDS PATH definition environment variables
+    (e.g. CRDS_MAPPATH, CRDS_MAPPATH_SINGLE, CRDS_REFPATH, ...)
+    as if the user had only specified CRDS_PATH=crds_path and let
+    all other cache subpaths be defined at default locations.
+    """
+    for name in os.environ:
+        if "CRDS_" in name and "PATH" in name:
+            del os.environ[name]
+    os.environ["CRDS_PATH"] = crds_path
+    
+
 # -------------------------------------------------------------------------------------
 
 def get_crds_picklepath(observatory):
@@ -546,6 +558,8 @@ AUTO_PICKLE_CONTEXTS = BooleanConfigItem("CRDS_AUTO_PICKLE_CONTEXTS", False,
 FORCE_COMPLETE_LOAD = BooleanConfigItem("CRDS_FORCE_COMPLETE_LOAD", False,
     "When True, force CRDS contexts to load in their entirety rather than based on what is actually used.")
 
+EXPLICIT_GARBAGE_COLLECTION = BooleanConfigItem("CRDS_EXPLICIT_GARBAGE_COLLECTION", True,
+    "When False, the @gc_collected function decorator skips garbage collection.")
 # -------------------------------------------------------------------------------------
 
 def get_sqlite3_db_path(observatory):
@@ -1037,7 +1051,7 @@ CRDS_NAME_RE_STR = r"([a-z]{1,32}_?){1,6}(_\d\d\d\d)?\."
 CRDS_NAME_RE = re.compile(CRDS_NAME_RE_STR)   # intentionally not complete.
 
 # s7g1700gl_dead.fits
-CDBS_NAME_RE_STR = r"[a-z0-9]{1,10}_[a-z0-9]{1,10}\.(fits|r\d[hd])"
+CDBS_NAME_RE_STR = r"[a-z0-9_]{1,52}\.(fits|r\d[hd])"
 CDBS_NAME_RE = re.compile(complete_re(CDBS_NAME_RE_STR))
 
 def is_valid_reference_name(filename):

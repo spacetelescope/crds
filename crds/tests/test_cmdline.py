@@ -283,7 +283,7 @@ class TestCmdline(test_config.CRDSTestCase):
     def test_file_outside_cache_pathless(self):
         s = Script("cmdline.Script")
         path = s.locate_file_outside_cache("hst_0001.pmap")
-        assert path.endswith('crds/tests/hst_0001.pmap'), path
+        assert path.endswith('./hst_0001.pmap'), path
 
     def test_file_outside_cache_uri(self):
         """Explicit crds:// notation for files inside cache."""

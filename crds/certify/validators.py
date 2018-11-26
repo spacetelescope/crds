@@ -12,7 +12,7 @@ import numpy as np
 
 # ============================================================================
 
-from crds.core import log, utils, timestamp, selectors
+from crds.core import log, utils, timestamp, selectors, config
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds.core.exceptions import BadKernelSumError, BadKernelCenterPixelTooSmall
@@ -699,6 +699,32 @@ class Isomorphicfitsver2Validator(IsomorphicfitsverValidator):
 
 class Isomorphicfitsver1Validator(IsomorphicfitsverValidator):
     max_ver = 1
+    
+# ----------------------------------------------------------------------------
+
+class FileexistsValidator(Validator):
+    """"""
+    def _check_value(self, filename, value):
+        """Verify that the file named `value` defined somewhere in certified
+        file `filename` actually exists in CRDS.   This is useful for e.g.
+        checking that a SYNPHOT TMC or TMT filename column value actually
+        exists in CRDS.
+        """
+        observatory = utils.file_to_observatory(self.condition(filename))
+        checked_path = config.locate_file(value, observatory)
+        log.verbose("Checking file", repr(value), "for existence in CRDS cache.")
+        if not os.path.exists(checked_path):
+            raise ValueError("Required CRDS file " + repr(value) + " does not exist in CRDS cache.")
+
+    def condition(self, value):
+        crds_name = value
+        if "$" in value: # remove IRAF-style path prefix from SYNPHOT TMC and TMT filename column values
+            crds_name = crds_name.split("$")[-1]
+        if "[" in value: # split off HDU index trailer,  or SYNPHOT parameterization trailer
+            crds_name = crds_name.split("[")[0]
+        log.verbose("Conditioned filepath", repr(value), "to", repr(crds_name))
+        return crds_name
+
     
 # ----------------------------------------------------------------------------
 

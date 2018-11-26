@@ -283,6 +283,7 @@ class Selector:
             self._raw_selections = merge_selections  # XXX not really,  nominally unused XXXX
             self._selections = merge_selections
         self._parkey_map = self.get_parkey_map()
+        self._comment_parkeys = tuple(name.upper() for name in self._rmap_header.get("comment_parkeys",()))
 
     def _trace_compare(self, other, show_equal=False):
         utils.trace_compare(self, other, show_equal)
@@ -897,7 +898,7 @@ class Selector:
             else:
                 old_key, old_value = self._raw_selections[i]
                 log.verbose("Modify found", repr(key), "as primitive", repr(old_value), "replacing with", repr(value))
-                self._replace_item(old_key, value)
+                self._replace_item(key, value)
         
     def _create_path(self, header, value, parkey, classes):
         """Create the Selector tree corresponding to `header` and `value` based on the
@@ -937,24 +938,11 @@ class Selector:
         for i, (old_key, _old_value) in enumerate(self._raw_selections):
             if self._equal_keys(key, old_key):
                 return i
-        else:
-            return None
+        return None
 
     def _equal_keys(self, key1, key2):
-        """Return True IFF `key1` is equivalent to `key2` for rmap modification."""
-        return self._normalize_key(key1) == self._normalize_key(key2)
-    
-    def _normalize_key(self, key):
-        """Return the simple version of single element keys.   Include key
-        conditioning so that numbers are matched as float strings, times are
-        uniform, etc.
-        
-        e.g.   ('something',) -->   'something'
-        e.g.   ('something','else') --> ('something','else')
-        """
-        if isinstance(key, tuple) and len(key) == 1:
-            key = key[0]
-        return self.condition_key(key)
+        """Return True IFF `key1` is equivalent to `key2` for rmap modification.  Ignore comment pars."""
+        return self.condition_key(key1) == self.condition_key(key2)
     
     @classmethod    
     def _make_key(self, header, parameters):
@@ -1837,9 +1825,26 @@ Restore original debug behavior:
         self._match_selections = self.get_matcher_selections(dict_wo_dups(self._selections))
         self._value_map = self.get_value_map()
      
+    def _equal_keys(self, key1, key2):
+        """Return True IFF `key1` is equivalent to `key2` for rmap modification.  Ignore comment pars."""
+        key1, key2 = self.condition_key(key1), self.condition_key(key2)
+        if len(key1) != len(key2):
+            return False
+        for i, v1 in enumerate(key1):
+            if self._parameters[i].upper() in self._comment_parkeys:
+                continue
+            if v1 != key2[i]:
+                return False
+        return True
+    
     @classmethod
     def condition_key(cls, match_tuple):
-        """Normalize the elements of match_tuple using utils.condition_value()"""
+        """Normalize the elements of match_tuple using utils.condition_value()
+        
+        e.g.   'something' -->   ('something',)
+        e.g.   1 -->   (1,)
+        e.g.   ('something','else') --> ('something','else')        
+        """
         if isinstance(match_tuple, tuple):
             return tuple([cls.condition_key_element(elem) for elem in match_tuple])
         else:  # simple strings
@@ -2017,6 +2022,9 @@ Restore original debug behavior:
             raise ValidationError("wrong length for parameter list " + 
                                   repr(self._parameters) + " for key " + repr(key))
         for i, name in enumerate(self._parameters):
+            if name in self._comment_parkeys:
+                log.verbose("Ignoring comment parameter", repr(name), "=", repr(key[i]))
+                continue
             if name not in valid_values_map:
                 log.verbose("Unchecked", repr(name), "=", repr(key[i]))
                 continue
@@ -2358,7 +2366,7 @@ Restore debug configuration.
         version = self._make_key(header, self._parameters)
         self._validate_version(version)
         return self.condition_key(version)
-        
+
     @classmethod
     def _make_key(self, header, parkeys):
         """Join reference file version parameters with periods, remove glob spaces.
