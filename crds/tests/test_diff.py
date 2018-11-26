@@ -581,7 +581,7 @@ def dt_diff_recurse_added_deleted_na():
     Changed two COS FLATFILE references to OMIT and N/A
 
     >>> old_state = test_config.setup()
-    >>> DiffScript("crds.diff hst.pmap data/hst.pmap --recurse-added-deleted")()  # doctest: +ELLIPSIS
+    >>> DiffScript("crds.diff crds://hst.pmap data/hst.pmap --recurse-added-deleted")()  # doctest: +ELLIPSIS
     (('.../mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'data/hst_cos_twozxtab_0262.rmap', ('FUV', 'SPECTROSCOPIC', '3.0'), ('2009-05-11', '00:00:00'), 'added terminal z2d1925ql_2zx.fits')
     (('.../mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700kl_phot.fits')
     (('.../mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:00'), 'deleted terminal u8k1433ql_phot.fits')

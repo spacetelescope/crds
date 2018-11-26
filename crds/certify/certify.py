@@ -914,10 +914,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
-    # For files on the command line to default to normal UNIX syntax, no path is CWD,
-    # uncomment following statement.   Add crds:// for cache paths.
-
-    # locate_file = cmdline.Script.locate_file_outside_cache
+    # For files on the command line to default to normal UNIX syntax, no path
+    # is CWD, uncomment following statement.  Add crds:// for cache paths.
+    locate_file = cmdline.Script.locate_file_outside_cache
 
     def main(self):
         if self.args.deep:
