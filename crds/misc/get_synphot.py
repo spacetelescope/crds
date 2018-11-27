@@ -74,16 +74,13 @@ Example get_synophot runs:
 
   This keeps a copy of the working CRDS cache under <my_pysyn_dir>/crds.  These files
   refer to the same storage as the normal synphot paths and do not require extra space.
+  --keep-crds is largely used to minimize repeat downloads.
 
 4. Get synphot files,  keeping old versions and user added synphot files
 
-  $ crds get_synphot  my_pysyn_dir  hst-edit --keep-cdbs
+  $ crds get_synphot  my_pysyn_dir  hst-edit --keep-synphot
 
-  This retains all the existing synphot directories and files under my_pysyn_dir
-
-NOTE: --keep-crds and --keep-cdbs are mutually incompatible because it creates
-      the possibility of different files with the same names in the CRDS cache
-      and synphot subdirectories.  
+  This retains the existing synphot comp and mtab directories my_pysyn_dir.
 """
     def __init__(self, *args, **keys):
         super(GetSynphotScript, self).__init__(*args, **keys)
@@ -101,7 +98,7 @@ NOTE: --keep-crds and --keep-cdbs are mutually incompatible because it creates
             "--keep-crds", action="store_true",
             help="Don't remove the 'crds' cache subdirectory of <synphot_dir> after downloading.")
         self.add_argument(
-            "--keep-cdbs", action="store_true",
+            "--keep-synphot", action="store_true",
             help="Don't remove <synphot_dir> subdirectories before linking requested files.")
 
     def determine_contexts(self):
@@ -127,7 +124,7 @@ NOTE: --keep-crds and --keep-cdbs are mutually incompatible because it creates
         syn_name_map = self.pysyn_cdbs_from_syn_tables()
 
         # Blow away comp and mtab to remove old versions of links
-        if not self.args.keep_cdbs:
+        if not self.args.keep_synphot:
             self.rmdir("comp")
             self.rmdir("mtab")
             
