@@ -3,7 +3,6 @@ the transformations required to automate rmap maintenance on the CRDS website.
 """
 import sys
 import os.path
-import gc
 
 # ============================================================================
     
@@ -55,95 +54,41 @@ def update_derivation(new_path, old_basename=None):
     
 # ============================================================================
 
-REFACTOR_SAVE_COUNT = 100
-
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
     or replacing all files in `inserted_references` and write out the result to
-    `new_rmap`.
-
-    Raise an exception if any reference in inserted_references replaces another
-    exactly,  effectively resulting in dropping the replaced file.   Process all
-    references issuing log ERROR messages prior to raising an exception.
+    `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
     
-    Returns          new ReferenceMapping named `new_rmap`.
+    Return new ReferenceMapping named `new_rmap`
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
-
     inserted_cases = {}
     exc = None
-
-    for i, reference in enumerate(inserted_references):
-
+    for reference in inserted_references:
         log.info("Inserting", os.path.basename(reference), "into",
                  repr(new.name))
-
+        new = new.insert_reference(reference)
         baseref = os.path.basename(reference)
-        try:
-            new = new.insert_reference(reference)
-        except Exception as exc:
-            exc = exceptions.MappingInsertionError(
-                "Failed inserting", repr(baseref), "into rmap", 
-                repr(old_rmap), ":", srepr(exc))
-            log.error(str(exc))
-            continue
-
-        exc, inserted_cases = _check_rmap_overlaps(exc, inserted_cases, new, baseref)
-
-        # Periodically save work and recover memory resources.
-        if i != 0 and i % REFACTOR_SAVE_COUNT == 0:
-            _write_rmap(old, new, new_rmap)
-
-    _write_rmap(old, new, new_rmap)
-
+        cases = []
+        with log.warn_on_exception("Failed capturing matching diagnostics for",
+                                   repr(baseref)):
+            cases = new.file_matches(baseref)
+        for fullcase in cases:
+            case = fullcase[1:]
+            if case not in inserted_cases:
+                inserted_cases[case] = baseref
+            else:
+                exc = exceptions.OverlappingMatchError(
+                    "Matching case for", srepr(baseref),
+                    "overlaps", srepr(inserted_cases[case]),
+                    "at case", repr(case))
+                log.error(str(exc))
     if exc is not None:
         raise exc
-
-    return new
-
-def _check_rmap_overlaps(exc, inserted_cases, new, baseref):
-    """Check that the matching cases of `baseref` don't overlap the match
-    cases for any other reference files exactly.
-
-    exc obj or None   Exception subclass tracking last exception for deferred raise
-    inserted_cases    { match_case_parameter_tuple : baseref, ... }
-    new               loaded rmap being built up insert-by-insert
-    baseref           basename of reference file
-
-    returns           exception obj or None, updated inserted_cases
-    """
-    cases = []
-    with log.warn_on_exception("Failed capturing matching diagnostics for",
-                               repr(baseref) + ".", 
-                               "Match overlap detection is disabled."):
-        cases = new.file_matches(baseref)
-    for fullcase in cases:
-        case = fullcase[1:]
-        if case not in inserted_cases:
-            inserted_cases[case] = baseref
-        else:
-            exc = exceptions.OverlappingMatchError(
-                "Matching case for", srepr(baseref),
-                "exactly overlaps", srepr(inserted_cases[case]),
-                "at case", repr(case), "replacing it.")
-            log.error(str(exc))
-    return exc, inserted_cases
-
-@utils.gc_collected
-def _write_rmap(old, new, new_rmap):
-    """Write out ReferenceMapping `new` to filepath `new_rmap` after attempting to
-    free memory and setting it's "derived_from" field to the name of
-    ReferenceMapping `old`.  
-
-    This can be an intermediate save or the save of the final rmap of
-    rmap_insert_references.
-
-    Returns   None
-    """
-    log.info("Writing", repr(new_rmap))
-    utils.clear_function_caches()
     new.header["derived_from"] = old.basename
+    log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
+    return new
 
 def rmap_delete_references(old_rmap, new_rmap, deleted_references):
     """Given the full path of starting rmap `old_rmap`,  modify it by deleting 
