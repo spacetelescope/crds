@@ -480,10 +480,9 @@ def dt_synphot_refactor():
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap data/2b516556m_tmc.fits")()
     CRDS - INFO -  Inserting 2b516556m_tmc.fits into 'synphot_tmctab.rmap'
-    CRDS - INFO -  Writing '/tmp/synphot_tmctab.test.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  2 infos
+    CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap")()
@@ -494,10 +493,9 @@ def dt_synphot_refactor():
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmgtab.rmap /tmp/synphot_tmgtab.test.rmap data/2381905mm_tmg.fits")()
     CRDS - INFO -  Inserting 2381905mm_tmg.fits into 'hst_synphot_tmg.rmap'
-    CRDS - INFO -  Writing '/tmp/synphot_tmgtab.test.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  2 infos
+    CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_tmgtab.rmap /tmp/synphot_tmgtab.test.rmap")()
@@ -508,10 +506,9 @@ def dt_synphot_refactor():
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmttab.rmap /tmp/synphot_tmttab.test.rmap data/tae17277m_tmt.fits")()
     CRDS - INFO -  Inserting tae17277m_tmt.fits into 'synphot_tmt.rmap'
-    CRDS - INFO -  Writing '/tmp/synphot_tmttab.test.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  2 infos
+    CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_tmttab.rmap /tmp/synphot_tmttab.test.rmap")()
@@ -522,10 +519,9 @@ def dt_synphot_refactor():
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_thermal.rmap /tmp/synphot_thermal.test.rmap data/wfc3_ir_f098m_002_th.fits")()
     CRDS - INFO -  Inserting wfc3_ir_f098m_002_th.fits into 'hst_synphot_thermal.rmap'
-    CRDS - INFO -  Writing '/tmp/synphot_thermal.test.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  2 infos
+    CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_thermal.rmap /tmp/synphot_thermal.test.rmap")()
@@ -537,10 +533,9 @@ def dt_synphot_refactor():
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_thruput.rmap /tmp/synphot_thruput.test.rmap data/wfc3_uvis_f469nf2_003_syn.fits")()
     CRDS - INFO -  Inserting wfc3_uvis_f469nf2_003_syn.fits into 'hst_synphot_thruput.rmap'
-    CRDS - INFO -  Writing '/tmp/synphot_thruput.test.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  2 infos
+    CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_thruput.rmap /tmp/synphot_thruput.test.rmap")()
