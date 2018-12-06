@@ -707,7 +707,7 @@ def certify_validator_bad_presence_condition():
 def certify_JsonCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.json", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
+    >>> certify.certify_file("data/valid.json", observatory="jwst",context="jwst_0034.pmap")
     CRDS - INFO -  Certifying 'data/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
@@ -716,7 +716,7 @@ def certify_JsonCertify_valid():
 def certify_YamlCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.yaml", observatory="jwst",context="jwst_0034.pmap", trap_exceptions=False)
+    >>> certify.certify_file("data/valid.yaml", observatory="jwst",context="jwst_0034.pmap")
     CRDS - INFO -  Certifying 'data/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
@@ -726,7 +726,7 @@ def certify_AsdfCertify_valid():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
+    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
@@ -737,7 +737,7 @@ def certify_AsdfCertify_valid():
 def certify_FitsCertify_opaque_name():
     """
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
-    >>> certify.certify_file("data/opaque_fts.tmp", observatory="hst",context="hst.pmap", trap_exceptions=False)
+    >>> certify.certify_file("data/opaque_fts.tmp", observatory="hst",context="hst.pmap")
     CRDS - INFO -  Certifying 'data/opaque_fts.tmp' as 'FITS' relative to context 'hst.pmap'
     >>> test_config.cleanup(old_state)
     """
@@ -746,7 +746,7 @@ def certify_AsdfCertify_opaque_name():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap", trap_exceptions=False) # doctest: +ELLIPSIS
+    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
@@ -1059,6 +1059,165 @@ def dt_acs_idctab_char_plus_column():
     CRDS - INFO -  2 warnings
     CRDS - INFO -  11 infos
     0
+    """
+
+def test_certify_check_rmap_updates():
+    """
+    This test verifies trial rmap updates under the control of the CRDS certify program.
+    
+    It checks for two primary conditions:
+    
+    1. That submitted files with identical matching criteria which would replace one another are errors.
+    
+    2. That new files which overlap the matching criteria of existing files without being identical are detected.
+    
+    Handling of (2) varies by project,  because for HST it is grudgingly permitted due to its
+    existence in CDBS and the need for identical rmap behavior to CDBS.  For JWST,  where
+    overlaps are avoidable,  non-identical overlaps are warnings during file submission and fatal errors
+    if encountered at runtime. For HST,  warnings are only visible in --verbose mode,  but for JWST they
+    are always visible.   Using warnings avoids the automatic cancellation of large file submissions,
+    holding open a choice between choosing to cancel or choosing to submit manual rmap fixes instead.
+    
+    >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_overlap.fits data/s7g1700gl_dead_dup1.fits data/s7g1700gl_dead_dup2.fits --check-rmap-updates --comparison-context hst_0508.pmap --verbose")()  # doctest: +ELLIPSIS
+    CRDS - DEBUG -  Command: ['crds.certify', 'data/s7g1700gl_dead_overlap.fits', 'data/s7g1700gl_dead_dup1.fits', 'data/s7g1700gl_dead_dup2.fits', '--check-rmap-updates', '--comparison-context', 'hst_0508.pmap', '--verbose']
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_dup1.fits' (1/3) as 'FITS' relative to context 'hst_0508.pmap'
+    CRDS - DEBUG -  No unique row parameters, skipping table row checks.
+    CRDS - INFO -  FITS file 's7g1700gl_dead_dup1.fits' conforms to FITS standards.
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits' class='Character' keyword='DESCRIP' value='INITIAL VERSION' no .tpn values defined.
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits' class='Character' keyword='DETECTOR' value='FUV' is in ['FUV', 'NUV']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits' class='Character' keyword='FILETYPE' value='DEADTIME REFERENCE TABLE' is in ['DEADTIME REFERENCE TABLE']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits' class='Character' keyword='INSTRUME' value='COS' is in ['COS']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits' class='Pedigree' keyword='PEDIGREE' value='GROUND' is in ['INFLIGHT', 'GROUND', 'MODEL', 'DUMMY', 'SIMULATION']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[0]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[1]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[2]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[3]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[4]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[5]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[6]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[7]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[8]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits[9]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits' class='Sybdate' keyword='USEAFTER' value='Oct 01 1996 00:00:00'
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup1.fits' class='Character' keyword='VCALCOS' value='2.0' no .tpn values defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_dup2.fits' (2/3) as 'FITS' relative to context 'hst_0508.pmap'
+    CRDS - DEBUG -  No unique row parameters, skipping table row checks.
+    CRDS - INFO -  FITS file 's7g1700gl_dead_dup2.fits' conforms to FITS standards.
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits' class='Character' keyword='DESCRIP' value='INITIAL VERSION' no .tpn values defined.
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits' class='Character' keyword='DETECTOR' value='FUV' is in ['FUV', 'NUV']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits' class='Character' keyword='FILETYPE' value='DEADTIME REFERENCE TABLE' is in ['DEADTIME REFERENCE TABLE']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits' class='Character' keyword='INSTRUME' value='COS' is in ['COS']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits' class='Pedigree' keyword='PEDIGREE' value='GROUND' is in ['INFLIGHT', 'GROUND', 'MODEL', 'DUMMY', 'SIMULATION']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[0]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[1]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[2]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[3]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[4]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[5]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[6]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[7]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[8]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits[9]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits' class='Sybdate' keyword='USEAFTER' value='Oct 01 1996 00:00:00'
+    CRDS - DEBUG -  File='s7g1700gl_dead_dup2.fits' class='Character' keyword='VCALCOS' value='2.0' no .tpn values defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead_overlap.fits' (3/3) as 'FITS' relative to context 'hst_0508.pmap'
+    CRDS - DEBUG -  No unique row parameters, skipping table row checks.
+    CRDS - INFO -  FITS file 's7g1700gl_dead_overlap.fits' conforms to FITS standards.
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Character' keyword='DESCRIP' value='INITIAL VERSION' no .tpn values defined.
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Character' keyword='DETECTOR' value='FUV|NUV' is an or'ed parameter matching ['FUV', 'NUV']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Character' keyword='DETECTOR' value='FUV' is in ['FUV', 'NUV']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Character' keyword='DETECTOR' value='NUV' is in ['FUV', 'NUV']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Character' keyword='FILETYPE' value='DEADTIME REFERENCE TABLE' is in ['DEADTIME REFERENCE TABLE']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Character' keyword='INSTRUME' value='COS' is in ['COS']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Pedigree' keyword='PEDIGREE' value='GROUND' is in ['INFLIGHT', 'GROUND', 'MODEL', 'DUMMY', 'SIMULATION']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[0]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[1]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[2]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[3]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[4]' class='Character' keyword='SEGMENT' value='FUVA' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[5]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[6]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[7]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[8]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits[9]' class='Character' keyword='SEGMENT' value='FUVB' is in ['ANY', 'FUVA', 'FUVB']
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Sybdate' keyword='USEAFTER' value='Oct 01 1996 00:00:00'
+    CRDS - DEBUG -  File='s7g1700gl_dead_overlap.fits' class='Character' keyword='VCALCOS' value='2.0' no .tpn values defined.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Checking rmap update for ('cos', 'deadtab') inserting files ['data/s7g1700gl_dead_dup1.fits', 'data/s7g1700gl_dead_dup2.fits', 'data/s7g1700gl_dead_overlap.fits']
+    CRDS - INFO -  Inserting s7g1700gl_dead_dup1.fits into 'hst_cos_deadtab_0250.rmap'
+    CRDS - DEBUG -  Unexpanded header [('DETECTOR', 'FUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'OPT_ELEM' of 'G130M|G140L|G160M'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'OPT_ELEM' of 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'
+    CRDS - DEBUG -  Expanded header [('DETECTOR', 'FUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
+    CRDS - DEBUG -  Mapping extra parkey 'DEADCORR' from UNDEFINED to 'N/A'.
+    CRDS - DEBUG -  Validating key 'FUV'
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
+    CRDS - DEBUG -  Modify found ('FUV',) augmenting UseAfterSelector(('DATE-OBS', 'TIME-OBS'), nselections=1) with 's7g1700gl_dead_dup1.fits'
+    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
+    CRDS - DEBUG -  Modify found '1996-10-01 00:00:00' as primitive 's7g1700gl_dead.fits' replacing with 's7g1700gl_dead_dup1.fits'
+    CRDS - INFO -  Inserting s7g1700gl_dead_dup2.fits into 'hst_cos_deadtab_0250.rmap'
+    CRDS - DEBUG -  Unexpanded header [('DETECTOR', 'FUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'OPT_ELEM' of 'G130M|G140L|G160M'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'OPT_ELEM' of 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'
+    CRDS - DEBUG -  Expanded header [('DETECTOR', 'FUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
+    CRDS - DEBUG -  Mapping extra parkey 'DEADCORR' from UNDEFINED to 'N/A'.
+    CRDS - DEBUG -  Validating key 'FUV'
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
+    CRDS - DEBUG -  Modify found ('FUV',) augmenting UseAfterSelector(('DATE-OBS', 'TIME-OBS'), nselections=1) with 's7g1700gl_dead_dup2.fits'
+    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
+    CRDS - DEBUG -  Modify found '1996-10-01 00:00:00' as primitive 's7g1700gl_dead_dup1.fits' replacing with 's7g1700gl_dead_dup2.fits'
+    CRDS - ERROR -  ----------------------------------------
+    Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
+     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00'))) 
+    Each reference would replace the other in the rmap.
+    Either reference file matching parameters need correction
+    or additional matching parameters should be added to the rmap
+    to enable CRDS to differentiate between the two files.
+    CRDS - INFO -  Inserting s7g1700gl_dead_overlap.fits into 'hst_cos_deadtab_0250.rmap'
+    CRDS - DEBUG -  Unexpanded header [('DETECTOR', 'FUV|NUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'OPT_ELEM' of 'G130M|G140L|G160M'
+    CRDS - DEBUG -  Skipping expansion for unused parkey 'OPT_ELEM' of 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'
+    CRDS - DEBUG -  Expanded header [('DETECTOR', 'FUV|NUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
+    CRDS - DEBUG -  Mapping extra parkey 'DEADCORR' from UNDEFINED to 'N/A'.
+    CRDS - DEBUG -  Validating key 'FUV|NUV'
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
+    CRDS - DEBUG -  Modify couldn't find 'FUV|NUV' adding new selector.
+    CRDS - DEBUG -  creating nested 'UseAfter' with '1996-10-01 00:00:00' = 's7g1700gl_dead_overlap.fits'
+    CRDS - DEBUG -  Writing '/tmp/hst_cos_deadtab_0250.rmap'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying '/tmp/hst_cos_deadtab_0250.rmap' as 'MAPPING' relative to context 'hst_0508.pmap'
+    CRDS - DEBUG -  Parsing '/tmp/hst_cos_deadtab_0250.rmap'
+    CRDS - DEBUG -  Validating 'hst_cos_deadtab_0250.rmap' with parameters (('DETECTOR',), ('DATE-OBS', 'TIME-OBS'))
+    CRDS - DEBUG -  Validating key ('FUV',)
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
+    CRDS - WARNING -  Match tuple ('FUV',) is an equal weight special case of ('FUV|NUV',)  requiring dynamic merging.
+    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
+    CRDS - DEBUG -  Validating key ('FUV|NUV',)
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
+    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
+    CRDS - DEBUG -  Validating key ('NUV',)
+    CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
+    CRDS - WARNING -  Match tuple ('NUV',) is an equal weight special case of ('FUV|NUV',)  requiring dynamic merging.
+    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
+    CRDS - DEBUG -  Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst_0508.pmap'
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  2 warnings
+    CRDS - INFO -  17 infos
+    1
+    >>> test_config.cleanup(old_state)
     """
     
 # ==================================================================================
@@ -1723,12 +1882,13 @@ class TestCertify(test_config.CRDSTestCase):
                               context="hst.pmap", compare_old_reference=True)
         
     def test_UnknownCertifier_missing(self):
-        assert_raises(certify.InvalidFormatError, certify.certify_file, 
-            self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
+        # log.set_exception_trap("test")
+        assert_raises(FileNotFoundError, certify.certify_file, 
+            self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap")
         
     def test_FitsCertify_bad_value(self):
         assert_raises(ValueError, certify.certify_file,
-            self.data("s7g1700gm_dead_broken.fits"), observatory="hst", context="hst.pmap", trap_exceptions=False)
+            self.data("s7g1700gm_dead_broken.fits"), observatory="hst", context="hst.pmap")
         
     # ------------------------------------------------------------------------------
         
