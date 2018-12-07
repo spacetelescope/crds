@@ -59,7 +59,42 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     or replacing all files in `inserted_references` and write out the result to
     `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
     
-    Return new ReferenceMapping named `new_rmap`
+    old_rmap  str     Filepath of source rmap into which `inserted_references` will be inserted
+    new_rmap  str     Filepath of updated rmap written out
+    inserted_references [ str, ...]    List of reference filepaths to be insterted
+
+    Note that "inserting" a reference file can result in:
+
+    1. adding a new match case,  
+    2. adding a new USEAFTER case
+    3. exactly replacing an existing reference file. 
+
+    Other outcomes are also possible for non-standard rmap selector class configurations.
+
+    Additional checking:
+
+    1. Generates an ERROR if any of the inserted reference files have identical
+    matching criteria since only one file with those criteria would be added to
+    the rmap and the other(s) would be "replaced" by their own insertion set.
+    Note: it is valid/common for an inserted reference to replace a reference
+    which is already in `old_rmap`.  This ERROR only applies to equalities
+    within the inserted_references list.
+
+    2. Generates a WARNING if the matching criteria of any inserted reference
+    file is a proper subset of inserted or existing references.  Thes subsets
+    will generally lead to the addition of new matching cases.  Since CRDS
+    inherited instances of these "subset overlaps" from HST CDBS, this warning
+    is only visible with --verbose for HST, they exist.  Since this condition
+    is bad both for understanding rmaps and for runtime complexity and
+    performance, for JWST the warning is visible without --verbose and will
+    also generate a runtime ERROR.  For JWST there is the expectation that an
+    offending file submission will either be (a) cancelled and corrected or (b)
+    provisionally accepted followed by an immediate manual rmap correction.
+    Provisional acceptance gives the option of f keeping the work
+    associated with large deliveries where the corrective measure might be to
+    manually merge overlapping categories with rmap edits.
+
+    Return None,  `new_rmap` is already the implicit result
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     inserted_cases = {}
