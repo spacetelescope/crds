@@ -20,5 +20,5 @@ PEDIGREE            H        C         W    &PEDIGREE
 CREATED             H        C         W    &AnyDate
 
 WAVELENGTH      C        R             R
-THROUGHPUT      C        R             O
+THROUGHPUT      C        R             R
 

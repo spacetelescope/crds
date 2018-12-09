@@ -20,4 +20,4 @@ CREATED             H        C         W    &AnyDate
 PEDIGREE            H        C         W    &PEDIGREE
 
 WAVELENGTH          C        R         R
-EMISSIVITY          C        R         O
+EMISSIVITY          C        R         R
