@@ -731,8 +731,7 @@ def memory_cleanup(func):
     """Clear cached file data and collect garbage to prevent memory exhaustion."""
     def wrapped(*args, **keys):
         try:
-            output = func(*args, **keys)
-            return output
+            return func(*args, **keys)
         finally:
             data_file.clear_header_cache()
             tables.clear_cache()
@@ -858,7 +857,7 @@ def check_rmap_updates(observatory, context, filepaths):
     """Do a test insertion of list of reference file paths `filepaths` into 
     the appropriate rmaps under CRDS `context` for the purpose of detecting
     problems related to adding references to `context` as a group.
-    
+
     observatory:  e.g. 'hst' or 'jwst'
     context: e.g. 'jwst_0499.pmap'
     filepaths:   [ reference_path, reference2_path, ...]
@@ -1011,8 +1010,6 @@ For more information on the checks being performed,  use --verbose or --verbosit
         if self.args.sync_files:    
             self._sync_comparison_files(comparison_context, comparison_reference)
             
-        log.set_exception_trap(not self.args.debug_traps)
-        
         certify_files(sorted(all_files), 
                       context=self.resolve_context(comparison_context),
                       comparison_reference=comparison_reference,
