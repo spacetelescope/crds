@@ -7,6 +7,7 @@ consistent with outside systems.
 import os
 from collections import defaultdict
 import gc
+import uuid
 
 import numpy as np
 
@@ -15,11 +16,12 @@ import numpy as np
 import crds
 
 from crds.core import pysh, log, config, utils, rmap, cmdline
-from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKeywordError
+from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKeywordError, MappingInsertionError
 
 from crds import data_file, diff
 from crds.io import tables
 from crds.client import api
+from crds.refactoring import refactor
 # from crds.io import abstract
 
 from . import mapping_parser
@@ -35,7 +37,7 @@ class Certifier:
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=None,
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
-                 original_name=None, trap_exceptions=None, run_fitsverify=False):
+                 original_name=None, run_fitsverify=False):
         
         self.filename = filename
         self.context = context
@@ -46,7 +48,6 @@ class Certifier:
         self.script = script
         self.comparison_reference = comparison_reference
         self.original_name = original_name
-        self.trap_exceptions = trap_exceptions
         self.run_fitsverify = run_fitsverify
         self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)
 
@@ -173,7 +174,7 @@ class ReferenceCertifier(Certifier):
                 checker.check(self.filename, self.header)                
                 log.verbose("Checked", checker, verbosity=70)
             except Exception as exc:
-                if not self.trap_exceptions:
+                if not log.get_exception_trap():
                     raise
                 presence = checker.is_applicable(self.header)
                 if presence == "W":  # excludes "O"
@@ -681,14 +682,13 @@ class MappingCertifier(Certifier):
         references = self.get_existing_reference_paths(mapping)
         
         if self.check_references == "contents":
-            certify_files(references, context=self.context, 
+            certify_files(references, context=self.context,
                           dump_provenance=self._dump_provenance_flag,
                           check_references=self.check_references,
                           compare_old_reference=self.compare_old_reference,
-                          trap_exceptions=self.trap_exceptions,
-                          script=self.script,
-                          observatory=self.observatory,
-                          run_fitsverify=self.run_fitsverify)
+                          script=self.script, observatory=self.observatory,
+                          run_fitsverify=self.run_fitsverify,
+                          check_rmap=False)
 
     def get_existing_reference_paths(self, mapping):
         """Return the paths of the references referred to by mapping.  Omit
@@ -728,9 +728,26 @@ def banner(char='#'):
     
 # ============================================================================
 
+def memory_cleanup(func):
+    """Clear cached file data and collect garbage to prevent memory exhaustion."""
+    def wrapped(*args, **keys):
+        try:
+            return func(*args, **keys)
+        finally:
+            data_file.clear_header_cache()
+            tables.clear_cache()
+            gc.collect()
+    wrapped.__name__ = func.__name__ + "[memory_cleanup]"
+    wrapped.__doc__ = func.__doc__
+    return wrapped
+
+# log.set_exception_trap short circuits deeply nested exception traps so that deep
+# exceptions can propagate upward for debug.
+
 @data_file.hijack_warnings
+@memory_cleanup
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
-                 trap_exceptions=True, compare_old_reference=False,
+                 compare_old_reference=False,
                  dont_parse=False, script=None, observatory=None,
                  comparison_reference=None, original_name=None, ith="",
                  run_fitsverify=False):
@@ -744,21 +761,17 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     compare_old_reference:  bool,  if True,  attempt tables mode checking.
     dont_parse:             bool,  if True,  don't run parser to scan mappings for duplicate keys.
     script:                 command line Script instance
-    trap_exceptions:        if True, trapped exceptions issue ERROR messages. Otherwise reraised.
     original_name:          browser-side name of file if any, files 
     """    
-    try:
-        old_flag = log.set_exception_trap(trap_exceptions)    #  XXX non-reentrant code,  no threading
-
+    trap = log.error_on_exception if script is None else script.error_on_exception
+        
+    with trap(filename, "Certifier instantiation error"):
         if filename == "N/A":
             log.verbose("Skipping certify N/A file.")
             return
         
-        if original_name is None:
-            original_name = filename
-            
-        if observatory is None:
-            observatory = utils.file_to_observatory(filename)
+        original_name = filename if original_name is None else original_name
+        observatory = utils.file_to_observatory(filename) if observatory is None else observatory
 
         filetype, klass = get_certifier_class(original_name, filename)
 
@@ -768,25 +781,17 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
         else:
             log.info("Certifying", repr(original_name) + ith, "as", repr(filetype.upper()),
                      "relative to context", repr(context))
-
-        trap = log.error_on_exception if script is None else script.error_on_exception
             
-        with trap(filename, "Certifier instantiation error"):
-            certifier = klass(filename, context=context, check_references=check_references,
-                              compare_old_reference=compare_old_reference,
-                              dump_provenance=dump_provenance,
-                              dont_parse=dont_parse, script=script, observatory=observatory,
-                              comparison_reference=comparison_reference,
-                              original_name=original_name,
-                              trap_exceptions=trap_exceptions,
-                              run_fitsverify=run_fitsverify)
+        certifier = klass(filename, context=context, check_references=check_references,
+                          compare_old_reference=compare_old_reference,
+                          dump_provenance=dump_provenance,
+                          dont_parse=dont_parse, script=script, observatory=observatory,
+                          comparison_reference=comparison_reference,
+                          original_name=original_name,
+                          run_fitsverify=run_fitsverify)
+
         with trap(filename, "Validation error"):
             certifier.certify()
-
-    finally:
-        log.set_exception_trap(old_flag)
-        data_file.clear_header_cache()
-        gc.collect()
 
 def get_certifier_class(original_name, filepath):
     """Given a reference file name with a valid extension, return the filetype and 
@@ -804,14 +809,27 @@ def get_certifier_class(original_name, filepath):
     filetype = data_file.get_filetype(filepath, original_name)
     klass = klasses.get(filetype, UnknownCertifier)
     return filetype, klass
-        
-# @data_file.hijack_warnings
+
+@memory_cleanup
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
-                  trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False, skip_banner=False, script=None, observatory=None,
-                  comparison_reference=None, run_fitsverify=False):
-    """certify_files() core function with error trapping set."""
+                  compare_old_reference=False, dont_parse=False, skip_banner=False, 
+                  script=None, observatory=None, comparison_reference=None, 
+                  run_fitsverify=False, check_rmap=True):
+    """Check the specified list of reference or mapping `files` paths.
     
+    files:                  full paths of references or mappings to check
+    context:                .pmap name to certify relative to
+    dump_provenance:        for references,  log provenance keywords and rmap parkey values.
+    check_references:       False, "exists", "contents"
+    compare_old_reference:  bool,  if True,  attempt tables mode checking.
+    dont_parse:             bool,  if True,  don't run parser to scan mappings for duplicate keys.
+    skip_banner:            don't output the "#" separator lines between files
+    script:                 command line Script instance
+    observatory:            e.g. 'jwst' or 'hst'
+    comparison_reference:   filepath to use for table comparison rather than finding in `context`.
+    check_rmap:             run trial rmap update to check for overlapping reference cases. 
+    """
+    trap = log.error_on_exception if script is None else script.error_on_exception
     for fnum, filename in enumerate(files):
         
         if not skip_banner:
@@ -821,19 +839,60 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         
         certify_file(
             filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
-            trap_exceptions=trap_exceptions, compare_old_reference=compare_old_reference, 
-            dont_parse=dont_parse, script=script, observatory=observatory,
+            compare_old_reference=compare_old_reference, dont_parse=dont_parse, script=script, observatory=observatory,
             comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify)
         
-    tables.clear_cache()
+    if check_rmap: # Requires checking all files in parallel, hence not in certify_file()
+        if not skip_banner:
+            banner()
+        with trap("Failed updating rmap"):
+            check_rmap_updates(observatory, context, files)
+
     if not skip_banner:
         banner()
 
-def test():
-    """Run doctests in this module.  See also certify unittests."""
-    import doctest
-    from crds import certify
-    return doctest.testmod(certify)
+# ============================================================================
+
+@memory_cleanup
+def check_rmap_updates(observatory, context, filepaths):
+    """Do a test insertion of list of reference file paths `filepaths` into 
+    the appropriate rmaps under CRDS `context` for the purpose of detecting
+    problems related to adding references to `context` as a group.
+
+    observatory:  e.g. 'hst' or 'jwst'
+    context: e.g. 'jwst_0499.pmap'
+    filepaths:   [ reference_path, reference2_path, ...]
+
+    The primary problem detected by the test insertion will be overlapping
+    match cases which can happen between two of `filepaths` or 
+    between a new reference and an existing reference in the rmap.
+
+    Overlaps come in two forms:
+
+    1. In the extreme, a perfectly overlapping category will result in only 
+    one of two equivalent references being added to the rmap.
+
+    2. When two categories overlap but one is a proper subset of the other.
+    In this instance,  because the categories are different,  a replacement 
+    does not occur, but at runtime whenever dataset satisfying the more 
+    restrictive category occurs,  both categories match with equal weight;
+    this results in an undesirable search ambiguity JWST disallows by default.
+    """
+    references = [ name for name in filepaths if config.is_reference(name) ]
+    if not references:
+        return
+    observatory = utils.file_to_observatory(references[0]) if observatory is None else observatory
+    organized = utils.organize_files(observatory, references)   # { (instrument, filekind) : [references,...] }
+    pmap = crds.get_cached_mapping(context)
+    for instrument, filekind in organized:
+        references2 = organized[(instrument, filekind)]
+        old_rmap = pmap.get_imap(instrument).get_rmap(filekind)
+        new_rmap = "/tmp/" + old_rmap.basename
+        log.info("Checking rmap update for", (instrument, filekind), "inserting files", references2)
+        refactor.rmap_insert_references(old_rmap.filename, new_rmap, references2)
+        
+        banner()
+        certify_file(new_rmap, context=context)    # check for partial overlaps
 
 # ============================================================================
 
@@ -911,6 +970,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
                           help="Report jwst.datamodels schema violations as warnings rather than as errors.")
         self.add_argument("-f", "--run-fitsverify", action="store_true",
                           help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
+        self.add_argument("-u", "--check-rmap-updates", action="store_true",
+                          help="Do a dry-run of adding reference files to the appropriate rmaps to detect errors.")
+
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
@@ -948,7 +1010,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
             
         if self.args.sync_files:    
             self._sync_comparison_files(comparison_context, comparison_reference)
-        
+            
         certify_files(sorted(all_files), 
                       context=self.resolve_context(comparison_context),
                       comparison_reference=comparison_reference,
@@ -956,9 +1018,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
                       dont_parse=self.args.dont_parse,
-                      trap_exceptions = not self.args.debug_traps,
                       script=self, observatory=self.observatory,
-                      run_fitsverify=self.args.run_fitsverify)
+                      run_fitsverify=self.args.run_fitsverify,
+                      check_rmap=self.args.check_rmap_updates)
     
         self.dump_unique_errors()
         return log.errors()
@@ -1003,14 +1065,14 @@ For more information on the checks being performed,  use --verbose or --verbosit
         return comparison_context
     
     def log_and_track_error(self, filename, *args, **keys):
-        """Override log_and_track_error() to compute instrument, filekind automatically."""
+        """Override log_and_track_error() to compute instrument, filekind automatically."""    
         try:
             instrument, filekind = utils.get_file_properties(self.observatory, filename)
         except Exception:
             instrument = filekind = "unknown"
         super(CertifyScript, self).log_and_track_error(filename, instrument, filekind, *args, **keys)
         return None  # to suppress re-raise
-    
+
     def mapping_closure(self, files):
         """Traverse the mappings in `files` and return a list of all mappings referred to by 
         `files` as well as any references in `files`.
@@ -1025,3 +1087,5 @@ For more information on the checks being performed,  use --verbose or --verbosit
                     more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files
         return sorted(closure_files)
+
+

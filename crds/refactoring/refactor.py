@@ -3,11 +3,10 @@ the transformations required to automate rmap maintenance on the CRDS website.
 """
 import sys
 import os.path
-import gc
 
 # ============================================================================
     
-from crds.core import exceptions, rmap, log, cmdline, utils
+from crds.core import exceptions, rmap, log, cmdline
 from crds.core.log import srepr
 from crds import diff
 
@@ -55,94 +54,71 @@ def update_derivation(new_path, old_basename=None):
     
 # ============================================================================
 
-REFACTOR_SAVE_COUNT = 100
-
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
     or replacing all files in `inserted_references` and write out the result to
-    `new_rmap`.
-
-    Raise an exception if any reference in inserted_references replaces another
-    exactly,  effectively resulting in dropping the replaced file.   Process all
-    references issuing log ERROR messages prior to raising an exception.
+    `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
     
-    Returns          new ReferenceMapping named `new_rmap`.
+    old_rmap  str     Filepath of source rmap into which `inserted_references` will be inserted
+    new_rmap  str     Filepath of updated rmap written out
+    inserted_references [ str, ...]    List of reference filepaths to be insterted
+
+    Note that "inserting" a reference file can result in:
+
+    1. adding a new match case,  
+    2. adding a new USEAFTER case
+    3. exactly replacing an existing reference file. 
+
+    Other outcomes are also possible for non-standard rmap selector class configurations.
+
+    Additional checking:
+
+    1. Generates an ERROR if any of the inserted reference files have identical
+    matching criteria since only one file with those criteria would be added to
+    the rmap and the other(s) would be "replaced" by their own insertion set.
+    Note: it is valid/common for an inserted reference to replace a reference
+    which is already in `old_rmap`.  This ERROR only applies to equalities
+    within the inserted_references list.
+
+    2. Generates a WARNING if the matching criteria of any inserted reference
+    file is a proper subset of inserted or existing references.  Thes subsets
+    will generally lead to the addition of new matching cases.  Since CRDS
+    inherited instances of these "subset overlaps" from HST CDBS, this warning
+    is only visible with --verbose for HST, they exist.  Since this condition
+    is bad both for understanding rmaps and for runtime complexity and
+    performance, for JWST the warning is visible without --verbose and will
+    also generate a runtime ERROR.  For JWST there is the expectation that an
+    offending file submission will either be (a) cancelled and corrected or (b)
+    provisionally accepted followed by an immediate manual rmap correction.
+    Provisional acceptance gives the option of f keeping the work
+    associated with large deliveries where the corrective measure might be to
+    manually merge overlapping categories with rmap edits.
+
+    Return None,  `new_rmap` is already the implicit result
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
-
     inserted_cases = {}
-    exc = None
-
-    for i, reference in enumerate(inserted_references):
-
-        log.info("Inserting", os.path.basename(reference), "into",
-                 repr(new.name))
-
+    for reference in inserted_references:
+        log.info("Inserting", os.path.basename(reference), "into", repr(new.name))
+        new = new.insert_reference(reference)
         baseref = os.path.basename(reference)
-        try:
-            new = new.insert_reference(reference)
-        except Exception as exc:
-            exc = exceptions.MappingInsertionError(
-                "Failed inserting", repr(baseref), "into rmap", 
-                repr(old_rmap), ":", srepr(exc))
-            log.error(str(exc))
-            continue
-
-        exc, inserted_cases = _check_rmap_overlaps(exc, inserted_cases, new, baseref)
-
-        # Periodically save work and recover memory resources.
-        if i != 0 and i % REFACTOR_SAVE_COUNT == 0:
-            _write_rmap(old, new, new_rmap)
-
-    _write_rmap(old, new, new_rmap)
-
-    if exc is not None:
-        raise exc
-
-    return new
-
-def _check_rmap_overlaps(exc, inserted_cases, new, baseref):
-    """Check that the matching cases of `baseref` don't overlap the match
-    cases for any other reference files exactly.
-
-    exc obj or None   Exception subclass tracking last exception for deferred raise
-    inserted_cases    { match_case_parameter_tuple : baseref, ... }
-    new               loaded rmap being built up insert-by-insert
-    baseref           basename of reference file
-
-    returns           exception obj or None, updated inserted_cases
-    """
-    cases = []
-    with log.warn_on_exception("Failed capturing matching diagnostics for",
-                               repr(baseref) + ".", 
-                               "Match overlap detection is disabled."):
-        cases = new.file_matches(baseref)
-    for fullcase in cases:
-        case = fullcase[1:]
-        if case not in inserted_cases:
-            inserted_cases[case] = baseref
-        else:
-            exc = exceptions.OverlappingMatchError(
-                "Matching case for", srepr(baseref),
-                "exactly overlaps", srepr(inserted_cases[case]),
-                "at case", repr(case), "replacing it.")
-            log.error(str(exc))
-    return exc, inserted_cases
-
-@utils.gc_collected
-def _write_rmap(old, new, new_rmap):
-    """Write out ReferenceMapping `new` to filepath `new_rmap` after attempting to
-    free memory and setting it's "derived_from" field to the name of
-    ReferenceMapping `old`.  
-
-    This can be an intermediate save or the save of the final rmap of
-    rmap_insert_references.
-
-    Returns   None
-    """
-    log.info("Writing", repr(new_rmap))
-    utils.clear_function_caches()
+        with log.warn_on_exception("Failed checking rmap update for", repr(baseref)):
+            cases = new.file_matches(baseref)
+            for fullcase in cases:
+                case = fullcase[1:]
+                if case not in inserted_cases:
+                    inserted_cases[case] = baseref
+                else:
+                    log.error("-"*40 + "\nBoth", srepr(baseref), 
+                              "and", srepr(inserted_cases[case]),
+                              "identically match case:\n", log.PP(case), """
+Each reference would replace the other in the rmap.
+Either reference file matching parameters need correction
+or additional matching parameters should be added to the rmap
+to enable CRDS to differentiate between the two files.""")
+                
     new.header["derived_from"] = old.basename
+    log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
 
 def rmap_delete_references(old_rmap, new_rmap, deleted_references):

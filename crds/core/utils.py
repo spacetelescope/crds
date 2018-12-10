@@ -107,6 +107,7 @@ def traced(func):
         log.verbose("trace result:", func.__name__, ":", result, verbosity=55)
         return result
     func2.__name__ = func.__name__ + " [traced]"
+    func2.__doc__ = func.__doc__
     func2._traced = True
     return func2
 
@@ -134,6 +135,7 @@ def gc_collected(func):
                 gc.collect()
         return result
     func2.__name__ = func.__name__ + " [gc_collected]"
+    func2.__doc__ = func.__doc__
     func2._gc_collected = True
     return func2
 
@@ -237,6 +239,7 @@ class xcached:
         """
         cached = CachedFunction(func, *self.args, **self.keys)
         cached.__name__ = cached.uncached.__name__ + " [xcached]"
+        cached.__doc__ = cached.uncached.__doc__
         return cached
 
 class CachedFunction:

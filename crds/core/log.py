@@ -365,7 +365,7 @@ def exception_trap_logger(func):
                 # wreck the traceback,  raising a new improved exception does.
                 raise  
             # Augmented,  the traceback is trashed from here down but the message is better when caught higher up.
-            elif reraise or CRDS_EXCEPTION_TRAP == "test":
+            elif reraise:
                 exc_class = keys.pop("exception_class", exc.__class__)
                 keys["end"] = ""
                 raise exc_class(format(*args + (":", str(exc)), **keys)) from exc

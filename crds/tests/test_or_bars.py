@@ -70,10 +70,9 @@ def dt_or_bars_refactor_add_file():
     CRDS - INFO -  Inserting jwst_miri_ipc_0003.add.fits into 'jwst_miri_ipc_0002.rmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'SHORT | MEDIUM |'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
-    CRDS - INFO -  Writing './jwst_miri_ipc_0003.add.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  3 infos
     0
 
     >>> diff.DiffScript("crds.diff data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0003.add.rmap")()
@@ -95,10 +94,9 @@ def dt_or_bars_refactor_replace_file():
     CRDS - INFO -  Inserting jwst_miri_ipc_0004.replace.fits into 'jwst_miri_ipc_0002.rmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'LONG |'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFULONG|'
-    CRDS - INFO -  Writing './jwst_miri_ipc_0004.replace.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  3 infos
     0
 
     >>> diff.DiffScript("crds.diff data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0004.replace.rmap")()
