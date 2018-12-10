@@ -1909,7 +1909,7 @@ class TestCertify(test_config.CRDSTestCase):
     #     script()
         
     def test_certify_dont_recurse_mappings(self):
-        script = certify.CertifyScript("crds.certify hst_0317.pmap --dont-recurse-mappings")
+        script = certify.CertifyScript("crds.certify crds://hst_0317.pmap --dont-recurse-mappings")
         errors = script()
         
     def test_certify_kernel_unity_validator_good(self):
