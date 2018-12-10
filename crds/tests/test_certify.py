@@ -1852,33 +1852,38 @@ class TestCertify(test_config.CRDSTestCase):
 
 # ------------------------------------------------------------------------------
 
+    def certify_files(self, *args, **keys):
+        keys = dict(keys)
+        keys["check_rmap"] = True
+        return certify.certify_files(*args, **keys)
+
     def certify_rmap_missing_parkey(self):
-        certify.certify_files([self.data("hst_missing_parkey.rmap")], observatory="hst")
+        self.certify_files([self.data("hst_missing_parkey.rmap")], observatory="hst")
     
     def certify_no_corresponding_rmap(self):
-        certify.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap")  
+        self.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap")  
   
     def certify_missing_provenance(self):
-        certify.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap",
+        self.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap",
                               dum_provenance=True, provenance=["GAIN"])  
     
 # ------------------------------------------------------------------------------
     def test_check_dduplicates(self):
-        certify.certify_files([self.data("hst.pmap")], observatory="hst")
-        certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
-        certify.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
+        self.certify_files([self.data("hst.pmap")], observatory="hst")
+        self.certify_files([self.data("hst_acs.imap")], observatory="hst")
+        self.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
         
     def test_check_comment(self):
-        certify.certify_files([self.data("hst.pmap")], observatory="hst")
-        certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
-        certify.certify_files([self.data("hst_acs_darkfile_comment.rmap")], observatory="hst")
+        self.certify_files([self.data("hst.pmap")], observatory="hst")
+        self.certify_files([self.data("hst_acs.imap")], observatory="hst")
+        self.certify_files([self.data("hst_acs_darkfile_comment.rmap")], observatory="hst")
         
     def test_table_mode_checks_identical(self):
-        certify.certify_files([self.data("v8q14451j_idc.fits")], observatory="hst", 
+        self.certify_files([self.data("v8q14451j_idc.fits")], observatory="hst", 
                               context="hst.pmap", compare_old_reference=True)
 
     def test_table_mode_checks_missing_modes(self):
-        certify.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst", 
+        self.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst", 
                               context="hst.pmap", compare_old_reference=True)
         
     def test_UnknownCertifier_missing(self):
