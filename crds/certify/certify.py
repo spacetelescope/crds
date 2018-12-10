@@ -790,8 +790,8 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
                           original_name=original_name,
                           run_fitsverify=run_fitsverify)
 
-    with trap(filename, "Validation error"):
-        certifier.certify()
+        with trap(filename, "Validation error"):
+            certifier.certify()
 
 def get_certifier_class(original_name, filepath):
     """Given a reference file name with a valid extension, return the filetype and 
