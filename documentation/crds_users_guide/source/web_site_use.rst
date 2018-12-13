@@ -459,7 +459,7 @@ Shell Approach
 In the shell approach a user must login to UNIX (in some fashion) and transfer
 files into their CRDS ingest directory manually.   For instance::
 
-  % scp /this_delivery/*.fits   dmsinsvm.stsci.edu:/ifs/crds/hst/ops/server_files/ingest/<username>
+  % scp /this_delivery/*.fits   pldmsins1.stsci.edu:/ifs/crds/hst/ops/server_files/ingest/<username>
 
 to copy references into my ingest directory *as-if* I had uploaded them through
 the uploads panel.
@@ -493,16 +493,17 @@ There are two special contexts in CRDS which are tracked:
 Edit Context
 !!!!!!!!!!!!
 
-Edit Context is the default context used for editing.   Whenever a new .pmap is created or
-added,  it becomes the editing context from which other .pmaps are derived by
-default.
+Edit Context is the default context used for adding new files.  Whenever a new
+.pmap is created or added, it becomes the editing context from which future
+.pmaps are derived by default.
 
 Operational Context
 !!!!!!!!!!!!!!!!!!!
 
 Operational Context is the .pmap which is nominally in use by
-the pipeline.  Generally speaking,  multiple contexts might be added to CRDS as
-the Edit Context long before they become operational.   
+the pipeline.   While it's common to make new files operational as each
+context is added,  it's possible for the operational context to lag
+behind the edit context where new files are being added.
 
 Recent 
 !!!!!!
@@ -517,11 +518,28 @@ Any valid CRDS context can be typed in directly as User Specified.
 Auto Rename
 +++++++++++
 
-Normally files uploaded to CRDS will be assigned new unique names.   During side-by-side
-testing with CDBS,  *Auto Rename* can be deselected so that new files added to CRDS
-retain their CDBS names for easier comparison.  The CRDS database remembers both
-the name of the file the submitter uploaded as well as the new unique name.
-   
+Normally files uploaded to CRDS will be assigned new unique names. Unchecking
+Auto Rename will request that CRDS use the uploaded file name as the official
+name.  The CRDS database remembers both the name of the file the submitter
+uploaded as well as the new unique name.
+
+Turning off Auto Rename should be done judiciously if at all.   It's
+appropriate in situations where uploaded files already have known unique names
+which it is desirable to keep.
+
+  * For JWST calibration references, in general Auto Rename should not be
+    turned off.
+
+  * For HST calibration references which are assigned unique names prior to
+    being submitted to CRDS, it is appropriate to turn Auto Rename off.
+
+  * For SYNPHOT references,  in general it is appropriate to turn Auto
+    Rename off.
+
+  * For hand-edited CRDS rules files (pmaps, imaps, rmaps) it can be
+    appropriate to turn Auto Rename off if file naming and header fields
+    have already been properly assigned.
+
 Compare Old Reference
 +++++++++++++++++++++
 
@@ -542,14 +560,31 @@ The results page lists the following items:
 
 * *Generated New Mappings* lists the new mapping files which provide the generated context for using the submitted references.
 
-* *Actions on Rmap* provides two accordions showing how the rmap controlling the submitted references was modified.   The logical differences accordion has a table of actions,  either *insert* for completely new files or *replace* for files which replaced an existing file.   The text differences are essentially output from UNIX *diff* for the old and new rmaps.
+* *Actions on Rmap* provides two accordions showing how the rmap controlling
+  the submitted references was modified.  The logical differences accordion has
+  a table of actions, either *insert* for completely new files or *replace* for
+  files which replaced an existing file.  The text differences are essentially
+  output from UNIX *diff* for the old and new rmaps.
 
-* *Certify Results* has an accordion panel for each submitted reference file which contains the results from crds.certify.   The submitted name of each file is listed first,  followed by any official name of the file assigned by CRDS.   The status of the certification can be "OK" or "Warnings".   Warnings should be reviewed by opening the accorion panel.
+* *Certify Results* has an accordion panel for each submitted reference file
+  which contains the results from crds.certify.  The submitted name of each
+  file is listed first, followed by any official name of the file assigned by
+  CRDS.  The status of a successful certification can be "OK" or "Warnings".
+  The status of a failed certification will be "ERRORS".  Failed certifications
+  automatically cancel a file submission.
+  
+  Warnings should be reviewed by opening the accordion panel.  Some CRDS
+  warnings describe conditions which *MUST* be addressed by future manual rmap
+  updates or cancelling the submission.   In particular,
    
 **IMPORTANT**  The results page only indicates the files which will be added to
 CRDS if the submission is *confirmed*.   Prior to confirmation of the submission,
 neither the submitted references nor the generated mappings are officially in CRDS.
-Do not *leave the confirmation page* prior to confirming.
+
+If you loose track of the submission log or confirmation pages,  you can find
+links to them in the *STARTED* and *READY* e-mails that CRDS sends out
+when a submission is initiated or CRDS has completed submission checkout
+and is ready for confirmation or cancellation.
 
 Collisions
 ++++++++++

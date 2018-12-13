@@ -5,58 +5,94 @@ Using the command line tools requires a local installation of the CRDS library.
 Some of the command line tools also interact with the CRDS server in order to
 implement their functionality.
 
-crds master program
--------------------
+Master program (crds)
+---------------------
+
+Much like git,  the *crds* master command provides a wrapper around
+CRDS sub-commands like *list*, *certify*, *checksum*, *uniqname*, etc.::
+
+   % crds --help
+   
+   usage: crds <command> <parameters...>
+
+  'crds' is a wrapper used to invoke various CRDS sub-programs.
+
+   For example,  to assign HST best reference files,  do:
+
+     $ crds bestrefs --files *.fits  --update-bestrefs
+
+   Available commands:
+
+   list                -- print information about CRDS configuration, etc. 
+   certify             -- check CRDS reference and rules files
+   bestrefs            -- assign bestrefs to datasets, regressions, repro
+   sync                -- manage local CRDS cache, download rules + references
+   diff                -- difference CRDS rules and references
+   rowdiff             -- difference reference tables
+   matches             -- list matching criteria relative to particular rules
+   checksum            -- update rmap checksum
+   query_affected      -- download CRDS new reference files affected dataset IDs
+   uniqname            -- rename HST files with new CDBS-style names
+   get_synphot         -- download synphot references
+   newcontext          -- automatically generates updated imaps and pmaps
+   refactor            -- automatically modifies rmaps
+
+   For more detail about individual commands use --help:
+
+      e.g. crds list --help
+
 
 The original DEPRECATED command line syntax, e.g. for the list command was::
 
   % python -m crds.list --status
-
-This was replaced by a NEW more succinct command line syntax, e.g.::
-
-  % crds list --status
-
-The 'crds' wrapper hides internal structural details of the CRDS package.
-
-For a list of available commands do::
-
-  % crds --help
-
-for detail on a single command do, e.g.::
-
-  % crds list --help
 
 
 Specifying File Paths
 ---------------------
 
 The command line tools operate on CRDS reference and mapping files both inside
-and outside the CRDS cache.   **Files specified without a path are assumed to be
-in the CRDS cache.**   Files specified with an explicit absolute or relative
-path can be located anywhere.   See examples below.
+and outside the CRDS cache.
+
+In all releases CRDS has interpreted an absolute or relative path normally.
+
+Until CRDS 7.3.1, CRDS interpreted filenames with no path as meaning "located
+inside the CRDS cache" with a path implied based on CRDS_PATH and/or other
+environment variables.
+
+After CRDS 7.3.1,  CRDS interprets filenames with no path normally and assumes
+they are in the current working directory.
+
+In all releases CRDS interprets ./ normally meaning "in the current directory".
+
+In all releases CRDS interprets a prefix of crds:// as meaning "located inside
+the CRDS cache" with a path defined based on CRDS_PATH and/or other environment
+variables.   This same prefix is recorded in JWST data products and then
+interpreted on the fly by calibration s/w as needed.
 
 .................
 In the CRDS cache
 .................
 
-To specify a file inside the CRDS file cache, use no path on the file::
+After v7.3.1, to specify a file inside the CRDS file cache, use either an
+explicit path (absolute or relative) or prefix the filename with crds:// to
+imply a cache path based on CRDS_PATH and/or other CRDS environment variables.
 
-  % crds diff hst.pmap  hst_0001.pmap  # assumes paths, and nested paths, are
-  in CRDS cache
+  % crds diff crds://hst.pmap  crds://hst_0001.pmap  
 
-This is the default and aligns with the behavior of CRDS rules files.
+Symbolic filenames like "jwst-edit" are assumed to be in the CRDS cache and
+do not need or permit the crds:// prefix.
 
 ........................
 In the current directory
 ........................
   
-To specify a file which is not located in the CRDS cache, use an explicit
-relative or absolute path::
+Files in the current working directory are referred to normally after 7.3.1::
     
-  % crds diff ./hst_acs_darkfile_0250.rmap  ./hst_acs_darkfile_0251.rmap
+  % crds diff hst_acs_darkfile_0250.rmap  hst_acs_darkfile_0251.rmap
 
-In this example,  the ./ is critical for telling CRDS to use the file in
-the current working directory.
+Prior to 7.3.1 the easiest method was to use an explicit relative path::
+  
+  % crds diff ./hst_acs_darkfile_0250.rmap  ./hst_acs_darkfile_0251.rmap
 
 
 crds.bestrefs
