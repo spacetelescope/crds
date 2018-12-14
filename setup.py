@@ -4,7 +4,7 @@ import glob
 
 from distutils.core import setup
 
-# import setuptools
+import setuptools
 
 setup_pars = {
     "packages" : [
