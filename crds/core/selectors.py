@@ -1990,7 +1990,7 @@ Restore original debug behavior:
                 try:
                     values = key[i]
                 except IndexError as exc:
-                    raise ValueError("Match tuple", repr(key),
+                    raise ValueError("Match case", repr(key),
                                      "wrong length for parameter list",
                                      repr(tuple(self._parameters))) from exc
                 if not isinstance(values, tuple):
@@ -2036,9 +2036,13 @@ Restore original debug behavior:
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
                 warn = log.verbose_warning if self._merge_overlaps else log.warning
-                warn("Match tuple " + repr(key) + 
-                    " is an equal weight special case of " + repr(other),
-                    " requiring dynamic merging.")
+                warn("Match case", repr(key), " is an equal weight special case of ", repr(other),
+                     "\n\tFor some parameter sets, CRDS interprets both matches as equally good.",
+                     "\n\tThis makes CRDS lookups hard to understand so it is not permitted for JWST by default.",
+                     "\n\tIt may indicate a mistake characterizing references for CRDS, i.e. one set of files should be parameterized differently.",
+                     "\n\tAs a WARNING,  it is possible to confirm these files.  However,  the rmap should be immediately",
+                     "\n\tupdated to consolidate or separate these overlapping cases.  For JWST,  it is an error to encounter equal weight cases at runtime.",
+                     "\n\tAlternately,  cancel the submission and update the reference file matching parameters to avoid the conflict.")
                 
 # ==============================================================================
 
