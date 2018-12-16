@@ -813,7 +813,7 @@ class Selector:
     def merge(self, other):
         raise AmbiguousMatchError("More than one match was found at the same weight and " +
             self.short_name + " does not support merging.")
-        
+
     # ------------------------------------------------------------------------
     
     def delete(self, terminal):
@@ -2036,13 +2036,21 @@ Restore original debug behavior:
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
                 warn = log.verbose_warning if self._merge_overlaps else log.warning
-                warn("Match case", repr(key), " is an equal weight special case of ", repr(other),
-                     "\n\tFor some parameter sets, CRDS interprets both matches as equally good.",
-                     "\n\tThis makes CRDS lookups hard to understand so it is not permitted for JWST by default.",
-                     "\n\tIt may indicate a mistake characterizing references for CRDS, i.e. one set of files should be parameterized differently.",
-                     "\n\tAs a WARNING,  it is possible to confirm these files.  However,  the rmap should be immediately",
-                     "\n\tupdated to consolidate or separate these overlapping cases.  For JWST,  it is an error to encounter equal weight cases at runtime.",
-                     "\n\tAlternately,  cancel the submission and update the reference file matching parameters to avoid the conflict.")
+                warn("-"*40 + "\nMatch case\n",
+                     log.PP(self.match_item(key)),
+                     "\nis an equal weight special case of\n",
+                     log.PP(self.match_item(other)), """
+For some parameter sets, CRDS interprets both matches as equally good.  For
+instance, when reading the web table, some parameter sets will have 'two
+answers' not just the first seen.  This makes CRDS reference assignments hard
+to understand so CRDS for JWST disallows this.  It may indicate a mistake
+characterizing references for CRDS, i.e. one set of files should be
+parameterized differently.  It is POSSIBLE to confirm these files.  However,
+the rmap should be immediately updated to consolidate or separate these
+overlapping cases.  For JWST, it is an error to encounter equal weight cases at
+runtime.  Alternately, cancel the submission and update the reference file
+matching parameters to avoid the conflict.
+""", "-"*40)
                 
 # ==============================================================================
 
