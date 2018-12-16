@@ -16,6 +16,7 @@ foreach pat ('*.orig' '*.pyc' 'build' '__pycache__' '*~' '.*~' '#*#' '#.*#')
     find ${dirs} -name "${pat}" | xargs rm -rf
 end
 
+rm -rf crds.egg-info
 rm -rf dist MANIFEST
 rm -rf build
 rm -rf install.log
