@@ -96,6 +96,7 @@ setup(name="crds",
           "submission": ["requests", "lxml", "parsley"],
       },
       tests_require=["nose"],
+      zip_safe=False,
       classifiers=[
           'Intended Audience :: Science/Research',
           'License :: OSI Approved :: BSD License',
