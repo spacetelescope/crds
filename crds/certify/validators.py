@@ -5,6 +5,7 @@ files define required parameters and that they have legal values.
 import os
 import re
 import copy
+import abc
 
 # ============================================================================
 
@@ -414,82 +415,99 @@ class DoubleValidator(FloatValidator):
 
 # ----------------------------------------------------------------------------
 
-class PedigreeValidator(KeywordValidator):
-    """Validates &PEDIGREE fields."""
+class PedigreeBaseValidator(KeywordValidator):
+    """Validates abstract &PEDIGREE fields."""
 
-    _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
+    _values = []
+    inflight_format = ""
 
     def _check_value(self, filename, value):
         """Check `value` as a PEDIGREE."""
-        pedigree, start, stop = self._get_pedigree_start_stop(filename, value)
-        rval = super(PedigreeValidator, self)._check_value(filename, pedigree)
-        return rval
+        pedigree = self._check_pedigree_start_stop(filename, value)
+        return super(PedigreeBaseValidator, self)._check_value(filename, pedigree)
+    @abc.abstractmethod
+    def validate_date(self, date):
+        """Subclasses must define validate_date()."""
 
-    def _get_pedigree_start_stop(self, filename, value):
-        """By default (HST) pedigrees all permit adding start + stop dates."""
-
-        values = value.split()
-        if len(values) == 1:
-            # pedigree, start, stop
-            return values[0].upper(), None, None
-        elif len(values) == 3:
-            pedigree, start, stop = values
-        elif len(values) == 4:
-            pedigree, start, _dash, stop = values
-        else:
-            raise ValueError("Invalid PEDIGREE format: " + repr(value))
-
-        # timecan't appear in either string
-        for char in start+stop:
-            if char in ["T"," ",":"]:
-                raise ValueError(
-                    "Time should not appear in PEDIGREE dates.  "
-                    "Invalid PEDIGREE format: " + repr(value))
-
-        start_dt = self.validate_date(start)
-        stop_dt = self.validate_date(stop)
-
-        if not (start_dt <= stop_dt):
-            raise ValueError("PEDIGREE date order invalid: " + repr(start) + " > " + repr(stop))
-
-        return pedigree.upper(), start, stop
-    
-    def validate_date(self, datestr):
-        """Return the datetime corresponding to an HST INFLIGHT PEDIGREE start or stop.
-        e.g.  '25/02/1996'  --> datetime()
+    @property
+    def should_be(self):
+        """Generate a combined single value + INFLIGHT format recommendation str."""
+        values = sorted(list(self._values))
+        values.remove("INFLIGHT")
+        return "One of " + repr(values) + " or " + repr(self.inflight_format)
+        
+    def _inflight_exc(self, clarification=""):
+        """Raise a ValueError() for an INFLIGHT PEDIGREE showing the expected
+        format augmented by additional `clarification` str.
         """
-        try:
-            return timestamp.get_slash_date(datestr)
-        except ValueError:
-            return timestamp.get_dash_date(datestr)
-    
-class JwstpedigreeValidator(PedigreeValidator):    
-    """Validates &JWSTPEDIGREE fields.  Stricter than normal HST PEDIGREE:
+        return ValueError(
+            "INFLIGHT format should be " + repr(self.inflight_format)
+            + " : "+ clarification)
 
-    Only INFLIGHT supplies dates.
-    Dates must be specified as dash dates only: 2018-01-27
-    The value MODEL is not permitted.
-    """
+    def _check_pedigree_start_stop(self, filename, value):
+        """Check the start + stop dates for INFLIGHT PEDIGREE values,  and
+        return the PEDIGREE "kind" for all values.
+        """
+        with log.augment_exception("Invalid value:", repr(value)):
+            
+            values = value.split()
+            if len(values) == 0:
+                raise ValueError("Missing value.")
+            
+            pedigree = values[0].upper()
+            if len(values) == 1:
+                if pedigree != "INFLIGHT":
+                    return pedigree
+                else:
+                    raise self._inflight_exc("No start + stop dates.")
+            elif len(values) == 3:
+                pedigree, start, stop = values
+            else:
+                if pedigree == "INFLIGHT":
+                    raise self._inflight_exc("Wrong number of words.")
+                else:
+                    raise ValueError(
+                        "Unrecognized format, should be: " + self.should_be)
+                    
+            # timecan't appear in either string
+            for char in start+stop:
+                if char in ["T"," ",":"]:
+                    raise self._inflight_exc(
+                        "Time should not appear in INFLIGHT dates.")
+        
+            try:
+                start_dt = self.validate_date(start)
+                stop_dt = self.validate_date(stop)
+            except Exception as exc:
+                raise self._inflight_exc(str(exc)) from exc
+        
+            if not (start_dt <= stop_dt):
+                raise self._inflight_exc("Start date > stop date")
+
+            return pedigree
+    
+class PedigreeValidator(PedigreeBaseValidator):    
+    """Validates (HST) &PEDIGREE fields."""
+
+    _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
+
+    inflight_format = "INFLIGHT DD/MM/YYYY DD/MM/YYYY"
+
+    def validate_date(self, date):
+        """"e.g. '25/02/1996' --> datetime()"""
+        return timestamp.get_slash_date(date)
+
+
+class JwstpedigreeValidator(PedigreeBaseValidator):    
+    """Validates &JWSTPEDIGREE fields."""
 
     _values = ["INFLIGHT", "GROUND", "DUMMY", "SIMULATION"]
 
-    def _get_pedigree_start_stop(self, filename, value):
-        pedigree, start, stop = super(JwstpedigreeValidator, self)._get_pedigree_start_stop(filename, value)
-        if pedigree == "INFLIGHT":
-            if start == None or stop == None:
-                raise ValueError(
-                    "INFLIGHT PEDIGREE must supply start and end dates, e.g. INFLIGHT 2017-01-01 2017-01-15")
-        else:
-            if start != None or stop != None:
-                raise ValueError(
-                    "Only INFLIGHT PEDIGREE should specify start and stop dates.")
-        return pedigree, start, stop
+    inflight_format = "INFLIGHT YYYY-MM-DD YYYY-MM-DD"
 
-    def validate_date(self, datestr):
-        """Return the datetime corresponding to a JWST INFLIGHT PEDIGREE start or stop.
-        e.g. '2018-01-30'   -->  datetime()
-        """
-        return timestamp.get_dash_date(datestr)
+    def validate_date(self, date):
+        """e.g.  '2018-01-30' --> datetime"""
+        return timestamp.get_dash_date(date)
         
 # ----------------------------------------------------------------------------
 
