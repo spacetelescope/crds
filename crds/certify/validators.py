@@ -495,8 +495,10 @@ class PedigreeValidator(PedigreeBaseValidator):
 
     def validate_date(self, date):
         """"e.g. '25/02/1996' --> datetime()"""
-        return timestamp.get_slash_date(date)
-
+        try:
+            return timestamp.get_slash_date(date)
+        except Exception:
+            return timestamp.get_dash_date(date)
 
 class JwstpedigreeValidator(PedigreeBaseValidator):    
     """Validates &JWSTPEDIGREE fields."""
