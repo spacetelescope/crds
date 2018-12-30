@@ -1604,7 +1604,7 @@ class TestCertify(test_config.CRDSTestCase):
     def test_tpn_pedigree_bad_datetime_dash_dash(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        assert_raises(ValueError, checker.check, "test.fits", {"INFLIGHT 2017-01-01 - 2017-01-02"})
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02"})
         
     def test_tpn_pedigree_bad_datetime_format_1(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
