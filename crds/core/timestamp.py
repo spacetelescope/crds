@@ -89,7 +89,7 @@ def month_num(month, initial_date=None):
         return  MONTHS.index(month[:3].capitalize()) + 1
     except ValueError as exc:
         raise ValueError(
-            "Invalid month value", repr(month), "in base date",
+            "Invalid month value " + repr(month) + " in base date " +
             repr(initial_date)) from exc
     
 def parse_alphabetical_date(date):
@@ -441,7 +441,7 @@ class Anydate(DateParser):
         try:
             return Sybdate.get_datetime(datestr)
         except ValueError as exc:
-            raise ValueError("Invalid Anydate format", repr(datestr)) from exc
+            raise ValueError("Invalid Anydate format " + repr(datestr)) from exc
     
 
 #class Shortdate(DateParser):

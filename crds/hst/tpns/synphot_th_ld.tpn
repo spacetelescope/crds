@@ -16,8 +16,8 @@ COMMENT             H        C         R
 HISTORY             H        C         R
 COMPNAME            H        C         R
 DESCRIP             H        C         R
-# CREATED             H        C         W    &AnyDate
+DATE                H        C         R    &AnyDate
 PEDIGREE            H        C         W    &PEDIGREE
 
 WAVELENGTH          C        R         R
-EMISSIVITY          C        R         O
+EMISSIVITY          C        R         R

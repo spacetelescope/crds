@@ -1758,7 +1758,7 @@ class TestCertify(test_config.CRDSTestCase):
     def test_tpn_pedigree_inflight_no_date(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        checker.check("test.fits", {"PEDIGREE":"INFLIGHT"})
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT"})
 
     def test_tpn_pedigree_equal_start_stop(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -1790,10 +1790,10 @@ class TestCertify(test_config.CRDSTestCase):
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 01-02-2017"})
 
-    def test_tpn_pedigree_good_datetime_dash_dash(self):
+    def test_tpn_pedigree_bad_datetime_dash_dash(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        checker.check("test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02"})
+        assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02"})
         
     def test_tpn_pedigree_bad_datetime_format_1(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])

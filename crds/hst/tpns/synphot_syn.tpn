@@ -17,7 +17,7 @@ HISTORY             H        C         R
 COMPNAME            H        C         R
 DESCRIP             H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
-CREATED             H        C         W    &AnyDate
+DATE                H        C         R    &AnyDate
 
 WAVELENGTH      C        R             R
 THROUGHPUT      C        R             R
