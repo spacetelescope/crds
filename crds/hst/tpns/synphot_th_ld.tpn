@@ -16,7 +16,7 @@ COMMENT             H        C         R
 HISTORY             H        C         R
 COMPNAME            H        C         R
 DESCRIP             H        C         R
-DATE                H        C         R    &AnyDate
+DATE                H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
 
 WAVELENGTH          C        R         R
