@@ -14,7 +14,7 @@ DESCRIP             H        C         R
 COMMENT             H        C         R
 HISTORY             H        C         R
 
-TIME                C        C         R   &ANYDATE
+TIME                C        C         R
 COMPNAME            C        C         R
 FILENAME            C        C         W   &FileExists
 COMMENT             C        C         R
