@@ -20,5 +20,5 @@ PEDIGREE            H        C         W    &PEDIGREE
 DATE                H        C         R
 
 WAVELENGTH      C        R             R
-THROUGHPUT      C        R             R
+THROUGHPUT      C        R             W
 

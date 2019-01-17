@@ -20,4 +20,4 @@ DATE                H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
 
 WAVELENGTH          C        R         R
-EMISSIVITY          C        R         R
+EMISSIVITY          C        R         W
