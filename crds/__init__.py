@@ -11,7 +11,7 @@ warnings.filterwarnings(
 # ============================================================================
 
 __version__ = "7.3.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST 2019 7.3.1 development."
+__rationale__ = "JWST 2019 DMS-7.3 CRDS-7.3.1 development."
 
 # ============================================================================
 

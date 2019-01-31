@@ -1,6 +1,9 @@
-__version__ = 'f6fd00da'
+
+
+__version__ = '55463344'
 
 __full_version_info__ = '''
-branch: master
-sha1: f6fd00da
+branch: 7.3.1
+sha1: 55463344
 '''
+    
