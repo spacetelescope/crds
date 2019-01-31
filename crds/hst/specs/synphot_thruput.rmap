@@ -1,6 +1,6 @@
 header = {
     'classes' : ('Match',),
-    'comment_parkeys' : ('CREATED', 'DESCRIP'),
+    'comment_parkeys' : ('DATE', 'DESCRIP'),
     'derived_from' : 'Initial hand made version 2018-11-24. Jira CCD-148.',
     'extra_keys' : (),
     'file_ext' : '.fits',
@@ -11,7 +11,7 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'hst_synphot_thruput.rmap',
     'observatory' : 'HST',
-    'parkey' : (('COMPNAME', 'CREATED', 'DESCRIP'),),
+    'parkey' : (('COMPNAME', 'DATE', 'DESCRIP'),),
     'reffile_format' : 'TABLE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
