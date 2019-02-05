@@ -731,11 +731,13 @@ def dump_references(*args, **keys):
     """
     return dump_references3(*args, **keys)[0]    
 
-def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=True):
+def dump_files(pipeline_context=None, files=None, ignore_cache=False, raise_exceptions=True):
     """Unified interface to dump any file in `files`, mapping or reference.
     
     Returns localpaths,  downloads count,  bytes downloaded
     """
+    if pipeline_context is None:
+        pipeline_context = get_default_context()
     if files is None:
         files = get_mapping_names(pipeline_context)
     mappings = [ os.path.basename(name) for name in files if config.is_mapping(name) ]
