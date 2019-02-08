@@ -16,7 +16,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_omit' : 'True',
-    'sha1sum' : '4caeacf959962a75a8274e178a27906f3cf52240',
+    'sha1sum' : '5d113df63ade771906c4ed15b6b6028e23e4e81e',
     'suffix' : 'th',
     'text_descr' : 'Component Thermal Tables',
     'tpn' : 'synphot_th.tpn',
