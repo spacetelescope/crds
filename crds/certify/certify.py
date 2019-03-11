@@ -815,7 +815,7 @@ def get_certifier_class(original_name, filepath):
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   compare_old_reference=False, dont_parse=False, skip_banner=False, 
                   script=None, observatory=None, comparison_reference=None, 
-                  run_fitsverify=False, check_rmap=True, check_sha1sums=True):
+                  run_fitsverify=False, check_rmap=True, check_sha1sums=False):
     """Check the specified list of reference or mapping `files` paths.
     
     files:                  full paths of references or mappings to check
@@ -829,7 +829,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     observatory:            e.g. 'jwst' or 'hst'
     comparison_reference:   filepath to use for table comparison rather than finding in `context`.
     check_rmap:             run trial rmap update to check for overlapping reference cases. 
-    check_sha1sums:       check the sha1sums of `files` relative to files known on the CRDS server.
+    check_sha1sums:         check the sha1sums of `files` relative to files known on the CRDS server.
     """
     trap = log.error_on_exception if script is None else script.error_on_exception
     for fnum, filename in enumerate(files):
