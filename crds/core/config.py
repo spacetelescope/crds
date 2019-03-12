@@ -782,7 +782,10 @@ def get_username(override=None):
             "CRDS_USERNAME", None, ini_section="authentication",
             comment="User's username on CRDS server, defaulting to current login.")
         # ultimately: override or env_var or ini_file or fallback function
-        USERNAME.set(override or USERNAME.get() or getpass.getuser())
+        username = override or USERNAME.get()
+        if username in ["None", "none", None]:
+            username = getpass.getuser()
+        USERNAME.set(username)
     return USERNAME.get()
 
 PASSWORD = None
@@ -799,7 +802,10 @@ def get_password(override=None):
             "CRDS_PASSWORD", None, ini_section="authentication",
             comment="User's password on CRDS server, defaulting to interactive echo-less entry.")
         # ultimately: override or env_var or ini_file or fallback function
-        PASSWORD.set(override or PASSWORD.get() or getpass.getpass())
+        password = override or PASSWORD.get()
+        if password in ["None", "none", None]:
+            password = getpass.getpass()
+        PASSWORD.set(password)
     return PASSWORD.get()
 
 # ===========================================================================
