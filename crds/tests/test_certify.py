@@ -598,6 +598,7 @@ def certify_comparison_context_none_all_mappings():
 
 def certify_jwst_valid():
     """
+    >> TestCertifyScript("crds.certify data/niriss_ref_photom.fits --comparison-context None")() # doctest: +ELLIPSIS
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying 'data/niriss_ref_photom.fits' (1/1) as 'FITS' relative to context None
     CRDS - INFO - FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
@@ -1977,8 +1978,8 @@ def main():
     """Run module tests,  for now just doctests only."""
     import unittest
 
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestHSTTpnInfoClass)
-    unittest.TextTestRunner().run(suite)
+    # suite = unittest.TestLoader().loadTestsFromTestCase(TestHSTTpnInfoClass)
+    # unittest.TextTestRunner().run(suite)
 
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCertify)
     unittest.TextTestRunner().run(suite)

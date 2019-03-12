@@ -16,6 +16,7 @@ def check_sha1sums(filepaths, observatory=None):
 
     Returns    count of duplicate files
     """
+    log.info("Checking local file sha1sums vs. CRDS server to identify files already in CRDS.")
     sha1sums = get_all_sha1sums(observatory)
     errors = 0
     for filepath in filepaths:
@@ -32,6 +33,8 @@ def check_sha1sum(filepath, sha1sums=None, observatory=None):
     if sha1sums is None:
         sha1sums = get_all_sha1sums(observatory)
     sha1sum = utils.checksum(filepath)
+    log.verbose("Checking file", repr(filepath), "with sha1sum", repr(sha1sum),
+                "for duplication on CRDS server.")
     if sha1sum in sha1sums:
         log.error("Submitted file", repr(filepath),
                   "is identical to existing CRDS file",
@@ -50,4 +53,5 @@ def get_all_sha1sums(observatory=None):
         observatory, fields=["sha1sum"])
     sha1sums = { info["sha1sum"]: name
                  for name,info in fileinfo.items() }
+    log.verbose("Retrieved", len(sha1sums), "sha1sums for existing CRDS files.")
     return sha1sums
