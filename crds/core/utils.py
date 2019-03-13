@@ -580,9 +580,11 @@ def create_path(path, mode=DEFAULT_DIR_PERMS):
         if not os.path.exists(subdir):
             log.verbose("Creating", repr(subdir), "with permissions %o" % mode)
             os.mkdir(subdir, mode)
+            os.chmod(subdir, mode)
 
 def ensure_dir_exists(fullpath, mode=DEFAULT_DIR_PERMS):
-    """Creates dirs from `fullpath` if they don't already exist.
+    """Creates dirs from `fullpath` if they don't already exist.  fullpath
+    is assumed to include a filename which will not be created.
     """
     create_path(os.path.dirname(fullpath), mode)
 

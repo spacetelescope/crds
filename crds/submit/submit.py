@@ -122,7 +122,7 @@ this command line interface must be members of the CRDS operators group
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
-        self.ensure_ingest_exists(host, path)
+        utils.create_path(path, 0o770)
         total_size = utils.total_size(self.files)
 
         ingest_info = self.get_ingested_files()
@@ -146,25 +146,6 @@ this command line interface must be members of the CRDS operators group
         log.divider(func=log.verbose)
         stats.report()
         log.divider(char="=")
-
-    def ensure_ingest_exists(self, host, path):
-        """Ensure the destination directory for submitted files on the CRDS server exist, or create it."""
-        self.possibly_remote_command(host, "mkdir -p " + path)
-        self.possibly_remote_command(host, "chmod 770 " + path)
-            
-    def possibly_remote_command(self, host, cmd, verbosity=65):
-        """If `host` is the localhost,  excecute `cmd` in subshell.  Otherwise execute `cmd` by ssh."""
-        if host.startswith(socket.gethostname()):
-            output = pysh.out_err(cmd, trace_commands=log.get_verbose() >= verbosity)
-        else:
-            output = pysh.out_err("ssh   ${host}    ${cmd}", trace_commands=log.get_verbose() >= verbosity)
-        if output:
-            log.verbose(output, verbosity=verbosity)
-   
-    #def upload_file(self, name, path, destination):
-    #    self.connection.upload_file('/upload/alt_new/', file=name)
-    #    # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
-    #    # self.connection.repost('/upload/alt_new/', file = open(name, "rb"))
 
     def scan_for_nonsubmitted_ingests(self, ingest_info):
         """Check for junk in the submitter's ingest directory,  left over files not
@@ -217,17 +198,14 @@ this command line interface must be members of the CRDS operators group
         the submitter's submission directory is visible from the host running this script.
         """
         try:
-            verbose = "-v" if log.get_verbose() >= 65 else ""
-            if destination.startswith(socket.gethostname()):
-                output = pysh.out_err("cp ${verbose} ${name} ${path}", raise_on_error=True, trace_commands=log.get_verbose() >= 65)
-            else:
-                bname = os.path.basename(name)
-                output = pysh.out_err("scp ${verbose} ${name} ${destination}/${bname}", raise_on_error=True, trace_commands=log.get_verbose() >= 65)
+            output = pysh.out_err("cp ${name} ${path}", raise_on_error=True,
+                                  trace_commands=log.get_verbose() >= 65)
             if output:
                 log.verbose(output)
             return output
         except Exception as exc:
-            log.fatal_error("File transfer failed for: " + repr(name), "-->", repr(destination))
+            log.fatal_error("File transfer failed for: " + repr(name),
+                            "-->", repr(destination), ":", str(exc))
             
     def wipe_files(self):
         """Copy self.files into the user's ingest directory on the CRDS server."""
