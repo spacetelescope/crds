@@ -27,6 +27,7 @@ from crds.refactoring import refactor
 from . import mapping_parser
 from . import validators
 from . import reftypes
+from . import check_sha1sum
 
 # ============================================================================
 
@@ -688,7 +689,7 @@ class MappingCertifier(Certifier):
                           compare_old_reference=self.compare_old_reference,
                           script=self.script, observatory=self.observatory,
                           run_fitsverify=self.run_fitsverify,
-                          check_rmap=False)
+                          check_rmap=False, check_sha1sums=False)
 
     def get_existing_reference_paths(self, mapping):
         """Return the paths of the references referred to by mapping.  Omit
@@ -814,7 +815,7 @@ def get_certifier_class(original_name, filepath):
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   compare_old_reference=False, dont_parse=False, skip_banner=False, 
                   script=None, observatory=None, comparison_reference=None, 
-                  run_fitsverify=False, check_rmap=True):
+                  run_fitsverify=False, check_rmap=True, check_sha1sums=False):
     """Check the specified list of reference or mapping `files` paths.
     
     files:                  full paths of references or mappings to check
@@ -828,6 +829,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     observatory:            e.g. 'jwst' or 'hst'
     comparison_reference:   filepath to use for table comparison rather than finding in `context`.
     check_rmap:             run trial rmap update to check for overlapping reference cases. 
+    check_sha1sums:         check the sha1sums of `files` relative to files known on the CRDS server.
     """
     trap = log.error_on_exception if script is None else script.error_on_exception
     for fnum, filename in enumerate(files):
@@ -847,6 +849,12 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
             banner()
         with trap("Failed updating rmap"):
             check_rmap_updates(observatory, context, files)
+
+    if check_sha1sums:
+        if not skip_banner:
+            banner()
+        with trap("Failed checking sha1sums"):
+            check_sha1sum.check_sha1sums(files, observatory)
 
     if not skip_banner:
         banner()
@@ -972,6 +980,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
                           help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
         self.add_argument("-u", "--check-rmap-updates", action="store_true",
                           help="Do a dry-run of adding reference files to the appropriate rmaps to detect errors.")
+        self.add_argument("-k", "--check-sha1sums", action="store_true",
+                          help="Check certified files to see if any are identical to files already in CRDS.")
 
         
         cmdline.UniqueErrorsMixin.add_args(self)
@@ -1020,7 +1030,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
                       dont_parse=self.args.dont_parse,
                       script=self, observatory=self.observatory,
                       run_fitsverify=self.args.run_fitsverify,
-                      check_rmap=self.args.check_rmap_updates)
+                      check_rmap=self.args.check_rmap_updates,
+                      check_sha1sums=self.args.check_sha1sums)
     
         self.dump_unique_errors()
         return log.errors()
