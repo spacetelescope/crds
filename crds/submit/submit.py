@@ -199,7 +199,7 @@ this command line interface must be members of the CRDS operators group
         """
         try:
             output = pysh.out_err("cp ${name} ${path}", raise_on_error=True,
-                                  trace_commands=log.get_verbose() >= 65)
+                                  trace_commands=log.get_verbose())
             if output:
                 log.verbose(output)
             return output
@@ -213,10 +213,8 @@ this command line interface must be members of the CRDS operators group
         log.divider(name="wipe files", char="=")
         log.info("Wiping files at", repr(destination))
         host, path = destination.split(":")
-        if destination.startswith(socket.gethostname()):
-            output = pysh.out_err("rm -vf  ${path}/*")
-        else:
-            output = pysh.out_err("ssh ${host} rm -vf ${path}/*")
+        output = pysh.out_err("rm -vf  ${path}/*",
+                              trace_commands=log.get_verbose())
         if output:
             log.verbose(output)
 
