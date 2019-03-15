@@ -46,23 +46,6 @@ this command line interface must be members of the CRDS operators group
         self.base_url = None
         self.jpoll_key = None
 
-    def create_submission(self):
-        """Create a Submission object based on script / command-line parameters."""
-        return utils.Struct(
-            uploaded_files = { os.path.basename(filepath) : filepath for filepath in self.files } if self.args.files else {},
-            description = self.args.description,
-            username = self.username,
-            creator_name = self.args.creator,
-            change_level = self.args.change_level,
-            auto_rename = not self.args.dont_auto_rename,
-            compare_old_reference = not self.args.dont_compare_old_reference,
-            submission_kind = self.args.submission_kind,
-            observatory = self.observatory,
-            pmap_mode = self.pmap_mode,
-            pmap_name = self.pmap_name,
-            agent = "command-line-script"
-            )
-
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
         super(ReferenceSubmissionScript, self).add_args()
@@ -266,20 +249,26 @@ this command line interface must be members of the CRDS operators group
         assert self.args.description is not None, "You must supply a --description for this function."
         self.ingest_files()
         log.info("Posting web request for", srepr(relative_url))
-        completion_args = self.connection.repost_start(
-            relative_url,
-            pmap_mode = self.pmap_mode,
-            pmap_name = self.pmap_name,
-            instrument = self.instrument,
-            change_level=self.args.change_level,
-            creator=self.args.creator,
-            description=self.args.description,
-            auto_rename=not self.args.dont_auto_rename,
-            compare_old_reference=not self.args.dont_compare_old_reference,
-            )
+        submission_args = self.get_submission_args()
+        completion_args = self.connection.repost_start(relative_url, **submission_args)
         # give POST time to complete send, not response
         time.sleep(10)
         return completion_args
+    
+    def get_submission_args(self):
+        """Return a dictionary mapping form variables to value strings for the basic command
+        line submission parameters.
+        """
+        return dict(
+            pmap_mode = self.pmap_mode,
+            pmap_name = self.pmap_name,
+            instrument = self.instrument,
+            change_level = self.args.change_level,
+            creator = self.args.creator,
+            description = self.args.description,
+            auto_rename = not self.args.dont_auto_rename,
+            compare_old_reference = not self.args.dont_compare_old_reference,
+        )
 
     def submission_complete(self, args):
         """Threaded completion function for any submission,  returns web response."""
@@ -324,8 +313,6 @@ this command line interface must be members of the CRDS operators group
 
         if self.args.logout:
             return self.logout()
-
-        self.submission = self.create_submission()
 
         self.login()
 
