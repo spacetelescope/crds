@@ -2,13 +2,11 @@ import yaml
 
 from .submit import ReferenceSubmissionScript
 
-
 class RedCatSubmissionScript(ReferenceSubmissionScript):
     """This script extends the original CRDS command line submission
     system with extra meta-data previously captured by the submit_to_redcat
     script.
     """
-
     def get_submission_parameters(self):
         """Returns the combined form parameter dictionary as a CRDS Struct defining
         the mapping from all form variables to their string values.
@@ -19,12 +17,17 @@ class RedCatSubmissionScript(ReferenceSubmissionScript):
         return parameters
 
     def add_args(self):
+        super(ReferenceSubmissionScript, self).add_args()
         self.add_arg("--redcat-parameters", type="str",
                      help="Path to YAML file defining extra ReDCaT parameters.")
-
+        
     def get_extra_parameters(self):
         """Return the form dictionary mapping form variables to value strings for
         new variables being added by the streamlining project.
         """
         with open(self.args.redcat_parameters) as f:
             return yaml.load(f)
+        
+    def batch_submit_references(self):
+        """Do a web re-post to the batch submit references web page."""
+        return self._submission("/submission_form/redcat_submit/")
