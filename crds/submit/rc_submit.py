@@ -1,3 +1,10 @@
+"""This module adds additional submission metadata and a programmatic interface
+to the original commamnd line submission program as part of the file submission
+streamlinin project.
+"""
+
+import sys
+
 import yaml
 
 from .submit import ReferenceSubmissionScript
@@ -7,13 +14,13 @@ class RedCatApiScript(ReferenceSubmissionScript):
     system with extra meta-data previously captured by the submit_to_redcat
     script.
     """
-    def get_submission_parameters(self):
+    def get_submission_args(self):
         """Returns the combined form parameter dictionary as a CRDS Struct defining
         the mapping from all form variables to their string values.
         """
-        self._extra_redcat_parameters = self.get_extra_parameters()
-        parameters = super(RedCatSubmissionScript, self).get_submission_parameters()
-        parameters.update(self._extra_redcat_parameters)
+        parameters = super(RedCatApiScript, self).get_submission_args()
+        extra_parameters = self.get_extra_parameters()
+        parameters.update(extra_parameters)
         return parameters
 
     def get_extra_parameters(self):
@@ -34,8 +41,8 @@ class RedCatSubmissionScript(RedCatApiScript):
     script.
     """
     def add_args(self):
-        super(ReferenceSubmissionScript, self).add_args()
-        self.add_arg("--redcat-parameters", type="str",
+        super(RedCatSubmissionScript, self).add_args()
+        self.add_argument("--redcat-parameters", type=str,
                      help="Path to YAML file defining extra ReDCaT parameters.")
         
     def get_extra_parameters(self):
@@ -43,7 +50,7 @@ class RedCatSubmissionScript(RedCatApiScript):
         new variables being added by the streamlining project.
         """
         with open(self.args.redcat_parameters) as f:
-            return yaml.load(f)
+            return yaml.load(f.read())
         
 def submit():
         # Deliver the files
@@ -59,3 +66,13 @@ def submit():
     script()
 
     # What should return value be?
+
+def main():
+    """Run the command line program version of the extended batch submit which
+    loads extended parameters from a YAML input file.
+    """
+    script = RedCatSubmissionScript()
+    return script()
+
+if __name__ == "__main__":
+    sys.exit(main())
