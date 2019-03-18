@@ -1028,7 +1028,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
     def _sync_comparison_files(self, comparison_context, comparison_reference):
         """Download comparison_context and comparison_reference as needed."""
         if comparison_context:
-            resolved_context = self.resolve_context(self.args.comparison_context)
+            resolved_context = self.resolve_context(comparison_context)
             self.sync_files([resolved_context])
         if comparison_reference:
             self.sync_files([comparison_reference])
