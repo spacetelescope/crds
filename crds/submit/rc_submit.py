@@ -52,12 +52,45 @@ class RedCatSubmissionScript(RedCatApiScript):
         with open(self.args.redcat_parameters) as f:
             return yaml.load(f.read())
         
-def submit():
-        # Deliver the files
+def submit(submission_params, autoconfirm=True, async=True):
+    """Submit reference files and meta information to CRDS
+
+    Parameters
+    ----------
+    submission_params: dict
+        The meta and reference file parameters that define the submission
+
+    autoconfirm: bool
+        Complete submission all the way into CRDS.
+
+    async=True
+        Return immediately without waiting for the submission to complete.
+
+    Returns
+    -------
+    monitor: monitor object
+        The handle to use to monitor the status of the submission
+    """
+
+    # Login to CRDS
+
+    # Certify the reference files
+    # In the future this will include checking for duplicate submissions
+
+    # Convert the dict the the appropriate structure.
+    # This would involve the use of `add_argument`
+
+    # Post the reference files to the website
+
+    # Post the meta information to the website
+
+    # Return the monitor handle
+
     script = RedcatApiScript("crds.submit --files {} "
                              "--monitor-processing "
                              "--wait-for-completion "
                              "--wipe-existing-files "
+                             "--certify-files "
                              "--log-time "
                              "--stats --creator '{} Team' "
                              "--description '{}'").format(
@@ -65,7 +98,6 @@ def submit():
     # script._extra_redcat_parameters = {}
     script()
 
-    # What should return value be?
 
 def main():
     """Run the command line program version of the extended batch submit which

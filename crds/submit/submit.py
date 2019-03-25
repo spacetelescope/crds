@@ -9,6 +9,7 @@ from crds.core import log, config, utils, pysh, cmdline
 from crds.core.log import srepr
 from . import web, background, monitor
 from crds.client import api
+from crds.certify import certify
 
 # ===================================================================
 
@@ -73,6 +74,9 @@ this command line interface must be members of the CRDS operators group
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
         self.add_argument("--keep-existing-files", action="store_true", 
                           help="Don't recopy files already in the server ingest directory that have the correct length.")
+        self.add_argument("--certify-files", action="store_true",
+                          help="Run CRDS certify and fail if errors are found.")
+        
         self.add_argument("--logout", action="store_true", 
                           help="Log out of the server,  dropping any lock.")
 
@@ -301,6 +305,19 @@ this command line interface must be members of the CRDS operators group
         log.info("Logging out releasing lock.")
         self.connection.login()
         self.connection.logout()
+
+    def certify_local_files(self):
+        """Run CRDS certify on submitted files and fail/exit if errors are
+        found.
+        """
+        if log.errors():
+            self.fatal_error("Errors encountered before CRDS certify run.")
+        certify.certify_files(
+            self.files, context=self.pmap_name, dump_provenance=True, 
+            compare_old_reference=True, observatory=self.observatory,
+            run_fitsverify=True, check_rmap=True, check_sha1sums=True)
+        if log.errors():
+            self.fatal_error("Certify errors found.  Aborting submission.")
         
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
@@ -311,6 +328,9 @@ this command line interface must be members of the CRDS operators group
         
         self.finish_parameters()
 
+        if self.args.certify_files:
+            self.certify_local_files()
+            
         if self.args.logout:
             return self.logout()
 
