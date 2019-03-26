@@ -7,6 +7,8 @@ import sys
 
 import yaml
 
+from crds.core import log
+
 from .submit import ReferenceSubmissionScript
 
 class RedCatApiScript(ReferenceSubmissionScript):
@@ -50,8 +52,12 @@ class RedCatSubmissionScript(RedCatApiScript):
         new variables being added by the streamlining project.
         """
         with open(self.args.redcat_parameters) as f:
-            return yaml.load(f.read())
-        
+            text = f.read()
+            log.verbose("Raw YAML read:\n", text, verbosity=75)
+            loaded = yaml.load(text)
+            log.verbose("ReDCaT parameters:\n", log.PP(loaded))
+            return loaded
+
 def submit(submission_params, autoconfirm=True, async=True):
     """Submit reference files and meta information to CRDS
 
