@@ -130,6 +130,7 @@ class CrdsDjangoConnection:
 
     def login(self, next="/"):
         """Login to the CRDS website and proceed to relative url `next`."""
+        self.session.cookies["ASB-AUTH"] = self.password
         response = self.repost(
             "/login/", 
             username = self.username,
