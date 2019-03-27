@@ -1,6 +1,8 @@
 """This module codifies standard practices for scripted interactions with the 
 web server file submission system.
 """
+import os.path
+
 from crds.core import log, utils
 from . import background
 
@@ -166,21 +168,11 @@ class CrdsDjangoConnection:
         """Login to the CRDS website and proceed to relative url `next`."""
         self.get("/logout/")
 
-    '''
-    def upload_file(self, relative_url, *post_dicts, **post_vars):
-        file_var = post_vars.pop("file_var", "file")
-        file = post_vars.pop("file")
-        content_type = post_vars.pop("content_type", "utf-8")
-        fields = dict(post_vars)
-        fields[file_var] = (file, open(file, "rb"), "text/plain") 
-        encoder = MultipartEncoder(fields=fields)
-        headers={'Content-Type': encoder.content_type}
-        response = self.repost(relative_url, data=encoder, headers=headers)
-        # monitor = MultipartEncoderMonitor(encoder, self.monitor_upload)
-        # headers={'Content-Type': monitor.content_type}
-        return response
-
-    def monitor_upload(self, encoder, length):
-        log.verbose("Upload monitor:", encoder, length)
-
-    '''
+    def upload_file(self, relative_url, filepath):
+        abs_url = self.abs_url(relative_url)
+        response = self.session.get(abs_url)
+        log.verbose("COOKIES:", log.PP(response.cookies))
+        csrf_token = response.cookies['csrftoken']
+        files = { "files" : open(filepath, "rb") }        
+        data = {'csrfmiddlewaretoken': csrf_token}
+        self.session.post(abs_url, files=files, data=data)
