@@ -105,11 +105,8 @@ this command line interface must be members of the CRDS operators group
     # -------------------------------------------------------------------------------------------------
 
     def ingest_files(self):
-        """Copy self.files into the user's ingest directory on the CRDS server."""
+        """Upload self.files to the user's ingest directory on the CRDS server."""
         stats = self._start_stats()
-        destination = self.submission_info.ingest_dir
-        host, path = destination.split(":")
-        utils.create_path(path, 0o770)
         total_size = utils.total_size(self.files)
 
         ingest_info = self.get_ingested_files()
@@ -121,14 +118,14 @@ this command line interface must be members of the CRDS operators group
 
         for i, filename in enumerate(remaining_files):
             file_size = utils.file_size(filename)
-            log.info("Copy started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
+            log.info("Upload started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
                      "[", utils.human_format_number(file_size), 
                      "/", utils.human_format_number(total_size), " bytes ]")
-            self.copy_file(filename, path, destination)
+            self.connection.upload_file("/upload/new/", filename)
             stats.increment("bytes", file_size)
             stats.increment("files", 1)
-            stats.log_status("files", "Copy complete", len(self.files))
-            stats.log_status("bytes", "Copy complete", total_size)
+            stats.log_status("files", "Upload complete", len(self.files))
+            stats.log_status("bytes", "Upload complete", total_size)
 
         log.divider(func=log.verbose)
         stats.report()
@@ -166,12 +163,12 @@ this command line interface must be members of the CRDS operators group
             else:
                 log.info("File", repr(filename), 
                          "exists but has incorrect size and must be recopied.  Deleting old ingest.")
-                self.connection.get(ingest_info[basename]["delete_url"])
+                self.connection.get(ingest_info[basename]["deleteUrl"])
         return files
 
     def get_ingested_files(self):
         """Return the server-side JSON info on the files already in the submitter's ingest directory."""
-        log.info("Determining existing files.")
+        log.verbose("Querying for existing files.")
         result = self.connection.get('/upload/list/').json()
         log.verbose("JSON info on existing ingested files:\n", log.PP(result))
         if "files" in result and isinstance(result["files"], list):
@@ -179,31 +176,13 @@ this command line interface must be members of the CRDS operators group
         else:
             return { info["name"] : info for info in result }
 
-    def copy_file(self, name, path, destination):
-        """Perform a cp-based or scp-based copy of file `name`,  either to `path` or
-        a host location based on `destination` and `name`,  depending on whether or not 
-        the submitter's submission directory is visible from the host running this script.
-        """
-        try:
-            output = pysh.out_err("cp ${name} ${path}", raise_on_error=True,
-                                  trace_commands=log.get_verbose())
-            if output:
-                log.verbose(output)
-            return output
-        except Exception as exc:
-            log.fatal_error("File transfer failed for: " + repr(name),
-                            "-->", repr(destination), ":", str(exc))
-            
     def wipe_files(self):
-        """Copy self.files into the user's ingest directory on the CRDS server."""
-        destination = self.submission_info.ingest_dir
+        """Delete all files from the user's ingest directory on the CRDS server."""
         log.divider(name="wipe files", char="=")
-        log.info("Wiping files at", repr(destination))
-        host, path = destination.split(":")
-        output = pysh.out_err("rm -vf  ${path}/*",
-                              trace_commands=log.get_verbose())
-        if output:
-            log.verbose(output)
+        ingest_info = self.get_ingested_files()
+        for basename in ingest_info:
+            log.info("Wiping file", repr(basename))
+            self.connection.get(ingest_info[basename]["deleteUrl"])
 
     def _start_stats(self):
         """Helper method to initialize stats keeping for ingest."""
@@ -211,7 +190,7 @@ this command line interface must be members of the CRDS operators group
         stats = utils.TimingStats(output=log.verbose)
         stats.start()
         log.divider(name="ingest files", char="=")
-        log.info("Copying", len(self.files), "file(s) totalling", utils.human_format_number(total_bytes), "bytes")
+        log.info("Uploading", len(self.files), "file(s) totalling", utils.human_format_number(total_bytes), "bytes")
         log.divider(func=log.verbose)
         return stats
 
