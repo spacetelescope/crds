@@ -9,6 +9,7 @@ from crds.core import log, config, utils, pysh, cmdline
 from crds.core.log import srepr
 from . import web, background, monitor
 from crds.client import api
+from crds.certify import certify
 
 # ===================================================================
 
@@ -46,23 +47,6 @@ this command line interface must be members of the CRDS operators group
         self.base_url = None
         self.jpoll_key = None
 
-    def create_submission(self):
-        """Create a Submission object based on script / command-line parameters."""
-        return utils.Struct(
-            uploaded_files = { os.path.basename(filepath) : filepath for filepath in self.files } if self.args.files else {},
-            description = self.args.description,
-            username = self.username,
-            creator_name = self.args.creator,
-            change_level = self.args.change_level,
-            auto_rename = not self.args.dont_auto_rename,
-            compare_old_reference = not self.args.dont_compare_old_reference,
-            submission_kind = self.args.submission_kind,
-            observatory = self.observatory,
-            pmap_mode = self.pmap_mode,
-            pmap_name = self.pmap_name,
-            agent = "command-line-script"
-            )
-
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
         super(ReferenceSubmissionScript, self).add_args()
@@ -90,6 +74,9 @@ this command line interface must be members of the CRDS operators group
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
         self.add_argument("--keep-existing-files", action="store_true", 
                           help="Don't recopy files already in the server ingest directory that have the correct length.")
+        self.add_argument("--certify-files", action="store_true",
+                          help="Run CRDS certify and fail if errors are found.")
+        
         self.add_argument("--logout", action="store_true", 
                           help="Log out of the server,  dropping any lock.")
 
@@ -118,11 +105,8 @@ this command line interface must be members of the CRDS operators group
     # -------------------------------------------------------------------------------------------------
 
     def ingest_files(self):
-        """Copy self.files into the user's ingest directory on the CRDS server."""
+        """Upload self.files to the user's ingest directory on the CRDS server."""
         stats = self._start_stats()
-        destination = self.submission_info.ingest_dir
-        host, path = destination.split(":")
-        utils.create_path(path, 0o770)
         total_size = utils.total_size(self.files)
 
         ingest_info = self.get_ingested_files()
@@ -134,14 +118,14 @@ this command line interface must be members of the CRDS operators group
 
         for i, filename in enumerate(remaining_files):
             file_size = utils.file_size(filename)
-            log.info("Copy started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
+            log.info("Upload started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
                      "[", utils.human_format_number(file_size), 
                      "/", utils.human_format_number(total_size), " bytes ]")
-            self.copy_file(filename, path, destination)
+            self.connection.upload_file("/upload/new/", filename)
             stats.increment("bytes", file_size)
             stats.increment("files", 1)
-            stats.log_status("files", "Copy complete", len(self.files))
-            stats.log_status("bytes", "Copy complete", total_size)
+            stats.log_status("files", "Upload complete", len(self.files))
+            stats.log_status("bytes", "Upload complete", total_size)
 
         log.divider(func=log.verbose)
         stats.report()
@@ -179,12 +163,12 @@ this command line interface must be members of the CRDS operators group
             else:
                 log.info("File", repr(filename), 
                          "exists but has incorrect size and must be recopied.  Deleting old ingest.")
-                self.connection.get(ingest_info[basename]["delete_url"])
+                self.connection.get(ingest_info[basename]["deleteUrl"])
         return files
 
     def get_ingested_files(self):
         """Return the server-side JSON info on the files already in the submitter's ingest directory."""
-        log.info("Determining existing files.")
+        log.verbose("Querying for existing files.")
         result = self.connection.get('/upload/list/').json()
         log.verbose("JSON info on existing ingested files:\n", log.PP(result))
         if "files" in result and isinstance(result["files"], list):
@@ -192,31 +176,13 @@ this command line interface must be members of the CRDS operators group
         else:
             return { info["name"] : info for info in result }
 
-    def copy_file(self, name, path, destination):
-        """Perform a cp-based or scp-based copy of file `name`,  either to `path` or
-        a host location based on `destination` and `name`,  depending on whether or not 
-        the submitter's submission directory is visible from the host running this script.
-        """
-        try:
-            output = pysh.out_err("cp ${name} ${path}", raise_on_error=True,
-                                  trace_commands=log.get_verbose())
-            if output:
-                log.verbose(output)
-            return output
-        except Exception as exc:
-            log.fatal_error("File transfer failed for: " + repr(name),
-                            "-->", repr(destination), ":", str(exc))
-            
     def wipe_files(self):
-        """Copy self.files into the user's ingest directory on the CRDS server."""
-        destination = self.submission_info.ingest_dir
+        """Delete all files from the user's ingest directory on the CRDS server."""
         log.divider(name="wipe files", char="=")
-        log.info("Wiping files at", repr(destination))
-        host, path = destination.split(":")
-        output = pysh.out_err("rm -vf  ${path}/*",
-                              trace_commands=log.get_verbose())
-        if output:
-            log.verbose(output)
+        ingest_info = self.get_ingested_files()
+        for basename in ingest_info:
+            log.info("Wiping file", repr(basename))
+            self.connection.get(ingest_info[basename]["deleteUrl"])
 
     def _start_stats(self):
         """Helper method to initialize stats keeping for ingest."""
@@ -224,7 +190,7 @@ this command line interface must be members of the CRDS operators group
         stats = utils.TimingStats(output=log.verbose)
         stats.start()
         log.divider(name="ingest files", char="=")
-        log.info("Copying", len(self.files), "file(s) totalling", utils.human_format_number(total_bytes), "bytes")
+        log.info("Uploading", len(self.files), "file(s) totalling", utils.human_format_number(total_bytes), "bytes")
         log.divider(func=log.verbose)
         return stats
 
@@ -266,20 +232,26 @@ this command line interface must be members of the CRDS operators group
         assert self.args.description is not None, "You must supply a --description for this function."
         self.ingest_files()
         log.info("Posting web request for", srepr(relative_url))
-        completion_args = self.connection.repost_start(
-            relative_url,
-            pmap_mode = self.pmap_mode,
-            pmap_name = self.pmap_name,
-            instrument = self.instrument,
-            change_level=self.args.change_level,
-            creator=self.args.creator,
-            description=self.args.description,
-            auto_rename=not self.args.dont_auto_rename,
-            compare_old_reference=not self.args.dont_compare_old_reference,
-            )
+        submission_args = self.get_submission_args()
+        completion_args = self.connection.repost_start(relative_url, **submission_args)
         # give POST time to complete send, not response
         time.sleep(10)
         return completion_args
+    
+    def get_submission_args(self):
+        """Return a dictionary mapping form variables to value strings for the basic command
+        line submission parameters.
+        """
+        return dict(
+            pmap_mode = self.pmap_mode,
+            pmap_name = self.pmap_name,
+            instrument = self.instrument,
+            change_level = self.args.change_level,
+            creator = self.args.creator,
+            description = self.args.description,
+            auto_rename = not self.args.dont_auto_rename,
+            compare_old_reference = not self.args.dont_compare_old_reference,
+        )
 
     def submission_complete(self, args):
         """Threaded completion function for any submission,  returns web response."""
@@ -312,6 +284,19 @@ this command line interface must be members of the CRDS operators group
         log.info("Logging out releasing lock.")
         self.connection.login()
         self.connection.logout()
+
+    def certify_local_files(self):
+        """Run CRDS certify on submitted files and fail/exit if errors are
+        found.
+        """
+        if log.errors():
+            self.fatal_error("Errors encountered before CRDS certify run.")
+        certify.certify_files(
+            self.files, context=self.pmap_name, dump_provenance=True, 
+            compare_old_reference=True, observatory=self.observatory,
+            run_fitsverify=True, check_rmap=True, check_sha1sums=True)
+        if log.errors():
+            self.fatal_error("Certify errors found.  Aborting submission.")
         
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
@@ -322,10 +307,11 @@ this command line interface must be members of the CRDS operators group
         
         self.finish_parameters()
 
+        if self.args.certify_files:
+            self.certify_local_files()
+            
         if self.args.logout:
             return self.logout()
-
-        self.submission = self.create_submission()
 
         self.login()
 
