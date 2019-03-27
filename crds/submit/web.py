@@ -169,5 +169,10 @@ class CrdsDjangoConnection:
         self.get("/logout/")
 
     def upload_file(self, relative_url, filepath):
+        abs_url = self.abs_url(relative_url)
+        response = self.session.get(abs_url)
+        log.verbose("COOKIES:", log.PP(response.cookies))
+        csrf_token = response.cookies['csrftoken']
         files = { "files" : open(filepath, "rb") }        
-        self.session.post(self.abs_url(relative_url), files=files)
+        data = {'csrfmiddlewaretoken': csrf_token}
+        self.session.post(abs_url, files=files, data=data)
