@@ -58,7 +58,7 @@ class RedCatSubmissionScript(RedCatApiScript):
             log.verbose("ReDCaT parameters:\n", log.PP(loaded))
             return loaded
 
-def submit(submission_params, autoconfirm=True, async=True):
+def submit(submission_params, autoconfirm=True, wait=False):
     """Submit reference files and meta information to CRDS
 
     Parameters
@@ -69,13 +69,16 @@ def submit(submission_params, autoconfirm=True, async=True):
     autoconfirm: bool
         Complete submission all the way into CRDS.
 
-    async=True
-        Return immediately without waiting for the submission to complete.
+    wait: bool 
+        Wait for the submission to complete before returning.
+        On  completion,  successful  submission  will be ready
+        for confirmation on web site unless autoconfirm is True.
 
     Returns
     -------
     monitor: monitor object
         The handle to use to monitor the status of the submission
+
     """
 
     # Login to CRDS
