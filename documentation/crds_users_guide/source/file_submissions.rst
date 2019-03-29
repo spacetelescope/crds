@@ -17,11 +17,29 @@ rules,  i.e. generate new rmaps, imap, and pmap based on header keywords in
 the submitted reference files.
 
 The *Extended Batch Submit References* process adds a number of additional form
-fields used to characterize your submission, previously captured by ReDCaT file
-submission scripts.  This metadata is permanently tracked in a CRDS submission
-object in the server database.  Aside from adding additional metadata, the
-Extended Batch Submit References process is essentially identical to the
-original Batch Submit References process.
+fields used to characterize your submission.  These fields were previously
+captured by ReDCaT file submission scripts.  This metadata is tracked in the
+CRDS server database.  Aside from adding metadata, the Extended Batch Submit
+References process is essentially identical to the original Batch Submit
+References process.
+
+The new web form, which begins as shown, fully supersedes the old form:
+
+.. figure:: images/extend_batch_submit.png
+   :scale: 50 %
+   :alt: extended batch reference submission inputs
+
+.. figure:: images/extend_batch_submit_2.png
+   :scale: 50 %
+   :alt: extended batch reference submission inputs 2
+
+.. figure:: images/extend_batch_submit_3.png
+   :scale: 50 %
+   :alt: extended batch reference submission inputs 3
+
+.. figure:: images/extend_batch_submit_4.png
+   :scale: 50 %
+   :alt: extended batch reference submission inputs 4
 
 **NOTE:** *Checked* or *Yes* answers for many fields are required for your
 submission to succeed; many of the form fields are reminders of the ReDCaT
