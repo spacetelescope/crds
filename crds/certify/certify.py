@@ -587,6 +587,7 @@ RECATEGORIZED_MESSAGE = {
     'Unregistered XTENSION value' : log.info,
     'checksum is not' : log.error,
     'Invalid CHECKSUM' : log.error,
+    'dyld: Library not loaded:' : log.warning,  # bad fitsverify not running,  not a known problem with reference.
 }
 
 def interpret_fitsverify_output(status, output):
