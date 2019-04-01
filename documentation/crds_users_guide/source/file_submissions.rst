@@ -452,3 +452,194 @@ so additional test parameters or other header and structural changes of any
 test rmap are not carried over by Add References,  only the reference files
 themselves.
 
+Submission Warnings and Errors
+..............................
+
+Identical Files
++++++++++++++++
+
+CRDS can detect if your submitted files are bit-for-bit-identical to any
+existing files or to each other by checking their sha1sums against the CRDS
+database.  CRDS rejects identical files as errors since there is a reasonable
+likelihood that intended files are missing.
+
+**SOLUTION:**  remove the duplicate files from your submission and re-submit.
+
+Certification Errors and Warnings
++++++++++++++++++++++++++++++++++
+
+CRDS has a certification program that is used to check incoming reference and
+rules files.  The certify program applies several kinds of checks which can
+result in warnings or errors on the website.  (The certify program is also
+installed with the CRDS client and can be run locally alone or embedded in
+other file submission toolchains.  See command line tools.)
+
+Internal CRDS Constraints
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+CRDS defines some constraints using specifications called .tpn files. These
+specifications and checks can be reviewed on the website by looking up the
+details of any particular reference file of the same instrument and type:
+
+.. figure:: images/certify_tpn_listing.png
+   :scale: 50 %
+   :alt: add references
+
+JWST Data Model Constraints
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+The JWST calibration software (CAL) models the structure and valild keyword
+values for reference files in its jwst.datamodels package.  Effectively, the
+CAL datamodels define a formatting contract your references are expected to
+fulfill.  File which don't fulfill this contract will either result in
+perpetual warnings or outright pipeline failures if CAL rejects a file.
+
+As part of CRDS file checking, crds certify invokes datamodels.open() to verify
+datamodels compliance for your reference files.
+
+This message::
+
+  CRDS - WARNING - Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
+
+indicates that the JWST CAL Data Models were not used to create your reference
+files.  Datamodels.open() needs the DATAMODL keyword to define the correct
+model to validate your file.
+
+You have the option of ignoring this warning, but it means that CRDS is not
+using the strictest and most appropriate model to validate your file, only a
+more generic fallback model.  When your file later is processed by the CAL
+software, the CAL software will use the correct model, so it may notice
+contractual issues and reject your file.
+
+**SOLUTION:** The best solution is to coordinate more closely with the JWST CAL
+s/w group to learn how to use the datamodels to create your reference files.
+Using the correct version of datamodels should guaranteee that your files are
+compliant when you create them, as well as correctly populate the DATAMODL
+keyword, reducing this CRDS check to a rubber stamp.  More information about
+CAL reference file formats and the datamodels can be found here: `JWST CAL
+Documentation`_.
+
+.. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
+
+Fitsverify Failures
+!!!!!!!!!!!!!!!!!!!
+
+For FITS files, as part of certification CRDS normally runs HEASARC's
+fitsverify program to verify that file formats are broadly compliant and should
+work with cfitsio as well as astropy.
+
+1. Checksum errors
+
+   CRDS classifies FITS checksum errors detected by fitsverify as errors::
+
+   CRDS - ERROR -  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
+   CRDS - ERROR -  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
+
+   CRDS leaves Astropy checksum warnings alone::
+
+   CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+   CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+   
+   Checksums are not required, but if you do define them they should be correct
+   so that file users are not bombarded with warnings from FITS libraries.
+   Hence,  the CRDS server rejects files with bad checksums based on the errors
+   defined for fitsverify.
+   
+   **SOLUTION 1:** Use your FITS s/w or *crds checksum* to update your CHECKSUM
+    and DATASUM keywords::
+
+     $ crds checksum *.fits
+
+   **SOLUTION 2:** Use crds checksum or your FITS s/w to remove CHECKSUM and
+   DATASUM keywords::
+
+     $ crds checksum --remove *.fits
+
+2. Other fitsverify anomalies
+
+   fitsverify can detect other anomalies such as file truncation.
+
+   By default warnings are merely echoed but errors will lead to the rejection
+   of your files.  On request, CRDS can be easily modified to ignore or remap
+   fitsverify warnings and errors.
+   
+No Comparison Reference Warning
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+For selected tables, CRDS attempts to perform a comparison between the new
+version of a table and any table it replaces in the CRDS rules.  This check is
+intended to detect accidental loss of table rows/modes and unexpected duplicate
+rows.
+
+When CRDS cannnot find a suitable comparison table,  CRDS issues a warning like::
+
+    CRDS - WARNING - No comparison reference for 'test_jwst_nircam_photom_0039.fits' in context 'jwst_0503.pmap'. Skipping tables comparison.
+
+to let you know that table checks are not being performed.  If it's expected
+that some comparison table should exist, further investigation is warranted but
+not required.  If this is a new table or inexact replacement (e.g. subsequent
+USEAFTER date), the warning can be ignored.
+
+Rmap Update Errors
+++++++++++++++++++
+
+As part of a typical reference file submission,  CRDS automatically adds new
+files to the appropriate rmap and generates new context files.   This phase
+can detect some forms of errors which should be addressed.
+
+Exact Matching Duplicates
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Given the task of adding N reference files to an rmap,  CRDS checks that N new
+files really do appear in the new rmap.  It is possible for new reference files
+to have different sha1sums, i.e. not be bit-for-bit-identical,  but also to use
+exactly the same CRDS matching criteria.  With identical matching criteria,
+both files would occupy the same location in the .rmap,  and one file would
+replace the other. This is almost certainly an error so CRDS rejects the file
+submission with a message like this::
+
+    CRDS - ERROR -  ----------------------------------------
+    Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
+     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00'))) 
+    Each reference would replace the other in the rmap.
+    Either reference file matching parameters need correction
+    or additional matching parameters should be added to the rmap
+    to enable CRDS to differentiate between the two files.
+
+**SOLUTION 1:** Generally this means there was an error generating or handling
+the reference files and the fix is to sort of the problem and re-submit.
+
+**SOLUTION 2:** Update the rmap to add additional matching parameters so that
+CRDS can differentiate between your files.  Resubmit the rmap using the
+Submit Mappings page.  Resubmit your reference files.
+
+Equal Weight Match Cases
+!!!!!!!!!!!!!!!!!!!!!!!!
+
+When adding files which are characterized as "similar but different",  CRDS can
+issue an WARNING like this::
+
+    CRDS - WARNING -  ----------------------------------------
+    Match case
+     (('DETECTOR', 'FUV'),) 
+    is an equal weight special case of
+     (('DETECTOR', 'FUV|NUV'),) 
+    For some parameter sets, CRDS interprets both matches as equally good.  For
+    instance, when reading the web table, some parameter sets will have 'two
+    answers' not just the first seen.  This makes CRDS reference assignments hard
+    to understand so CRDS for JWST disallows this.  It may indicate a mistake
+    characterizing references for CRDS, i.e. one set of files should be
+    parameterized differently.  It is POSSIBLE to confirm these files.  However,
+    the rmap should be immediately updated to consolidate or separate these
+    overlapping cases.  For JWST, it is an error to encounter equal weight cases at
+    runtime.  Alternately, cancel the submission and update the reference file
+    matching parameters to avoid the conflict.
+    ----------------------------------------
+
+Conceptually a CRDS reference file lookup should be a tree descent.  First the
+instrument is used to select an imap, then a type keyword is used to select an
+rmap within the imap, then matching parameters are used to define categories
+(instrument configs) of references in the rmap, and finally a USEAFTER
+comparison is used to select the most recent viable reference file for a
+specific category.
+

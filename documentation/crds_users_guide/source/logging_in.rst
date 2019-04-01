@@ -21,8 +21,8 @@ are:
 5. Instrument locking (hidden unless fails)
 
 In addition to basic MyST and auth.mast authentication,  CRDS adds
-requirements for (a) locking and instrument and (b) having a CRDS
-account authorizing you to deliver files or manage the context.
+the requirement that you have a CRDS account and that you lock any
+instrument for which you are submitting files.
 
 Instrument Selection
 ....................
