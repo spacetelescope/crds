@@ -4,6 +4,7 @@ web server file submission system.
 import os.path
 
 from crds.core import log, utils
+from crds.core.exceptions import CrdsWebError
 from . import background
 
 # from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
@@ -145,24 +146,35 @@ class CrdsDjangoConnection:
     def check_error(self, response):
         """Call fatal_error() if response contains an error_message <div>."""
         self._check_error(response, '//div[@id="error_message"]', "CRDS server error:")
+        self._check_error(response, '//div[@class="error_message"]', "CRDS server new form error:")
 
-    def check_login(self, reseponse):
+    def check_login(self, response):
         """Call fatal_error() if response contains an error_login <div>."""
-        self._check_error(reseponse, '//div[@id="error_login"]',
-                          "Error logging into CRDS server:")
-        self._check_error(reseponse, '//div[@id="error_message"]',
-                          "Error logging into CRDS server:")
+        self._check_error(
+            response, '//div[@id="error_login"]',
+            "Error logging into CRDS server:")
+        self._check_error(
+            response, '//div[@id="error_message"]',
+            "Error logging into CRDS server:")
+        self._check_error(
+            response, '//title[contains(text(), "MyST SSO Portal")]',
+            "Error logging into CRDS server:")
 
     def _check_error(self, response, xpath_spec, error_prefix):
         """Extract the `xpath_spec` text from `response`,  if present call fatal_error() with
         `error_prefix` and the response `xpath_spec` text.
         """
         error_msg_parse = html.fromstring(response.text).xpath(xpath_spec)
-        error_message = error_msg_parse and error_msg_parse[0].text.strip()
-        if error_message:
-            if error_message.startswith("ERROR: "):
-                error_message = error_message[len("ERROR: "):]
-            log.fatal_error(error_prefix, error_message)
+        errors = 0
+        for parse in error_msg_parse:
+            error_message = parse.text.strip().replace("\n","")
+            if error_message:
+                if error_message.startswith("ERROR: "):
+                    error_message = error_message[len("ERROR: ")]
+                errors += 1
+                log.error(error_prefix, error_message)
+        if errors:
+            raise CrdsWebError("A web transaction with the CRDS server had errors.")
 
     def logout(self):
         """Login to the CRDS website and proceed to relative url `next`."""
