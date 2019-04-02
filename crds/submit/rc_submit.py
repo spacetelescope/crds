@@ -54,7 +54,7 @@ class RedCatSubmissionScript(RedCatApiScript):
         with open(self.args.redcat_parameters) as f:
             text = f.read()
             log.verbose("Raw YAML read:\n", text, verbosity=75)
-            loaded = yaml.load(text)
+            loaded = yaml.safe_load(text)
             log.verbose("ReDCaT parameters:\n", log.PP(loaded))
             return loaded
 

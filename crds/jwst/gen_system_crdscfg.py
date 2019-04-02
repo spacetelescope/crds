@@ -59,7 +59,7 @@ class CrdsCfgGenerator:
 
     def get_body(self):
         """Load the input_yaml as a CRDS Struct and return it."""
-        return utils.Struct(yaml.load(self.input_yaml))
+        return utils.Struct(yaml.safe_load(self.input_yaml))
     
     def get_updated_yaml(self):
         """Modify the input_yaml to replace the cal code version and generation date,

@@ -1117,7 +1117,7 @@ def yaml_pars_to_json_bestrefs(yaml_filename, json_filename=None):
     if json_filename is None:
         json_filename = os.path.splitext(yaml_filename)[0] + ".json"
     with open(yaml_filename) as yaml_file:
-        pars = yaml.load(yaml_file)
+        pars = yaml.safe_load(yaml_file)
     combs = param_combinations(pars)
     write_combs_json(json_filename, combs)
 
