@@ -2,11 +2,11 @@
 import sys
 import os
 import os.path
-import socket
 import time
 
-from crds.core import log, config, utils, pysh, cmdline
+from crds.core import log, config, utils, cmdline, exceptions
 from crds.core.log import srepr
+from crds.core.exceptions import CrdsError
 from . import web, background, monitor
 from crds.client import api
 from crds.certify import certify
@@ -136,11 +136,15 @@ this command line interface must be members of the CRDS operators group
         in the current submission and fail if found.
         """
         submitted_basenames = [ os.path.basename(filepath) for filepath in self.files ]
+        msg = None
         for ingested in ingest_info.keys():
             if ingested not in submitted_basenames:
-                log.fatal_error(
-                    "Non-submitted file", log.srepr(ingested), 
-                    "is already in the CRDS server's ingest directory.  Delete it (--wipe-existing-files?) or submit it.")
+                msg = log.format("Non-submitted file", log.srepr(ingested), 
+                                 "is already in the CRDS server's ingest directory.  Delete it (--wipe-existing-files or web page Upload Files panel) or submit it.")
+                log.error(msg)
+        if msg is not None:
+            raise exceptions.CrdsExtraneousFileError(
+                "Unexpected files already delivered to CRDS server. See ERROR messages.")
 
     def keep_existing_files(self, ingest_info, files):
         """Keep files which have already been copied and have the correct server side
@@ -151,7 +155,7 @@ this command line interface must be members of the CRDS operators group
             basename = os.path.basename(filename)
             try:
                 existing_size = int(ingest_info[basename]["size"])
-            except:
+            except Exception:
                 log.info("File", repr(filename), 
                          "does not exist in ingest directory and will be copied to CRDS server.")
                 continue
@@ -173,8 +177,7 @@ this command line interface must be members of the CRDS operators group
         log.verbose("JSON info on existing ingested files:\n", log.PP(result))
         if "files" in result and isinstance(result["files"], list):
             return { info["name"] : info for info in result["files"] }
-        else:
-            return { info["name"] : info for info in result }
+        return { info["name"] : info for info in result }
 
     def wipe_files(self):
         """Delete all files from the user's ingest directory on the CRDS server."""
@@ -290,13 +293,13 @@ this command line interface must be members of the CRDS operators group
         found.
         """
         if log.errors():
-            self.fatal_error("Errors encountered before CRDS certify run.")
+            raise CrdsError("Errors encountered before CRDS certify run.")
         certify.certify_files(
             self.files, context=self.pmap_name, dump_provenance=True, 
             compare_old_reference=True, observatory=self.observatory,
             run_fitsverify=True, check_rmap=True, check_sha1sums=True)
         if log.errors():
-            self.fatal_error("Certify errors found.  Aborting submission.")
+            raise CrdsError("Certify errors found.  Aborting submission.")
         
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
@@ -344,4 +347,3 @@ this command line interface must be members of the CRDS operators group
 # ===================================================================
 
 # ===================================================================
-

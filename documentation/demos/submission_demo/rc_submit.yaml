@@ -5,7 +5,7 @@ file_type: dark
 history_updated: True
 descrip_updated: True
 useafter_updated: True
-useafter_matches: N/A
+useafter_matches: "Yes"
 pedigree_updated: True
 keywords_checked: "Yes"
 descrip_updated: True
@@ -14,8 +14,8 @@ ingest_files: False
 etc_delivery: "No"
 jwst_etc: "No"
 calpipe_version: "Yes 1.0"
-replacement_files: False
-old_reference_files: "No"
+replacement_files: "No"
+old_reference_files: 
 replacing_badfiles: "No"
 jira_issue: 
 table_rows_changed: xxx
