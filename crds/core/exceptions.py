@@ -35,7 +35,9 @@ class CrdsWebAuthenticationError(CrdsWebError):
     """The id='error_login' <div> of a CRDS server login response was present and not empty.
     Login to the website failed due to username or password.
     """
-
+class CrdsExtraneousFileError(CrdsWebError):
+    """Unexpected files are already in the ingest directory during a file submisssion."""
+    
 # -------------------------------------------------------------------------------------------
 
 class CrdsBackgroundError(CrdsError):
