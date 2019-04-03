@@ -3,7 +3,6 @@ to the original commamnd line submission program as part of the file submission
 streamlinin project.
 """
 
-import os
 import sys
 import yaml
 from crds.core import log, config
@@ -30,9 +29,6 @@ NULL_FIELDTYPES = {
     'BooleanField'     : bool,
     'CharField'        : str,
     'TypedChoiceField' : str, }
-
-HST_INSTRUMENTS  = ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
-JWST_INSTRUMENTS = ['fgs', 'miri', 'nircam', 'niriss', 'nirspec', 'system']  # system?
 
 # Preserve order of YAML dicts (from https://stackoverflow.com/a/52621703):
 yaml.add_representer(dict, lambda self, data: yaml.representer.SafeRepresenter.represent_dict(self, data.items()))
@@ -96,7 +92,7 @@ class RedCatApiScript(ReferenceSubmissionScript):
                 pass
 
     def __repr__(self):
-        return '<RedCatApiScript Object {}-{}>:\nFields:  {}'.format(
+        return '<RedCatApiScript Object {}-{}>;  Fields:\n{}'.format(
             self._observatory, self.string, 
             self._fields.__repr__())
 
@@ -242,9 +238,12 @@ class RedCatApiScript(ReferenceSubmissionScript):
         # ... get and populate required form dictionary,  careful about
         # conflicts with baseclass.   See baseclass self.connection for
         # doing any web i/o.
-        
-        
-        
+        self.validate()
+        extra_params = self.items()
+        extra_params.pop('change_level')
+        extra_params.pop('description')
+        return extra_params
+
     def batch_submit_references(self):
         """Do a web re-post to the batch submit references web page."""
         return self._submission("/submission_form/redcat_submit/")
