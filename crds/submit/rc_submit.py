@@ -126,7 +126,6 @@ class RedCatApiScript(ReferenceSubmissionScript):
             raise ValueError("'{}' must be of type {}".format(key, field_type.__name__))
         
         # Check if choice fields have allowed values:
-        print (self._form_description[key])
         if ('choices' in self._form_description[key]) and \
            (self._form_description[key]['type'] != 'BooleanField'):
             matches = [x for x in self._form_description[key]['choices'] if x.lower() == value.lower()]
