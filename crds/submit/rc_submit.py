@@ -116,7 +116,8 @@ class RedCatApiScript(ReferenceSubmissionScript):
         field_type = NULL_FIELDTYPES[self._form_description[key]['type']]
         
         # Interpret boolean values in choice fields as 'Yes' and 'No':
-        if isinstance(value, bool) and ('choices' in self._form_description[key]):
+        if isinstance(value, bool) and ('choices' in self._form_description[key]) and \
+            not (self._form_description[key]['type'] == 'BooleanField'):
             if value:
                 value = 'Yes'
             else:
@@ -125,7 +126,9 @@ class RedCatApiScript(ReferenceSubmissionScript):
             raise ValueError("'{}' must be of type {}".format(key, field_type.__name__))
         
         # Check if choice fields have allowed values:
-        if 'choices' in self._form_description[key]:
+        print (self._form_description[key])
+        if ('choices' in self._form_description[key]) and \
+           (self._form_description[key]['type'] != 'BooleanField'):
             matches = [x for x in self._form_description[key]['choices'] if x.lower() == value.lower()]
             if len(matches) != 1:
                 raise ValueError("'{}' must be a valid choice: {{{}}}".format(key, 
@@ -238,7 +241,6 @@ class RedCatApiScript(ReferenceSubmissionScript):
         # ... get and populate required form dictionary,  careful about
         # conflicts with baseclass.   See baseclass self.connection for
         # doing any web i/o.
-        self.validate()
         extra_params = self.items()
         extra_params.pop('change_level')
         extra_params.pop('description')
@@ -247,6 +249,10 @@ class RedCatApiScript(ReferenceSubmissionScript):
     def batch_submit_references(self):
         """Do a web re-post to the batch submit references web page."""
         return self._submission("/submission_form/redcat_submit/")
+    
+    def submit(self):
+        self.validate()
+        return self.main()
 
 class RedCatSubmissionScript(RedCatApiScript):
     """This script extends the original CRDS command line submission
