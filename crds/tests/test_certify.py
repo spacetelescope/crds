@@ -1221,7 +1221,7 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
     CRDS - WARNING -  ----------------------------------------
     Match case
-     (('DETECTOR', 'FUV'),) 
+     (('DETECTOR', 'NUV'),) 
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
     For some parameter sets, CRDS interprets both matches as equally good.
