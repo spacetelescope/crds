@@ -3,6 +3,7 @@ to the original commamnd line submission program as part of the file submission
 streamlinin project.
 """
 
+import os
 import sys
 import yaml
 from crds.core import log, config
@@ -51,7 +52,7 @@ class RedCatApiScript(ReferenceSubmissionScript):
         
         super(RedCatApiScript, self).__init__(*args, **keys)
         
-        config.base_url = BASE_URLS[string][observatory]  # config.get_server_url(observatory, string)
+        config.base_url = BASE_URLS[string][observatory]
         url = urllib.parse.urljoin(config.base_url, URL_DESCRIPTION)
         try:
             with urllib.request.urlopen(url) as req:
@@ -90,11 +91,14 @@ class RedCatApiScript(ReferenceSubmissionScript):
                 self[key] = self._form_description[key]['initial']
             except KeyError:
                 pass
+        
+        self._files = set()  # Users should not modify this directly!
 
     def __repr__(self):
-        return '<RedCatApiScript Object {}-{}>;  Fields:\n{}'.format(
+        return '<RedCatApiScript Object {}-{}>;  Fields:\n{}\nFiles:\n{}'.format(
             self._observatory, self.string, 
-            self._fields.__repr__())
+            self._fields.__repr__(),
+            list(self.files))
 
     @property
     def string(self):
@@ -186,6 +190,29 @@ class RedCatApiScript(ReferenceSubmissionScript):
         return self._fields.items(*args, **kargs)
 
     # ------------------------------------------------------------------------------------
+    # Set methods to handle filename manipulation:
+
+    def add_file(self, filename):
+        ''' Add a file to the submission.  Calls crds.certify() on the file.'''
+        if not os.access(filename, os.R_OK):
+            raise FileNotFoundError("'{}' does not exist or is not readable.".format(filename))
+        self._files.add(filename)
+
+    @wraps(set.remove)
+    def remove_file(self, filename, *args, **kargs):
+        self._files.remove(filename, *args, **kargs)
+
+    #@wraps(set.pop)
+    #def pop_file(self, *args, **kargs):
+    #    return self._files.pop(*args, **kargs)
+
+    @property
+    def files(self):
+        ''' Set of files associated with the submission.'''
+        return frozenset(self._files)
+
+    # ------------------------------------------------------------------------------------
+    # Custom methods:
 
     def help(self):
         ''' Print help text derived from CRDS instance specified.
@@ -219,10 +246,10 @@ class RedCatApiScript(ReferenceSubmissionScript):
         #                     "locked='{}' vs reported='{}'".format(
         #        self.lock_status, self['instrument']))
         
-        ## Make sure files were associated with the submission:
-        #if len(self.files) == 0:
-        #    raise Exception('No files have been added to submission.  '
-        #                    'Use the `submission_obj.add_file()` method.')
+        # Make sure files were associated with the submission:
+        if len(self.files) == 0:
+            raise Exception('No files have been added to submission.  '
+                            'Use the `submission_obj.add_file()` method.')
 
     def get_submission_args(self):
         """Returns the combined form parameter dictionary as a CRDS Struct defining
