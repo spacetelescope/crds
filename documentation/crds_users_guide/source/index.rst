@@ -10,6 +10,7 @@ CRDS User Manual
    :maxdepth: 2
    
    overview.rst
+   web_site_use.rst
    installation.rst
    basic_use.rst
    environment.rst
@@ -17,7 +18,6 @@ CRDS User Manual
    logging_in.rst
    file_submissions.rst
    pipeline_management.rst
-   web_site_use.rst
    web_services.rst
    rmap_syntax.rst
    library_use.rst
