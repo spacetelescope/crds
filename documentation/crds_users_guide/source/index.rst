@@ -22,6 +22,7 @@ CRDS User Manual
    rmap_syntax.rst
    library_use.rst
    reference_conventions.rst
+   certify_constraints.rst
    database.rst
  
 

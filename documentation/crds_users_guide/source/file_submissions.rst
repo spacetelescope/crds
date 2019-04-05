@@ -350,6 +350,22 @@ Hence, it is recommended to do imap and pmap work in two phases: First, modify
 and submit the imaps, generating and/or reserving official CRDS names.  Next
 manually modify the pmap as needed to refer to the newly generated imap names.
 
+Submit References
+.................
+
+*Submit References* provides a lower level interface for submitting a list of 
+references.   No mappings are generated to refer to the submitted files.
+Submitted references must still pass through crds.certify.
+
+.. figure:: images/web_submit_references.png
+   :scale: 50 %
+   :alt: create contexts inputs
+
+References submitted in this manner are archived normally but without
+corresponding .rmap updates are essentially orphans.  If intended for automatic
+use similar to normal reference files, there's an expectation that some other
+form of .rmap update will be performed to add these references to a context.
+
 Mark Files Bad
 ..............
 
@@ -443,6 +459,18 @@ so additional test parameters or other header and structural changes of any
 test rmap are not carried over by Add References,  only the reference files
 themselves.
 
+Certify Files
+.............
+
+*Certify File* runs crds.certify on the files in the ingest directory.
+
+.. figure:: images/web_certify_file.png
+   :scale: 50 %
+   :alt: certify file inputs
+   
+If the certified file is a reference table,  the specified context is used to
+locate a comparison file.
+
 Submission Warnings and Errors
 ..............................
 
@@ -479,10 +507,12 @@ other file submission toolchains.  See command line tools.)
 Internal CRDS Constraints
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-CRDS defines constraints of its own using specifications called .tpn
-files. These specifications and checks can be reviewed on the website by
-looking up the details of any particular reference file of the same instrument
-and type:
+CRDS defines constraints of its own using specifications called .tpn files
+descrubed in detail here: :ref:`header-certify-constraints`.  These
+specifications and checks can be reviewed on the website by looking up the
+details of any particular reference file of the same instrument and type:
+
+..: 
 
 .. figure:: images/certify_tpn_listing.png
    :scale: 50 %
@@ -611,13 +641,17 @@ that some comparison table should exist, further investigation is warranted but
 not required.  If this is a new table or inexact replacement (e.g. subsequent
 USEAFTER date), the warning can be ignored.
 
-Comparison Reference Not Found
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Error Opening Comparison Reference
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-To perform table checks,  crds certify needs access to the comparison reference
-file.   If you are using a personal CRDS cache rather than the shared onsite
-cache /grp/crds/cache,  your cache may not contain the comparison reference.
+Idenifying a comparison reference file by consulting the comparison context is
+just the first step.  To perform table checks, crds certify needs direct
+access to the comparison reference as a readable file.
 
+The CRDS servers and users using /grp/crds/cache should never see this problem.
+Users utilizing a personal CRDS cache e.g. defined by CRDS_PATH may see this
+problem and can download missing comparison references by
+specifying --sync-files to crds certify.
 
 Duplicate Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -628,13 +662,9 @@ parameters.   This lets CRDS define the set of modes represented in any
 particular table.   If as part of defining this set CRDS notices that there
 are multiple copies of some parameter combination which should be unique,
 CRDS will issue a warning::
-
-
   
 Missing Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!
-
-  
 
 Rmap Update Errors
 ++++++++++++++++++
@@ -663,6 +693,9 @@ submission with a message like this::
     Either reference file matching parameters need correction
     or additional matching parameters should be added to the rmap
     to enable CRDS to differentiate between the two files.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
 
 **SOLUTION 1:** Generally this means there was an error generating or handling
 the reference files and the fix is to sort of the problem and re-submit.
@@ -683,6 +716,10 @@ issue an WARNING like this::
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
     For some parameter sets, CRDS interprets both matches as equally good.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
+     ----------------------------------------
     
 Conceptually a CRDS reference file lookup should be a tree descent.  First the
 instrument is used to select an imap, then a type keyword is used to select an
