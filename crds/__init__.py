@@ -44,7 +44,7 @@ then alias them into the top level crds namespace using importlib.import_module(
 and sys.modules to make it appear as if each core package has already been imported
 and belongs to the top level namespace.
 '''
-def alias_subpackage_module(subpkg, modules):
+def _alias_subpackage_module(subpkg, modules):
     """Alias each module from `modules` of `subpkg` to appear in this
     namespace.
     """
@@ -74,7 +74,7 @@ CORE_MODULES = [
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
-alias_subpackage_module("crds.core", CORE_MODULES)
+_alias_subpackage_module("crds.core", CORE_MODULES)
 
 # ============================================================================
 
@@ -88,7 +88,7 @@ REFACTORING_MODULES = [
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
-alias_subpackage_module("crds.refactoring", REFACTORING_MODULES)
+_alias_subpackage_module("crds.refactoring", REFACTORING_MODULES)
 
 # ============================================================================
 
@@ -104,7 +104,7 @@ MISC_MODULES = [
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
-alias_subpackage_module("crds.misc", MISC_MODULES)
+_alias_subpackage_module("crds.misc", MISC_MODULES)
 
 # ============================================================================
 

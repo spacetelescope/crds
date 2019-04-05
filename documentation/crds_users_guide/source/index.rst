@@ -15,7 +15,6 @@ CRDS User Manual
    basic_use.rst
    environment.rst
    command_line_tools.rst
-   logging_in.rst
    file_submissions.rst
    pipeline_management.rst
    web_services.rst
