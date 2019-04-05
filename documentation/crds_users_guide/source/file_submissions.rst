@@ -1,27 +1,27 @@
 File Submissions
 ================
 
-CRDS provides a number of functions used to submit new reference files or
-rules.
+The CRDS website provides a number of functions used to submit new reference
+files or rules.
 
 This section describes the processes of submitting files to CRDS.  It does not
-detail the requirements of *creating* files which are described better
-elsewhere and *fundamental* to what you're doing.
+detail the formats and requirements of *creating* files which are described
+better elsewhere,  such as `HST ICD-47`_ or `JWST CAL Documentation`_.
+
+.. _`HST ICD-47`: http://newcdbs.stsci.edu/doc/ICD47/index.html
+
+.. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
+
   
 Extended Batch Submit References (new)
 ......................................
 
-The most common form of file submission is to submit new reference files and
-have CRDS automatically check them and merge them into the CRDS file assignment
-rules,  i.e. generate new rmaps, imap, and pmap based on header keywords in
-the submitted reference files.
+*Extended Batch Submit References* acquires extra submission metadata prior to
+continuing to the original *Batch Submit References* page.  It is the new
+approach expected for submitting most reference files.
 
-The *Extended Batch Submit References* process adds a number of additional form
-fields used to characterize your submission.  These fields were previously
-captured by ReDCaT file submission scripts.  This metadata is tracked in the
-CRDS server database.  Aside from adding metadata, the Extended Batch Submit
-References process is essentially identical to the original Batch Submit
-References process.
+In both cases, CRDS checks incoming reference files, generates appropriate rmap
+updates, and presents checking results and rmap differences to the submitter.
 
 The new web form, which begins as shown, fully supersedes the old form:
 
@@ -48,10 +48,11 @@ requirements for submitting files to CRDS.
 Batch Submit References (deprecated)
 ....................................
 
-*Batch Submit References* is intended to handle the majority of CRDS reference
-submissions, both checking and ingesting files and automatically generating the
-corresponding CRDS rules updates.  It accepts a number of reference files and
-metadata which applies to all of them.
+While deprecated, *Batch Submit References* remains available for use as
+needed.  Most CRDS processing is identical to that of *Extended Batch Submit
+References*, the primary difference is that the *Extended Batch Submit
+References* form collects more metadata and creates a record of the submission
+before proceeding to the original functions.
 
 The specified reference files are checked on the server using crds.certify and
 if they pass are submitted to CRDS.  
@@ -64,13 +65,10 @@ Upload Files
 ++++++++++++
 
 The first task involved with *Batch Submit References* is transferring the
-submitted files to the server.  There are two approaches for getting files on
-the server, web based and shell based.  Each CRDS user has their own ingest
-directory.  This section applies equally to all of the file submission pages
-that have an *Upload Files* accordion.
-
-Web Approach
-!!!!!!!!!!!!
+submitted files to the server.  Each CRDS user has their own ingest directory
+so while users can work in parallel they are each limited to one delivery at a
+time.  This section applies equally to all of the file submission pages that
+have an *Upload Files* accordion.
 
 On the file submission pages,  the *Upload Files* accordion opens to support
 uploading submitted files to a user's CRDS ingest directory via the browser.
@@ -96,36 +94,17 @@ Uploading files is accomplished by:
 **IMPORTANT**  Just adding files to the file list does not upload them.   You
 must click *Start upload* to initiate the file transfer.
 
-Shell Approach
-!!!!!!!!!!!!!!
-
-In the shell approach a user must login to UNIX (in some fashion) and transfer
-files into their CRDS ingest directory manually.   For instance::
-
-  % scp /this_delivery/*.fits   pldmsins1.stsci.edu:/ifs/crds/hst/ops/server_files/ingest/<username>
-
-to copy references into my ingest directory *as-if* I had uploaded them through
-the uploads panel.
-
-The submitted reference files should now be your ingest directory on the server
-and the CRDS server will behave as if they had been uploaded through web
-interface.  Refreshing the file submission web page should make manually copied
-files show up in the *Upload Files* accordion.
-
-Using cp or scp improves the efficiency and reliability of file transfers
-should that become an issue.  Telecommuters working offsite by VPN can use this
-technique to avoid inefficient transfers.
-
 Derive From Context 
 +++++++++++++++++++
 
 The specified context is used as the starting point for new automatically 
 generated context files and also determines any predecessors of the submitted 
 references for comparison during certification.   If all the submitted reference
-files pass certification,  a new .rmap, .imap, and .pmap are generated
-automatically to refer to the newly entered references.    Based on their
-header parameters,  references are automatically assigned to appropriate
-match locations in the .rmap file.
+files pass certification,  new .rmap's, .imap, and .pmap are generated
+automatically to refer to the newly added references.
+
+Based on their header parameters, references are automatically assigned to
+appropriate match locations in the .rmap file.
 
 .. figure:: images/web_derive_from_context.png
    :scale: 50 %
@@ -136,27 +115,39 @@ There are two special contexts in CRDS which are tracked:
 Edit Context
 !!!!!!!!!!!!
 
-Edit Context is the default context used for adding new files.  Whenever a new
+*Edit Context* is the default context used for adding new files.  Whenever a new
 .pmap is created or added, it becomes the editing context from which future
 .pmaps are derived by default.
+
+In this way CRDS deliveries normally chain from one context to the next in a
+linear flow which can advance ahead of the *Operational Context* indefinitely
+to support last minute testing prior to being used for real calibrations.  In
+almost all cases, eventually the current *Edit Context* is adopted for use in
+the archive pipeline and effectively becomes the *Operational Context*.
 
 Operational Context
 !!!!!!!!!!!!!!!!!!!
 
-Operational Context is the .pmap which is nominally in use by
-the pipeline.   While it's common to make new files operational as each
-context is added,  it's possible for the operational context to lag
-behind the edit context where new files are being added.
+*Operational Context* is the .pmap which is nominally in use by the pipeline.
+While it's common to make new files operational as each context is added, it's
+possible for the *Operational Context* to lag behind the *Edit Context* when
+new files are being added but need additional testing in OPS.   Deriving
+from the *Operational Context* is a crude kind of reversion since CRDS
+effectively branches around any existing subsequent contexts.
 
 Recent 
 !!!!!!
 
-Recent lists a number of recently added contexts based on delivery time.   
+*Recent* lists a number of recently added contexts based on delivery
+time. Using a *Recent* context instead of the *Edit Context* is a crude kind of
+reversion, CRDS effectively branches around existing subsequent contexts.
 
 User Specified
 !!!!!!!!!!!!!!
 
-Any valid CRDS context can be typed in directly as User Specified.
+Any valid CRDS context can be typed in directly as *User Specified* and used
+as the baseline for the next context.   This is also a kind of reversion and
+branching.
    
 Auto Rename
 +++++++++++
@@ -455,47 +446,63 @@ themselves.
 Submission Warnings and Errors
 ..............................
 
+This section discusses some of the more common errors and warnings associated
+with CRDS file submissions.  While CRDS does its best to trap and reject common
+errors, CRDS error checking is not a substitute for testing reference files in
+actual calibrations and verifying that they work.
+
+**NOTE:** don't hesitate to ask for clarifications or changes if you find CRDS
+checks confusing or counterproductive.
+
 Identical Files
 +++++++++++++++
 
-CRDS can detect if your submitted files are bit-for-bit-identical to any
-existing files or to each other by checking their sha1sums against the CRDS
-database.  CRDS rejects identical files as errors since there is a reasonable
-likelihood that intended files are missing.
+CRDS detects if submitted files are bit-for-bit-identical to existing files or
+each other by comparing their sha1sums.  CRDS rejects identical files since
+there is a likelihood that the wrong files have been delivered by mistake.
 
-**SOLUTION:**  remove the duplicate files from your submission and re-submit.
+**SOLUTION:** Remove the duplicate files from your submission and re-submit.
+Rather than re-uploading your entire submission, you have the option to log
+into the webite and remove duplicates from the upload area before proceeding
+with the remainder of the submission form.  You can also upload missing or
+replacement files,  then fill out the remainder of the form and submit.
 
 Certification Errors and Warnings
 +++++++++++++++++++++++++++++++++
 
-CRDS has a certification program that is used to check incoming reference and
+CRDS has a certification process that is used to check incoming reference and
 rules files.  The certify program applies several kinds of checks which can
 result in warnings or errors on the website.  (The certify program is also
-installed with the CRDS client and can be run locally alone or embedded in
+installed with the CRDS client and can be run locally by itself or embedded in
 other file submission toolchains.  See command line tools.)
 
 Internal CRDS Constraints
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-CRDS defines some constraints using specifications called .tpn files. These
-specifications and checks can be reviewed on the website by looking up the
-details of any particular reference file of the same instrument and type:
+CRDS defines constraints of its own using specifications called .tpn
+files. These specifications and checks can be reviewed on the website by
+looking up the details of any particular reference file of the same instrument
+and type:
 
 .. figure:: images/certify_tpn_listing.png
    :scale: 50 %
    :alt: add references
 
+These checks are independent of the JWST datamodels discussed below.
+
 JWST Data Model Constraints
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 The JWST calibration software (CAL) models the structure and valild keyword
-values for reference files in its jwst.datamodels package.  Effectively, the
-CAL datamodels define a formatting contract your references are expected to
-fulfill.  File which don't fulfill this contract will either result in
-perpetual warnings or outright pipeline failures if CAL rejects a file.
+values for reference files in its jwst.datamodels package.  See `JWST CAL
+Documentation`_ for more information.
 
-As part of CRDS file checking, crds certify invokes datamodels.open() to verify
-datamodels compliance for your reference files.
+Effectively, the CAL datamodels define a formatting contract your references
+need to fulfill.  Files which don't fulfill this contract will generally either
+result in perpetual warnings or outright pipeline failures.
+
+*Crds certify* invokes datamodels.open() to verify datamodels compliance for
+your reference files.
 
 This message::
 
@@ -505,21 +512,23 @@ indicates that the JWST CAL Data Models were not used to create your reference
 files.  Datamodels.open() needs the DATAMODL keyword to define the correct
 model to validate your file.
 
-You have the option of ignoring this warning, but it means that CRDS is not
-using the strictest and most appropriate model to validate your file, only a
-more generic fallback model.  When your file later is processed by the CAL
-software, the CAL software will use the correct model, so it may notice
-contractual issues and reject your file.
+This message::
 
-**SOLUTION:** The best solution is to coordinate more closely with the JWST CAL
-s/w group to learn how to use the datamodels to create your reference files.
-Using the correct version of datamodels should guaranteee that your files are
-compliant when you create them, as well as correctly populate the DATAMODL
-keyword, reducing this CRDS check to a rubber stamp.  More information about
-CAL reference file formats and the datamodels can be found here: `JWST CAL
-Documentation`_.
+  CRDS - WARNING - NoTypeWarning : jwst.datamodels.util : model_type not found. Opening .../jwst_miri_specwcs_lrscdp7.fits as a ReferenceFileModel
 
-.. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
+resulted from a reference file that used an invalid value for DATAMODL.
+  
+You have the option of ignoring these warnings, but CRDS is probably not using
+the most appropriate model to validate your file, only a more generic model.
+When your file is later processed by the CAL software, CAL will use the correct
+model and may reject your file.
+
+**SOLUTION:** The best solution is to use the CAL datamodels and methods
+recommended by the CAL s/w team to create your reference files.  This will
+automatically set DATAMODL and can pre-validate your reference files at the
+same time you create them.  While this won't catch everything,  its superior
+to CRDS catching errors later.   Better yet,  running your files through actual
+test calibrations may reveal problems no constraints catch.
 
 Fitsverify Failures
 !!!!!!!!!!!!!!!!!!!
@@ -532,13 +541,13 @@ work with cfitsio as well as astropy.
 
    CRDS classifies FITS checksum errors detected by fitsverify as errors::
 
-   CRDS - ERROR -  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
-   CRDS - ERROR -  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
+     CRDS - ERROR -  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
+     CRDS - ERROR -  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
 
    CRDS leaves Astropy checksum warnings alone::
 
-   CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-   CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
    
    Checksums are not required, but if you do define them they should be correct
    so that file users are not bombarded with warnings from FITS libraries.
@@ -560,18 +569,40 @@ work with cfitsio as well as astropy.
    fitsverify can detect other anomalies such as file truncation.
 
    By default warnings are merely echoed but errors will lead to the rejection
-   of your files.  On request, CRDS can be easily modified to ignore or remap
-   fitsverify warnings and errors.
-   
+   of your files.
+
+   On request, CRDS can be modified to reclassify fitsverify messages as
+   warnings, errors, etc.
+
+Table Checks
+++++++++++++
+
+Optionally CRDS certify attempts to detect errors in table updates by loosely
+characterizing unique table rows.  This check is configured in the CRDS client
+as part of the type specification for the table by setting the
+"unique_row_keys" parameter in the spec.  This parameter defines table columns
+which should define combinations which appear in the table only once.  CRDS
+does not verify that all combinations are present.  CRDS verifies that
+combinations which were present in an old table version are present in the new
+version.
+
+Table checking consists of four stages:
+
+  1. Identifying a comparison reference file
+  2. Identifying unique mode rows
+  3. Checking for duplicate rows
+  4. Checking for deleted rows in the new version of the table
+
+Each instrument + reference type combination can potentially define different
+"mode columns" in its type specification.
+
+
 No Comparison Reference Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-For selected tables, CRDS attempts to perform a comparison between the new
-version of a table and any table it replaces in the CRDS rules.  This check is
-intended to detect accidental loss of table rows/modes and unexpected duplicate
-rows.
-
-When CRDS cannnot find a suitable comparison table,  CRDS issues a warning like::
+When a --comparison-context is specified, CRDS searches the context for a
+reference file which the new table would replace.  When CRDS cannnot find a
+suitable comparison table, CRDS issues a warning like::
 
     CRDS - WARNING - No comparison reference for 'test_jwst_nircam_photom_0039.fits' in context 'jwst_0503.pmap'. Skipping tables comparison.
 
@@ -580,12 +611,39 @@ that some comparison table should exist, further investigation is warranted but
 not required.  If this is a new table or inexact replacement (e.g. subsequent
 USEAFTER date), the warning can be ignored.
 
+Comparison Reference Not Found
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+To perform table checks,  crds certify needs access to the comparison reference
+file.   If you are using a personal CRDS cache rather than the shared onsite
+cache /grp/crds/cache,  your cache may not contain the comparison reference.
+
+
+Duplicate Mode Rows Warning
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+To meet its ultimate goal of detecting accidentally dropped table modes, CRDS
+first tries to characterize mode rows as unique using some selection of
+parameters.   This lets CRDS define the set of modes represented in any
+particular table.   If as part of defining this set CRDS notices that there
+are multiple copies of some parameter combination which should be unique,
+CRDS will issue a warning::
+
+
+  
+Missing Mode Rows Warning
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  
+
 Rmap Update Errors
 ++++++++++++++++++
 
-As part of a typical reference file submission,  CRDS automatically adds new
-files to the appropriate rmap and generates new context files.   This phase
-can detect some forms of errors which should be addressed.
+As part of a typical reference file submission, CRDS automatically adds new
+files to the appropriate rmap and generates new context files.  New files are
+added to the rmaps baed on the values of rmap-specific parameters pulled from
+their headers.  This phase can detect some forms of errors which generally
+need to be addressed,  even if they only appear as warnings.
 
 Exact Matching Duplicates
 !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -624,22 +682,12 @@ issue an WARNING like this::
      (('DETECTOR', 'FUV'),) 
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
-    For some parameter sets, CRDS interprets both matches as equally good.  For
-    instance, when reading the web table, some parameter sets will have 'two
-    answers' not just the first seen.  This makes CRDS reference assignments hard
-    to understand so CRDS for JWST disallows this.  It may indicate a mistake
-    characterizing references for CRDS, i.e. one set of files should be
-    parameterized differently.  It is POSSIBLE to confirm these files.  However,
-    the rmap should be immediately updated to consolidate or separate these
-    overlapping cases.  For JWST, it is an error to encounter equal weight cases at
-    runtime.  Alternately, cancel the submission and update the reference file
-    matching parameters to avoid the conflict.
-    ----------------------------------------
-
+    For some parameter sets, CRDS interprets both matches as equally good.
+    
 Conceptually a CRDS reference file lookup should be a tree descent.  First the
 instrument is used to select an imap, then a type keyword is used to select an
 rmap within the imap, then matching parameters are used to define categories
-(instrument configs) of references in the rmap, and finally a USEAFTER
-comparison is used to select the most recent viable reference file for a
-specific category.
+(instrument configs) of references in the rmap and only one category is chosen,
+and finally a USEAFTER comparison selects the most recent reference file in the
+category.
 
