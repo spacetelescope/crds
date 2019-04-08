@@ -1110,8 +1110,8 @@ usage::
 
 optional arguments::
   --help                Show this help message and exit
-  --files FILES [FILES ...]
-                        Files to rename.
+
+--files FILES [FILES ...] Files to rename.
   --dry-run             Print how a file would be renamed without modifying it.
   -a, --add-checksum    Add FITS checksum.  Without, checksums *removed* if header modified.
   -f, --add-keywords    When renaming, add FILENAME, ROOTNAME, HISTORY keywords for the generated name.

@@ -219,27 +219,3 @@ value of \*.   The result of the activity search is a table of matching actions:
 The default filter of \*.pmap previews contexts that have been submitted but
 not yet selected for operational use in the pipeline.
 
-Certify Files
-.............
-
-*Certify File* runs crds.certify on the files in the ingest directory.
-
-.. figure:: images/web_certify_file.png
-   :scale: 50 %
-   :alt: certify file inputs
-   
-If the certified file is a reference table,  the specified context is used to
-locate a comparison file. 
-
-
-Submit References
-.................
-
-*Submit References* provides a lower level interface for submitting a list of 
-references.   No mappings are generated to refer to the submitted files.
-Submitted references must still pass through crds.certify.
-
-.. figure:: images/web_submit_references.png
-   :scale: 50 %
-   :alt: create contexts inputs
-

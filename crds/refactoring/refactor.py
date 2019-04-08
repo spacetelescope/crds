@@ -115,7 +115,10 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
 Each reference would replace the other in the rmap.
 Either reference file matching parameters need correction
 or additional matching parameters should be added to the rmap
-to enable CRDS to differentiate between the two files.""")
+to enable CRDS to differentiate between the two files.
+See the file submission section of the CRDS server user's guide here:  
+    https://jwst-crds.stsci.edu/static/users_guide/index.html 
+for more explanation.""")
                 
     new.header["derived_from"] = old.basename
     log.verbose("Writing", repr(new_rmap))

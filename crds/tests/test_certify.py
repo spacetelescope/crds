@@ -1182,6 +1182,9 @@ def test_certify_check_rmap_updates():
     Either reference file matching parameters need correction
     or additional matching parameters should be added to the rmap
     to enable CRDS to differentiate between the two files.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
     CRDS - INFO -  Inserting s7g1700gl_dead_overlap.fits into 'hst_cos_deadtab_0250.rmap'
     CRDS - DEBUG -  Unexpanded header [('DETECTOR', 'FUV|NUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
     CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
@@ -1221,7 +1224,7 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
     CRDS - WARNING -  ----------------------------------------
     Match case
-     (('DETECTOR', 'FUV'),) 
+     (('DETECTOR', 'NUV'),) 
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
     For some parameter sets, CRDS interprets both matches as equally good.

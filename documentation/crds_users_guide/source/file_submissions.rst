@@ -13,6 +13,119 @@ better elsewhere,  such as `HST ICD-47`_ or `JWST CAL Documentation`_.
 .. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
 
   
+Logging In
+..........
+
+Privileged tasks in CRDS such as:
+
+1. Submitting new files
+2. Managing the context
+
+require authenticating with the CRDS server.
+
+Authentication Overview
++++++++++++++++++++++++
+
+Logging in requires what can be a multi-step workflow.  The steps of logging in
+are:
+
+1. Instrument selection  (Pipeline operators select "none")
+2. MyST authentication  (skipped if done previously)
+3. Auth.mast token authorization (skipped if done previously)
+4. CRDS server account verification  (hidden unless fails)
+5. Instrument locking (hidden unless fails)
+
+In addition to basic MyST and auth.mast authentication,  CRDS adds
+the requirement that you have a CRDS account and that you lock any
+instrument for which you are submitting files.
+
+Instrument Selection
+++++++++++++++++++++
+
+The first step of logging in is to select the instrument for which you will be
+submitting files.  Eventually during login, CRDS will lock this instrument so
+that you have exclusive access for one submission.  If a lock cannnot be
+obtained because someone else has it, your login will fail.  This prevents your
+changes from colliding with another's in CRDS and the loss of work.
+
+.. figure:: images/web_login.png
+   :scale: 50 %
+   :alt: login page with instrument locking
+
+MyST Authentication
++++++++++++++++++++
+
+The outer-most layer of CRDS authentication is to authenticate with MyST.  This
+proves to CRDS that you're participating with STScI in a general way.  This
+step requires entry of your e-mail or username and AD password and may also
+entail related two factor authorization not shown.
+
+.. figure:: images/myst_login.png
+   :scale: 50 %
+   :alt: MyST authentication
+
+Auth.mast Authorization 
++++++++++++++++++++++++
+
+auth.mast may request that you authorize CRDS to obtain a token.  These
+tokens are the way in which CRDS obtains your MyST identity.
+
+.. figure:: images/auth_mast_login.png
+   :scale: 50 %
+   :alt: auth.mast page asking to grant token to CRDS
+
+CRDS Account
+++++++++++++
+
+As part of submitting files or managing the CRDS context, you need to apply for
+a CRDS account.  These permissions are checked automatically after your MyST
+identity is verified.
+
+**IMPORTANT** Your MyST identity is connected to your CRDS permissions via your
+MyST e-mail.  You should specify your MyST e-mail when applying for a CRDS
+account.
+
+CRDS Instrument Locking
++++++++++++++++++++++++
+
+When a user logs in, the instrument they've locked and the time remaining on
+the lock are displayed next to the home button:
+
+.. figure:: images/web_logged_in.png
+   :scale: 50 %
+   :alt: logged in page with count down timer
+
+Instrument locking is used to prevent conflicting modifications to the same
+CRDS rules files by simultaneous files submissions.
+
+Other users who attempt to login for the same instrument while it is locked
+will be denied.   When the lock holder confirms or cancels their submission,'
+the lock is released so that others can proceed.
+
+When the user performs an action on the website, their lock timer is reset to
+its maximum value.
+
+If your lock times out, another user can take the lock and submit files to the
+same instrument and reference type.  Different instruments or reftypes should
+not cause conflicts.  Submitting to the same instrument and reftype will
+generally cause the first set of conflicting rules changes to be lost.
+
+Forced submissions should be carefully coordinated since by definition locking
+protections are not in place.
+
+Care should be taken with the locking mechanism and file submissions.  **DO NOT**:
+
+* Don't login from multiple browsers or sites.  The last browser/site you log
+  in from will steal the lock from the original login.  While this won't abort
+  any submission, it will open the possibility for conflict and require earlier
+  submissions waiting for confirmation to be *forced*.
+
+* You cannot login for more than one instrument at a time.  
+
+* Don't perform multiple file submissions for the same instrument at the same
+  time.  Finish and confirm or cancel each file submission before proceeding
+  with the next.
+
 Extended Batch Submit References (new)
 ......................................
 
@@ -350,6 +463,22 @@ Hence, it is recommended to do imap and pmap work in two phases: First, modify
 and submit the imaps, generating and/or reserving official CRDS names.  Next
 manually modify the pmap as needed to refer to the newly generated imap names.
 
+Submit References
+.................
+
+*Submit References* provides a lower level interface for submitting a list of 
+references.   No mappings are generated to refer to the submitted files.
+Submitted references must still pass through crds.certify.
+
+.. figure:: images/web_submit_references.png
+   :scale: 50 %
+   :alt: create contexts inputs
+
+References submitted in this manner are archived normally but without
+corresponding .rmap updates are essentially orphans.  If intended for automatic
+use similar to normal reference files, there's an expectation that some other
+form of .rmap update will be performed to add these references to a context.
+
 Mark Files Bad
 ..............
 
@@ -443,6 +572,18 @@ so additional test parameters or other header and structural changes of any
 test rmap are not carried over by Add References,  only the reference files
 themselves.
 
+Certify Files
+.............
+
+*Certify File* runs crds.certify on the files in the ingest directory.
+
+.. figure:: images/web_certify_file.png
+   :scale: 50 %
+   :alt: certify file inputs
+   
+If the certified file is a reference table,  the specified context is used to
+locate a comparison file.
+
 Submission Warnings and Errors
 ..............................
 
@@ -479,10 +620,12 @@ other file submission toolchains.  See command line tools.)
 Internal CRDS Constraints
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-CRDS defines constraints of its own using specifications called .tpn
-files. These specifications and checks can be reviewed on the website by
-looking up the details of any particular reference file of the same instrument
-and type:
+CRDS defines constraints of its own using specifications called .tpn files
+descrubed in detail here: :ref:`header-certify-constraints`.  These
+specifications and checks can be reviewed on the website by looking up the
+details of any particular reference file of the same instrument and type:
+
+..: 
 
 .. figure:: images/certify_tpn_listing.png
    :scale: 50 %
@@ -611,13 +754,17 @@ that some comparison table should exist, further investigation is warranted but
 not required.  If this is a new table or inexact replacement (e.g. subsequent
 USEAFTER date), the warning can be ignored.
 
-Comparison Reference Not Found
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Error Opening Comparison Reference
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-To perform table checks,  crds certify needs access to the comparison reference
-file.   If you are using a personal CRDS cache rather than the shared onsite
-cache /grp/crds/cache,  your cache may not contain the comparison reference.
+Idenifying a comparison reference file by consulting the comparison context is
+just the first step.  To perform table checks, crds certify needs direct
+access to the comparison reference as a readable file.
 
+The CRDS servers and users using /grp/crds/cache should never see this problem.
+Users utilizing a personal CRDS cache e.g. defined by CRDS_PATH may see this
+problem and can download missing comparison references by
+specifying --sync-files to crds certify.
 
 Duplicate Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -628,13 +775,9 @@ parameters.   This lets CRDS define the set of modes represented in any
 particular table.   If as part of defining this set CRDS notices that there
 are multiple copies of some parameter combination which should be unique,
 CRDS will issue a warning::
-
-
   
 Missing Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!
-
-  
 
 Rmap Update Errors
 ++++++++++++++++++
@@ -663,6 +806,9 @@ submission with a message like this::
     Either reference file matching parameters need correction
     or additional matching parameters should be added to the rmap
     to enable CRDS to differentiate between the two files.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
 
 **SOLUTION 1:** Generally this means there was an error generating or handling
 the reference files and the fix is to sort of the problem and re-submit.
@@ -683,6 +829,10 @@ issue an WARNING like this::
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
     For some parameter sets, CRDS interprets both matches as equally good.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
+     ----------------------------------------
     
 Conceptually a CRDS reference file lookup should be a tree descent.  First the
 instrument is used to select an imap, then a type keyword is used to select an
