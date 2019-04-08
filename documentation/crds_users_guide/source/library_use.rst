@@ -11,7 +11,7 @@ environment variables CRDS_SERVER_URL and CRDS_PATH.   See the section on
 *Installation* for more details.
 
 crds.getreferences()
---------------------
+....................
 
 Given  dataset header containing parameters required to determine best
 references, and optionally a specific .pmap to use as the best references
@@ -78,7 +78,7 @@ reference file paths::
 
 
 crds.get_default_context()
---------------------------
+..........................
 
 get_default_context() returns the name of the pipeline mapping which is 
 currently in operational use.   When no
@@ -99,7 +99,7 @@ reference files for a given set of parameters::
 
         
 Overview of Features
---------------------
+....................
 Using the crds package it's possible to:
 
 - Load and operate on rmaps
@@ -111,7 +111,7 @@ Using the crds package it's possible to:
 - Determine the closure of mappings which reference a particular file.
 
 Important Modules
------------------
+.................
 
 There are really two important modules which anyone doing low-level and non-
 networked CRDS development will first be concerned with:
@@ -136,10 +136,10 @@ networked CRDS development will first be concerned with:
        * Other experimental Selector classes
 
 Basic Operations on Mappings
-----------------------------
+............................
 
 Loading Rmaps
-~~~~~~~~~~~~~
++++++++++++++
 
 Perhaps the most fundamental thing you can do with a CRDS mapping is create an
 active object version by loading the file::
@@ -166,7 +166,7 @@ The behavior of the cached mapping is identical to the "loaded" mapping and
 subsequent calls are nearly instant.
 
 Seeing Referenced Names
-~~~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++++
 
 CRDS Mapping classes all know how to show you the files referenced by themselves
 and their descendents.   The ACS instrument context has a reference mapping for
@@ -201,7 +201,7 @@ The ACS atod reference mapping (rmap) refers to 4 different reference files::
 
 
 Computing Best References
-~~~~~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++++++
 
 The primary function of CRDS is the computation of best reference files based
 upon a dictionary of dataset metadata.   Hence,  both an InstrumentContext and a
@@ -284,7 +284,7 @@ because this will make it include the "INSTRUME" parameter needed to choose
 the ACS instrument.
 
 Mapping Checksums
------------------
+.................
 
 CRDS mappings contain sha1sum checksums over the entire contents of the mapping,
 with the exception of the checksum itself.   When a CRDS Mapping of any kind is
@@ -292,7 +292,7 @@ loaded,  the checksum is transparently verified to ensure that the Mapping
 contents are intact.   
 
 Ignoring Checksums!
-~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++
 
 Ordinarily,  during pipeline operations,  ignoring checksums should not be done.
 Ironically though,  the first thing you may want to do as a developer is ignore 
@@ -306,7 +306,7 @@ while you iterate on new versions of the mapping::
    % setenv CRDS_IGNORE_MAPPING_CHECKSUM 1
 
 Adding Checksums
-~~~~~~~~~~~~~~~~
+++++++++++++++++
 
 Once you've finished your masterpiece ReferenceMapping,  it can be sealed with
 a checksum like this::
