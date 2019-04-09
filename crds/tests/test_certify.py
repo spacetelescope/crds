@@ -1182,6 +1182,9 @@ def test_certify_check_rmap_updates():
     Either reference file matching parameters need correction
     or additional matching parameters should be added to the rmap
     to enable CRDS to differentiate between the two files.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
     CRDS - INFO -  Inserting s7g1700gl_dead_overlap.fits into 'hst_cos_deadtab_0250.rmap'
     CRDS - DEBUG -  Unexpanded header [('DETECTOR', 'FUV|NUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
     CRDS - DEBUG -  Skipping expansion for unused parkey 'LIFE_ADJ' of '-1.0|1.0'
@@ -1207,16 +1210,10 @@ def test_certify_check_rmap_updates():
      (('DETECTOR', 'FUV'),) 
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
-    For some parameter sets, CRDS interprets both matches as equally good.  For
-    instance, when reading the web table, some parameter sets will have 'two
-    answers' not just the first seen.  This makes CRDS reference assignments hard
-    to understand so CRDS for JWST disallows this.  It may indicate a mistake
-    characterizing references for CRDS, i.e. one set of files should be
-    parameterized differently.  It is POSSIBLE to confirm these files.  However,
-    the rmap should be immediately updated to consolidate or separate these
-    overlapping cases.  For JWST, it is an error to encounter equal weight cases at
-    runtime.  Alternately, cancel the submission and update the reference file
-    matching parameters to avoid the conflict.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
      ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Validating key ('FUV|NUV',)
@@ -1230,16 +1227,10 @@ def test_certify_check_rmap_updates():
      (('DETECTOR', 'NUV'),) 
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
-    For some parameter sets, CRDS interprets both matches as equally good.  For
-    instance, when reading the web table, some parameter sets will have 'two
-    answers' not just the first seen.  This makes CRDS reference assignments hard
-    to understand so CRDS for JWST disallows this.  It may indicate a mistake
-    characterizing references for CRDS, i.e. one set of files should be
-    parameterized differently.  It is POSSIBLE to confirm these files.  However,
-    the rmap should be immediately updated to consolidate or separate these
-    overlapping cases.  For JWST, it is an error to encounter equal weight cases at
-    runtime.  Alternately, cancel the submission and update the reference file
-    matching parameters to avoid the conflict.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    See the file submission section of the CRDS server user's guide here:  
+        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    for more explanation.
      ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst_0508.pmap'
