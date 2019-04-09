@@ -20,6 +20,15 @@ BASE_URLS = {
     'test': {
         'hst':  'https://hst-crds-test.stsci.edu/',
         'jwst': 'https://jwst-crds-test.stsci.edu/', },
+    'ops': {
+        'hst':  'https://hst-crds.stsci.edu/',   # 'ops' not in URL
+        'jwst': 'https://jwst-crds.stsci.edu/', },
+    'bit': {
+        'hst':  'https://hst-crds-bit.stsci.edu/',
+        'jwst': 'https://jwst-crds-bit.stsci.edu/', },
+    'cit': {
+        'hst':  'https://hst-crds-cit.stsci.edu/',
+        'jwst': 'https://jwst-crds-cit.stsci.edu/', },
     #'production': {
     #    'hst':  'https://hst-crds.stsci.edu/',
     #    'jwst': 'https://jwst-crds.stsci.edu/', },
@@ -147,14 +156,14 @@ class Submission(object):
     
     Parameters:
         observatory (str, {hst, jwst}):  Used in determining which CRDS for submission
-        string (str, {production, test, dev}):  Used in determining which CRDS for submission
+        string (str, {ops, test, dev, bit, cit}):  Used in determining which CRDS for submission
     '''
     def __init__(self, observatory, string='dev', *args, **kwargs):
         observatory, string = observatory.lower(), string.lower()
         if observatory not in ['hst', 'jwst']:
             raise ValueError('Observatory "{}" must be either "hst" or "jwst".')
-        if string not in ['dev', 'test', 'production']:
-            raise ValueError('String "{}" must be either "production", "test", or "dev".')
+        if string not in ['dev', 'test', 'ops', 'bit', 'cit']:
+            raise ValueError('String "{}" must be either "ops", "test", "dev", "bit" or "cit".')
         self._observatory = observatory
         self._string = string
         
@@ -306,7 +315,7 @@ class Submission(object):
     @property
     def files(self):
         ''' Set of files associated with the submission.'''
-        return frozenset(self._files)
+        return list(self._files)
     
     # ------------------------------------------------------------------------------------
     # Custom methods:
@@ -367,20 +376,18 @@ class Submission(object):
         print ('YAML FILE:  ', yml_name)
         try:
             # "--verbosity 80 "
-            call_to_RedCatApiScript = ("crds.submit --files {} "
-                                       "--monitor-processing "
-                                       "--wait-for-completion "
-                                       "--wipe-existing-files "
-                                       "--certify-files "
-                                       "--log-time "
-                                       "--stats --creator {} "
-                                       "--change-level {} "
-                                       "--description {} ").format(
-                ' '.join(self.files),  #["'{}'".format(x) for x in self.files]), 
-                self['instrument'], 
-                self['change_level'], 
-                self['description'])
-            print (call_to_RedCatApiScript)
+            argv = [ "crds.submit", "--files" ] + self.files + [
+                "--monitor-processing",
+                "--wait-for-completion",
+                "--wipe-existing-files",
+                "--certify-files",
+                "--log-time",
+                "--stats",
+                "--creator", "someone",
+                "--change-level", self["change_level"],
+                "--description", self["description"],
+                ]
+            print (argv)
             #crds.submit --files xa81715gj_ccd.fits --monitor-processing --wait-for-completion 
             #--wipe-existing-files --certify-files --log-time --stats 
             #--creator 'stis Team' --change-level MODERATE 
@@ -403,28 +410,10 @@ class Submission(object):
             #
             # crds.submit: error: unrecognized arguments: Team' STIS CCDTAB with new readnoise values starting 2017-Jan-03.'
             # An exception has occurred, use %tb to see the full traceback.
-
             
-            script = RedCatApiScript( call_to_RedCatApiScript )
+            script = RedCatApiScript( argv )
             
             script._extra_redcat_parameters = extra_fields  # Use update instead?
-            
-            #script = RedCatApiScript("crds.submit --files {} "
-            #                         "--monitor-processing "
-            #                         "--wait-for-completion "
-            #                         "--wipe-existing-files "
-            #                         "--certify-files "
-            #                         "--log-time "
-            #                         "--stats --creator '{} Team' "
-            #                         "--redcat-parameters '{}' "
-            #                         "--change-level {} "
-            #                         "--description '{}'".format(
-            #                ' '.join(self.files), 
-            #                self['instrument'], 
-            #                yml_name, 
-            #                self['change_level'], 
-            #                self['description']))
-            
             
             script()
         finally:
