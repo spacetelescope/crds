@@ -38,7 +38,7 @@ class Certifier:
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=None,
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
-                 original_name=None, run_fitsverify=False):
+                 original_name=None, run_fitsverify=False, check_sha1sum=False):
         
         self.filename = filename
         self.context = context
@@ -50,6 +50,7 @@ class Certifier:
         self.comparison_reference = comparison_reference
         self.original_name = original_name
         self.run_fitsverify = run_fitsverify
+        self.check_sha1sum = check_sha1sum
         self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)
 
         assert self.check_references in [False, None, "exist", "contents"], \
@@ -159,6 +160,10 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
+        if self.check_sha1sum:
+            with self.error_on_exception("Duplicate file check"):
+                check_sha1sum.check_sha1sum(self.filename, observatory=self.observatory)
+
         self.complex_init()
 
         with self.error_on_exception("Error loading"):
@@ -752,7 +757,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
                  compare_old_reference=False,
                  dont_parse=False, script=None, observatory=None,
                  comparison_reference=None, original_name=None, ith="",
-                 run_fitsverify=False):
+                 run_fitsverify=False, check_sha1sum=False):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
     
@@ -790,7 +795,8 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
                           dont_parse=dont_parse, script=script, observatory=observatory,
                           comparison_reference=comparison_reference,
                           original_name=original_name,
-                          run_fitsverify=run_fitsverify)
+                          run_fitsverify=run_fitsverify,
+                          check_sha1sum=check_sha1sum)
 
         with trap(filename, "Validation error"):
             certifier.certify()
@@ -843,19 +849,13 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         certify_file(
             filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
             compare_old_reference=compare_old_reference, dont_parse=dont_parse, script=script, observatory=observatory,
-            comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify)
+            comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify, check_sha1sum=check_sha1sums)
         
     if check_rmap: # Requires checking all files in parallel, hence not in certify_file()
         if not skip_banner:
             banner()
         with trap("Failed updating rmap"):
             check_rmap_updates(observatory, context, files)
-
-    if check_sha1sums:
-        if not skip_banner:
-            banner()
-        with trap("Failed checking sha1sums"):
-            check_sha1sum.check_sha1sums(files, observatory)
 
     if not skip_banner:
         banner()
