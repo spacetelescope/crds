@@ -1,6 +1,7 @@
 """This module contains functions for checking for identical existing files on
 the CRDS server.
 """
+import os.path
 
 from crds import client
 from crds.core import utils, log
@@ -35,9 +36,9 @@ def check_sha1sum(filepath, sha1sums=None, observatory=None):
     log.verbose("Checking file", repr(filepath), "with sha1sum", repr(sha1sum),
                 "for duplication on CRDS server.")
     if sha1sum in sha1sums:
-        raise DuplicateSha1sumError("Submitted file", repr(filepath),
-                                    "is identical to existing CRDS file",
-                                    repr(sha1sums[sha1sum]))
+        raise DuplicateSha1sumError(
+            "File", repr(os.path.basename(filepath)),
+            "is identical to existing CRDS file", repr(sha1sums[sha1sum]))
 
 def get_all_sha1sums(observatory=None):
     """Query the CRDS server for sha1sums for all existing files.

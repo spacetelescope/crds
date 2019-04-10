@@ -599,8 +599,12 @@ Identical Files
 +++++++++++++++
 
 CRDS detects if submitted files are bit-for-bit-identical to existing files or
-each other by comparing their sha1sums.  CRDS rejects identical files since
-there is a likelihood that the wrong files have been delivered by mistake.
+each other by comparing their sha1sums::
+  
+   CRDS - ERROR - In 'jwst_miri_dark_0057_b.fits' : Duplicate file check : File 'jwst_miri_dark_0057_b.fits' is identical to existing CRDS file 'jwst_miri_dark_0057.fits'
+  
+CRDS rejects identical files since there is a likelihood that the wrong files
+have been delivered by mistake.
 
 **SOLUTION:** Remove the duplicate files from your submission and re-submit.
 Rather than re-uploading your entire submission, you have the option to log
