@@ -230,6 +230,9 @@ class MissingArrayError(CrdsError):
 class MissingColumnError(CrdsError):
     """A specified (named?) column was not found in a reference file."""
 
+class DuplicateSha1sumError(CrdsError):
+    """This file is bit-for-bit identical with a file already in CRDS."""
+
 # -------------------------------------------------------------------------------------------
 
 class NameComparisonError(CrdsError):
