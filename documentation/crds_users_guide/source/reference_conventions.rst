@@ -12,11 +12,13 @@ Supported CRDS file formats
 Required Keywords and Properties
 --------------------------------
 
-Reference files specify metadata as keyword values that CRDS can check and that
-CRDS can also generally use to perform automatic update rmap updates, adding
-references to rmaps based on keyword values.  In essence, each reference file
-is required to specify the instrument configurations for which it is the best
-reference file.
+Reference files specify metadata as keyword values that CRDS often checks.  In
+general, instrument configuration parameters can be used to automatically add
+reference files to CRDS rmaps which describe how to assign them.  In essence,
+each reference file is required to specify the instrument configurations for
+which it is the best reference file.  CRDS supports the use of patterns and/or
+substitutions for keyword values which enable as single reference file to
+support more than one instrument configuration.
 
 Keywords For New File Formats
 .............................
@@ -69,7 +71,7 @@ simplicity:
 
 .. table:: Boiler Plate Keywords
         :widths: auto
-		
+        
         ===============  ====================   =====================
         FITS             DATAMODELS             VALUES
         ===============  ====================   =====================
@@ -272,7 +274,7 @@ The following table defines the pattern keywords currently supported for JWST:
 
 .. table:: JWST Pattern Keyword Names
         :widths: auto
-		
+        
         =========   =========== ===========================
         FITS        ``P_`` FITS ``P_`` DATAMODELS
         =========   =========== ===========================

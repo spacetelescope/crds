@@ -10,6 +10,57 @@ To function correctly,  these API calls may require the user to set the
 environment variables CRDS_SERVER_URL and CRDS_PATH.   See the section on
 *Installation* for more details.
 
+crds.getrecommendations()
+.........................
+
+Given dataset header containing parameters required to determine best
+references, and optionally a specific .pmap to use as the best references
+context, and optionally a list of the reference types for which reference files
+are to be determined, getrecommendations() will determine best references
+and return a mapping from reference types to reference file basenames::
+
+  def getrecommendations(parameters, reftypes=None, context=None, ignore_cache=False,
+                       observatory="jwst", fast=False):
+    """
+    getrecommendations() returns the best references for the specified `parameters`
+    and pipeline `context`.   Unlike getreferences(),  getrecommendations() does
+    not attempt to cache the files locally.
+        
+    parameters      { str:  str,int,float,bool, ... }
+    
+      `parameters` should be a dictionary-like object mapping best reference 
+      matching parameters to their values for this dataset.
+    
+    reftypes        [ str, ... ] 
+    
+      If `reftypes` is None,  return all possible reference types.   Otherwise
+      return the reference types specified by `reftypes`.
+    
+    context         str
+    
+      Specifies the pipeline context, i.e. specific version (.pmap) of CRDS
+      rules used to do the best references match.  If `context` is None, use
+      the latest available context.
+
+    ignore_cache    bool
+
+      If `ignore_cache` is True,  download files from server even if already present.
+    
+    observatory     str
+    
+       nominally 'jwst' or 'hst'.
+    
+    fast            bool
+    
+      If fast is True, skip verbose output, parameter screening, implicit
+      config update, and bad reference checking.
+    
+    Returns { reftype : bestref_basename, ... }
+    
+      returns a mapping from types requested in `reftypes` to the path for each
+      cached reference file.
+    """
+
 crds.getreferences()
 ....................
 
@@ -76,7 +127,6 @@ reference file paths::
                     }
         """
 
-
 crds.get_default_context()
 ..........................
 
@@ -98,43 +148,6 @@ reference files for a given set of parameters::
         """
 
         
-Overview of Features
-....................
-Using the crds package it's possible to:
-
-- Load and operate on rmaps
-- Determine best reference files for a dataset
-- Check mapping syntax and verify checksum
-- Certify that a mapping and all it's dependencies exist and are valid
-- Certify that a reference file meets important constraints
-- Add checksums to mappings
-- Determine the closure of mappings which reference a particular file.
-
-Important Modules
-.................
-
-There are really two important modules which anyone doing low-level and non-
-networked CRDS development will first be concerned with:
-
-- crds.rmap module
-    -- defines classes which load and operate on mapping files
-        * Mapping
-        * PipelineContext (.pmap)
-        * InstrumentContext (.imap),
-        * ReferenceMapping (.rmap)
-    -- defines get_cached_mapping() function
-        * loads and caches a Mapping or subclass instances from files,  
-          typically this is a recursive process loading pipeline or instrument
-          contexts as well as all associated reference mappings.
-        * this *cache* is an object cache to speed up access to mappings,  
-          not the file *cache* used by crds.client to avoid repeated network
-          file transfers.
-- crds.selectors module
-    -- defines classes implementing best reference logic
-       * MatchSelector
-       * UseAfterSelector
-       * Other experimental Selector classes
-
 Basic Operations on Mappings
 ............................
 

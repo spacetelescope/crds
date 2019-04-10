@@ -75,6 +75,25 @@ from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
 # ===================================================================
 
+__all__ = [
+    "Mapping",
+    "ContextMapping",
+    "PipelineContext",
+    "InstrumentContext",
+    "ReferenceMapping",
+    "get_cached_mapping",
+    "load_mapping",
+    "fetch_mapping",
+    "asmapping",
+    "locate_mapping",
+    "list_mappings",
+    "list_references",
+    "get_best_references",
+    "mapping_type",
+]
+
+# ===================================================================
+
 Filetype = namedtuple("Filetype","header_keyword,extension,rmap")
 Failure  = namedtuple("Failure","header_keyword,message")
 Filemap  = namedtuple("Filemap","date,file,comment")
