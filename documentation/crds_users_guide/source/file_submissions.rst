@@ -158,6 +158,10 @@ The new web form, which begins as shown, fully supersedes the old form:
 submission to succeed; many of the form fields are reminders of the ReDCaT
 requirements for submitting files to CRDS.
 
+The following section on *Batch Submit References* describes the remainder of
+processing for *Extended Batch Submit References*;  the only real difference
+is the simplified input form.
+
 Batch Submit References (deprecated)
 ....................................
 
@@ -599,8 +603,12 @@ Identical Files
 +++++++++++++++
 
 CRDS detects if submitted files are bit-for-bit-identical to existing files or
-each other by comparing their sha1sums.  CRDS rejects identical files since
-there is a likelihood that the wrong files have been delivered by mistake.
+each other by comparing their sha1sums::
+  
+   CRDS - ERROR - In 'jwst_miri_dark_0057_b.fits' : Duplicate file check : File 'jwst_miri_dark_0057_b.fits' is identical to existing CRDS file 'jwst_miri_dark_0057.fits'
+  
+CRDS rejects identical files since there is a likelihood that the wrong files
+have been delivered by mistake.
 
 **SOLUTION:** Remove the duplicate files from your submission and re-submit.
 Rather than re-uploading your entire submission, you have the option to log
@@ -621,7 +629,7 @@ Internal CRDS Constraints
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
 CRDS defines constraints of its own using specifications called .tpn files
-descrubed in detail here: :ref:`header-certify-constraints`.  These
+described in detail here: :ref:`header-certify-constraints`.  These
 specifications and checks can be reviewed on the website by looking up the
 details of any particular reference file of the same instrument and type:
 
@@ -761,10 +769,11 @@ Idenifying a comparison reference file by consulting the comparison context is
 just the first step.  To perform table checks, crds certify needs direct
 access to the comparison reference as a readable file.
 
-The CRDS servers and users using /grp/crds/cache should never see this problem.
-Users utilizing a personal CRDS cache e.g. defined by CRDS_PATH may see this
-problem and can download missing comparison references by
-specifying --sync-files to crds certify.
+The CRDS servers and users using /grp/crds/cache should never see this problem
+because all reference files should be available for comparison.  Users
+utilizing a personal CRDS cache e.g. defined by CRDS_PATH may see this problem
+and can download missing comparison references by specifying --sync-files to
+crds certify.
 
 Duplicate Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -779,6 +788,11 @@ CRDS will issue a warning::
 Missing Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
+A warning is issued when a unique parameter combination from one table
+is missing from the next version.   This is not necessarily an error,  but
+is a cause for review to ensure that combinations being lost were intended
+to be dropped.
+
 Rmap Update Errors
 ++++++++++++++++++
 
@@ -791,37 +805,42 @@ need to be addressed,  even if they only appear as warnings.
 Exact Matching Duplicates
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-Given the task of adding N reference files to an rmap,  CRDS checks that N new
-files really do appear in the new rmap.  It is possible for new reference files
-to have different sha1sums, i.e. not be bit-for-bit-identical,  but also to use
-exactly the same CRDS matching criteria.  With identical matching criteria,
-both files would occupy the same location in the .rmap,  and one file would
-replace the other. This is almost certainly an error so CRDS rejects the file
-submission with a message like this::
+Given the task of adding N reference files to an rmap, CRDS checks that N new
+files appear in the new rmap.  Given two files with identical matching
+parameter values, both files would occupy the same location in the .rmap, and
+one file would replace the other. This is certainly an error so CRDS rejects
+the file submission with a message like this::
 
     CRDS - ERROR -  ----------------------------------------
     Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
      ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00'))) 
     Each reference would replace the other in the rmap.
-    Either reference file matching parameters need correction
-    or additional matching parameters should be added to the rmap
-    to enable CRDS to differentiate between the two files.
-    See the file submission section of the CRDS server user's guide here:  
-        https://jwst-crds.stsci.edu/static/users_guide/index.html 
-    for more explanation.
 
 **SOLUTION 1:** Generally this means there was an error generating or handling
-the reference files and the fix is to sort of the problem and re-submit.
+the reference files and the fix is to gather the correct set of files and
+resubmit.
 
-**SOLUTION 2:** Update the rmap to add additional matching parameters so that
-CRDS can differentiate between your files.  Resubmit the rmap using the
-Submit Mappings page.  Resubmit your reference files.
+**SOLUTION 2:** CRDS may view two files which are truly different as "the same"
+because the CRDS rmap is not using the correct matching parameters to
+differentiate between them.  In that case the fix may be to add or change the
+keywords CRDS is using to select reference files of this type, i.e. the rmap's
+parkey header value.  This fix entails modifying the existing rmap to
+define a new matching keywords,  and updating the match cases of any existing
+reference files to correspond to the new keywords.   The revised rmap is then
+delivered using *Submit Mappings*,  and the original submission is then
+repeated relative to the new rmap.
+
+**NOTE:** It is possible for new reference files to have different sha1sums,
+i.e. not be bit-for-bit-identical, but also to use exactly the same CRDS
+matching criteria and be considered to be "duplicates" from a matching
+perspective.
 
 Equal Weight Match Cases
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-When adding files which are characterized as "similar but different",  CRDS can
-issue an WARNING like this::
+When adding files which are characterized as "similar but different", or in
+cases where special values like GENERIC and N/A are being used, CRDS can
+issue a WARNING like this::
 
     CRDS - WARNING -  ----------------------------------------
     Match case
@@ -829,15 +848,101 @@ issue an WARNING like this::
     is an equal weight special case of
      (('DETECTOR', 'FUV|NUV'),) 
     For some parameter sets, CRDS interprets both matches as equally good.
-    See the file submission section of the CRDS server user's guide here:  
-        https://jwst-crds.stsci.edu/static/users_guide/index.html 
-    for more explanation.
-     ----------------------------------------
-    
-Conceptually a CRDS reference file lookup should be a tree descent.  First the
-instrument is used to select an imap, then a type keyword is used to select an
-rmap within the imap, then matching parameters are used to define categories
-(instrument configs) of references in the rmap and only one category is chosen,
-and finally a USEAFTER comparison selects the most recent reference file in the
-category.
+
+This section explains the related issues and what to do.
+
+Weighted Matching
+^^^^^^^^^^^^^^^^^
+CRDS uses a weighted matching scheme to assign reference files.   Every
+reference type's rmap has a set of parameters which is used to categorize
+files and how to apply them,  the *parkey* list/tuple defined in the rmap's
+header.
+
+CRDS uses a process of elimination for matching.  Each parameter is used to
+eliminate categories of reference files which can't match.  After running
+through all matching parameters, ideally only one category remains, the right
+one.  It's possible however for multiple categories to survive the process of
+elimination; in this case, CRDS uses "match weight" to choose the best.
+
+During matching, each rmap parameter value will have one of 3 consequences when
+compared to the corresponding dataset value:
+
+1. The parameter value will definitively break the match and rule out the
+   category completely.
+2. The parameter will match and add a value of one to the match weight.
+3. Some values (N/A or GENERIC) neither break the match nor add weight,
+   they are counted as zero.
+
+For the hypothetical warning shown earlier, there is an existing category which
+matches on DETECTOR=FUV.  There is a new category which matches on either FUV
+or NUV.  For a dataset with DETECTOR=FUV, either category would match with a
+weight of "one".  Since the weights are both one, to CRDS they are equally good
+matches.
+
+In general rmaps use 2-3 matching parameters making analysis more complex.
+
+Problems with Equal Weight Matches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+There are a number of problems with searches which result in multiple
+Match() solutions:
+
+1. Human beings reviewing the CRDS reference files, e.g. on the website, will
+   expect one and only one category to match.  Hence they are likely to find
+   the first, and overlook any others.
+
+2. CRDS matching does not generally stop with the Match() category.  The
+   Match() normally determines a list of files from which a reference is
+   selected using USEAFTER and the observation date of the data.  This means
+   that searching two categories involves shuffling them together in sorted
+   order.  This is really impossible to visualize.
+
+3. Related but disjoint categories of reference files are unlikely, it's more
+   probable that a category is describing too many or too few parameter
+   combinations.  The root idea is that future file organizations, future
+   categories, should match past categories.  Or perhaps conversely, past
+   categories should be expanded to match new categories.
+
+Solution for Equal Weight Matches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To avoid losing the work entailed by a file submission completely,  equal
+weight match cases are reported as warnings to give lattitude in how to
+address the problem.   There are generally three solutions:
+
+1. Cancel the submission and regenerate the reference files with different
+   parameter values which coincide with an existing category.
+
+2. Accept the submission but immediately edit the rmap to combine overlapping
+   Match() categories.
+
+3. Last ditch: Accept the submission, but immediately set a "merge_overlaps" :
+   "TRUE" value in the rmap header.  Submit the new rmap using Submit Mappings.
+   merge_overlaps will cause disjoint categories to by dynamically shuffled
+   together for USEAFTER lookups.
+
+**NOTE:** For HST "merge_overlaps" defaults to "TRUE", but for JWST
+"merge_overlaps" defaults to "FALSE".
+
+Why CRDS Categorizes Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The crux of this is that CRDS rmaps *create* categories which are expected to
+be a taxonomy.
+
+Looking at an excerpt of the ACS DARKFILE rmap,  organization is good::
+  
+      DETECTOR  CCDAMP              CCDGAIN
+      
+      ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1992-01-01 00:00:00' : 'lcb12060j_drk.fits',
+        '2002-03-01 00:00:00' : 'n3o1022cj_drk.fits',
+        '2002-03-18 00:00:00' : 'n3o1022ej_drk.fits',
+        '2002-03-19 00:34:31' : 'n3o1022fj_drk.fits',
+        '2002-03-20 00:34:32' : 'n3o1022hj_drk.fits',
+        ...
+        
+Because of how CRDS organizes rmaps, we know at a glance that EVERY file shown
+applies to the same 28 discrete paramerer combinations, and also that every
+file has a lot in common with all the others: the same "category".  These
+categories can be arbitrarily complex and vary for each rmap.
 
