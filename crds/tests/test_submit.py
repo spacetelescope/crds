@@ -130,7 +130,7 @@ class TestSubmission(object):
     @mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True)
     def setup_class(cls, urlopen):
         '''This method is run once for each class before any tests are run.'''
-        old_state = test_config.setup()
+        cls.old_state = test_config.setup()
         
         # Create a temporary directory:
         cls.tmpdir = tempfile.mkdtemp(prefix='tmp_rc_submit_')
@@ -154,7 +154,7 @@ class TestSubmission(object):
         '''This method is run once for each class after all tests are run.'''
         # Remove temporary directory and all files contained therein:
         shutil.rmtree(cls.tmpdir)
-        test_config.cleanup(old_state)
+        test_config.cleanup(cls.old_state)
 
     @raises(KeyError)
     def test_badkey(self):
