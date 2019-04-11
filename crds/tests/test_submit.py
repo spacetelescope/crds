@@ -3,6 +3,7 @@ import shutil
 import tempfile
 from nose.tools import assert_equals, assert_not_equals, assert_is, assert_true, raises
 from crds.submit import Submission, NoFilesSelected
+from crds.tests import test_config
 import mock
 
 # To run:
@@ -129,6 +130,8 @@ class TestSubmission(object):
     @mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True)
     def setup_class(cls, urlopen):
         '''This method is run once for each class before any tests are run.'''
+        old_state = test_config.setup()
+        
         # Create a temporary directory:
         cls.tmpdir = tempfile.mkdtemp(prefix='tmp_rc_submit_')
 
@@ -151,6 +154,7 @@ class TestSubmission(object):
         '''This method is run once for each class after all tests are run.'''
         # Remove temporary directory and all files contained therein:
         shutil.rmtree(cls.tmpdir)
+        test_config.cleanup(old_state)
 
     @raises(KeyError)
     def test_badkey(self):
