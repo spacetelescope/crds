@@ -105,8 +105,10 @@ class Submission(object):
         self._string = string
         
         config.base_url = BASE_URLS[self.string][self.observatory]
-        os.environ['CRDS_SERVER_URL'] = config.base_url
-        
+        if not os.environ.get('CRDS_SERVER_URL'):
+            log.verbose('Setting $CRDS_SERVER_URL to {}'.format(config.base_url))
+            os.environ['CRDS_SERVER_URL'] = config.base_url
+
         url = urllib.parse.urljoin(config.base_url, URL_DESCRIPTION)
         try:
             with urllib.request.urlopen(url) as req:
