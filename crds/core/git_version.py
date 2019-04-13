@@ -1,9 +1,9 @@
 
 
-__version__ = '55463344'
+__version__ = '5c66357a'
 
 __full_version_info__ = '''
-branch: 7.3.1
-sha1: 55463344
+branch: update-git-hash
+sha1: 5c66357a
 '''
     
