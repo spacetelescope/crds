@@ -601,7 +601,7 @@ def certify_duplicate_sha1sum():
     >>> TestCertifyScript("crds.certify data/s7g1700gl_dead.fits --check-sha1sums")() # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying only references,  defaulting --comparison-context to operational context.
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
+    CRDS - INFO -  Certifying 'data/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context '...'
     CRDS - ERROR -  instrument='COS' type='DEADTAB' data='data/s7g1700gl_dead.fits' ::  Duplicate file check : File 's7g1700gl_dead.fits' is identical to existing CRDS file 's7g1700gl_dead.fits'
     CRDS - INFO -  FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
     CRDS - INFO -  ########################################
