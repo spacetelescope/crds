@@ -39,6 +39,8 @@ checksum            -- update rmap checksum
 query_affected      -- download CRDS new reference files affected dataset IDs
 uniqname            -- rename HST files with new CDBS-style names
 get_synphot         -- download synphot references
+submit              -- simple command line file submission
+rc_submit           -- extended command line file submisson
 
 For more detail about individual commands use --help:
 
@@ -61,6 +63,8 @@ REMAPPED_MODULES = {
     "newcontext" : "crds.refactoring.newcontext",
     "checksum" : "crds.refactoring.checksum",
     "get_synphot" : "crds.misc.get_synphot",
+    "submit" : "crds.submit",
+    "rc_submit" : "crds.submit.rc_submit",
 }
 
 remapped = REMAPPED_MODULES.get(sys.argv[1], "crds." + sys.argv[1])

@@ -35,7 +35,9 @@ class CrdsWebAuthenticationError(CrdsWebError):
     """The id='error_login' <div> of a CRDS server login response was present and not empty.
     Login to the website failed due to username or password.
     """
-
+class CrdsExtraneousFileError(CrdsWebError):
+    """Unexpected files are already in the ingest directory during a file submisssion."""
+    
 # -------------------------------------------------------------------------------------------
 
 class CrdsBackgroundError(CrdsError):
@@ -227,6 +229,9 @@ class MissingArrayError(CrdsError):
 
 class MissingColumnError(CrdsError):
     """A specified (named?) column was not found in a reference file."""
+
+class DuplicateSha1sumError(CrdsError):
+    """This file is bit-for-bit identical with a file already in CRDS."""
 
 # -------------------------------------------------------------------------------------------
 

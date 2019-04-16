@@ -11,7 +11,20 @@ warnings.filterwarnings(
 # ============================================================================
 
 __version__ = "7.3.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST 2019 DMS-7.3 CRDS-7.3.1 development."
+__rationale__ = "Spring 2019 CRDS submission streamlining project"
+
+__all__ = [
+    "getrecommendations",
+    "getreferences",
+    "get_pickled_mapping",
+    "get_symbolic_mapping",
+    "get_cached_mapping",
+    "get_context_name",
+    "asmapping",
+    "locate_mapping",
+    "locate_file",
+    "get_default_context",
+    ]
 
 # ============================================================================
 
@@ -44,7 +57,7 @@ then alias them into the top level crds namespace using importlib.import_module(
 and sys.modules to make it appear as if each core package has already been imported
 and belongs to the top level namespace.
 '''
-def alias_subpackage_module(subpkg, modules):
+def _alias_subpackage_module(subpkg, modules):
     """Alias each module from `modules` of `subpkg` to appear in this
     namespace.
     """
@@ -52,7 +65,7 @@ def alias_subpackage_module(subpkg, modules):
         globals()[module] = importlib.import_module(subpkg + "." + module)
         sys.modules["crds." + module] = sys.modules[subpkg + "." + module]
 
-CORE_MODULES = [
+_CORE_MODULES = [
     "pysh",
     "python23",
     "exceptions",
@@ -74,13 +87,13 @@ CORE_MODULES = [
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
-alias_subpackage_module("crds.core", CORE_MODULES)
+_alias_subpackage_module("crds.core", _CORE_MODULES)
 
 # ============================================================================
 
 # e.g. python -m crds.newcontext now called as python -m crds.refactoring.newcontext
 
-REFACTORING_MODULES = [
+_REFACTORING_MODULES = [
     "checksum",
     "newcontext",
     "refactor",
@@ -88,13 +101,13 @@ REFACTORING_MODULES = [
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
-alias_subpackage_module("crds.refactoring", REFACTORING_MODULES)
+_alias_subpackage_module("crds.refactoring", _REFACTORING_MODULES)
 
 # ============================================================================
 
 # e.g. python -m crds.uniqname now called as -m crds.refactoring.uniqname
 
-MISC_MODULES = [
+_MISC_MODULES = [
     "datalvl",               # external interface with pipelines
     "query_affected",        # external interface with pipelines
     "uniqname",              # external interface with submitters
@@ -104,7 +117,7 @@ MISC_MODULES = [
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
-alias_subpackage_module("crds.misc", MISC_MODULES)
+_alias_subpackage_module("crds.misc", _MISC_MODULES)
 
 # ============================================================================
 

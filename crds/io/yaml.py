@@ -21,7 +21,7 @@ class YamlFile(AbstractFile):
         import yaml
         with open(self.filepath) as pfile:
             try:
-                header = yaml.load(pfile)
+                header = yaml.safe_load(pfile)
             except ValueError as exc:
                 raise exceptions.YamlFormatError(
                     "YAML wouldn't load from", repr(self.filepath), ":", str(exc))

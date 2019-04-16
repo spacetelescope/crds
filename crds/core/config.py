@@ -780,9 +780,12 @@ def get_username(override=None):
         # get env_var or ini_file
         USERNAME = StrConfigItem(
             "CRDS_USERNAME", None, ini_section="authentication",
-            comment="User's username on CRDS server, defaulting to current login.")
+            comment="User's e-mail on CRDS server, defaulting to current login.")
         # ultimately: override or env_var or ini_file or fallback function
-        USERNAME.set(override or USERNAME.get() or getpass.getuser())
+        username = override or USERNAME.get()
+        if username in ["None", "none", None]:
+            username = getpass.getuser()
+        USERNAME.set(username)
     return USERNAME.get()
 
 PASSWORD = None
@@ -794,12 +797,14 @@ def get_password(override=None):
     """
     global PASSWORD
     if PASSWORD is None:
-        # get env_var or ini_file
-        PASSWORD = StrConfigItem(
-            "CRDS_PASSWORD", None, ini_section="authentication",
-            comment="User's password on CRDS server, defaulting to interactive echo-less entry.")
         # ultimately: override or env_var or ini_file or fallback function
-        PASSWORD.set(override or PASSWORD.get() or getpass.getpass())
+        PASSWORD = StrConfigItem(
+            "MAST_API_TOKEN", None, ini_section="authentication",
+            comment="User's MAST_API_TOKEN, defaulting to echo-less key entry.")
+        password = override or PASSWORD.get()
+        if password in ["None", "none", None]:
+            password = getpass.getpass()
+        PASSWORD.set(password)
     return PASSWORD.get()
 
 # ===========================================================================

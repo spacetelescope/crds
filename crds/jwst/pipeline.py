@@ -183,7 +183,7 @@ def _load_refpath(context, refpath):
     """Given `context` and SYSTEM CRDSCFG reference at `refpath`,  construct a CrdsCfgManager."""
     import yaml
     with open(refpath) as opened:
-        crdscfg =  yaml.load(opened)
+        crdscfg =  yaml.safe_load(opened)
     return CrdsCfgManager(context, refpath, crdscfg)
 
 # --------------------------------------------------------------------------------------
