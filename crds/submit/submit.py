@@ -297,7 +297,7 @@ this command line interface must be members of the CRDS operators group
         certify.certify_files(
             self.files, context=self.pmap_name, dump_provenance=True, 
             compare_old_reference=True, observatory=self.observatory,
-            run_fitsverify=True, check_rmap=True, check_sha1sums=True)
+            run_fitsverify=True, check_rmap=False, check_sha1sums=True)
         if log.errors():
             raise CrdsError("Certify errors found.  Aborting submission.")
         
