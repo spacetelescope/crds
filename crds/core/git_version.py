@@ -1,9 +1,9 @@
 
 
-__version__ = '7abb4e0f'
+__version__ = '8491d53b'
 
 __full_version_info__ = '''
-branch: update-git-hash
-sha1: 7abb4e0f
+branch: turn-off-check-rmap-updates
+sha1: 8491d53b
 '''
     
