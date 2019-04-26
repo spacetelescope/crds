@@ -16,6 +16,7 @@ CRDS User Manual
    environment.rst
    command_line_tools.rst
    file_submissions.rst
+   programmatic_interface.rst
    pipeline_management.rst
    web_services.rst
    rmap_syntax.rst
