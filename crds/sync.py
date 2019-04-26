@@ -254,7 +254,7 @@ class SyncScript(cmdline.ContextsScript):
         self.add_argument("--save-pickles", action="store_true",
                           help="Save pre-compiled versions of the sync'ed contexts in the CRDS cache.  Keep pre-existing pickles.")
         self.add_argument("--output-dir", type=str, default=None,
-                          help="Directory to output sync'ed files, for simple syncs.")
+                          help="Directory to output sync'ed files, for simple syncs,  particularly --files.   Implies 'flat' cache.")
         self.add_argument("--clear-locks", action="store_true",
                           help="Remove CRDS cache file lock(s).")
         self.add_argument("--force-config-update", action="store_true",
@@ -303,6 +303,8 @@ class SyncScript(cmdline.ContextsScript):
         # If explicit files were specified,  do not update cache config.
         if self.args.files and self.args.output_dir:
             log.verbose_warning("Used explicit --files list and --output-dir,  skipping cache server_config update including default context and bad files.")
+            if config.writable_cache_or_verbose("skipping removal of ref_cache_subdir_mode file."):
+                os.remove(config.get_crds_ref_subdir_file(self.observatory))
         else:
             self.update_context()
 
@@ -326,6 +328,7 @@ class SyncScript(cmdline.ContextsScript):
             os.environ["CRDS_REFPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_CFGPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_PICKLEPATH_SINGLE"] = self.args.output_dir
+            self.args.organize = "flat"
 
         if self.readonly_cache:
             log.info("Syncing READONLY cache,  only checking functions are enabled.")
