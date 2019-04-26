@@ -6,7 +6,10 @@ there is a programmatic interface that allows users to perform the tasks
 of reference file submission using Python.  It requires crds version of at
 least 7.3.1, and that you acquire an authorization token from auth.mast.stsci.
 The string value of this token must be inserted into the environment
-variable MAST_API_TOKEN.
+variable MAST_API_TOKEN::
+
+    import os
+    os.environ['MAST_API_TOKEN'] = 'LongStringObtainedFromAuth.mast.stsciPage'
 
 To use this functionality, import the Submission class from crds::
 
@@ -182,7 +185,7 @@ to something other than one of these instruments, an exception will occur.
 Similarly, if you try to set s['chicken'], or some other keyword not in the
 set of allowed keywords, and exception will occur::
 
-    s['file_type']                  = 'DARKFILE'
+    s['file_type']                  = 'DARK'
     s['history_updated']            = True
     s['pedigree_updated']           = True
     s['keywords_checked']           = True
@@ -200,11 +203,11 @@ set of allowed keywords, and exception will occur::
     #s['jira_issue']                = ''
     s['table_rows_changed']         = 'All rows'
     s['modes_affected']             = 'All MIRI observations starting 2017-Jan-03'
-    s['correctness_testing']        = 'DARKFILE was run on all MIRI data and verified '
+    s['correctness_testing']        = 'DARK was run on all MIRI data and verified '
     #s['additional_considerations'] = ''
     s['change_level']               = 'MODERATE'
-    s['description']                = 'Updating MIRI DARKFILE starting 2017-Jan-03.'
-​
+    s['description']                = 'Updating MIRI DARK starting 2017-Jan-03.'
+
 The assignments that are commented out are unnecessary as the default values are empty strings.
 To add files to the submission, use the add_file() method::
 
@@ -363,12 +366,3 @@ This will validate the submission by making sure all of the fields that need val
 have them and by ensuring that there is at least 1 file to submit before performing
 the submission.
 
-WARNING: If, during the submission, you see a prompt for PASSWORD:,
-you should abort the submission and set your environment variable
-MAST_API_TOKEN.  Do not enter your AD or CRDS password.  Here's how::
-
-    import os
-    os.environ['MAST_API_TOKEN'] = 'LongStringObtainedFromAuth.mast.stsciPage'
-
-Once you have set this, you can re-do the submission and you should not be
-prompted further.
