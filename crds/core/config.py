@@ -576,7 +576,7 @@ def get_crds_ref_subdir_mode(observatory):
     """Return the mode value defining how reference files are located."""
     global CRDS_REF_SUBDIR_MODE
     if CRDS_REF_SUBDIR_MODE in ["None", None]:
-        mode_path = os.path.join(get_crds_cfgpath(observatory),  CRDS_SUBDIR_TAG_FILE)
+        mode_path = get_crds_ref_subdir_file(observatory)
         try:
             with open(mode_path) as pfile:
                 mode = pfile.read().strip()
@@ -601,10 +601,19 @@ def set_crds_ref_subdir_mode(mode, observatory):
     global CRDS_REF_SUBDIR_MODE
     check_crds_ref_subdir_mode(mode)
     CRDS_REF_SUBDIR_MODE = mode
-    mode_path = os.path.join(get_crds_cfgpath(observatory), CRDS_SUBDIR_TAG_FILE)
+    mode_path = get_crds_ref_subdir_file(observatory)
     if writable_cache_or_verbose("skipping subdir mode write."):
         from crds.core import heavy_client as hv   #  yeah,  kinda gross
         hv.cache_atomic_write(mode_path, mode, "Couldn't save sub-directory mode config")
+
+def get_crds_ref_subdir_file(observatory):
+    """Return path to CRDS config file defining cache organization.  Created 
+    automatically,  this is nominally for CRDS internal use only and cleanup.
+
+    Returns <path to cache organization config file>
+    """
+    return os.path.join(get_crds_cfgpath(observatory), CRDS_SUBDIR_TAG_FILE)
+    
 
 def check_crds_ref_subdir_mode(mode):
     """Check for valid reference location subdirectory `mode`."""
