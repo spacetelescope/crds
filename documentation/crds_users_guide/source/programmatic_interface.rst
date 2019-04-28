@@ -4,12 +4,38 @@ Using the Programmatic Python Interface to submit reference files
 As an alternative to command-line and web submissions of reference files,
 there is a programmatic interface that allows users to perform the tasks
 of reference file submission using Python.  It requires crds version of at
-least 7.3.1, and that you acquire an authorization token from auth.mast.stsci.
+least 7.3.1.
+
+Authenticating
+..............
+
+To utilize the programmatic API you are required to have a CRDS account and to
+authenticate via MyST and auth.mast_.  MyST will ask you to enter your AD
+password unless you have already authenticated.  auth.mast_ supports the
+creation and revocation of secret token_ values.
+
+.. _auth.mast: https://auth.mast.stsci.edu/
+.. _token: https://auth.mast.stsci.edu/tokens
+
 The string value of this token must be inserted into the environment
 variable MAST_API_TOKEN::
 
     import os
     os.environ['MAST_API_TOKEN'] = 'LongStringObtainedFromAuth.mast.stsciPage'
+
+A typical auth.mast token looks something like::
+
+  1b73d91d0db55b1800847529a3b6f91e
+
+**IMPORTANT:** Since CRDS now uses MyST and auth.mast to identify you, never
+never directly enter your AD password (MyST password) on the CRDS server or in
+response to a CRDS prompt.
+
+**NOTE:** CRDS passwords for existing CRDS file submitters and operators are
+obsolete and no longer work.
+
+API Description
+...............
 
 To use this functionality, import the Submission class from crds::
 
