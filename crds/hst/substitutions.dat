@@ -22,7 +22,7 @@
         
         'CCDGAIN': {
             "DETECTOR=='HRC' and CCDGAIN=='-1'": '1.0|2.0|4.0|8.0',
-            "DETECTOR=='WFC' and CCDGAIN=='-1'": '0.5|1.0|1.4|2.0',
+            "DETECTOR=='WFC' and CCDGAIN=='-1'": '0.5|1.0|1.4|2.0|4.0|8.0',
             "DETECTOR in ['WFC', 'HRC'] and CCDGAIN=='-999'": '1.0|2.0|4.0|8.0',
             "DETECTOR in ['WFC', 'HRC'] and CCDGAIN=='-999.0'": '1.0|2.0|4.0|8.0',
             },

@@ -775,24 +775,60 @@ utilizing a personal CRDS cache e.g. defined by CRDS_PATH may see this problem
 and can download missing comparison references by specifying --sync-files to
 crds certify.
 
+Selection of Mode Columns
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+CRDS define table modes using the intersection of columns specified in the
+type's specification and columns available in the table::
+
+    CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS - INFO -  Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
+    CRDS - INFO -  Mode columns defined by spec for old reference 'yas2005el_hv.fits[1]' are: ['DATE']
+    CRDS - INFO -  All column names for this table old reference 'yas2005el_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
+
+In this hypothetical example, CRDS will check that no value of DATE appears
+more than once, and every value of DATE appearing in the old version of the
+table appears in the new version of the table.
+    
+Note that the intersection can vary if e.g. columns in a table vary by FITS
+HDU; there is no expectation that every mode column mentioned in the CRDS
+type specification are in every HDU.
+
 Duplicate Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-To meet its ultimate goal of detecting accidentally dropped table modes, CRDS
-first tries to characterize mode rows as unique using some selection of
-parameters.   This lets CRDS define the set of modes represented in any
-particular table.   If as part of defining this set CRDS notices that there
-are multiple copies of some parameter combination which should be unique,
-CRDS will issue a warning::
-  
+To meet the ultimate goal of detecting accidentally dropped table modes, CRDS
+first tries to characterize mode rows as unique using the selected mode
+parameters.  This lets CRDS define the set of modes represented in any
+particular table.
+
+If as part of defining this set CRDS notices that there are multiple copies of
+a parameter combination which should be unique, CRDS will issue a warning::
+
+    CRDS - WARNING -  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
+     (129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    (131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+
+In this hypothetical case, both row 129 and row 131 have the DATE value
+56924.0417.  Based on the type specification,  CRDS has defined this as
+something unexpected.  If on review it is determined that the duplicate rows
+are innocuous or expected, this warning can be ignored. 
+
 Missing Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
 A warning is issued when a unique parameter combination from one table
-is missing from the next version.   This is not necessarily an error,  but
-is a cause for review to ensure that combinations being lost were intended
-to be dropped.
+is missing from the next version::
 
+  CRDS - WARNING -  Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+  CRDS - WARNING -  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+  CRDS - WARNING -  Table mode (('DATE', 56964.0),) from old reference
+  'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+
+If on review it is determined that these rows were dropped intentionally,
+this warning can be ignored.
+  
 Rmap Update Errors
 ++++++++++++++++++
 
@@ -926,8 +962,7 @@ address the problem.   There are generally three solutions:
 Why CRDS Categorizes Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The crux of this is that CRDS rmaps *create* categories which are expected to
-be a taxonomy.
+CRDS rmaps *create* categories which are expected to be a taxonomy.
 
 Looking at an excerpt of the ACS DARKFILE rmap,  organization is good::
   
@@ -940,9 +975,10 @@ Looking at an excerpt of the ACS DARKFILE rmap,  organization is good::
         '2002-03-19 00:34:31' : 'n3o1022fj_drk.fits',
         '2002-03-20 00:34:32' : 'n3o1022hj_drk.fits',
         ...
+
+The meaning of the Match case above is that each file supports every
+combination of the DETECTOR, 7 values of CCDAMP, and 4 values of CCDGAIN
+for a total of 28 discrete parameter combinations.
         
-Because of how CRDS organizes rmaps, we know at a glance that EVERY file shown
-applies to the same 28 discrete paramerer combinations, and also that every
-file has a lot in common with all the others: the same "category".  These
-categories can be arbitrarily complex and vary for each rmap.
+These categories can be arbitrarily complex and vary for each rmap.
 

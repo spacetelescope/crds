@@ -812,7 +812,7 @@ def get_password(override=None):
             comment="User's MAST_API_TOKEN, defaulting to echo-less key entry.")
         password = override or PASSWORD.get()
         if password in ["None", "none", None]:
-            password = getpass.getpass()
+            password = getpass.getpass("MAST_API_TOKEN: ")
         PASSWORD.set(password)
     return PASSWORD.get()
 
