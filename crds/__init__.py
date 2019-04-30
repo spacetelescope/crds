@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.3.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "Spring 2019 CRDS submission streamlining project"
+__version__ = "7.3.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "Spring 2019 CRDS submission streamlining project, #2"
 
 __all__ = [
     "getrecommendations",
