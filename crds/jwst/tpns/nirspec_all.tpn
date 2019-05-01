@@ -23,7 +23,7 @@ include includes/nirspec_subarray_baseline.tpn
 #                                       PRISM,MIRROR,ANY,N/A
 
 META.EXPOSURE.READPATT      H   C   O  NRSRAPID,NRS,NRSN8R2,NRSN16R4,NRSN32R8,\
-                                       NRSIRS2,NRSIRS2RAPID,NRSSLOW,\
+                                       NRSIRS2,NRSIRS2RAPID,NRSSLOW,NRSRAPIDD1,NRSRAPIDD2,\
                                        ANY,N/A
 READPATT                    H   C   O
 

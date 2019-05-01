@@ -29,7 +29,7 @@ META.EXPOSURE.READPATT      H    C    O     ACQ1,ACQ2,ALLIRS2,BRIGHT1,BRIGHT2,\
                                             FGS,FGS60,FGS8370,FGS840,FGSRAPID,FINEGUIDE,\
                                             ID,MEDIUM2,MEDIUM8,NIS,NISRAPID,\
                                             NRS,NRSIRS2,NRSN16R4,NRSN32R8,NRSN8R2,\
-                                            NRSRAPID,NRSIRS2RAPID,NRSSLOW,RAPID,\
+                                            NRSRAPID,NRSIRS2RAPID,NRSSLOW,RAPID,NRSRAPIDD1,NRSRAPIDD2,\
                                             SHALLOW2,SHALLOW4,SLOW,TRACK,ANY,N/A
 
 META.INSTRUMENT.FILTER      H     C   O  CLEAR,F070LP,F070W,F090W,F1000W,F100LP,F1065C,\
