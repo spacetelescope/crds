@@ -1,9 +1,9 @@
 
 
-__version__ = 'cd1e1ed4'
+__version__ = '093abad4'
 
 __full_version_info__ = '''
-branch: update-7.3.2-hash
-sha1: cd1e1ed4
+branch: add-readpatt-nrsrapidd2
+sha1: 093abad4
 '''
     
