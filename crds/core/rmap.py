@@ -1082,9 +1082,6 @@ class ReferenceMapping(Mapping):
         self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
         
         relevant  = dict(self.header.get("parkey_relevance", {}))
-        relevant.update({
-            name : "False" for name in self._comment_parkeys
-        })
         self._parkey_relevance_exprs = { 
             name.lower() : self.get_expr(expr) for (name, expr) in relevant.items()
             }
@@ -1392,7 +1389,8 @@ class ReferenceMapping(Mapping):
                 relevant = eval(compiled, {}, expr_header)  # secured
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
                             "is relevant:", relevant, repr(source), verbosity=55)
-                if not (relevant or keep_comments):
+                if not (relevant or (keep_comments and lparkey in self._comment_parkeys)):
+                    log.verbose("Setting irrelevant parkey", repr(parkey), "to N/A")
                     header[parkey] = "N/A"
         return header
     
