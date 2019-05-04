@@ -805,7 +805,7 @@ selector = Match({
         '2008-02-20 00:00:00' : 't3420177i_drk.fits',
     }),
 })
-""", ignore=True)
+""", ignore_checksum=True)
 
     def test_ref_to_dataset_ir(self):
 
