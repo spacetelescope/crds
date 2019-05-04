@@ -468,15 +468,17 @@ def dt_synphot_refactor():
     For classic irrelevant parkey matching where values are normalized to N/A and ignored
 
     >>> print(log.PP(r.map_irrelevant_parkeys_to_na(header)))
-    CRDS - DEBUG -  Parkey synphot thermal created is relevant: False 'False'
-    CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: False 'False'
+    CRDS - DEBUG -  Parkey synphot thermal created is relevant: False 'keep_comments'
+    CRDS - DEBUG -  Setting irrelevant parkey 'CREATED' to N/A
+    CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: False 'keep_comments'
+    CRDS - DEBUG -  Setting irrelevant parkey 'DESCRIP' to N/A
     {'COMPNAME': 'NIC1_BEND', 'CREATED': 'N/A', 'DESCRIP': 'N/A'}
     
     For rmap updates which add comment keywords to the match tuples for web display
 
     >>> print(log.PP(r.map_irrelevant_parkeys_to_na(header, keep_comments=True)))
-    CRDS - DEBUG -  Parkey synphot thermal created is relevant: False 'False'
-    CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: False 'False'
+    CRDS - DEBUG -  Parkey synphot thermal created is relevant: True 'keep_comments'
+    CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: True 'keep_comments'
     {'COMPNAME': 'NIC1_BEND',
      'CREATED': '2002-03-06 04:51:00',
      'DESCRIP': 'Use NIC2 values'}
