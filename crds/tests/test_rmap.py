@@ -769,6 +769,7 @@ selector = Match({
         p.tojson()
 
     def _get_rmap(self):
+        log.set_verbose(55)
         return rmap.ReferenceMapping.from_string("""
 header = {
     'derived_from' : 'hst_wfc3_darkfile_0379.rmap',
@@ -817,6 +818,7 @@ selector = Match({
             DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
         
+        # transform for rmap updates
         dheader = utils.Struct(r.reference_to_dataset_header(header))
         
         self.assertEqual(dheader.DETECTOR, "IR")
@@ -826,7 +828,7 @@ selector = Match({
         self.assertEqual(dheader.CCDGAIN, "1.0")
         self.assertEqual(dheader.SAMP_SEQ, "MIF1200")
         self.assertEqual(dheader.SUBTYPE, "FULLIMAG")
-        self.assertEqual(dheader.DARKCORR, "PERFORM")
+        self.assertEqual(dheader.DARKCORR, "N/A")
         
     def test_ref_to_dataset_uvis(self):
         
@@ -836,16 +838,17 @@ selector = Match({
             DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
         
+        # transform for rmap updates
         dheader = utils.Struct(r.reference_to_dataset_header(header))
         
         self.assertEqual(dheader.DETECTOR, "UVIS")
         self.assertEqual(dheader.CCDAMP, "ABCD")
         self.assertEqual(dheader.BINAXIS1, "1.0")   # comment
-        self.assertEqual(dheader.BINAXIS2, "1.0")   # non-comment
+        self.assertEqual(dheader.BINAXIS2, "2.0")   # non-comment
         self.assertEqual(dheader.CCDGAIN, "N/A")
         self.assertEqual(dheader.SAMP_SEQ, "N/A")
         self.assertEqual(dheader.SUBTYPE, "N/A")        
-        self.assertEqual(dheader.DARKCORR, "PERFORM")
+        self.assertEqual(dheader.DARKCORR, "N/A")
 
     def test_na_parkeys_ir(self):
 
@@ -857,6 +860,7 @@ selector = Match({
             DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
         
+        # transform for bestrefs
         dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
         
         self.assertEqual(dheader.DETECTOR, "IR")
@@ -875,19 +879,18 @@ selector = Match({
         header = dict(
             DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
-        
+
+        # transform for bestrefs
         dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
         
         self.assertEqual(dheader.DETECTOR, "UVIS")
         self.assertEqual(dheader.CCDAMP, "ABCD")
-        self.assertEqual(dheader.BINAXIS1, "1.0")   # comment
-        self.assertEqual(dheader.BINAXIS2, "1.0")   # non-comment
+        self.assertEqual(dheader.BINAXIS1, "N/A")   # comment
+        self.assertEqual(dheader.BINAXIS2, "2.0")   # non-comment
         self.assertEqual(dheader.CCDGAIN, "N/A")
         self.assertEqual(dheader.SAMP_SEQ, "N/A")
         self.assertEqual(dheader.SUBTYPE, "N/A")
         self.assertEqual(dheader.DARKCORR, "PERFORM")
-        
-
     
 # ==================================================================================
 
