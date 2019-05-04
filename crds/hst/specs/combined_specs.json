@@ -2156,7 +2156,7 @@
                 "Match"
             ],
             "comment_parkeys":[
-                "CREATED",
+                "DATE",
                 "DESCRIP"
             ],
             "derived_from":"Initial hand made version 2018-11-19. Jira CCD-148.",
@@ -2172,7 +2172,7 @@
             "parkey":[
                 [
                     "COMPNAME",
-                    "CREATED",
+                    "DATE",
                     "DESCRIP"
                 ]
             ],
@@ -2180,7 +2180,7 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_omit":"True",
-            "sha1sum":"4caeacf959962a75a8274e178a27906f3cf52240",
+            "sha1sum":"5d113df63ade771906c4ed15b6b6028e23e4e81e",
             "suffix":"th",
             "text_descr":"Component Thermal Tables",
             "tpn":"synphot_th.tpn",
@@ -2193,7 +2193,7 @@
                 "Match"
             ],
             "comment_parkeys":[
-                "CREATED",
+                "DATE",
                 "DESCRIP"
             ],
             "derived_from":"Initial hand made version 2018-11-24. Jira CCD-148.",
@@ -2209,7 +2209,7 @@
             "parkey":[
                 [
                     "COMPNAME",
-                    "CREATED",
+                    "DATE",
                     "DESCRIP"
                 ]
             ],
@@ -2217,7 +2217,7 @@
             "reffile_required":"YES",
             "reffile_switch":"NONE",
             "rmap_omit":"True",
-            "sha1sum":"9dde88e82c8176502450f843b62562a2a3c39f1e",
+            "sha1sum":"43a2e7e5a7a473f9bac642272521d48234019527",
             "suffix":"syn",
             "text_descr":"Component Throughput Tables",
             "tpn":"synphot_syn.tpn",
@@ -2412,11 +2412,7 @@
             "suffix":"bpx",
             "text_descr":"Data Quality (Bad Pixel) Initialization Table",
             "tpn":"wfc3_bpx.tpn",
-            "unique_rowkeys":[
-                "CCDCHIP",
-                "PIX1",
-                "PIX2"
-            ]
+            "unique_rowkeys":null
         },
         "ccdtab":{
             "extra_keys":[],
