@@ -16,7 +16,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_omit' : 'True',
-    'sha1sum' : '9dde88e82c8176502450f843b62562a2a3c39f1e',
+    'sha1sum' : '43a2e7e5a7a473f9bac642272521d48234019527',
     'suffix' : 'syn',
     'text_descr' : 'Component Throughput Tables',
     'tpn' : 'synphot_syn.tpn',
