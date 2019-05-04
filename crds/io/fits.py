@@ -14,6 +14,8 @@ import io
 
 from astropy.io import fits
 
+import numpy as np
+
 # ============================================================================
 
 from crds.core import config, utils, log
