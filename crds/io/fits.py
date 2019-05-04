@@ -212,7 +212,8 @@ class FitsFile(AbstractFile):
         output = "crds-" + str(uuid.uuid4()) + ".fits"
         with fits_open(self.filepath, do_not_scale_image_data=True) as hdus:
             for hdu in hdus:
-                fits.append(output, hdu.data, hdu.header, checksum=True)
+                data = hdu.data if hdu.data is not None else np.array([])
+                fits.append(output, data, hdu.header, checksum=True)
         os.remove(self.filepath)
         os.rename(output, self.filepath)
     
