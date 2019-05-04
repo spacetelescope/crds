@@ -1082,6 +1082,9 @@ class ReferenceMapping(Mapping):
         self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
         
         relevant  = dict(self.header.get("parkey_relevance", {}))
+        relevant.update({
+            name : "keep_comments" for name in self._comment_parkeys
+        })
         self._parkey_relevance_exprs = { 
             name.lower() : self.get_expr(expr) for (name, expr) in relevant.items()
             }
@@ -1345,7 +1348,9 @@ class ReferenceMapping(Mapping):
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "is relevant:", relevant, repr(source), verbosity=55)
         except Exception as exc:
-            log.warning("Relevance check failed: " + str(exc))
+            log.warning("Failed checking relevance for", repr(self.instrument),
+                        repr(self.filekind), "with expr", repr(source),
+                        ":", str(exc))
         else:
             if not relevant:
                 raise crexc.IrrelevantReferenceTypeError(
@@ -1359,7 +1364,9 @@ class ReferenceMapping(Mapping):
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "should be omitted: ", omit, repr(source), verbosity=55)
         except Exception as exc:
-            log.warning("Keyword omit check failed: " + str(exc))
+            log.warning("Failed checking OMIT for", repr(self.instrument),
+                        repr(self.filekind), "with expr", repr(source),
+                        ":", str(exc))
         else:
             if omit:
                 raise crexc.OmitReferenceTypeError("rmap_omit expression indicates this type should be omitted.")
@@ -1382,6 +1389,7 @@ class ReferenceMapping(Mapping):
         expr_header = data_file.ensure_keys_defined(expr_header, needed_keys=self._required_parkeys)
         expr_header = utils.condition_header_keys(expr_header)
         header = dict(header)  # copy
+        expr_header["keep_comments"] = keep_comments
         for parkey in self._required_parkeys:  # Only add/overwrite irrelevant
             lparkey = parkey.lower()
             if lparkey in self._parkey_relevance_exprs:
@@ -1389,7 +1397,7 @@ class ReferenceMapping(Mapping):
                 relevant = eval(compiled, {}, expr_header)  # secured
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
                             "is relevant:", relevant, repr(source), verbosity=55)
-                if not (relevant or (keep_comments and lparkey in self._comment_parkeys)):
+                if not relevant:
                     log.verbose("Setting irrelevant parkey", repr(parkey), "to N/A")
                     header[parkey] = "N/A"
         return header

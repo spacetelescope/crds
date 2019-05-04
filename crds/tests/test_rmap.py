@@ -6,7 +6,7 @@ import json
 from pprint import pprint as pp
 import pickle
 
-from crds import rmap, log, config, tests
+from crds import rmap, log, config, tests, utils
 from crds.client import api
 from crds.exceptions import *
 from crds.tests import test_config
@@ -768,6 +768,123 @@ selector = Match({
         p = rmap.get_cached_mapping("jwst.pmap")
         p.tojson()
 
+    def _get_rmap(self):
+        return rmap.ReferenceMapping.from_string("""
+header = {
+    'derived_from' : 'hst_wfc3_darkfile_0379.rmap',
+    'filekind' : 'DARKFILE',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_darkfile_0379.rmap',
+    'observatory' : 'HST',
+    'comment_parkeys' : ('BINAXIS1',),
+    'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey_relevance' : {
+        'binaxis1' : '(DETECTOR == "UVIS")',
+        'binaxis2' : '(DETECTOR == "UVIS")',
+        'ccdgain' : '(DETECTOR == "IR")',
+        'samp_seq' : '(DETECTOR == "IR")',
+        'subtype' : '(DETECTOR == "IR")',
+    },
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'DARKCORR',
+    'rmap_relevance' : '(DARKCORR != "OMIT")',
+    'sha1sum' : '16cfa985b83a7fb9db414dc8f339a95b9c03c5fa',
+}
+
+selector = Match({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'MIF1200', 'FULLIMAG') : UseAfter({
+        '2008-02-19 00:00:00' : 't3n16499i_drk.fits',
+        '2008-02-20 00:00:00' : 't3n1649ai_drk.fits',
+    }),
+    ('UVIS', 'ABCD', 1, 1, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2007-12-17 00:00:00' : 's9q1628ci_drk.fits',
+        '2007-12-18 00:00:00' : 's9q1628ei_drk.fits',
+        '2008-02-19 00:00:00' : 't3420175i_drk.fits',
+        '2008-02-20 00:00:00' : 't3420177i_drk.fits',
+    }),
+})
+""", ignore=True)
+
+    def test_ref_to_dataset_ir(self):
+
+        # rmap update time conversions don't map comment parkeys to N/A
+        
+        r = self._get_rmap()
+        
+        header = dict(
+            DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+        
+        dheader = utils.Struct(r.reference_to_dataset_header(header))
+        
+        self.assertEqual(dheader.DETECTOR, "IR")
+        self.assertEqual(dheader.CCDAMP, "ABCD")
+        self.assertEqual(dheader.BINAXIS1, "1.0")   # comment
+        self.assertEqual(dheader.BINAXIS2, "N/A")   # non-comment
+        self.assertEqual(dheader.CCDGAIN, "1.0")
+        self.assertEqual(dheader.SAMP_SEQ, "MIF1200")
+        self.assertEqual(dheader.SUBTYPE, "FULLIMAG")
+        
+    def test_ref_to_dataset_uvis(self):
+        
+        r = self._get_rmap()
+        
+        header = dict(
+            DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+        
+        dheader = utils.Struct(r.reference_to_dataset_header(header))
+        
+        self.assertEqual(dheader.DETECTOR, "UVIS")
+        self.assertEqual(dheader.CCDAMP, "ABCD")
+        self.assertEqual(dheader.BINAXIS1, "1.0")   # comment
+        self.assertEqual(dheader.BINAXIS2, "1.0")   # non-comment
+        self.assertEqual(dheader.CCDGAIN, "N/A")
+        self.assertEqual(dheader.SAMP_SEQ, "N/A")
+        self.assertEqual(dheader.SUBTYPE, "N/A")        
+
+    def test_na_parkeys_ir(self):
+
+        r = self._get_rmap()
+        
+        # bestrefs time conversions still map comment parkeys to N/A
+        
+        header = dict(
+            DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+        
+        dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
+        
+        self.assertEqual(dheader.DETECTOR, "IR")
+        self.assertEqual(dheader.CCDAMP, "ABCD")
+        self.assertEqual(dheader.BINAXIS1, "N/A")   # comment
+        self.assertEqual(dheader.BINAXIS2, "N/A")   # non-comment
+        self.assertEqual(dheader.CCDGAIN, "1.0")
+        self.assertEqual(dheader.SAMP_SEQ, "MIF1200")
+        self.assertEqual(dheader.SUBTYPE, "FULLIMAG")
+        
+    def test_na_parkeys_uvis(self):
+        
+        r = self._get_rmap()
+        
+        header = dict(
+            DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+        
+        dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
+        
+        self.assertEqual(dheader.DETECTOR, "UVIS")
+        self.assertEqual(dheader.CCDAMP, "ABCD")
+        self.assertEqual(dheader.BINAXIS1, "1.0")   # comment
+        self.assertEqual(dheader.BINAXIS2, "1.0")   # non-comment
+        self.assertEqual(dheader.CCDGAIN, "N/A")
+        self.assertEqual(dheader.SAMP_SEQ, "N/A")
+        self.assertEqual(dheader.SUBTYPE, "N/A")
+        
+
+    
 # ==================================================================================
 
 
