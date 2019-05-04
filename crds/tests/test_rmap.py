@@ -815,7 +815,7 @@ selector = Match({
         
         header = dict(
             DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
-            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
         
         dheader = utils.Struct(r.reference_to_dataset_header(header))
         
@@ -826,6 +826,7 @@ selector = Match({
         self.assertEqual(dheader.CCDGAIN, "1.0")
         self.assertEqual(dheader.SAMP_SEQ, "MIF1200")
         self.assertEqual(dheader.SUBTYPE, "FULLIMAG")
+        self.assertEqual(dheader.DARKCORR, "PERFORM")
         
     def test_ref_to_dataset_uvis(self):
         
@@ -833,7 +834,7 @@ selector = Match({
         
         header = dict(
             DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
-            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
         
         dheader = utils.Struct(r.reference_to_dataset_header(header))
         
@@ -844,6 +845,7 @@ selector = Match({
         self.assertEqual(dheader.CCDGAIN, "N/A")
         self.assertEqual(dheader.SAMP_SEQ, "N/A")
         self.assertEqual(dheader.SUBTYPE, "N/A")        
+        self.assertEqual(dheader.DARKCORR, "PERFORM")
 
     def test_na_parkeys_ir(self):
 
@@ -853,7 +855,7 @@ selector = Match({
         
         header = dict(
             DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
-            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
         
         dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
         
@@ -864,6 +866,7 @@ selector = Match({
         self.assertEqual(dheader.CCDGAIN, "1.0")
         self.assertEqual(dheader.SAMP_SEQ, "MIF1200")
         self.assertEqual(dheader.SUBTYPE, "FULLIMAG")
+        self.assertEqual(dheader.DARKCORR, "PERFORM")
         
     def test_na_parkeys_uvis(self):
         
@@ -871,7 +874,7 @@ selector = Match({
         
         header = dict(
             DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
-            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG")
+            CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
         
         dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
         
@@ -882,6 +885,7 @@ selector = Match({
         self.assertEqual(dheader.CCDGAIN, "N/A")
         self.assertEqual(dheader.SAMP_SEQ, "N/A")
         self.assertEqual(dheader.SUBTYPE, "N/A")
+        self.assertEqual(dheader.DARKCORR, "PERFORM")
         
 
     
