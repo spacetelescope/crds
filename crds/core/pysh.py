@@ -2,15 +2,7 @@
 
 """pysh is syntactic sugar which simplifies using the Python
 subprocess module for writing command line utility scripts that one
-might ordinarily write in a UNIX shell, .e.g. bash, ksh, or csh.  One
-of my dirty secrets is that I can no longer remember the little I ever
-knew of bash and csh.  A second dirty secret is that shellscript still
-lures me back with it's simplicity...  but then breaks down as my
-scripts get more complicated.  pysh is for those times when I want to
-quickly write what I would type on the command line, but find myself
-struggling to learn or remember the more cryptic syntax of shells.
-So, shellscript can be very terse, but seems increasingly ugly as
-applications grow beyond a few lines.
+might ordinarily write in a UNIX shell, .e.g. bash, ksh, or csh.
 
 While the subprocess module provides a flexible basis for launching
 other programs in a wide variety of contexts, it does lack the
@@ -35,11 +27,17 @@ But using pysh,  built upon the subprocess module,  one would say this:
 
    output = out("dmesg | grep hda")
 
-The real advantage of pysh comes into play when control flow
-constructs such as if-then-else, for, and while come into play, let
-alone any of the more powerful features of Python such as modules,
-classes, functions, lists, mappings, sets, strings, exception handling,
-etc.
+Pysh supports a syntax very similar to UNIX shell substitution which
+is interpreted in the scope the pysh subprocess is called from, e.g.
+
+    filename1 = "something.fits"
+    out("ls -l ${filename1}")
+
+is functionally equivalent to:
+
+    out("ls -l 'something.fits'")
+
+Note that each substitution value is limited to being a single UNIX word.
 """
 import sys
 import os
@@ -47,11 +45,9 @@ import re
 import glob
 import os.path
 import inspect
+import shlex
 
-if sys.version_info >= (3,0,0):
-    from io import StringIO
-else:
-    import StringIO
+from io import StringIO
 
 from subprocess import PIPE, STDOUT, Popen
 
@@ -98,7 +94,7 @@ class Shell:
     records the final command line and manages program I/O,  capturing output
     and error status as attributes which can be inspected later.
     """
-    def __init__(self, args, **keys):
+    def __init__(self, *args, **keys):
         self.status = None  # overridden by __call__
         self._context = keys.pop("context", None)
         self._input = keys.pop("input", None)
@@ -139,10 +135,7 @@ class Shell:
         """Expand the shell syntax for strings in `args` relative to this
         Shell's context.
         """
-        if isinstance(args, str):
-            args = [args]
-        else:
-            args = list(args)
+        args = list(args)
         for i, arg in enumerate(args):
             args[i] = expand_vars(arg, self._context)
         return args
@@ -191,6 +184,11 @@ def _context(backup):
     context.update(frame.f_locals)
     args = inspect.getargvalues(frame)[3]
     context.update(args)
+    context = {
+        key : shlex.quote(val)
+        for key, val in context.items()
+        if isinstance(val, str)
+    }
     return context
 
 # This could also be made to handle simple $N sys.argv
@@ -200,7 +198,7 @@ ENV_VAR_CURLY = re.compile(r"[$]{([a-zA-Z_0-9]+)}")
 ENV_VAR_STAR = re.compile(r"([$][*])")
 
 def _replace_dollar(match):
-    """Return the substituion for a local, global, or environment variable."""
+    """Return the substitution for a local, global, or environment variable."""
     return "%(" + match.group(1) + ")s"
 
 def _replace_sysarg(match):
