@@ -1045,8 +1045,10 @@ def cleanpath(name):
 
 # ============================================================================
 
-def bestrefs(filepaths, context=None, reftypes=(), sync_references=False, verbosity=-1):
-    """Assign best references to FITS files specified by `filepaths`.
+def assign_bestrefs(filepaths, context=None, reftypes=(),
+                    sync_references=False, verbosity=-1):
+    """Assign best references to FITS files specified by `filepaths` 
+    filling in appropriate reference type keywords.
 
     Define best references using either .pmap `context` or the default
     CRDS operational context if context=None.
@@ -1057,10 +1059,18 @@ def bestrefs(filepaths, context=None, reftypes=(), sync_references=False, verbos
     If `sync_references` is True, download any missing reference files
     to the CRDS cache.
 
-    If verbosity=-1, only show warnings and errors.  If verbosity=0,
-    also include CRDS INFO logging.  If verbosity > 0, also include
-    debug log messages at or below that verbosity level.  
-    -1 <= verbosity <= 100.
+    Verbosity defines the level of CRDS log output:
+    
+    verbosity=-3    feeling lucky, no output
+    verbosity=-2    only errors
+    verbosity=-1    only warnings and errors
+    verbosity=0     info, warnings, and errors
+    verbosity=10    info + minimal progress output
+    verbosity=30    info + simplified bestref assignments
+    verbosity=50    info + keywords + exact values (standard)
+    verbosity=60    info + bestrefs elimination
+    ...
+    -3 <= verbosity <= 100
 
     Returns  count of errors 
     """

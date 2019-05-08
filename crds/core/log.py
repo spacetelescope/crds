@@ -175,18 +175,20 @@ class CrdsLogger:
         return self.format(*args, **keys)
 
     def info(self, *args, **keys):
-        if self.verbose_level >= 0:
-            self.logger.info(self.eformat(self.msg_count, *args, **keys))
         self.infos += 1
-
-    def error(self, *args, **keys):
-        self.errors += 1
-        self.logger.error(self.eformat(self.msg_count, *args, **keys))
+        if self.verbose_level > -1:
+            self.logger.info(self.eformat(self.msg_count, *args, **keys))
 
     def warn(self, *args, **keys):
         self.warnings += 1
-        self.logger.warning(self.eformat(self.msg_count, *args, **keys))
+        if self.verbose_level > -2:
+            self.logger.warning(self.eformat(self.msg_count, *args, **keys))
         
+    def error(self, *args, **keys):
+        self.errors += 1
+        if self.verbose_level > -3:
+            self.logger.error(self.eformat(self.msg_count, *args, **keys))
+
     def debug(self, *args, **keys):
         self.debugs += 1
         self.logger.debug(self.eformat(self.msg_count, *args, **keys))
@@ -220,7 +222,7 @@ class CrdsLogger:
         self.errors = self.warnings = self.infos = self.debugs = 0
         
     def set_verbose(self, level=True):
-        assert -1 <= level <= 100,  "verbosity level must be in range -1..100"
+        assert -3 <= level <= 100,  "verbosity level must be in range -3..100"
         old_verbose = self.verbose_level
         if level == True:
             level = DEFAULT_VERBOSITY_LEVEL

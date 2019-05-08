@@ -16,6 +16,7 @@ __rationale__ = "Spring 2019 CRDS submission streamlining project, #2"
 __all__ = [
     "getrecommendations",
     "getreferences",
+    "assign_bestrefs",
     "get_pickled_mapping",
     "get_symbolic_mapping",
     "get_cached_mapping",
