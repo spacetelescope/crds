@@ -1043,3 +1043,48 @@ def cleanpath(name):
     else:
         return name
 
+# ============================================================================
+
+def bestrefs(filepaths, context=None, reftypes=(), sync_references=False, verbosity=-1):
+    """Assign best references to FITS files specified by `filepaths`.
+
+    Define best references using either .pmap `context` or the default
+    CRDS operational context if context=None.
+
+    If `reftypes` is defined, assign bestrefs to only the listed
+    reftypes, otherwise assign all reftypes.
+
+    If `sync_references` is True, download any missing reference files
+    to the CRDS cache.
+
+    If verbosity=-1, only show warnings and errors.  If verbosity=0,
+    also include CRDS INFO logging.  If verbosity > 0, also include
+    debug log messages at or below that verbosity level.  
+    -1 <= verbosity <= 100.
+
+    Returns  count of errors 
+    """
+    old_verbosity = log.set_verbose(verbosity)
+
+    cmd = "crds.bestrefs --update-bestrefs"
+
+    if context:
+        cmd += f" --new-context {context}"
+
+    if reftypes:
+        types = " ".join(reftypes)
+        cmd += f" --types {types}"
+
+    if sync_references:
+        cmd += " --sync-references=1"
+
+    files = " ".join(filepaths)
+    cmd += f" --files {files}"
+
+    script = BestrefsScript(cmd)
+
+    errors = script()
+
+    log.set_verbose(old_verbosity)
+
+    return errors

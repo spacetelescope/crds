@@ -142,7 +142,7 @@ class CrdsLogger:
             self.verbose_level =  int(verbose_level)
         except Exception:
             warning("Bad format for CRDS_VERBOSITY =", repr(verbose_level),
-                        "Use e.g. 0 for no debug,  50 for default debug output. 100 max debug.")
+                        "Use e.g. -1 to squelch info, 0 for no debug,  50 for default debug output. 100 max debug.")
             self.verbose_level = DEFAULT_VERBOSITY_LEVEL
             
     def set_formatter(self, enable_time=False, enable_msg_count=True):
@@ -174,8 +174,9 @@ class CrdsLogger:
         return self.format(*args, **keys)
 
     def info(self, *args, **keys):
+        if self.verbose_level >= 0:
+            self.logger.info(self.eformat(self.msg_count, *args, **keys))
         self.infos += 1
-        self.logger.info(self.eformat(self.msg_count, *args, **keys))
 
     def error(self, *args, **keys):
         self.errors += 1
@@ -218,7 +219,7 @@ class CrdsLogger:
         self.errors = self.warnings = self.infos = self.debugs = 0
         
     def set_verbose(self, level=True):
-        assert 0 <= level <= 100,  "verbosity level must be in range 0..100"
+        assert -1 <= level <= 100,  "verbosity level must be in range -1..100"
         old_verbose = self.verbose_level
         if level == True:
             level = DEFAULT_VERBOSITY_LEVEL
