@@ -45,6 +45,8 @@ from .core.heavy_client import get_context_name
 from crds.client import api
 from crds.client import get_default_context
 
+from crds.bestrefs import assign_bestrefs
+
 # ============================================================================
 
 '''This code section supports moving modules from the root crds namespace into 
