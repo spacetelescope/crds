@@ -69,9 +69,7 @@ __all__ = [
     
     "push_remote_context",
     "get_remote_context",
-    
-    "get_submission_info",
-    
+        
     "jpoll_pull_messages",
     "jpoll_abort",
     
@@ -403,12 +401,6 @@ def get_remote_context(observatory, pipeline_name):
             (observatory, pipeline_name)) from exc
 
 # ==============================================================================
-
-def get_submission_info(observatory, username):
-    """Return configuration parameters needed for command line file submission
-    relative to the current server, observatory, and username.
-    """
-    return utils.Struct(S.get_submission_info(observatory, username))
 
 def jpoll_pull_messages(key, since_id=None):
     """Return a list of jpoll json message objects from the channel associated
