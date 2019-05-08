@@ -127,6 +127,50 @@ reference file paths::
                     }
         """
 
+crds.assign_bestrefs()
+......................
+
+The assign_bestrefs() higher level function call simulates the behavior of the
+crds bestrefs program used in the archive pipeline for HST.  Essentially, it
+populates the headers of FITS dataset files with the best choice for each
+reference type::
+
+  def assign_bestrefs(filepaths, context=None, reftypes=(),
+                    sync_references=False, verbosity=-1):
+    """Assign best references to FITS files specified by `filepaths` 
+    filling in appropriate reference type keywords.
+
+    Define best references using either .pmap `context` or the default
+    CRDS operational context if context=None.
+
+    If `reftypes` is defined, assign bestrefs to only the listed
+    reftypes, otherwise assign all reftypes.
+
+    If `sync_references` is True, download any missing reference files
+    to the CRDS cache.
+
+    Verbosity defines the level of CRDS log output:
+    
+    verbosity=-3    feeling lucky, no output
+    verbosity=-2    only errors
+    verbosity=-1    only warnings and errors
+    verbosity=0     info, warnings, and errors
+    verbosity=10    info + minimal progress output
+    verbosity=30    info + simplified bestref assignments
+    verbosity=50    info + keywords + exact values (standard)
+    verbosity=60    info + bestrefs elimination
+    ...
+    -3 <= verbosity <= 100
+
+    NOTE: While assign_bestrefs() may work for JWST, it is primarily intended
+    for HST and does not precisely simulate the actions performed by the JWST
+    CAL s/w to handle reference files.  The underlying machinery is the same,
+    but header updates are not guaranteed to be identical, particularly
+    regarding the reference types which are assigned values.
+
+    Returns  count of errors
+    """
+
 crds.get_default_context()
 ..........................
 
