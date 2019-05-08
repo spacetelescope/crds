@@ -39,7 +39,6 @@ this command line interface must be members of the CRDS operators group
         self.username = None
         self.connection = None
         self.submission = None
-        self.submission_info = None
         self.pmap_mode = None
         self.pmap_name = None
         self.instruments_filekinds = None
@@ -87,7 +86,6 @@ this command line interface must be members of the CRDS operators group
         self.username = self.args.username or config.get_username()
         password = config.get_password()
         self.base_url = config.get_server_url(self.observatory)
-        self.submission_info = api.get_submission_info(self.observatory, self.username)
         self.instruments_filekinds = utils.get_instruments_filekinds(self.observatory, self.files) if self.args.files else {}
         self.instrument = list(self.instruments_filekinds.keys())[0] if len(self.instruments_filekinds) == 1 else "none"
         self.connection = web.CrdsDjangoConnection(
