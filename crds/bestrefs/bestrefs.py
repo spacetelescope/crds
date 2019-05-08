@@ -1043,3 +1043,64 @@ def cleanpath(name):
     else:
         return name
 
+# ============================================================================
+
+def assign_bestrefs(filepaths, context=None, reftypes=(),
+                    sync_references=False, verbosity=-1):
+    """Assign best references to FITS files specified by `filepaths` 
+    filling in appropriate reference type keywords.
+
+    Define best references using either .pmap `context` or the default
+    CRDS operational context if context=None.
+
+    If `reftypes` is defined, assign bestrefs to only the listed
+    reftypes, otherwise assign all reftypes.
+
+    If `sync_references` is True, download any missing reference files
+    to the CRDS cache.
+
+    Verbosity defines the level of CRDS log output:
+    
+    verbosity=-3    feeling lucky, no output
+    verbosity=-2    only errors
+    verbosity=-1    only warnings and errors
+    verbosity=0     info, warnings, and errors
+    verbosity=10    info + minimal progress output
+    verbosity=30    info + simplified bestref assignments
+    verbosity=50    info + keywords + exact values (standard)
+    verbosity=60    info + bestrefs elimination
+    ...
+    -3 <= verbosity <= 100
+
+    NOTE: While assign_bestrefs() may work for JWST, it is primarily intended
+    to expose the behavior of the program used in the HST archive pipeline for
+    programmatic use.  Since JWST CAL normally uses an alternate mechanism for
+    updating FITS files, using assign_bestrefs() for JWST is less applicable
+    and more experimental.
+
+    Returns  count of errors
+    """
+    old_verbosity = log.set_verbose(verbosity)
+
+    cmd = "crds.bestrefs --update-bestrefs"
+
+    if context:
+        cmd += f" --new-context {context}"
+
+    if reftypes:
+        types = " ".join(reftypes)
+        cmd += f" --types {types}"
+
+    if sync_references:
+        cmd += " --sync-references=1"
+
+    files = " ".join(filepaths)
+    cmd += f" --files {files}"
+
+    script = BestrefsScript(cmd)
+
+    errors = script()
+
+    log.set_verbose(old_verbosity)
+
+    return errors

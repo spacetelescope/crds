@@ -4,6 +4,7 @@ import shutil
 
 from crds import bestrefs
 from crds.bestrefs import BestrefsScript
+from crds import assign_bestrefs
 from crds.tests import test_config
 
 """
@@ -489,12 +490,22 @@ class TestBestrefs(test_config.CRDSTestCase):
             header = json.load(pfile)
         header = header["LCE31SW6Q:LCE31SW6Q"]
         badttab = header["BADTTAB"]
-        assert badttab == "N/A"
+        self.assertEqual(badttab, "N/A")
         gsagtab = header["GSAGTAB"]
-        assert gsagtab == "X6L1439EL_GSAG.FITS"
+        self.assertEqual(gsagtab, "X6L1439EL_GSAG.FITS")
         flatfile = header["FLATFILE"] 
-        assert flatfile == "N/A"
+        self.assertEqual(flatfile, "N/A")
         os.remove("./test_cos_combined.json")
+
+    def test_assign_bestrefs(self):
+        test_copy = "cos_N8XTZCAWQ_updated.fits"
+        shutil.copy("data/cos_N8XTZCAWQ.fits", test_copy)
+
+        errors = assign_bestrefs([test_copy], context="hst_0500.pmap")
+        self.assertEqual(errors, 0)
+        
+        os.remove(test_copy)
+    
 
 # ==================================================================================
 

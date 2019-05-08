@@ -16,6 +16,7 @@ __rationale__ = "Spring 2019 CRDS submission streamlining project, #2"
 __all__ = [
     "getrecommendations",
     "getreferences",
+    "assign_bestrefs",
     "get_pickled_mapping",
     "get_symbolic_mapping",
     "get_cached_mapping",
@@ -43,6 +44,8 @@ from .core.heavy_client import get_context_name
 
 from crds.client import api
 from crds.client import get_default_context
+
+from crds.bestrefs import assign_bestrefs
 
 # ============================================================================
 
