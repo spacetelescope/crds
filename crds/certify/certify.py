@@ -583,7 +583,8 @@ class FitsCertifier(ReferenceCertifier):
         """Run optional external fitsverify program from cfitsio library, installed separately from CRDS."""
         log.info("Running fitsverify.")
         # subprocess stderr and stdout are combined into output
-        status, output = pysh.status_out_err("fitsverify {}".format(self.filename))
+        filename = self.filename # quoted
+        status, output = pysh.status_out_err("fitsverify ${filename}") # secure
         interpret_fitsverify_output(status, output)
 
 # -------------------------------------------------------------------------------------------------
