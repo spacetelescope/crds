@@ -1072,7 +1072,13 @@ def assign_bestrefs(filepaths, context=None, reftypes=(),
     ...
     -3 <= verbosity <= 100
 
-    Returns  count of errors 
+    NOTE: While assign_bestrefs() may work for JWST, it is primarily intended
+    to expose the behavior of the program used in the HST archive pipeline for
+    programmatic use.  Since JWST CAL normally uses an alternate mechanism for
+    updating FITS files, using assign_bestrefs() for JWST is less applicable
+    and more experimental.
+
+    Returns  count of errors
     """
     old_verbosity = log.set_verbose(verbosity)
 
