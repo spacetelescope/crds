@@ -502,7 +502,7 @@ class TestBestrefs(test_config.CRDSTestCase):
         shutil.copy("data/cos_N8XTZCAWQ.fits", test_copy)
 
         errors = assign_bestrefs([test_copy], context="hst_0500.pmap")
-        self.assserEqual(errors, 0)
+        self.assertEqual(errors, 0)
         
         os.remove(test_copy)
     
