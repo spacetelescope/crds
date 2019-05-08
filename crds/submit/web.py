@@ -1,7 +1,10 @@
 """This module codifies standard practices for scripted interactions with the 
 web server file submission system.
 """
+import os.path
+
 from crds.core import log, utils
+from crds.core.exceptions import CrdsError, CrdsWebError
 from . import background
 
 # from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
@@ -36,7 +39,7 @@ class CrdsDjangoConnection:
 
     def __init__(self, locked_instrument="none", username=None, password=None, base_url=None):
         if DISABLED:
-            log.fatal_error("Missing or broken depenencies:", DISABLED)
+            raise CrdsError("Missing or broken depenencies:", DISABLED)
         self.locked_instrument = locked_instrument
         self.username = username
         self.password = password
@@ -125,11 +128,12 @@ class CrdsDjangoConnection:
         log.verbose("lock_status:", response)
         json_dict = utils.Struct(response.json())
         if (json_dict.name and (not json_dict.is_expired) and (json_dict.type == "instrument") and (json_dict.user == self.username)):
-            log.fatal_error("User", repr(self.username), "has already locked", repr(json_dict.name),
-                            ".  Failing to avert collisions.  User --logout or logout on the website to bypass.")
+            CrdsWebError("User", repr(self.username), "has already locked", repr(json_dict.name),
+                         ".  Failing to avert collisions.  User --logout or logout on the website to bypass.")
 
     def login(self, next="/"):
         """Login to the CRDS website and proceed to relative url `next`."""
+        self.session.cookies["ASB-AUTH"] = self.password
         response = self.repost(
             "/login/", 
             username = self.username,
@@ -140,46 +144,53 @@ class CrdsDjangoConnection:
         self.check_login(response)
         
     def check_error(self, response):
-        """Call fatal_error() if response contains an error_message <div>."""
+        """Note an error + exception if response contains an error_message <div>."""
         self._check_error(response, '//div[@id="error_message"]', "CRDS server error:")
+        self._check_error(response, '//div[@class="error_message"]', "CRDS server new form error:")
 
-    def check_login(self, reseponse):
-        """Call fatal_error() if response contains an error_login <div>."""
-        self._check_error(reseponse, '//div[@id="error_login"]',
-                          "Error logging into CRDS server:")
-        self._check_error(reseponse, '//div[@id="error_message"]',
-                          "Error logging into CRDS server:")
+    def check_login(self, response):
+        """Note an error + exception if response contains content indicating login error."""
+        self._check_error(
+            response, '//div[@id="error_login"]',
+            "Error logging into CRDS server:")
+        self._check_error(
+            response, '//div[@id="error_message"]',
+            "Error logging into CRDS server:")
+        self._check_error(
+            response, '//title[contains(text(), "MyST SSO Portal")]',
+            "Error logging into CRDS server:")
 
     def _check_error(self, response, xpath_spec, error_prefix):
-        """Extract the `xpath_spec` text from `response`,  if present call fatal_error() with
-        `error_prefix` and the response `xpath_spec` text.
+        """Extract the `xpath_spec` text from `response`,  if present issue a
+        log ERROR with  `error_prefix` and the response `xpath_spec` text 
+        then raise an exception.  This may result in multiple ERROR messages.
+        
+        Issue a log ERROR for each form error,  then raise an exception 
+        if any errors found.
+
+        returns None
         """
         error_msg_parse = html.fromstring(response.text).xpath(xpath_spec)
-        error_message = error_msg_parse and error_msg_parse[0].text.strip()
-        if error_message:
-            if error_message.startswith("ERROR: "):
-                error_message = error_message[len("ERROR: "):]
-            log.fatal_error(error_prefix, error_message)
+        errors = 0
+        for parse in error_msg_parse:
+            error_message = parse.text.strip().replace("\n","")
+            if error_message:
+                if error_message.startswith("ERROR: "):
+                    error_message = error_message[len("ERROR: ")]
+                errors += 1
+                log.error(error_prefix, error_message)
+        if errors:
+            raise CrdsWebError("A web transaction with the CRDS server had errors.")
 
     def logout(self):
         """Login to the CRDS website and proceed to relative url `next`."""
         self.get("/logout/")
 
-    '''
-    def upload_file(self, relative_url, *post_dicts, **post_vars):
-        file_var = post_vars.pop("file_var", "file")
-        file = post_vars.pop("file")
-        content_type = post_vars.pop("content_type", "utf-8")
-        fields = dict(post_vars)
-        fields[file_var] = (file, open(file, "rb"), "text/plain") 
-        encoder = MultipartEncoder(fields=fields)
-        headers={'Content-Type': encoder.content_type}
-        response = self.repost(relative_url, data=encoder, headers=headers)
-        # monitor = MultipartEncoderMonitor(encoder, self.monitor_upload)
-        # headers={'Content-Type': monitor.content_type}
-        return response
-
-    def monitor_upload(self, encoder, length):
-        log.verbose("Upload monitor:", encoder, length)
-
-    '''
+    def upload_file(self, relative_url, filepath):
+        abs_url = self.abs_url(relative_url)
+        response = self.session.get(abs_url)
+        log.verbose("COOKIES:", log.PP(response.cookies))
+        csrf_token = response.cookies['csrftoken']
+        files = { "files" : open(filepath, "rb") }        
+        data = {'csrfmiddlewaretoken': csrf_token}
+        self.session.post(abs_url, files=files, data=data)

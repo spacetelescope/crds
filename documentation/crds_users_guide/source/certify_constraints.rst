@@ -1,43 +1,49 @@
-Overview
-========
+.. _header-certify-constraints:
 
-This note largely documents the design and syntax of CRDS certify .tpn
-constraint definition files.   But as an overview,  CRDS certify performs
-these forms of checks::
+Certify Constraints
+===================
+
+Certify Overview
+----------------
+
+This section documents the design and syntax of CRDS certify .tpn constraint
+definition files.  The .tpn constraints define many of the checks CRDS applies
+to rule or reference files.  CRDS certify performs these forms of checks::
 
  1. .tpn defined constraint checks unique to CRDS
- 2. spec defined unique table row checks, missing mode checks
+ 2. CRDS type spec defined unique table row checks, missing mode checks
  3. fitsverify checks, recategorized as needed
- 4. astropy.io.fits, ASDF, JSON, YAML format checks
+ 4. FITS, ASDF, JSON, YAML format checks
  5. JWST data models open() checks
  6. JWST data models scraped value checks
+ 7. .rmap update checks
+ 8. sha1sum checks (bit-for-bit identical file rejection)
 
-.tpn files are used by CRDS certify to define checks on reference file
-header keywords and array properties.
+This section discusses syntax for (1),  file constraints CRDS defines 
+itself internally.
+
+Overview of .tpn Files
+----------------------
+
+.tpn files are used by CRDS certify to define checks on reference files and
+.rmaps.  Value checks are applied to CRDS .rmap files which are not modeled in
+JWST CAL code.
 
 For HST .tpn files define almost all CRDS checks (some table checks also exist)
-and were incorporated verbatim from CDBS certify to simplify porting a moving
-target.
+and were incorporated verbatim from CDBS certify.   This is the origin of
+CRDS .tpn syntax.
 
-For JWST, CRDS certify .tpn checks are used to extend and augment the checks
-performed by the data models, e.g. adding the notion of "required" when
-specified or implied, checking array dimensions, checking keyword
-interrelationships, etc.  CRDS .tpn syntax was significantly extended from HST
-to support additional forms and organizations of checks as well as the original
-checks.
+For JWST, .tpn checks are used to extend and augment the checks performed by
+the data models, e.g. adding the notion of "required", checking array
+dimensions, checking keyword interrelationships, differentiating acceptable
+values by instrument, etc.  CRDS .tpn syntax was significantly extended from
+HST to support additional forms and organizations of checks which have been
+utilized for JWST.
 
 .tpn File Organizations
-=======================
+-----------------------
 
 For HST, .tpn files were written for every combination of <instrument>_<type>.
-
-There are two forms of .tpn, one which constraints reference file properties
-(.tpn) and one which constraints rmap properties (_ld.tpn).  The _ld.tpn files
-originally constrained the expanded CDBS database matching parameter values.
-While limiting the file structure to <instrument>_<type> combinations was
-simple, there was also an extreme penalty for redundantly specified checks of
-common constraints like PEDIGREE or USEAFTER.
-
 
 For JWST, additional broader classes of .tpn are also defined and all
 applicable forms are loaded for any given reference file::
@@ -50,9 +56,22 @@ applicable forms are loaded for any given reference file::
 For JWST,  the additional file classes permit generalization of constraints
 without added redundancy.   PEDIGREE can defined once in all_all,  etc.
 
+There are two forms of .tpn, one which constrains reference file properties
+(.tpn) and one which constrains rmap properties (_ld.tpn).  The _ld.tpn files
+originally constrained CDBS database field values for matching parameters;
+because of translations between FITS headers and database values,  reference
+file and database values were not necessarily identical.   For JWST .tpn
+and _ld.tpn files are almost universally identical.
 
-Standard .tpn directives
-------------------------
+While HST's design of limiting the file structure to <instrument>_<type>
+combinations was simple, there was also a significant penalty of redundant
+definitions for keyword constraints like &USEAFTER or &PEDIGREE.
+
+.tpn Directives
+---------------
+
+Explicit Directives
+...................
     
 Typical constraint directives result in a CRDS TpnInfo() object being defined
 in CRDS certify, which corresponds 1:1 to a CRDS Validator() object/subclass.
@@ -61,8 +80,8 @@ which checks the constraint defined by a TpnInfo.  Ultimately the outcome of
 .tpn files is a list of TpnInfo() constraints to check, which are tuples of
 properties, interpreted via appropriate Validator() subclassses.
 
-Synthetic .tpn directives
--------------------------
+Synthetic Directives
+....................
 
 The CRDS certifier uses the JWST data models in two ways:
 
@@ -80,14 +99,8 @@ if present) to "definintely required" where keywords are needed for CRDS
 matching.  The synthetic TpnInfo() objects generally scrape value enumerations
 from the core schema for use in CRDS.
 
-File Directives
-===============
-
-.tpn files contain several forms of directives: include, replace, and
-constraint.
-
 Include Directive
------------------
+.................
 
 The semantics of 'include' are roughly model'ed after the C pre-processor's
 #include directives.
@@ -111,7 +124,7 @@ generally will not follow the JWST classes of include files (all_all, fgs_all,
 etc.) or their naming conventions.
 
 Replace Directive
------------------
+.................
 
 The replace directive causes CRDS to do substitutions on all subsequent lines
 in the .tpn file, even lines included from other .tpn files.  The replace
@@ -134,7 +147,7 @@ to e.g. define a replacement in all_all and have it apply everywhere.
 
 
 Constraint Directive
---------------------
+....................
 
 By far the most common directive is the constraint directive, which defines one
 condition on a reference file and is of the form::
@@ -170,7 +183,7 @@ The columns of the constraint are interpreted as follows:
    evaluate to True.    Literal numerical ranges may also be specified.
 
 Whitespace in Constraint Fields
-...............................
++++++++++++++++++++++++++++++++
 
 Since whitespace is used to delimit fields within a constraint, spaces /
 whitespace MAY NOT appear within any single field, i.e. the value list,
@@ -203,13 +216,13 @@ expressed in a dense format, not even readability is a complete slam dunk as a
 motivation for modernizing formats.
 
 <Name> Field
-............
+++++++++++++
 
 The name field specifies the name of a header keyword, table column, array,
 or expression constraint.
 
 Header Keyword Names
-++++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!!
 
 Header and table keyword names correspond roughly to FITS keywords or JWST CAL
 data models paths flattened into a single string, e.g.::
@@ -217,8 +230,8 @@ data models paths flattened into a single string, e.g.::
   READPATT
   META.EXPOSURE.READPATT
 
- Array Names
- +++++++++++
+Array Names
+!!!!!!!!!!!
   
 Array names are specified as the bare HDU name in the <name> field, e.g. SCI.
 These are referenced within expressions as <name>_ARRAY.  These are case
@@ -240,7 +253,7 @@ There are two additional specification cases for array names:
    names by the double-underscore-digit convention,  an imperfect compromise.
 
 Expression Constraint Names
-+++++++++++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Expression constraint names describe the check performed by the value
 expression, they do not describe any physical entity within the reference file.
@@ -248,7 +261,7 @@ Note that expression here refers to a keytype=X constraint and have no relation
 to expressions used in the <presence> field described below.
 
 <Keytype> Field
-...............
++++++++++++++++
 
 The keytype field consists of one character corresponding to::
 
@@ -262,7 +275,7 @@ The keytype field consists of one character corresponding to::
  }
 
 Header Keywords (H)
-+++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!
 
 Header keyword names correspond to values taken from the union of all HDU
 headers.
@@ -276,14 +289,14 @@ capital letters with periods replaced by underscores so that they can be
 evaluated as a single keyword name rather than as nested objects.
 
 Columns (C)
-+++++++++++
+!!!!!!!!!!!
 
 Column names generally apply to the name of a FITS table column and the
 corresponding constraint applies only to the values of that single column in
 isolation.
 
 Array Format (A)
-++++++++++++++++
+!!!!!!!!!!!!!!!!
 
 Array format constraints apply to lightweight array properties taken from
 FITS HDU data::
@@ -309,7 +322,7 @@ are defined.  So an ERR array constraint might also refer to SCI if it was
 known to be loaded elsewhere.
 
 Array Data (D)
-++++++++++++++
+!!!!!!!!!!!!!!
 
 Array data checks are heavy weight and entail loading the actual reference data
 so that constraints can be applied to it::
@@ -328,7 +341,7 @@ value enumerations, ranges, etc.  Most commonly expressions limit the array shap
 and type.
 
 Expressions (X)
-+++++++++++++++
+!!!!!!!!!!!!!!!
 
 Expressions replace the typical value enumeration, range, etc. with a Python
 expression written in terms of the reference file header and array properties.
@@ -339,12 +352,12 @@ only.   Arrays are pre-loaded and remain available to all expressions for the
 duration of a single reference file check.
 
 Group (G)
-+++++++++
+!!!!!!!!!
 
 Not implemented but parsed for the sake of HST CDBS backward compatibility.
 
 <Datatype> Field
-................
+++++++++++++++++
 
 The datatype field conceptually corresponds to the type of a FITS keyword
 defined in the reference file header or table.  Similar properties are imposed
@@ -368,7 +381,7 @@ or array by definition...  although frequently expressions are used to check
 type.
 
 <Presence> Field
-................
+++++++++++++++++
 
 The presence field determines the conditions under which a constraint applies
 and what should happen when it is omitted::
@@ -385,7 +398,7 @@ and what should happen when it is omitted::
  }
 
 Simple Presence Values
-++++++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!!!!
 
 Simple presence values are specified as a single character which correspond to
 these classifications:
@@ -435,7 +448,7 @@ For even more control, or for keywords not used by CRDS matching, additional
 constraints can be defined in more specialized .tpn's.
 
 Presence Expressions and Helpers
-++++++++++++++++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 A Python expression can be specified to define when a constraint does or
 doesn't apply based on keyword values.
@@ -485,7 +498,7 @@ case; this prevents collisions with keyword, column, or array names which are
 always written in upper case.
 
 <Values>
-........
+++++++++
 
 The <values> field of each constraint can define a number of things, including
 enumerations of literal values::
@@ -507,7 +520,7 @@ custom validator identifiers::
 or nothing at all.
 
 Enumerations
-++++++++++++
+!!!!!!!!!!!!
 
 Value enumerations list the possible literal values that can be assigned to
 a keyword, e.g.::
@@ -515,7 +528,7 @@ a keyword, e.g.::
  FGS,NIRCAM,NIRISS,NIRSPEC,MIRI,SYSTEM
    
 Ranges
-++++++
+!!!!!!
 
 Ranges specify inclusive numerical ranges which keyword values must lie within,
 e.g.::
@@ -530,7 +543,7 @@ constraint would be::
 where KEYWORD is the name of the constrained keyword.
 
 Custom Constraint Validators
-++++++++++++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Custom constraint handlers define new classes of validators and are always
 specified by a value / validator name beginning with &, e.g.::
@@ -550,7 +563,7 @@ classes named like e.g.  PedigreeValidator, UseafterValidator,
 JwstdateValidator.
 
 Expressions Constraints
-+++++++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!!!!!
 
 Unlike presence expressions which define when a constraint should or should not
 be applied, expressions constraints define the condition which should be
@@ -632,13 +645,13 @@ Some of the table helpers::
 (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
 
 Empty Value Lists
-.................
++++++++++++++++++
 
 The value list can be empty, in which case the constraint is limited to
 checking presence and type.
 
 Unique Row Table Checks
-=======================
+-----------------------
 
 CRDS has an HST requirement to attempt to detect missing table modes.  This
 is done by specifying table columns which should identify unique rows,  and
@@ -676,7 +689,7 @@ rows turns out to be good enough in practice,  it's relatively uncommon to
 check multiple tables in one reference.
 
 Debugging Certify Updates
-=========================
+-------------------------
 
 When run without --verbose, CRDS certify is relatively quiet about what it is
 checking unless checks fail.  (A current exception which may change is the
@@ -710,127 +723,4 @@ literal like 'jwst_0442.pmap'.  Likewise, exhaustive testing may require
 running certify on 'hst-edit' as well after setting::
 
   $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
-
-Other Notes
-===========
-
-#1 - IRS2 readouts and 2048x3200
---------------------------------
-
-NIRSpec IRS2 readouts produce 3200 pixels in one image dimension. In the native
-detector readout orientation it's nx=3200, ny=2048 (i.e. it's a horizontal
-rectangle). But all science data and all reference data in CRDS always need to
-be in DMS (science) orientation, which for NIRSpec means the x/y axes get
-swapped, so that means IRS2 images have nx=2048, ny=3200 (i.e. a vertical
-rectangle). Taking a quick look at one of the NIRSpec MASK ref files in CRDS
-for IRS2 mode, it correctly shows that the image has dimensions of
-2048x3200. So that's the correct orientation you're looking for. If anyone ever
-delivers a NIRSpec ref file to CRDS that has dimensions 3200x2048, it's wrong
-(it's still in native detector orientation) and needs to be rejected.
-
-The complicating factor in all of this is that a conscious decision was made to
-still have the SUBSTRTn keywords (datamodel meta.subarray.[xy]size) retain
-their original values of 2048, rather than 3200, because the extra pixels in
-the image do not correspond to real pixels on the detector (they're virtual
-values inserted into the image). So the detector was still commanded to readout
-2048x2048 pixels, hence the decision to make the size keywords still say
-2048x2048. Even though ny=3200 in the actual image. So any comparison of
-subarray size keyword values against the actual image size needs to allow for
-this (i.e. it's OK to have meta.subarray.ysize=2048 when data.shape[-2] =
-3200), as long as READPATT has the string "IRS2" somewhere in it.
-
-#2 - SUBSTRT 1/2 & reference pixels
------------------------------------
-
-For the JWST detectors all reference pixels are physical pixels that are
-counted as part of the detector dimensions (unlike virtual overscan regions
-in CCD's). So the 2048x2048 detector dimensions of the near-IR detectors
-already includes the reference pixels and the MIRI detectors are always
-referenced in the full 1032x1024 space that includes their reference
-pixels. The SUBSTRTn and SUBSIZEn values also always include the reference
-pixels (i.e. SUBSTRT1 = 1 means the subarray is starting on the first
-reference pixel. The first "live" pixel is at SUBSTRT1 = 5.) So for MIRI
-full-frame readouts SUBSIZE1 = 1032, not 1024 (the same as NAXIS1).
-
-The only exception to this is the NIRSpec IRS2 readout mode that includes
-many more columns of reference pixels interspersed within the live pixels,
-resulting in total image dimensions that are greater than 2048 (at least
-along the y image axis). So this is the only case where SUBSIZEn != NAXISn,
-because NAXIS2 2048, while a decision was made to still set SUBSIZE2 = 2048.
-
-
-# 3 - DARK array NDIM
----------------------
-
-Comments about array dimensions and array shape equivalence:
-
-DARK: non-MIRI: SCI=ERR=3D, DQ=2D; MIRI: SCI=ERR=DQ=4D
-
-LINEARITY: COEFFS=3D, DQ=2D
-
-# 4 - NIRSPEC DARK no reference pixels
---------------------------------------
-
-For NIRSpec data, the DARK step is run (in calwebb_detector1.py) after
-refpix, so the image at that point will be 2048 x 2048, and the dark file will
-have shape (N, 2048, 2048), where N has to do with the number of groups.  So it
-is correct that the darks will be 2048x2048.
-
-Similarly for READNOISE.
-
-# 5 - NIRSPEC SUBARRAY GAIN=2 STRIPING
---------------------------------------
-
-If memory serves, in a conversation we all had with NIRSpec folks about a year
-ago, they need to deliver some subarray ref files with SUBARRAY='GENERIC',
-because the exact placement of the subarray varies from exposure to exposure
-and is tied to the use of different gratings (different gratings result in
-spectra being located in slightly different places on the detector and they
-change the subarray location to match). So for example the "mystery stripe"
-2048x256 subarray is probably used for fixed-slit exposures, where the 256 is
-large enough to cover all the slits. Science exposures taken using a subarray
-for a single slit (which is smaller yet) will use that 2048x256 reference file
-and extract (on the fly) the subarray that matches the smaller science
-subarray, matching both the location and size of the subarray used in the
-science exposure. So that's why SUBARRAY has to be set to 'GENERIC' in those
-ref files, so that CRDS knows to select it when a science exposure uses some
-other specific subarray like "SUBS200A1" or "SUBS400A1" and let the cal
-pipeline do the on-the-fly extraction thing, like it also does when full-frame
-ref files use SUBARRAY='GENERIC'.
-
-The reason they can't just use a full-frame ref file with SUBARRAY='GENERIC'
-for these, is because NIRSpec subarrays are readout using a different gain than
-full-frame, so they have to use subarray-specific reference files (because the
-actual pixel values in the images are different than for full-frame).
-
-# 6 - GAIN SCI HDU and GAINFACT
--------------------------------
-
-The GainModel schema specifies a single FITS HDU with EXTNAME='SCI'. The jump
-and ramp_fit steps, which use the gain ref file, both load it into a GainModel
-data model, hence if there isn't a SCI extension present I would assume the
-load would fail. Therefore the SCI label should be mandatory.
-
-The GAINFACT keyword is only used (and hence required) for NIRSpec gain ref
-files that are subarray (like jwst_nirspec_gain_0016.fits and
-jwst_nirspec_gain_0017.fits). So GAINFACT is only needed when the ref data have
-dimensions less than 2048x2048.
-
-# 7 - AREA MIRI SCI dimensions
-------------------------------
-
-Huh, never noticed this before, which is due to the fact that all we do with
-the imaging-mode AREA reference files is attach the data array to an extra
-extension in the science product and that's it - we don't actually use it or
-apply it anywhere. It's information only, for possible use by the user while
-doing analysis. The reference pixels don't get stripped off until level-3
-processing, which combines multiple images. Level-2 products, which is the
-stage where a user might need to use the AREA data, still have the reference
-pixels in the image. So theoretically I guess the AREA array should be the
-original 1032x1024 size that includes the reference pixels, just for ease in
-applying it to the science image, which will still be 1032x1024 at that point.
-
-AREA ref files for the imaging mode of other instruments, like NIRCam, are the
-full 2048x2048 size, which means they contain reference pixels. Hence for
-consistency we should request that the MIRI IDT deliver theirs the same way.
 

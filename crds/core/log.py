@@ -123,6 +123,7 @@ class CrdsLogger:
         
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
+        self.logger.propagate = False
         self.formatter = self.set_formatter()
         self.console = None
         if enable_console:
@@ -243,6 +244,7 @@ class CrdsLogger:
     def add_stream_handler(self, filelike, level=logging.DEBUG):
         handler = logging.StreamHandler(filelike)
         handler.setLevel(level)
+        handler.propagate = False
         handler.setFormatter(self.formatter)
         self.handlers.append(handler)
         self.logger.addHandler(handler)

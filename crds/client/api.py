@@ -28,6 +28,7 @@ from .proxy import CheckingProxy
 # ==============================================================================
 
 __all__ = [
+    "get_default_observatory",
     "get_default_context",
     "get_context_by_date",
     "get_server_info",

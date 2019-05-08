@@ -3,10 +3,11 @@ Travis CI and sites with no access to /grp/crds/cache.
 
 Setting up CRDS to run the built-in unit tests can be accomplished as follows:
 
-    % git checkout https://github.com/spacetelescope/crds.git CRDS
+    % git clone https://github.com/spacetelescope/crds.git CRDS
     % cd CRDS
     % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
     % setup_test_cache $HOME   # You need at least 1G of space for this
+    % source envs/hst-crds-ops.sh (or .csh )  #   -dev or -test should also largely work
     % ./runtests
 
 If you wish to relocate your CRDS test caches somewhere other than $HOME
@@ -14,6 +15,7 @@ do:
 
     % setup_test_cache <somewhere else>
     % setenv CRDS_TEST_ROOT <somewhere else>
+    % source envs/hst-crds-ops.sh (or .csh)   #   -dev or -test should also largely work
     % ./runtests
 
 The above configures CRDS to run the built-in unit tests using several file
@@ -28,7 +30,7 @@ sources:
   /grp/crds/cache is a complete HST + JWST readonly cache on the Central Store,  too large to distribute
 
 - $HOME/crds_cache_ops
-  For CRDS_PATH set by hst-crds-ops.csh,  used whenever tests don't clear CRDS_PATH
+  For CRDS_PATH set by hst-crds-ops.csh (or .sh),  used whenever tests don't clear CRDS_PATH
 
 - CRDS/crds/tests/data
   Ad hoc test data files used with explicit paths

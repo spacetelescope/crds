@@ -93,7 +93,7 @@ polls the server for new messages at some periodic rate in seconds:
         if status == 0:
             log.info(self.format_remote("COMPLETED:", result))
         elif status == 1:
-            log.fatal_error(self.format_remote("FAILED:", result))
+            log.error(self.format_remote("FAILED:", result))
         elif status == 2:
             log.error(self.format_remote("CANCELLED:", result))
         else:

@@ -1,9 +1,9 @@
 
 
-__version__ = '55463344'
+__version__ = '093abad4'
 
 __full_version_info__ = '''
-branch: 7.3.1
-sha1: 55463344
+branch: add-readpatt-nrsrapidd2
+sha1: 093abad4
 '''
     

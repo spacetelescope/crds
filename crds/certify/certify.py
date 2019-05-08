@@ -27,6 +27,7 @@ from crds.refactoring import refactor
 from . import mapping_parser
 from . import validators
 from . import reftypes
+from . import check_sha1sum
 
 # ============================================================================
 
@@ -37,7 +38,7 @@ class Certifier:
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=None,
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
-                 original_name=None, run_fitsverify=False):
+                 original_name=None, run_fitsverify=False, check_sha1sum=False):
         
         self.filename = filename
         self.context = context
@@ -49,6 +50,7 @@ class Certifier:
         self.comparison_reference = comparison_reference
         self.original_name = original_name
         self.run_fitsverify = run_fitsverify
+        self.check_sha1sum = check_sha1sum
         self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)
 
         assert self.check_references in [False, None, "exist", "contents"], \
@@ -158,6 +160,10 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
+        if self.check_sha1sum:
+            with self.error_on_exception("Duplicate file check"):
+                check_sha1sum.check_sha1sum(self.filename, observatory=self.observatory)
+
         self.complex_init()
 
         with self.error_on_exception("Error loading"):
@@ -586,6 +592,7 @@ RECATEGORIZED_MESSAGE = {
     'Unregistered XTENSION value' : log.info,
     'checksum is not' : log.error,
     'Invalid CHECKSUM' : log.error,
+    'dyld: Library not loaded:' : log.warning,  # bad fitsverify not running,  not a known problem with reference.
 }
 
 def interpret_fitsverify_output(status, output):
@@ -688,7 +695,7 @@ class MappingCertifier(Certifier):
                           compare_old_reference=self.compare_old_reference,
                           script=self.script, observatory=self.observatory,
                           run_fitsverify=self.run_fitsverify,
-                          check_rmap=False)
+                          check_rmap=False, check_sha1sums=False)
 
     def get_existing_reference_paths(self, mapping):
         """Return the paths of the references referred to by mapping.  Omit
@@ -750,7 +757,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
                  compare_old_reference=False,
                  dont_parse=False, script=None, observatory=None,
                  comparison_reference=None, original_name=None, ith="",
-                 run_fitsverify=False):
+                 run_fitsverify=False, check_sha1sum=False):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
     
@@ -788,7 +795,8 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
                           dont_parse=dont_parse, script=script, observatory=observatory,
                           comparison_reference=comparison_reference,
                           original_name=original_name,
-                          run_fitsverify=run_fitsverify)
+                          run_fitsverify=run_fitsverify,
+                          check_sha1sum=check_sha1sum)
 
         with trap(filename, "Validation error"):
             certifier.certify()
@@ -814,7 +822,7 @@ def get_certifier_class(original_name, filepath):
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   compare_old_reference=False, dont_parse=False, skip_banner=False, 
                   script=None, observatory=None, comparison_reference=None, 
-                  run_fitsverify=False, check_rmap=True):
+                  run_fitsverify=False, check_rmap=True, check_sha1sums=False):
     """Check the specified list of reference or mapping `files` paths.
     
     files:                  full paths of references or mappings to check
@@ -828,6 +836,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     observatory:            e.g. 'jwst' or 'hst'
     comparison_reference:   filepath to use for table comparison rather than finding in `context`.
     check_rmap:             run trial rmap update to check for overlapping reference cases. 
+    check_sha1sums:         check the sha1sums of `files` relative to files known on the CRDS server.
     """
     trap = log.error_on_exception if script is None else script.error_on_exception
     for fnum, filename in enumerate(files):
@@ -840,7 +849,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         certify_file(
             filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
             compare_old_reference=compare_old_reference, dont_parse=dont_parse, script=script, observatory=observatory,
-            comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify)
+            comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify, check_sha1sum=check_sha1sums)
         
     if check_rmap: # Requires checking all files in parallel, hence not in certify_file()
         if not skip_banner:
@@ -972,6 +981,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
                           help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
         self.add_argument("-u", "--check-rmap-updates", action="store_true",
                           help="Do a dry-run of adding reference files to the appropriate rmaps to detect errors.")
+        self.add_argument("-k", "--check-sha1sums", action="store_true",
+                          help="Check certified files to see if any are identical to files already in CRDS.")
 
         
         cmdline.UniqueErrorsMixin.add_args(self)
@@ -1020,7 +1031,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
                       dont_parse=self.args.dont_parse,
                       script=self, observatory=self.observatory,
                       run_fitsverify=self.args.run_fitsverify,
-                      check_rmap=self.args.check_rmap_updates)
+                      check_rmap=self.args.check_rmap_updates,
+                      check_sha1sums=self.args.check_sha1sums)
     
         self.dump_unique_errors()
         return log.errors()
@@ -1028,7 +1040,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
     def _sync_comparison_files(self, comparison_context, comparison_reference):
         """Download comparison_context and comparison_reference as needed."""
         if comparison_context:
-            resolved_context = self.resolve_context(self.args.comparison_context)
+            resolved_context = self.resolve_context(comparison_context)
             self.sync_files([resolved_context])
         if comparison_reference:
             self.sync_files([comparison_reference])
