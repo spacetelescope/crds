@@ -12,4 +12,5 @@
     'suffix': 'bpx',
     'text_descr': 'Data Quality (Bad Pixel) Initialization Table',
     'tpn': 'wfc3_bpx.tpn',
+    'unique_rowkeys': ('CCDCHIP', 'PIX1', 'PIX2'),
 }
