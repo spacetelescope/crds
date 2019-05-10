@@ -25,7 +25,8 @@ elif [[ "${MACOSX_DEPLOYMENT_TARGET}" == "clang_default" ]]; then
     export MACOSX_DEPLOYMENT_TARGET=""
 fi
 
-wget https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-MacOSX-x86_64.sh -O miniconda.sh
+echo "Skipping miniconda download to use checked-in copy..."
+#wget https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-MacOSX-x86_64.sh -O miniconda.sh
 bash miniconda.sh -b -p $HOME/miniconda
 export PATH="$HOME/miniconda/bin:$PATH"
 
