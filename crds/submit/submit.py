@@ -46,6 +46,10 @@ this command line interface must be members of the CRDS operators group
         self.base_url = None
         self.jpoll_key = None
 
+        self._ready_url = None
+        self._error_count = None
+        self._warning_count = None
+
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
         super(ReferenceSubmissionScript, self).add_args()
@@ -266,7 +270,8 @@ this command line interface must be members of the CRDS operators group
             extra_params = "--log-time"
         submission_monitor = monitor.MonitorScript("crds.monitor --key {} --poll {} {}".format(
             self.jpoll_key, 3, extra_params), reset_log=False)
-        return submission_monitor()
+        submission_monitor()
+        return submission_monitor
 
     def monitor_complete(self, monitor_future):
         """Wait for the monitor job to complete and return the result."""
@@ -298,7 +303,7 @@ this command line interface must be members of the CRDS operators group
             run_fitsverify=True, check_rmap=False, check_sha1sums=True)
         if log.errors():
             raise CrdsError("Certify errors found.  Aborting submission.")
-        
+    
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
 
@@ -337,9 +342,15 @@ this command line interface must be members of the CRDS operators group
             self.submission_complete(submit_future)
 
         if self.args.monitor_processing:
-            self.monitor_complete(monitor_future)
+            monitor = self.monitor_complete(monitor_future)
+            if monitor.exit_status == 0:
+                self._ready_url = monitor.result
 
         log.standard_status()
+
+        self._error_count = log.errors()
+        self._warning_count = log.warnings()
+        
         return log.errors()
 
 # ===================================================================

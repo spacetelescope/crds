@@ -5,6 +5,9 @@ streamlining project.'''
 import os
 import sys
 import yaml
+import collections
+import webbrowser
+
 from crds.core import log, config
 from .submit import ReferenceSubmissionScript
 import urllib
@@ -85,6 +88,12 @@ class RedCatSubmissionScript(RedCatApiScript):
             loaded = yaml.safe_load(text)
             log.verbose("ReDCaT parameters:\n", log.PP(loaded))
             return loaded
+
+class SubmissionResult(collections.namedtuple("SubmissionResult", ["error_count", "warning_count", "ready_url"])):
+    def open_ready_url(self):
+        if self.ready_url is None:
+            raise RuntimeError("ready_url is not present")
+        webbrowser.open(self.ready_url)
 
 class Submission(object):
     '''Client-side Redcat submission class.  Can be used to prepare, validate, and submit 
@@ -320,6 +329,12 @@ class Submission(object):
         script = RedCatApiScript(argv)
         script._extra_redcat_parameters = dict(self)
         script()
+
+        return SubmissionResult(
+            error_count=script._error_count,
+            warning_count=script._warning_count,
+            ready_url=script._ready_url
+        )
 
 def main():
     '''Run the command line program version of the extended batch submit which

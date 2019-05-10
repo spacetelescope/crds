@@ -15,6 +15,10 @@ from crds.client import api
 
 # ===================================================================
 
+_STATUS_COMPLETED = 0
+_STATUS_FAILED = 1
+_STATUS_CANCELLED = 3
+
 class MonitorScript(cmdline.Script):
     """Command line script to dump real time submission progress messages."""
 
@@ -31,6 +35,8 @@ polls the server for new messages at some periodic rate in seconds:
     def __init__(self, *args, **keys):
         super(MonitorScript, self).__init__(*args, **keys)
         self._last_id = 0
+        
+        self.result = None
 
     def add_args(self):
         """Add class-specifc command line parameters."""
@@ -43,14 +49,14 @@ polls the server for new messages at some periodic rate in seconds:
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
         log.divider("monitoring server on " + repr(self.args.key), char="=")
-        exit_flag = False
-        while not exit_flag:
+        exit_status = None
+        while exit_status is None:
             for message in self._poll_status():
                 handler = getattr(self, "handle_" + message.type, self.handle_unknown)
-                exit_flag = handler(message)
+                exit_status = handler(message)
             time.sleep(self.args.poll_delay)
         log.divider("monitoring server done", char="=")
-        return exit_flag
+        return exit_status
 
     def _poll_status(self):
         """Use network API to pull status messages from server."""
@@ -79,62 +85,71 @@ polls the server for new messages at some periodic rate in seconds:
         and continue monitoring.
         """
         log.info(self.format_remote(message.data))
-        return False
+        return None
 
     def handle_unknown(self,  message):
         """Handle unknown `message` types by issuing a warning and continuing monitoring."""
         log.warning(self.format_remote("Unknown message type", repr(message.type), "in", repr(message)))
-        return False
+        return None
 
     def handle_done(self, message):
         """Generic "done" handler issue info() message and stops monitoring / exits."""
         status = message.data["status"]
         result = message.data.get("result", None)
-        if status == 0:
+
+        if status == _STATUS_COMPLETED:
             log.info(self.format_remote("COMPLETED:", result))
-        elif status == 1:
+        elif status == _STATUS_FAILED:
             log.error(self.format_remote("FAILED:", result))
-        elif status == 2:
+        elif status == _STATUS_CANCELLED:
             log.error(self.format_remote("CANCELLED:", result))
         else:
             log.info(self.format_remote("DONE:", result))
+
         self.result = result
-        return result
+        
+        return status
 
     def handle_cancel(self, message):
         """Generic "cancel" handler reports on commanded cancellation of remote process
         and possibly why it was cancelled.   Then stops monitoring /exits.
         """
         log.warning(self.format_remote("Processing cancelled:", message.data))
-        return message.data["result"]
+
+        self.result = message.data["result"]
+
+        return _STATUS_CANCELLED
 
     def handle_fail(self, message):
         """Generic "fail" handler reports on remote process fatal error / failure
         and issues an error() message, then stops monitoring /exits.
         """
         log.error(self.format_remote("Processing failed:",  message.data))
-        return message.data["result"]
+
+        self.result = message.data["result"]
+        
+        return _STATUS_FAILED
     
     def handle_error(self, message):
         """Generic "error" handler issues an error message from remote process and
         continues monitoring.
         """
         log.error(self.format_remote(message.data))
-        return False
+        return None
     
     def handle_verbose(self, message):
         """Generic "verbose" handler issues a debug message from remote process if
         this monitor is running verbosely.
         """
         log.verbose(self.format_remote(message.data))
-        return False
+        return None
 
     def handle_warning(self, message):
         """Generic "warning" handler issues a  warning from remote process and 
         contiues monitoring.
         """
         log.warning(self.format_remote(message.data))
-        return False
+        return None
 
 # ===================================================================
 

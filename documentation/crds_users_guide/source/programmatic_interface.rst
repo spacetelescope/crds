@@ -246,7 +246,7 @@ You can also remove files::
 And finally, when the files to be submitted have been added and the fields
 of the Submission have been filled in, the Submission can be submitted::
 
-    s.submit()
+    result = s.submit()
     2019-04-24 12:24:50,823 - CRDS - INFO -  =============================== setting up ===============================
     2019-04-24 12:24:51,038 - CRDS - INFO -  Symbolic context 'jwst-edit' resolves to 'jwst_0511.pmap'
     2019-04-24 12:24:51,038 - CRDS - INFO -  ########################################
@@ -392,3 +392,18 @@ This will validate the submission by making sure all of the fields that need val
 have them and by ensuring that there is at least 1 file to submit before performing
 the submission.
 
+The return value of `submit()` includes error and warning counts, as well as
+a link to the Review/Confirm page for the submission::
+
+    result.error_count
+    result.warning_count
+    result.ready_url
+
+The `open_ready_url()` function will attempt to open the Review/Confirm page in
+your system's default browser::
+
+    result.open_ready_url()
+
+Note that the page's *confirm*, *cancel*, and *force* buttons will not be available
+unless authenticated.  If they seem to be missing, try logging in with the *Login*
+button at the upper right-hand corner of the page.
