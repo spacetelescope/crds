@@ -81,7 +81,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'CRDS'
-copyright = '2017, Space Telescope Science Institute'
+copyright = f'{datetime.datetime.now().year}, Space Telescope Science Institute'
 author = 'Space Telescope Science Institute'
 
 # The version info for the project you're documenting, acts as replacement for
