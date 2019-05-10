@@ -20,10 +20,11 @@ env:
     matrix:
         - PYTHON_VERSION=3.6
         - PYTHON_VERSION=3.7
-    
+
+install:
+    - source ./ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+    - ./setup_test_cache $CRDS_TEST_ROOT    
 script:
-    - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
-    - ./setup_test_cache $CRDS_TEST_ROOT
     - ./install
     - conda list
     - ./runtests --cover
