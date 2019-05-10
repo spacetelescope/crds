@@ -16,6 +16,7 @@ env:
         - PIP_DEPENDENCIES='parsley coveralls'
         - CRDS_SERVER_URL='https://hst-crds.stsci.edu'
         - CRDS_TEST_ROOT=/tmp
+	- DEBUG=True
 
     matrix:
         - PYTHON_VERSION=3.6
