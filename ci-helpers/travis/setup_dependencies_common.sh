@@ -243,27 +243,32 @@ echo "Successfully installed astropy-ci-extras"
 # which may lead to ignore install dependencies of the package we test.
 # This update should not interfere with the rest of the functionalities
 # here.
+echo "Before --upgrade pip"
 if [[ -z $PIP_VERSION ]]; then
     $PIP_INSTALL --upgrade pip
 fi
 
 # PEP8
 # PEP8 has been renamed to pycodestyle, keep both here for now
+echo "Before pep8"
 if [[ $MAIN_CMD == pep8* ]]; then
     $PIP_INSTALL pep8
     return  # no more dependencies needed
 fi
 
+echo "Before pycodestyle"
 if [[ $MAIN_CMD == pycodestyle* ]]; then
     $PIP_INSTALL pycodestyle
     return  # no more dependencies needed
 fi
 
+echo "Before flake8"
 if [[ $MAIN_CMD == flake8* ]]; then
     $PIP_INSTALL flake8
     return  # no more dependencies needed
 fi
 
+echo "Before pylint"
 if [[ $MAIN_CMD == pylint* ]]; then
     $PIP_INSTALL pylint
 
@@ -276,6 +281,7 @@ if [[ $MAIN_CMD == pylint* ]]; then
     return  # no more dependencies needed
 fi
 
+echo "Before CONDA_DEPENDENCIES"
 # Pin required versions for dependencies, howto is in FAQ of conda
 # http://conda.pydata.org/docs/faq.html#pinning-packages
 if [[ ! -z $CONDA_DEPENDENCIES ]]; then
