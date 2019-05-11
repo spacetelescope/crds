@@ -1,3 +1,5 @@
+.. _file-submissions:
+
 File Submissions
 ================
 
@@ -982,3 +984,28 @@ for a total of 28 discrete parameter combinations.
         
 These categories can be arbitrarily complex and vary for each rmap.
 
+Browse Submission History
+.........................
+
+To browse previous submissions, follow the *Submission History* link on the
+home page.  The initial form offers options for filtering by instrument,
+submission date, etc:
+
+.. figure:: images/submission_history_filter.png
+   :scale: 50 %
+   :alt: Screenshot of Submission History filter page
+
+Use the special value * to disable a given filter.
+
+Submitting the filter form will yield a summary list of relevant submissions:
+
+.. figure:: images/submission_history_summary.png
+   :scale: 50 %
+   :alt: Screenshot of Submission History summary page
+
+The link in the leftmost column leads to a detailed view of the submission
+fields:
+
+.. figure:: images/submission_history_detail.png
+   :scale: 50 %
+   :alt: Screenshot of Submission History detail page

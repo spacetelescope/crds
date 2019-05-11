@@ -4,3 +4,6 @@ coverage
 .project
 *.pyc
 *~
+
+documentation/crds_users_guide/build
+documentation/crds_users_guide/*.tar.gz

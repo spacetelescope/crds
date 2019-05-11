@@ -219,3 +219,7 @@ value of \*.   The result of the activity search is a table of matching actions:
 The default filter of \*.pmap previews contexts that have been submitted but
 not yet selected for operational use in the pipeline.
 
+Authenticated Services
+----------------------
+
+See :ref:`file-submissions`.
