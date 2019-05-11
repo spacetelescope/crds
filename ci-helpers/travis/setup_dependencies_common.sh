@@ -213,7 +213,7 @@ fi
 
 echo "Made it to just before the PIP_INSTALL"
 
-export PIP_INSTALL='python -m pip install'
+export PIP_INSTALL='python -m pip install -v'
 
 # We use the channel astropy-ci-extras to host pytest 2.7.3 that is
 # compatible with LTS 1.0.x astropy. We need to disable channel priority for
