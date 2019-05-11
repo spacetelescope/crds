@@ -145,7 +145,8 @@ fi
 
 echo "conda ${CONDA_VERSION}" > $PIN_FILE_CONDA
 
-retry_on_known_error conda install $QUIET conda
+#retry_on_known_error conda install $QUIET conda
+conda install conda
 
 if [[ -z $CONDA_CHANNEL_PRIORITY ]]; then
     CONDA_CHANNEL_PRIORITY=false
@@ -176,9 +177,10 @@ fi
 
 # CONDA
 if [[ -z $CONDA_ENVIRONMENT ]]; then
-    retry_on_known_error conda create $QUIET -n test $PYTHON_OPTION
+#    retry_on_known_error conda create $QUIET -n test $PYTHON_OPTION
+    conda create -n test $PYTHON_OPTION
 else
-    retry_on_known_error conda env create $QUIET -n test -f $CONDA_ENVIRONMENT
+    conda env create -n test -f $CONDA_ENVIRONMENT
 fi
 source activate test
 
@@ -209,13 +211,15 @@ if [[ ! -z $PIP_VERSION ]]; then
     echo "pip ${PIP_VERSION}.*" >> $PIN_FILE
 fi
 
+echo "Made it to just before the PIP_INSTALL"
+
 export PIP_INSTALL='python -m pip install'
 
 # We use the channel astropy-ci-extras to host pytest 2.7.3 that is
 # compatible with LTS 1.0.x astropy. We need to disable channel priority for
 # this step to make sure the latest version is picked up when
 # CHANNEL_PRIORITY is set to True above.
-retry_on_known_error conda install -c astropy-ci-extras --no-channel-priority $QUIET $PYTHON_OPTION pytest pip || ( \
+conda install -c astropy-ci-extras --no-channel-priority $PYTHON_OPTION pytest pip || ( \
     $PIP_FALLBACK && ( \
     if [[ ! -z $PYTEST_VERSION ]]; then
         echo "Installing pytest with conda was unsuccessful, using pip instead"
@@ -232,6 +236,8 @@ retry_on_known_error conda install -c astropy-ci-extras --no-channel-priority $Q
         mv /tmp/pin_file_temp $PIN_FILE
     fi)
 )
+
+echo "Successfully installed astropy-ci-extras"
 
 # In case of older python versions there isn't an up-to-date version of pip
 # which may lead to ignore install dependencies of the package we test.
