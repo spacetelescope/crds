@@ -329,6 +329,8 @@ if [[ ! -z $CONDA_DEPENDENCIES ]]; then
     fi
 fi
 
+echo "Before NUMPY"
+
 # NUMPY
 # We use --no-pin to avoid installing other dependencies just yet.
 
@@ -409,6 +411,8 @@ if [[ ! -z $NUMPY_INSTALL ]]; then
     }
 fi
 
+echo "Before ASTROPY"
+
 # ASTROPY
 if [[ ! -z $ASTROPY_VERSION ]]; then
     if [[ $ASTROPY_VERSION == dev* ]]; then
@@ -460,6 +464,8 @@ if [[ ! -z $ASTROPY_VERSION ]]; then
 
 fi
 
+echo "Before SUNPY"
+
 # SUNPY
 if [[ ! -z $SUNPY_VERSION ]]; then
     if [[ $SUNPY_VERSION == dev* ]]; then
@@ -495,6 +501,7 @@ if [[ ! -z $SUNPY_VERSION ]]; then
 
 fi
 
+echo "Before DOCUMENTATION DEPENDENCIES"
 
 # DOCUMENTATION DEPENDENCIES
 # build_sphinx needs sphinx and matplotlib (for plot_directive).
@@ -557,6 +564,8 @@ if [[ $SETUP_CMD == *build_sphinx* ]] || [[ $SETUP_CMD == *build_docs* ]]; then
 
 fi
 
+echo "Before ADDITIONAL DEPENDENCIES"
+
 # ADDITIONAL DEPENDENCIES (can include optionals, too)
 if [[ ! -z $CONDA_DEPENDENCIES ]]; then
     retry_on_known_error $CONDA_INSTALL $CONDA_DEPENDENCIES $CONDA_DEPENDENCIES_FLAGS || ( \
@@ -589,15 +598,21 @@ if [[ ! -z $CONDA_DEPENDENCIES ]]; then
         mv /tmp/pin_copy $PIN_FILE))
 fi
 
+echo "Before PARALLEL BUILDS"
+
 # PARALLEL BUILDS
 if [[ $SETUP_CMD == *parallel* || $SETUP_CMD == *numprocesses* ]]; then
     $PIP_INSTALL pytest-xdist
 fi
 
+echo "Before OPEN FILES"
+
 # OPEN FILES
 if [[ $SETUP_CMD == *open-files* ]]; then
     retry_on_known_error $CONDA_INSTALL psutil
 fi
+
+echo "Before NUMPY DEV and PRE"
 
 # NUMPY DEV and PRE
 
@@ -614,6 +629,8 @@ if [[ $NUMPY_VERSION == pre* ]]; then
     $PIP_INSTALL --pre --upgrade numpy
 fi
 
+echo "Before MATPLOTLIB DEV"
+
 # MATPLOTLIB DEV
 
 # We now install Matplotlib dev - this has to be done last, otherwise conda might
@@ -628,6 +645,7 @@ if [[ $MATPLOTLIB_VERSION == pre* ]]; then
     $PIP_INSTALL --pre --upgrade --no-deps matplotlib
 fi
 
+echo "Before SCIPY_DEV"
 
 # SCIPY_DEV
 
@@ -645,6 +663,7 @@ if [[ $SCIPY_VERSION == pre* ]]; then
     $PIP_INSTALL --pre --upgrade --no-deps scipy
 fi
 
+echo "Before SCIKIT_LEARN DEV"
 
 # SCIKIT_LEARN DEV
 
@@ -661,6 +680,8 @@ fi
 if [[ $SCIKIT_LEARN_VERSION == pre* ]]; then
     $PIP_INSTALL --pre --upgrade --no-deps scikit-learn
 fi
+
+echo "Before ASTROPY DEV and PRE"
 
 # ASTROPY DEV and PRE
 
@@ -679,6 +700,8 @@ fi
 if [[ $ASTROPY_VERSION == pre* ]]; then
     $PIP_INSTALL --pre --upgrade --no-deps astropy
 fi
+
+echo "Before SUNPY DEV and PRE"
 
 # SUNPY DEV and PRE
 
@@ -719,6 +742,8 @@ if [[ $ASTROPY_VERSION == stable ]]; then
     fi
 fi
 
+echo "Before PIP DEPENDENCIES"
+
 # PIP DEPENDENCIES
 
 # We finally install the dependencies listed in PIP_DEPENDENCIES. We do this
@@ -731,6 +756,7 @@ if [[ ! -z $PIP_DEPENDENCIES ]]; then
     $PIP_INSTALL $PIP_DEPENDENCIES $PIP_DEPENDENCIES_FLAGS
 fi
 
+echo "Before COVERAGE DEPENDENCIES"
 
 # COVERAGE DEPENDENCIES
 

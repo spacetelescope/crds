@@ -34,3 +34,5 @@ echo "Exited miniconda.sh, onto setup_dependencies_common.sh"
 
 # Install common Python dependencies
 source "$( dirname "${BASH_SOURCE[0]}" )"/setup_dependencies_common.sh
+
+echo "Exited setup_dependencies_common.sh"
