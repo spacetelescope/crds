@@ -30,5 +30,7 @@ echo "Skipping miniconda download to use checked-in copy..."
 bash miniconda.sh -b -p $HOME/miniconda
 export PATH="$HOME/miniconda/bin:$PATH"
 
+echo "Exited miniconda.sh, onto setup_dependencies_common.sh"
+
 # Install common Python dependencies
 source "$( dirname "${BASH_SOURCE[0]}" )"/setup_dependencies_common.sh
