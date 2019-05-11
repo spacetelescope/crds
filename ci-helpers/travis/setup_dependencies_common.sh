@@ -119,11 +119,11 @@ if [[ -z $PIP_FALLBACK ]]; then
     PIP_FALLBACK=true
 fi
 
-if [[ $DEBUG == True ]]; then
+#if [[ $DEBUG == True ]]; then
     QUIET=''
-else
-    QUIET='-q'
-fi
+#else
+#    QUIET='-q'
+#fi
 
 if [[ -z $CONDA_DEPENDENCIES_FLAGS ]]; then
    CONDA_DEPENDENCIES_FLAGS=''
@@ -568,17 +568,18 @@ echo "Before ADDITIONAL DEPENDENCIES"
 
 # ADDITIONAL DEPENDENCIES (can include optionals, too)
 if [[ ! -z $CONDA_DEPENDENCIES ]]; then
-    retry_on_known_error $CONDA_INSTALL $CONDA_DEPENDENCIES $CONDA_DEPENDENCIES_FLAGS || ( \
+    $CONDA_INSTALL $CONDA_DEPENDENCIES $CONDA_DEPENDENCIES_FLAGS || ( \
         $PIP_FALLBACK && ( \
         # If there is a problem with conda install, try pip install one-by-one
         cp $PIN_FILE /tmp/pin_copy
         for package in $(echo $CONDA_DEPENDENCIES); do
+	    echo "Installing $package"
             # We need to avoid other dependencies picked up from the pin file
             awk -v package=$package '{if ($1 == package) print $0}' /tmp/pin_copy > $PIN_FILE
             if [[ $DEBUG == True ]]; then
                 cat $PIN_FILE
             fi
-            retry_on_known_error $CONDA_INSTALL $package $CONDA_DEPENDENCIES_FLAGS || ( \
+            $CONDA_INSTALL $package $CONDA_DEPENDENCIES_FLAGS || ( \
                 echo "Installing the dependency $package with conda was unsuccessful, using pip instead."
                 # We need to remove the problematic package from the pin
                 # file, otherwise further conda install commands may fail,
