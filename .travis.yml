@@ -10,7 +10,7 @@ env:
     # CONDA_JWST_DEPENDENCIES is used because CONDA_DEPENDENCIES is not truly global.
     global:
         - MAIN_CMD='python setup.py'
-        - CONDA_DEPENDENCIES='pytest sphinx nose mock lxml requests fitsverify lockfile filelock'
+        - CONDA_DEPENDENCIES='pytest sphinx nose mock lxml requests lockfile filelock'
         - CONDA_JWST_DEPENDENCIES='pytest jwst sphinx nose mock lxml requests fitsverify lockfile filelock'
         - PIP_DEPENDENCIES='parsley coveralls'
         - CRDS_SERVER_URL='https://hst-crds.stsci.edu'
@@ -22,7 +22,7 @@ env:
 
 install:
     - source ./ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
-    - conda install -c 'http://ssb.stsci.edu/conda-dev' jwst
+    - conda install -c 'http://ssb.stsci.edu/conda-dev' jwst fitsverify
     - ./setup_test_cache $CRDS_TEST_ROOT    
 script:
     - ./install
