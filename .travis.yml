@@ -21,8 +21,8 @@ env:
         - PYTHON_VERSION=3.7
 
 install:
-    - conda install -c 'http://ssb.stsci.edu/conda-dev' jwst
     - source ./ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+    - conda install -c 'http://ssb.stsci.edu/conda-dev' jwst
     - ./setup_test_cache $CRDS_TEST_ROOT    
 script:
     - ./install
