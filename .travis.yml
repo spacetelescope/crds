@@ -22,6 +22,7 @@ env:
 
 install:
     - source ./ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+    - conda config --show
     - conda install -c 'http://ssb.stsci.edu/conda-dev' jwst fitsverify
     - ./setup_test_cache $CRDS_TEST_ROOT    
 script:
