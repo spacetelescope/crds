@@ -247,6 +247,15 @@ class Script:
 
         return api.get_default_observatory()
 
+    @property
+    def exit_status(self):
+        """Retrieve the script's exit status as it would have been sent to
+        sys.exit(...), had the script been run from the commandline."""
+
+        if self._exit_status is None:
+            raise RuntimeError("exit_status is not available until script has completed")
+        return self._exit_status
+
     def set_server(self, observatory):
         """Based on `observatory`,  set the CRDS server to an appropriate default,  particularly
         for the case where CRDS_SERVER_URL is not set.
