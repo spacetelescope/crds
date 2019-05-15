@@ -1,0 +1,32 @@
+#! /usr/bin/env python
+#-*-python-*-
+
+import sys
+import re
+import datetime
+
+from astropy.io import fits
+
+from crds.core import pysh
+from crds.core import timestamp
+
+pysh.usage("<unique-keyword> <FITS files...>", 1, help="""
+
+Add a timestamp (specified keyword, nominally USEAFTER) to each of the
+specified files for the purpose of rendering the file superficially different.
+This supports CRDS file submission testing by making innocuous changes to
+existing references so they can be resubmitted as if they're new.
+
+""")
+
+keyword = sys.argv[1]
+assert re.match("^[A-Z0-9]+$", keyword), "First parameter should be a FITS keyword."
+
+now = datetime.datetime.now()
+
+for file in sys.argv[2:]:
+    time = timestamp.format_date(now, "T").split(".")[0]
+    now += datetime.timedelta(days=10)
+    fits.setval(file, keyword, value=time, do_not_scale_image_data=True, ext=0)
+    print((file, keyword, "=", time))
+
