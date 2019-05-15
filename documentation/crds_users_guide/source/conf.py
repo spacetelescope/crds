@@ -184,7 +184,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'CRDS.tex', 'CRDS Documentation',
+    (master_doc, f'CRDS_users_guide-{release}.tex', 'CRDS Documentation',
      'Space Telescope Science Institute', 'manual'),
 ]
 
@@ -205,8 +205,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'CRDS', 'CRDS Documentation',
-     author, 'CRDS', 'One line description of project.',
+    (master_doc, f'CRDS_users_guide-{release}', 'CRDS Documentation',
+     author, 'CRDS_users_guide', 'One line description of project.',
      'Miscellaneous'),
 ]
 
