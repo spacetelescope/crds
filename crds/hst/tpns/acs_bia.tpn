@@ -22,6 +22,7 @@ APERTURE        H       C       R       ANY_FULL,ANY_WFC1_2K,ANY_WFC2_2K,\
                                         WFC1-1K,WFC1-2K,WFC1-512,WFC1-CTE,\
                                         WFC1-FIX,WFC1-IRAMP,WFC1-IRAMPQ,\
                                         WFC1-MRAMP,WFC1-MRAMPQ,WFC2,WFC2-2K,\
+                                        WFC2-1K,WFC2-512,\
                                         WFC2-FIX,WFC2-MRAMP,WFC2-ORAMP,\
                                         WFC2-MRAMPQ,WFC2-ORAMPQ,WFCENTER,\
                     WFC1-POL0UV,WFC1-POL0V,\
