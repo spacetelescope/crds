@@ -170,15 +170,20 @@ class CrdsDjangoConnection:
 
         returns None
         """
-        error_msg_parse = html.fromstring(response.text).xpath(xpath_spec)
         errors = 0
-        for parse in error_msg_parse:
-            error_message = parse.text.strip().replace("\n","")
-            if error_message:
-                if error_message.startswith("ERROR: "):
-                    error_message = error_message[len("ERROR: ")]
-                errors += 1
-                log.error(error_prefix, error_message)
+        if response.ok:
+            error_msg_parse = html.fromstring(response.text).xpath(xpath_spec)
+            for parse in error_msg_parse:
+                error_message = parse.text.strip().replace("\n","")
+                if error_message:
+                    if error_message.startswith("ERROR: "):
+                        error_message = error_message[len("ERROR: ")]
+                    errors += 1
+                    log.error(error_prefix, error_message)
+        else:
+            log.error("CRDS server responded with HTTP error status", response.status_code)
+            errors += 1
+
         if errors:
             raise CrdsWebError("A web transaction with the CRDS server had errors.")
 
