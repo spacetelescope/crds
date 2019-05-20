@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.3.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "Spring 2019 CRDS submission streamlining project, #2"
+__version__ = "7.3.3"   # XXXX  see also ../setup.cfg
+__rationale__ = "JWST DMS 7.3.3,  Streamlining #3/final"
 
 __all__ = [
     "getrecommendations",

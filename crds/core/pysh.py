@@ -90,11 +90,11 @@ def get_debug():
 
 class Shell:
     """Shell performs sh-like variable substitutions and returns a callable
-    object which runs `args` as a subprocess when called.   The shell object
+    object which runs `command` as a subprocess when called.   The shell object
     records the final command line and manages program I/O,  capturing output
     and error status as attributes which can be inspected later.
     """
-    def __init__(self, *args, **keys):
+    def __init__(self, *command, **keys):
         self.status = None  # overridden by __call__
         self._context = keys.pop("context", None)
         self._input = keys.pop("input", None)
@@ -104,41 +104,41 @@ class Shell:
         self._trace_exceptions = keys.pop("trace_exceptions", get_debug())      
         self._capture_output = keys.pop("capture_output", get_debug())
         self._independent_error = keys.pop("independent_error", False)
-
+        
         if self._context is None:    
             # subclasses, were there any,  would need to pass this in
             # when calling __init__ from the subclass since it would
             # change the depth of the stack and invalidate the below.
             self._context = _context(1)  
 
-        args = self._handle_args(args)
+        command = self._handle_command(*command)
         
         if self._capture_output:
             if self._independent_error:
                 self._popen = Popen(
-                    args, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=PIPE, **keys)
+                    command, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=PIPE, **keys)
             else:                
                 self._popen = Popen(
-                    args, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **keys)
+                    command, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **keys)
         else:
             # The real utility of this branch is when you want to see
             # output on your terminal like an ordinary shellscript.
             # The downside is that output is no longer captured.
-            self._popen = Popen(args, shell=self._use_shell, stdin=PIPE, **keys)
+            self._popen = Popen(command, shell=self._use_shell, stdin=PIPE, **keys)
 
-        self._args = args
+        self._command = command
         self._keys = keys
         self.out  = "" # string results stdout, stderr
         self.err  = ""   
 
-    def _handle_args(self, args):
-        """Expand the shell syntax for strings in `args` relative to this
+    def _handle_command(self, *command):
+        """Expand the shell syntax for strings in `command` relative to this
         Shell's context.
         """
-        args = list(args)
-        for i, arg in enumerate(args):
-            args[i] = expand_vars(arg, self._context)
-        return args
+        command = list(command)
+        for i, arg in enumerate(command):
+            command[i] = expand_vars(arg, self._context)
+        return " ".join(command)
 
     def __call__(self):
         """Execute the commands in this Shell expression and either raise
@@ -164,7 +164,7 @@ class Shell:
             return self._popen.returncode
 
     def __repr__(self):
-        return "Shell(%s, %s)" % (repr(self._args), repr(self._keys),)
+        return "Shell(%s, %s)" % (repr(self._command), repr(self._keys),)
 
 # =========================================================================
 
@@ -230,59 +230,59 @@ def expand_vars(string, context=None):
 
 # =========================================================================
 
-def sh(command, **keys):
+def sh(*command, **keys):
     """Run a subprogram,  inheriting stdout and stderr from the calller, and
     return the program exit status.  Output is not captured.
     If raise_on_error is True,  raise an exception on non-zero program exit.
     """
-    shell = Shell(command, context=_context(1), capture_output=False, **keys)
+    shell = Shell(*command, context=_context(1), capture_output=False, **keys)
     shell()
     return shell.status
 
-def _captured_output(command, **keys):
-    """Make a Shell out of `command` and `**keys` and execute it, capturing
+def _captured_output(*command, **keys):
+    """Make a Shell out of `*command` and `**keys` and execute it, capturing
     the output.   Execute the Shell and return it so that various output
     strings or error status can be fetched from attributes as needed.
     """
-    shell = Shell(command, context=_context(2), capture_output=True, **keys)
+    shell = Shell(*command, context=_context(2), capture_output=True, **keys)
     shell()
     return shell
 
-def status(command, **keys):
+def status(*command, **keys):
     """Run a subprogram capturing it's output and return the exit status."""
-    return _captured_output(command, **keys).status
+    return _captured_output(*command, **keys).status
 
-def out(command, **keys):
+def out(*command, **keys):
     """Run a subprogram and return it's stdout."""
-    return _captured_output(command, **keys).out
+    return _captured_output(*command, **keys).out
 
-def err(command, **keys):
+def err(*command, **keys):
     """Run a subprogram and return it's stderr."""
-    return _captured_output(command, **keys).err
+    return _captured_output(*command, **keys).err
 
-def out_err(command, **keys):
+def out_err(*command, **keys):
     """Run a subprogram and return it's combined/interleaved stdout and stderr."""
     keys["independent_error"] = False
-    return _captured_output(command, **keys).out
+    return _captured_output(*command, **keys).out
 
-def status_out_err(command, **keys):
+def status_out_err(*command, **keys):
     """Run a subprogram and return it's status and combined/interleaved stdout and stderr."""
     keys["independent_error"] = False
-    capture = _captured_output(command, **keys)
+    capture = _captured_output(*command, **keys)
     return capture.status, capture.out
 
-def words(command, **keys):
+def words(*command, **keys):
     """Return the standard output of `command` split into a sequence
     of words.
     """
-    return _captured_output(command, **keys).out.split()
+    return _captured_output(*command, **keys).out.split()
 
-def lines(command, **keys):
+def lines(*command, **keys):
     """Return the standard output of `command` split into a sequence
     of lines.
     """
     # keys["independent_error"] = False
-    return _captured_output(command, **keys).out.splitlines()
+    return _captured_output(*command, **keys).out.splitlines()
 
 # =========================================================================
 
