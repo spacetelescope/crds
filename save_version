@@ -16,7 +16,7 @@ def rewrite(filename, regex, replacement):
         file.write(contents)
 
 def indirect_out(command):
-    return pysh.out(*command.split(), trace_commands=True).strip()
+    return pysh.out(*command.split()).strip()
 
 def main():
     
