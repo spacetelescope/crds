@@ -6,6 +6,16 @@ there is a programmatic interface that allows users to perform the tasks
 of reference file submission using Python.  It requires crds version of at
 least 7.3.1.
 
+Required CRDS Account
+.....................
+
+Submitting files to CRDS requires obtaining a CRDS account authorizing you to
+do so.  To obtain a CRDS account,  please file a ticket with the `CRDS Jira`_
+project requesting authorization so submit files.
+
+.. _`CRDS Jira`:  https://jira.stsci.edu/projects/CRDS/issues
+
+  
 Authenticating
 ..............
 

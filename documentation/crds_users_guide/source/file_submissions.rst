@@ -14,6 +14,16 @@ better elsewhere,  such as `HST ICD-47`_ or `JWST CAL Documentation`_.
 
 .. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
 
+
+Required CRDS Account
+.....................
+
+Submitting files to CRDS requires obtaining a CRDS account authorizing you to
+do so.  To obtain a CRDS account,  please file a ticket with the `CRDS Jira`_
+project requesting authorization so submit files.
+
+.. _`CRDS Jira`:  https://jira.stsci.edu/projects/CRDS/issues
+
   
 Logging In
 ..........
