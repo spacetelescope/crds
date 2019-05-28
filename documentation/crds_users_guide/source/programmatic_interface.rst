@@ -10,12 +10,18 @@ Required CRDS Account
 .....................
 
 Submitting files to CRDS requires obtaining a CRDS account authorizing you to
-do so.  To obtain a CRDS account,  please file a ticket with the `CRDS Jira`_
+do so.  These permissions are managed by CRDS and checked automatically after
+your MyST identity is verified.
+
+To obtain a CRDS account,  please file a ticket with the `CRDS Jira`_
 project requesting authorization so submit files.
 
 .. _`CRDS Jira`:  https://jira.stsci.edu/projects/CRDS/issues
 
-  
+**IMPORTANT** Your MyST identity is connected to your CRDS permissions via your
+MyST e-mail.  You should specify your MyST e-mail when applying for a CRDS
+account.
+
 Authenticating
 ..............
 
