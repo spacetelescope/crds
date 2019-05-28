@@ -14,7 +14,23 @@ better elsewhere,  such as `HST ICD-47`_ or `JWST CAL Documentation`_.
 
 .. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
 
-  
+
+Required CRDS Account
+.....................
+
+Submitting files to CRDS requires obtaining a CRDS account authorizing you to
+do so.  These permissions are managed by CRDS and checked automatically after
+your MyST identity is verified.
+
+To obtain a CRDS account,  please file a ticket with the `CRDS Jira`_
+project requesting authorization so submit files.
+
+.. _`CRDS Jira`:  https://jira.stsci.edu/projects/CRDS/issues
+
+**IMPORTANT** Your MyST identity is connected to your CRDS permissions via your
+MyST e-mail.  You should specify your MyST e-mail when applying for a CRDS
+account.
+
 Logging In
 ..........
 
@@ -75,17 +91,6 @@ tokens are the way in which CRDS obtains your MyST identity.
 .. figure:: images/auth_mast_login.png
    :scale: 50 %
    :alt: auth.mast page asking to grant token to CRDS
-
-CRDS Account
-++++++++++++
-
-As part of submitting files or managing the CRDS context, you need to apply for
-a CRDS account.  These permissions are checked automatically after your MyST
-identity is verified.
-
-**IMPORTANT** Your MyST identity is connected to your CRDS permissions via your
-MyST e-mail.  You should specify your MyST e-mail when applying for a CRDS
-account.
 
 CRDS Instrument Locking
 +++++++++++++++++++++++
