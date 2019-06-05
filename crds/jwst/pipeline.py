@@ -61,6 +61,8 @@ import re
 
 # import yaml     DEFERRED
 
+from pkg_resources import parse_version
+
 # --------------------------------------------------------------------------------------
 
 # from jwst import version     DEFERRED
@@ -145,8 +147,10 @@ def get_pipelines(exp_type, cal_ver=None, context=None):
     reference file and determine the sequence of pipeline .cfgs required to process that
     exp_type.
     """
+    
     context = _get_missing_context(context)
     cal_ver = _get_missing_calver(cal_ver)
+    
     with log.augment_exception("Failed determining required pipeline .cfgs for",
                                "EXP_TYPE", srepr(exp_type), "CAL_VER", srepr(cal_ver)):
         config_manager = _get_config_manager(context, cal_ver)
@@ -169,6 +173,8 @@ def _header_to_exptype_calver(header):
     """Given dataset `header`,  return the EXP_TYPE and CAL_VER values."""
     cal_ver = header.get("META.CALIBRATION_SOFTWARE_VERSION", header.get("CAL_VER"))
     exp_type = header.get("META.EXPOSURE.TYPE",  header.get("EXP_TYPE", "UNDEFINED"))
+    # tsovisit = header.get("META.VISIT.TSOVISIT", header.get("TSOVISIT", "UNDEFINED"))
+    # ramp = header.get("META.INSTRUMENT.LAMP_STATE", header.get("LAMP", "UNDEFINED"))
     return exp_type, cal_ver
 
 @utils.cached  # for caching,  pars must be immutable, ideally simple
@@ -196,7 +202,8 @@ REFPATHS = [
     ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
     ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
     ('0.10.0', "jwst_system_crdscfg_b7.2.yaml"),
-    ('999.0.0', "jwst_system_crdscfg_b7.2.yaml"),   # latest backstop
+    ('0.13.0', "jwst_system_crdscfg_b7.3.yaml"),
+    ('999.0.0', "jwst_system_crdscfg_b7.3.yaml"),   # latest backstop
 ]
     
 def _get_config_refpath(context, cal_ver):
@@ -226,16 +233,6 @@ def _get_config_refpath(context, cal_ver):
     log.verbose("Using", srepr(os.path.basename(refpath)),
                 "to determine applicable default reftypes for", srepr(cal_ver))
     return refpath
-
-def _digits_only(version):
-    """
-    >>> _digits_only("0.7.7")
-    (0, 7, 7)
-    >>> _digits_only("0.10.1a1")
-    (0, 10, 1)
-    """
-    match  = re.match("([0-9.]+).*", version)
-    return tuple([int(dig) for dig in match.group(1).split(".") if dig])
 
 def _versions_lt(v1, v2):
     """Compare two semantic version numbers and account for issues like '10' < '9'.
@@ -274,12 +271,11 @@ def _versions_lt(v1, v2):
     >>> _versions_gte("0.10.1", "0.10.1dev20000")
     True
     """
-    v1, v2 = _digits_only(v1), _digits_only(v2)
-    return v1 < v2
+    return parse_version(v1) < parse_version(v2)
 
 def _versions_gte(v1, v2):
     """"""
-    return not _versions_lt(v1, v2)
+    return parse_version(v1) >= parse_version(v2)
 
 class CrdsCfgManager:
     """The CrdsCfgManager handles using SYSTEM CRDSCFG information to compute things."""
