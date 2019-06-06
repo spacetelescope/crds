@@ -406,7 +406,7 @@ class Mapping:
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping and all the mappings selected by it."""
         parkeys = set(self.parkey)
-        parkeys |= set(self.extra_keys)
+        parkeys |= set(self.header.get("extra_keys",[]))
         if hasattr(self, "selections"):
             for selection in self.selections.normal_values():
                 parkeys |= set(selection.get_required_parkeys())

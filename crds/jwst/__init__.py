@@ -8,7 +8,7 @@ HERE  = os.path.abspath(os.path.dirname(__file__) or ".")
 # These are added globally to requested parameters for all rmaps,  roughly
 # equivalent to config_manager.pipeline_exceptions.keys()
 #
-extra_keys = ["META.VISIT.TSOVISIT", "META.INSTRUMENT.RAMP_STATE"]
+extra_keys = ["META.VISIT.TSOVISIT", "META.INSTRUMENT.LAMP_STATE"]
 
 
 TYPES = reftypes.from_package_file("jwst", __file__)
