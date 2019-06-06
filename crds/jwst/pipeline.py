@@ -136,11 +136,22 @@ def header_to_pipelines(header, context=None):
     """Given a dataset `header`,  extract the EXP_TYPE or META.EXPOSURE.TYPE keyword
     from and use it to look up the pipelines required to process it.
 
-    Return a list of reftype names.
+    Return a list of pipeline .cfg names.
     """
     with log.augment_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
-    return get_pipelines(exp_type, cal_ver, context)
+    config_manager = _get_config_manager(context, cal_ver)
+    pipelines = get_pipelines(exp_type, cal_ver, context)
+    header = utils.condition_header(header)
+    pipelines2 = []
+    for cfg in pipelines:
+        for param, exceptions in config_manager.pipeline_exceptions.items():
+            paramval = header.get(param.upper, "UNDEFINED")
+            if paramval == "T":
+                pipelines2.append(exceptions.get(cfg, cfg))
+            else:
+                pipelines2.append(cfg)
+    return pipelines2
 
 def get_pipelines(exp_type, cal_ver=None, context=None):
     """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
@@ -167,7 +178,6 @@ def reftype_to_pipelines(reftype, cal_ver=None, context=None):
                                "EXP_TYPE", srepr(reftype), "CAL_VER", srepr(cal_ver)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.reftype_to_pipelines(reftype)
-
 
 def _header_to_exptype_calver(header):
     """Given dataset `header`,  return the EXP_TYPE and CAL_VER values."""
@@ -283,6 +293,7 @@ class CrdsCfgManager:
         self._context = context
         self._refpath = refpath
         self._crdscfg = utils.Struct(crdscfg)
+        self.pipeline_exceptions = self._crdscfg.get("pipeline_exceptions", {})
         
     def exptype_to_reftypes(self, exp_type):
         """For a given EXP_TYPE string, return a list of reftypes needed to process that

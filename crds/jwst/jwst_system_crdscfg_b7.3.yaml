@@ -32,9 +32,9 @@ meta:
     reftype: CRDSCFG
     telescope: JWST
     useafter: 1900-01-01T00:00:00
-    calibration_software_version: 0.13.3
+    calibration_software_version: 0.13.4
     crds_version: 7.3.3
-    generation_date: 2019-06-03T12:36:41
+    generation_date: 2019-06-06T15:21:06
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -120,6 +120,14 @@ level_pipeline_exptypes:
 #
 # ----------------------------------------------------------------------------------------------
 
+pipeline_exceptions:
+    meta.visit.tsovisit:
+       calwebb_image2.cfg:  calwebb_tso-image2.cg
+       calwebb_spec2.cfg:  calwebb_tso-spec2.cg
+       outlier_detection.cfg: outlier_detection_tso.cfg
+    meta.instrument.lamp_state:
+       calwebb_spec2.cfg: calwebb_nrslamp-spec2.cfg
+
 steps_to_reftypes_exceptions: []
     # flat_field:
         # - case1:
@@ -163,13 +171,13 @@ steps_to_reftypes_exceptions: []
 
 
 
+
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg:
   - dq_init
   - firstframe
   - group_scale
-  - ipc
   - lastframe
   - linearity
   - refpix
@@ -182,7 +190,6 @@ pipeline_cfgs_to_steps:
   - firstframe
   - gain_scale
   - group_scale
-  - ipc
   - jump
   - lastframe
   - linearity
@@ -220,37 +227,23 @@ pipeline_cfgs_to_steps:
   - straylight
   calwebb_tso-image2.cfg:
   - assign_wcs
-  - bkg_subtract
   - flat_field
   - photom
-  - resample
   calwebb_tso-spec2.cfg:
   - assign_wcs
-  - barshadow
-  - bkg_subtract
   - cube_build
   - extract_1d
   - extract_2d
   - flat_field
-  - fringe
-  - imprint_subtract
-  - msa_flagging
-  - pathloss
   - photom
-  - resample_spec
   - srctype
-  - straylight
   calwebb_tso1.cfg:
   - dark_current
   - dq_init
-  - firstframe
   - gain_scale
   - group_scale
-  - ipc
   - jump
-  - lastframe
   - linearity
-  - persistence
   - ramp_fit
   - refpix
   - rscd
@@ -260,26 +253,26 @@ pipeline_cfgs_to_steps:
 
 steps_to_reftypes:
   assign_wcs:
+  - distortion
+  - filteroffset
+  - specwcs
+  - regions
+  - wavelengthrange
   - camera
   - collimator
   - disperser
-  - distortion
-  - filteroffset
   - fore
   - fpa
-  - ifufore
-  - ifupost
-  - ifuslicer
   - msa
   - ote
-  - regions
-  - specwcs
-  - wavelengthrange
+  - ifupost
+  - ifufore
+  - ifuslicer
   barshadow:
   - barshadow
   bkg_subtract:
-  - wavelengthrange
   - wfssbkg
+  - wavelengthrange
   cube_build:
   - cubepar
   - resol
@@ -292,25 +285,23 @@ steps_to_reftypes:
   extract_2d:
   - wavecorr
   - wavelengthrange
-  firstframe: []
+  firstframe: &id001 []
   flat_field:
-  - dflat
-  - fflat
   - flat
+  - fflat
   - sflat
+  - dflat
   fringe:
   - fringe
   gain_scale:
   - gain
-  group_scale: []
-  guider_cds: []
-  imprint_subtract: []
-  ipc:
-  - ipc
+  group_scale: *id001
+  guider_cds: *id001
+  imprint_subtract: *id001
   jump:
   - gain
   - readnoise
-  lastframe: []
+  lastframe: *id001
   linearity:
   - linearity
   msa_flagging:
@@ -318,26 +309,25 @@ steps_to_reftypes:
   pathloss:
   - pathloss
   persistence:
-  - persat
   - trapdensity
   - trappars
+  - persat
   photom:
-  - area
   - photom
+  - area
   ramp_fit:
-  - gain
   - readnoise
+  - gain
   refpix:
   - refpix
-  resample:
+  resample: &id002
   - drizpars
-  resample_spec:
-  - drizpars
+  resample_spec: *id002
   rscd:
   - rscd
   saturation:
   - saturation
-  srctype: []
+  srctype: *id001
   straylight:
   - straymask
   superbias:
@@ -551,7 +541,6 @@ exptypes_to_reftypes:
   - mask
   - sflat
   FGS_DARK:
-  - ipc
   - linearity
   - mask
   - refpix
@@ -582,7 +571,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -631,7 +619,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -653,7 +640,6 @@ exptypes_to_reftypes:
   FGS_INTFLAT:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -667,7 +653,6 @@ exptypes_to_reftypes:
   FGS_SKYFLAT:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -702,7 +687,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -739,7 +723,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -759,7 +742,6 @@ exptypes_to_reftypes:
   - wavelengthrange
   - wfssbkg
   MIR_DARK:
-  - ipc
   - linearity
   - mask
   - refpix
@@ -769,7 +751,6 @@ exptypes_to_reftypes:
   MIR_FLAT-IMAGE:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -783,7 +764,6 @@ exptypes_to_reftypes:
   MIR_FLAT-MRS:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -797,7 +777,6 @@ exptypes_to_reftypes:
   MIR_FLATIMAGE:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -811,7 +790,6 @@ exptypes_to_reftypes:
   MIR_FLATIMAGE-EXT:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -825,7 +803,6 @@ exptypes_to_reftypes:
   MIR_FLATMRS:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -839,7 +816,6 @@ exptypes_to_reftypes:
   MIR_FLATMRS-EXT:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -868,7 +844,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -909,7 +884,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -935,7 +909,6 @@ exptypes_to_reftypes:
   - wfssbkg
   MIR_LRS-SLITLESS:
   - area
-  - barshadow
   - camera
   - collimator
   - cubepar
@@ -943,26 +916,20 @@ exptypes_to_reftypes:
   - dflat
   - disperser
   - distortion
-  - drizpars
   - extract1d
   - fflat
   - filteroffset
   - flat
   - fore
   - fpa
-  - fringe
   - gain
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
-  - msaoper
   - ote
-  - pathloss
-  - persat
   - photom
   - readnoise
   - refpix
@@ -972,13 +939,9 @@ exptypes_to_reftypes:
   - saturation
   - sflat
   - specwcs
-  - straymask
   - superbias
-  - trapdensity
-  - trappars
   - wavecorr
   - wavelengthrange
-  - wfssbkg
   MIR_LYOT:
   - area
   - camera
@@ -997,7 +960,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1038,7 +1000,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1080,7 +1041,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1117,7 +1077,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1137,7 +1096,6 @@ exptypes_to_reftypes:
   - wavelengthrange
   - wfssbkg
   NIS_DARK:
-  - ipc
   - linearity
   - mask
   - refpix
@@ -1147,7 +1105,6 @@ exptypes_to_reftypes:
   NIS_EXTCAL:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -1176,7 +1133,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1213,7 +1169,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1235,7 +1190,6 @@ exptypes_to_reftypes:
   NIS_LAMP:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -1248,7 +1202,6 @@ exptypes_to_reftypes:
   - trappars
   NIS_SOSS:
   - area
-  - barshadow
   - camera
   - collimator
   - cubepar
@@ -1256,26 +1209,20 @@ exptypes_to_reftypes:
   - dflat
   - disperser
   - distortion
-  - drizpars
   - extract1d
   - fflat
   - filteroffset
   - flat
   - fore
   - fpa
-  - fringe
   - gain
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
-  - msaoper
   - ote
-  - pathloss
-  - persat
   - photom
   - readnoise
   - refpix
@@ -1285,13 +1232,9 @@ exptypes_to_reftypes:
   - saturation
   - sflat
   - specwcs
-  - straymask
   - superbias
-  - trapdensity
-  - trappars
   - wavecorr
   - wavelengthrange
-  - wfssbkg
   NIS_TACONFIRM:
   - area
   - camera
@@ -1310,7 +1253,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1347,7 +1289,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1388,7 +1329,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1430,7 +1370,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1450,7 +1389,6 @@ exptypes_to_reftypes:
   - wavelengthrange
   - wfssbkg
   NRC_DARK:
-  - ipc
   - linearity
   - mask
   - refpix
@@ -1460,7 +1398,6 @@ exptypes_to_reftypes:
   NRC_FLAT:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -1489,7 +1426,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1526,7 +1462,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1548,7 +1483,6 @@ exptypes_to_reftypes:
   NRC_LED:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -1577,7 +1511,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1614,7 +1547,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1635,7 +1567,6 @@ exptypes_to_reftypes:
   - wfssbkg
   NRC_TSGRISM:
   - area
-  - barshadow
   - camera
   - collimator
   - cubepar
@@ -1643,26 +1574,20 @@ exptypes_to_reftypes:
   - dflat
   - disperser
   - distortion
-  - drizpars
   - extract1d
   - fflat
   - filteroffset
   - flat
   - fore
   - fpa
-  - fringe
   - gain
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
-  - msaoper
   - ote
-  - pathloss
-  - persat
   - photom
   - readnoise
   - refpix
@@ -1672,13 +1597,9 @@ exptypes_to_reftypes:
   - saturation
   - sflat
   - specwcs
-  - straymask
   - superbias
-  - trapdensity
-  - trappars
   - wavecorr
   - wavelengthrange
-  - wfssbkg
   NRC_TSIMAGE:
   - area
   - camera
@@ -1687,7 +1608,6 @@ exptypes_to_reftypes:
   - dflat
   - disperser
   - distortion
-  - drizpars
   - fflat
   - filteroffset
   - flat
@@ -1697,12 +1617,10 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
   - ote
-  - persat
   - photom
   - readnoise
   - refpix
@@ -1712,10 +1630,7 @@ exptypes_to_reftypes:
   - sflat
   - specwcs
   - superbias
-  - trapdensity
-  - trappars
   - wavelengthrange
-  - wfssbkg
   NRC_WFSC:
   - area
   - camera
@@ -1734,7 +1649,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1775,7 +1689,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1802,7 +1715,6 @@ exptypes_to_reftypes:
   NRS_AUTOFLAT:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -1835,7 +1747,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1877,7 +1788,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1898,7 +1808,6 @@ exptypes_to_reftypes:
   - wfssbkg
   NRS_BRIGHTOBJ:
   - area
-  - barshadow
   - camera
   - collimator
   - cubepar
@@ -1906,26 +1815,20 @@ exptypes_to_reftypes:
   - dflat
   - disperser
   - distortion
-  - drizpars
   - extract1d
   - fflat
   - filteroffset
   - flat
   - fore
   - fpa
-  - fringe
   - gain
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
-  - msaoper
   - ote
-  - pathloss
-  - persat
   - photom
   - readnoise
   - refpix
@@ -1935,13 +1838,9 @@ exptypes_to_reftypes:
   - saturation
   - sflat
   - specwcs
-  - straymask
   - superbias
-  - trapdensity
-  - trappars
   - wavecorr
   - wavelengthrange
-  - wfssbkg
   NRS_CONFIRM:
   - area
   - camera
@@ -1960,7 +1859,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -1980,7 +1878,6 @@ exptypes_to_reftypes:
   - wavelengthrange
   - wfssbkg
   NRS_DARK:
-  - ipc
   - linearity
   - mask
   - refpix
@@ -2009,7 +1906,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2051,7 +1947,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2092,7 +1987,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2134,7 +2028,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2156,7 +2049,6 @@ exptypes_to_reftypes:
   NRS_LAMP:
   - dark
   - gain
-  - ipc
   - linearity
   - mask
   - persat
@@ -2185,7 +2077,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2226,7 +2117,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2268,7 +2158,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2305,7 +2194,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
@@ -2342,7 +2230,6 @@ exptypes_to_reftypes:
   - ifufore
   - ifupost
   - ifuslicer
-  - ipc
   - linearity
   - mask
   - msa
