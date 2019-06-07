@@ -19,6 +19,14 @@ things like "reference types used by a pipeline."
 >>> header_to_pipelines(test_header("0.7.0", "NRS_BRIGHTOBJ"))
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
 
+>>> header = test_header("0.13.0", "MIR_IMAGE", tsovisit="F")
+>>> header_to_pipelines(header)
+['calwebb_detector1.cfg', 'calwebb_image2.cfg']
+    
+>>> header = test_header("0.13.0", "MIR_IMAGE", tsovisit="T")
+>>> header_to_pipelines(header)
+['calwebb_detector1.cfg', 'calwebb_tso-image2.cfg']
+
 >>> header_to_pipelines(test_header("0.7.0", "MIR_IMAGE"))
 ['calwebb_sloper.cfg', 'calwebb_image2.cfg']
     
@@ -75,7 +83,7 @@ from crds.client import api
 
 # --------------------------------------------------------------------------------------
 
-def test_header(calver, exp_type):
+def test_header(calver, exp_type, tsovisit="F", lamp_state="NONE"):
     """Create a header-like dictionary from `calver` and `exp_type` to
     support testing header-based functions.
     """
@@ -84,6 +92,8 @@ def test_header(calver, exp_type):
         "REFTYPE" : "CRDSCFG",
         "META.CALIBRATION_SOFTWARE_VERSION" : calver,
         "META.EXPOSURE.TYPE" : exp_type,
+        "META.VISIT.TSOVISIT" : tsovisit,
+        "META.INSTRUMENT.LAMP_STATE" : lamp_state,
         }
     return header
 
@@ -113,10 +123,17 @@ def header_to_reftypes(header, context=None):
 
     Return a list of reftype names.
     """
-    with log.warn_on_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
+    context = _get_missing_context(context)
+    with log.augment_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
-        return get_reftypes(exp_type, cal_ver, context)
-    return []
+    config_manager = _get_config_manager(context, cal_ver)
+    pipelines = header_to_pipelines(header, context)
+    reftypes = set()
+    for cfg in pipelines:
+        steps = config_manager.pipeline_cfgs_to_steps[cfg]
+        for step in steps:
+            reftypes |= set(config_manager.steps_to_reftypes[step])
+    return sorted(list(reftypes))
 
 def get_reftypes(exp_type, cal_ver=None, context=None):
     """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
@@ -142,15 +159,16 @@ def header_to_pipelines(header, context=None):
         exp_type, cal_ver = _header_to_exptype_calver(header)
     config_manager = _get_config_manager(context, cal_ver)
     pipelines = get_pipelines(exp_type, cal_ver, context)
+    if not config_manager.pipeline_exceptions:
+        return pipelines
     header = utils.condition_header(header)
     pipelines2 = []
     for cfg in pipelines:
         for param, exceptions in config_manager.pipeline_exceptions.items():
-            paramval = header.get(param.upper, "UNDEFINED")
-            if paramval == "T":
-                pipelines2.append(exceptions.get(cfg, cfg))
-            else:
-                pipelines2.append(cfg)
+            paramval = header.get(param.upper(), "UNDEFINED")
+            if paramval not in ["F", "NONE"]:  # tsovisit, lamp_state
+                cfg = exceptions.get(cfg, cfg)
+        pipelines2.append(cfg)
     return pipelines2
 
 def get_pipelines(exp_type, cal_ver=None, context=None):
@@ -183,8 +201,6 @@ def _header_to_exptype_calver(header):
     """Given dataset `header`,  return the EXP_TYPE and CAL_VER values."""
     cal_ver = header.get("META.CALIBRATION_SOFTWARE_VERSION", header.get("CAL_VER"))
     exp_type = header.get("META.EXPOSURE.TYPE",  header.get("EXP_TYPE", "UNDEFINED"))
-    # tsovisit = header.get("META.VISIT.TSOVISIT", header.get("TSOVISIT", "UNDEFINED"))
-    # ramp = header.get("META.INSTRUMENT.LAMP_STATE", header.get("LAMP", "UNDEFINED"))
     return exp_type, cal_ver
 
 @utils.cached  # for caching,  pars must be immutable, ideally simple
@@ -294,6 +310,8 @@ class CrdsCfgManager:
         self._refpath = refpath
         self._crdscfg = utils.Struct(crdscfg)
         self.pipeline_exceptions = self._crdscfg.get("pipeline_exceptions", {})
+        self.pipeline_cfgs_to_steps = self._crdscfg.get("pipeline_cfgs_to_steps", {})
+        self.steps_to_reftypes = self._crdscfg.get("steps_to_reftypes", {})
         
     def exptype_to_reftypes(self, exp_type):
         """For a given EXP_TYPE string, return a list of reftypes needed to process that
