@@ -25,7 +25,7 @@ things like "reference types used by a pipeline."
     
 >>> header = test_header("0.13.0", "MIR_IMAGE", tsovisit="T")
 >>> header_to_pipelines(header)
-['calwebb_detector1.cfg', 'calwebb_tso-image2.cfg']
+['calwebb_tso1.cfg', 'calwebb_tso-image2.cfg']
 
 >>> header_to_pipelines(test_header("0.7.0", "MIR_IMAGE"))
 ['calwebb_sloper.cfg', 'calwebb_image2.cfg']
@@ -83,7 +83,7 @@ from crds.client import api
 
 # --------------------------------------------------------------------------------------
 
-def test_header(calver, exp_type, tsovisit="F", lamp_state="NONE"):
+def test_header(calver, exp_type, tsovisit="F", lamp_state="OFF"):
     """Create a header-like dictionary from `calver` and `exp_type` to
     support testing header-based functions.
     """
@@ -123,16 +123,17 @@ def header_to_reftypes(header, context=None):
 
     Return a list of reftype names.
     """
-    with log.augment_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
+    with log.warn_on_exception("Failed determining reftypes for", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
-    config_manager = _get_config_manager(context, cal_ver)
-    pipelines = header_to_pipelines(header, context)
-    reftypes = set()
-    for cfg in pipelines:
-        steps = config_manager.pipeline_cfgs_to_steps[cfg]
-        for step in steps:
-            reftypes |= set(config_manager.steps_to_reftypes[step])
-    return sorted(list(reftypes))
+        config_manager = _get_config_manager(context, cal_ver)
+        pipelines = header_to_pipelines(header, context)
+        reftypes = set()
+        for cfg in pipelines:
+            steps = config_manager.pipeline_cfgs_to_steps[cfg]
+            for step in steps:
+                reftypes |= set(config_manager.steps_to_reftypes[step])
+        return sorted(list(reftypes))
+    return []
 
 def get_reftypes(exp_type, cal_ver=None, context=None):
     """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
@@ -155,7 +156,7 @@ def header_to_pipelines(header, context=None):
     with log.augment_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
     config_manager = _get_config_manager(context, cal_ver)
-    pipelines = get_pipelines(exp_type, cal_ver, context)
+    pipelines = get_pipelines(exp_type, cal_ver, context)   # uncorrected
     if config_manager.pipeline_exceptions:
         pipelines2 = []
         for cfg in pipelines:
@@ -172,7 +173,7 @@ def header_to_pipelines(header, context=None):
 def get_pipelines(exp_type, cal_ver=None, context=None):
     """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
     reference file and determine the sequence of pipeline .cfgs required to process that
-    exp_type.
+    exp_type.   This is an uncorrected result,  pipeline_exceptions can alter this.
     """
     with log.augment_exception("Failed determining required pipeline .cfgs for",
                                "EXP_TYPE", srepr(exp_type)):
