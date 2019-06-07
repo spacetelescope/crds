@@ -123,7 +123,6 @@ def header_to_reftypes(header, context=None):
 
     Return a list of reftype names.
     """
-    context = _get_missing_context(context)
     with log.augment_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
     config_manager = _get_config_manager(context, cal_ver)
@@ -140,10 +139,8 @@ def get_reftypes(exp_type, cal_ver=None, context=None):
     reference file and determine the reference types required to process every pipeline Step
     nominally associated with that exp_type.
     """
-    context = _get_missing_context(context)
-    cal_ver = _get_missing_calver(cal_ver)
     with log.warn_on_exception("Failed determining required reftypes from",
-                               "EXP_TYPE", srepr(exp_type), "CAL_VER", srepr(cal_ver)):
+                               "EXP_TYPE", srepr(exp_type)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.exptype_to_reftypes(exp_type)
     return []
@@ -159,29 +156,26 @@ def header_to_pipelines(header, context=None):
         exp_type, cal_ver = _header_to_exptype_calver(header)
     config_manager = _get_config_manager(context, cal_ver)
     pipelines = get_pipelines(exp_type, cal_ver, context)
-    if not config_manager.pipeline_exceptions:
-        return pipelines
-    header = utils.condition_header(header)
-    pipelines2 = []
-    for cfg in pipelines:
-        for param, exceptions in config_manager.pipeline_exceptions.items():
-            paramval = header.get(param.upper(), "UNDEFINED")
-            if paramval not in ["F", "NONE"]:  # tsovisit, lamp_state
-                cfg = exceptions.get(cfg, cfg)
-        pipelines2.append(cfg)
-    return pipelines2
+    if config_manager.pipeline_exceptions:
+        pipelines2 = []
+        for cfg in pipelines:
+            for param, exceptions in config_manager.pipeline_exceptions.items():
+                paramval = header.get(param.upper(), "F")
+                if paramval not in ["F", "FALSE", "NONE", "OFF"]:
+                    # tsovisit, lamp_state
+                    cfg = exceptions.get(cfg, cfg)
+            pipelines2.append(cfg)
+        pipelines = pipelines2
+    log.verbose("Applicable pipelines for", srepr(exp_type), "are", srepr(pipelines))
+    return pipelines
 
 def get_pipelines(exp_type, cal_ver=None, context=None):
     """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
     reference file and determine the sequence of pipeline .cfgs required to process that
     exp_type.
     """
-    
-    context = _get_missing_context(context)
-    cal_ver = _get_missing_calver(cal_ver)
-    
     with log.augment_exception("Failed determining required pipeline .cfgs for",
-                               "EXP_TYPE", srepr(exp_type), "CAL_VER", srepr(cal_ver)):
+                               "EXP_TYPE", srepr(exp_type)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.exptype_to_pipelines(exp_type)
 
@@ -190,16 +184,15 @@ def reftype_to_pipelines(reftype, cal_ver=None, context=None):
     reference file and determine the sequence of pipeline .cfgs required to process that
     exp_type.
     """
-    context = _get_missing_context(context)
-    cal_ver = _get_missing_calver(cal_ver)
     with log.augment_exception("Failed determining required pipeline .cfgs for",
-                               "EXP_TYPE", srepr(reftype), "CAL_VER", srepr(cal_ver)):
+                               "REFTYPE", srepr(reftype)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.reftype_to_pipelines(reftype)
 
 def _header_to_exptype_calver(header):
     """Given dataset `header`,  return the EXP_TYPE and CAL_VER values."""
     cal_ver = header.get("META.CALIBRATION_SOFTWARE_VERSION", header.get("CAL_VER"))
+    cal_ver = _get_missing_calver(cal_ver)
     exp_type = header.get("META.EXPOSURE.TYPE",  header.get("EXP_TYPE", "UNDEFINED"))
     return exp_type, cal_ver
 
@@ -236,6 +229,8 @@ def _get_config_refpath(context, cal_ver):
     """Given CRDS `context` and calibration s/w version `cal_ver`,  identify the applicable
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
+    context = _get_missing_context(context)
+    cal_ver = _get_missing_calver(cal_ver)
     i = 0
     while (i < len(REFPATHS)-1 and not _versions_lt(cal_ver, REFPATHS[i+1][0])):
         i += 1
@@ -332,9 +327,6 @@ class CrdsCfgManager:
         Return [.cfg's, ... ]
         """
         pipelines = self._crdscfg.exptypes_to_pipelines[exp_type]
-        log.verbose("Applicable pipelines for", srepr(exp_type), 
-                    "determined by", srepr(os.path.basename(self._refpath)),
-                    "are", srepr(pipelines))
         return pipelines
 
     def reftype_to_pipelines(self, reftype):

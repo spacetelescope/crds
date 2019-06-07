@@ -757,7 +757,6 @@ than errors as the default.
         if types and self.args.skip_types:
             types = set(types) - set(self.args.skip_types)
         types = sorted(list(types))
-        log.verbose("For", repr(dataset), "processing reference types:", repr(types))
         return types
     
     @property

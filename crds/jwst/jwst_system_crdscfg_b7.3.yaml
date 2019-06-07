@@ -122,7 +122,7 @@ level_pipeline_exptypes:
 
 pipeline_exceptions:
     meta.visit.tsovisit:
-       calwebb_detector1.cfg: calweeb_tso1.cfg   
+       calwebb_detector1.cfg: calwebb_tso1.cfg   
        calwebb_image2.cfg:    calwebb_tso-image2.cfg
        calwebb_spec2.cfg:     calwebb_tso-spec2.cfg
        outlier_detection.cfg: outlier_detection_tso.cfg
