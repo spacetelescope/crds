@@ -8,10 +8,10 @@ things like "reference types used by a pipeline."
 ['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'pathloss', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'straymask', 'superbias', 'v2v3', 'wavelengthrange']
 
 >>> header_to_reftypes(test_header("0.13.0", "MIR_IMAGE"))
-['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'superbias', 'v2v3', 'wavelengthrange']
+['area', 'camera', 'collimator', 'dark', 'dflat', 'disperser', 'distortion', 'drizpars', 'fflat', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'linearity', 'mask', 'msa', 'ote', 'persat', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'sflat', 'specwcs', 'superbias', 'trapdensity', 'trappars', 'wavelengthrange', 'wfssbkg']
 
 >>> header_to_reftypes(test_header("0.13.0", "MIR_LRS-FIXEDSLIT"))
-['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'flat', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'pathloss', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'straymask', 'superbias', 'v2v3', 'wavelengthrange']
+['area', 'barshadow', 'camera', 'collimator', 'cubepar', 'dark', 'dflat', 'disperser', 'distortion', 'drizpars', 'extract1d', 'fflat', 'filteroffset', 'flat', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'linearity', 'mask', 'msa', 'msaoper', 'ote', 'pathloss', 'persat', 'photom', 'readnoise', 'refpix', 'regions', 'resol', 'rscd', 'saturation', 'sflat', 'specwcs', 'straymask', 'superbias', 'trapdensity', 'trappars', 'wavecorr', 'wavelengthrange', 'wfssbkg']
 
 >>> header_to_pipelines(test_header("0.7.0", "FGS_DARK"))
 ['calwebb_dark.cfg', 'skip_2b.cfg']
