@@ -121,12 +121,18 @@ level_pipeline_exptypes:
 # ----------------------------------------------------------------------------------------------
 
 pipeline_exceptions:
+
     meta.visit.tsovisit:
+       default_missing: F
+       dont_replace: F, FALSE, NONE, OFF
        calwebb_detector1.cfg: calwebb_tso1.cfg   
        calwebb_image2.cfg:    calwebb_tso-image2.cfg
        calwebb_spec2.cfg:     calwebb_tso-spec2.cfg
        outlier_detection.cfg: outlier_detection_tso.cfg
+
     meta.instrument.lamp_state:
+       default_missing: F
+       dont_replace: F, FALSE, NONE, OFF
        calwebb_spec2.cfg:     calwebb_nrslamp-spec2.cfg
 
 steps_to_reftypes_exceptions: []

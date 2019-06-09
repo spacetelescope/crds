@@ -13,18 +13,6 @@ pipelines used to process the given dataset filepath or dataset with a particula
 >>> header_to_pipelines(test_header("0.7.0", "MIR_LRS-FIXEDSLIT"))
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
 
->>> get_pipelines("FGS_DARK", "0.7.0", observatory="jwst")
-['calwebb_dark.cfg', 'skip_2b.cfg']
-
->>> get_pipelines("NRS_BRIGHTOBJ", "0.7.0", observatory="jwst")
-['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
-
->>> get_pipelines("MIR_IMAGE", "0.7.0", observatory="jwst")
-['calwebb_sloper.cfg', 'calwebb_image2.cfg']
-    
->>> get_pipelines("MIR_LRS-FIXEDSLIT", "0.7.0", observatory="jwst")
-['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
-   
 """
 from crds.core import utils
 from crds import data_file
@@ -59,12 +47,3 @@ def header_to_pipelines(header, context=None):
     locator = utils.header_to_locator(header)
     return locator.header_to_pipelines(header, context)
 
-def get_pipelines(exp_type, cal_ver=None, context=None, observatory=None):
-    """Given `exp_type`, calibration software version `cal_ver`, CRDS context
-    name `context`, and project / `observatory name,  return the list of 
-    calibration software pipeline names (.cfgs) used to process that `exp_type`
-    under version `cal_ver`.
-    """
-    assert context or observatory, "Must define one of `context` or `observatory`."
-    locator = utils.get_locator_module(observatory)
-    return locator.get_pipelines(exp_type, cal_ver, context)
