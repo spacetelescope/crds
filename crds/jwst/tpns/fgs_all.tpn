@@ -11,9 +11,9 @@ META.INSTRUMENT.NAME        H   C   R    FGS
 
 META.INSTRUMENT.DETECTOR    H   C   O    GUIDER1,GUIDER2,ANY,N/A
 
-META.EXPOSURE.READPATT      H   C   O    ID,ACQ1,ACQ2,TRACK,FINEGUIDE,\
-                                         FGS,FGS60,FGS8370,FGS840,FGSRAPID,\
-                                         FINEGUIDE,ANY,N/A
+# META.EXPOSURE.READPATT      H   C   O    ID,ACQ1,ACQ2,TRACK,FINEGUIDE,\
+#                                          FGS,FGS60,FGS8370,FGS840,FGSRAPID,\
+#                                          FINEGUIDE,ANY,N/A
 
 META.EXPOSURE.TYPE          H   C   O   FGS_DARK,FGS_FOCUS,FGS_IMAGE,FGS_INTFLAT,FGS_SKYFLAT,\
                                         FGS_ACQ1,FGS_ACQ2,FGS_FINEGUIDE,\

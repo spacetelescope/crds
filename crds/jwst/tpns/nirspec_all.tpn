@@ -22,10 +22,11 @@ include includes/nirspec_subarray_baseline.tpn
 # META.INSTRUMENT.GRATING     H   C   O  G140M,G235M,G395M,G140H,G235H,G395H,\
 #                                       PRISM,MIRROR,ANY,N/A
 
-META.EXPOSURE.READPATT      H   C   O  NRSRAPID,NRS,NRSN8R2,NRSN16R4,NRSN32R8,\
-                                       NRSIRS2,NRSIRS2RAPID,NRSSLOW,\
-                                       NRSRAPIDD1,NRSRAPIDD2,NRSRAPIDD6,\
-                                       ANY,N/A
+# META.EXPOSURE.READPATT      H   C   O  NRSRAPID,NRS,NRSN8R2,NRSN16R4,NRSN32R8,\
+#                                        NRSIRS2,NRSIRS2RAPID,NRSSLOW,\
+#                                        NRSRAPIDD1,NRSRAPIDD2,NRSRAPIDD6,\
+#                                        ANY,N/A
+
 READPATT                    H   C   O
 
 META.EXPOSURE.GAIN_FACTOR     H   R   O  1.0:10.0
