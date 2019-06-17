@@ -456,11 +456,17 @@ def ref_properties_from_header(filename):
     path, _parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "hst")
-    if "DBTABLE" not in header or header["DBTABLE"] in ["IMPHTTAB"]:
-        instrument = header["INSTRUME"].lower()
-    else:
-        instrument = "synphot"
-    instrument = INSTRUMENT_FIXERS.get(instrument, instrument)
+    try:
+        if "DBTABLE" not in header or header["DBTABLE"] in ["IMPHTTAB"]:
+            instrument = header["INSTRUME"].lower()
+        else:
+            instrument = "synphot"
+        instrument = INSTRUMENT_FIXERS.get(instrument, instrument)
+    except Exception as exc:
+        raise CrdsNamingError("Can't determine instrument for",
+                              repr(os.path.basename(filename)) + ".",
+                              "CAL references must define INSTRUME,",
+                              "SYNPHOT references define DBTABLE.") from exc
     try:
         filetype = header.get(
             "FILETYPE", header.get(
