@@ -464,8 +464,7 @@ def ref_properties_from_header(filename):
     try:
         filetype = header.get(
             "FILETYPE", header.get(
-                "DBTABLE", header.get(
-                    "CDBSFILE"))).lower()
+                "DBTABLE", header["CDBSFILE"])).lower()
     except KeyError:
         observatory = header.get(
         "TELESCOP", header.get(
