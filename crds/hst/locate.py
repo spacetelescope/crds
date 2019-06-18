@@ -456,20 +456,29 @@ def ref_properties_from_header(filename):
     path, _parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "hst")
-    if "DBTABLE" not in header or header["DBTABLE"] in ["IMPHTTAB"]:
-        instrument = header["INSTRUME"].lower()
-    else:
-        instrument = "synphot"
-    instrument = INSTRUMENT_FIXERS.get(instrument, instrument)
+    try:
+        if "DBTABLE" not in header or header["DBTABLE"] in ["IMPHTTAB"]:
+            instrument = header["INSTRUME"].lower()
+        else:
+            instrument = "synphot"
+        instrument = INSTRUMENT_FIXERS.get(instrument, instrument)
+    except KeyError as exc:
+        raise CrdsNamingError("Can't determine instrument for",
+                              repr(os.path.basename(filename)) + ".",
+                              "CAL references must define INSTRUME,",
+                              "SYNPHOT references define DBTABLE.") from exc
     try:
         filetype = header.get(
             "FILETYPE", header.get(
-                "DBTABLE", header.get(
-                    "CDBSFILE"))).lower()
+                "DBTABLE", header.get("CDBSFILE")))
+        if filetype is None:
+            raise KeyError
+        else:
+            filetype = filetype.lower()
     except KeyError:
         observatory = header.get(
-        "TELESCOP", header.get(
-            "TELESCOPE", None))
+            "TELESCOP", header.get(
+                "TELESCOPE", None))
         if observatory is not None and observatory.upper() != "HST":
             raise CrdsNamingError(
                 "CRDS is configured for 'HST' but file", 
@@ -478,9 +487,8 @@ def ref_properties_from_header(filename):
                 "telescope.  Reconfigure CRDS_PATH or CRDS_SEVER_URL.")
         else:
             raise CrdsNamingError(
-                "File", repr(os.path.basename(filename)),
-                "is missing FILETYPE, CDBSFILE, DBTABLE, TELESCOP, and TELESCOPE;",
-                "CRDS cannot identify HST file type.")
+                "Can't determine HST file type for", repr(os.path.basename(filename)) + ".",
+                "Check FILETYPE, CDBSFILE, DBTABLE, TELESCOP, and/or TELESCOPE.")
     filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
     try:
         filekind = TYPES.filetype_to_filekind(instrument, filetype)
