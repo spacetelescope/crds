@@ -87,7 +87,7 @@ setup(name="crds",
       author_email="jmiller@stsci.edu",
       url="https://hst-crds.stsci.edu",
       license="BSD",
-      install_requires=["astropy", "numpy", "filelock",], # "lockfile"],
+      install_requires=["astropy", "numpy", "mock", "filelock", "lockfile"],
       extras_require={
           "jwst": ["jwst"],
           "submission": ["requests", "lxml", "parsley", "fitsverify"],

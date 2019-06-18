@@ -145,18 +145,10 @@ class HeaderGenerator:
         # replace param-by-param,  not id-by-id, since headers2[id] may be partial
         for dataset_id in headers2:
             if dataset_id not in self.headers:
-                log.verbose("Adding headers for", repr(dataset_id))
                 self.headers[dataset_id] = {}
-            else:
-                log.verbose("Updating headers for", repr(dataset_id))
             header1, header2 = self.headers[dataset_id], headers2[dataset_id]
             for key in header2:
                 if key not in header1 or header1[key] != header2[key]:
-                    if key in header1:
-                        log.verbose("Updating/correcting", repr(dataset_id), "key", repr(key),
-                                    "from", repr(header1[key]), "to", repr(header2[key]))
-                    else:
-                        log.verbose("Adding", repr(dataset_id), "key", repr(key), "=", repr(header2[key]))
                     header1[key] = header2[key]
 
     def handle_updates(self, all_updates):
