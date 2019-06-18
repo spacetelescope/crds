@@ -411,10 +411,12 @@ Mapping Change Procedure
 
 The manual rmap update process is to:
 
-1.  Download the starting rmap from the web site or get it out of /grp/crds/cache/mappings/{hst,jwst}/.
+1.  Download the starting rmap from the web site or copy it out of
+    /grp/crds/cache/mappings/hst or /grp/crds/cache/mappings/jwst.
 
-2.  **DO NOT** change the name of the mapping or alter the internal name links
-    like *derived_from* in the mapping header.  Leave the naming properties exactly as-is.
+2.  **DO NOT** change the name of the mapping
+    **DO NOT** alter the internal name links like *derived_from* in the mapping
+    header.   Leave the naming properties exactly as-is.
 
 3.  Modify the mapping in any text editor and verify the mapping as best you
     can.  Use great care, CRDS certify cannot check many of the mapping properties.
@@ -424,44 +426,35 @@ The manual rmap update process is to:
 
      % crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-edit
 
-   You may/will see an rmap checksum warning since you modified the contents of
+   You may see an rmap checksum warning since you modified the contents of
    the rmap.
 
    Note: the ./ seen in the example command is important,  it tells CRDS to
    use the file in the current directory instead of attempting to find it in
    the CRDS cache.
 
-   By default, most tools in CRDS will not load a mapping with an incorrect
-   checksum.  Run crds.checksum on the mapping to update the internal sha1sum
-   if you wish to load the context into Python to do other tests with the
-   .rmap::
+   Run crds.checksum on the mapping to update the internal sha1sum if you wish
+   to load the context into Python to do other tests with the .rmap::
 
      % crds checksum ./jwst_miri_dark_0004.rmap
     
    The internal checksum is also used to verify the upload integrity when you
    finally submit the file to CRDS.  An out-of-date checksum or corrupted file
-   will generate a warning and the server will automatically fix it.  However,
-   it is then possible for upload errors to go undetected since a warning is
-   expected.
+   will generate a warning.
 
-6. Typically for rmaps, **DO** check Generate Contexts as that will derive new a
-   imap and pmap referring to your modified rmap.
+6. Typically for rmaps set::
+ * Generate Contexts ON
+ * Auto-Rename ON
 
-7. As you submit, **DO** check Auto-Rename.  In addition to renaming your
-   modified rmap, this automatically handles the internal rmap header naming
-   properties correctly. 
-
-Following this process is the key to maintaining the rmap's internal naming
-links.  The internal naming links are used to track the derivation of rmaps
-and generate the Edit Collision Warnings.  Edit Collision warnings indicate
-when two rmaps were derived from the same source and can mean that one of the
-two change sets will be lost if the delivery is not corrected.
+**NOTE:** See also `Delete References`_ and `Add References`_ for streamlined
+methods of adding and removing existing references to/from rmaps.
 
 Imap and Pmap Differences
 +++++++++++++++++++++++++
 
-Note that submissions of imaps and pmaps do not support Generate Context.  In
-addition, CRDS doesn't accept files that refer to other files not already in
+Note that submissions of imaps and pmaps do not support Generate Context.
+
+In addition, CRDS doesn't accept files that refer to other files not already in
 CRDS.  This means that pmaps and new imaps they refer to cannot be handled in
 one submission.
 
@@ -473,6 +466,69 @@ header updates.
 Hence, it is recommended to do imap and pmap work in two phases: First, modify
 and submit the imaps, generating and/or reserving official CRDS names.  Next
 manually modify the pmap as needed to refer to the newly generated imap names.
+
+New .pmaps not created by CRDS require manually updating the Editing Context
+using Set Context.
+
+Manual .imap update
+!!!!!!!!!!!!!!!!!!!
+
+1. Identify the baseline context to derive from.
+
+2. Within that .pmap,  identify the .imap to modify.
+
+3. Download or copy the identified .imap.
+
+4. Manually edit the .imap to make your required changes, e.g. removing a
+type or setting a type to N/A.   Note that adding types can generally be
+done just by submitting the new .rmap normally.
+
+5. Submit the .imap using Submit Mappings with::
+  * Generate Contexts OFF
+  * Auto-rename ON
+
+6. Confirm your submission
+
+7. Follow the procedure for manually updating a .pmap to refer to
+your newly named .imap
+
+Manual .pmap update
+!!!!!!!!!!!!!!!!!!!
+
+1. Download or copy the .pmap you wish to start from.
+
+2. Manually edit the .pmap to make any required changes.
+
+3. Submit the .pmap using Submit Mappings with::
+  * Generate Contexts OFF
+  * Auto-rename ON
+
+4. Confirm your submission.
+
+5. From here onward,  this should be a normal file submission,  with
+corresponding processes to archive the files,  Set Context the default
+OPERATIONAL context,  and sync the pipeline's CRDS cache.
+
+6. Use Set Context to update the **EDIT context** to this .pmap
+as the default starting point for subsequent file submissions.
+
+Manually update the EDIT context
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+The default starting point for new rules (Derive From Context) is defined by
+the Editing Context.
+
+When Generate Contexts is ON,  CRDS automatically sets the Editing
+Context to the generated .pmap.
+
+When Generate Contexts is OFF and a .pmap is manually updated, the Set Context
+page should generally be used to update the Editing Context so that future
+submissions will derive from the new .pmap by default.
+
+The Set Context page can be used to update either the Operational or Editing
+Context.  When updating the Editing Context, you may need to open the context
+selection accordion and type in the name of the new .pmap in User Specified.
+Verify that the correct .pmap is being set.
 
 Submit References
 .................
@@ -531,6 +587,8 @@ By default, bestrefs assignment of bad references or use of bad rules are errors
 The default command line behavior can be overridden by setting environment variables:
 *CRDS_ALLOW_BAD_RULES* and/or *CRDS_ALLOW_BAD_REFERENCES*.
 
+.. _`Delete References`:
+   
 Delete References
 .................
 
@@ -553,6 +611,8 @@ Files field of the input form, separated by spaces, commas, and/or newlines.
 Changes to rules which result from delete references are presented on a results
 page which must be confirmed or cancelled as with other file submissions.
 
+.. _`Add References`:
+   
 Add References
 ..............
 
