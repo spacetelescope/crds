@@ -244,11 +244,11 @@ def dt_get_context_parkeys():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> heavy_client.get_context_parkeys("jwst.pmap","miri")    
-    ['META.INSTRUMENT.TYPE', 'META.OBSERVATION.DATE', 'REFTYPE']
+    ['META.INSTRUMENT.TYPE', 'META.INSTRUMENT.LAMP_STATE', 'META.OBSERVATION.DATE', 'META.VISIT.TSOVISIT', 'REFTYPE']
     >>> heavy_client.get_context_parkeys("jwst_miri.imap","miri")
-    ['META.OBSERVATION.DATE', 'REFTYPE']
+    ['META.INSTRUMENT.LAMP_STATE', 'META.OBSERVATION.DATE', 'META.VISIT.TSOVISIT', 'REFTYPE']
     >>> heavy_client.get_context_parkeys("jwst_miri_flat.rmap","miri")
-    ['META.OBSERVATION.DATE']
+    ['META.OBSERVATION.DATE', 'META.VISIT.TSOVISIT', 'META.INSTRUMENT.LAMP_STATE']
     >>> test_config.cleanup(old_state)
     """
 

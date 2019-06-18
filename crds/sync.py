@@ -300,9 +300,9 @@ class SyncScript(cmdline.ContextsScript):
 
         # update CRDS cache config area,  including stored version of operational context.
         # implement pipeline support functions of context update verify and echo
-        # If explicit files were specified,  do not update cache config.
-        if self.args.files and self.args.output_dir:
-            log.verbose_warning("Used explicit --files list and --output-dir,  skipping cache server_config update including default context and bad files.")
+        # If --output-dir was specified,  do not update cache config.
+        if self.args.output_dir:
+            log.verbose_warning("Used --output-dir,  skipping cache server_config update including default context and bad files.")
             if config.writable_cache_or_verbose("skipping removal of ref_cache_subdir_mode file."):
                 os.remove(config.get_crds_ref_subdir_file(self.observatory))
         else:

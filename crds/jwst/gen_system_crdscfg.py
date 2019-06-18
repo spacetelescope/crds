@@ -13,6 +13,7 @@ configurations and required reference types.
 import sys
 import re
 import fnmatch
+import os.path
 
 # ----------------------------------------------------------------------------------------------
 
@@ -21,12 +22,13 @@ import yaml
 # ----------------------------------------------------------------------------------------------
 
 from jwst import version
-from jwst.stpipe import cmdline as jwst_cmdline
+from jwst.stpipe import pipeline
+from jwst import pipeline as pipepkg
 
 # ----------------------------------------------------------------------------------------------
 
 import crds
-from crds.core import log, exceptions, utils, timestamp
+from crds.core import log, exceptions, utils, timestamp, pysh
 from crds.core.log import srepr
 
 # ----------------------------------------------------------------------------------------------
@@ -83,12 +85,25 @@ class CrdsCfgGenerator:
         pipeline_cfgs_to_steps
         steps_to_reftypes
         """
+        pysh.sh("rm -rf configs")
+        pysh.sh("collect_pipeline_cfgs configs")
         self.pipeline_cfgs_to_steps["skip_2b.cfg"] = []
         for pipeline_cfg in self.loaded_cfg.pipeline_cfgs:
-            steps_to_reftypes = jwst_cmdline.steps_to_reftypes_from_config(pipeline_cfg)
+            log.info("Processing", repr(pipeline_cfg))
+            cfgdir = "configs" # os.path.dirname(pipepkg.__file__) or ""
+            cfgpath = os.path.join(cfgdir, pipeline_cfg)
+            p = pipeline.Pipeline.from_config_file(cfgpath)
+            steps_to_reftypes = {}
+            for name, stepcfg in p.steps.items():
+                if stepcfg.get("skip", True):
+                    log.info("Considering", repr(name), "skip")
+                else:
+                    log.info("Considering", repr(name), "keep")
+                    step = p.step_defs[name]  # class
+                    steps_to_reftypes[name] = step.reference_file_types
             self.pipeline_cfgs_to_steps[pipeline_cfg] = sorted(list(steps_to_reftypes.keys()))
             self.steps_to_reftypes.update(steps_to_reftypes)
-        
+
     def generate_output_yaml(self):
         """Generate the SYSTEM CRDSCFG reference YAML."""
         output_yaml = self.get_updated_yaml()

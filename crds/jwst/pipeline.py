@@ -7,17 +7,25 @@ things like "reference types used by a pipeline."
 >>> header_to_reftypes(test_header("0.7.0", "NRS_BRIGHTOBJ"))
 ['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'pathloss', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'straymask', 'superbias', 'v2v3', 'wavelengthrange']
 
->>> header_to_reftypes(test_header("0.7.0", "MIR_IMAGE"))
-['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'superbias', 'v2v3', 'wavelengthrange']
+>>> header_to_reftypes(test_header("0.13.0", "MIR_IMAGE"))
+['area', 'camera', 'collimator', 'dark', 'dflat', 'disperser', 'distortion', 'drizpars', 'fflat', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'linearity', 'mask', 'msa', 'ote', 'persat', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'sflat', 'specwcs', 'superbias', 'trapdensity', 'trappars', 'wavelengthrange', 'wfssbkg']
 
->>> header_to_reftypes(test_header("0.7.0", "MIR_LRS-FIXEDSLIT"))
-['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'flat', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'pathloss', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'straymask', 'superbias', 'v2v3', 'wavelengthrange']
+>>> header_to_reftypes(test_header("0.13.0", "MIR_LRS-FIXEDSLIT"))
+['area', 'barshadow', 'camera', 'collimator', 'cubepar', 'dark', 'dflat', 'disperser', 'distortion', 'drizpars', 'extract1d', 'fflat', 'filteroffset', 'flat', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'linearity', 'mask', 'msa', 'msaoper', 'ote', 'pathloss', 'persat', 'photom', 'readnoise', 'refpix', 'regions', 'resol', 'rscd', 'saturation', 'sflat', 'specwcs', 'straymask', 'superbias', 'trapdensity', 'trappars', 'wavecorr', 'wavelengthrange', 'wfssbkg']
 
 >>> header_to_pipelines(test_header("0.7.0", "FGS_DARK"))
 ['calwebb_dark.cfg', 'skip_2b.cfg']
 
 >>> header_to_pipelines(test_header("0.7.0", "NRS_BRIGHTOBJ"))
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
+
+>>> header = test_header("0.13.0", "MIR_IMAGE", tsovisit="F")
+>>> header_to_pipelines(header)
+['calwebb_detector1.cfg', 'calwebb_image2.cfg']
+    
+>>> header = test_header("0.13.0", "MIR_IMAGE", tsovisit="T")
+>>> header_to_pipelines(header)
+['calwebb_tso1.cfg', 'calwebb_tso-image2.cfg']
 
 >>> header_to_pipelines(test_header("0.7.0", "MIR_IMAGE"))
 ['calwebb_sloper.cfg', 'calwebb_image2.cfg']
@@ -61,6 +69,8 @@ import re
 
 # import yaml     DEFERRED
 
+from pkg_resources import parse_version
+
 # --------------------------------------------------------------------------------------
 
 # from jwst import version     DEFERRED
@@ -73,7 +83,7 @@ from crds.client import api
 
 # --------------------------------------------------------------------------------------
 
-def test_header(calver, exp_type):
+def test_header(calver, exp_type, tsovisit="F", lamp_state="OFF"):
     """Create a header-like dictionary from `calver` and `exp_type` to
     support testing header-based functions.
     """
@@ -82,6 +92,8 @@ def test_header(calver, exp_type):
         "REFTYPE" : "CRDSCFG",
         "META.CALIBRATION_SOFTWARE_VERSION" : calver,
         "META.EXPOSURE.TYPE" : exp_type,
+        "META.VISIT.TSOVISIT" : tsovisit,
+        "META.INSTRUMENT.LAMP_STATE" : lamp_state,
         }
     return header
 
@@ -111,22 +123,16 @@ def header_to_reftypes(header, context=None):
 
     Return a list of reftype names.
     """
-    with log.warn_on_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
+    with log.warn_on_exception("Failed determining reftypes for", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
-        return get_reftypes(exp_type, cal_ver, context)
-    return []
-
-def get_reftypes(exp_type, cal_ver=None, context=None):
-    """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
-    reference file and determine the reference types required to process every pipeline Step
-    nominally associated with that exp_type.
-    """
-    context = _get_missing_context(context)
-    cal_ver = _get_missing_calver(cal_ver)
-    with log.warn_on_exception("Failed determining required reftypes from",
-                               "EXP_TYPE", srepr(exp_type), "CAL_VER", srepr(cal_ver)):
         config_manager = _get_config_manager(context, cal_ver)
-        return config_manager.exptype_to_reftypes(exp_type)
+        pipelines = header_to_pipelines(header, context)
+        reftypes = set()
+        for cfg in pipelines:
+            steps = config_manager.pipeline_cfgs_to_steps[cfg]
+            for step in steps:
+                reftypes |= set(config_manager.steps_to_reftypes[step])
+        return sorted(list(reftypes))
     return []
 
 # This is potentially an external interface to system data processing (SDP) / the archive pipeline.
@@ -134,21 +140,37 @@ def header_to_pipelines(header, context=None):
     """Given a dataset `header`,  extract the EXP_TYPE or META.EXPOSURE.TYPE keyword
     from and use it to look up the pipelines required to process it.
 
-    Return a list of reftype names.
+    Return a list of pipeline .cfg names.
     """
     with log.augment_exception("Failed determining exp_type, cal_ver from header", log.PP(header)):
         exp_type, cal_ver = _header_to_exptype_calver(header)
-    return get_pipelines(exp_type, cal_ver, context)
+    config_manager = _get_config_manager(context, cal_ver)
+    pipelines = _get_pipelines(exp_type, cal_ver, context)   # uncorrected
+    if config_manager.pipeline_exceptions:  # correction based on extra non-EXP_TYPE params
+        pipelines2 = []
+        for cfg in pipelines:
+            for param, exceptions in config_manager.pipeline_exceptions.items():
+                exceptions = dict(exceptions)
+                dont_replace = exceptions.pop("dont_replace")
+                default_missing  = exceptions.pop("default_missing")
+                paramval = header.get(param.upper(), default_missing)
+                if paramval not in dont_replace:
+                    cfg = exceptions.get(cfg, cfg)
+            pipelines2.append(cfg)
+        pipelines = pipelines2
+    log.verbose("Applicable pipelines for", srepr(exp_type), "are", srepr(pipelines))
+    return pipelines
 
-def get_pipelines(exp_type, cal_ver=None, context=None):
+def _get_pipelines(exp_type, cal_ver=None, context=None):
     """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
     reference file and determine the sequence of pipeline .cfgs required to process that
-    exp_type.
+    exp_type.   
+
+    NOTE:  This is an uncorrected result,  config_manager.pipeline_exceptions is used to
+    alter this based on other header parameters.
     """
-    context = _get_missing_context(context)
-    cal_ver = _get_missing_calver(cal_ver)
     with log.augment_exception("Failed determining required pipeline .cfgs for",
-                               "EXP_TYPE", srepr(exp_type), "CAL_VER", srepr(cal_ver)):
+                               "EXP_TYPE", srepr(exp_type)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.exptype_to_pipelines(exp_type)
 
@@ -157,17 +179,15 @@ def reftype_to_pipelines(reftype, cal_ver=None, context=None):
     reference file and determine the sequence of pipeline .cfgs required to process that
     exp_type.
     """
-    context = _get_missing_context(context)
-    cal_ver = _get_missing_calver(cal_ver)
     with log.augment_exception("Failed determining required pipeline .cfgs for",
-                               "EXP_TYPE", srepr(reftype), "CAL_VER", srepr(cal_ver)):
+                               "REFTYPE", srepr(reftype)):
         config_manager = _get_config_manager(context, cal_ver)
         return config_manager.reftype_to_pipelines(reftype)
-
 
 def _header_to_exptype_calver(header):
     """Given dataset `header`,  return the EXP_TYPE and CAL_VER values."""
     cal_ver = header.get("META.CALIBRATION_SOFTWARE_VERSION", header.get("CAL_VER"))
+    cal_ver = _get_missing_calver(cal_ver)
     exp_type = header.get("META.EXPOSURE.TYPE",  header.get("EXP_TYPE", "UNDEFINED"))
     return exp_type, cal_ver
 
@@ -196,13 +216,16 @@ REFPATHS = [
     ('0.9.1', "jwst_system_crdscfg_b7.1.1.yaml"),
     ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
     ('0.10.0', "jwst_system_crdscfg_b7.2.yaml"),
-    ('999.0.0', "jwst_system_crdscfg_b7.2.yaml"),   # latest backstop
+    ('0.13.0', "jwst_system_crdscfg_b7.3.yaml"),
+    ('999.0.0', "jwst_system_crdscfg_b7.3.yaml"),   # latest backstop
 ]
     
 def _get_config_refpath(context, cal_ver):
     """Given CRDS `context` and calibration s/w version `cal_ver`,  identify the applicable
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
     """
+    context = _get_missing_context(context)
+    cal_ver = _get_missing_calver(cal_ver)
     i = 0
     while (i < len(REFPATHS)-1 and not _versions_lt(cal_ver, REFPATHS[i+1][0])):
         i += 1
@@ -226,16 +249,6 @@ def _get_config_refpath(context, cal_ver):
     log.verbose("Using", srepr(os.path.basename(refpath)),
                 "to determine applicable default reftypes for", srepr(cal_ver))
     return refpath
-
-def _digits_only(version):
-    """
-    >>> _digits_only("0.7.7")
-    (0, 7, 7)
-    >>> _digits_only("0.10.1a1")
-    (0, 10, 1)
-    """
-    match  = re.match("([0-9.]+).*", version)
-    return tuple([int(dig) for dig in match.group(1).split(".") if dig])
 
 def _versions_lt(v1, v2):
     """Compare two semantic version numbers and account for issues like '10' < '9'.
@@ -274,12 +287,11 @@ def _versions_lt(v1, v2):
     >>> _versions_gte("0.10.1", "0.10.1dev20000")
     True
     """
-    v1, v2 = _digits_only(v1), _digits_only(v2)
-    return v1 < v2
+    return parse_version(v1) < parse_version(v2)
 
 def _versions_gte(v1, v2):
     """"""
-    return not _versions_lt(v1, v2)
+    return parse_version(v1) >= parse_version(v2)
 
 class CrdsCfgManager:
     """The CrdsCfgManager handles using SYSTEM CRDSCFG information to compute things."""
@@ -287,6 +299,9 @@ class CrdsCfgManager:
         self._context = context
         self._refpath = refpath
         self._crdscfg = utils.Struct(crdscfg)
+        self.pipeline_exceptions = self._crdscfg.get("pipeline_exceptions", {})
+        self.pipeline_cfgs_to_steps = self._crdscfg.get("pipeline_cfgs_to_steps", {})
+        self.steps_to_reftypes = self._crdscfg.get("steps_to_reftypes", {})
         
     def exptype_to_reftypes(self, exp_type):
         """For a given EXP_TYPE string, return a list of reftypes needed to process that
@@ -307,9 +322,6 @@ class CrdsCfgManager:
         Return [.cfg's, ... ]
         """
         pipelines = self._crdscfg.exptypes_to_pipelines[exp_type]
-        log.verbose("Applicable pipelines for", srepr(exp_type), 
-                    "determined by", srepr(os.path.basename(self._refpath)),
-                    "are", srepr(pipelines))
         return pipelines
 
     def reftype_to_pipelines(self, reftype):
@@ -340,8 +352,19 @@ def scan_exp_type_coverage():
         if exp_type in ["ANY","N/A"]:
             continue
         with log.warn_on_exception("failed determining reftypes for", repr(exp_type)):
-            reftypes = get_reftypes(exp_type)
+            reftypes = _get_reftypes(exp_type)
             log.verbose("Reftypes for", repr(exp_type), "=", repr(reftypes))
+
+def _get_reftypes(exp_type, cal_ver=None, context=None):
+    """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
+    reference file and determine the reference types required to process every pipeline Step
+    nominally associated with that exp_type.
+    """
+    with log.warn_on_exception("Failed determining required reftypes from",
+                               "EXP_TYPE", srepr(exp_type)):
+        config_manager = _get_config_manager(context, cal_ver)
+        return config_manager.exptype_to_reftypes(exp_type)
+    return []
 
 def test():
     """Run the module doctests."""

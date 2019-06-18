@@ -406,6 +406,7 @@ class Mapping:
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping and all the mappings selected by it."""
         parkeys = set(self.parkey)
+        parkeys |= set(self.header.get("extra_keys",[]))
         if hasattr(self, "selections"):
             for selection in self.selections.normal_values():
                 parkeys |= set(selection.get_required_parkeys())
@@ -1243,6 +1244,7 @@ class ReferenceMapping(Mapping):
         if include_reffile_switch and self._reffile_switch != "NONE":
             parkeys.append(self._reffile_switch)
         parkeys.extend(list(self.extra_keys))
+        parkeys.extend(getattr(self.obs_package, "extra_keys", []))
         return parkeys
 
     def get_extra_parkeys(self):

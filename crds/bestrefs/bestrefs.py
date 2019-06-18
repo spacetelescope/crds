@@ -305,8 +305,6 @@ than errors as the default.
         self.datasets_since = self.args.datasets_since
 
         self.active_header = None   # new or old header last processed with bestrefs
-        self.drop_ids = []
-
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
 
@@ -367,10 +365,22 @@ than errors as the default.
         if self.args.files and not self.args.update_bestrefs:
             log.info("No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.")
 
-        self.drop_ids = [self.normalize_id(dataset) for dataset in self.args.drop_ids]
-        
         return True
 
+    @property
+    def only_ids(self):
+        return self._normalized(self.args.only_ids) or None
+    
+    @property
+    def drop_ids(self):
+        return self._normalized(self.args.drop_ids)
+
+    def _normalized(self, id_list):
+        if id_list:
+            return [self.normalize_id(dataset) for dataset in id_list]
+        else:
+            return []
+        
     def normalize_id(self, dataset):
         """Convert a given `dataset` ID to uppercase.  For the sake of simplicity convert
         simple IDs into unassociated exposure IDs in <exposure>:<exposure> form.  This is a
@@ -619,10 +629,10 @@ than errors as the default.
             sys.exit(-1)
         if self.args.load_pickles:
             self.pickle_headers = headers.PickleHeaderGenerator(
-                context, self.args.load_pickles, only_ids=self.args.only_ids, datasets_since=datasets_since)
+                context, self.args.load_pickles, only_ids=self.only_ids, datasets_since=datasets_since)
             if the_headers:   # combine partial correction headers field-by-field
                 log.verbose("Augmenting primary parameter sets with pickle overrides.")
-                the_headers.update_headers(self.pickle_headers.headers, only_ids=self.args.only_ids)
+                the_headers.update_headers(self.pickle_headers.headers, only_ids=self.only_ids)
             else:   # assume pickles-only sources are all complete snapshots
                 log.verbose("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
                 the_headers = self.pickle_headers
@@ -678,7 +688,7 @@ than errors as the default.
             if dataset in self.drop_ids:
                 log.verbose("Skipping drop-list dataset", repr(dataset))
                 return
-            elif self.args.only_ids and dataset not in self.args.only_ids:
+            elif self.only_ids and dataset not in self.only_ids:
                 log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
                 return
             elif self.args.files:
@@ -757,7 +767,6 @@ than errors as the default.
         if types and self.args.skip_types:
             types = set(types) - set(self.args.skip_types)
         types = sorted(list(types))
-        log.verbose("For", repr(dataset), "processing reference types:", repr(types))
         return types
     
     @property
@@ -907,7 +916,7 @@ than errors as the default.
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
 
         if self.args.save_pickle:
-            self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
+            self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.only_ids)
 
         self.warn_bad_updates()  # Warn about bad file reference updates only, not failures
 
