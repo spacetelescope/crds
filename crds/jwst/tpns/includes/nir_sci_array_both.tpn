@@ -4,8 +4,6 @@
 # depending on whether refpix are possible or not.
 #
 
-# See documentation/crds_design.rst
-
 # READPATT  H           C         O
  
 SCI       A           X         R                           (array_exists(SCI_ARRAY))
