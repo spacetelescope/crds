@@ -100,9 +100,9 @@ class Shell:
         self._input = keys.pop("input", None)
         self._use_shell = keys.pop("use_shell", True)
         self._raise_on_error = keys.pop("raise_on_error", get_debug())
-        self._trace_commands = keys.pop("trace_commands", get_debug())      
+        self._trace_commands = keys.pop("trace_commands", False)      
         self._trace_exceptions = keys.pop("trace_exceptions", get_debug())      
-        self._capture_output = keys.pop("capture_output", get_debug())
+        self._capture_output = keys.pop("capture_output", False)
         self._independent_error = keys.pop("independent_error", False)
         
         if self._context is None:    
