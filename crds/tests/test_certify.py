@@ -636,7 +636,7 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  NoTypeWarning : jwst.datamodels.util : model_type not found...
+    CRDS - WARNING -  NoTypeWarning : ...jwst.datamodels.util : model_type not found...
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  2 warnings
@@ -793,8 +793,8 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : jwst.datamodels...
-    CRDS - WARNING -  NoTypeWarning : jwst.datamodels...
+    CRDS - WARNING -  ValidationWarning : ...jwst.datamodels...
+    CRDS - WARNING -  NoTypeWarning : ...jwst.datamodels...
     >>> test_config.cleanup(old_state)
     """
 
