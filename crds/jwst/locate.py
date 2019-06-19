@@ -233,10 +233,18 @@ def ref_properties_from_header(filename):
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "jwst")
     header["TELESCOP"] = header["TELESCOPE"] = header["META.TELESCOPE"] = "jwst"
-    instrument = utils.header_to_instrument(header).lower()
-    filekind = utils.get_any_of(header, FILEKIND_KEYWORDS, "UNDEFINED").lower()
-    assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
-    assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
+    name = os.path.basename(filename)
+    try:
+        instrument = utils.header_to_instrument(header).lower()
+        assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
+    except Exception as exc:
+        raise exceptions.CrdsNamingError(
+            "Can't identify instrument of", repr(name), ":", str(exc)) from exc
+    try:
+        filekind = utils.get_any_of(header, FILEKIND_KEYWORDS, "UNDEFINED").lower()
+        assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
+    except Exception as exc:
+        raise exceptions.CrdsNamingError("Can't identify REFTYPE of", repr(name))
     return path, "jwst", instrument, filekind, serial, ext
 
 # =============================================================================
