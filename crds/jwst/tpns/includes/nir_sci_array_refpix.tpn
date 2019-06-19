@@ -1,7 +1,6 @@
 # Applies to NIRCAM, NIRISS, FGS (i.e. all NIR instruments except NIRSPEC)
 
 # This is a concrete .tpn applying to reftypes which may have refpix.
-# See documentation/crds_design.rst
 
 replace XDIM_MAX 2304
 replace SCI_TYPE ['FLOAT','INT']
