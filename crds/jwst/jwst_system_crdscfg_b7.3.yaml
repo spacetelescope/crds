@@ -34,7 +34,7 @@ meta:
     useafter: 1900-01-01T00:00:00
     calibration_software_version: 0.13.4
     crds_version: 7.3.3
-    generation_date: 2019-06-06T17:27:17
+    generation_date: 2019-06-20T08:36:54
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -45,7 +45,7 @@ meta:
 
 pipeline_cfgs: [calwebb_dark.cfg, calwebb_detector1.cfg, calwebb_spec2.cfg, calwebb_image2.cfg,
                 calwebb_guider.cfg, calwebb_tso1.cfg, calwebb_tso-image2.cfg,
-                calwebb_tso-spec2.cfg]
+                calwebb_tso-spec2.cfg, calwebb_nrslamp-spec2.cfg]
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -57,15 +57,16 @@ pipeline_cfgs: [calwebb_dark.cfg, calwebb_detector1.cfg, calwebb_spec2.cfg, calw
 exp_types: [FGS_ACQ1, FGS_ACQ2, FGS_DARK, FGS_FINEGUIDE, FGS_FOCUS,
               FGS_ID-IMAGE, FGS_ID-STACK, FGS_IMAGE, FGS_INTFLAT, FGS_SKYFLAT, FGS_TRACK,
               MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_LRS-FIXEDSLIT,
-              MIR_LRS-SLITLESS, MIR_MRS, MIR_DARK, MIR_FLAT-IMAGE, MIR_FLATIMAGE, MIR_FLATIMAGE-EXT,
+              MIR_LRS-SLITLESS, MIR_MRS, MIR_DARK, MIR_DARKIMG, MIR_DARKMRS, MIR_DARKALL,
+              MIR_FLAT-IMAGE, MIR_FLATIMAGE, MIR_FLATIMAGE-EXT,
               MIR_FLAT-MRS, MIR_FLATMRS, MIR_FLATMRS-EXT, MIR_CORONCAL, NIS_AMI, NIS_DARK, NIS_EXTCAL,
               NIS_FOCUS, NIS_IMAGE, NIS_LAMP, NIS_SOSS, NIS_TACQ, NIS_TACONFIRM,
               NIS_WFSS, NRC_IMAGE, NRC_WFSS, NRC_TACQ, NRC_CORON,
               NRC_FOCUS, NRC_DARK, NRC_FLAT, NRC_LED, NRC_WFSC, NRC_TACONFIRM,
               NRC_TSIMAGE, NRC_TSGRISM, NRS_AUTOFLAT, NRS_AUTOWAVE, NRS_BOTA,
               NRS_BRIGHTOBJ, NRS_CONFIRM, NRS_DARK, NRS_FIXEDSLIT, NRS_FOCUS,
-              NRS_IFU, NRS_IMAGE, NRS_LAMP, NRS_MIMF, NRS_MSASPEC, NRS_TACONFIRM,
-              NRS_TACQ, NRS_TASLIT]
+              NRS_IFU, NRS_IMAGE, NRS_LAMP, NRS_MIMF, NRS_MSASPEC, NRS_MSATA, NRS_TACONFIRM,
+              NRS_TACQ, NRS_TASLIT, NRS_WATA]
 
 # ----------------------------------------------------------------------------------------------
 # MANUAL UPDATE REQUIRED
@@ -83,7 +84,7 @@ levels: [ level2a, level2b]
 
 level_pipeline_exptypes:
     level2a:
-        - calwebb_dark.cfg: [FGS_DARK, MIR_DARK, NRC_DARK, NIS_DARK, NRS_DARK]
+        - calwebb_dark.cfg: [FGS_DARK, MIR_DARK, MIR_DARKIMG, MIR_DARKMRS, MIR_DARKALL, NRC_DARK, NIS_DARK, NRS_DARK]
 
         - calwebb_guider.cfg: [FGS_ID-STACK, FGS_ID-IMAGE, FGS_ACQ1, FGS_ACQ2, FGS_TRACK, FGS_FINEGUIDE]
 
@@ -95,12 +96,16 @@ level_pipeline_exptypes:
         - calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_MRS, NRS_FIXEDSLIT, NRS_MSASPEC, NRS_IFU,
                              NRS_AUTOWAVE, NIS_WFSS, NRC_WFSS]
 
+        - calwebb_nrslamp-spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_MRS, NRS_FIXEDSLIT, NRS_MSASPEC, NRS_IFU,
+                                     NRS_AUTOWAVE, NIS_WFSS, NRC_WFSS]
+
         - calwebb_tso-spec2.cfg: [MIR_LRS-SLITLESS, NRC_TSGRISM, NIS_SOSS, NRS_BRIGHTOBJ]
 
         - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, NRC_WFSC, NRC_TACONFIRM,
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
                              NIS_IMAGE, NIS_FOCUS, NIS_AMI, NIS_TACQ, NIS_TACONFIRM, 
                              NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
+                             NRS_WATA, NRS_MSATA,
                              FGS_IMAGE, FGS_FOCUS]
 
         - calwebb_tso-image2.cfg: [NRC_TSIMAGE]
@@ -157,29 +162,6 @@ steps_to_reftypes_exceptions: []
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # vvvvvvvv GENERATED vvvvvvvv
 pipeline_cfgs_to_steps:
   calwebb_dark.cfg:
@@ -217,6 +199,16 @@ pipeline_cfgs_to_steps:
   - flat_field
   - photom
   - resample
+  calwebb_nrslamp-spec2.cfg:
+  - assign_wcs
+  - barshadow
+  - bkg_subtract
+  - cube_build
+  - extract_1d
+  - extract_2d
+  - msa_flagging
+  - resample_spec
+  - srctype
   calwebb_spec2.cfg:
   - assign_wcs
   - barshadow
@@ -384,6 +376,15 @@ exptypes_to_pipelines:
   MIR_DARK:
   - calwebb_dark.cfg
   - skip_2b.cfg
+  MIR_DARKALL:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  MIR_DARKIMG:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  MIR_DARKMRS:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
   MIR_FLAT-IMAGE:
   - calwebb_detector1.cfg
   - skip_2b.cfg
@@ -525,6 +526,9 @@ exptypes_to_pipelines:
   NRS_MSASPEC:
   - calwebb_detector1.cfg
   - calwebb_spec2.cfg
+  NRS_MSATA:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
   NRS_TACONFIRM:
   - calwebb_detector1.cfg
   - calwebb_image2.cfg
@@ -532,6 +536,9 @@ exptypes_to_pipelines:
   - calwebb_detector1.cfg
   - calwebb_image2.cfg
   NRS_TASLIT:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_WATA:
   - calwebb_detector1.cfg
   - calwebb_image2.cfg
 
@@ -756,6 +763,27 @@ exptypes_to_reftypes:
   - rscd
   - saturation
   - superbias
+  MIR_DARKALL:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  MIR_DARKIMG:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  MIR_DARKMRS:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
   MIR_FLAT-IMAGE:
   - dark
   - gain
@@ -2148,6 +2176,42 @@ exptypes_to_reftypes:
   - wavecorr
   - wavelengthrange
   - wfssbkg
+  NRS_MSATA:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
   NRS_TACONFIRM:
   - area
   - camera
@@ -2221,6 +2285,42 @@ exptypes_to_reftypes:
   - wavelengthrange
   - wfssbkg
   NRS_TASLIT:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_WATA:
   - area
   - camera
   - collimator
