@@ -244,10 +244,10 @@ def warn_bad_context(observatory, context, instrument=None):
 @utils.cached
 def get_bad_mappings_in_context(observatory, context, instrument=None):
     """Return the list of bad files (defined by the server) contained by `context`."""
-    if instrument is None:
-        check_context = context
-    else:
+    try:
         check_context = rmap.get_cached_mapping(context).get_imap(instrument).basename
+    except Exception:
+        check_context = context 
     bad_mappings = get_config_info(observatory).bad_files_set
     context_mappings = mapping_names(check_context)
     return sorted(list(context_mappings & bad_mappings))
@@ -259,7 +259,7 @@ def mapping_names(context):
     try:
         mapping = get_symbolic_mapping(context)
         contained_mappings = mapping.mapping_names()
-    except IOError:
+    except Exception:
         contained_mappings = api.get_mapping_names(context)
     return set(contained_mappings)
 
