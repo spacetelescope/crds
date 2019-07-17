@@ -1059,10 +1059,29 @@ def is_reference(reference):
     extension = os.path.splitext(reference)[-1].lower()
     return bool(re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension))
 
-# max len name component == 32.  max components == 6. (currently 3 used).
+# max len name component == 32.  max components == 3.
 # no digits in CRDS name components,  except serial no
-CRDS_NAME_RE_STR = r"([a-z]{1,32}_?){1,6}(_\d\d\d\d)?\."
-CRDS_NAME_RE = re.compile(CRDS_NAME_RE_STR)   # intentionally not complete.
+CRDS_OBS_RE_STR = r"(?P<observatory>" + r"[a-z][a-z]{1,8})"     # No hyphens
+CRDS_INSTR_RE_STR = r"(?P<instrument>" + r"[a-z][a-z]{1,16})"   # No hyphens
+CRDS_FILEKIND_RE_STR = r"(?P<filekind>" + r"[a-z][a-z\-]{1,32})"
+CRDS_BASE_NAME_RE_STR = (r"(" +
+        CRDS_OBS_RE_STR + r"(_" + 
+            CRDS_INSTR_RE_STR + r"(_" +
+                CRDS_FILEKIND_RE_STR +
+            r")?" +
+        r")?" +
+    r")")
+    
+CRDS_SYM_NAME_RE_STR = (r"(" +
+        CRDS_OBS_RE_STR + r"(\-" + 
+            CRDS_INSTR_RE_STR + r"(\-" +
+                CRDS_FILEKIND_RE_STR +
+            r")?" +
+        r")?" +
+    r")")
+    
+CRDS_NAME_RE_STR = CRDS_BASE_NAME_RE_STR + r"(_\d\d\d\d)?\."
+CRDS_NAME_RE = re.compile(CRDS_NAME_RE_STR)   # intentionally not complete. no ^ or $
 
 # s7g1700gl_dead.fits
 CDBS_NAME_RE_STR = r"[a-z0-9_]{1,52}\.(fits|r\d[hd])"
@@ -1078,6 +1097,9 @@ def is_valid_reference_name(filename):
     True
     
     >>> is_valid_reference_name("s7g1700gl_dead.fits")
+    True
+
+    >>> is_valid_reference_name("jwst_miri_pars-tweakreg_0001.asdf")
     True
     """
     name = os.path.basename(filename)
@@ -1097,6 +1119,12 @@ def is_crds_name(name):
     
     >>> is_crds_name("s7g1700gl_dead.fits")
     False
+
+    >>> is_crds_name("jwst_miri_pars-tweakreg_0001.asdf")
+    True
+
+    >>> is_crds_name("jwst_miri_pars-tweakreg_0001.rmap")
+    True
     """
     name = os.path.basename(name).lower()
     return bool(CRDS_NAME_RE.match(name))
@@ -1109,6 +1137,9 @@ def is_cdbs_name(name):
     
     >>> is_cdbs_name("s7g1700gl_dead.fits")
     True
+
+    >>> is_cdbs_name("jwst_miri_pars-tweakreg_0001.asdf")
+    False
     """
     name = os.path.basename(name).lower()
     return bool(CDBS_NAME_RE.match(name))
@@ -1117,21 +1148,59 @@ def is_cdbs_name(name):
 
 # Standard date time format using T separator for command line use specifying contexts.
 # e.g. 2040-02-22T12:01:30.4567
-CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\d(T\d\d:\d\d:\d\d(\.\d+)?)?"
+CONTEXT_DATETIME_RE_STR = (
+    r"\d\d\d\d\-\d\d\-\d\d" + 
+        r"(T\d\d:\d\d:\d\d" + 
+            r"(\.\d+)?" +
+        r")?"
+    )
+
 CONTEXT_DATETIME_RE = re.compile(complete_re(CONTEXT_DATETIME_RE_STR))
 
-# e.g.  hst, hst-acs, hst-acs-darkfile
-CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z0-9]{1,32}(\-[a-z0-9]{1,32})?)?" 
 CONTEXT_OBS_RE_STR = r"[a-z]{1,8}" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
-CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational|versions))"
+CONTEXT_RE_STR = (
+    r"(" +
+        r"(?P<context>" + CRDS_SYM_NAME_RE_STR + ")" + 
+        r"(" +
+            r"(\-" +
+                r"(" +
+                    r"(?P<date>" + CONTEXT_DATETIME_RE_STR + r")" +
+                        r"|" +
+                    r"(?P<context_tag>" + "edit|operational|versions" + r")" +
+                r")" +
+            r")" + 
+        r")" + 
+    r")" +
+        r"|" +
+    r"(" +
+        r"(" + CONTEXT_DATETIME_RE_STR + r")" +
+    r")"
+    )
 CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
 
-PIPELINE_CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational|versions))"
+PIPELINE_CONTEXT_RE_STR = (
+    r"(" +
+        r"(?P<context>" + CRDS_OBS_RE_STR + ")" + 
+        r"(" +
+            r"(\-" +
+                r"(" +
+                    r"(?P<date>" + CONTEXT_DATETIME_RE_STR + r")" +
+                        "|" +
+                    r"(?P<context_tag>" + "edit|operational|versions" + r")" +
+                r")" +
+            r")" + 
+        r")"
+    r")" +
+        r"|" +
+    r"(" +
+        r"(" + CONTEXT_DATETIME_RE_STR + r")" +
+    r")"
+    )
 PIPELINE_CONTEXT_RE = re.compile(complete_re(PIPELINE_CONTEXT_RE_STR))
 
-MAPPING_RE_STR = CRDS_NAME_RE_STR + r".map"
+MAPPING_RE_STR = CRDS_NAME_RE_STR + r"[pir]map"
 MAPPING_RE = re.compile(complete_re(MAPPING_RE_STR))
 
 def is_mapping(mapping):
@@ -1219,7 +1288,10 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst-acs-2040-01-29T12:00:00")
     True
 
-    >>> is_mapping_spec("hst-acs-darkfile-2040-01-29T12:00:00")
+    >>> is_mapping_spec("jwst-miri-pars-tweakreg-2040-01-29T12:00:00")
+    True
+    
+    >>> is_mapping_spec("jwst-miri-pars-tweakreg-edit")
     True
     
     >>> is_mapping_spec("2040-01-29T12:00:00")
@@ -1262,6 +1334,9 @@ def is_context_spec(mapping):
     >>> is_context_spec("foo")
     False
     
+    >>> is_context_spec("hst-edit")
+    True
+    
     >>> is_context_spec("hst-2040-01-29T12:00:00")
     True
 
@@ -1274,6 +1349,9 @@ def is_date_based_mapping_spec(mapping):
     """Return True IFF `mapping` is a date based specification (not a filename).
  
     >>> is_date_based_mapping_spec("2040-01-29T12:00:00")
+    True
+
+    >>> is_date_based_mapping_spec("jwst-miri-pars-tweakreg-2040-01-29T12:00:00")
     True
  
     >>> is_date_based_mapping_spec("hst.pmap")
