@@ -1,9 +1,9 @@
 
         
-__version__ = 'f32df8fc3edbbf8427ae197304e6524b4b90ba32'
+__version__ = '05ea3b6e3f69101a11aac61ce3a543ba1b80a501'
 
 __full_version_info__ = '''
-branch: HEAD
-sha1: f32df8fc3edbbf8427ae197304e6524b4b90ba32
+branch: crds-2019-Q3-development
+sha1: 05ea3b6e3f69101a11aac61ce3a543ba1b80a501
 '''
     
