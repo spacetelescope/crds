@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.3.4"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST DMS 7.3"
+__version__ = "7.4.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "JWST DMS 7.4, 2019 Q3 development"
 
 __all__ = [
     "getrecommendations",
