@@ -813,14 +813,16 @@ def expand_all_instruments(observatory, context):
 
     Expansion of "all" is determined by instruments in e.g. jwst-operational
     """
-    pattern = observatory + r"\-all\-([^\-]+)\-(.+)"
-    mtch = re.match(pattern, context)
-    if mtch:
-        root_context = observatory + "-" + mtch.group(2)
+    mtch = config.CONTEXT_RE.match(context)
+    if mtch and mtch.group("instrument") == "all":
+        root_context = observatory + "-" + mtch.group("date")
         pmap = heavy_client.get_symbolic_mapping(root_context)
-        all_imaps = [ "-".join([observatory, instrument, mtch.group(1), mtch.group(2)])
+        observatory = mtch.group("observatory")
+        filekind = mtch.group("filekind")
+        date = mtch.group("date")
+        all_maps = [ "-".join([observatory, instrument, filekind, date])
                 for instrument in pmap.selections.keys() if instrument != "system"]
     else:
-        all_imaps = [context]
-    return all_imaps
+        all_maps = [context]
+    return all_maps
 

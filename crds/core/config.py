@@ -1165,10 +1165,10 @@ CONTEXT_RE_STR = (
         r"(?P<context>" + CRDS_SYM_NAME_RE_STR + ")" + 
         r"(" +
             r"(\-" +
-                r"(" +
-                    r"(?P<date>" + CONTEXT_DATETIME_RE_STR + r")" +
+                r"(?P<date>" +
+                    r"(" + CONTEXT_DATETIME_RE_STR + r")" +
                         r"|" +
-                    r"(?P<context_tag>" + "edit|operational|versions" + r")" +
+                    r"(" + "edit|operational|versions" + r")" +
                 r")" +
             r")" + 
         r")" + 
