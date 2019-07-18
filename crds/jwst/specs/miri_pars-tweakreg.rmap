@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2019-07-16',
+    'file_ext' : '.asdf',
+    'filekind' : 'PARS-TWEAKREG',
+    'filetype' : 'PARS-TWEAKREG',
+    'instrument' : 'MIRI',
+    'ld_tpn' : 'miri_pars-tweakreg_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-tweakreg.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '01ff24a6ed037c46b2b9c201a9be83e8efe09aaa',
+    'suffix' : 'pars-tweakreg',
+    'text_descr' : 'MIRI imager tweakreg parameters',
+    'tpn' : 'miri_pars-tweakreg.tpn',
+}
+
+selector = Match({
+})
