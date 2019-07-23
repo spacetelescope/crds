@@ -176,11 +176,13 @@ def classify_name(name):
     
     >>> classify_name("z6n1832tm_tmc.fits")
     'oldsynphot'
-    
+
+    Ad hoc names are generally mistakes which are immediately replaced.   Classify them
+    as oldcdbs (oldest) so that comparison with anything else is interpreted as a 
+    replacement with something newer,  and nominal.
+
     >>> classify_name("bbbbbb.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Failed to classify name 'bbbbbb.fits' for determining time order.
+    'oldcdbs'
     """
     if name == "N/A":
         return "crds"
