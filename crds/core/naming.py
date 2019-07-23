@@ -39,14 +39,10 @@ def newer(name1, name2):
     True
 
     >>> newer("s7g1700gl_dead.fits", "bbbbb.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Failed to classify name 'bbbbb.fits' for determining time order.
+    True
 
     >>> newer("bbbbb.fits", "s7g1700gl_dead.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Failed to classify name 'bbbbb.fits' for determining time order.
+    False
 
     >>> newer("hst_cos_deadtab_0001.rmap", "hst_cos_deadtab_0002.rmap")
     False
@@ -199,7 +195,9 @@ def classify_name(name):
     elif new_cdbs_name(name):
         return "newcdbs"
     else:
-        raise NameComparisonError("Failed to classify name", repr(name), "for determining time order.")
+        # raise NameComparisonError("Failed to classify name", repr(name), "for determining time order.")
+        log.warning("Failed to classify name", repr(name), "for determining time order.")
+        return "oldcdbs"  # if it's a garbage name, make it oldest so replacing it is normal.
 
 def crds_name(name):
     """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap
