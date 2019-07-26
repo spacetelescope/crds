@@ -755,7 +755,6 @@ class ContextsScript(Script):
         which cannot be found within the reference files referred to by any .pmap.
         """
         all_references = self._list_references()
-        all_references += self.get_conjugates(all_references)
         all_references = set(all_references)
         all_pmaps = self._list_mappings("*.pmap")
         pmap_references = self._get_context_references(all_pmaps)
