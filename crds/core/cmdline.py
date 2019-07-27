@@ -691,6 +691,9 @@ class ContextsScript(Script):
             help='Operate on all contexts up to and including the specified context.')
         group.add_argument("--after-context", metavar='CONTEXT', type=mapping_spec, nargs=1, default=None,
             help='Operate on all contexts after and including the specified context.')
+        
+        self.add_argument('--include-orphans', action='store_true',
+            help='Include reference files not mentioned by any contexts.')
 
     def determine_contexts(self):
         """Support explicit specification of contexts, context id range, or all."""
@@ -743,6 +746,20 @@ class ContextsScript(Script):
         self.require_server_connection()
         return heavy_client.list_mappings(self.observatory, glob_pattern)
     
+    def _list_references(self, glob_pattern="*"):
+        self.require_server_connection()
+        return api.list_references(self.observatory, glob_pattern)
+    
+    def _orphan_references(self):
+        """Return the set of reference files which exist the CRDS catalog but
+        which cannot be found within the reference files referred to by any .pmap.
+        """
+        all_references = self._list_references()
+        all_references = set(all_references)
+        all_pmaps = self._list_mappings("*.pmap")
+        pmap_references = self._get_context_references(all_pmaps)
+        return set(all_references - pmap_references)
+
     def dump_files(self, context, files=None, ignore_cache=None):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
         if ignore_cache is None:
@@ -753,57 +770,77 @@ class ContextsScript(Script):
         self.increment_stat("total-bytes", nbytes)
 
     def get_context_mappings(self):
-        """Return the set of mappings which are pointed to by the mappings
-        in `self.contexts`.
+        """Return the list of mappings which are pointed to by the mappings in `self.contexts`.
+        
+        If --all was specified,  include orphan mappings not reachable from any .pmap.
         """
-        files = set()
-        useable_contexts = []
         if not self.contexts:
             return []
         log.verbose("Getting all mappings for specified contexts.", verbosity=55)
-        if self.args.all:
-            files = self._list_mappings("*.*map")
-            pmaps = self._list_mappings("*.pmap")
-            useable_contexts = []
-            if pmaps and files:
-                with log.warn_on_exception("Failed dumping mappings for", repr(self.contexts)):
-                    self.dump_files(pmaps[-1], files)
-            for context in self.contexts:
-                with log.warn_on_exception("Failed loading context", repr(context)):
-                    pmap = rmap.get_cached_mapping(context)
-                    useable_contexts.append(context)
-        else:
-            for context in self.contexts:
-                with log.warn_on_exception("Failed listing mappings for", repr(context)):
-                    try:
-                        pmap = rmap.get_cached_mapping(context)
-                        files |= set(pmap.mapping_names())
-                    except Exception:
-                        files |= set(api.get_mapping_names(context))
-                    useable_contexts.append(context)
-            useable_contexts = sorted(useable_contexts)
-            if useable_contexts and files:
-                with log.warn_on_exception("Failed dumping mappings for", repr(self.contexts)):
-                    self.dump_files(useable_contexts[-1], files)
-
-        self.contexts = useable_contexts  # XXXX reset self.contexts
-        files = sorted(files)
-        log.verbose("Got mappings from specified (usable) contexts: ", files, verbosity=55)
-        return files
+        mappings = self._list_mappings("*.*map") if self.args.all else self.contexts
+        useable_contexts, mapping_closure = self._dump_and_vet_mappings(mappings)
+        self.contexts = useable_contexts   # XXXX reset self.contexts
+        log.verbose("Got mappings from specified (usable) contexts: ", self.contexts, verbosity=55)
+        return mapping_closure
     
-    def get_context_references(self):
-        """Return the set of references which are pointed to by the references
-        in `contexts`.
+    def _dump_and_vet_mappings(self, mappings):
+        """Ensure all mapping files listed in `mappings` are in the CRDS cache.
+        
+        Returns  (list(useable_contexts), list(mappings_closures))
         """
-        files = set()
-        for context in self.contexts:
+        log.verbose("Getting and checking specified mappings.", verbosity=55)
+        
+        # Based on the specified mappings,  identify the  mappings they refer to
+        mapping_closure = set()
+        for mapping in mappings:
+            with log.warn_on_exception("Failed loading context", repr(mapping)):
+                try:
+                    loadable = rmap.get_cached_mapping(mapping)
+                    loadable_names = loadable.mapping_names()
+                except Exception as exc:
+                    log.verbose("Failed loading", repr(mapping), 
+                                "using API call to get mapping names", str(exc))
+                    loadable_names = api.get_mapping_names(mapping)
+                mapping_closure |= set(loadable_names)
+        
+        # Dump all missing files in one call        
+        with log.verbose_warning_on_exception("Mapping closure download failed"):
+            self.dump_files(self.default_context, mapping_closure)
+        
+        # After attempting to sync,  identify which mappings are actually loadable now.
+        useable_contexts = []
+        for mapping in mappings:
+            with log.warn_on_exception("Failed loading", repr(mapping)):
+                _loaded = rmap.get_cached_mapping(mapping)
+                useable_contexts.append(mapping)
+        
+        return sorted(useable_contexts), sorted(mapping_closure)
+
+    def _get_context_references(self, mappings=None):
+        """Return the set of references which are pointed to by the mappings in `mappings`
+        or self.get_context_mappings() when mappings is None.
+        """
+        references = set()
+        mappings = self.get_context_mappings() if mappings is None else mappings
+        for context in mappings:
             try:
                 pmap = rmap.get_cached_mapping(context)
-                files |= set(pmap.reference_names())
+                references |= set(pmap.reference_names())
                 log.verbose("Determined references from cached mapping", repr(context))
             except Exception:  # only ask the server if loading context fails
-                files |= set(api.get_reference_names(context))
-        return sorted(files)
+                log.verbose("Determined references from CRDS server service", repr(context))
+                references |= set(api.get_reference_names(context))
+        return references
+    
+    def get_context_references(self):
+        """Return the sorted list of references defined by the closure of the specified 
+        contexts.   If --include-orphans was specified,  also include reference files
+        from the CRDS catalog which do not appear in any .pmap.
+        """
+        references = self._get_context_references(self.contexts)
+        if self.args.include_orphans:
+            references |= self._orphan_references()
+        return sorted(list(references))
 
 def expand_all_instruments(observatory, context):
     """Expand symbolic context specifiers for rmaps with "all" for instrument 
