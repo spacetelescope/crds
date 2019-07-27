@@ -791,20 +791,19 @@ class ContextsScript(Script):
         log.verbose("Getting and checking specified mappings.", verbosity=55)
         mapping_closure = set()
         useable_contexts = []
-        with log.warn_on_exception("Failed dumping mappings:", repr(mappings)):
-            self.dump_files(self.default_context, mappings)
         for mapping in mappings:
             with log.warn_on_exception("Failed loading context", repr(mapping)):
                 try:
                     loadable = rmap.get_cached_mapping(mapping)
                     loadable_names = loadable.mapping_names()
-                    if config.is_context(mapping):
-                        useable_contexts.append(mapping)
                 except Exception as exc:
                     log.verbose("Failed loading", repr(mapping), 
                                 "using API call to get mapping names:", str(exc))
                     loadable_names = api.get_mapping_names(mapping)
                 mapping_closure |= set(loadable_names)
+            with log.warn_on_exception("Failed dumping mappings for", repr(mapping)):
+                self.dump_files(self.default_context, loadable_names)
+                useable_contexts.append(mapping)
         return sorted(useable_contexts), sorted(mapping_closure)
 
     def _get_context_references(self, mappings=None):
