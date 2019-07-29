@@ -7,7 +7,7 @@ TransformedDict --   generic MutableMapping with key and value transforms
 LazyFileDict   --  Demand loaded network of files (aka CRDS context)
 
 """
-from collections import MutableMapping
+from collections.abc import MutableMapping
 
 # =============================================================================
 
