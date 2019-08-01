@@ -777,10 +777,17 @@ class ContextsScript(Script):
         if not self.contexts:
             return []
         log.verbose("Getting all mappings for specified contexts.", verbosity=55)
-        mappings = self._list_mappings("*.*map") if self.args.all else self.contexts
+        if self.args.all:
+            mappings = self._list_mappings("*.*map")
+            with log.verbose_warning_on_exception("Downloading all mappings failed"):
+                self.dump_files(self.default_context, mappings)
+        else:
+            mappings = self.contexts
+            
         useable_contexts, mapping_closure = self._dump_and_vet_mappings(mappings)
         self.contexts = useable_contexts   # XXXX reset self.contexts
         log.verbose("Got mappings from specified (usable) contexts: ", self.contexts, verbosity=55)
+
         return mapping_closure
     
     def _dump_and_vet_mappings(self, mappings):
