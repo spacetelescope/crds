@@ -10,7 +10,7 @@ header = {
     'name' : 'jwst_miri_pars-refpixstep.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '01ff24a6ed037c46b2b9c201a9be83e8efe09aaa',
+    'sha1sum' : 'a7c54388fd563058bc4e780ad2395206806deb75',
     'suffix' : 'pars-refpixstep',
     'text_descr' : 'MIRI imager refpixstep parameters',
     'tpn' : 'miri_pars-refpixstep.tpn',
