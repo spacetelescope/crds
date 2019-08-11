@@ -25,7 +25,7 @@ import json
 
 # from crds import data_file,  import deferred until required
 
-from . import log, config, pysh
+from . import log, config, pysh, exceptions
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
 # ===================================================================
@@ -716,7 +716,10 @@ def str_checksum(data):
 def get_file_properties(observatory, filename):
     """Return instrument,filekind fields associated with filename."""
     path = config.locate_file(filename, observatory)
-    return get_locator_module(observatory).get_file_properties(path)        
+    try:
+        return get_locator_module(observatory).get_file_properties(path)
+    except Exception as exc:
+        raise exceptions.FilePropertiesError(f"Failed to determine '{observatory}' instrument or reftype for '{filename}' : '{str(exc)}'") from exc
 
 def get_instruments_filekinds(observatory, filepaths):
     """Given a list of filepaths return the mapping of instruments and

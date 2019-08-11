@@ -77,6 +77,9 @@ class CrdsRemoteContextError(CrdsError):
 
 # -------------------------------------------------------------------------------------------
 
+class FilePropertiesError(CrdsError):
+    """Failure to determine instrument/or and reftype."""
+
 class CrdsUnknownInstrumentError(CrdsError):
     """Reference to an instrument which does not exist in a context."""
 
