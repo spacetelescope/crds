@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2019-08-08',
+    'file_ext' : '.asdf',
+    'filekind' : 'PARS-REFPIXSTEP',
+    'filetype' : 'PARS-REFPIXSTEP',
+    'instrument' : 'MIRI',
+    'ld_tpn' : 'miri_pars-refpixstep_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-refpixstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'a7c54388fd563058bc4e780ad2395206806deb75',
+    'suffix' : 'pars-refpixstep',
+    'text_descr' : 'MIRI imager refpixstep parameters',
+    'tpn' : 'miri_pars-refpixstep.tpn',
+}
+
+selector = Match({
+})
