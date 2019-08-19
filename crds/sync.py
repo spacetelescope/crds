@@ -386,7 +386,9 @@ class SyncScript(cmdline.ContextsScript):
         else:
             active_references = self.get_context_references()
         # Handle GEIS paired data files
-        active_references = sorted(set(active_references + self.get_conjugates(active_references)))
+        active_references = set(active_references + self.get_conjugates(active_references))
+        if self.args.purge_rejected or self.args.purge_blacklisted:
+            active_references -= self.bad_files
         return active_references
     
     def update_context(self):
@@ -615,14 +617,14 @@ class SyncScript(cmdline.ContextsScript):
         if info["rejected"] != "false":
             log.verbose_warning("File", repr(base), "has been explicitly rejected.", verbosity=60)
             if self.args.purge_rejected:
-                self.remove_files([path], "files")
+                self.remove_files([path], "file")
             return
 
         if info["blacklisted"] != "false":
             log.verbose_warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.",
                                 verbosity=60)
             if self.args.purge_blacklisted:
-                self.remove_files([path], "files")
+                self.remove_files([path], "file")
             return
         return
     
