@@ -9,8 +9,9 @@ sudo: false
 env:
     - PYTHON_VERSION=3.6
     - PYTHON_VERSION=3.7
+
     # CONDA_JWST_DEPENDENCIES is used because CONDA_DEPENDENCIES is not truly global.
-    global:
+    - global:
         - MAIN_CMD='python setup.py'
         - CONDA_CHANNELS='http://ssb.stsci.edu/conda-dev'
         - CONDA_DEPENDENCIES='pytest jwst sphinx nose mock lxml requests fitsverify lockfile filelock'
@@ -19,8 +20,8 @@ env:
         - CRDS_SERVER_URL='https://hst-crds.stsci.edu'
         - CRDS_TEST_ROOT=/tmp
         - SCRIPT_COMMAND='./install && conda list && ./runtests --cover'
-
-    matrix:
+        
+    - matrix:
         include:
         - env: SCRIPT_COMMAND='pytest crds'
 
