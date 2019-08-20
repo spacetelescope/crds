@@ -4,7 +4,7 @@ specific policies for JWST:
 1. How to convert reference file basenames to fully specified paths.
 
 2. How to manage parameters for reference file Validator objects used
-in the certification of reference files. 
+in the certification of reference files.
 """
 import os.path
 import re
@@ -18,7 +18,7 @@ from crds.io import abstract
 
 # =======================================================================
 
-# These two functions decouple the generic reference file certifier program 
+# These two functions decouple the generic reference file certifier program
 # from observatory-unique ways of specifying and caching Validator parameters.
 
 from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
@@ -83,7 +83,7 @@ def get_data_model_flat_dict(filepath):
     except Exception as exc:
         raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'")) from exc
     return flat_dict
-    
+
 # =======================================================================
 
 def match_context_key(key):
@@ -186,7 +186,7 @@ def decompose_newstyle_name(filename):
     return path, observatory, instrument, filekind, serial, ext
 
 def properties_inside_mapping(filename):
-    """Load `filename`s mapping header to discover and 
+    """Load `filename`s mapping header to discover and
     return (instrument, filekind).
     """
     map = rmap.fetch_mapping(filename)
@@ -254,37 +254,37 @@ def reference_keys_to_dataset_keys(rmapping, header):
     relevant to datasets.  So for ACS biasfile the reference says BINAXIS1 but
     the dataset says NUMCOLS.  This would convert { "BINAXIS1": 1024 } to {
     "NUMCOLS" : 1024 }.
-    
+
     In general,  rmap parkeys are matched against datset values and are defined
     as dataset header keywords.   For refactoring though,  what's initially
     available are reference file keywords...  which need to be mapped into the
     terms rmaps know:  dataset keywords.
     """
     header = dict(header)
-    
+
     # Basic common pattern translations
     translations = {
             "META.EXPOSURE.P_EXPTYPE" : "META.EXPOSURE.TYPE",
             "P_EXP_TY" : "META.EXPOSURE.TYPE",
-    
+
             "META.INSTRUMENT.P_BAND" : "META.INSTRUMENT.BAND",
             "P_BAND" : "META.INSTRUMENT.BAND",
-              
+
             "META.INSTRUMENT.P_DETECTOR"  : "META.INSTRUMENT.DETECTOR",
             "P_DETECT"  : "META.INSTRUMENT.DETECTOR",
 
             "META.INSTRUMENT.P_CHANNEL" : "META.INSTRUMENT.CHANNEL",
             "P_CHANNE" : "META.INSTRUMENT.CHANNEL",
-            
+
             "META.INSTRUMENT.P_FILTER" : "META.INSTRUMENT.FILTER",
             "P_FILTER"  : "META.INSTRUMENT.FILTER",
-            
+
             "META.INSTRUMENT.P_PUPIL"  : "META.INSTRUMENT.PUPIL",
             "P_PUPIL" : "META.INSTRUMENT.PUPIL",
-            
+
             "META.INSTRUMENT.P_MODULE"  : "META.INSTRUMENT.MODULE",
             "P_MODULE" : "META.INSTRUMENT.MODULE",
-            
+
             "META.SUBARRAY.P_SUBARRAY" : "META.SUBARRAY.NAME",
             "P_SUBARR" : "META.SUBARRAY.NAME",
 
@@ -295,7 +295,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
             "META.EXPOSURE.P_READPATT" : "META.EXPOSURE.READPATT",
             "P_READPA" : "META.EXPOSURE.READPATT",
 
-            # vvvv Speculative,  not currently defined or required by CAL vvvvv 
+            # vvvv Speculative,  not currently defined or required by CAL vvvvv
             "META.INSTRUMENT.PCORONAGRAPH" : "META.INSTRUMENT.CORONAGRAPH",
             "P_CORONM" : "META.INSTRUMENT.CORONAGRAPH",
         }
@@ -305,25 +305,25 @@ def reference_keys_to_dataset_keys(rmapping, header):
         translations.update(rmapping.reference_to_dataset)
     except AttributeError:
         pass
-    
+
     log.verbose("reference_to_dataset translations:\n", log.PP(translations), verbosity=60)
     log.verbose("reference_to_dataset input header:\n", log.PP(header), verbosity=80)
-    
+
     for key in header:
         # Match META.X.P_SOMETHING or P_SOMETH
         if (key.split(".")[-1].startswith("P_")) and key not in translations:
-            log.warning("CRDS-pattern-like keyword", repr(key), 
+            log.warning("CRDS-pattern-like keyword", repr(key),
                         "w/o CRDS translation to corresponding dataset keyword.")
-            log.info("Pattern-like keyword", repr(key), 
+            log.info("Pattern-like keyword", repr(key),
                      "may be misspelled or missing its translation in CRDS.  Pattern will not be used.")
-            log.info("The translation for", repr(key), 
+            log.info("The translation for", repr(key),
                      "can be defined in crds.jwst.locate or rmap header reference_to_dataset field.")
             log.info("If this is not a pattern keyword, adding a translation to 'not-a-pattern'",
                      "will suppress this warning.")
-    
+
     # Add replacements for translations *if* the existing untranslated value
     # is poor and the translated value is better defined.   This is to do
-    # translations w/o replacing valid/concrete DM values with something 
+    # translations w/o replacing valid/concrete DM values with something
     # like guessed values of "UNDEFINED" or "N/A".
     for rkey in sorted(translations):
         if rkey in header:
@@ -331,12 +331,12 @@ def reference_keys_to_dataset_keys(rmapping, header):
             dval = header.get(translations[rkey], None)
             rval = header[rkey]
             if rval not in [None, "UNDEFINED"] and rval != dval:
-                log.info("Setting", repr(dkey), "=", repr(dval), 
+                log.info("Setting", repr(dkey), "=", repr(dval),
                          "to value of", repr(rkey), "=", repr(rval))
                 header[dkey] = rval
-    
+
     header = abstract.cross_strap_header(header)
-    
+
     # NOTE:  the hacks below happen after cross-strapping and pattern handling
     # so if the keywords are still undefined they're undefined.  They have to
     # be explicitly defined as UNDEFINED somehow since they're nearly universally
@@ -345,13 +345,13 @@ def reference_keys_to_dataset_keys(rmapping, header):
     # variables so they need to be incidentally defined.  This currently doesn't
     # work out if the rmap doesn't use them.  Condition variables are eval'ed in
     # expressions.
-    
+
     if "SUBARRAY" not in header:
         header["SUBARRAY"] = header["META.SUBARRAY.NAME"] = "UNDEFINED"
-                
+
     if "EXP_TYPE" not in header:
         header["EXP_TYPE"] = header["META.EXPOSURE.TYPE"] = "UNDEFINED"
-                
+
     if "USEAFTER" not in header and "META.USEAFTER" in header:
         header["USEAFTER"] = header["META.USEAFTER"]
     if "USEAFTER" not in header and "META.USEAFTER" in header:
@@ -369,7 +369,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
         header["TIME-OBS"] = header["META.OBSERVATION.TIME"] = reformatted[1]
 
     log.verbose("reference_to_dataset output header:\n", log.PP(header), verbosity=80)
-    
+
     return header
 
 # =============================================================================
@@ -481,7 +481,7 @@ def locate_dir(instrument, mode=None):
 # XXXX the first translation should be the FITS keyword assuming there is one!!
 
 CROSS_STRAPPED_KEYWORDS = {
-                           
+
     # META.REF_FILE.X is now obsolete but retained for backward compatibility.
     # it was replaced by META.X
 
@@ -499,7 +499,7 @@ CROSS_STRAPPED_KEYWORDS = {
     "META.CALIBRATION_SOFTWARE_VERSION" : ["CAL_VER", "CALIBRATION_SOFTWARE_VERSION"],
     "META.OBSERVATION.DATE" : ["DATE-OBS"],
     "META.OBSERVATION.TIME" : ["TIME-OBS"],
-    
+
 
     # These should all be stock DM:FITS,  automatic
     # "META.INSTRUMENT.BAND" : ["BAND"],
@@ -516,7 +516,7 @@ CROSS_STRAPPED_KEYWORDS = {
     # "META.SUBARRAY.YSIZE" : ["SUBSIZE2"],
     # "META.SUBARRAY.FASTAXIS" : ["FASTAXIS"],
     # "META.SUBARRAY.SLOWAXIS" : ["SLOWAXIS"],
-    
+
     # "META.EXPOSURE.TYPE" : ["EXP_TYPE"],
     # "META.EXPOSURE.READPATT" : ["READPATT"],
 
@@ -615,4 +615,3 @@ def test():
     import doctest
     from . import locate
     return doctest.testmod(locate)
-

@@ -1,5 +1,5 @@
 '''
-This module defines top level functions for operating on files,  either related to 
+This module defines top level functions for operating on files,  either related to
 determining fundamental properties of a file (get_filetype, get_observatory) or
 related to instantiating a specialized file handler object (file_factory) appropriate
 for the given observatory and file format.
@@ -27,7 +27,7 @@ def file_factory(filepath, original_name=None, observatory=None):
     class.  Unspecified parameters determined from `filepath` as possible.
 
     Where possible file extension will be used to determine file type.
-    
+
     filepath        must be a viable path to an existing reference
     original_name   may be a more informative basename if filepath is a temp file
     observatory     "hst" or "jwst",  biases JWST to use datamodels vs. fits
@@ -92,9 +92,9 @@ def get_filetype(filepath, original_name=None):
     filetype = config.filetype(original_name)
     if filetype != "unknown":
         return filetype
-    
+
     with open(filepath, "rb") as handle:
-        first_5 = str(handle.read(5).decode('utf-8'))    
+        first_5 = str(handle.read(5).decode('utf-8'))
         if first_5 == "#ASDF":
             return "asdf"
         elif first_5 == "SIMPL":
@@ -117,7 +117,7 @@ def get_filetype(filepath, original_name=None):
             return "json"
     except Exception:
         pass
-    
+
     try:
         with open(filepath) as handle:
             import yaml
@@ -125,7 +125,7 @@ def get_filetype(filepath, original_name=None):
             return "yaml"
     except Exception:
         pass
-    
+
     return "unknown"
 
 # ----------------------------------------------------------------------------------------------
@@ -133,4 +133,3 @@ def get_filetype(filepath, original_name=None):
 def is_dataset(name):
     """Returns True IFF `name` is plausible as a dataset.   Not a guarantee."""
     return config.filetype(name) in ["fits", "asdf", "geis"]
-

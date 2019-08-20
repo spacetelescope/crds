@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+
+# Disable everything so that we can enable checks explicitly
+disable=I,E,W,R,C,F
+
+# Enable just whitespace checks for now (trailing whitespace and trailing newlines)
+enable=C0303,C0304,C0305

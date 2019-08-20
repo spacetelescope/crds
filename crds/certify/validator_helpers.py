@@ -16,15 +16,15 @@ from crds.core import utils, exceptions
 
 def has_columns(array_info, col_names):
     """Return True IFF CRDS `array_info` object defines `col_names` columns in any order.
-    
+
     >>> has_columns(utils.Struct(COLUMN_NAMES=["THIS","THAT","ANOTHER"]), ["THAT","ANOTHER","THIS"])
     True
     >>> has_columns(utils.Struct(COLUMN_NAMES=["THIS","THAT","ANOTHER"]), ["THAT","ANOTHER","FOO"])
     False
-    
+
     >>> has_columns("UNDEFINED",  ["THAT","ANOTHER","FOO"])
     False
-    
+
     NOTE:  does not disallow extra columns not listed.
     """
     if not array_exists(array_info):
@@ -36,7 +36,7 @@ def has_columns(array_info, col_names):
 
 def has_type(array_info, typestr):
     """Return True IFF CRDS `array_info` object has a data array of type `typestr`.
-    
+
     >>> has_type(utils.Struct({"DATA_TYPE" : "int8"}), "INT")
     True
     >>> has_type(utils.Struct({"DATA_TYPE" : "uint64"}), "INTEGER")
@@ -80,15 +80,15 @@ def _image_type(typestr):
     }.get(typestr, typestr)
 
 def has_column_type(array_info, col_name, typestr):
-    """Return True IFF column `col_name` of CRDS `array_info` object has a 
+    """Return True IFF column `col_name` of CRDS `array_info` object has a
     data array of type `typestr`.
-    
+
     >>> has_column_type(utils.Struct(DATA_TYPE={"WAVELENGTH":">f4"}), "WAVELENGTH", "FLOAT")
     True
-    
+
     >>> has_column_type(utils.Struct(DATA_TYPE={"WAVELENGTH":">f4"}), "WAVELENGTH", "INTEGER")
     False
- 
+
     >>> has_column_type("UNDEFINED", "WAVELENGTH", "INTEGER")
     False
 
@@ -96,7 +96,7 @@ def has_column_type(array_info, col_name, typestr):
     Traceback (most recent call last):
     ...
     crds.core.exceptions.MissingColumnError: Data type not defined for column 'WAVELEN'
-  
+
     """
     if not array_exists(array_info):
         return False
@@ -109,7 +109,7 @@ def has_column_type(array_info, col_name, typestr):
     except KeyError:
         pass
     raise exceptions.MissingColumnError("Data type not defined for column", repr(col_name))
-        
+
 def _table_type(typestr):
     """Return the translation of CRDS fuzzy type name `typestr` into numpy dtype str() prefixes.
     If CRDS has no definition for `typestr`,  return it unchanged.
@@ -118,10 +118,10 @@ def _table_type(typestr):
     float_types = [">f","<f","float","float"]
     complex_types = [">c","<c","complex","complex"]
     string_types = ["|S"]
-    
+
     def _array_types(types):
         return ["('" + typestr for typestr in types]
-    
+
     trans = {
         'COMPLEX': complex_types,
         'COMPLEX_ARRAY': _array_types(complex_types),
@@ -141,17 +141,17 @@ def _table_type(typestr):
 
 def is_table(array_info):
     """Return True IFF CRDS `array_info` object corresponds to a table.
-    
+
     >>> is_table(utils.Struct(KIND="IMAGE"))
     False
     >>> is_table(utils.Struct(KIND="TABLE"))
     True
     """
     return array_exists(array_info) and array_info.KIND=="TABLE"
-    
+
 def is_image(array_info):
     """Return True IFF CRDS `array_info` object corresponds to an image.
-    
+
     >>> is_image(utils.Struct(KIND="IMAGE"))
     True
     >>> is_image(utils.Struct(KIND="TABLE"))
@@ -161,17 +161,17 @@ def is_image(array_info):
 
 def  array_exists(array_info):
     """Return True IFF array_info is not UNDEFINED.
-    
+
     >>> array_exists("UNDEFINED")
     False
     >>> array_exists(utils.Struct({"KIND":"IMAGE", "SHAPE" : (2048,2048), "TYPE": "float32"}))
     True
     """
-    return array_info != "UNDEFINED" 
+    return array_info != "UNDEFINED"
 
 def is_imaging_mode(exp_type):
     """Return True IFF `exp_type` is one of the imaging modes for any instrument.
-    
+
     >>> is_imaging_mode('MIR_IMAGE')
     True
     >>> is_imaging_mode("NRS_IFU")
@@ -179,21 +179,21 @@ def is_imaging_mode(exp_type):
     """
     return exp_type in ["NRC_IMAGE", "NRC_TACQ", "NRC_TACONF", "NRC_CORON", "NRC_TSIMAGE",
                         "NRC_FOCUS", "NRC_DARK", "NRC_FLAT", "NRC_LED",
-                        
+
                         "MIR_IMAGE", "MIR_TACQ", "MIR_LYOT", "MIR_4QPM", "MIR_DARK",
-                        "MIR_FLATIMAGE", "MIR_CORONCAL", 
-                        
-                        "NRS_TASLIT", "NRS_TACQ", "NRS_TACONFIRM", 
+                        "MIR_FLATIMAGE", "MIR_CORONCAL",
+
+                        "NRS_TASLIT", "NRS_TACQ", "NRS_TACONFIRM",
                         "NRS_CONFIRM", "NRS_IMAGE", "NRS_FOCUS", "NRS_DARK", "NRS_MIMF",
-                        
-                        "NIS_IMAGE", "NIS_TACQ", "NIS_TACONFIRM", "NIS_AMI", 
+
+                        "NIS_IMAGE", "NIS_TACQ", "NIS_TACONFIRM", "NIS_AMI",
                         "NIS_FOCUS", "NIS_DARK", "NIS_LAMP",
-                        
+
                         "FGS_IMAGE", "FGS_FOCUS", "FGS_SKYFLAT", "FGS_INTFLAT", "FGS_DARK", "FGS_ID-STACK"]
-    
+
 def is_full_frame(subarray):
     """Return True IFF `subarray` is defined and has a full frame subarray value.
-    
+
     >>> is_full_frame("UNDEFINED")
     False
     >>> is_full_frame("FULL")
@@ -215,7 +215,7 @@ def is_full_frame(subarray):
 
 def is_subarray(subarray):
     """Return True IFF `subarray` is defined and is not a full frame value.
-    
+
     >>> is_subarray("UNDEFINED")
     False
     >>> is_subarray("GENERIC")
@@ -237,11 +237,11 @@ def is_subarray(subarray):
 
 def subarray_defined(header):
     """Return True IFF SUBARRAY related keywords are defined.
-    
+
     >>> header = dict(SUBARRAY="GENERIC",SUBSTRT1="1",SUBSTRT2="1",SUBSIZE1="2048",SUBSIZE2="2048")
     >>> subarray_defined(header)
     True
-    
+
     >>> header = dict(SUBARRAY="GENERIC",SUBSTRT1="1",SUBSTRT2="1",SUBISIZE2="2048")
     >>> subarray_defined(header)
     False
@@ -254,7 +254,7 @@ def subarray_defined(header):
 
 def is_irs2(readpatt):
     """Return True IFF `readpatt` is one of the IRS2 READPATTs.
-    
+
     >>> is_irs2("NRSIRS2")
     True
     >>> is_irs2("NRSIRS2RAPID")
@@ -268,13 +268,13 @@ def is_irs2(readpatt):
 
 def is_defined(value):
     """Return True IFF `value` is not 'UNDEFINED' or None.
-    
+
     >>> is_defined("UNDEFINED")
     False
-    
+
     >>> is_defined(None)
     False
-    
+
     >>> is_defined("FOO")
     True
     """
@@ -283,10 +283,10 @@ def is_defined(value):
 # # @utils.traced
 # def nir_filter(instrument, reftype, exp_type):
 #     """Return True if a SCI, ERR, or DQ array is appropriate for the specified
-#     JWST NIR instrument, reftype, and exp_type.   This can be used to filter 
-#     out NIR SCI,ERR,DQ array definitions for those NIRSPEC modes and types 
+#     JWST NIR instrument, reftype, and exp_type.   This can be used to filter
+#     out NIR SCI,ERR,DQ array definitions for those NIRSPEC modes and types
 #     that don't define them.  The logic is too complex to inline.
-#     
+#
 #     >>> nir_filter("NIRSPEC", "SFLAT", "NRS_MSASPEC")
 #     True
 #     >>> nir_filter("NIRSPEC", "SFLAT", "NRS_IFU")
@@ -295,10 +295,10 @@ def is_defined(value):
 #     False
 #     >>> nir_filter("NIRSPEC", "SFLAT", "NRS_BRIGHTOBJ")
 #     False
-#     
+#
 #     >>> nir_filter("NIRSPEC", "DFLAT", "ANY")
 #     True
-#     
+#
 #     >>> nir_filter("NIRSPEC", "FFLAT", "NRS_MSASPEC")
 #     True
 #     >>> nir_filter("NIRSPEC", "FFLAT", "NRS_IFU")
@@ -307,7 +307,7 @@ def is_defined(value):
 #     False
 #     >>> nir_filter("NIRSPEC", "FFLAT", "NRS_BRIGTOBJ")
 #     False
-#     
+#
 #     """
 #     assert instrument != "MIRI",  "nir_filter() .tpn function should only be called for NIR-detector based instruments."
 #     if instrument == "NIRSPEC":
@@ -323,7 +323,7 @@ def is_defined(value):
 #             return True
 #     else:
 #         return True
-    
+
 # ----------------------------------------------------------------------------
 
 # These are presence field helpers that mutate a True value of a presence expression
@@ -334,12 +334,12 @@ def is_defined(value):
 # (OPTIONAL(True)) --> "O"
 # (OPTIONAL(False)) --> False,  constraint not evaluated.
 #
-# The enables having constraints which are conditionally optional,  so e.g. a constraint 
-# on 
+# The enables having constraints which are conditionally optional,  so e.g. a constraint
+# on
 
 def optional(flag=True):
     """When this flag is True, an exception should be issued if the related keyword/element is
-    defined and the constraint fails.   If the keyword/element is not defined or `flag` is False,  
+    defined and the constraint fails.   If the keyword/element is not defined or `flag` is False,
     the constraint should be ignored.   Returns "O" or False
 
     >>> optional(True)
@@ -423,20 +423,20 @@ def all_subarray(flag=True):
     False
     """
     return "A" if flag else False
-                 
+
 # ----------------------------------------------------------------------------
 
 def ndim(array, dims):
     """Return True IFF CRDS `array` object has number of dimensions `dims`.
-    
+
     >>> array = utils.Struct({"KIND":"IMAGE", "SHAPE" : (2048,2048), "TYPE": "float32"})
-    
+
     >>> ndim(array, 2)
     True
-    
+
     >>> ndim(array, 3)
     False
-    
+
     """
     return len(array.SHAPE) == dims
 
@@ -449,5 +449,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-
-

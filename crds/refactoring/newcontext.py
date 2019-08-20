@@ -13,7 +13,7 @@ from . import refactor
 
 # =============================================================================
 
-# Code used by the website to determine affected 
+# Code used by the website to determine affected
 
 def get_update_map(old_pipeline, updated_rmaps):
     """Given the name of a pipeline context, `old_pipeline`, and a list
@@ -40,7 +40,7 @@ def get_update_map(old_pipeline, updated_rmaps):
         assert update not in updates[imap_name], "Duplicate update for " + repr(update)
         updates[imap_name].append(update)
     return updates
-            
+
 # =============================================================================
 
 # Code used by the website to generate new contexts.
@@ -58,12 +58,12 @@ def generate_new_contexts(old_pipeline, updates, new_names):
     new_imaps = list(new_names.values())
     hack_in_new_maps(old_pipeline, new_pipeline, new_imaps)
     return [new_pipeline] + new_imaps
-    
+
 def hack_in_new_maps(old, new, updated_maps):
     """Given mapping named `old`,  create a modified copy named `new` which
     installs each map of `updated_maps` in place of it's predecessor.
     """
-    copy_mapping(old, new)  
+    copy_mapping(old, new)
     for mapping in sorted(updated_maps):
         key, replaced, replacement = insert_mapping(new, mapping)
         if replaced:
@@ -74,7 +74,7 @@ def hack_in_new_maps(old, new, updated_maps):
 def insert_mapping(context, mapping):
     """Replace the filename in file `context` with the same generic name
     as `mapping` with `mapping`.  Re-write `context` in place.
-    
+
     If mapping is of the form <instrument>_<type>_"n/a",  then it specifies
     that <type> of <instrument> should be set to "N/A".
     """
@@ -107,15 +107,15 @@ def copy_mapping(old_map, new_map):
 def new_context(old_pipeline, updated_rmaps):
     """Given a pipeline mapping name `old_pipeline`, and a list of the names
     of new rmaps, `updated_rmaps`, generate new imaps as needed and a single
-    pmap which refers to them all.   
-    
+    pmap which refers to them all.
+
     Returns  { old_name : fake_names }
     """
     updates = get_update_map(old_pipeline, updated_rmaps)
     new_names = generate_fake_names(old_pipeline, updates)
     generate_new_contexts(old_pipeline, updates, new_names)
     return new_names
-    
+
 def generate_fake_names(old_pipeline, updates):
     """Generate a map from old pipeline and instrument context names to new
     names for their updated replacements.   "Fake" names only work locally
@@ -129,7 +129,7 @@ def generate_fake_names(old_pipeline, updates):
     return new_names
 
 def fake_name(old_map):
-    """Given and old mapping name, `old_map`, adjust the serial number to 
+    """Given and old mapping name, `old_map`, adjust the serial number to
     create a new mapping name of the same series.   This name is fake in the
     sense that it is local to a developer's machine.
     """
@@ -143,7 +143,7 @@ def fake_name(old_map):
             new_map = re.sub(r"_(\d+)(\.[pir]map)", r"_%04d\2" % serial, old_map)
         else:
             new_map = old_map
-    elif re.search(r"\w+[^\d]+\..map", old_map):   
+    elif re.search(r"\w+[^\d]+\..map", old_map):
         # if no serial,  start off existing sequence as 0001
         parts = os.path.splitext(old_map)
         new_map = parts[0] + "_0001" + parts[1]
@@ -152,7 +152,7 @@ def fake_name(old_map):
         raise ValueError("Unrecognized mapping filename " + repr(old_map))
     if os.path.exists(rmap.locate_mapping(new_map)):
         # recurse until there's a free name,  or eventually fail.
-        return fake_name(new_map)   
+        return fake_name(new_map)
     else:
         if not new_map.startswith("./"):
             new_map = "./" + os.path.basename(new_map)
@@ -165,7 +165,7 @@ def update_header_names(name_map):
     for old_path, new_path in sorted(name_map.items()):
         old_base, new_base = os.path.basename(old_path), os.path.basename(new_path)
         refactor.update_derivation(new_path, old_base)
-        log.info("Adjusting name", repr(new_base), "derived_from", repr(old_base), 
+        log.info("Adjusting name", repr(new_base), "derived_from", repr(old_base),
                  "in", repr(new_path))
     return name_map # no change
 
@@ -173,15 +173,15 @@ def update_header_names(name_map):
 
 class NewContextScript(cmdline.Script):
     """Defines the command line handler for crds newcontext."""
-    
+
     description = """Based on `old_pmap`,  generate a new .pmap and .imaps as
-needed in order to support `new_rmaps`.   Currently generated contexts have 
+needed in order to support `new_rmaps`.   Currently generated contexts have
 fake names and are for local test purposes only,  not formal distribution.
 """
     def add_args(self):
         self.add_argument("old_pmap")
         self.add_argument("new_rmap", nargs="+", help="Names of new rmaps to insert into the new context.""")
-        
+
     def main(self):
         name_map = new_context(self.args.old_pmap, self.args.new_rmap)
         update_header_names(name_map)

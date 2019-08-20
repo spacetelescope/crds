@@ -68,7 +68,7 @@ def dt_disabled_uses_rmaps():
 
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_disabled_uses_imap():
     """
     >>> old_state = test_config.setup()
@@ -95,7 +95,7 @@ class TestUses(test_config.CRDSTestCase):
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    
+
     import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestUses)
     unittest.TextTestRunner().run(suite)

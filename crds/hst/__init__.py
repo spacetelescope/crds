@@ -45,7 +45,7 @@ INSTRUMENT_FIXERS = {
 }
 
 TYPE_FIXERS = {
-    ("wfpc2","dark") : "drk", 
+    ("wfpc2","dark") : "drk",
 }
 
 PROVENANCE_KEYWORDS = ("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",)

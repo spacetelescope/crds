@@ -70,7 +70,7 @@ def dt_rmap_minimum_header():
      'TIME-OBS': '11:00:47'}
     >>> test_config.cleanup(old_state)
     """
-    
+
 
 
 def dt_rmap_str():
@@ -114,7 +114,7 @@ def dt_rmap_obs_package():
     'crds.hst'
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_rmap_format_with_comment():
     '''
     >>> old_state = test_config.setup()
@@ -430,7 +430,7 @@ def dt_imap_match_not_applicable():
     ...      "CCDAMP" : "A",
     ...      "CCDGAIN" : "1.0",
     ...      "DATE-OBS" : "1993-01-01",
-    ...      "TIME-OBS" : "12:00:00", 
+    ...      "TIME-OBS" : "12:00:00",
     ...      "OBSTYPE" : "IMAGING",
     ...      "FLATCORR" : "PERFORM",
     ...      "DQICORR" : "PERFORM",
@@ -521,7 +521,7 @@ class TestRmap(test_config.CRDSTestCase):
         os.environ["CRDS_MAPPATH_SINGLE"] = self.data_dir
         self.assertEqual(rmap.list_mappings("*.imap", "hst"), [
                 'hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap', 'hst_acs_9999.imap',
-                'hst_cos.imap', 'hst_nicmos.imap', 'hst_stis.imap', 'hst_wfc3.imap', 'hst_wfpc2.imap', 
+                'hst_cos.imap', 'hst_nicmos.imap', 'hst_stis.imap', 'hst_wfc3.imap', 'hst_wfpc2.imap',
                 'jwst_fgs_na.imap', 'jwst_miri_omit.imap', 'jwst_niriss_na_omit.imap'])
 
     def test_rmap_list_references(self):
@@ -580,7 +580,7 @@ selector = Match({
             'TIME-OBS': '18:09:15.773332'}
         with self.assertRaises(CrdsUnknownReftypeError):
             r.get_best_references(header, include=["flatfile"])
-            
+
     def test_rmap_get_parkey_map(self):
         i = rmap.get_cached_mapping("hst_acs.imap")
         i.get_parkey_map() == {'APERTURE': ['*',
@@ -732,7 +732,7 @@ selector = Match({
      'YCORNER': ['N/A']}
 
     maxDiff = None
-    
+
     def test_rmap_todict(self):
         r = rmap.get_cached_mapping("data/hst_cos_bpixtab_0252.rmap")
         self.assertEqual(r.todict(), {'text_descr': 'Data Quality (Bad Pixel) Initialization Table', 'selections': [('FUV', '1996-10-01 00:00:00', 's7g1700dl_bpix.fits'), ('FUV', '2009-05-11 00:00:00', 'z1r1943fl_bpix.fits'), ('NUV', '1996-10-01 00:00:00', 's7g1700pl_bpix.fits'), ('NUV', '2009-05-11 00:00:00', 'uas19356l_bpix.fits')], 'header': {'sha1sum': 'd2024dade52a406af70fcdf27a81088004d67cae', 'reffile_switch': 'none', 'filekind': 'bpixtab', 'instrument': 'cos', 'derived_from': 'hst_cos_bpixtab_0251.rmap', 'reffile_format': 'table', 'observatory': 'hst', 'parkey': (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')), 'reffile_required': 'none', 'rmap_relevance': 'always', 'mapping': 'reference', 'name': 'hst_cos_bpixtab_0252.rmap'}, 'parameters': ('DETECTOR', 'USEAFTER', 'REFERENCE')})
@@ -750,7 +750,7 @@ selector = Match({
                 "DATE-OBS" : "1993-01-01",
                 "TIME-OBS" : "12:00:00",
                 }) == "NOT FOUNT n/a"
-        
+
     def test_rmap_match_omit(self):
         r = rmap.get_cached_mapping("data/hst_acs_darkfile_na_omit.rmap")
         r.get_best_ref({
@@ -813,16 +813,16 @@ selector = Match({
     def test_ref_to_dataset_ir(self):
 
         # rmap update time conversions don't map comment parkeys to N/A
-        
+
         r = self._get_rmap()
-        
+
         header = dict(
-            DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
-        
+
         # transform for rmap updates
         dheader = utils.Struct(r.reference_to_dataset_header(header))
-        
+
         self.assertEqual(dheader.DETECTOR, "IR")
         self.assertEqual(dheader.CCDAMP, "ABCD")
         self.assertEqual(dheader.BINAXIS1, "1.0")   # comment
@@ -831,40 +831,40 @@ selector = Match({
         self.assertEqual(dheader.SAMP_SEQ, "MIF1200")
         self.assertEqual(dheader.SUBTYPE, "FULLIMAG")
         self.assertEqual(dheader.DARKCORR, "N/A")
-        
+
     def test_ref_to_dataset_uvis(self):
-        
+
         r = self._get_rmap()
-        
+
         header = dict(
-            DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
-        
+
         # transform for rmap updates
         dheader = utils.Struct(r.reference_to_dataset_header(header))
-        
+
         self.assertEqual(dheader.DETECTOR, "UVIS")
         self.assertEqual(dheader.CCDAMP, "ABCD")
         self.assertEqual(dheader.BINAXIS1, "1.0")   # comment
         self.assertEqual(dheader.BINAXIS2, "2.0")   # non-comment
         self.assertEqual(dheader.CCDGAIN, "N/A")
         self.assertEqual(dheader.SAMP_SEQ, "N/A")
-        self.assertEqual(dheader.SUBTYPE, "N/A")        
+        self.assertEqual(dheader.SUBTYPE, "N/A")
         self.assertEqual(dheader.DARKCORR, "N/A")
 
     def test_na_parkeys_ir(self):
 
         r = self._get_rmap()
-        
+
         # bestrefs time conversions still map comment parkeys to N/A
-        
+
         header = dict(
-            DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            DETECTOR="IR", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
-        
+
         # transform for bestrefs
         dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
-        
+
         self.assertEqual(dheader.DETECTOR, "IR")
         self.assertEqual(dheader.CCDAMP, "ABCD")
         self.assertEqual(dheader.BINAXIS1, "N/A")   # comment
@@ -873,18 +873,18 @@ selector = Match({
         self.assertEqual(dheader.SAMP_SEQ, "MIF1200")
         self.assertEqual(dheader.SUBTYPE, "FULLIMAG")
         self.assertEqual(dheader.DARKCORR, "PERFORM")
-        
+
     def test_na_parkeys_uvis(self):
-        
+
         r = self._get_rmap()
-        
+
         header = dict(
-            DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",   
+            DETECTOR="UVIS", CCDAMP="ABCD", BINAXIS1="1.0", BINAXIS2="2.0",
             CCDGAIN="1.0", SAMP_SEQ="MIF1200", SUBTYPE="FULLIMAG", DARKCORR="PERFORM")
 
         # transform for bestrefs
         dheader = utils.Struct(r.map_irrelevant_parkeys_to_na(header))
-        
+
         self.assertEqual(dheader.DETECTOR, "UVIS")
         self.assertEqual(dheader.CCDAMP, "ABCD")
         self.assertEqual(dheader.BINAXIS1, "N/A")   # comment
@@ -893,7 +893,7 @@ selector = Match({
         self.assertEqual(dheader.SAMP_SEQ, "N/A")
         self.assertEqual(dheader.SUBTYPE, "N/A")
         self.assertEqual(dheader.DARKCORR, "PERFORM")
-    
+
 # ==================================================================================
 
 

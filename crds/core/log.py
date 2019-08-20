@@ -120,7 +120,7 @@ class CrdsLogger:
 
         self.handlers = []  # logging handlers, used e.g. to add console or file output streams
         self.filters = []   # simple CRDS filters, used e.g. to mutate message text
-        
+
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
         self.logger.propagate = False
@@ -145,7 +145,7 @@ class CrdsLogger:
             warning("Bad format for CRDS_VERBOSITY =", repr(verbose_level),
                         "Use e.g. -1 to squelch info, 0 for no debug,  50 for default debug output. 100 max debug.")
             self.verbose_level = DEFAULT_VERBOSITY_LEVEL
-            
+
     def set_formatter(self, enable_time=False, enable_msg_count=True):
         """Set the formatter attribute of `self` to a logging.Formatter and return it."""
         self.formatter = logging.Formatter(
@@ -155,7 +155,7 @@ class CrdsLogger:
         for handler in self.handlers:
             handler.setFormatter(self.formatter)
         return self.formatter
-        
+
     @property
     def msg_count(self):
         return "(%07d) -" % (self.infos + self.errors + self.warnings + self.debugs) if ADD_LOG_MSG_COUNT else ""
@@ -183,7 +183,7 @@ class CrdsLogger:
         self.warnings += 1
         if self.verbose_level > -2:
             self.logger.warning(self.eformat(self.msg_count, *args, **keys))
-        
+
     def error(self, *args, **keys):
         self.errors += 1
         if self.verbose_level > -3:
@@ -196,15 +196,15 @@ class CrdsLogger:
     def should_output(self, *args, **keys):
         verbosity = keys.get("verbosity", DEFAULT_VERBOSITY_LEVEL)
         return not self.verbose_level < verbosity
-            
+
     def verbose(self, *args, **keys):
         if self.should_output(*args, **keys):
             self.debug(*args, **keys)
- 
+
     def verbose_warning(self, *args, **keys):
         if self.should_output(*args, **keys):
             self.warn(*args, **keys)
-            
+
     def write(self, *args, **keys):
         """Output a message to stdout, formatting each positional parameter
         as a string.
@@ -217,10 +217,10 @@ class CrdsLogger:
 
     def status(self):
         return self.errors, self.warnings, self.infos
-    
+
     def reset(self):
         self.errors = self.warnings = self.infos = self.debugs = 0
-        
+
     def set_verbose(self, level=True):
         assert -3 <= level <= 100,  "verbosity level must be in range -3..100"
         old_verbose = self.verbose_level
@@ -230,10 +230,10 @@ class CrdsLogger:
             level = 0
         self.verbose_level = level
         return old_verbose
-        
+
     def get_verbose(self):
         return self.verbose_level
-    
+
     def add_console_handler(self, level=logging.DEBUG, stream=sys.stderr):
         if self.console is None:
             self.console = self.add_stream_handler(stream)
@@ -251,7 +251,7 @@ class CrdsLogger:
         self.handlers.append(handler)
         self.logger.addHandler(handler)
         return handler
-    
+
     def remove_stream_handler(self, handler):
         self.handlers.remove(handler)
         self.logger.removeHandler(handler)
@@ -319,7 +319,7 @@ def set_test_mode():
     remove_console_handler()
     add_console_handler(stream=sys.stdout)
     set_log_time(False)
-    
+
 def set_log_time(enable_time=False):
     """Set the flag for including time in log messages.  Ignore CRDS_LOG_TIME."""
     THE_LOGGER.set_formatter(enable_time)
@@ -330,7 +330,7 @@ def set_log_time(enable_time=False):
 def reduced_verbosity(reduced_level, threshhold):
     """Sets the global verbosity level to `reduced_level` as long as it is already below `threshhold`
     within the scope of the with-block / context manager.
-    
+
     If the global verbosity is above `threshhold`,  don't set to `reduced_level` enabling high verbosity settings
     to bypass the suppression.
     """
@@ -342,7 +342,7 @@ def reduced_verbosity(reduced_level, threshhold):
     finally:
         if old_verbose < threshhold:
             set_verbose(old_verbose)
-        
+
 # ===========================================================================
 
 def exception_trap_logger(func):
@@ -350,15 +350,15 @@ def exception_trap_logger(func):
     def func_on_exception(*args, **keys):
         """func_on_exception is a context manager which issues a func() message if any statement
         in a with-block generates an exception.   The exception is suppressed.
-        
+
         >> with warn_on_exception("As expected, it failed."):
         ...    print("do it.")
         do it.
-    
+
         >> with warn_on_exception("As expected, it failed."):
         ...    raise Exception("It failed!")
         ...    print("do it.")
-        
+
         Never printed 'do it.'  Nothing printed because the func() output is a log message.
         """
         try:
@@ -368,7 +368,7 @@ def exception_trap_logger(func):
             if not CRDS_EXCEPTION_TRAP:
                 # In python-2, distinction between raise and "raise something".  raise doesn't
                 # wreck the traceback,  raising a new improved exception does.
-                raise  
+                raise
             # Augmented,  the traceback is trashed from here down but the message is better when caught higher up.
             elif reraise:
                 exc_class = keys.pop("exception_class", exc.__class__)
@@ -391,7 +391,7 @@ def set_exception_trap(flag):
     if flag is not None:
         CRDS_EXCEPTION_TRAP = flag
     return old_flag
-    
+
 def _reraise(*args, **keys):
     """Signal to exception_trap_logger to unconditionally reraise the exception,  probably augmented."""
     return True
@@ -406,7 +406,7 @@ fatal_error_on_exception = exception_trap_logger(fatal_error)
 
 # Either supress-with-error or augment the exception in the enclosed block.
 # Suppressing an exception results in less information to identify the problem
-# but can also reveal multiple problems in a single program run if executed 
+# but can also reveal multiple problems in a single program run if executed
 # inside a loop that an augmented exception would have exited.
 if bool(os.environ.get("CRDS_TRAP_AUGMENTED", False)):
     augment_exception = error_on_exception
@@ -429,22 +429,22 @@ def get_add_log_msg_count():
 # ===========================================================================
 
 class PP:
-    """A wrapper to defer pretty printing until after it's known a verbose 
+    """A wrapper to defer pretty printing until after it's known a verbose
     message will definitely be output.
     """
     def __init__(self, ppobj):
         self.ppobj = ppobj
-    
+
     def __str__(self):
         return pprint.pformat(self.ppobj)
 
 class Deferred:
-    """A wrapper to delay calling a callable until after it's known a verbose 
+    """A wrapper to delay calling a callable until after it's known a verbose
     message will definitely be output.
     """
     def __init__(self, ppobj):
         self.ppobj = ppobj
-    
+
     def __str__(self):
         return str(self.ppobj())
 
@@ -457,9 +457,9 @@ def handle_standard_options(
     '''
     if parser is None:
         parser = optparse.OptionParser(usage)
-    
+
     parser.add_option("-V", "--verbose", dest="verbose",
-                      help="Set verbosity level.", 
+                      help="Set verbosity level.",
                       metavar="VERBOSITY", default=None)
 
     options, args = parser.parse_args(args)
@@ -484,11 +484,11 @@ def format_parameter_list(parameters):
     """
     items = sorted(dict(parameters).items())
     return " ".join(["=".join([key, repr(str(value))]) for (key,value) in items])
-    
+
 # ==============================================================================
 
 def srepr(obj):
-    """Return the repr() of the str() of obj"""  
+    """Return the repr() of the str() of obj"""
     return repr(str(obj))
 
 # ==============================================================================
@@ -513,4 +513,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-

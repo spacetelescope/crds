@@ -26,7 +26,7 @@ TEST_TEMP_DIR = tempfile.mkdtemp(prefix='crds-test-')
 # ==============================================================================
 
 class CRDSTestCase(unittest.TestCase):
-    
+
     clear_existing = False
     server_url = None
     cache = config.get_crds_path()
@@ -38,7 +38,7 @@ class CRDSTestCase(unittest.TestCase):
         if not os.path.exists(self.temp_dir):
             os.mkdir(self.temp_dir)
         self.hst_mappath =  TEST_MAPPATH
-        self.old_state = setup(cache=self.cache, url=self.server_url, 
+        self.old_state = setup(cache=self.cache, url=self.server_url,
                                clear_existing=self.clear_existing)
     def tearDown(self, *args, **keys):
         super(CRDSTestCase, self).tearDown(*args, **keys)
@@ -111,4 +111,3 @@ def run_and_profile(name, case, globs={}, locs={}):
     stats.sort_stats('cumulative')
     stats.print_stats(100)
     os.remove('profile.stats')
-

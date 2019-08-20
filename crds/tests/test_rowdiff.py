@@ -48,7 +48,7 @@ Perform FITS table difference by rows
                      - If mode-fields is specified, the tuple is described by
                        modediff
                      - Otherwise the tuple is described by rowdiff
-      stdout: Human readable report.    
+      stdout: Human readable report.
 
 ----------
 TEST CASES

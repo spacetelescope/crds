@@ -22,7 +22,7 @@ from crds.core import exceptions, config, log, utils, timestamp
 
 DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS","EXTNAME","EXTVER"]
 APPEND_KEYS = ["COMMENT", "HISTORY"]
-    
+
 # ===========================================================================
 
 # NOTE:  hijack_warnings needs to be nestable
@@ -87,7 +87,7 @@ def hijacked_showwarning(message, category, filename, lineno, *args, **keys):
 #
 # For "un-modeled" references or if the decision is made to drop datamodels use, each
 # observatories locator module can define CROSS_STRAPPED_KEYWORDS.  See an example, jwst.
-# 
+#
 # For projects supporting the datamodels,  the schema is used to define the correspondence
 # between data model dotted paths and the keyword of the underlying file format.
 #
@@ -114,16 +114,16 @@ def equivalence_dict_to_pairs(equivalent_keywords_dict):
     a list of keyword pairs that should be cross-strapped.
     """
     pairs = []
-    log.verbose("Explicitly cross_strapped_keywords:", 
+    log.verbose("Explicitly cross_strapped_keywords:",
                 log.PP(equivalent_keywords_dict), verbosity=90)
     for master, slaves in equivalent_keywords_dict.items():
         for slave in slaves:
             if master != slave:
                 pairs.append((master, slave))
                 pairs.append((slave, master))
-    return pairs    
+    return pairs
 
-    
+
 def _cross_strap_pair(header, keyword_pair):
     """Mutate `header` using (master, slave) `keyword_pair` so that slave
     duplicates master's value under slave's name IFF master is defined
@@ -139,7 +139,7 @@ def _cross_strap_pair(header, keyword_pair):
 
 def convert_to_eval_header(header):
     """To support using file headers in eval expressions,  two changes need to be made:
-    
+
     1. JWST data model keywords, dotted paths, need to be translated to underscored paths.
     This makes them valid identifiers instead of non-existent nested objects when evaled.
 
@@ -151,7 +151,7 @@ def convert_to_eval_header(header):
     return header
 
 def _destringize_numbers(header):
-    """Convert string values in `header` that work as numbers back into 
+    """Convert string values in `header` that work as numbers back into
     ints and floats.
     """
     with_numbers = {}
@@ -164,10 +164,10 @@ def _destringize_numbers(header):
             except:
                 pass
         with_numbers[key] = val
-    return with_numbers    
+    return with_numbers
 
 def _convert_dotted_paths(header):
-    """Convert header dotted-path keys into valid Python identifiers 
+    """Convert header dotted-path keys into valid Python identifiers
     (for eval()) by using underscores instead of periods and add to
     existing contents of `header`.
     """
@@ -196,22 +196,22 @@ def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
 # ================================================================================================
 
 class AbstractFile:
-    
+
     format = "ABSTRACT"
-    
+
     def __init__(self, filepath, original_name=None, observatory=None):
         """Create an AbstractFile.
-        
+
         Required for use:
-        
+
         filepath          working path for this file
-        
+
         Retained for debug:
-        
+
         original_name     abstract,  possibly more readable name to infer type and observatory w/o io
-        observatory       observatory this file belongs to 
+        observatory       observatory this file belongs to
         """
-        # This __init__ should be kept fast 
+        # This __init__ should be kept fast
         self.filepath = filepath
         self.original_name = original_name
         self.observatory = observatory
@@ -224,15 +224,15 @@ class AbstractFile:
     def add_checksum(self):
         """Add checksum to`self.filepath`."""
         raise self._unsupported_file_op_error("add_checksum")
-    
+
     def remove_checksum(self):
         """Remove checksum from`self.filepath`."""
         raise self._unsupported_file_op_error("remove_checksum")
-    
+
     def verify_checksum(self):
         """Verify checksum in `self.filepath`."""
         raise self._unsupported_file_op_error("verify_checksum")
-    
+
     def get_format(self):
         """Return a string describing the structure of file at `filepath`,  intended
         for file overview describing generic array structure.
@@ -246,7 +246,7 @@ class AbstractFile:
     def get_array(self, array_name):
         """Return the array object corresponding to array selected by `array_id_info`."""
         raise self._unsupported_file_op_error("get_array")
-    
+
     # ----------------------------------------------------------------------------------------------
 
     def getval(self, key, **keys):
@@ -256,7 +256,7 @@ class AbstractFile:
     def setval(self, key, value):
         """Set the value of a single metadata key,  nominally in the 'primary header'."""
         raise self._unsupported_file_op_error("setval")
-    
+
     # ----------------------------------------------------------------------------------------------
 
     def get_header(self, needed_keys, **keys):
@@ -269,7 +269,7 @@ class AbstractFile:
         crossed_header["FILE_FORMAT"] = \
             self.__class__.__name__[:-len("File")].upper()
         return crossed_header
-    
+
     def get_raw_header(self, needed_keys, **keys):
         """Return the metadata dictionary associated with this file,  nominally a dict
         describing the FITS header, ASDF tree, or JSON or YAML contents.
@@ -281,7 +281,7 @@ class AbstractFile:
         """Limit `header` to `needed_keys`,  converting all keys to upper case
         and making note of any significant duplicates, and adding any missing
         `needed_keys` as UNDEFINED.
-    
+
         To detect duplicates,  use an item list for `old_header`,  not a dict.
         """
         needed_keys = tuple(key.upper() for key in needed_keys)
@@ -302,7 +302,7 @@ class AbstractFile:
                 else:
                     header[key] = value
         return ensure_keys_defined(header, needed_keys)
-    
+
     # ----------------------------------------------------------------------------------------------
 
     def to_simple_types(self, tree):
@@ -319,7 +319,7 @@ class AbstractFile:
             else:
                 result[str(key.upper())] = self._simple_type(value)
         return result
-    
+
     def _simple_type(self, value):
         """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
         if isinstance(value, (str, int, float, complex)):
@@ -331,4 +331,3 @@ class AbstractFile:
         else:
             rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
         return rval
-

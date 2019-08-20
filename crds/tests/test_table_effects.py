@@ -9,7 +9,7 @@ def dt_table_effects_default_always_reprocess():
     """
     Test: Default rule: always reprocess, based on STIS PCTAB.
     Test: STIS APERTAB: No reprocess
-    
+
     >>> old_state = test_config.setup()
 
     >>> doctest.ELLIPSIS_MARKER = '...'
@@ -35,16 +35,16 @@ def dt_table_effects_default_always_reprocess():
     CRDS - INFO -  0 warnings
     CRDS - INFO -  3 infos
     0
-    
+
     >>> test_config.cleanup(old_state)
     """
 
 def dt_table_effects_reprocess_test():
     """
     Test: COS WCPTAB, reprocess yes
-    
+
     >>> old_state = test_config.setup()
-    
+
     >>> doctest.ELLIPSIS_MARKER = '...'
     >>> BestrefsScript(argv="bestrefs.py -z  --verbosity 25 --old-context hst_0018.pmap  --new-context hst_0024.pmap --datasets LB6M01030")() # doctest: +ELLIPSIS
     CRDS - DEBUG -  Using explicit new context 'hst_0024.pmap' for computing updated best references.
@@ -63,14 +63,14 @@ def dt_table_effects_reprocess_test():
     CRDS - INFO -  0 warnings
     CRDS - INFO -  3 infos
     0
-    
+
     >>> test_config.cleanup(old_state)
     """
 
 def dt_table_effects_reprocess_no():
     """
     Test: COS WCPTAB, reprocess no
-    
+
     >>> old_state = test_config.setup()
 
     >>> doctest.ELLIPSIS_MARKER = '...'

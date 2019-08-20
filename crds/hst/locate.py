@@ -6,7 +6,7 @@ specific policies for HST:
 2. How to convert a reference or mapping basename to a download URL.
 
 3. How to manage parameters for reference file Validator objects used
-in the certification of reference files. 
+in the certification of reference files.
 
 The intentions is that a similar module with different policies could
 be implemented for JWST.
@@ -77,11 +77,11 @@ def header_to_pipelines(header, context="hst-operational"):
     raise NotImplementedError("HST has not defined header_to_pipelines().")
 
 def get_exptypes(instrument=None):
-    """Return the list of EXP_TYPE values for instrument,  or for all 
+    """Return the list of EXP_TYPE values for instrument,  or for all
     instruments if instrument is not specified.
     """
     raise NotImplementedError("HST has not defined get_exptypes().")
-    
+
 
 # =======================================================================
 
@@ -104,7 +104,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     keys relevant to datasets.
     """
     result = dict(header)
-    
+
     #  XXXXX TODO   Add/consolidate logic to handle P_ pattern keywords
 
     # If USEAFTER is defined,  or we're configured to fake it...
@@ -119,7 +119,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
         result["DATE_OBS"] = reformatted[0]
         result["TIME-OBS"] = reformatted[1]
         result["TIME_OBS"] = reformatted[1]
-    
+
     return result
 
 # =======================================================================
@@ -266,11 +266,11 @@ CDBS_DIRS_TO_INSTR = {
    "/iref/":"wfc3",
    "/lref/":"cos",
    "/nref/":"nicmos",
-   
+
    "/upsf/":"wfpc2",
    "/uref/":"wfpc2",
    "/uref_linux/":"wfpc2",
-   
+
    "/yref/" : "fos",
    "/zref/" : "hrs",
 }
@@ -307,13 +307,13 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
                     log.warning("No GEIS header for", repr(ref))
 
             log.verbose("Processing:", instrument, filekind, ref)
-            
+
             _path2, _observ2, instrument2, filekind2, _serial2, _ext2 = ref_properties_from_header(ref)
             if instrument != instrument2:
-                log.error("Inconsistent instruments", repr(instrument), "vs.", repr(instrument2), 
+                log.error("Inconsistent instruments", repr(instrument), "vs.", repr(instrument2),
                           "for", repr(ref))
             if filekind != filekind2:
-                log.error("Inconsistent filekinds", repr(filekind), "vs.", repr(filekind2), 
+                log.error("Inconsistent filekinds", repr(filekind), "vs.", repr(filekind2),
                           "for", repr(ref))
 
             for pmap_name in reversed(sorted(rmap.list_mappings("*.pmap", observatory="hst"))):
@@ -324,24 +324,24 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
                     continue
 
                 if r.instrument != instrument:
-                    log.error("Rmap instrument", repr(r.instrument), 
+                    log.error("Rmap instrument", repr(r.instrument),
                               "inconsistent with name derived instrument", repr(instrument), "for", repr(ref), "in", repr(pmap_name))
                 if r.filekind != filekind:
-                    log.error("Rmap filekind", repr(r.filekind), 
+                    log.error("Rmap filekind", repr(r.filekind),
                               "inconsistent with name derived filekind", repr(filekind), "for", repr(ref), "in", repr(pmap_name))
                 if r.instrument != instrument2:
-                    log.error("Rmap instrument", repr(r.instrument), 
+                    log.error("Rmap instrument", repr(r.instrument),
                               "inconsistent with content derived instrument", repr(instrument2), "for", repr(ref), "in", repr(pmap_name))
                 if r.filekind != filekind2:
-                    log.error("Rmap filekind", repr(r.filekind), 
+                    log.error("Rmap filekind", repr(r.filekind),
                               "inconsistent with content derived filekind", repr(filekind2), "for", repr(ref), "in", repr(pmap_name))
-                
+
                 if not exhaustive_mapping_check:
                     break
 
             else:
                 log.error("Orphan reference", repr(ref), "not found under any context.")
-            
+
 def get_reference_properties(filename):
     """Figure out FITS (instrument, filekind, serial) based on `filename`."""
     # try:
@@ -371,8 +371,8 @@ GEIS_EXT_TO_SUFFIX = {
 }
 
 def ref_properties_from_cdbs_path(filename):
-    """Based on a HST CDBS `filename`,  return 
-    
+    """Based on a HST CDBS `filename`,  return
+
     (path, "hst", instrument, filekind, serial, ext)
 
     Raise AssertionError if it's not a good filename.
@@ -435,7 +435,7 @@ def instrument_from_refname(filename):
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine:
 
-    (path, "hst", instrument, filekind, serial, ext) 
+    (path, "hst", instrument, filekind, serial, ext)
     """
     # For legacy files,  just use the root filename as the unique id
     path, _parts, ext = _get_fields(filename)
@@ -466,9 +466,9 @@ def ref_properties_from_header(filename):
                 "TELESCOPE", None))
         if observatory is not None and observatory.upper() != "HST":
             raise CrdsNamingError(
-                "CRDS is configured for 'HST' but file", 
+                "CRDS is configured for 'HST' but file",
                 repr(os.path.basename(filename)),
-                "is for the", repr(observatory), 
+                "is for the", repr(observatory),
                 "telescope.  Reconfigure CRDS_PATH or CRDS_SEVER_URL.")
         else:
             raise CrdsNamingError(
@@ -534,7 +534,7 @@ def generate_timestamp(now=None):
 
     if now is None:
         now = datetime.datetime.utcnow()
-    
+
     if now.year < 2016:
         year = chr(now.year - 2015 + ord('z'))
     elif 2016 <= now.year <= 2025:
@@ -562,7 +562,7 @@ def generate_timestamp(now=None):
         second = chr(hsecs - 10 + ord('a'))
 
     return "".join([year, month, day, hour, minute, second])
-    
+
 # ============================================================================
 
 # HST FITS headers have filenames adorned with environment prefixes for each
@@ -603,7 +603,7 @@ def locate_dir(instrument, mode=None):
             try:
                 rootdir = os.environ[prefix[:-1]]
             except KeyError:
-                raise KeyError("Reference location not defined for " + repr(instrument) + 
+                raise KeyError("Reference location not defined for " + repr(instrument) +
                                ".  Did you configure " + repr(prefix) + "?")
     elif mode == "instrument" and instrument != "synphot":   # use simple names inside CRDS cache.
         rootdir = os.path.join(crds_refpath, instrument)
@@ -615,7 +615,7 @@ def locate_dir(instrument, mode=None):
                     utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
                     os.symlink(rootdir, refdir)
     elif mode == "instrument" and instrument == "synphot":
-        rootdir = os.path.join(crds_refpath, instrument)        
+        rootdir = os.path.join(crds_refpath, instrument)
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
         rootdir = crds_refpath
     else:
@@ -640,4 +640,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-

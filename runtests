@@ -15,7 +15,7 @@ CRDS_TEST_ROOT = os.environ.get("CRDS_TEST_ROOT", os.environ["HOME"])
 # os.environ["CRDS_MAPPATH"] = os.path.join(os.getcwd(), "..", "crds_cache_archive", "mappings")
 os.environ["CRDS_TESTING_CACHE"] = os.path.join(CRDS_TEST_ROOT, "crds-cache-test")
 
-# The *defined* CRDS cache for testing 
+# The *defined* CRDS cache for testing
 os.environ["CRDS_PATH"] = os.path.join(CRDS_TEST_ROOT, "crds-cache-default-test")
 
 # For testing,  even the default cache is controlled and overridden.  This is a test-only setting,
@@ -35,5 +35,3 @@ else:
     status = os.system("nosetests")
 os.system("python -m crds.list --status --log-time")
 sys.exit(status)
-
-

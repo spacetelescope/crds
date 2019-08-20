@@ -37,7 +37,7 @@ def fits_open_trapped(filename, **keys):
 def fits_open(filename, **keys):
     """Return the results of io.fits.open() configured using CRDS environment
     settings, overridden by any conflicting keyword parameter values.
-    Nominally used for updating bestrefs FITS headers.  
+    Nominally used for updating bestrefs FITS headers.
 
     CRDS_FITS_VERIFY_CHECKSUM is used to enable/disable default checksum verification.
     CRDS_FITS_IGNORE_MISSING_END is used to enable/disable the missing FITS END check.
@@ -70,7 +70,7 @@ def get_fits_header_union(filepath, needed_keys=(), original_name=None, observat
 # ============================================================================
 
 class FitsFile(AbstractFile):
-    
+
     format = "FITS"
 
     def get_info(self):
@@ -83,7 +83,7 @@ class FitsFile(AbstractFile):
 
     def _array_name_to_hdu_index(self, array_name):
         """Convert array names with extended notations into "index" values
-        which can be used to select particular HDUs.  
+        which can be used to select particular HDUs.
 
         The extended notations include specifying HDUs using an extension number
         pseudonym like this:
@@ -108,9 +108,9 @@ class FitsFile(AbstractFile):
         -----------------------------------------------------
         Filename: crds/tests/data/y951738kl_hv.fits
         No.    Name      Ver    Type      Cards   Dimensions   Format
-        0  PRIMARY       1 PrimaryHDU      22   ()      
-        1  FUVA          1 BinTableHDU     17   106R x 2C   [D, I]   
-        2  FUVB          1 BinTableHDU     17   127R x 2C   [D, I]   
+        0  PRIMARY       1 PrimaryHDU      22   ()
+        1  FUVA          1 BinTableHDU     17   106R x 2C   [D, I]
+        2  FUVB          1 BinTableHDU     17   127R x 2C   [D, I]
 
         # Actual test and expected results
         >>> fits_file._array_name_to_hdu_index("FUVB")
@@ -179,7 +179,7 @@ class FitsFile(AbstractFile):
                 return 'UNDEFINED'
             generic_class = {
                 "IMAGEHDU" : "IMAGE",
-                "BINTABLEHDU" : "TABLE", 
+                "BINTABLEHDU" : "TABLE",
             }.get(hdu.__class__.__name__.upper(), "UNKNOWN")
             if generic_class in ["IMAGE","UNKNOWN"]:
                 typespec = hdu.data.dtype.name
@@ -188,7 +188,7 @@ class FitsFile(AbstractFile):
                 dtype = hdu.data.dtype
                 typespec = {name.upper():str(dtype.fields[name][0]) for name in dtype.names}
                 column_names = [name.upper() for name in hdu.data.dtype.names]
-            return utils.Struct( 
+            return utils.Struct(
                         SHAPE = hdu.data.shape,
                         KIND = generic_class,
                         DATA_TYPE = typespec,
@@ -207,7 +207,7 @@ class FitsFile(AbstractFile):
     def setval(self, key, value):
         """FITS version of setval() method."""
         fits.setval(self.filepath, key, value=value)
-    
+
     @hijack_warnings
     def add_checksum(self):
         """Add checksums to `filepath`."""
@@ -218,7 +218,7 @@ class FitsFile(AbstractFile):
                 fits.append(output, data, hdu.header, checksum=True)
         os.remove(self.filepath)
         os.rename(output, self.filepath)
-    
+
     @hijack_warnings
     def remove_checksum(self):
         """Remove checksums from `filepath`."""
@@ -231,14 +231,14 @@ class FitsFile(AbstractFile):
                 fits.append(output, data, hdu.header, checksum=False)
         os.remove(self.filepath)
         os.rename(output, self.filepath)
-    
+
     @hijack_warnings
     def verify_checksum(self):
         """Verify checksums in `filepath`."""
         with fits.open(self.filepath, do_not_scale_image_data=True, checksum=True) as hdus:
             for hdu in hdus:
                 hdu.verify("warn")
-                
+
 def test():
     from crds.io import fits
     import doctest
@@ -246,4 +246,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-

@@ -24,7 +24,7 @@ def dt_fake_name():
 
     >>> newcontext.fake_name("data/hst.pmap")
     './hst_0003.pmap'
-    
+
     >>> newcontext.fake_name("data/hst_cos_0001.imap")
     './hst_cos_0001.imap'
 

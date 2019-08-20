@@ -25,7 +25,7 @@ mapping = header_section:h comment_section:c selector_section:s -> (h, s, c)
 header_section = ws 'header' ws '=' ws dict:d ws -> d
 
 comment_section = ((ws 'comment' ws '=' ws block_string:c ws -> c)
-                  | -> None)  
+                  | -> None)
 selector_section = ws 'selector' ws '=' ws selector:s ws -> s
 
 selector = ( dict | parameters ):d -> d
@@ -42,10 +42,10 @@ value = (string | tuple | number | selector | dict | set | true | false | none):
 
 string = (('"' (escapedChar | ~'"' anything)*:c '"')
          |("'" (escapedChar | ~"'" anything)*:c "'") -> ''.join(c))
-         
+
 block_string = (('\"\"\"' (escapedChar | ~'\"\"\"' anything)*:c '\"\"\"')
                |("\'\'\'" (escapedChar | ~"\'\'\'" anything)*:c "\'\'\'")) -> ''.join(c)
-         
+
 escapedChar = '\\' (('"' -> '"')    |('\\' -> '\\')
                    |('/' -> '/')    |('b' -> '\b')
                    |('f' -> '\f')   |('n' -> '\n')
@@ -89,19 +89,19 @@ def profile_parse(filename="hst_cos_deadtab.rmap"):
     import pstats
     filename = rmap.locate_mapping(filename)
     statsname = os.path.splitext(filename)[0] + ".stats"
-    cProfile.runctx('result = MAPPING_PARSER(open("{}").read()).mapping()'.format(filename), 
+    cProfile.runctx('result = MAPPING_PARSER(open("{}").read()).mapping()'.format(filename),
                     locals(), globals(), statsname)
     stats = pstats.Stats(statsname)
     stats.sort_stats("time")
     stats.print_stats(20)
 '''
-    
+
 Parsing = namedtuple("Parsing", "header,selector,comment")
-    
+
 def parse_mapping(filename):
     """Parse mapping `filename`.   Return parsing."""
     global parsley, MAPPING_PARSER
-    
+
     if parsley is None:
         raise NotImplementedError("Parsley parsing package must be installed.")
 
@@ -123,4 +123,3 @@ def check_duplicates(parsing):
     else:
         selectors.check_duplicates(parsing.header, ["header"])
         selectors.check_duplicates(parsing.selector, ["selector"])
-

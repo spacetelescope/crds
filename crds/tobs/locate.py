@@ -4,7 +4,7 @@ specific policies for TOBS:
 1. How to convert reference file basenames to fully specified paths.
 
 2. How to manage parameters for reference file Validator objects used
-in the certification of reference files. 
+in the certification of reference files.
 
 """
 import os.path
@@ -18,7 +18,7 @@ HERE = os.path.dirname(__file__) or "./"
 
 # =======================================================================
 
-# These two functions decouple the generic reference file certifier program 
+# These two functions decouple the generic reference file certifier program
 # from observatory-unique ways of specifying and caching Validator parameters.
 
 from crds.tobs import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
@@ -44,11 +44,11 @@ def project_check(refpath):
     return
 
 def get_exptypes(instrument=None):
-    """Return the list of EXP_TYPE values for instrument,  or for all 
+    """Return the list of EXP_TYPE values for instrument,  or for all
     instruments if instrument is not specified.
     """
     raise NotImplementedError("TOBS has not defined get_exptypes().")
-    
+
 # =======================================================================
 
 # When loading headers,  make sure each keyword in a tuple is represented with
@@ -156,7 +156,7 @@ def decompose_newstyle_name(filename):
     return path, observatory, instrument, filekind, serial, ext
 
 def properties_inside_mapping(filename):
-    """Load `filename`s mapping header to discover and 
+    """Load `filename`s mapping header to discover and
     return (instrument, filekind).
     """
     mapping = rmap.fetch_mapping(filename)
@@ -187,14 +187,14 @@ CDBS_DIRS_TO_INSTR = {
    "/iref/":"wfc3",
    "/lref/":"cos",
    "/nref/":"nicmos",
-   
+
    "/upsf/":"wfpc2",
    "/uref/":"wfpc2",
    "/uref_linux/":"wfpc2",
-   
+
    "/yref/" : "fos",
    "/zref/" : "hrs",
-   
+
 }
 
 def get_reference_properties(filename):
@@ -220,7 +220,7 @@ def ref_properties_from_header(filename):
     return path, "tobs", instrument, filekind, serial, ext
 
 
-    
+
 # =======================================================================
 
 def header_to_reftypes(header, context):
@@ -310,4 +310,3 @@ def test():
     import doctest
     from . import locate
     return doctest.testmod(locate)
-

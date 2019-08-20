@@ -9,7 +9,7 @@ pipelines used to process the given dataset filepath or dataset with a particula
 
 >>> header_to_pipelines(test_header("0.7.0", "MIR_IMAGE"))
 ['calwebb_sloper.cfg', 'calwebb_image2.cfg']
-    
+
 >>> header_to_pipelines(test_header("0.7.0", "MIR_LRS-FIXEDSLIT"))
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
 
@@ -20,7 +20,7 @@ from crds import data_file
 # --------------------------------------------------------------------------------------
 
 def test_header(calver, exp_type):
-    """Create a header-like dict from `calver` and `exp_type` to support 
+    """Create a header-like dict from `calver` and `exp_type` to support
     testing.
     """
     header = {
@@ -46,4 +46,3 @@ def header_to_pipelines(header, context=None):
     """
     locator = utils.header_to_locator(header)
     return locator.header_to_pipelines(header, context)
-

@@ -33,7 +33,7 @@ def dt_or_bars_certify_bad_keyword():
     CRDS - INFO -  If this is not a pattern keyword, adding a translation to 'not-a-pattern' will suppress this warning.
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  NoTypeWarning : ...jwst.datamodels.util : model_type not found... 
+    CRDS - WARNING -  NoTypeWarning : ...jwst.datamodels.util : model_type not found...
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  3 warnings
@@ -78,12 +78,12 @@ def dt_or_bars_refactor_add_file():
     >>> diff.DiffScript("crds.diff data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0003.add.rmap")()
     (('data/jwst_miri_ipc_0002.rmap', './jwst_miri_ipc_0003.add.rmap'), ('MIRIFULONG|MIRIFUSHORT', 'MEDIUM|SHORT'), ('2014-01-01', '00:00:00'), 'added Match rule for jwst_miri_ipc_0003.add.fits')
     1
-    
+
     >>> pp(refactor.rmap_check_modifications("data/jwst_miri_ipc_0002.rmap", "./jwst_miri_ipc_0003.add.rmap", "none", "data/jwst_miri_ipc_0003.add.fits", expected=("add_rule",)))
     True
 
     >>> _ = os.system("rm ./*.rmap")
-    
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -102,16 +102,16 @@ def dt_or_bars_refactor_replace_file():
     >>> diff.DiffScript("crds.diff data/jwst_miri_ipc_0002.rmap ./jwst_miri_ipc_0004.replace.rmap")()
     (('data/jwst_miri_ipc_0002.rmap', './jwst_miri_ipc_0004.replace.rmap'), ('MIRIFULONG', 'LONG'), ('1900-01-01', '00:00:00'), 'replaced jwst_miri_ipc_0004.fits with jwst_miri_ipc_0004.replace.fits')
     1
-    
+
     >>> pp(refactor.rmap_check_modifications("data/jwst_miri_ipc_0002.rmap", "./jwst_miri_ipc_0004.replace.rmap", "jwst_miri_ipc_0004.fits", "data/jwst_miri_ipc_0004.replace.fits", expected=("replace",)))
     True
 
     >>> refactor.rmap_check_modifications("data/jwst_miri_ipc_0002.rmap", "./jwst_miri_ipc_0004.replace.rmap", "data/jwst_miri_ipc_0004.fits", "data/jwst_miri_ipc_0004.replace.fits",
     ...                          expected=("replace",))
     True
-    
+
     >>> _ = os.system("rm ./*.rmap")
-    
+
     >>> test_config.cleanup(old_state)
     """
 

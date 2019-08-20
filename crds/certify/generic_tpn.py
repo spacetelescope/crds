@@ -66,14 +66,14 @@ _TpnInfo = collections.namedtuple("TpnInfo", "name,keytype,datatype,presence,val
 
 class TpnInfo(_TpnInfo):
     """Named tuple describing a file checking constraint with enhanced repr()."""
-    
+
     def __repr__(self):
         return ("(" + repr(self.name) + ", "
                 + self._repr_keytype() + ", "
                 + self._repr_datatype() + ", "
                 + self._repr_presence() + ", "
                 + self._repr_values() + ")")
-    
+
     keytypes = {
         "H" : "HEADER",
         "C" : "COLUMN",
@@ -97,7 +97,7 @@ class TpnInfo(_TpnInfo):
 
     def _repr_datatype(self):
         return repr(self.datatypes.get(self.datatype[0], self.datatype[0]))
-        
+
     presences = {
         "E" : "EXCLUDED",
         "R" : "REQUIRED",
@@ -108,7 +108,7 @@ class TpnInfo(_TpnInfo):
         "S" : "IF_SUBARRAY",
         "A" : "ANY_SUBARRAY"
     }
-    
+
     def _repr_presence(self):
         if is_expression(self.presence):
             return "condition="+repr(self.presence)
@@ -119,7 +119,7 @@ class TpnInfo(_TpnInfo):
             return "expression=" + repr(self.values[0])
         else:
             return "values=" + repr(self.values)
-        
+
     @property
     def is_expression(self):
         """Return True IFF this is an expression constraint."""
@@ -129,7 +129,7 @@ class TpnInfo(_TpnInfo):
     def is_conditionally_applicable(self):
         """Return True IFF this constraint has an expression defining when it is applicable."""
         return is_expression(self.presence)
-    
+
     @property
     def is_complex_constraint(self):
         """Used to eliminate infos not appropriate as rmap value lists."""
@@ -169,7 +169,7 @@ def is_expression(tpn_field):
     is signified by bracketing the value in parens.
     """
     return tpn_field.startswith("(") and tpn_field.endswith(")")
-    
+
 @utils.cached
 def load_tpn_lines(fname, replacements=()):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
@@ -177,7 +177,7 @@ def load_tpn_lines(fname, replacements=()):
     second word should be a base filename that refers to a file in the same
     directory as `fname`.  The lines of the include file are recursively included.
     """
-    log.verbose("Loading .tpn lines from", log.srepr(fname), 
+    log.verbose("Loading .tpn lines from", log.srepr(fname),
                 "with replacements", log.srepr(replacements), verbosity=80)
     lines = []
     append = False
@@ -198,8 +198,8 @@ def load_tpn_lines(fname, replacements=()):
                         orig2, replaced2 = replacement2
                         if orig == orig2 and replaced != replaced2:
                             raise exceptions.InconsistentTpnReplaceError(
-                                "In", repr(fname), 
-                                "Tpn replacement directive", repr(replacement), 
+                                "In", repr(fname),
+                                "Tpn replacement directive", repr(replacement),
                                 "conflicts with directive", repr(replacement2))
                     else:
                         replacements = replacements + (replacement,)
@@ -215,7 +215,7 @@ def load_tpn_lines(fname, replacements=()):
             append = line.endswith("\\")
     return lines
 
-SPACE_MAGIC = "@@1324$$" 
+SPACE_MAGIC = "@@1324$$"
 
 def _fix_quoted_whitespace(line):
     """Replace spaces and tabs which appear inside quotes in `line` with
@@ -240,7 +240,7 @@ def _fix_quoted_whitespace(line):
 def _restore_embedded_spaces(values):
     """Undo space encoding needed to make simple splits work for TpnInfos."""
     return [value.replace(SPACE_MAGIC, " ") for value in values]
-    
+
 def _remove_quotes(values):
     """Remove any quotes from quoted values."""
     removed = []

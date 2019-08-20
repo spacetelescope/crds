@@ -1,4 +1,4 @@
-"""uses.py defines functions which will list the files which use a given 
+"""uses.py defines functions which will list the files which use a given
 reference or mapping file.
 
 >> from pprint import pprint as pp
@@ -109,7 +109,7 @@ Prints out the mappings which refer to the specified mappings or references.
 
 Prints out the datasets which historically used a particular reference as defined by DADSOPS.
 
-IMPORTANT:  
+IMPORTANT:
    1. You must specify references or rules on which to operate with --files.
    2. You must set CRDS_PATH and CRDS_SERVER_URL to give crds.uses access to CRDS mappings and databases.
 """
@@ -141,8 +141,8 @@ hst_acs_darkfile_0005.rmap
     def add_args(self):
         """Add command line parameters unique to this script."""
         super(UsesScript, self).add_args()
-        self.add_argument("--files", nargs="+", 
-                          help="References for which to dump using mappings or datasets.")        
+        self.add_argument("--files", nargs="+",
+                          help="References for which to dump using mappings or datasets.")
         self.add_argument("-i", "--include-used", action="store_true", dest="include_used",
                           help="Include the used file in the output as the first column.")
 
@@ -156,11 +156,11 @@ hst_acs_darkfile_0005.rmap
             sys.exit(-1)
         self.print_mappings_using_files()
         return log.errors()
-            
+
     def locate_file(self, file_):
         """Just use basenames for identifying file references."""
         return os.path.basename(file_)
-            
+
     def print_mappings_using_files(self):
         """Print out the mappings which refer to the specified mappings or references."""
         for file_ in self.files:
@@ -169,7 +169,7 @@ hst_acs_darkfile_0005.rmap
                     print(file_, use)
                 else:
                     print(use)
-    
+
 def test():
     """Run the module doctest."""
     import doctest

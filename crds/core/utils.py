@@ -76,7 +76,7 @@ def trace_compare(self, other, show_equal=False):
             self.__dict__[key]
         except KeyError:
             print(key, "value not present in self")
-                
+
 # ===================================================================
 
 def flatten(sequence):
@@ -116,10 +116,10 @@ def traced(func):
 def gc_collected(func):
     """Run Python's gc.collect() before and after the decorated function.
 
-    This is pretty slow and may be overkill but was motivated by file 
+    This is pretty slow and may be overkill but was motivated by file
     submission use cases such as "certify" and "insert_references" which
     iterate over large numbers of reference files and,  particularly when
-    examining arrays,  may easily exhaust memory,  sometimes leading to 
+    examining arrays,  may easily exhaust memory,  sometimes leading to
     silent OS or shell level crashes with no traceback.
     """
     @functools.wraps(func)
@@ -143,12 +143,12 @@ def gc_collected(func):
 
 def cached(func):
     """The cached decorator embeds a dictionary in a function wrapper to
-    capture prior results.   
-    
+    capture prior results.
+
     The wrapped function works like the original, except it's faster because it
     fetches results for prior calls from the cache.   The wrapped function has
     extra attributes:
-    
+
     .cache                      -- { key(parameters): old_result } dictionary
     .uncached(*args, **keys)    -- original unwrapped function
     .readonly(*args, **keys)    -- function variant which uses but doesn't update cache
@@ -158,39 +158,39 @@ def cached(func):
     ... def sum(x,y):
     ...   print("really doing it.")
     ...   return x+y
-    
+
     The first call should actually call the unwrapped sum():
 
     >>> sum(1,2)
     really doing it.
     3
-    
+
     The second call will return the prior result found in the cache:
-    
+
     >>> sum(1,2)
     3
-    
+
     Dump or operate on the cache like this, it's just a dict:
-    
+
     >>> sum.cache
     {(1, 2): 3}
-    
+
     By-pass the cache and call the undecorated function like this:
-    
+
     >>> sum.uncached(1,2)
     really doing it.
     3
-    
+
     Clear the cache like this:
-    
+
     >>> sum.cache.clear()
     >>> sum(1,2)
     really doing it.
     3
-    
+
     A variant of the function which reads but does not update the cache is available.
     After calling the read_only variant the cache is not updated:
-    
+
     >>> sum.cache.clear()
     >>> sum.readonly(1,2)
     really doing it.
@@ -198,7 +198,7 @@ def cached(func):
     >>> sum(1,2)
     really doing it.
     3
-    
+
     However,  the readonly variant will exploit any values in the cache already:
 
     >>> sum(1,2)
@@ -208,23 +208,23 @@ def cached(func):
 
 class xcached:
     """Caching decorator which supports auxilliary caching parameters.
-    
+
     omit_from_key lists keywords or positional indices to be excluded from cache
     key creation:
-    
+
     >>> @xcached(omit_from_key=[0, "x"])
     ... def sum(x, y, z):
     ...     return x + y + z
-    
+
     >>> sum(1,2,3)
     6
-    
+
     >>> sum(2,2,3)
     6
-    
+
     >>> sum.uncached(2,2,3)
     7
-    
+
     >>> sum.readonly(2,2,3)
     6
     """
@@ -246,9 +246,9 @@ class CachedFunction:
     """Class to support the @cached function decorator.   Called at runtime
     for typical caching version of function.
     """
-    
+
     cache_set = set()
-    
+
     def __init__(self, func, omit_from_key=None):
         self.cache = dict()
         self.uncached = func
@@ -257,13 +257,13 @@ class CachedFunction:
         self.__doc__ = self.uncached.__doc__
         self.__module__ = self.uncached.__module__
         self.__name__ = self.uncached.__name__ + " [cached]"
-        
+
     def cache_key(self, *args, **keys):
         """Compute the cache key for the given parameters."""
         args = tuple([ a for (i, a) in enumerate(args) if i not in self.omit_from_key])
         keys = tuple([item for item in keys.items() if item[0] not in self.omit_from_key])
         return args + keys
-    
+
     def _readonly(self, *args, **keys):
         """Compute (cache_key, func(*args, **keys)).   Do not add to cache."""
         key = self.cache_key(*args, **keys)
@@ -288,7 +288,7 @@ class CachedFunction:
         key, result = self._readonly(*args, **keys)
         self.cache[key] = result
         return result
-    
+
     def __get__(self, obj, objtype):
         '''Support instance methods.'''
         return functools.partial(self.__call__, obj)
@@ -298,7 +298,7 @@ def clear_function_caches():
     for cache_func in CachedFunction.cache_set:
         log.verbose("Clearing cache for", repr(cache_func.uncached), verbosity=80)
         cache_func.cache = dict()
-        
+
 def list_cached_functions():
     """List all the functions supporting caching under @utils.cached or @utils.xcached."""
     for cache_func in sorted(CachedFunction.cache_set):
@@ -308,45 +308,45 @@ def list_cached_functions():
 
 def capture_output(func):
     """Decorate a function with @capture_output to define a CapturedFunction()
-    wrapper around it.   
-    
+    wrapper around it.
+
     Doesn't currently capture non-python output but could with dup2.
-    
+
     Decorate any function to wrap it in a CapturedFunction() wrapper:
-    
+
     >>> @capture_output
-    ... def f(x,y): 
+    ... def f(x,y):
     ...    print("hi")
     ...    return x + y
-    
+
     >>> f
     CapturedFunction('f')
 
     Calling a captured function suppresses its output:
-    
+
     >>> f(1, 2)
     3
-    
+
     To call the original undecorated function:
-    
+
     >>> f.uncaptured(1, 2)
     hi
     3
-    
+
     If you don't care about the return value,  but want the output:
-    
+
     >>> f.outputs(1, 2) == 'hi\\n'
     True
 
     If you need both the return value and captured output:
-    
+
     >>> f.returns_outputs(1, 2) == (3, 'hi\\n')
     True
 
     """
     class CapturedFunction:
         """Closure on `func` which supports various forms of output capture."""
-        
+
         def __repr__(self):
             return "CapturedFunction('%s')" % func.__name__
 
@@ -375,11 +375,11 @@ def capture_output(func):
         def outputs(self, *args, **keys):
             """Call the wrapped function, capture output,  return output_from_f."""
             return self.returns_outputs(*args, **keys)[1]
-        
+
         def __call__(self, *args, **keys):
             """Call the undecorated function,  capturing and discarding it's output,  returning the result."""
             return self.suppressed(*args, **keys)
-        
+
         def uncaptured(self, *args, **keys):
             """Call the undecorated function and return the result."""
             return func(*args, **keys)
@@ -395,8 +395,8 @@ def compare_dicts(dict1, dict2):
     deleted = { key: dict1[key] for key in dict1 if key not in dict2 }
     added = { key: dict2[key] for key in dict2 if key not in dict1 }
     replaced = { key: compare_dicts(dict1[key], dict2[key]) for key in dict1 if key in dict2 and dict1[key] != dict2[key] }
-    return dict(deleted=deleted, added=added, replaced=replaced)        
-        
+    return dict(deleted=deleted, added=added, replaced=replaced)
+
 # ===================================================================
 
 class TimingStats:
@@ -408,20 +408,20 @@ class TimingStats:
         self.elapsed = None
         self.output = log.info if output is None else output
         self.start()
-    
+
     def get_stat(self, name):
         """Return the value of statistic `name`."""
         return self.counts[name]
-    
+
     def increment(self, name, amount=1):
         """Add `amount` to stat count for `name`."""
         self.counts[name] += amount
-        
+
     def start(self):
         """Start the timing interval."""
         self.started = datetime.datetime.now()
         return self
-     
+
     def stop(self):
         """Stop the timing interval."""
         self.stopped = datetime.datetime.now()
@@ -441,7 +441,7 @@ class TimingStats:
         """Output stats on `name`."""
         count, rate = self.status(name)
         self.msg(count, "at", rate)
-        
+
     def raw_status(self, name):
         self.stop()
         counts = self.counts[name]
@@ -461,15 +461,15 @@ class TimingStats:
         """
         stat, stat_per_sec = self.raw_status(name)
         if total is not None:
-            self.msg(intro, "[", 
-                     human_format_number(stat), "/", 
+            self.msg(intro, "[",
+                     human_format_number(stat), "/",
                      human_format_number(total), name, "]",
-                     "[", 
+                     "[",
                      human_format_number(stat_per_sec), name + "-per-second ]")
         else:
-            self.msg(intro, 
-                     "[", human_format_number(stat), name, "]", 
-                     "[", human_format_number(stat_per_sec), name + "-per-second ]")            
+            self.msg(intro,
+                     "[", human_format_number(stat), name, "]",
+                     "[", human_format_number(stat_per_sec), name + "-per-second ]")
 
     def msg(self, *args):
         """Format (*args, **keys) using log.format() and call output()."""
@@ -543,12 +543,12 @@ def invert_dict(dictionary):
                              repr(inverse[value]))
         inverse[value] = key
     return inverse
-    
+
 # ===================================================================
 
 def evalfile(fname):
     """Evaluate and return the contents of file `fname`,  restricting
-    expressions to data literals. 
+    expressions to data literals.
     """
     with open(fname) as sourcefile:
         contents = sourcefile.read()
@@ -595,18 +595,18 @@ def ensure_dir_exists(fullpath, mode=DEFAULT_DIR_PERMS):
 def is_writable(filepath, no_exist=True):
     """Interpret the mode bits of `filepath` in terms of the current user and it's groups,
     returning True if any of user, group, or other have write permission on the path.
-    
+
     If `filepath` doesn't exist,  return `no_exist` if the directory is writable.
     """
     if not os.path.exists(filepath):   # If file doesn't exist,  make sure directory is writable.
         return no_exist and len(os.path.dirname(filepath)) and is_writable(os.path.dirname(filepath))
     stats = os.stat(filepath)
-    user_writeable = bool(stats.st_mode & stat.S_IWUSR) 
+    user_writeable = bool(stats.st_mode & stat.S_IWUSR)
     effective_user_matches =  bool(stats.st_uid == os.geteuid())
     group_writeable = bool(stats.st_mode & stat.S_IWGRP)
     group_matches = bool(stats.st_gid in os.getgroups())
     other_writeable = bool(stats.st_mode & stat.S_IWOTH)
-    return bool((user_writeable and effective_user_matches) or 
+    return bool((user_writeable and effective_user_matches) or
                 (group_writeable and group_matches) or
                 (other_writeable))
 
@@ -637,7 +637,7 @@ def remove(rmpath, observatory):
 def _no_message(*args):
     """Do nothing message handler."""
 
-def copytree(src, dst, symlinks=False, fnc_directory=_no_message, 
+def copytree(src, dst, symlinks=False, fnc_directory=_no_message,
              fnc_file=_no_message, fnc_symlink=_no_message):
     """Derived from shutil.copytree() example with added function hooks called
     on a per-directory, per-file, and per-symlink basis with (src, dest)
@@ -751,7 +751,7 @@ MODULE_PATH_RE = re.compile(r"^crds(_server)?(\.\w{1,64}){0,10}$")
 @cached
 def get_object(*args):
     """Import the given `dotted_name` and return the object.
-    
+
     >>> rmap = get_object("crds.rmap")
     >>> fail = get_object("crds.rmap; eval('2+2')")
     Traceback (most recent call last):
@@ -761,7 +761,7 @@ def get_object(*args):
     """
     dotted_name = ".".join(args)
     assert MODULE_PATH_RE.match(dotted_name), \
-        "Invalid dotted name for get_object() : " + repr(dotted_name)   
+        "Invalid dotted name for get_object() : " + repr(dotted_name)
     parts = dotted_name.split(".")
     pkgpath = ".".join(parts[:-1])
     cls = parts[-1]
@@ -788,7 +788,7 @@ def condition_value(value):
 
     >>> condition_value('ANY')
     '*'
-    
+
     # >>> condition_value('-999')
     'N/A'
     # >>> condition_value('-999.0')
@@ -808,7 +808,7 @@ def condition_value(value):
 
     >>> condition_value('4294967295')
     '-1.0'
-    
+
     >>> condition_value(False)
     'F'
     >>> condition_value(True)
@@ -876,7 +876,7 @@ def _eval_keys(keys):
 def condition_header_keys(header):
     """Convert a matching parameter header into the form which supports eval(), ie.
     JWST-style header keys.   Nominally for JWST data model style keys.
-    
+
     >>> from pprint import pprint as pp
     >>> pp(condition_header_keys({"META.INSTRUMENT.NAME": "NIRISS"}))
     {'META.INSTRUMENT.NAME': 'NIRISS', 'META_INSTRUMENT_NAME': 'NIRISS'}
@@ -929,7 +929,7 @@ def file_to_observatory(filename):
 @cached
 def instrument_to_observatory(instrument):
     """Given the name of an instrument,  return the associated observatory.
-    
+
     >>> instrument_to_observatory("acs")
     'hst'
     >>> instrument_to_observatory("ACS")
@@ -939,7 +939,7 @@ def instrument_to_observatory(instrument):
     >>> instrument_to_observatory("foo")
     Traceback (most recent call last):
     ...
-    ValueError: Unknown instrument 'foo'    
+    ValueError: Unknown instrument 'foo'
     """
     instrument = fix_instrument(instrument.lower())
     for (obs, instr) in observatory_instrument_tuples():
@@ -957,7 +957,7 @@ def get_locator_module(observatory):
 def get_observatory_package(observatory):
     """Return the base observatory package."""
     return get_object("crds." + observatory)
-    
+
 def file_to_locator(filename):
     """Given reference or dataset `filename`,  return the associated observatory locator module."""
     return instrument_to_locator(file_to_instrument(filename))
@@ -979,16 +979,16 @@ def file_to_instrument(filename):
     from crds import data_file
     header = data_file.get_unconditioned_header(filename, needed_keys=tuple(INSTRUMENT_KEYWORDS))
     return header_to_instrument(header)
-    
+
 def header_to_instrument(header, default=None):
     """Given reference or dataset `header`, return the associated instrument.
-    
+
     >>> header_to_instrument({"INSTRUME":"ACS"}, default="UNDEFINED")
     'ACS'
-    
+
     >>> header_to_instrument({"META.INSTRUMENT.NAME":"MIRI"}, default=None)
     'MIRI'
-    
+
     >>> header_to_instrument({"FOO":"MIRI"}, default="UNDEFINED")
     'UNDEFINED'
     """
@@ -998,7 +998,7 @@ def header_to_instrument(header, default=None):
         raise KeyError("No instrument keyword defined in header.")
     else:
         return val.upper()
-    
+
 def fix_instrument(instr):
     """"Apply instrument fixers to `instr` to replace obsolete synonyms with standard version."""
     return get_all_instrument_fixers().get(instr, instr)
@@ -1022,7 +1022,7 @@ def get_all_instrument_fixers():
 
 def get_any_of(getter,  possible_keys,  default=None):
     """Search for the value of any of `possible_keys` in `dictionary`,  returning `default` if none are found.
-    
+
     >>> get_any_of( {"A":1},  ["C","D","A"], "UNDEFINED")
     1
     >>> get_any_of( {"X":1},  ["C","D","A"], "UNDEFINED")
@@ -1036,10 +1036,10 @@ def get_any_of(getter,  possible_keys,  default=None):
             return val
     else:
         return default
-    
+
 def header_to_observatory(header):
     """Given reference or dataset `header`,  return the associated observatory.
-    
+
     >>> header_to_observatory({"META.INSTRUMENT.NAME":"MIRI"})
     'jwst'
     """
@@ -1052,7 +1052,7 @@ def header_to_locator(header):
     instr = header_to_instrument(header)
     locator = instrument_to_locator(instr)
     return locator
-    
+
 def get_reference_paths(observatory):
     """Return the list of subdirectories involved with storing references of all instruments."""
     pkg = get_observatory_package(observatory)
@@ -1105,14 +1105,14 @@ def write_combs_json(outpath, combs):
 
 def yaml_pars_to_json_bestrefs(yaml_filename, json_filename=None):
     """Given an input file describing parameter values that need
-    to be covered,  convert the coverage specification into 
+    to be covered,  convert the coverage specification into
     discrete parameter combinations (nominally bestrefs headers)
     and write them out in JSON format suitable for bestrefs.
 
     META.INSTRUMENT.NAME:
         [ NIRCAM ]
-    
-    META.EXPOSURE.READPATT: 
+
+    META.EXPOSURE.READPATT:
         [DEEP8, DEEP2, MEDIUM8, MEDIUM2, SHALLOW4, SHALLOW2,
         BRIGHT2, BRIGHT1,RAPID]
     """
@@ -1157,4 +1157,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-

@@ -13,7 +13,7 @@ from .abstract import AbstractFile
 # ============================================================================
 
 class YamlFile(AbstractFile):
-    
+
     format = "YAML"
 
     def get_raw_header(self, needed_keys=(), **keys):
@@ -27,4 +27,3 @@ class YamlFile(AbstractFile):
                     "YAML wouldn't load from", repr(self.filepath), ":", str(exc))
             header = self.to_simple_types(header)
         return header
-

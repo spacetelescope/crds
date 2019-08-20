@@ -1,4 +1,4 @@
-"""This module defines limited facilities for extracting information from 
+"""This module defines limited facilities for extracting information from
 reference and datasets,  generally in the form of header dictionaries.
 """
 from crds.core  import utils, log
@@ -55,7 +55,7 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
     which have no distinguishable extension.  Original name is browser-side
     name for file.
 
-    get_free_header() is a cached function to prevent repeat file reads.  
+    get_free_header() is a cached function to prevent repeat file reads.
     Although parameters are given default values,  for caching to work correctly
     even default parameters should be specified positionally.
 
@@ -93,7 +93,7 @@ def setval(filepath, key, value):
         key = key.replace("META_", "META.")
     file_obj = file_factory(filepath)
     file_obj.setval(key, value)
-    
+
 def add_checksum(filepath):
     """Add checksums to `filepath`."""
     file_obj = file_factory(filepath)
@@ -113,7 +113,7 @@ def verify_checksum(filepath):
 
 def get_array_properties(filename, array_name, keytype="A"):
     """Return the dictionary defining basic properties of `array_name` of `filename`.
-    
+
     Keytype == "A" for "array" means lightweight format only checks with no data included.
     Keytype == "D" for "data" means heavy data oriented checks with data arrays returned as well.
     """

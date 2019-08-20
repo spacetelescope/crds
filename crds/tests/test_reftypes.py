@@ -40,7 +40,7 @@ def reftypes_hst_load_raw_specs():
     >>> spec = reftypes.load_raw_specs(SPECS)
     >>> test_config.cleanup(old_state)
     """
-  
+
 def reftypes_hst_save_json_specs():
     """
     >>> old_state = test_config.setup()
@@ -52,7 +52,7 @@ def reftypes_hst_save_json_specs():
     CRDS - INFO -  Saved combined type specs to '...'
     >>> test_config.cleanup(old_state)
     """
-  
+
 def reftypes_jwst_load_raw_specs():
     """
     >>> old_state = test_config.setup()
@@ -60,7 +60,7 @@ def reftypes_jwst_load_raw_specs():
     >>> spec = reftypes.load_raw_specs(SPECS)
     >>> test_config.cleanup(old_state)
     """
-  
+
 def reftypes_jwst_save_json_specs():
     """
     >>> old_state = test_config.setup()
@@ -72,7 +72,7 @@ def reftypes_jwst_save_json_specs():
     CRDS - INFO -  Saved combined type specs to '...'
     >>> test_config.cleanup(old_state)
     """
-  
+
 def reftypes_hst_reference_name_to_tpn_infos():
     """
     >>> old_state = test_config.setup()
@@ -181,7 +181,7 @@ def reftypes_jwst_get_filekinds():
     ['all', 'amplifier', 'area', 'dark', 'distortion', 'drizpars', 'extract1d', 'flat', 'gain', 'ipc', 'linearity', 'mask', 'pathloss', 'persat', 'photom', 'readnoise', 'regions', 'saturation', 'specwcs', 'superbias', 'throughput', 'trapdensity', 'trappars', 'wavelengthrange', 'wcsregions', 'wfssbkg']
     >>> test_config.cleanup(old_state)
     """
-    
+
 def reftypes_reference_name_to_tpn_text():
     """
     >>> old_state = test_config.setup()
@@ -220,7 +220,7 @@ def reftypes_reference_name_to_ld_tpn_text():
     <BLANKLINE>
     >>> test_config.cleanup(old_state)
     """
-    
+
 
 def reftypes_get_row_keys_by_instrument():
     """
@@ -242,14 +242,14 @@ class TestReftypes(test_config.CRDSTestCase):
     def tearDown(self, *args, **keys):
         super(TestReftypes, self).tearDown(*args, **keys)
         log.set_exception_trap(self._old_debug)
-        
+
     # ------------------------------------------------------------------------------
-        
+
     def test_validator_bad_presence(self):
         #         tinfo = certify.TpnInfo('DETECTOR','H','C','Q', ('WFC','HRC','SBC'))
         #         assert_raises(ValueError, certify.validator, tinfo)
         pass
-    
+
 # ==================================================================================
 
 def main():
@@ -264,4 +264,3 @@ def main():
 
 if __name__ == "__main__":
     print(main())
-

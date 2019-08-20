@@ -13,12 +13,12 @@ def pickle_unpickle(context, data):
     header = data_file.get_header(data)
     prefs = p.get_best_references(header)
     q = pickle.dumps(p)
-    r = pickle.loads(q) 
+    r = pickle.loads(q)
     rrefs = r.get_best_references(header)
     diffs = p.difference(r, include_header_diffs=True, recurse_added_deleted=True)
     assert prefs == rrefs
     assert str(p) == str(r)
-    return { 
+    return {
         "refs": prefs == rrefs,
         "strs" : str(p) == str(r),
         "equal": p == r,

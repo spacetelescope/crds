@@ -1,5 +1,5 @@
-"""CheckingProxy derived from jsonrpc.proxy due to subclassing problems 
-w/getattr. Converts service errors into ServiceError exceptions,  otherwise 
+"""CheckingProxy derived from jsonrpc.proxy due to subclassing problems
+w/getattr. Converts service errors into ServiceError exceptions,  otherwise
 call returns the jsonrpc "result" field.
 """
 import sys
@@ -60,7 +60,7 @@ try:
     _PROCESS_ID = str(uuid.uuid4())
 except Exception:
     _PROCESS_ID = "00000000-0000-0000-00000000000000000"
-        
+
 MSG_NO = 0
 def _request_id():
     """Return an identifier unique to this particular JSONRPC request."""
@@ -69,13 +69,13 @@ def _request_id():
     return "%08x" % MSG_NO
 
 class CheckingProxy:
-    """CheckingProxy converts calls to undefined methods into JSON RPC service 
-    calls bindings.   If the JSON rpc returns an error,  CheckingProxy raises a 
+    """CheckingProxy converts calls to undefined methods into JSON RPC service
+    calls bindings.   If the JSON rpc returns an error,  CheckingProxy raises a
     ServiceError exception containing the error's message.
-    
+
     XXX NOTE: Always underscore new methods or you may hide a real JSONRPC method
     which also appears in the proxy object's namespace with the same name.
-    
+
     """
     def __init__(self, service_url, version='1.0'):
         self.__version = str(version)
@@ -88,7 +88,7 @@ class CheckingProxy:
     def __repr__(self):
         return self.__class__.__name__ + "(url='%s', version='%s')" % \
             (self.__service_url, self.__version)
-        
+
 class ServiceCallBinding:
     """When called,  ServiceCallBinding issues a JSONRPC call to the associated
     service URL.
@@ -101,7 +101,7 @@ class ServiceCallBinding:
     def __repr__(self):
         return self.__class__.__name__ + "(url='%s', method='%s')" % \
             (self.__service_url, self.__service_name)
-        
+
     def _call(self, *args, **kwargs):
         """Core of RPC dispatch without error interpretation, logging, or return value decoding."""
         params = kwargs if len(kwargs) else args
@@ -114,11 +114,11 @@ class ServiceCallBinding:
                           'params': params,
                           'id': message_id()
                          }
-        
+
         parameters = json.dumps(jsonrpc_params)
-        
+
         url = self._get_url(jsonrpc_params)
-        
+
         if "serverless" in url or "server-less" in url:
             raise exceptions.ServiceError("Configured for server-less mode.  Skipping JSON RPC " + repr(self.__service_name))
 
@@ -126,7 +126,7 @@ class ServiceCallBinding:
             log.verbose("CRDS JSON RPC", self.__service_name, params if len(str(params)) <= 60 else "(...)", "-->")
         else:
             log.verbose("CRDS JSON RPC to", url, "parameters", params, "-->")
-        
+
         response = apply_with_retries(self._call_service, parameters, url)
 
         try:
@@ -134,9 +134,9 @@ class ServiceCallBinding:
         except Exception as exc:
             log.warning("Invalid CRDS jsonrpc response:\n", response)
             raise
-        
+
         return rval
-    
+
     def _get_url(self, jsonrpc_params):
         """Return the JSONRPC URL used to perform a method call.   Since post parameters are not visible in the
         log,  annotate the URL with additional method id paths which are functionally ignored but visible in
@@ -154,7 +154,7 @@ class ServiceCallBinding:
         except Exception as exc:
             raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc)) from exc
 
- 
+
 
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
@@ -197,7 +197,7 @@ def fix_strings(rval):
 
 # These operate transparently in the proxy and are optionally used by the server.
 #
-# This makes a new client with crds_decoder compatible with both encoding and 
+# This makes a new client with crds_decoder compatible with both encoding and
 # unencoding servers.
 #
 # An older client without crds_decoder will not work with a new server which is encoding.

@@ -25,12 +25,12 @@ def fallback_header_wfpc2_flatfile_v1(rmap, header):
     """Compute a fallback header for WFPC2 BIASFILE."""
     filter1 = header["FILTER1"]
     filter2 = header["FILTER2"]
-    log.verbose("Computing fallback header wfpc2 ", rmap.filekind, 
+    log.verbose("Computing fallback header wfpc2 ", rmap.filekind,
                 "swapping filter1 was" , filter1, "filter2 was", filter2)
     header["FILTER1"] = filter2
     header["FILTER2"] = filter1
     return header
-    
+
 '''
          if lrfwave > 3000 and lrfwave <= 4200:
             filename = "M3C10045U.R4H"
@@ -49,17 +49,17 @@ def wfpc2_flatfile_filter(kmap):
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10045u.r4h', comment='')]
     kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >3000 and <=4200 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10045u.r4h', comment='')]
-    
+
     kmap[('*',    '*',       '*',       'EXT',       'FR*',     '*',      '# >4200 and <=5800 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004fu.r4h', comment='')]
     kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >4200 and <=5800 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004fu.r4h', comment='')]
-    
+
     kmap[('*',    '*',       '*',       'EXT',       'FR*',     '*',      '# >5800 and <=7600 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004nu.r4h', comment='')]
     kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >5800 and <=7600 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004nu.r4h', comment='')]
-    
+
     kmap[('*',    '*',       '*',       'EXT',       'FR*',     '*',      '# >7600 and <=10000 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10052u.r4h', comment='')]
     kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >7600 and <=10000 #')] = \
@@ -70,7 +70,7 @@ def wfpc2_flatfile_filter(kmap):
             "fallback_header" : "fallback_header_wfpc2_flatfile_v1",
         }),
     ]
-    
+
     return kmap, header_additions
 
 
@@ -102,11 +102,11 @@ def wfpc2_flatfile_filter(kmap):
       #  since numbers are not quoted but string are)
       try:
         querytxt = (querytxt + "and wfpc2_row_"+querynum+"." +
-                 string.lower(k._field) + " = '" + 
+                 string.lower(k._field) + " = '" +
                  aSource._keywords[k._field][0] + "' ")
       except TypeError:
         querytxt = (querytxt + "and wfpc2_row_"+querynum+"." +
-                 string.lower(k._field) + " = " + 
+                 string.lower(k._field) + " = " +
                  str(aSource._keywords[k._field][0]) + " ")
     #
     return querytxt
@@ -118,7 +118,7 @@ Name: wfpc2_flatfile_custom
 
 Description:
 ------------
-This customized function composes a database query against the CDBS 
+This customized function composes a database query against the CDBS
 database to find an applicable WFPC2 FLAT reference file.   A special
 query is needed because the LRFWAVE keyword value can trigger a set of
 hard-coded file selections, and if not, the two filter values can occur in
@@ -128,7 +128,7 @@ Arguments:
 ----------
 thereffile (I) - a Reffile object containing information about the reference
                  file and its selection parameters
-aSource (I)   - Input source object containing a dictionary of 
+aSource (I)   - Input source object containing a dictionary of
                  keyword name/value pairs.  These form the
                  inputsource for the database query parameters.
 Returns:
@@ -178,17 +178,17 @@ History:
     querytxt = string.replace(querytxt,"EXPOSURE_START", exposure_start)
 
     # add the file selection fields (row_2)
-    querytxt = querytxt + self.wfpc2_flat_file_selection("2", thereffile, 
+    querytxt = querytxt + self.wfpc2_flat_file_selection("2", thereffile,
                                                         aSource)
     # add second template
     querytxt = querytxt + query_template_b
-    
+
     # add the file selection fields again (row_1)
-    querytxt = querytxt + self.wfpc2_flat_file_selection("1", thereffile, 
+    querytxt = querytxt + self.wfpc2_flat_file_selection("1", thereffile,
                                                         aSource)
-    
+
     # replace any None values with null
-    query1 = string.replace(querytxt, "None", "null")                         
+    query1 = string.replace(querytxt, "None", "null")
 
     # get results in a list of lists
     result = [[]]
@@ -209,12 +209,12 @@ Name: wfpc2_flatfile
 Description:
 ------------
 This special-purpose function handles the WFPC2 FLATFILE.
-In addition to handling the possibility that the WFPC2 filters can occur in 
+In addition to handling the possibility that the WFPC2 filters can occur in
 "normal" or "reversed" order, this routine also include special handling
 for linear ramp filters (LRF), which get their flat selected based
 on the LRFWAVE keyword.  In fact, because the LRFWAVE selection only
 affects a small subset of data, and because it was added during the
-final stages of WFPC-2 closeout processing, it was NOT added to 
+final stages of WFPC-2 closeout processing, it was NOT added to
 CDBS, and the names of the actual FLATs applied in these special cases
 WILL BE HARD-CODED HERE.
 
@@ -232,7 +232,7 @@ Arguments:
 ----------
 thereffile (I) - a Reffile object containing information about the reference
                  file and its selection parameters
-aSource (I)   - Input source object containing a dictionary of 
+aSource (I)   - Input source object containing a dictionary of
                  keyword name/value pairs.  These form the
                  inputsource for the database query parameters.
 Returns:
@@ -259,9 +259,9 @@ History:
       #print("filtnam1="+str(aSource._keywords['FILTNAM1']))
       #print("filtnam2="+str(aSource._keywords['FILTNAM2']))
       if (aSource._keywords['IMAGETYP'][0] == "EXT" and
-          ((aSource._keywords['FILTNAM1'] != [None,0] and 
+          ((aSource._keywords['FILTNAM1'] != [None,0] and
             aSource._keywords['FILTNAM1'][0][0:2] == "FR") or
-           (aSource._keywords['FILTNAM2'] != [None,0] and 
+           (aSource._keywords['FILTNAM2'] != [None,0] and
             aSource._keywords['FILTNAM2'][0][0:2] == "FR") )):
 
          opusutil.PrintMsg("I","FLATFILE selection will be based on LRFWAVE value = "+str(aSource._keywords['LRFWAVE'][0]))
@@ -284,7 +284,7 @@ History:
             filename = " "
          return filename
 
-      # reaching here means this is NOT a LRFWAVE case, 
+      # reaching here means this is NOT a LRFWAVE case,
       #   so use the normal CDBS file selection method first
       #
       filename = self.wfpc2_flatfile_custom(thereffile, aSource)

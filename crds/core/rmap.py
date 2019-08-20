@@ -102,18 +102,18 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 
 class LowerCaseDict(dict):
     """Used to return Mapping header string values uniformly as lower case.
-    
+
     >>> d = LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
-    
+
     Ordinarily,  all string values are mapped to lower case:
-    
+
     >>> d["this"]
     'that'
-    
-    Values bracketed by () are returned unaltered in order to support header Python 
-    expressions which are typically evaluated in the context of an incoming header 
+
+    Values bracketed by () are returned unaltered in order to support header Python
+    expressions which are typically evaluated in the context of an incoming header
     (FITS) dictionary,  all upper case:
-    
+
     >>> d["another"]
     '(ESCAPED)'
     """
@@ -124,13 +124,13 @@ class LowerCaseDict(dict):
         if isinstance(val, str) and not (val.startswith("(") and val.endswith(")")):
             val = val.lower()
         return val
-    
+
     def get(self, key, default):
         if key in self:
             return self[key]
         else:
             return default
-    
+
     def __repr__(self):
         """
         >> LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
@@ -149,7 +149,7 @@ class Mapping:
     # Strictly speaking,  belongs to ContextMapping, need some default though
     # If False,  only specifies nested Mappings by filename
     specifies_references = False
-    
+
     # no precursor file if derived_from contains any of these.
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
@@ -229,7 +229,7 @@ class Mapping:
         rep += ", "
         rep = rep[:-2] + ")"
         return rep
-    
+
     def __str__(self):
         """Return the source text of the Mapping."""
         return self.format()
@@ -244,7 +244,7 @@ class Mapping:
     @classmethod
     def from_file(cls, basename, *args, **keys):
         """Load a mapping file `basename` and do syntax and basic validation.  If `path` is
-        specified, recursively load all files relative to `path` and include path in the 
+        specified, recursively load all files relative to `path` and include path in the
         name of the mapping.
         """
         log.verbose("Loading mapping", repr(basename), verbosity=55)
@@ -281,7 +281,7 @@ class Mapping:
         """Given a mapping at `filepath`,  validate it and return a fully
         instantiated (header, selector) tuple.
         """
-        with log.augment_exception("Can't load file " + where, 
+        with log.augment_exception("Can't load file " + where,
                                    exception_class=crexc.MappingError):
             code = MAPPING_VERIFIER.compile_and_check(text)
             header, selector, comment = cls._interpret(code)
@@ -317,7 +317,7 @@ class Mapping:
     def locate(self):
         """Return the "locate" module associated with self.observatory."""
         return utils.get_object("crds", self.observatory, "locate")
-    
+
     @property
     def obs_package(self):
         """Return the package (__init__) associated with self.observatory."""
@@ -327,7 +327,7 @@ class Mapping:
     def instr_package(self):
         """Return the module associated with self.instrument."""
         return utils.get_object("crds", self.observatory, self.instrument)
-        
+
     def format(self):
         """Return the string representation of this mapping, i.e. pretty
         serialization.   This is currently limited to initially creating rmaps,
@@ -335,10 +335,10 @@ class Mapping:
         therefore loses comments.
         """
         if self.comment:
-            return "header = {0}\n\ncomment = {1}\n\nselector = {2}\n" .format( 
+            return "header = {0}\n\ncomment = {1}\n\nselector = {2}\n" .format(
                 self._format_header(), self._format_comment(), self._format_selector())
         else:
-            return "header = {0}\n\nselector = {1}\n".format(self._format_header(), self._format_selector())       
+            return "header = {0}\n\nselector = {1}\n".format(self._format_header(), self._format_selector())
 
     def _format_dict(self, dict_, indent=0):
         """Return indented source code for nested `dict`."""
@@ -363,7 +363,7 @@ class Mapping:
             return self._format_dict(self.selector)
         else:
             return self.selector.format()
-        
+
     def _format_comment(self):
         """Return the string representation of the multi-line comment block."""
         return '"""' + self.comment + '"""'
@@ -425,7 +425,7 @@ class Mapping:
             keys = self.get_required_parkeys()
         minimized = {}
         for key in keys:
-            minimized[key] = header.get(key.lower(), 
+            minimized[key] = header.get(key.lower(),
                                         header.get(key.upper(), "UNDEFINED"))
         return minimized
 
@@ -449,12 +449,12 @@ class Mapping:
         for key in self.selections:  # Check for deleted or replaced keys in self / old mapping.
             if key not in new_mapping.selections:   # deletions from self
                 diff = selectors.DiffTuple(
-                    * path + ((self.filename, new_mapping.filename), (key,), 
+                    * path + ((self.filename, new_mapping.filename), (key,),
                     "deleted " + repr(self._value_name(key))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 if recurse_added_deleted and self._is_normal_value(key):
                     # Get tuples for all implicitly deleted nested files.
-                    nested_diffs = self.selections[key].diff_files("deleted", 
+                    nested_diffs = self.selections[key].diff_files("deleted",
                         path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                 else: # either no recursion or key is special and cannot be recursed.
                     nested_diffs = []
@@ -467,7 +467,7 @@ class Mapping:
                     # if contents are different,  include a diff tuple
                     # otherwise assume higher level file at different path
                     diff = selectors.DiffTuple(
-                        * (path + ((self.filename, new_mapping.filename), (key,), 
+                        * (path + ((self.filename, new_mapping.filename), (key,),
                                    "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
                         parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 else:
@@ -475,15 +475,15 @@ class Mapping:
                     diff = None
                 if self._is_normal_value(key) and new_mapping._is_normal_value(key):   # mapping replacements
                     # recursion needed if both selections are mappings.
-                    nested_diffs = self.selections[key].difference( new_mapping.selections[key],  
-                        path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,), 
+                    nested_diffs = self.selections[key].difference( new_mapping.selections[key],
+                        path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,),
                         include_header_diffs=include_header_diffs, recurse_added_deleted=recurse_added_deleted)
                 elif recurse_added_deleted:  # include added/deleted cases from normal mapping replacing special, vice versa
                     if self._is_normal_value(key):  # new_mapping is special
-                        nested_diffs = self.selections[key].diff_files("deleted", 
+                        nested_diffs = self.selections[key].diff_files("deleted",
                             path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                     elif new_mapping._is_normal_value(key):   # self is special
-                        nested_diffs = new_mapping.selections[key].diff_files("added", 
+                        nested_diffs = new_mapping.selections[key].diff_files("added",
                             path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                     else:  # recurse but both special,  handled by basic diff above.
                         nested_diffs = []
@@ -503,17 +503,17 @@ class Mapping:
         for key in new_mapping.selections:
             if key not in self.selections:      # Additions to self
                 diff = selectors.DiffTuple(
-                    * path + ((self.filename, new_mapping.filename), (key,), 
+                    * path + ((self.filename, new_mapping.filename), (key,),
                     "added " + repr(new_mapping._value_name(key))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
                 if recurse_added_deleted and new_mapping._is_normal_value(key):
                     # Get tuples for all implicitly added nested files.
-                    nested_adds = new_mapping.selections[key].diff_files("added", 
+                    nested_adds = new_mapping.selections[key].diff_files("added",
                         path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                     differences.extend(nested_adds)
             else: # replacement case already handled in first for-loop,  not needed in reverse.
-                pass 
+                pass
         return sorted(differences)
 
     def diff_files(self, added_deleted, path=(), pars=()):
@@ -526,7 +526,7 @@ class Mapping:
                 diffs.extend(selection.diff_files(added_deleted, path + (key,), pars + (self.diff_name,)))
             else:
                 delete_special = selectors.DiffTuple(
-                        * (path + ((self.filename,), (key,), 
+                        * (path + ((self.filename,), (key,),
                         added_deleted + " " + repr(self._value_name(key)))),
                         parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 diffs.append(delete_special)
@@ -535,12 +535,12 @@ class Mapping:
     def _is_normal_value(self, key):
         """Return True IFF the value of selection `key` is not special, i.e. N/A or OMIT."""
         return not MappingSelectionsDict.is_special_value(self.selections[key])
-    
+
     def _value_name(self, key):
         """Return either a special value,  or the filename of the loaded mapping."""
         value = self.selections[key]
         return value if MappingSelectionsDict.is_special_value(value) else value.filename
-    
+
     def _value_xsum(self, key):
         """Return selections[key] if it is a special value, otherwise assume it is a mapping
         and return the sha1sum header field.
@@ -572,16 +572,16 @@ class Mapping:
                     parameter_names = pars + (self.diff_name, "DIFFERENCE",))
                 differences.append(diff)
         return sorted(differences)
-    
+
     @property
     def diff_name(self):
         """Name used to identify mapping item in DiffTuple's"""
         return self.__class__.__name__ # .replace("Context","").replace("Mapping","")
-    
+
     def copy(self):
         """Return an in-memory copy of this rmap as a new object."""
         return self.from_string(self.format(), self.filename, ignore_checksum=True)
-    
+
     def reference_names(self):
         """Returns set(ref_file_name...)"""
         return sorted({ reference for selector in self.selections.normal_values() for reference in selector.reference_names() })
@@ -595,11 +595,11 @@ class Mapping:
     def mapping_names(self):
         """Returns a list of mapping files associated with this Mapping"""
         return sorted([self.basename] + [name for selector in self.selections.normal_values() for name in selector.mapping_names()])
- 
+
     def file_matches(self, filename):
         """Return the "extended match tuples" which can be followed to arrive at `filename`."""
         return sorted([match for value in self.selections.normal_values() for match in value.file_matches(filename)])
-    
+
     def get_derived_from(self):
         """Return the Mapping object `self` was derived from, or None."""
         for substring in self.null_derivation_substrings:
@@ -623,18 +623,18 @@ class Mapping:
         assert  self_val == nested_val, \
             "selector['{}']='{}' in '{}' doesn't match header['{}']='{}' in nested file '{}'.".format(
             key, self_val, self.filename, key, nested_val, nested.filename)
-            
+
     def todict(self, recursive=10):
         """Return a 'pure data' dictionary representation of this mapping and it's children
-        suitable for conversion to json.  If `recursive` is non-zero,  return that many 
+        suitable for conversion to json.  If `recursive` is non-zero,  return that many
         levels of the hierarchy starting with this one.   If recursive is zero,  only
         return the filename and header of the next levels down,  not the contents.
         """
         # dict required here for subsequent update.
-        selections = dict([(key, val.todict(recursive-1)) if recursive-1 
+        selections = dict([(key, val.todict(recursive-1)) if recursive-1
                             else (val.basename, val.header)
                             for (key,val) in self.selections.normal_items()])
-        selections.update(dict([(key, {"name": val, "text_descr": self.obs_package.TEXT_DESCR[key]}) 
+        selections.update(dict([(key, {"name": val, "text_descr": self.obs_package.TEXT_DESCR[key]})
                                 for (key,val) in self.selections.special_items()]))
         # selections.items() critical below for prior interface,  web context display
         return {
@@ -800,7 +800,7 @@ class PipelineContext(ContextMapping):
         """Given `filename` nominally to insert, return the instrument it corresponds to."""
         instrument, _filekind = utils.get_file_properties(self.observatory, filename)
         return instrument.upper()
-    
+
     def get_equivalent_mapping(self, mapping):
         """Return the Mapping equivalent to name `mapping` in pmap `self`,  or None."""
         if mapping.endswith(".pmap"):
@@ -818,12 +818,12 @@ class PipelineContext(ContextMapping):
     @utils.cached
     def get_required_parkeys(self):
         """Return a dictionary of matching parameters for each instrument:
-        
+
             { instrument : [ matching_parkey_name, ... ], }
         """
-        return { instrument : list(self.parkey) + self.selections[instrument].get_required_parkeys() 
+        return { instrument : list(self.parkey) + self.selections[instrument].get_required_parkeys()
                  for instrument in self.selections.normal_keys() }
-        
+
 # ===================================================================
 
 class InstrumentContext(ContextMapping):
@@ -862,7 +862,7 @@ class InstrumentContext(ContextMapping):
         return self.selections[filekind]
 
     def get_imap(self, instrument):
-        """Make sequences like get_cached_mapping(mapping).get_imap(instrument)... work where `mapping` is an 
+        """Make sequences like get_cached_mapping(mapping).get_imap(instrument)... work where `mapping` is an
         instrument mapping.
         """
         return self
@@ -970,12 +970,12 @@ class InstrumentContext(ContextMapping):
         for dataset's instrument,  assumed to be self.instrument.
         """
         return list(sorted(self.selections.keys()))
-        
+
     def get_item_key(self, filename):
         """Given `filename` nominally to insert, return the filekind it corresponds to."""
         _instrument, filekind = utils.get_file_properties(self.observatory, filename)
         return filekind.upper() if self.observatory == "jwst" else filekind.lower()
-    
+
     def get_equivalent_mapping(self, mapping):
         """Return the Mapping equivalent to name `mapping` in imap `self`, or None."""
         if mapping.endswith(".pmap"):
@@ -992,7 +992,7 @@ class InstrumentContext(ContextMapping):
                 return None
             else:  # I think it's always just "rmap".
                 return rmap.get_equivalent_mapping(mapping)
-            
+
     def difference(self, *args, **keys):
         """difference specialized to add .instrument to diff."""
         diffs = super(InstrumentContext, self).difference(*args, **keys)
@@ -1021,7 +1021,7 @@ class ReferenceMapping(Mapping):
         self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
         self._reffile_required = self.header.get("reffile_required", "NONE").upper()
 
-        # header precondition method, e.g. crds.hst.acs.precondition_header  
+        # header precondition method, e.g. crds.hst.acs.precondition_header
         # TPNs define the static definitive possibilities for parameter choices
         # rmaps define the actually appearing literal parameter values
         self._rmap_valid_values = self.selector.get_value_map()
@@ -1033,7 +1033,7 @@ class ReferenceMapping(Mapping):
 
         # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
         self._rmap_relevance_expr = None
-        
+
         # if _rmap_omit_expr evaluates to True at match-time,  this type should be omitted from bestrefs results.
         self._rmap_omit_expr = None
 
@@ -1052,7 +1052,7 @@ class ReferenceMapping(Mapping):
         # this is a potential alternative to preconditioning and fallback which are *runtime* hooks and non-transparent
         # to someone looking at the rmap.
         self._rmap_update_headers = None
-        
+
         # Actually compile lambdas for the hooks above.
         self._init_compiled()
 
@@ -1077,23 +1077,23 @@ class ReferenceMapping(Mapping):
         pass
 
     def _init_compiled(self):
-        """Initialize object fields which contain compiled code objects, special handling for pickling."""        
+        """Initialize object fields which contain compiled code objects, special handling for pickling."""
         self._comment_parkeys = tuple(name.lower() for name in self.header.get("comment_parkeys", ()))
         self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))
         self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
-        
+
         relevant  = dict(self.header.get("parkey_relevance", {}))
         relevant.update({
             name : "keep_comments" for name in self._comment_parkeys
         })
-        self._parkey_relevance_exprs = { 
+        self._parkey_relevance_exprs = {
             name.lower() : self.get_expr(expr) for (name, expr) in relevant.items()
             }
-        
+
         self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
-                
+
     def validate(self):
         """Validate the contents of this rmap against the TPN for this
         filekind / reftype.   Each field of each Match tuple must have a value
@@ -1128,9 +1128,9 @@ class ReferenceMapping(Mapping):
         future versions of hooks without breaking past rmaps.
 
         Hooks are called basically like methods, typically as hook(self, header).   Hooks return hook-specific values.
-        
+
         Nth generation hooks defined by name in rmap header "hooks" { unversioned_name : versioned_hook_name } dict.
-        To unplug a hook,  define it in rmap header "hooks" like { "precondition_header" : "none" }        
+        To unplug a hook,  define it in rmap header "hooks" like { "precondition_header" : "none" }
         """
         hooks = self.header.get("hooks", None)
         if hooks:  # Either get the replacement name,  or use the original name if not found.
@@ -1141,7 +1141,7 @@ class ReferenceMapping(Mapping):
         if hook is not default:
             log.verbose("Using hook", repr(hook_name), "for rmap", repr(self.basename), verbosity=55)
         return hook
-        
+
     # Unusual caching style implements deferred loading of .tpn files,  fairly slow.
     @property
     @utils.cached
@@ -1154,11 +1154,11 @@ class ReferenceMapping(Mapping):
         just the rmap's filekind.
         """
         return [self.filekind]
-        
+
     def get_best_references(self, header, include=None):
         """Shim so that .rmaps can be used for bestrefs in place of a .pmap or .imap for single type development."""
         if include is not None and self.filekind not in include:
-            raise crexc.CrdsUnknownReftypeError(self.__class__.__name__, repr(self.basename), 
+            raise crexc.CrdsUnknownReftypeError(self.__class__.__name__, repr(self.basename),
                                           "can only compute bestrefs for type", repr(self.filekind), "not", include)
         bestref = self.get_best_ref(header)
         if bestref is not None:
@@ -1249,13 +1249,13 @@ class ReferenceMapping(Mapping):
 
     def get_extra_parkeys(self):
         """Return a tuple of parkeys which are not directly matched.   These correspond
-        to HST dataset parkeys which were used to compute the values of other keys 
+        to HST dataset parkeys which were used to compute the values of other keys
         which *are* used to match.   These keys appear in HST rmaps with constant
         universal values of N/A.  At rmap update time,  these keys need to be mapped
         to N/A in the event they're actually defined in the reference to avoid creating
         new rules for that specific case when the parameter is not really intended for matching.
         """
-        extra = list(self.extra_keys) 
+        extra = list(self.extra_keys)
         if self._reffile_switch != "NONE":
             extra.append(self._reffile_switch)
         return tuple(extra)
@@ -1321,7 +1321,7 @@ class ReferenceMapping(Mapping):
         """
         other = asmapping(other, cache="readonly")
         header_diffs = self.difference_header(other, path=path, pars=pars) if include_header_diffs else []
-        body_diffs = self.selector.difference(other.selector, 
+        body_diffs = self.selector.difference(other.selector,
                 path = path + ((self.filename, other.filename),),
                 pars = pars + (self.diff_name,))
         diffs = header_diffs + body_diffs
@@ -1357,7 +1357,7 @@ class ReferenceMapping(Mapping):
             if not relevant:
                 raise crexc.IrrelevantReferenceTypeError(
                     "Rmap does not apply to the given parameter set based on rmap_relevance expression.")
-                
+
     def check_rmap_omit(self, header):
         """Return True IFF this type should be omitted based on the 'rmap_omit' header expression."""
         source, compiled = self._rmap_omit_expr
@@ -1380,9 +1380,9 @@ class ReferenceMapping(Mapping):
         rmap updates facilitates exact case matches (replacements) ignoring irrelevant
         parameters while defining the case.   If `keep_comments` is set to True then
         irrelevant_parkeys which are also comments are not converted to N/A.
-        
+
         COME FROM: This function is called both on dataset headers during bestrefs and
-        on reference file headers during rmap updates with the presumption that any 
+        on reference file headers during rmap updates with the presumption that any
         parameter required by the relevance expressions is defined in both datasets and
         reference files.
         """
@@ -1403,7 +1403,7 @@ class ReferenceMapping(Mapping):
                     log.verbose("Setting irrelevant parkey", repr(parkey), "to N/A")
                     header[parkey] = "N/A"
         return header
-    
+
     def insert_reference(self, reffile):
         """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         header = self.get_refactor_header(reffile)
@@ -1417,17 +1417,17 @@ class ReferenceMapping(Mapping):
         2. Ensures required parkeys are at least defined as UNDEFINED or N/A.
         3. Maps from reference file keywords and values to dataset keywords and values rmaps match on.
         """
-        # Since expansion rules may depend on keys not used in matching,  get entire header  
+        # Since expansion rules may depend on keys not used in matching,  get entire header
         from crds import data_file
         header = data_file.get_header(reffile, observatory=self.observatory)
         needed_keys = tuple(self.get_reference_parkeys()) + tuple(extra_keys)
         header = data_file.ensure_keys_defined(header, needed_keys=needed_keys)
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
-        log.verbose("insert_reference raw reffile header:\n", 
+        log.verbose("insert_reference raw reffile header:\n",
                     log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
                     verbosity=70)
-        header = self.reference_to_dataset_header(header)        
-        log.verbose("insert_reference transformed-to-dataset header:\n", 
+        header = self.reference_to_dataset_header(header)
+        log.verbose("insert_reference transformed-to-dataset header:\n",
                     log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
                     verbosity=70)
         return header
@@ -1446,30 +1446,30 @@ class ReferenceMapping(Mapping):
         # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
         # Also, DATE-OBS, TIME-OBS  <-->  USEAFTER
         header = self.locate.reference_keys_to_dataset_keys(self, header)
-        
-        # Reference files specify things like ANY which must be expanded to 
+
+        # Reference files specify things like ANY which must be expanded to
         # glob patterns for matching with the reference file.
         header = substitutions.expand_wildcards(self, header)
-        
+
         # Translate header values to .rmap normalized form,  e.g. utils.condition_value()
         header = self.locate.condition_matching_header(self, header)
-    
+
         # Evaluate parkey relevance rules in the context of header to map
         # mode irrelevant parameters to N/A.
         # XXX not clear if/how this works with expanded wildcard or-patterns.
         header = self.map_irrelevant_parkeys_to_na(header, keep_comments=True)
-    
+
         # The "extra" parkeys always appear in the rmap with values of "N/A".
         # The dataset value of the parkey is typically used to compute other parkeys
         # for HST corner cases.   It's a little stupid for them to appear in the
-        # rmap match tuples,  but the dataset values for those parkeys are indeed 
+        # rmap match tuples,  but the dataset values for those parkeys are indeed
         # relevant,  and it does provide a hint that magic is going on.  At rmap update
         # time,  these parkeys need to be set to N/A even if they're actually defined.
         for key in self.get_extra_parkeys():
             log.verbose("Mapping extra parkey", repr(key), "from", header[key], "to 'N/A'.")
             header[key] = "N/A"
         return header
-        
+
     def insert_header_reference(self, header, reffile):
         """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         if self._rmap_update_headers:
@@ -1483,7 +1483,7 @@ class ReferenceMapping(Mapping):
 
     def get_reference_parkeys(self):
         """Return parkey names from the reference file perspective,  this can be a superset
-        of the obvious parkey count due to redundant keyword expressions resulting from 
+        of the obvious parkey count due to redundant keyword expressions resulting from
         reference_to_dataset and mixed filetypes (some translated,  some not.)
         """
         dataset_parkeys = self.get_required_parkeys()
@@ -1498,10 +1498,10 @@ class ReferenceMapping(Mapping):
         of this rmap and return it.
         """
         new = self.copy()
-        new.selector.insert(header, value, 
+        new.selector.insert(header, value,
             self.tpn_valid_values if not config.ALLOW_BAD_PARKEY_VALUES else {})
         return new
-    
+
     def delete(self, terminal):
         """Remove all instances of `terminal` (nominally a filename) from `self`."""
         new = self.copy()
@@ -1522,7 +1522,7 @@ class ReferenceMapping(Mapping):
                 "parameters" : tuple(nested["parameters"]),
                 "selections" : nested["selections"]
                 }
-        
+
     def get_equivalent_mapping(self, mapping):
         """Return `self` for comparison if `mapping` name specifies an rmap, otherwise None."""
         if not mapping.endswith(".rmap"):
@@ -1544,7 +1544,7 @@ def _load(mapping, **keys):
 def get_cached_mapping(mapping, **keys):
     """Load `mapping` from the file system or cache,  adding it and all it's
     descendents to the cache.
-    
+
     NOTE:   mutations to the mapping are reflected in the cache.   This call is
     not suitable for experimental mappings which need to be reloaded from the
     file system since the cached version will be returned instead.   This call
@@ -1560,9 +1560,9 @@ def fetch_mapping(mapping, **keys):
     """Load any `mapping`,  exploiting Mapping's already in the cache but not
     adding anything extra.   This is safe for experimental mappings and temporaries
     because new mappings not in the cache are not added to the cache.
-    
+
     This call only returns a copy of mappings not already in the cache.
-    
+
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
     keys["loader"] = fetch_mapping
@@ -1570,9 +1570,9 @@ def fetch_mapping(mapping, **keys):
 
 def load_mapping(mapping, **keys):
     """Load any `mapping`,  ignoring the cache.   Returns a unique object
-    for each call.   Slow but safe for any use,  reads every file and 
+    for each call.   Slow but safe for any use,  reads every file and
     returns a new copy.
-    
+
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
     keys["loader"] = load_mapping
@@ -1602,15 +1602,15 @@ def _load_mapping(mapping, **keys):
 
 def asmapping(filename_or_mapping, cached=False, **keys):
     """Return the Mapping object corresponding to `filename_or_mapping`.
-    filename_or_mapping must either be a string (filename to be loaded) or 
+    filename_or_mapping must either be a string (filename to be loaded) or
     a Mapping subclass which is simply returned.
-    
+
     cached can be set to:
-    
+
     False, "uncached"   ignore the mappings cache,  always reload,  don't add to cache
     "readonly"          load the mapping from the cache if possible,  don't add to the cache if not present
     True, "cached"      load the mapping from the cache if possible, add it to the cache if not present
-    
+
     'readonly' is for experimental/proposed mappings which should not permanently exist in the
     cache because they may later be rejected and/or redefined.
     """
@@ -1644,7 +1644,7 @@ class MappingSelectionsDict(LazyFileDict):
 
     >>> selections.normal_values()
     [InstrumentContext('hst_acs.imap')]
-        
+
     >>> selections.special_values()
     ['N/A']
 
@@ -1676,7 +1676,7 @@ class MappingSelectionsDict(LazyFileDict):
     @classmethod
     def is_na_value(cls, value):
         return isinstance(value, str) and value in cls.na_values_set
-    
+
     @classmethod
     def is_omit_value(cls, value):
         return isinstance(value, str) and value in cls.omit_values_set
@@ -1717,7 +1717,7 @@ def _glob_list(pattern, full_path=False):
         return sorted(glob.glob(pattern))
     else:
         return sorted([os.path.basename(fpath) for fpath in glob.glob(pattern)])
-        
+
 # =============================================================================
 
 def mapping_type(mapping):
@@ -1758,7 +1758,7 @@ def mapping_type(mapping):
 def is_special_value(filename):
     """Return True IFF `filename` is one of the special values which
     does not correspond to a file, e.g. N/A.
-    
+
     >>> is_special_value("foo.fits")
     False
 
@@ -1772,7 +1772,7 @@ def is_special_value(filename):
 def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys):
     """Do simple text replacement from `old_text` to `new_text` in `rmapping`.
     """
-    log.info("Replacing", srepr(old_text), "with", srepr(new_text), "in", 
+    log.info("Replacing", srepr(old_text), "with", srepr(new_text), "in",
              srepr(rmapping.basename), "to", srepr(new_filename))
     original_rmap = str(rmapping)
     new_rmap = original_rmap.replace(old_text, new_text)

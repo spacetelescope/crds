@@ -1,4 +1,4 @@
-"""This module codifies standard practices for scripted interactions with the 
+"""This module codifies standard practices for scripted interactions with the
 web server file submission system.
 """
 import os.path
@@ -22,7 +22,7 @@ except (ImportError, RuntimeError):
 
 # ==================================================================================================
 
-def log_section(section_name, section_value, verbosity=50, log_function=log.verbose, 
+def log_section(section_name, section_value, verbosity=50, log_function=log.verbose,
                 divider_name=None):
     """Issue log divider bar followed by a corresponding log message."""
     log.divider(name=divider_name, verbosity=verbosity, func=log.verbose)
@@ -69,14 +69,14 @@ class CrdsDjangoConnection:
         self.dump_response("Response: ", response)
         self.check_error(response)
         return response
-    
+
     post_complete = get_complete = repost_complete = response_complete
 
     def get(self, relative_url):
         """HTTP(S) GET `relative_url` and return the requests response object."""
         args = self.get_start(relative_url)
         return self.get_complete(args)
-    
+
     @background.background
     def get_start(self, relative_url):
         """Initiate a GET running in the background, do debug logging."""
@@ -96,7 +96,7 @@ class CrdsDjangoConnection:
         vars = utils.combine_dicts(*post_dicts, **post_vars)
         log_section("POST:", vars, divider_name="POST: " + url)
         return self.session.post(url, data=vars)
-    
+
     def repost(self, relative_url, *post_dicts, **post_vars):
         """First GET form from ``relative_url`,  next POST form to same
         url using composition of variables from *post_dicts and **post_vars.
@@ -135,14 +135,14 @@ class CrdsDjangoConnection:
         """Login to the CRDS website and proceed to relative url `next`."""
         self.session.cookies["ASB-AUTH"] = self.password
         response = self.repost(
-            "/login/", 
+            "/login/",
             username = self.username,
-            password = self.password, 
+            password = self.password,
             instrument = self.locked_instrument,
             next = next,
             )
         self.check_login(response)
-        
+
     def check_error(self, response):
         """Note an error + exception if response contains an error_message <div>."""
         self._check_error(response, '//div[@id="error_message"]', "CRDS server error:")
@@ -162,10 +162,10 @@ class CrdsDjangoConnection:
 
     def _check_error(self, response, xpath_spec, error_prefix):
         """Extract the `xpath_spec` text from `response`,  if present issue a
-        log ERROR with  `error_prefix` and the response `xpath_spec` text 
+        log ERROR with  `error_prefix` and the response `xpath_spec` text
         then raise an exception.  This may result in multiple ERROR messages.
-        
-        Issue a log ERROR for each form error,  then raise an exception 
+
+        Issue a log ERROR for each form error,  then raise an exception
         if any errors found.
 
         returns None
@@ -196,6 +196,6 @@ class CrdsDjangoConnection:
         response = self.session.get(abs_url)
         log.verbose("COOKIES:", log.PP(response.cookies))
         csrf_token = response.cookies['csrftoken']
-        files = { "files" : open(filepath, "rb") }        
+        files = { "files" : open(filepath, "rb") }
         data = {'csrfmiddlewaretoken': csrf_token}
         self.session.post(abs_url, files=files, data=data)

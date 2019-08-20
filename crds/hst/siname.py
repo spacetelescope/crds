@@ -76,15 +76,15 @@ ID_CHAR_TO_INSTRUMENT = {
   "m" : "SYNPHOT",
   }
 
-INSTRUMENT_TO_ID_CHAR = { 
-  val: key for (key, val) in ID_CHAR_TO_INSTRUMENT.items() 
+INSTRUMENT_TO_ID_CHAR = {
+  val: key for (key, val) in ID_CHAR_TO_INSTRUMENT.items()
 }
 
 def instrument_to_id_char(instrument):
   """Given an instrument name (e.g. acs) return the corresponding CDBS
   instrument id character.
   """
-  return INSTRUMENT_TO_ID_CHAR[instrument.upper()] 
+  return INSTRUMENT_TO_ID_CHAR[instrument.upper()]
 
 def add_IRAF_prefix(instrument_name):
     """
@@ -93,7 +93,7 @@ Name: add_IRAF_prefix
 
 Description:
 ------------
-Determines IRAF prefix for a reference file name, 
+Determines IRAF prefix for a reference file name,
 depending on instrument and reffile format.
 
 Inputs:
@@ -212,7 +212,7 @@ Name: get_cdbs_prefix
 Description:
 ------------
 Translate instrument name into CDBS database file and row table prefix.
-Each HST instrument has two tables in CDBS, one for file-level info 
+Each HST instrument has two tables in CDBS, one for file-level info
 (*_file) and one for row-level info (*_row).  Each has a prefix
 indicating the instrument name (e.g. acs_row).
 
@@ -278,4 +278,3 @@ History:
      return ID_CHAR_TO_INSTRUMENT[parts[0][-1:].lower()]
    except:
       raise UnknownInstrument
-

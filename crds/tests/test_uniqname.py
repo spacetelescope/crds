@@ -63,7 +63,7 @@ file has been created and modified as specified (checksums, keywords, etc.)
 Renamed files can be output to a different directory using --output-path.
 
 --dry-run can be used to demo renaming by printing what the new name would be.
-    
+
 """
 import os
 import doctest
@@ -112,7 +112,7 @@ def dt_has_checksum():
 
 def test():
     """Run module tests,  for now just doctests only.
-    
+
     test_config.setup() and cleanup() are done inline above because bracketing
     the tests here does not get picked up by nose test discovery.  Combining
     tests into one giant docstring works but is hard to analyze and debug when

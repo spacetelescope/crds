@@ -5,13 +5,13 @@ import sys
 import os.path
 
 # ============================================================================
-    
+
 from crds.core import exceptions, rmap, log, cmdline
 from crds.core.log import srepr
 from crds import diff
 
 # ============================================================================
-    
+
 class NoUseAfterError(ValueError):
     "The specified UseAfter datetime didn't exist in the rmap."
 
@@ -19,19 +19,19 @@ class NoMatchTupleError(ValueError):
     "The specified Match tuple didn't exist in the rmap."
 
 # ============================================================================
-    
+
 def set_header_value(old_rmap, new_rmap, key, new_value):
     """Set the value of `key` in `filename` to `new_value` and rewrite the rmap.
-    This is potentially lossy since rewriting the rmap may/will lose comments and 
+    This is potentially lossy since rewriting the rmap may/will lose comments and
     formatting quirks.
     """
     mapping = rmap.load_mapping(old_rmap)
     mapping.header[key] = new_value
     mapping.write(new_rmap)
-    
+
 def del_header_value(old_rmap, new_rmap, key):
     """Set the value of `key` in `filename` to `new_value` and rewrite the rmap.
-    This is potentially lossy since rewriting the rmap may/will lose comments and 
+    This is potentially lossy since rewriting the rmap may/will lose comments and
     formatting quirks.
     """
     mapping = rmap.load_mapping(old_rmap)
@@ -39,7 +39,7 @@ def del_header_value(old_rmap, new_rmap, key):
     mapping.write(new_rmap)
 
 def update_derivation(new_path, old_basename=None):
-    """Set the 'derived_from' and 'name' header fields of `new_path`.  
+    """Set the 'derived_from' and 'name' header fields of `new_path`.
     This function works for all Mapping classes:  pmap, imap, and rmap.
     """
     new = rmap.fetch_mapping(new_path)
@@ -51,23 +51,23 @@ def update_derivation(new_path, old_basename=None):
     new.header["name"] = str(os.path.basename(new_path))
     new.write(new_path)
     return str(derived_from)
-    
+
 # ============================================================================
 
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
-    """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
+    """Given the full path of starting rmap `old_rmap`,  modify it by inserting
     or replacing all files in `inserted_references` and write out the result to
     `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
-    
+
     old_rmap  str     Filepath of source rmap into which `inserted_references` will be inserted
     new_rmap  str     Filepath of updated rmap written out
     inserted_references [ str, ...]    List of reference filepaths to be insterted
 
     Note that "inserting" a reference file can result in:
 
-    1. adding a new match case,  
+    1. adding a new match case,
     2. adding a new USEAFTER case
-    3. exactly replacing an existing reference file. 
+    3. exactly replacing an existing reference file.
 
     Other outcomes are also possible for non-standard rmap selector class configurations.
 
@@ -109,26 +109,26 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
                 if case not in inserted_cases:
                     inserted_cases[case] = baseref
                 else:
-                    log.error("-"*40 + "\nBoth", srepr(baseref), 
+                    log.error("-"*40 + "\nBoth", srepr(baseref),
                               "and", srepr(inserted_cases[case]),
                               "identically match case:\n", log.PP(case), """
 Each reference would replace the other in the rmap.
 Either reference file matching parameters need correction
 or additional matching parameters should be added to the rmap
 to enable CRDS to differentiate between the two files.
-See the file submission section of the CRDS server user's guide here:  
-    https://jwst-crds.stsci.edu/static/users_guide/index.html 
+See the file submission section of the CRDS server user's guide here:
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
 for more explanation.""")
-                
+
     new.header["derived_from"] = old.basename
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
 
 def rmap_delete_references(old_rmap, new_rmap, deleted_references):
-    """Given the full path of starting rmap `old_rmap`,  modify it by deleting 
+    """Given the full path of starting rmap `old_rmap`,  modify it by deleting
     all files in `deleted_references` and write out the result to
     `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
-    
+
     Return new ReferenceMapping named `new_rmap`
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
@@ -148,9 +148,9 @@ def rmap_delete_references(old_rmap, new_rmap, deleted_references):
 def rmap_check_modifications(old_rmap, new_rmap, old_ref, new_ref, expected=("add",)):
     """Check the differences between `old_rmap` and `new_rmap` and make sure they're
     limited to the types listed in `expected`.
-    
+
     expected should be "add" or "replace".
-    
+
     Returns as_expected,  True IFF all rmap modifications match `expected`.
     """
     diffs = diff.mapping_diffs(old_rmap, new_rmap)
@@ -181,19 +181,19 @@ class RefactorScript(cmdline.Script):
     description = """
     Modifies a reference mapping by adding the specified reference files.
     """
-    
-    epilog = """    
+
+    epilog = """
     """
 
     locate_file = cmdline.Script.locate_file_outside_cache
-    
+
     def add_args(self):
         self.add_argument("command", choices=("insert", "delete", "set_header", "del_header"),
             help="Name of refactoring command to perform.")
         self.add_argument('old_rmap', type=cmdline.reference_mapping,
             help="Reference mapping to modify by inserting references.")
         self.add_argument('new_rmap', type=cmdline.reference_mapping,
-            help="Name of modified reference mapping output file.")        
+            help="Name of modified reference mapping output file.")
         self.add_argument('references', type=str, nargs="+",
             help="Reference files to insert into (or delete from) `old_rmap` to produce `new_rmap`.")
 
@@ -209,7 +209,7 @@ class RefactorScript(cmdline.Script):
     def ref_paths(self):
         self.args.files = self.args.references
         return self.files  # standard file location and @-handling for self.args.files
-        
+
     def main(self):
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert":
@@ -229,4 +229,3 @@ class RefactorScript(cmdline.Script):
 
 if __name__ == "__main__":
     sys.exit(RefactorScript()())
-

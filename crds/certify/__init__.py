@@ -6,4 +6,3 @@ __all__ = [
     "certify_file",
     "CertifyScript",
 ]
-

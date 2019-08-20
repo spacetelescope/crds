@@ -18,7 +18,7 @@ class UniqnameScript(cmdline.Script):
     """Command line script for renaming references with official CRDS names."""
 
     description = """This script is used to rename references with unique official CRDS names for HST."""
-        
+
     epilog = """This program is based loosely on the CDBS program uniqname modified to support
 enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
 
@@ -54,10 +54,10 @@ Renamed files can be output to a different directory using --output-path.
 
     def __init__(self, *args, **keys):
         super(UniqnameScript, self).__init__(*args, **keys)
-    
+
     def add_args(self):
         """Setup command line switch parsing."""
-        self.add_argument('--files', nargs="+", 
+        self.add_argument('--files', nargs="+",
                           help="Files to rename.")
         self.add_argument('--dry-run', action='store_true',
                           help='Print how a file would be renamed without modifying it.')
@@ -65,9 +65,9 @@ Renamed files can be output to a different directory using --output-path.
                           help='Add FITS checksum.  Without, checksums *removed* if header modified.')
         self.add_argument('-f', '--add-keywords', action='store_true',
                           help='When renaming, add FILENAME, ROOTNAME, HISTORY keywords for the generated name.')
-        self.add_argument('-e', '--verify-file', action='store_true', 
+        self.add_argument('-e', '--verify-file', action='store_true',
                           help='Verify FITS compliance and any checksums before changing each file.')
-        self.add_argument('-s', '--standard', action='store_true', 
+        self.add_argument('-s', '--standard', action='store_true',
                           help='Same as --add-keywords --verify-file,  does not add checksums (add -a).')
         self.add_argument('-r', '--remove-original', action='store_true',
                           help='After renaming,  remove the orginal file.')
@@ -80,7 +80,7 @@ Renamed files can be output to a different directory using --output-path.
         super(UniqnameScript, self).add_args()
 
     locate_file = cmdline.Script.locate_file_outside_cache
-        
+
     def main(self):
         """Generate names corrsponding to files listed on the command line."""
         if self.args.standard:
@@ -104,8 +104,8 @@ Renamed files can be output to a different directory using --output-path.
         # XXXX script returns filename result not suitable as program exit status
         # XXXX filename result is insufficient if multiple files are specified.
         # XXXX filename result supports embedded use on web server returning new name.
-        return uniqname  
-    
+        return uniqname
+
     def rewrite(self, filename, uniqname):
         """Add a FITS checksum to `filename.`"""
         with data_file.fits_open(filename, mode="readonly", checksum=self.args.verify_file, do_not_scale_image_data=True) as hdus:
@@ -131,7 +131,7 @@ Renamed files can be output to a different directory using --output-path.
                 if "buffer is too small" in str(exc):
                     raise CrdsError(
                         "Failed to rename/rewrite", repr(basefile),
-                        "as", repr(baseuniq), ":", 
+                        "as", repr(baseuniq), ":",
                         "probable file truncation", ":", str(exc)) from exc
                 else:
                     raise CrdsError("Failed to rename/rewrite", repr(basefile),
@@ -184,4 +184,3 @@ def uniqname(old_path):
 if __name__ == "__main__":
     UniqnameScript()()
     sys.exit(log.errors())
-

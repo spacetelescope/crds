@@ -42,7 +42,7 @@ def background(func):
     """
 
     def run_thread(*args, **keys):
-        """Function wrapper which runs the function as a background thread and 
+        """Function wrapper which runs the function as a background thread and
         returns the started daemon thread.
         """
         def target_func():

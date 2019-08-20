@@ -34,7 +34,7 @@ setup(name="crds_test_data",
       classifiers=[
           'Intended Audience :: Science/Research',
           'License :: OSI Approved :: BSD License',
-          'Operating System :: OS-X, Linux', 
+          'Operating System :: OS-X, Linux',
           'Programming Language :: Python :: 2.7',
           # 'Programming Language :: Python :: 3',
           'Programming Language :: Python :: Implementation :: CPython',

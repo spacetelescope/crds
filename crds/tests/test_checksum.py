@@ -12,7 +12,7 @@ from crds.refactoring.checksum import ChecksumScript
 def dt_checksum_script_fits_add():
     """
     >>> old_state = test_config.setup()
-    
+
     >>> _ = shutil.copy("data/s7g1700gl_dead.fits", "added.fits")
     >>> header = data_file.get_header("./added.fits")
     >>> assert "CHECKSUM" not in header
@@ -26,38 +26,38 @@ def dt_checksum_script_fits_add():
     >>> header = data_file.get_header("./added.fits")
     >>> assert "CHECKSUM" in header
     >>> assert "DATASUM" in header
-    
+
     >>> ChecksumScript("crds.refactor.checksum --verify ./added.fits")()  # doctest: +ELLIPSIS
     CRDS - INFO -  Verifying checksum for './added.fits'
     0
-    
+
     >>> os.remove("added.fits")
-    
+
     >>> test_config.cleanup(old_state)
     """
 
 def dt_checksum_script_fits_remove():
     """
     >>> old_state = test_config.setup()
-    
+
     >>> _ = shutil.copy("data/s7g1700gl_dead_good_xsum.fits", "removed.fits")
     >>> header = data_file.get_header("./removed.fits")
     >>> assert "CHECKSUM" in header
     >>> assert "DATASUM" in header
-    
+
     >>> ChecksumScript("crds.refactor.checksum --remove ./removed.fits")()  # doctest: +ELLIPSIS
     CRDS - INFO -  Removing checksum for './removed.fits'
     0
-    
+
     >>> utils.clear_function_caches()
     >>> header = data_file.get_header("./removed.fits")
     >>> assert "CHECKSUM" not in header
     >>> assert "DATASUM" not in header
-    
+
     >>> ChecksumScript("crds.refactor.checksum --verify ./removed.fits")()  # doctest: +ELLIPSIS
     CRDS - INFO -  Verifying checksum for './removed.fits'
     0
-    
+
     >>> os.remove("removed.fits")
     >>> test_config.cleanup(old_state)
     """
@@ -93,9 +93,9 @@ def dt_checksum_script_fits_verify_bad():
     >>> os.remove("verify_bad.fits")
     >>> test_config.cleanup(old_state)
     """
-    
+
 # ----------------------------------------------------------------------
-    
+
 def dt_checksum_script_rmap_verify_good():
     """
     >>> old_state = test_config.setup()
@@ -121,7 +121,7 @@ def dt_checksum_script_rmap_add_bad():
     >>> os.remove("add_bad.rmap")
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_checksum_script_rmap_verify_bad():
     """
     >>> old_state = test_config.setup()
@@ -217,7 +217,7 @@ def dt_checksum_script_unsupported_text():
 
 def test():
     """Run module tests,  for now just doctests only.
-    
+
     test_config.setup() and cleanup() are done inline above because bracketing
     the tests here does not get picked up by nose test discovery.  Combining
     tests into one giant docstring works but is hard to analyze and debug when

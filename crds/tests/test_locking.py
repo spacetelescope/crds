@@ -29,7 +29,7 @@ def multiprocessing_instance(output_file_name):
             time.sleep(0.2)
         output_file.write("\n")
         output_file.flush()
-            
+
 
 def try_multiprocessing():
     """Run some test functions using multiprocessing."""
@@ -113,7 +113,7 @@ def dt_lockfile_locking():
     'enabled, lockfile'
     >>> crds_cache_locking.get_cache_lock()
     CrdsLockFile('/tmp/crds.cache')
-    
+
     >> try_multiprocessing()    XXXXX lockfile is broken
     testing
     testing
@@ -175,4 +175,3 @@ def main():
 
 if __name__ == "__main__":
     print(main())
-

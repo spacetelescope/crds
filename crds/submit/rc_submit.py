@@ -14,8 +14,8 @@ import urllib
 from functools import wraps
 from textwrap import wrap
 
-class NoFilesSelected(Exception): 
-    pass 
+class NoFilesSelected(Exception):
+    pass
 
 BASE_URLS = {
     'dev': {
@@ -65,7 +65,7 @@ class RedCatApiScript(ReferenceSubmissionScript):
         '''Return the form dictionary mapping form variables to value strings for
         new variables being added by the streamlining project.'''
         return self._extra_redcat_parameters
-        
+
     def batch_submit_references(self):
         '''Do a web re-post to the batch submit references web page.'''
         return self._submission("/submission_form/redcat_submit/")
@@ -96,11 +96,11 @@ class SubmissionResult(collections.namedtuple("SubmissionResult", ["error_count"
         webbrowser.open(self.ready_url)
 
 class Submission(object):
-    '''Client-side Redcat submission class.  Can be used to prepare, validate, and submit 
+    '''Client-side Redcat submission class.  Can be used to prepare, validate, and submit
     CRDS submissions.
-    
+
     Call `submission_obj.help()` to print details about the submission object form fields.
-    
+
     Parameters:
         observatory (str, {hst, jwst}):  Used in determining which CRDS for submission
         string (str, {ops, test, dev, bit, cit}):  Used in determining which CRDS for submission'''
@@ -112,7 +112,7 @@ class Submission(object):
             raise ValueError('String "{}" must be either "ops", "test", "dev", "bit" or "cit".')
         self._observatory = observatory
         self._string = string
-        
+
         config.base_url = BASE_URLS[self.string][self.observatory]
         if not os.environ.get('CRDS_SERVER_URL'):
             log.verbose('Setting $CRDS_SERVER_URL to {}'.format(config.base_url))
@@ -128,7 +128,7 @@ class Submission(object):
         # Convert list describing form to a dictionary (preserves order):
         self._form_description = {field['key']: field for field in self._form_description}
         for key in self._form_description:  self._form_description[key].pop('key')
-        
+
         # Hard-code in change_level and description for now:
         self._form_description['change_level'] = {
             'type': 'TypedChoiceField',
@@ -160,8 +160,8 @@ class Submission(object):
 
     def __repr__(self):
         return '<Submission Object {}-{}>:\nFields:  {}\nFiles:  {}'.format(
-            self.observatory, self.string, 
-            self._fields.__repr__(), 
+            self.observatory, self.string,
+            self._fields.__repr__(),
             list(self.files))
 
     # ------------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ class Submission(object):
            (self._form_description[key]['type'] != 'BooleanField'):
             matches = [x for x in self._form_description[key]['choices'] if x.lower() == value.lower()]
             if len(matches) != 1:
-                raise ValueError("'{}' must be a valid choice: {{{}}}".format(key, 
+                raise ValueError("'{}' must be a valid choice: {{{}}}".format(key,
                                  ', '.join(self._form_description[key]['choices'])))
             # Inherit case from matching choice:
             value = matches[0]
@@ -276,7 +276,7 @@ class Submission(object):
         '''Print help text derived from CRDS instance specified.'''
         # Can't easily overwrite __doc__ dynamically.
         for key, field in self._form_description.items():
-            print (key, ' (', NULL_FIELDTYPES[self._form_description[key]['type']].__name__, 
+            print (key, ' (', NULL_FIELDTYPES[self._form_description[key]['type']].__name__,
                 ', optional)' if not field.get('required', False) else ')', '\n', '-'*len(key), sep='')
             print ('\n'.join(wrap(field['label'])))
             if 'help_text' in field:
@@ -307,7 +307,7 @@ class Submission(object):
         return yaml.safe_dump(dict(self), *args, **kargs)
 
     def submit(self):
-        '''Validate submission form, upload to CRDS staging, handle server-side 
+        '''Validate submission form, upload to CRDS staging, handle server-side
         submission errors.'''
         # Client-side validation
         # Upload the form

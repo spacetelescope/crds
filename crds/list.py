@@ -29,7 +29,7 @@ class ListScript(cmdline.ContextsScript):
 cache, reference and mapping files, default context names, and dataset headers
 and ids used for CRDS reprocessing recommendations.
     """
-        
+
     epilog = """
 General categories of information driven by switches include:
 
@@ -41,7 +41,7 @@ General categories of information driven by switches include:
 5. Listing global default and installed pipeline contexts
 6. Resolving context specifiers into literal context names
 
-Many crds list services require setting CRDS_SERVER_URL to a valid CRDS 
+Many crds list services require setting CRDS_SERVER_URL to a valid CRDS
 server to provide a source for the headers.
 
 For HST::
@@ -83,27 +83,27 @@ Contexts to list can be specified in a variety of ways:
 -- To list the references contained by several contexts::
 
 % crds list  --references --contexts hst_0001.pmap hst_0002.pmap ...
-vb41935ij_bia.fits 
-vb41935kj_bia.fits 
+vb41935ij_bia.fits
+vb41935kj_bia.fits
 ...
 
 -- To list the references in a numerical range of contexts::
 
 % crds list --references --range 1:2 --references
-vb41935lj_bia.fits 
+vb41935lj_bia.fits
 vb41935oj_bia.fits
 ...
 
 -- To list all mappings, even those not referenced by an imap or pmap::
 
 % crds list --mappings --all
-hst.pmap 
-hst_0001.pmap 
-hst_0002.pmap 
-hst_acs.imap 
-hst_acs_0001.imap 
-hst_acs_0002.imap 
-hst_acs_atodtab.rmap 
+hst.pmap
+hst_0001.pmap
+hst_0002.pmap
+hst_acs.imap
+hst_acs_0001.imap
+hst_acs_0002.imap
+hst_acs_atodtab.rmap
 ...
 
 --references, --mappings, or both can be listed.
@@ -151,7 +151,7 @@ File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
 ...
 }
 
-4. Information about the dataset IDs and parameters used for CRDS reprocessing 
+4. Information about the dataset IDs and parameters used for CRDS reprocessing
 and regressions can be printed or stored.
 
  Parameter set IDs can be listed for one or more instruments as follows::
@@ -159,37 +159,37 @@ and regressions can be printed or stored.
  % crds list --dataset-ids-for-instruments wfc3...
  JCL403010:JCL403ECQ
  ... hundreds to hundreds of thousands of IDs as shown above ...
- 
+
  IDs can also be captured to a file using UNIX I/O redirection::
- 
- % crds list --dataset-ids-for-instruments wfc3   >wfc3.ids    
- 
- IDs for HST are of the form <product>:<exposure> where many exposures feed into 
- the construction of one product and recalibrating any component exposure suggests 
+
+ % crds list --dataset-ids-for-instruments wfc3   >wfc3.ids
+
+ IDs for HST are of the form <product>:<exposure> where many exposures feed into
+ the construction of one product and recalibrating any component exposure suggests
  recalibrating the combined product.
 
- CRDS stores dataset parameters for regression testing as a JSON dictionaries 
+ CRDS stores dataset parameters for regression testing as a JSON dictionaries
  specifying one set of dataset parameters per line of the file::
- 
+
  % crds list --dataset-headers @wfc3.ids --json > wfc3.headers.json
- 
- NOTE:  while IDs can be specified directly on the command line,  CRDS has an 
+
+ NOTE:  while IDs can be specified directly on the command line,  CRDS has an
  @-notation that means "take IDs from this file".
- 
- The JSON headers are suitable for running through crds.bestrefs to perform 
+
+ The JSON headers are suitable for running through crds.bestrefs to perform
  reprocessing checks or single context reference file coverage checks shown  here::
- 
+
  % crds bestrefs --load-pickle wfc3.headers.json --dump-unique-errors --stats
  ...  errors related to looking up references for these parameter sets ...
- 
- The script crds_dataset_capture combines the process of dumping all IDs for an 
+
+ The script crds_dataset_capture combines the process of dumping all IDs for an
  instrument and dumping their corresponding dataset parameters.  IDs files and
  header files are placed in a dated regression capture directory::
- 
+
  % crds_dataset_capture wfc3 acs ...
  ... downloads IDs and headers for WFC3, ACS to dated directory ...
 
- The default multi-line format for dataset parameters is more readable than the 
+ The default multi-line format for dataset parameters is more readable than the
  --json form::
 
  % crds list --dataset-headers jcl403010 --first-id --minimize-header
@@ -250,7 +250,7 @@ and regressions can be printed or stored.
 5. Information about the default context can be printed.  There are two variations and a subtle distinction::
 
 % python m crds.list --operational-context
-jwst_0204.pmap 
+jwst_0204.pmap
 
 lists the context which has been *commanded* as default on the CRDS server.
 
@@ -289,7 +289,7 @@ jwst_0207.pmap
 jwst_0208.pmap
 jwst_0209.pmap
 
-% crds list --resolve-contexts  --contexts jwst-miri-dark-operational 
+% crds list --resolve-contexts  --contexts jwst-miri-dark-operational
 jwst_miri_dark_0012.rmap
 
 % crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
@@ -299,7 +299,7 @@ jwst_niriss_superbias_0005.rmap
         super(ListScript, self).__init__(*args, **keys)
         self.show_context_resolution = False
         self._file_info = {}
-        
+
     def add_args(self):
         """Add switches unique to crds.list."""
 
@@ -337,7 +337,7 @@ jwst_niriss_superbias_0005.rmap
 
         self.add_argument("--cat", nargs="*", dest="cat", metavar="FILES", default=None,
             help="print the text of the specified mapping files.")
-        self.add_argument("--keywords", nargs="+", 
+        self.add_argument("--keywords", nargs="+",
             help="limited list of keywords to be catted from reference headers.")
         self.add_argument("--add-filenames", action="store_true",
             help="prefix each line of a cat'ed file with the filename.")
@@ -346,7 +346,7 @@ jwst_niriss_superbias_0005.rmap
 
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
             help="print the name of the operational context on the central CRDS server.")
-        self.add_argument("--remote-context", type=str, metavar="PIPELINE", 
+        self.add_argument("--remote-context", type=str, metavar="PIPELINE",
             help="print the name of the context reported as in use by the specified pipeline.")
         self.add_argument("--resolve-contexts", action="store_true", dest="resolve_contexts",
             help="print the literal names of the contexts defined by the command line context specifiers.")
@@ -356,9 +356,9 @@ jwst_niriss_superbias_0005.rmap
 
         self.add_argument("--file-properties", nargs="*", default=None,
                           help="print the instrument, filekind, filename for each of the files specified.")
-        
+
         super(ListScript, self).add_args()
-        
+
     def main(self):
         """List files."""
         if self.args.cat is not None: # including []
@@ -376,7 +376,7 @@ jwst_niriss_superbias_0005.rmap
 
         if self.args.resolve_contexts:
             self.list_resolved_contexts()
-                    
+
         if self.args.list_references:
             self.list_references()
         if self.args.list_mappings:
@@ -424,7 +424,7 @@ jwst_niriss_superbias_0005.rmap
         and whether or not --mappings or --references are set.
         """
         mappings = self.get_context_mappings() if self.args.list_mappings else []
-        references = self.get_context_references() if self.args.list_references else []        
+        references = self.get_context_references() if self.args.list_references else []
         return [filename for filename in mappings + references if filename != 'N/A']
 
     def list_file_properties(self):
@@ -438,11 +438,11 @@ jwst_niriss_superbias_0005.rmap
                 print(instrument, filekind, os.path.basename(filepath))
 
     def cat_files(self):
-        """Print out the files listed after --cat or implied by a combination of 
+        """Print out the files listed after --cat or implied by a combination of
         explicitly specified contexts and --mappings or --references.
-        
+
         --files is not allowed.
-        
+
         """
         # --cat files...   specifying *no* files still triggers --cat logic
         # --contexts context-specifiers [including --all --last --range...]
@@ -459,9 +459,9 @@ jwst_niriss_superbias_0005.rmap
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
             with log.error_on_exception("Failed dumping:", repr(name)):
-                path = self.locate_file(name) 
+                path = self.locate_file(name)
                 self._cat_file(path)
-                    
+
     def _cat_file(self, path):
         """Print out information on a single reference or mapping at `path`."""
         self._cat_banner("File:", os.path.abspath(path), delim="#", bottom_delim="-")
@@ -470,7 +470,7 @@ jwst_niriss_superbias_0005.rmap
         else:
             self._cat_text(path)
         if self._file_info:
-            self._cat_catalog_info(path)        
+            self._cat_catalog_info(path)
 
     def _cat_banner(self, *args, **keys):
         """Print a banner for --cat for `name` and return the filepath of `name`."""
@@ -481,7 +481,7 @@ jwst_niriss_superbias_0005.rmap
         print(*args)
         if bottom_delim:
             print(bottom_delim*80)
-        
+
     def _cat_reference(self, path):
         """Print information on any reference type at `path`."""
         self._cat_header(path)
@@ -490,7 +490,7 @@ jwst_niriss_superbias_0005.rmap
             self._print_lines(path, _fits_info_lines(path))
             if not self.args.no_arrays:
                 self._cat_array_properties(path)
-        
+
     def _cat_array_properties(self, path):
         """Print out the CRDS interpretation of every array in `path`,  currently FITS only."""
         with data_file.fits_open(path) as hdulist:
@@ -508,7 +508,7 @@ jwst_niriss_superbias_0005.rmap
         """Dump out the contexts of a text file."""
         with open(path) as pfile:
             self._print_lines(path, pfile.readlines())
-            
+
     def _cat_header(self, path):
         """Dump out the header associated with a reference file."""
         old = config.ALLOW_SCHEMA_VIOLATIONS.set(True)
@@ -550,27 +550,27 @@ jwst_niriss_superbias_0005.rmap
         references = [ rmap.locate_file(filename, self.observatory) if self.args.full_path else filename
                        for filename in self.get_context_references() ]
         _print_list(references)
-    
+
     def list_mappings(self):
-        """Consult the server and print the names of all CRDS mappings associated 
+        """Consult the server and print the names of all CRDS mappings associated
         with the given contexts.
         """
         mappings = [ rmap.locate_file(filename, self.observatory) if self.args.full_path else filename
                        for filename in self.get_context_mappings() ]
         _print_list(mappings)
-    
+
     def list_cached_mappings(self):
         """List the mapping paths in the local cache."""
         _print_list(rmap.list_mappings("*.*map", self.observatory, full_path=self.args.full_path))
-        
+
     def list_cached_pickles(self):
         """List the pickle paths in the local cache."""
         _print_list(rmap.list_pickles("*", self.observatory, full_path=self.args.full_path))
-        
+
     def list_cached_references(self):
         """List the reference paths in the local cache."""
         _print_list(rmap.list_references("*", self.observatory, full_path=self.args.full_path))
-        
+
     def list_dataset_headers(self):
         """List dataset header info for self.args.dataset_headers with respect to self.args.contexts"""
         # Support @-files for ids specified on command line
@@ -578,7 +578,7 @@ jwst_niriss_superbias_0005.rmap
         products_seen, exposures_seen = set(), set()
         expanded_ids = []
         for context in self.contexts:
-            with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context), 
+            with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context),
                                         "for", repr(self.args.dataset_headers)):
                 for returned_id, header in api.get_dataset_headers_unlimited(context, ids):
                     product, exposure = returned_id.split(":")
@@ -596,9 +596,9 @@ jwst_niriss_superbias_0005.rmap
         if self.args.id_expansions_only:
             for expanded in sorted(expanded_ids):
                 print(expanded)
-                            
+
     def dump_header(self, context, returned_id, header):
-        """Print out dataset `header` for `id` and `context` in either .json or 
+        """Print out dataset `header` for `id` and `context` in either .json or
         multi-line formats.
         """
         pmap = crds.get_cached_mapping(context)
@@ -637,17 +637,17 @@ jwst_niriss_superbias_0005.rmap
         cache_subdir_mode = config.get_crds_ref_subdir_mode(self.observatory)
         pyinfo = _get_python_info()
         _print_dict("CRDS Environment", info)
-        _print_dict("CRDS Client Config", { 
-                "server_url" : current_server_url, 
+        _print_dict("CRDS Client Config", {
+                "server_url" : current_server_url,
                 "cache_subdir_mode": cache_subdir_mode,
                 "readonly_cache": self.readonly_cache,
                 "effective_context": heavy_client.get_context_name(self.observatory),
                 "crds" : repr(crds),
-                "version": heavy_client.version_info() 
+                "version": heavy_client.version_info()
                 })
         _print_dict("CRDS Actual Paths", real_paths)
-        _print_dict("CRDS Server Info", server, 
-                    ["observatory", "status", "connected", "operational_context", "last_synced", 
+        _print_dict("CRDS Server Info", server,
+                    ["observatory", "status", "connected", "operational_context", "last_synced",
                      "reference_url", "mapping_url", "effective_mode"])
         if self.observatory == "hst":
             cal_vars = { var : os.environ[var] for var in os.environ
@@ -675,7 +675,7 @@ jwst_niriss_superbias_0005.rmap
         _print_dict(None, status)
 
     def list_required_parkeys(self):
-        """Print out the parkeys required for matching using the specified contexts.""" 
+        """Print out the parkeys required for matching using the specified contexts."""
         for name in self.contexts:
             mapping = crds.get_cached_mapping(name)
             if isinstance(mapping, rmap.PipelineContext):
@@ -703,7 +703,7 @@ def _get_python_info():
     if pypath:
         pyinfo["PYTHON_PATH"] = pypath
     return pyinfo
-    
+
 def _print_dict(title, dictionary, selected = None):
     """Print out dictionary `d` with a one line `title`."""
     if selected is None:
