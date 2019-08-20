@@ -19,10 +19,16 @@ env:
         - SCRIPT_COMMAND='./install && conda list && ./runtests --cover'
 
     matrix:
-        - PYTHON_VERSION=3.6
-        - PYTHON_VERSION=3.7
         include:
-            - SCRIPT_COMMAND='pylint crds'
+        - env: PYTHON_VERSION=3.6
+          os: linux
+        - env: PYTHON_VERSION=3.6
+          os: osx
+        - env: PYTHON_VERSION=3.7
+          os: linux
+        - env: PYTHON_VERSION=3.7
+          os: osx
+        - env: SCRIPT_COMMAND='pytest crds'
 
 install:
     - git clone git://github.com/astropy/ci-helpers.git
