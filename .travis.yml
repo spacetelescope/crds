@@ -16,13 +16,13 @@ env:
         - PIP_DEPENDENCIES='parsley coveralls pylint'
         - CRDS_SERVER_URL='https://hst-crds.stsci.edu'
         - CRDS_TEST_ROOT=/tmp
-	- SCRIPT_COMMAND='./install && conda list && ./runtests --cover'
+        - SCRIPT_COMMAND='./install && conda list && ./runtests --cover'
 
     matrix:
         - PYTHON_VERSION=3.6
         - PYTHON_VERSION=3.7
         include:
-	    - SCRIPT_COMMAND='pylint crds'
+            - SCRIPT_COMMAND='pylint crds'
 
 install:
     - git clone git://github.com/astropy/ci-helpers.git
