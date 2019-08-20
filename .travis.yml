@@ -13,7 +13,7 @@ env:
         - CONDA_CHANNELS='http://ssb.stsci.edu/conda-dev'
         - CONDA_DEPENDENCIES='pytest jwst sphinx nose mock lxml requests fitsverify lockfile filelock'
         - CONDA_JWST_DEPENDENCIES='pytest jwst sphinx nose mock lxml requests fitsverify lockfile filelock'
-        - PIP_DEPENDENCIES='parsley coveralls'
+        - PIP_DEPENDENCIES='parsley coveralls pylint'
         - CRDS_SERVER_URL='https://hst-crds.stsci.edu'
         - CRDS_TEST_ROOT=/tmp
 	- SCRIPT_COMMAND='./install && conda list && ./runtests --cover'
@@ -30,9 +30,6 @@ install:
     - ./setup_test_cache $CRDS_TEST_ROOT
     
 script: $SCRIPT_COMMAND
-    - ./install
-    - conda list
-    - ./runtests --cover
 
 # after_success:
 #     coveralls
