@@ -7,6 +7,8 @@ os:
 sudo: false
 
 env:
+    - PYTHON_VERSION=3.6
+    - PYTHON_VERSION=3.7
     # CONDA_JWST_DEPENDENCIES is used because CONDA_DEPENDENCIES is not truly global.
     global:
         - MAIN_CMD='python setup.py'
@@ -20,14 +22,6 @@ env:
 
     matrix:
         include:
-        - env: PYTHON_VERSION=3.6
-          os: linux
-        - env: PYTHON_VERSION=3.6
-          os: osx
-        - env: PYTHON_VERSION=3.7
-          os: linux
-        - env: PYTHON_VERSION=3.7
-          os: osx
         - env: SCRIPT_COMMAND='pytest crds'
 
 install:
