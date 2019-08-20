@@ -1514,6 +1514,39 @@ def simplify_version(version):
 
 # -------------------------------------------------------------------------------------
 
+# These configure CRDS to stream mappings directly from S3 and return s3:// URLs to
+# reference files.  It is expected that the files be stored on S3 in the "flat" structure
+# (no instrument in the key).
+
+S3_ENABLED = BooleanConfigItem("CRDS_S3_ENABLED", False, "When True, enables S3 streaming")
+S3_BUCKET_NAME = StrConfigItem("CRDS_S3_BUCKET_NAME", None,
+    "Name of the S3 bucket that contains both mapping and reference files",
+    lower=True
+)
+
+OBSERVATORY = StrConfigItem("CRDS_OBSERVATORY", None,
+    "Configured observatory, required for S3 streaming",
+    lower=True
+)
+
+def locate_mapping_s3(mappath):
+    return _locate_file_s3(mappath, "mappings/")
+
+def locate_reference_s3(ref):
+    return _locate_file_s3(ref, "references/")
+
+def _locate_file_s3(filename, prefix):
+    assert S3_BUCKET_NAME != "none", "CRDS_S3_BUCKET_NAME is required for S3 streaming"
+    assert OBSERVATORY != "none", "CRDS_OBSERVATORY is required for S3 streaming"
+
+    upper_filename = filename.upper()
+    if "NOT FOUND" in upper_filename or "N/A" in upper_filename:
+        return filename
+
+    return "s3://" + S3_BUCKET_NAME + "/" + prefix + OBSERVATORY + "/" + os.path.basename(filename)
+
+# -------------------------------------------------------------------------------------
+
 def test():
     """Run doctests on crds.config module."""
     import doctest
