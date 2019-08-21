@@ -27,15 +27,15 @@ from .generic_tpn import TpnInfo   # generic TpnInfo code
 
 def array_name(rootname):
     """Given the `rootname` for an array,  return the name of the array used
-    in Validator expressions.  
-    
+    in Validator expressions.
+
     >>> array_name('SCI')
     'SCI_ARRAY'
     >>> array_name(1)
     'ARRAY_1'
     >>> array_name('1')
     'ARRAY_1'
-    
+
     """
     if isinstance(rootname,int) or re.match(r"\d+", rootname):
         return "ARRAY_" + str(rootname)
@@ -43,7 +43,7 @@ def array_name(rootname):
         return rootname.upper() + "_ARRAY"
     else:
         raise TypeError("Invalid array rootname type for: " + repr(rootname))
-    
+
 # ============================================================================
 
 class Validator:
@@ -61,7 +61,7 @@ class Validator:
         if not (self.info.presence in generic_tpn.TpnInfo.presences or
                 self.conditionally_required):
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
-        
+
         if not (self.info.keytype in generic_tpn.TpnInfo.keytypes):
             raise ValueError("Bad TPN keytype " + repr(self.info.keytype))
 
@@ -74,7 +74,7 @@ class Validator:
         space = dict(globals())
         space.update(validator_helpers.__dict__)
         return space
-            
+
     @property
     def complex_name(self):
         """If this is an array validator,  return name of array as it appears in expressions,
@@ -84,15 +84,15 @@ class Validator:
             return array_name(self.name)
         else:
             return self.name
-        
+
     def verbose(self, filename, value, *args, **keys):
         """Prefix log.verbose() with standard info about this Validator.
         Unique message is in *args, **keys
         """
         return log.verbose("File=" + repr(os.path.basename(filename)),
-                           "class=" + repr(self.__class__.__name__[:-len("Validator")]), 
-                           "keyword=" + repr(self.name), 
-                           "value=" + repr(value), 
+                           "class=" + repr(self.__class__.__name__[:-len("Validator")]),
+                           "keyword=" + repr(self.name),
+                           "value=" + repr(value),
                            *args, **keys)
 
     def condition(self, value):
@@ -105,7 +105,7 @@ class Validator:
 
     def __repr__(self):
         """Represent Validator instance as a string."""
-        return self.__class__.__name__ + repr(self.info) 
+        return self.__class__.__name__ + repr(self.info)
 
     def check(self, filename, header):
         """Pull the value(s) corresponding to this Validator out of it's
@@ -114,7 +114,7 @@ class Validator:
         """
         if not self.is_applicable(header):
             return True
-        
+
         if self.info.keytype == "C":
             return self.check_column(filename, header)
         elif self.info.keytype == "G":
@@ -122,7 +122,7 @@ class Validator:
         elif self.info.keytype in ["H","X","A","D"]:
             return self.check_header(filename, header)
         else:
-            raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) + 
+            raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) +
                              " for " + repr(self.name))
 
     def check_header(self, filename, header):
@@ -154,7 +154,7 @@ class Validator:
         """_check_value is the core simple value checker."""
         raise NotImplementedError(
             "Validator is an abstract class.  Sub-class and define _check_value().")
-    
+
     def check_column(self, filename, header):
         """Extract a column of new_values from `filename` and check them all against
         the legal values for this Validator.   This checks a single column,  not a row/mode.
@@ -169,7 +169,7 @@ class Validator:
         if not column_seen:
             self.handle_missing(header)
         return True
-        
+
     def check_group(self, _filename, _header):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
         log.warning("Group keys are not currently supported by CRDS.")
@@ -180,7 +180,7 @@ class Validator:
         """
         presence = self.info.presence
         if self.conditionally_required:
-            if header: 
+            if header:
                 presence = self.is_applicable(header)
                 if not presence:
                     log.verbose("Conditional constraint on", repr(self.name),
@@ -203,7 +203,7 @@ class Validator:
             raise TpnDefinitionError("Unexpected validator 'presence' value:",
                                      repr(self.info.presence))
         return "UNDEFINED"
-    
+
     @property
     def _keytype_descr(self):
         descr = self.info._repr_keytype()[1:-1]
@@ -264,11 +264,11 @@ class Validator:
 #            return header.get(self.name, False) != "UNDEFINED"
         elif presence == "F": # IF_FULL_FRAME
             return validator_helpers.is_full_frame(SUBARRAY)
-        elif presence == "S": # IF_SUBARRAY        
+        elif presence == "S": # IF_SUBARRAY
             return validator_helpers.is_subarray(SUBARRAY)
         elif presence == "A":
             return validator_helpers.subarray_defined(header)
-        else:    
+        else:
             return True
 
     def get_required_copy(self):
@@ -278,7 +278,7 @@ class Validator:
         idict["presence"] = "R"
         required.info = TpnInfo(*idict.values())
         return required
-    
+
 # ----------------------------------------------------------------------------
 
 class KeywordValidator(Validator):
@@ -298,11 +298,11 @@ class KeywordValidator(Validator):
         else:
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
                              str(log.PP(self._values)))
-    
+
     def _match_value(self, value):
         """Do a literal match of `value` to the allowed values of this tpninfo."""
         return value in self._values or not self._values
-    
+
 # ----------------------------------------------------------------------------
 
 class CharacterValidator(KeywordValidator):
@@ -375,9 +375,9 @@ class IntValidator(NumericalValidator):
 
 class FloatValidator(NumericalValidator):
     """Validates floats of any precision."""
-    
+
     epsilon = 1e-7
-    
+
     condition = float
 
     type_name = "Float"
@@ -396,7 +396,7 @@ class FloatValidator(NumericalValidator):
             msg = " ".join([self.type_name, repr(value), "is not within +-",
                             repr(self.epsilon), "of any of", repr(self._values)])
             raise ValueError(msg) from exc
- 
+
 # ----------------------------------------------------------------------------
 
 class RealValidator(FloatValidator):
@@ -408,7 +408,7 @@ class RealValidator(FloatValidator):
 
 class DoubleValidator(FloatValidator):
     """Validate 64-bit floats."""
-    
+
     epsilon = 1e-14
 
     type_name = "Double"
@@ -428,11 +428,11 @@ class PedigreeBaseValidator(KeywordValidator):
         """Check `value` as a PEDIGREE."""
         pedigree = self._check_pedigree_start_stop(filename, value)
         return super(PedigreeBaseValidator, self)._check_value(filename, pedigree)
-    
+
     @abc.abstractmethod
     def validate_date(self, date):
         """Subclasses must define validate_date().
-        
+
         validate_date() parses `date` str for valid format for one date.
 
         raises ValueError for invalid formats.
@@ -444,7 +444,7 @@ class PedigreeBaseValidator(KeywordValidator):
     def should_be(self):
         """Generate a combined single value + INFLIGHT format recommendation str."""
         return "One of " + repr(self._values_wo_date) + " or " + repr(self._dated_format)
-        
+
     def _inflight_exc(self, clarification=""):
         """Raise a ValueError() for an INFLIGHT PEDIGREE showing the expected
         format augmented by additional `clarification` str.
@@ -458,7 +458,7 @@ class PedigreeBaseValidator(KeywordValidator):
         return the PEDIGREE "kind" for all values.
         """
         with log.augment_exception("Invalid value:", repr(value)):
-            
+
             values = value.split()
             if len(values) == 0:
                 raise ValueError("Missing value.")
@@ -478,7 +478,7 @@ class PedigreeBaseValidator(KeywordValidator):
             else:
                 raise ValueError(
                     "Invalid format for PEDIGREE: ", repr(value))
-            
+
             start, stop = values[1:]
 
             # timecan't appear in either string
@@ -486,13 +486,13 @@ class PedigreeBaseValidator(KeywordValidator):
                 if char in ["T"," ",":"]:
                     raise self._inflight_exc(
                         "Time should not appear in INFLIGHT dates.")
-        
+
             try:
                 start_dt = self.validate_date(start)
                 stop_dt = self.validate_date(stop)
             except Exception as exc:
                 raise self._inflight_exc(str(exc)) from exc
-        
+
             if not (start_dt <= stop_dt):
                 raise self._inflight_exc("Start date > stop date")
 
@@ -500,7 +500,7 @@ class PedigreeBaseValidator(KeywordValidator):
 
 # These class names are "magic" and correspond to
 # PEDIGREE and JWSTPEDIGREE Tpn checks
-class PedigreeValidator(PedigreeBaseValidator):    
+class PedigreeValidator(PedigreeBaseValidator):
     """Validates (HST) &PEDIGREE fields."""
 
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
@@ -515,7 +515,7 @@ class PedigreeValidator(PedigreeBaseValidator):
         except Exception:
             return timestamp.get_slash_date(date)  # DD/MM/YYYY
 
-class JwstpedigreeValidator(PedigreeBaseValidator):    
+class JwstpedigreeValidator(PedigreeBaseValidator):
     """Validates &JWSTPEDIGREE fields."""
 
     _values = ["INFLIGHT", "GROUND", "DUMMY", "SIMULATION"]
@@ -526,7 +526,7 @@ class JwstpedigreeValidator(PedigreeBaseValidator):
     def validate_date(self, date):
         """e.g.  '2018-01-30' --> datetime"""
         return timestamp.get_dash_date(date)
-        
+
 # ----------------------------------------------------------------------------
 
 class SybdateValidator(KeywordValidator):
@@ -556,7 +556,7 @@ class JwstdateValidator(KeywordValidator):
                 try:
                     timestamp.Jwstdate.get_datetime(value.replace(" ","T"))
                 except ValueError:
-                    timestamp.Jwstdate.get_datetime(value)   # re-execute to replace exception raised                 
+                    timestamp.Jwstdate.get_datetime(value)   # re-execute to replace exception raised
             log.warning("Non-compliant date format", repr(value), "for", repr(self.name),
                         "should be", repr("YYYY-MM-DDTHH:MM:SS"),)
 
@@ -586,7 +586,7 @@ class ExpressionValidator(Validator):
         self._expr = info.values[0]
         self._expr_code = compile(self._expr, repr(self.info), "eval")
 
-    def _check_value(self, *args, **keys):   
+    def _check_value(self, *args, **keys):
         return True
 
     def check_header(self, filename, header):
@@ -600,9 +600,9 @@ class ExpressionValidator(Validator):
                     repr(self.name), "condition", str(self._expr))
         for keyword in expr_identifiers(self._expr):
             if header.get(keyword, "UNDEFINED") == "UNDEFINED":
-                log.verbose_warning("Keyword or Array", repr(keyword), 
+                log.verbose_warning("Keyword or Array", repr(keyword),
                                     "is 'UNDEFINED'. Skipping ", repr(self._expr))
-                return True   # fake satisfied     
+                return True   # fake satisfied
         try:
             satisfied = eval(self._expr_code, header, self._eval_namespace)
         except Exception as exc:
@@ -613,21 +613,21 @@ class ExpressionValidator(Validator):
             log.warning("Constraint", str(self._expr), "is not satisfied.")
             satisfied = True
         return satisfied
-    
+
 def expr_identifiers(expr):
     """Scan `expr` for identifiers,  assume helper functions are in mixed or lowercase.
 
     Returns [ identifier_in_expr, ...]
-    
+
     >>> expr_identifiers("((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))")
     ['EXP_TYPE']
-    
+
     >>> expr_identifiers("(len(SCI_ARRAY.SHAPE)==2)")
     ['SCI_ARRAY']
-    
+
     >>> expr_identifiers("_")
     []
-    
+
     >>> expr_identifiers("200121")
     []
 
@@ -641,13 +641,13 @@ def expr_identifiers(expr):
     no_dots = [key.split(".")[0] for key in no_quotes]
     no_numbers = [key for key in no_dots if not re.match(r"\d+", key)]
     no_underscores = [key for key in no_numbers if key != "_"]
-    return no_underscores 
+    return no_underscores
 
 # ---------------------------------------------------------------------------
 
 class KernelunityValidator(Validator):
-    """Ensure that every image in the specified array as a sum() near 1.0"""    
-    def _check_value(self, *args, **keys):  
+    """Ensure that every image in the specified array as a sum() near 1.0"""
+    def _check_value(self, *args, **keys):
         return True
 
     def check_header(self, filename, header):
@@ -661,7 +661,7 @@ class KernelunityValidator(Validator):
         images_shape = (images,) + all_data.shape[-2:]
         images_data = np.reshape(all_data, images_shape)
         log.verbose("File=" + repr(os.path.basename(filename)),
-                   "Checking", len(images_data), repr(array_name), "kernel(s) of size", 
+                   "Checking", len(images_data), repr(array_name), "kernel(s) of size",
                     images_data[0].shape, "for individual sums of 1+-1e-6.   Center pixels >= 1.")
 
         center_0 = images_data.shape[-2]//2
@@ -671,11 +671,11 @@ class KernelunityValidator(Validator):
             log.warning("Possible bad IPC Kernel:  One or more kernel center pixel value(s) too small, should be >= 1.0")
             # raise BadKernelCenterPixelTooSmall(
             #    "One or more kernel center pixel value(s) too small,  should be >= 1.0")
-                                 
+
         for (i, image) in enumerate(images_data):
             if abs(image.sum()-1.0) > 1.0e-6:
                 raise BadKernelSumError("Kernel sum", image.sum(),
-                    "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))    
+                    "is not 1+-1e-6 for kernel #" + str(i), ":", repr(image))
 
 # ----------------------------------------------------------------------------
 
@@ -685,8 +685,8 @@ class IsomorphicfitsverValidator(Validator):
     """
 
     max_ver = None
-    
-    def _check_value(self, *args, **keys):  
+
+    def _check_value(self, *args, **keys):
         return True
 
     def check_header(self, filename, header):
@@ -735,7 +735,7 @@ class Isomorphicfitsver2Validator(IsomorphicfitsverValidator):
 
 class Isomorphicfitsver1Validator(IsomorphicfitsverValidator):
     max_ver = 1
-    
+
 # ----------------------------------------------------------------------------
 
 class FileexistsValidator(Validator):
@@ -761,7 +761,7 @@ class FileexistsValidator(Validator):
         log.verbose("Conditioned filepath", repr(value), "to", repr(crds_name))
         return crds_name
 
-    
+
 # ----------------------------------------------------------------------------
 
 def validator(info):
@@ -810,4 +810,3 @@ def get_reffile_tpninfos(observatory, refpath):
     tpns = list(locator.get_all_tpninfos(instrument, filekind, "tpn"))
     tpns.extend(locator.get_extra_tpninfos(refpath))
     return tpns
-

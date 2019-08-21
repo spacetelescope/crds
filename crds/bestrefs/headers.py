@@ -1,7 +1,7 @@
 """This module is a command line script which handles comparing the best
 reference recommendations for a particular context and dataset files.
 
-For more details on the several modes of operations and command line parameters browse the source or run:   
+For more details on the several modes of operations and command line parameters browse the source or run:
 
 % crds bestrefs --help
 """
@@ -39,7 +39,7 @@ class HeaderGenerator:
 
     def __init__(self, context, sources, datasets_since):
         self.context = context
-        self.observatory = None if context is None else utils.file_to_observatory(context) 
+        self.observatory = None if context is None else utils.file_to_observatory(context)
         self.sources = sources
         self.headers = {}
         self._datasets_since = datasets_since
@@ -152,7 +152,7 @@ class HeaderGenerator:
                     header1[key] = header2[key]
 
     def handle_updates(self, all_updates):
-        """Base handle_updates() updates the loaded headers with the computed bestrefs for use 
+        """Base handle_updates() updates the loaded headers with the computed bestrefs for use
         with --save-pickle.
         """
         for dataset in sorted(all_updates):
@@ -336,11 +336,11 @@ class PickleHeaderGenerator(HeaderGenerator):
 # ============================================================================
 
 def load_bestrefs_headers(path):
-    """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  
+    """Given `path` to a serialization file,  load  {dataset_id : header, ...}.
     Supports .pkl and .json.
 
     For easier editing and syntax error precision,  .json files are stored as
-    one header per line.  
+    one header per line.
 
     Also used by server to load mock parameters.
     """
@@ -378,7 +378,7 @@ def update_file_bestrefs(context, dataset, updates):
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
     locator = utils.instrument_to_locator(instrument)
-    prefix = locator.get_env_prefix(instrument) 
+    prefix = locator.get_env_prefix(instrument)
 
     with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True, checksum=False) as hdulist:
 
@@ -397,9 +397,8 @@ def update_file_bestrefs(context, dataset, updates):
             keyword = locator.filekind_to_keyword(update.filekind)
             set_key(keyword, new_ref)
 
-        # This is a workaround for a bug in astropy.io.fits handling of 
+        # This is a workaround for a bug in astropy.io.fits handling of
         # FITS updates that are header-only and extend the header.
         # This statement appears to do nothing but *is not* pointless.
         for hdu in hdulist:
             hdu.data
-

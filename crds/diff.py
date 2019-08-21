@@ -22,7 +22,7 @@ from crds.core import cmdline, naming
 from crds import rowdiff, sync
 
 # ============================================================================
-        
+
 __all__ = [
     "DiffScript",
     "difference",
@@ -36,15 +36,15 @@ __all__ = [
 ]
 
 # ============================================================================
-        
+
 def mapping_diffs(old_file, new_file, *args, **keys):
-    """Return the logical differences between CRDS mappings named `old_file` 
+    """Return the logical differences between CRDS mappings named `old_file`
     and `new_file`.
-    
+
     IFF include_header_diffs,  include differences in mapping headers.   Some are "boring", e.g. sha1sum or name.
-    
+
     IFF recurse_added_deleted,  include difference tuples for all nested adds and deletes whenever a higher level
-        mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.        
+        mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.
     """
     observatory = keys.pop("observatory", None)
     differ = MappingDifferencer(observatory, old_file, new_file, *args, **keys)
@@ -52,7 +52,7 @@ def mapping_diffs(old_file, new_file, *args, **keys):
 
 def get_affected(old_pmap, new_pmap, *args, **keys):
     """Examine the diffs between `old_pmap` and `new_pmap` and return sorted lists of affected instruments and types.
-    
+
     Returns { affected_instrument : { affected_type, ... } }
     """
     observatory = keys.pop("observatory", crds.get_pickled_mapping(old_pmap).observatory)  # reviewed
@@ -60,18 +60,18 @@ def get_affected(old_pmap, new_pmap, *args, **keys):
     return differ.get_affected()
 
 # ==============================================================================================================
-    
+
 def difference(observatory, old_file, new_file, *args, **keys):
     """Difference different kinds of CRDS files (mappings, FITS references, etc.)
-    named `old_file` and `new_file` against one another and print out the results 
+    named `old_file` and `new_file` against one another and print out the results
     on stdout.
-    
+
     Returns:
-    
+
     0 no differences
     1 some differences
     2 errors in subshells
-    
+
     """
     filetype = config.filetype(old_file)
     differs = {
@@ -98,17 +98,17 @@ def decolorize(output):
     return re.sub(r"\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]", "", output)
 
 # ==============================================================================================================
-    
+
 class Differencer:
     """This baseclass provides a standard set of (largely optional) parameters to subclasses.
-    
+
     observatory           str  nominally hst or jwst
-    old_file              str  name of first/old file in difference  
+    old_file              str  name of first/old file in difference
     new_file              str  name of second/new file in difference
     primitive_diffs       bool difference replaced reference files using fitsdiff
     check_diffs           bool check for name reversions, file deletions, rule changes, class changes, and parameter changes
     check_references      bool check for reference additions or deletions, regardless of matching criteria
-    mapping_text_diffs    bool print out UNIX text diffs for mapping changes 
+    mapping_text_diffs    bool print out UNIX text diffs for mapping changes
     include_header_diffs  bool include header changes in logical diff output for mappings
     hide_boring_diffs     bool hide boring header changes in logical diff output (name, sha1sum, derived_from, etc.)
     recurse_added_deleted bool recursively include all files of added or deleted mapping as also added or deleted
@@ -161,24 +161,24 @@ class Differencer:
     def difference(self):
         """Run diff() method on `old_file` and `new_file` and print() output.
 
-        Returns the output status and 
-        
+        Returns the output status and
+
         Returns:
         0 no differences
         1 some differences
         2 errors
-        
+
         NOTE:  often overridden
         """
         status, out_err = self.diff()
         print(out_err, end="")
         return status
-    
+
     def diff(self):
         """Placeholder diff() method for abstract class."""
         raise NotImplementedError("Differencer is an abstract class.")
 # ==============================================================================================================
-    
+
 class MappingDifferencer(Differencer):
     """This class recursively differences a mapping hierarchy."""
 
@@ -193,12 +193,12 @@ class MappingDifferencer(Differencer):
             " are not the same kind of CRDS mapping:  .pmap, .imap, .rmap"
 
     def difference(self):
-        """Print the logical differences between CRDS mappings named `old_file` 
-        and `new_file`.  
-        
+        """Print the logical differences between CRDS mappings named `old_file`
+        and `new_file`.
+
         IFF primitive_differences,  recursively difference any replaced files found
         in the top level logical differences.
-        
+
         IFF check_diffs, issue warnings about critical differences.   See
         mapping_check_diffs().
         """
@@ -223,7 +223,7 @@ class MappingDifferencer(Differencer):
                     old, new = diff_replace_old_new(diff)
                     if old and new:
                         from crds import diff
-                        diff.difference(self.observatory, old, new, primitive_diffs=self.primitive_diffs, 
+                        diff.difference(self.observatory, old, new, primitive_diffs=self.primitive_diffs,
                                         recurse_added_deleted=self.recurse_added_deleted)
         pairs = sorted(set(mapping_pairs(differences) +  [(self.old_file, self.new_file)]))
         for (old, new) in pairs:
@@ -236,22 +236,22 @@ class MappingDifferencer(Differencer):
 
         if self.check_diffs:
             mapping_check_diffs_core(differences)
-        
+
         return 1 if differences else 0
 
     def squash_diff_tuples(self, diff2):
         """Change notation of diff tuples into -- separated components for readability."""
         return " -- ".join([" ".join(diff) if isinstance(diff, tuple) else diff for diff in diff2])
-    
+
     def mapping_diffs(self):
-        """Return the logical differences between CRDS mappings named `old_file` 
+        """Return the logical differences between CRDS mappings named `old_file`
         and `new_file`.
-        
+
         IFF include_header_diffs,  include differences in mapping headers.   Some are "boring", e.g. sha1sum or name.
-        
+
         IFF recurse_added_deleted,  include difference tuples for all nested adds and deletes whenever a higher level
         mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.
-        
+
         """
         # At this time,  the fetch_mapping path parameter appears to exist only to thwart CRDS mapping caching.
         old_map = rmap.fetch_mapping(self.locate_file1(self.old_file), ignore_checksum=True, path=self.mappings_cache1)
@@ -262,7 +262,7 @@ class MappingDifferencer(Differencer):
 
     def get_affected(self):
         """Examine the diffs between `old_pmap` and `new_pmap` and return sorted lists of affected instruments and types.
-        
+
         Returns { affected_instrument : { affected_type, ... } }
         """
         instrs = defaultdict(set)
@@ -306,10 +306,10 @@ class MappingDifferencer(Differencer):
                         log.verbose("Found", repr(diff_str), "diff between", repr(step[0:1]))
                         return True
         return False
-        
+
 
 # ==============================================================================================================
-    
+
 class FitsDifferencer(Differencer):
 
     """Differences FITS format files including row differences."""
@@ -323,29 +323,29 @@ class FitsDifferencer(Differencer):
 
     def difference(self):
         """Run fitsdiff on files named `old_file` and `new_file`.
-        
+
         Returns:
-        
+
         0 no differences
         1 some differences
         """
         loc_old_file = self.locate_file1(self.old_file)
         loc_new_file = self.locate_file2(self.new_file)
-        
+
         # Do the standard diff.
         fdiff = FITSDiff(loc_old_file, loc_new_file)
-        
+
         # Do the diff by rows.
         rdiff = rowdiff.RowDiff(loc_old_file, loc_new_file)
-        
+
         if not fdiff.identical:
             fdiff.report(fileobj=sys.stdout)
             print('\n', rdiff)
-            
+
         return 0 if fdiff.identical else 1
 
 # ==============================================================================================================
-    
+
 class TextDifferencer(Differencer):
     """Run UNIX diff on two text files named `old_file` and `new_file`."""
 
@@ -363,7 +363,7 @@ class TextDifferencer(Differencer):
         return status, out_err
 
 # ==============================================================================================================
-    
+
 class AsdfDifferencer(Differencer):
     """Run UNIX diff on two text files named `old_file` and `new_file`."""
 
@@ -378,18 +378,18 @@ class AsdfDifferencer(Differencer):
         loc_old_file = self.locate_file1(self.old_file)
         loc_new_file = self.locate_file2(self.new_file)
         status, out_err = pysh.status_out_err("asdftool diff ${loc_old_file} ${loc_new_file}", raise_on_error=False)   # secure
-        if not status and len(out_err) != 0:  
+        if not status and len(out_err) != 0:
             # convert asdftool "no errors" to diff-style "diffs exist"
             status = 1
         if len(out_err) == 0:
             out_err = ""  # otherwise b''
-        else:  
+        else:
             # asdftool colorizes diffs using ANSI color escape sequences.
             out_err = decolorize(out_err)
         return status, out_err
 
 # ==============================================================================================================
-    
+
 class JsonDifferencer(TextDifferencer):
     """Run UNIX diff on two text files named `old_file` and `new_file`."""
 
@@ -398,7 +398,7 @@ class JsonDifferencer(TextDifferencer):
         super(JsonDifferencer, self).__init__(*args, **keys)
         self.pretty_print = keys.pop("pretty_print", True)
         self.remove_files = []
-        
+
     def locate_file(self, filename):
         """Create a temporary file based on source filename source name IFF self.pretty_print."""
         if not self.pretty_print:
@@ -416,7 +416,7 @@ class JsonDifferencer(TextDifferencer):
     def difference(self):
         """Run UNIX diff on two json files named `old_file` and `new_file`.
         If self.pretty_print is True,  reformat the files as temporaries
-        
+
         Returns:
         0 no differences
         1 some differences
@@ -433,13 +433,13 @@ class JsonDifferencer(TextDifferencer):
         return result
 
 # ============================================================================
-        
+
 def simplify_to_lowest_mapping(diff):
     """For diffs which affect nested mappings,  pop-off the path of the higher level mappings
     and show only the name of the leaf mapping.
-    
-    >>> simplify_to_lowest_mapping((('jwst_0063.pmap', 'jwst_0074.pmap'), ('jwst_nirspec_0024.imap', 'jwst_nirspec_0027.imap'), 
-    ...                            ('jwst_nirspec_saturation_0001.rmap', 'jwst_nirspec_saturation_0002.rmap'), 
+
+    >>> simplify_to_lowest_mapping((('jwst_0063.pmap', 'jwst_0074.pmap'), ('jwst_nirspec_0024.imap', 'jwst_nirspec_0027.imap'),
+    ...                            ('jwst_nirspec_saturation_0001.rmap', 'jwst_nirspec_saturation_0002.rmap'),
     ...                            "header replaced 'parkey' = (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),) with (('META.INSTRUMENT.DETECTOR',),)"))
     (('jwst_nirspec_saturation_0001.rmap', 'jwst_nirspec_saturation_0002.rmap'), "header replaced 'parkey' = (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),) with (('META.INSTRUMENT.DETECTOR',),)")
     """
@@ -473,7 +473,7 @@ def mapping_pairs(differences):
             if len(pair) == 2 and rmap.is_mapping(pair[0]):
                 pairs.add(pair)
     return sorted(pairs)
-        
+
 def unquote_diff(diff):
     """Remove repr str quoting in `diff` tuple,  don't change header diffs."""
     return diff[:-1] + (diff[-1].replace("'",""),) if "header" not in diff[-1] else diff
@@ -496,7 +496,7 @@ def diff_added_new(diff):
     """Return the (old, new) filenames from difference tuple `diff`."""
     new = diff[-1].split()[-1]
     return unquote(new)
-    
+
 # XXXX fragile,  coordinate with selector.py and rmap.py
 def diff_action(diff):
     """Return 'add', 'replace', or 'delete' based on action represented by
@@ -522,7 +522,7 @@ def diff_action(diff):
 # ============================================================================
 
 def mapping_affected_modes(old_file, new_file, include_header_diffs=True):
-    """Return a sorted set of flat tuples describing the matching parameters affected by the differences 
+    """Return a sorted set of flat tuples describing the matching parameters affected by the differences
     between old_file and new_file.
     """
     affected = defaultdict(int)
@@ -532,8 +532,8 @@ def mapping_affected_modes(old_file, new_file, include_header_diffs=True):
         if mode is not None:
             affected[mode] += 1
     return [ tup + (("DIFF_COUNT", str(affected[tup])),) for tup in sorted(affected) ]
-    
-DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS", 
+
+DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS",
                                "META.OBSERVATION.DATE", "META.OBSERVATION.TIME",
                                "META_OBSERVATION_DATE", "META_OBSERVATION_TIME",
                                "DIFFERENCE", "INSTRUME", "REFTYPE")
@@ -541,7 +541,7 @@ DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS",
 BORING_VARS = ["NAME", "DERIVED_FROM", "SHA1SUM", "ROW_KEYS"]  # XXX ROW_KEYS obsolete
 
 def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
-    """Return a list of parameter items which characterize the effect of a difference in 
+    """Return a list of parameter items which characterize the effect of a difference in
     terms of instrument, type, and instrument mode.
     """
     instrument = filekind = None
@@ -601,12 +601,12 @@ def mapping_check_references(mapping, derived_from):
     if new_refs - old_refs:
         log.warning("Added references for", repr(derived_from.filename), "and", repr(mapping.filename), "=",
                  list(new_refs - old_refs))
- 
+
 def mapping_check_diffs(mapping, derived_from):
     """Issue warnings for *deletions* in self relative to parent derived_from
     mapping.  Issue warnings for *reversions*,  defined as replacements which
-    where the replacement is older than the original,  as defined by the names.   
-    
+    where the replacement is older than the original,  as defined by the names.
+
     This is intended to check for missing modes and for inadvertent reversions
     to earlier versions of files.   For speed and simplicity,  file time order
     is currently determined by the names themselves,  not file contents, file
@@ -649,9 +649,9 @@ def mapping_check_diffs_core(diffs):
 
 def _diff_tail(msg):
     """`msg` is an arbitrary length difference "path",  which could
-    be coming from any part of the mapping hierarchy and ending in any kind of 
-    selector tree.   The last item is always the change message: add, replace, 
-    delete <blah>.  The next to last should always be a selector key of some kind.  
+    be coming from any part of the mapping hierarchy and ending in any kind of
+    selector tree.   The last item is always the change message: add, replace,
+    delete <blah>.  The next to last should always be a selector key of some kind.
     Back up from there to find the first mapping tuple.
     """
     tail = []
@@ -674,7 +674,7 @@ def fits_difference(*args, **keys):
 def text_difference(*args, **keys):
     """Run UNIX diff on two text files named `old_file` and `new_file`.  Parameters
     are specified as Differencer class.
-    
+
     Returns:
       0 no differences
       1 some differences
@@ -684,7 +684,7 @@ def text_difference(*args, **keys):
     return differ.difference()
 
 # ==============================================================================================================
-    
+
 def get_added_references(old_pmap, new_pmap, cached=True):
     """Return the list of references from `new_pmap` which were not in `old_pmap`."""
     old_pmap = rmap.asmapping(old_pmap, cached=cached)
@@ -717,36 +717,36 @@ def get_updated_files(context1, context2):
     return sorted(list(updated - old_files))
 
 # ==============================================================================================================
-    
+
 class DiffScript(cmdline.Script):
     """Python command line script to difference mappings or references."""
-    
+
     description = """Difference CRDS mapping or reference files."""
-    
+
     epilog = """Reference files are nominally differenced using FITS-diff or diff.
-    
-Mapping files are differenced using CRDS machinery to recursively compare too mappings and 
+
+Mapping files are differenced using CRDS machinery to recursively compare too mappings and
 their sub-mappings.
-    
+
 Differencing two mappings will find all the logical differences between the two contexts
 and any nested mappings.
-    
-By specifying --mapping-text-diffs,  UNIX diff will be run on mapping files in addition to 
+
+By specifying --mapping-text-diffs,  UNIX diff will be run on mapping files in addition to
 CRDS logical diffs.   (Duplicate/overlapping cases can be collapsed by the default mapping loader
-and hence missed in logical differences,  but are revealed by text differences.   crds.certify 
+and hence missed in logical differences,  but are revealed by text differences.   crds.certify
 can also detect duplicate entries,  but at the cost of mapping load speed.)
-    
+
 By specifying --primitive-diffs,  FITS diff will be run on all references which are replaced
 in the logical differences between two mappings.
-    
+
 For example:
-    
+
     % crds diff hst_0001.pmap  hst_0005.pmap  --brief
-    
+
 Or to include UNIX diff style diffs of rules as well:
-    
+
     % crds diff hst_0001.pmap  hst_0005.pmap  --brief --mapping-text-diffs
-    
+
 Or for more recursive diffs,  including reference file diffs similar to fitsdiff:
 
     % crds diff hst_0001.pmap  hst_0005.pmap  --brief --primitive-diffs
@@ -770,7 +770,7 @@ Differencing two sets of rules (withing the same cache) with simplified output:
     jwst_0080.pmap jwst_0081.pmap -- miri -- replaced jwst_miri_0048.imap with jwst_miri_0049.imap
 
 Differencing two sets of rules (from two different pre-synced caches, e.g. from TEST and OPS)  rules only:
-    
+
     # First make sure two rules caches are up to date by syncing
     % .... sync cache #1 using crds.sync and server #1
     % .... sync cache #2 using crds.sync and server #2
@@ -805,16 +805,16 @@ Mutually Exclusive Modes
         super(DiffScript, self).__init__(*args, **keys)
         self.old_file = None
         self.new_file = None
-    
+
     locate_file = cmdline.Script.locate_file_outside_cache
-    
+
     def add_args(self):
         """Add diff-specific command line parameters."""
         self.add_argument("old_file",  help="Prior file of difference.""")
         self.add_argument("new_file",  help="New file of difference.""")
 
         self.add_argument("-P", "--primitive-diffs", dest="primitive_diffs",
-            help="Fitsdiff replaced reference files when diffing mappings.", 
+            help="Fitsdiff replaced reference files when diffing mappings.",
             action="store_true")
 
         self.add_argument("-T", "--mapping-text-diffs",  dest="mapping_text_diffs", action="store_true",
@@ -887,9 +887,9 @@ Mutually Exclusive Modes
                 self.sync_files([self.old_file, self.new_file])
         elif self.args.print_all_new_files:
             log.warning("--print-all-new-files requires a complete set of rules.  suggest --sync-files.")
-            
+
         # self.args.files = [ self.old_file, self.new_file ]   # for defining self.observatory
-    
+
         assert (self.args.cache1 and self.args.cache2) or (not self.args.cache1 and not self.args.cache2), \
             "Cache-to-cache comparison requires both --cache1 and --cache2;  otherwise neither for single cache comparison."
 
@@ -904,8 +904,8 @@ Mutually Exclusive Modes
         elif self.args.print_affected_modes:
             status = self.print_affected_modes()
         else:
-            status = difference(self.observatory, self.old_file, self.new_file, 
-                                primitive_diffs=self.args.primitive_diffs, 
+            status = difference(self.observatory, self.old_file, self.new_file,
+                                primitive_diffs=self.args.primitive_diffs,
                                 check_diffs=self.args.check_diffs,
                                 check_references=self.args.check_references,
                                 mapping_text_diffs=self.args.mapping_text_diffs,
@@ -921,7 +921,7 @@ Mutually Exclusive Modes
             return 2
         else:
             return status
-    
+
     def print_new_files(self):
         """Print the references or mappings which are in the second (new) context and not
         the firtst (old) context.
@@ -960,7 +960,7 @@ Mutually Exclusive Modes
     def instrument_filekind(self, filename):
         """Return the instrument and filekind of `filename` as a space separated string."""
         instrument, filekind = utils.get_file_properties(self.observatory, filename)
-        return instrument + " " + filekind 
+        return instrument + " " + filekind
 
     def print_affected_instruments(self):
         """Print the instruments affected in a switch from `old_pmap` to `new_pmap`."""
@@ -981,9 +981,9 @@ Mutually Exclusive Modes
                     print("%-10s %-10s" % (instrument, filekind))
                     status = 1
         return status
-                    
+
     def print_affected_modes(self):
-        """Print out all the affected mode tuples associated with the differences.""" 
+        """Print out all the affected mode tuples associated with the differences."""
         assert rmap.is_mapping(self.old_file) and rmap.is_mapping(self.new_file), \
             "for --print-affected-modes both files must be mappings."
         modes = mapping_affected_modes(self.old_file, self.new_file, self.args.include_header_diffs)

@@ -100,24 +100,24 @@ class Shell:
         self._input = keys.pop("input", None)
         self._use_shell = keys.pop("use_shell", True)
         self._raise_on_error = keys.pop("raise_on_error", get_debug())
-        self._trace_commands = keys.pop("trace_commands", False)      
-        self._trace_exceptions = keys.pop("trace_exceptions", get_debug())      
+        self._trace_commands = keys.pop("trace_commands", False)
+        self._trace_exceptions = keys.pop("trace_exceptions", get_debug())
         self._capture_output = keys.pop("capture_output", False)
         self._independent_error = keys.pop("independent_error", False)
-        
-        if self._context is None:    
+
+        if self._context is None:
             # subclasses, were there any,  would need to pass this in
             # when calling __init__ from the subclass since it would
             # change the depth of the stack and invalidate the below.
-            self._context = _context(1)  
+            self._context = _context(1)
 
         command = self._handle_command(*command)
-        
+
         if self._capture_output:
             if self._independent_error:
                 self._popen = Popen(
                     command, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=PIPE, **keys)
-            else:                
+            else:
                 self._popen = Popen(
                     command, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **keys)
         else:
@@ -129,7 +129,7 @@ class Shell:
         self._command = command
         self._keys = keys
         self.out  = "" # string results stdout, stderr
-        self.err  = ""   
+        self.err  = ""
 
     def _handle_command(self, *command):
         """Expand the shell syntax for strings in `command` relative to this
@@ -202,7 +202,7 @@ def _replace_dollar(match):
     return "%(" + match.group(1) + ")s"
 
 def _replace_sysarg(match):
-    """Return the substitution for the $<n> syntax,  .e.g. $1 for the 
+    """Return the substitution for the $<n> syntax,  .e.g. $1 for the
     first command line parameter.
     """
     return sys.argv[int(match.group(1))]
@@ -325,7 +325,7 @@ def arg(index, default=None, typecast=str):
     """
     val = sys.argv[index] if len(sys.argv) >= index+1 else default
     return typecast(val)
-        
+
 # =========================================================================
 
 # Code for rewriting a file of pysh-script as an ordinary python module.

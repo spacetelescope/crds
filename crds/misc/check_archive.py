@@ -18,7 +18,7 @@ class CheckArchiveScript(cmdline.Script):
     """Command line script for for checking archive file availability."""
 
     description =  """Command line script for for checking archive file availability."""
-        
+
     epilog = """
 Checking out the archive with respect to CRDS file availability
 and setting up a pipeline cache might have a few stages:
@@ -56,14 +56,14 @@ captured to output file all.b6.archive.  e.g. status like:
 ERROR messages for each problem (missing or length) are printed to stderr
 
 3. Once the archive is looking good,  sync all the CRDS rules to a local cache:
-    
+
     % crds sync --all --stats --check-sha1sum
 
-which will verify rules download, loadability, and exact contents with respect to 
+which will verify rules download, loadability, and exact contents with respect to
 the CRDS server database.
 
 4. Once all of these trial runs are completed,  the appropriate archive pipeline
-is probably ready to run the cron_sync script to initialize their CRDS cache from 
+is probably ready to run the cron_sync script to initialize their CRDS cache from
 the archive and appropriate CRDS server.
     """
 
@@ -157,7 +157,7 @@ the archive and appropriate CRDS server.
             for filename in self.files:
                 if filename not in self.missing_files + self.bad_length_files:
                     self.dump_file(filename, "ok")
-            
+
     def dump_file(self, filename, kind):
         """Dump info about one file annotated with string `kind`."""
         if self.file_info[filename] != "NOT FOUND":

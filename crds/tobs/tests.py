@@ -20,7 +20,7 @@ class Test_00_Selectors(TobsTestCase):
     def setUp(self):
         super(Test_00_Selectors, self).setUp()
         self.rmap = rmap.get_cached_mapping("tobs_tinstr_tfilekind.rmap")
-    
+
     def _selector_testcase(self, case, parameter, result):
         header = {
             "TEST_CASE": case,
@@ -28,7 +28,7 @@ class Test_00_Selectors(TobsTestCase):
         }
         bestref = self.rmap.get_best_ref(header)
         self.assertEqual(bestref, result)
-        
+
     def test_use_after_bad_datetime(self):
         header = { "TEST_CASE":"USE_AFTER", "PARAMETER": '4.5' }
         bestref = self.rmap.get_best_ref(header)
@@ -51,15 +51,15 @@ class Test_00_Selectors(TobsTestCase):
         bestref = self.rmap.get_best_ref(header)
         assert bestref.startswith("NOT FOUND UseAfter required lookup parameter 'PARAMETER' is undefined.")
 
-    def test_select_version1(self): 
+    def test_select_version1(self):
         self._selector_testcase('SELECT_VERSION', '4.5', 'cref_flatfield_73.fits')
-    def test_select_version2(self): 
+    def test_select_version2(self):
         self._selector_testcase('SELECT_VERSION', '5', 'cref_flatfield_123.fits')
-    def test_select_version3(self): 
+    def test_select_version3(self):
         self._selector_testcase('SELECT_VERSION', '6', 'cref_flatfield_123.fits')
-    def test_select_version4(self): 
+    def test_select_version4(self):
         self._selector_testcase('SELECT_VERSION', '2.0', 'cref_flatfield_65.fits')
-        
+
     def test_closest_time1(self):
         self._selector_testcase('CLOSEST_TIME', '2016-05-05', 'cref_flatfield_123.fits')
     def test_closest_time2(self):
@@ -74,16 +74,16 @@ class Test_00_Selectors(TobsTestCase):
         self._selector_testcase('CLOSEST_TIME', '2016-04-16', 'cref_flatfield_123.fits')
 
     def test_bracket1(self):
-        self._selector_testcase('BRACKET', '1.25',     
+        self._selector_testcase('BRACKET', '1.25',
             ('cref_flatfield_120.fits', 'cref_flatfield_124.fits'))
     def test_bracket2(self):
-        self._selector_testcase('BRACKET', '1.2',     
+        self._selector_testcase('BRACKET', '1.2',
             ('cref_flatfield_120.fits', 'cref_flatfield_120.fits'))
     def test_bracket3(self):
-        self._selector_testcase('BRACKET', '1.5',     
+        self._selector_testcase('BRACKET', '1.5',
             ('cref_flatfield_124.fits', 'cref_flatfield_124.fits'))
     def test_bracket4(self):
-        self._selector_testcase('BRACKET', '5.0',     
+        self._selector_testcase('BRACKET', '5.0',
             ('cref_flatfield_137.fits', 'cref_flatfield_137.fits'))
     def test_bracket5(self):
         self._selector_testcase('BRACKET', '1.0',
@@ -108,14 +108,14 @@ class Test_00_Selectors(TobsTestCase):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.0', 'cref_flatfield_137.fits')
     def test_geometrically_nearest8(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.1', 'cref_flatfield_137.fits')
-        
+
     def test_reference_names(self):
-        assert self.rmap.reference_names() == ['bar_bia.fits', 'bar_bia2.fits', 'cref_flatfield_120.fits', 
-                                               'cref_flatfield_123.fits', 'cref_flatfield_124.fits', 
-                                               'cref_flatfield_137.fits', 'cref_flatfield_222.fits', 
-                                               'cref_flatfield_65.fits', 'cref_flatfield_73.fits', 
-                                               'foo_bia.fits', 'foo_bia1.fits', 'nal1503ij_bia.fits', 
-                                               'o3913216j_bia.fits', 'o5d10135j_bia.fits', 'o9f15549j_bia.fits', 
+        assert self.rmap.reference_names() == ['bar_bia.fits', 'bar_bia2.fits', 'cref_flatfield_120.fits',
+                                               'cref_flatfield_123.fits', 'cref_flatfield_124.fits',
+                                               'cref_flatfield_137.fits', 'cref_flatfield_222.fits',
+                                               'cref_flatfield_65.fits', 'cref_flatfield_73.fits',
+                                               'foo_bia.fits', 'foo_bia1.fits', 'nal1503ij_bia.fits',
+                                               'o3913216j_bia.fits', 'o5d10135j_bia.fits', 'o9f15549j_bia.fits',
                                                'o9s16388j_bia.fits', 'o9t1525sj_bia.fits']
 
 # =============================================================================
@@ -128,18 +128,18 @@ class Test_01_Insert(TobsTestCase):
         super(Test_01_Insert, self).setUp()
         self.rmap = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         self.original = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
-        
+
     def class_name(self, selector_name):
         return "".join([x.capitalize() for x in selector_name.split("_")])
 
     def set_classes(self, classes):
         self.rmap.selector._rmap_header["classes"] = classes
-        
+
     def terminal_insert(self, selector_name, param, value):
         """Check the bottom level insert functionality."""
-        header = { 
+        header = {
                   "TEST_CASE" : selector_name,
-                  "PARAMETER" : param, 
+                  "PARAMETER" : param,
         }
         inner_class = self.class_name(selector_name)
         self.set_classes(("Match", inner_class))
@@ -154,9 +154,9 @@ class Test_01_Insert(TobsTestCase):
 
     def terminal_replace(self, selector_name, param, value):
         """Check the bottom level replace functionality."""
-        header = { 
+        header = {
                   "TEST_CASE" : selector_name,
-                  "PARAMETER" : param, 
+                  "PARAMETER" : param,
         }
         inner_class = self.class_name(selector_name)
         self.set_classes(("Match", inner_class))
@@ -175,13 +175,13 @@ class Test_01_Insert(TobsTestCase):
 
     def test_useafter_replace_before(self):
         self.terminal_replace("USE_AFTER", '2003-09-26 01:28:00', 'foo.fits')
-            
+
     def test_useafter_insert_mid(self):
         self.terminal_insert("USE_AFTER", '2004-06-18 04:36:01', 'foo.fits')
-            
+
     def test_useafter_replace_mid(self):
         self.terminal_replace("USE_AFTER", '2004-06-18 04:36:00', 'foo.fits')
-            
+
     def test_useafter_insert_after(self):
         self.terminal_insert("USE_AFTER", '2004-07-14 16:52:01', 'foo.fits')
 
@@ -223,14 +223,14 @@ class Test_01_Insert(TobsTestCase):
          self.terminal_insert("CLOSEST_TIME", '2018-01-20 00:57', 'foo.fits')
     def test_closest_time_insert_after(self):
          self.terminal_insert("CLOSEST_TIME", '2020-04-20 00:00:00', 'foo.fits')
-    
+
     def test_closest_time_replace_before(self):
          self.terminal_replace("CLOSEST_TIME", '2017-04-24', 'foo.fits')
     def test_closest_time_replace_mid(self):
          self.terminal_replace("CLOSEST_TIME", '2018-02-01', 'foo.fits')
     def test_closest_time_replace_after(self):
          self.terminal_replace("CLOSEST_TIME", '2019-04-15', 'foo.fits')
-    
+
     """
             1.2: "cref_flatfield_120.fits",
             1.5: "cref_flatfield_124.fits",
@@ -273,10 +273,10 @@ class Test_01_Insert(TobsTestCase):
 
 class RecursiveModify:
     """Tests for checking automatic rmap update logic for adding new references."""
-    
+
     result_filename = None
     rmap_str = None
-    insert_header = lookup_header = { 
+    insert_header = lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "DATE-OBS" : "2017-04-20",
@@ -303,16 +303,16 @@ class RecursiveModify:
         assert len(diffs) == 1, "Fewer/more differences than expected: " + repr(diffs)
         log.verbose("recursive insert result rmap:")
         log.verbose(open(self.result_filename).read())
-    
+
     def test_1_recursive_use_rmap(self):
         r = rmap.load_mapping(self.result_filename)
         result = r.get_best_ref(self.lookup_header)
         log.verbose("recursive lookup result:", result)
         assert result == self.expected_lookup_result, "Recursively generated rmap produced wrong result."
-    
+
     def test_9_recursive_tear_down(self):
         os.remove(self.result_filename)
-        
+
 class Test_02_DeepRecursiveModify(TobsTestCase, RecursiveModify):
     result_filename = "./recursive_deep.rmap"
     expected_lookup_result = ("foo.fits", "foo.fits")
@@ -352,10 +352,10 @@ header = {
 selector = UseAfter({
     '2015-04-01 01:02:03' : Match({
     }),
-    '2017-04-20 01:02:03' : Match({    
+    '2017-04-20 01:02:03' : Match({
     }),
     '2018-04-03 01:02:03' : Match({
-    }),    
+    }),
 })
 '''
 
@@ -378,10 +378,10 @@ header = {
 selector = ClosestTime({
     '2015-04-01 01:02:03' : Match({
     }),
-    '2017-04-20 01:02:03' : Match({    
+    '2017-04-20 01:02:03' : Match({
     }),
     '2018-04-03 01:02:03' : Match({
-    }),    
+    }),
 })
 '''
 
@@ -406,30 +406,30 @@ selector = SelectVersion({
     }),
     '<5' : Match({
     }),
-    'default' : Match({    
+    'default' : Match({
     }),
 })
 '''
-    insert_header = lookup_header = { 
+    insert_header = lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "SW_VERSION" : "1.2",
         }
-    
+
 class Test_06_RecursiveSelectVersion_MatchingVersion(Test_05_RecursiveSelectVersion):
-    insert_header = { 
+    insert_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "SW_VERSION" : "<3.1",
         }
-    lookup_header = { 
+    lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "SW_VERSION" : "3.0",
         }
 
 class Test_07_RecursiveSelectVersion_DefaultVersion(Test_05_RecursiveSelectVersion):
-    insert_header = lookup_header = { 
+    insert_header = lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "SW_VERSION" : "default",
@@ -457,22 +457,22 @@ selector = GeometricallyNearest({
     }),
     2.8 : Match({
     }),
-    99.0 : Match({    
+    99.0 : Match({
     }),
 })
 '''
-    insert_header = lookup_header = { 
+    insert_header = lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "GEOM_PAR" : "1.2",
         }
 class Test_09_RecursiveGeometricallyNearestExact(Test_08_RecursiveGeometricallyNearest):
-    insert_header = lookup_header = { 
+    insert_header = lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "GEOM_PAR" : "0.1",
         }
-    
+
 class Test_10_RecursiveBracket(TobsTestCase, RecursiveModify):
     result_filename = "./recursive_bracket.rmap"
     expected_lookup_result = ("foo.fits", "foo.fits")
@@ -496,19 +496,19 @@ selector = Bracket({
     2.8 : Match({
         ('MPX', '98.7') : 'bar.fits',
     }),
-    99.0 : Match({    
+    99.0 : Match({
     }),
 })
 '''
-    insert_header = lookup_header = { 
+    insert_header = lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "BRACKET_PAR" : "0.5",
         }
-    
+
 class Test_11_RecursiveBracketExact(Test_10_RecursiveBracket):
     expected_lookup_result = ("foo.fits", "foo.fits")
-    insert_header = lookup_header = { 
+    insert_header = lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "BRACKET_PAR" : "0.1",
@@ -521,7 +521,7 @@ class Test_12_RecursiveBracketExactMidLookup(Test_10_RecursiveBracket):
           "MATCH_PAR2" : "99.9",
           "BRACKET_PAR" : "0.1",
         }
-    lookup_header = { 
+    lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "BRACKET_PAR" : "0.5",
@@ -546,14 +546,14 @@ selector = Bracket({
     2.8 : Match({
         ('MP1', '99.9') : 'bar.fits',
     }),
-    99.0 : Match({    
+    99.0 : Match({
     }),
 })
 '''
-    
+
 class Test_13_DeleteTest(TobsTestCase):
     result_filename = "./delete.rmap"
-    lookup_header = { 
+    lookup_header = {
           "MATCH_PAR1" : "MP1",
           "MATCH_PAR2" : "99.9",
           "BRACKET_PAR" : "0.5",
@@ -578,7 +578,7 @@ selector = Bracket({
     2.8 : Match({
         ('MP1', '99.9') : 'bar.fits',
     }),
-    99.0 : Match({    
+    99.0 : Match({
     }),
 })
 '''
@@ -599,13 +599,13 @@ selector = Bracket({
             assert "deleted Bracket rule" in diff[-1], "Bad difference " + repr(diff)
         log.verbose("recursive delete result rmap:")
         log.verbose(open(self.result_filename).read())
-    
+
     def test_1_recursive_use_rmap(self):
         r = rmap.load_mapping(self.result_filename)
         ref = r.get_best_ref(self.lookup_header)
         log.verbose("ref:", ref)
         assert ref.startswith("NOT FOUND list index out of range")
-            
+
     def test_2_delete_fails(self):
         log.verbose("-"*60)
         r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
@@ -614,14 +614,13 @@ selector = Bracket({
         except crds.CrdsError:
             pass
         else:
-            assert False, "Expected delete to fail."    
-        
-    
+            assert False, "Expected delete to fail."
+
+
     def test_9_recursive_tear_down(self):
         os.remove(self.result_filename)
-    
-        
+
+
 if __name__ == '__main__':
     # log.set_verbose()
     unittest.main()
-

@@ -1,5 +1,5 @@
 """This module defines functions for loading JWST's data model schema files which
-describe reference parameters and their values.   The schema files are used to 
+describe reference parameters and their values.   The schema files are used to
 validate reference and rmap parameters to screen out illegal values.
 
 The primary functions provided by this module are:
@@ -48,7 +48,7 @@ def get_exptypes(instrument=None):
                        if value.startswith(INSTR_PREFIX[instrument.lower()])])
 
 def get_schema_tpninfos(refpath):
-    """Load the list of TPN info tuples corresponding to `instrument` and 
+    """Load the list of TPN info tuples corresponding to `instrument` and
     `filekind` from it's .tpn file.
     """
     with log.warn_on_exception("Failed loading schema constraints for", repr(refpath)):
@@ -110,7 +110,7 @@ def _load_schema(schema_name=None):
     return model.schema
 
 def _schema_to_flat(schema):
-    """Load the specified data model schema and return a flat dictionary from 
+    """Load the specified data model schema and return a flat dictionary from
     data model dotted path strings to TpnInfo objects.
     """
     flat = _x_schema_to_flat(schema)
@@ -132,12 +132,12 @@ def _x_schema_to_flat(schema):
         if feature in schema:
             log.verbose_warning("Schema item has unhandled feature {}.", verbosity=80)
             return None
-        
+
     if "anyOf" in schema and "type" in schema["anyOf"]:
         schema_type = schema["anyOf"]["type"]
     else:
         schema_type = schema.get("type", "null")
-        
+
     if schema_type ==  "object":
         subprops = schema["properties"]
         for prop in subprops:
@@ -170,13 +170,13 @@ BASIC_TYPES = ["string","number","integer","boolean"]
 OPTIONAL_TYPES = type_or_null(BASIC_TYPES)
 
 #
-# Only the first character of the field is stored, i.e. Header == H                                                       
+# Only the first character of the field is stored, i.e. Header == H
 #
-# name = field identifier                                                                                                 
-# keytype = (Header|Group|Column)                                                                                         
-# datatype = (Integer|Real|Logical|Double|Character)                                                                      
-# presence = (Optional|Required)                                                                                          
-# values = [...]                                                                                                          
+# name = field identifier
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+# values = [...]
 #
 # TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
 #
@@ -186,7 +186,7 @@ SCHEMA_TYPE_TO_TPN = {
     "INTEGER" : ("I", "O"),
     "NUMBER" : ("D", "O"),
     "BOOLEAN" : ("L", "O"),
-    
+
     ("STRING", "NULL") : ("C", "O"),
     ("INTEGER", "NULL") : ("I", "O"),
     ("NUMBER", "NULL") : ("D", "O"),
@@ -209,7 +209,7 @@ def _flat_to_tpns(flat=None, schema_name=None):
                 value = tuple(value)
             datatype = SCHEMA_TYPE_TO_TPN.get(value, None)
             if datatype is not None:
-                tpn = TpnInfo(name=basekey.upper(), keytype="H", datatype=datatype[0], 
+                tpn = TpnInfo(name=basekey.upper(), keytype="H", datatype=datatype[0],
                               presence=datatype[1], values=legal_values)
                 log.verbose("Adding tpn constraint from DM schema:", repr(tpn), verbosity=65)
                 tpns.append(tpn)
@@ -237,7 +237,7 @@ FITS_TO_DM = None
 
 def dm_to_fits(key):
     """Return the FITS keyword for DM `key` or None.
-    
+
     >>> dm_to_fits('META.SUBARRAY.NAME')
     'SUBARRAY'
     """
@@ -248,7 +248,7 @@ def dm_to_fits(key):
 
 def fits_to_dm(key):
     """Return the DM keyword for FITS `key` or None.
-    
+
     >>> fits_to_dm('SUBARRAY')
     'META.SUBARRAY.NAME'
     """
@@ -264,4 +264,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

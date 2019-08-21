@@ -40,7 +40,7 @@ def dt_check_archive_file_api_false():
     CRDS - ERROR -  File 'foo.pmap' failed HTTP HEAD with code = 404 from '.../foo.pmap'
     False
 
-    >>> test_config.cleanup(old_state) 
+    >>> test_config.cleanup(old_state)
     """
 
 def dt_check_archive_script():
@@ -54,7 +54,7 @@ def dt_check_archive_script():
     CRDS - INFO -  1 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  3 infos
-    >>> test_config.cleanup(old_state) 
+    >>> test_config.cleanup(old_state)
     """
 
 # ==================================================================

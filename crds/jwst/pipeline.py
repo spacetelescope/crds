@@ -22,14 +22,14 @@ things like "reference types used by a pipeline."
 >>> header = test_header("0.13.0", "MIR_IMAGE", tsovisit="F")
 >>> header_to_pipelines(header)
 ['calwebb_detector1.cfg', 'calwebb_image2.cfg']
-    
+
 >>> header = test_header("0.13.0", "MIR_IMAGE", tsovisit="T")
 >>> header_to_pipelines(header)
 ['calwebb_tso1.cfg', 'calwebb_tso-image2.cfg']
 
 >>> header_to_pipelines(test_header("0.7.0", "MIR_IMAGE"))
 ['calwebb_sloper.cfg', 'calwebb_image2.cfg']
-    
+
 >>> header_to_pipelines(test_header("0.7.0", "MIR_LRS-FIXEDSLIT"))
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
 
@@ -100,7 +100,7 @@ def test_header(calver, exp_type, tsovisit="F", lamp_state="OFF"):
 # --------------------------------------------------------------------------------------
 
 def _get_missing_calver(cal_ver=None):
-    """If `cal_ver` is None, return the calibration software version for 
+    """If `cal_ver` is None, return the calibration software version for
     the installed version of calibration code.  Otherwise return `cal_ver`
     unchanged.
     """
@@ -114,7 +114,7 @@ def _get_missing_context(context=None):
     return context unchanged.
     """
     return "jwst-operational" if context is None else context
-    
+
 # --------------------------------------------------------------------------------------
 
 def header_to_reftypes(header, context=None):
@@ -164,7 +164,7 @@ def header_to_pipelines(header, context=None):
 def _get_pipelines(exp_type, cal_ver=None, context=None):
     """Given `exp_type` and `cal_ver` and `context`,  locate the appropriate SYSTEM CRDSCFG
     reference file and determine the sequence of pipeline .cfgs required to process that
-    exp_type.   
+    exp_type.
 
     NOTE:  This is an uncorrected result,  config_manager.pipeline_exceptions is used to
     alter this based on other header parameters.
@@ -219,7 +219,7 @@ REFPATHS = [
     ('0.13.0', "jwst_system_crdscfg_b7.3.yaml"),
     ('999.0.0', "jwst_system_crdscfg_b7.3.yaml"),   # latest backstop
 ]
-    
+
 def _get_config_refpath(context, cal_ver):
     """Given CRDS `context` and calibration s/w version `cal_ver`,  identify the applicable
     SYSTEM CRDSCFG reference file, cache it, and return the file path.
@@ -232,8 +232,8 @@ def _get_config_refpath(context, cal_ver):
     refpath = os.path.join(HERE, REFPATHS[i][1])
     try:  # Use a normal try/except because exceptions are expected.
         header = {
-            "META.INSTRUMENT.NAME" : "SYSTEM", 
-            "META.CALIBRATION_SOFTWARE_VERSION": cal_ver 
+            "META.INSTRUMENT.NAME" : "SYSTEM",
+            "META.CALIBRATION_SOFTWARE_VERSION": cal_ver
         }
         pmap = crds.get_symbolic_mapping(context)
         imap = pmap.get_imap("system")
@@ -302,7 +302,7 @@ class CrdsCfgManager:
         self.pipeline_exceptions = self._crdscfg.get("pipeline_exceptions", {})
         self.pipeline_cfgs_to_steps = self._crdscfg.get("pipeline_cfgs_to_steps", {})
         self.steps_to_reftypes = self._crdscfg.get("steps_to_reftypes", {})
-        
+
     def exptype_to_reftypes(self, exp_type):
         """For a given EXP_TYPE string, return a list of reftypes needed to process that
         EXP_TYPE through the data levels appropriate for that EXP_TYPE.
@@ -310,13 +310,13 @@ class CrdsCfgManager:
         Return [reftypes, ... ]
         """
         reftypes = self._crdscfg.exptypes_to_reftypes[exp_type]
-        log.verbose("Applicable reftypes for", srepr(exp_type), 
+        log.verbose("Applicable reftypes for", srepr(exp_type),
                     "determined by", srepr(os.path.basename(self._refpath)),
                     "are", srepr(reftypes))
         return reftypes
 
     def exptype_to_pipelines(self, exp_type):
-        """For a given EXP_TYPE string, return a list of pipeline .cfg's needed to 
+        """For a given EXP_TYPE string, return a list of pipeline .cfg's needed to
         process that EXP_TYPE through the appropriate data levels.
 
         Return [.cfg's, ... ]
@@ -341,7 +341,7 @@ def invert_list_mapping(mapping):
     for key, values in mapping.items():
         for value in values:
             inverted[value].add(key)
-    return { key:list(sorted(values)) 
+    return { key:list(sorted(values))
              for (key,values) in inverted.items() }
 
 def scan_exp_type_coverage():

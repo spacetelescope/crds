@@ -92,7 +92,7 @@ setup(name="crds",
           "jwst": ["jwst"],
           "submission": ["requests", "lxml", "parsley", "fitsverify"],
       },
-      tests_require=["nose", "mock"],
+      tests_require=["nose", "mock", "pylint"],
       zip_safe=False,
       classifiers=[
           'Intended Audience :: Science/Research',
@@ -104,4 +104,3 @@ setup(name="crds",
       ],
       **setup_pars
 )
-

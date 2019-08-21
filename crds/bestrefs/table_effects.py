@@ -2,12 +2,12 @@
 by table changes.   The nature of the optimization is that,  viewed as a file change,  CRDS
 would think a new table "affects everything" and be forced to recommend reprocessing all datasets.
 The code in this module is tasked with determining if the rows selected from two versions of
-a table by particular dataset parameters are actually different.   
+a table by particular dataset parameters are actually different.
 
-If the rows are not different, then effectifvely the new version of the table should not cause 
+If the rows are not different, then effectifvely the new version of the table should not cause
 a dataset to be processed.
 
-If the rows are different,  then the dataset should be reprocessed.  
+If the rows are different,  then the dataset should be reprocessed.
 """
 from crds.core import rmap, log
 from crds.io import tables
@@ -17,28 +17,28 @@ from crds.client import api
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):
     """This is the top level interface to crds.bestrefs running in "Affected Datasets" mode.
-    
+
     It determines if reprocessing `dataset` with parameters `dataset_parameters` should be performed as
     a consequence of switching from `old_reference` to `new_reference`.  old_reference is assigned to dataset
     by old_context,  and new_reference is assigned to dataset by new_context.
-        
+
     Parameters
     ----------
-    dataset: 
+    dataset:
              id of dataset being reprocessed,  <assoc>:<member> or <unassoc>:<unassoc> format
-    
+
     dataset_parameters:
                         { parameter : value, ...} for all matching parameters and row selection parameters
-    
+
                         XXX row selection parameters not used in file selection may not be present until
                         XXX explicitly added to the CRDS interface to the DADSOPS parameter database...
                         XXX and possibly even to DADSOPS itself. Normally the row selections have only been
                         XXX done with direct access to dataset .fits files.
-    
+
     old_context: loaded pmap or name of old context,  possibly for metadata or None
 
     new_context: loaded pmap or name of new context,  possibly for metadata
-    
+
     update: Update object
 
     Returns
@@ -53,14 +53,14 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
                 new_context, '\n',
                 update,
                 verbosity=100)
-                
+
     # no old_context means "single context" mode,  always reprocess.
-    if old_context is None:   
+    if old_context is None:
         return True
-    
-    # NOTE: non-tables are treated in DeepLook as filekinds which aren't (or maybe someday are) handled,  
+
+    # NOTE: non-tables are treated in DeepLook as filekinds which aren't (or maybe someday are) handled,
     # hence reprocessed for now.
-    
+
     # Reprocess for non-file special values.  Other code will decide what to do with the updates,
     # the point here is that table comparison isn't possible so filtering shouldn't be done.
     old_ref = update.old_reference.lower()
@@ -70,15 +70,15 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
         return True
 
     # mostly debug wrappers here,  allows simple string parameters to work and resolves cache paths.
-    old_context = rmap.asmapping(old_context, cached=True)   
+    old_context = rmap.asmapping(old_context, cached=True)
     new_context = rmap.asmapping(new_context, cached=True)
     old_reference = old_context.locate_file(old_ref)
     new_reference = new_context.locate_file(new_ref)
-    
+
     # Log that deep examination is occuring.
-    log.verbose('Deep Reference examination between {} and {} initiated.'.format(old_reference, new_reference), 
+    log.verbose('Deep Reference examination between {} and {} initiated.'.format(old_reference, new_reference),
                 verbosity=25)
-    
+
     with log.error_on_exception("Failed fetching comparison reference tables:", repr([old_ref, new_ref])):
         api.dump_files(new_context.name, [old_ref, new_ref])
 
@@ -102,7 +102,7 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
         log.verbose(deep_look.preamble, 'Dataset headers = {}'.format(dataset_parameters), verbosity=75)
         log.verbose(deep_look.preamble, 'Comparing references {} and {}.'.format(old_reference, new_reference), verbosity=75)
         deep_look.are_different(dataset_parameters, old_reference, new_reference)
-        
+
         log.verbose(deep_look.preamble, 'Reprocessing is {}required.'.format('' if deep_look.is_different else 'not '), verbosity=25)
         log.verbose(deep_look.preamble, deep_look.message, verbosity=25)
         return deep_look.is_different
@@ -113,7 +113,7 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
         log.verbose_warning('Deep examination error: {}'.format(error.message), verbosity=25)
         log.verbose_warning('Deep examination failed, presuming reprocessing.', verbosity=25)
         return True
-    
+
 
 ###########
 # Utilities
@@ -122,7 +122,7 @@ def str_to_number(val, strip=True):
     """Map string `input` to the simplest numerical type capable of parsing it.  If `input`
     will not parse for any type,  return it as-is,  optionally stripping whitespace.
     """
-    
+
     types = [int, float, complex]
 
     result = None
@@ -132,25 +132,25 @@ def str_to_number(val, strip=True):
             break
         except Exception:
             continue
-    
+
     if result is None:
         result = val.strip() if strip else val
-        
+
     return result
 
 def mode_select(table, constraints):
     """Return rows that match the constraints
-    
+
     Parameters
     ----------
     table: simple table
            Table to examine
-           
+
     constraints: {field: (value, cmpfn, **kargs}
                  For each field, compare the given value using the
                  the specified comparison function. The cmpfn looks like
                      bool = cmpfn(row[field], value, **kargs)
-                 
+
     Returns
     -------
     The next row that matches.
@@ -167,13 +167,13 @@ def mode_select(table, constraints):
 
 def mode_equality(modes_a, modes_b):
     """Check if the modes are equal"""
-    
+
     # Assume not equal
     equality = False
-    
+
     # Must be the same length
     if len(modes_a) == len(modes_b):
-        
+
         # Must have some length
         if len(modes_a) > 0:
             equality = (modes_a == modes_b)
@@ -228,7 +228,7 @@ def cmp_equal(table_value, matching_values, wildcards=()):
 
 
 # ##############################
-# 
+#
 # DeepLook
 #
 # The rules.
@@ -239,7 +239,7 @@ def cmp_equal(table_value, matching_values, wildcards=()):
 class DeepLookError(Exception):
     """Deep Look error base class
     """
-    
+
     def __init__(self, message):
         super(DeepLookError, self).__init__(message)
         self.message = message
@@ -251,7 +251,7 @@ class DeepLook:
     """Base class to define how reference tables are deep-checked
     for differences between references
     """
- 
+
     rules = {} # List of classes to use for rules.
 
     def __init__(self):
@@ -287,7 +287,7 @@ class DeepLook:
         name = (instrument + '_' + filekind).lower()
         log.verbose('Instantiating rules for reference type {}.'.format(name), verbosity=25)
         if name in cls.rules:
-            return  cls.rules[name]() 
+            return  cls.rules[name]()
         else:
             raise DeepLookError('No rules for instrument {} and reference file kind {}'.format(instrument, filekind))
 

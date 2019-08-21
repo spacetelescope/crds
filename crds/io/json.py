@@ -14,7 +14,7 @@ from .abstract import AbstractFile
 # ============================================================================
 
 class JsonFile(AbstractFile):
-    
+
     format = "JSON"
 
     def get_raw_header(self, needed_keys=(), **keys):
@@ -27,5 +27,3 @@ class JsonFile(AbstractFile):
                     "JSON wouldn't load from", repr(self.filepath), ":", str(exc))
             header = self.to_simple_types(header)
         return header
-
-

@@ -31,11 +31,11 @@ def precondition_header_acs_biasfile_v1(rmap, header_in):
         exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
         if (exptime < SM4):
             if numcols > ACS_HALF_CHIP_COLS:
-                if header["CCDAMP"] in ["A","D"]: 
+                if header["CCDAMP"] in ["A","D"]:
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
                                 "to AD for NUMCOLS = " + header["NUMCOLS"])
                     header["CCDAMP"] = "AD"
-                elif header["CCDAMP"] in ["B","C"]:  
+                elif header["CCDAMP"] in ["B","C"]:
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C " +
                                 "to BC for NUMCOLS = " + header["NUMCOLS"])
                     header["CCDAMP"] = "BC"
@@ -48,11 +48,11 @@ def precondition_header_acs_biasfile_v1(rmap, header_in):
             log.verbose("acs_biasfile_selection: bad NUMROWS.")
             # sys.exc_clear()
         else:
-            header["NUMROWS"] = utils.condition_value(str(numrows)) 
+            header["NUMROWS"] = utils.condition_value(str(numrows))
     return header     # XXXXXX RETURN NOW !!!!
 
 
-# ===========================================================================    
+# ===========================================================================
 
 #   This section contains matching customizations.
 
@@ -98,25 +98,25 @@ def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
 
     if header_matches(header, dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0')):
         return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
+
     if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
         return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
+
     if header_matches(header, dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
         return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
+
     if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C|D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
         return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
+
     if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
         return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
+
     if header_matches(header, dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
         return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
+
     if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A|B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
         return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
+
     return header
 
 def header_matches(header, conditions):
@@ -141,9 +141,9 @@ header_additions = [   # dictionary items (ordered)
 def acs_biasfile_filter(kmap):
     """APERTURE was added late as a matching parameter and so many existing references
     have an APERTURE value of '' in CDBS.   Where it's relevant,  it's actually defined.
-    Here we change '' to * to make CRDS ignore it when it doesn't matter.   We also change 
+    Here we change '' to * to make CRDS ignore it when it doesn't matter.   We also change
     APERTURE to * for any useafter date which precedes SM4 (possibly they define APERTURE).
-    
+
     add_fallback_to_kmap() duplicates the correct filemaps to simulate the fallback header lookup.
     """
     replacement = "*"
@@ -179,23 +179,23 @@ def acs_biasfile_filter(kmap):
     if dropped_files:  # bummer,  bug in my code...
         log.error("Dropped files:", sorted(dropped_files))
 
-    kmap = add_fallback_to_kmap(kmap, 
+    kmap = add_fallback_to_kmap(kmap,
         matches=dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0'),
         dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
+
+    kmap = add_fallback_to_kmap(kmap,
         matches=dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0'),
         dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
+
+    kmap = add_fallback_to_kmap(kmap,
         matches=dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0'),
         dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
+
+    kmap = add_fallback_to_kmap(kmap,
         matches=dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0'),
         dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
+
+    kmap = add_fallback_to_kmap(kmap,
         matches=dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0'),
         dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
 
@@ -218,9 +218,9 @@ def total_files(kmap):
     for match, fmaps in kmap.items():
         total = total.union({fmap.file for fmap in fmaps})
     return total
-        
+
 def add_fallback_to_kmap(kmap, matches, dont_care,
-    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 
+    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS',
              'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')):
     """Copy items in `kmap` whose keys match the parameters in `matches`,  setting
     the key-copy values named in `dont_care` to 'N/A'.   The copy with some 'N/A's is a fallback.
@@ -244,7 +244,7 @@ def key_matches(key, parkeys, matches):
     for i, name in enumerate(parkeys):
         if name in matches:
             if utils.condition_value(matches[name]) != utils.condition_value(key[i]):
-                log.verbose("Exiting on", repr(name), 
+                log.verbose("Exiting on", repr(name),
                          utils.condition_value(matches[name]),
                          utils.condition_value(key[i]))
                 return False

@@ -11,7 +11,7 @@ from crds.tests import test_config
 # ==================================================================================
 
 class TestSync(test_config.CRDSTestCase):
-    
+
     script_class = SyncScript
 
     def setUp(self):
@@ -52,22 +52,22 @@ class TestSync(test_config.CRDSTestCase):
         self.assert_crds_exists("hst_cos_deadtab.rmap")
         self.assert_crds_exists("s7g1700gl_dead.fits")
         self.assert_crds_exists("s7g1700ql_dead.fits")
-    
+
     def test_sync_organize_instr(self):
         self.run_script("crds.sync --contexts hst_cos_deadtab.rmap --fetch-references --organize=instrument --organize-delete-junk")
         self.assert_crds_exists("hst_cos_deadtab.rmap")
         self.assert_crds_exists("s7g1700gl_dead.fits")
         self.assert_crds_exists("s7g1700ql_dead.fits")
         self.run_script("crds.sync --contexts hst_cos_deadtab.rmap --fetch-references --organize=flat --organize-delete-junk")
-        
+
     def test_sync_fetch_sqlite3_db(self):
         self.run_script("crds.sync --fetch-sqlite-db")
-        
+
     def test_sync_dataset_ids(self):
         old_state = test_config.setup()
         self.run_script("crds.sync --contexts hst.pmap --dataset-ids LA9K03CBQ:LA9K03CBQ --fetch-references")
         test_config.cleanup(old_state)
-        
+
     def test_purge_mappings(self):
         self.run_script("crds.sync --contexts hst_cos_deadtab.rmap --fetch-references")
         self.run_script("crds.sync --organize=flat")
@@ -79,7 +79,7 @@ class TestSync(test_config.CRDSTestCase):
         self.run_script("crds.sync --contexts hst_acs_imphttab.rmap --fetch-references --purge-mappings --purge-references")
         self.assertEqual(rmap.list_references("*", "hst"), ['w3m1716tj_imp.fits', 'w3m17170j_imp.fits', 'w3m17171j_imp.fits'])
         self.assertEqual(rmap.list_mappings("*", "hst"), ['hst_acs_imphttab.rmap'])
-        
+
 # ==================================================================================
 
 

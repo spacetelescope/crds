@@ -7,13 +7,13 @@ from crds.core import log, rmap
 
 def wfc3_flshfile_filter(kmap):
     """Filter to customize WFC3 FLSHFILE for hst_gentools/gen_rmap.py.
-    
+
     Adds special case matches to rmap for ZERO|ZEROCUR|OFF.
     """
     kmap[('N/A', 'N/A', 'N/A', 'N/A', 'ZERO|ZEROCUR|OFF', 'N/A')] = [
-        rmap.Filemap(date='1990-01-01 00:00:00', file='w7j1705di_fls.fits', 
+        rmap.Filemap(date='1990-01-01 00:00:00', file='w7j1705di_fls.fits',
                      comment='Hack to support matching CDBS irrelevant answers to irrelevant FLASHCUR cases.'),
-        rmap.Filemap(date='2012-01-01 00:00:00', file='wc52031pi_fls.fits', 
+        rmap.Filemap(date='2012-01-01 00:00:00', file='wc52031pi_fls.fits',
                      comment='post-flash created from in-flight wfc3/uvis frames.----------------')
         ]
     return kmap, []
@@ -22,7 +22,7 @@ def wfc3_flshfile_filter(kmap):
 
 def wfc3_biasfile_filter(kmap):
     """Filter to customize WFC3 BIASFILE for hst_gentools/gen_rmap.py.
-    
+
     Adds precondition_header() hook to rmap header.   Driven by CDBS special case code.
     """
     header_additions = {
@@ -34,7 +34,7 @@ def wfc3_biasfile_filter(kmap):
 
 def wfc3_darkfile_filter(kmap_orig):
     """Filter to customize DARKFILE for hst_gentools/gen_rmap.py.
-    
+
     Removes dead SUBTYPE='' darkfiles.   Driven by CDBS reffile_ops database defects.
     """
     darkfile_match_keys = ('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE')
@@ -61,7 +61,7 @@ def precondition_header_wfc3_biasfile_v1(rmap, header_in):
     header = dict(header_in)
     if header["SUBARRAY"] == "T" and "SUB" not in header["APERTURE"]:
         header["APERTURE"] = "N/A"
-        log.verbose("Mutated APERTURE to ", repr(header["APERTURE"]), 
+        log.verbose("Mutated APERTURE to ", repr(header["APERTURE"]),
                     "based on SUBARRAY='T' and 'SUB' not in APERTURE.")
     return header
 
@@ -97,7 +97,7 @@ dataset header values against the CDBS reference file database::
       # special case: APERTURE is NOT a selection field for custom subarrays
       #                        but IS for every other mode
       #
-      if (k._field == 'APERTURE' and 
+      if (k._field == 'APERTURE' and
           aSource._keywords["SUBARRAY"] == "T" and
           aSource._keywords["APERTURE"].find("SUB") == -1):
 
@@ -109,11 +109,11 @@ dataset header values against the CDBS reference file database::
       #  since numbers are not quoted but string are)
       try:
         querytxt = (querytxt + "and wfc3_row_"+querynum+"." +
-                 string.lower(k._field) + " = '" + 
+                 string.lower(k._field) + " = '" +
                  aSource._keywords[k._field][0] + "' ")
       except TypeError:
         querytxt = (querytxt + "and wfc3_row_"+querynum+"." +
-                 string.lower(k._field) + " = " + 
+                 string.lower(k._field) + " = " +
                  str(aSource._keywords[k._field][0]) + " ")
     #
     return querytxt
@@ -124,9 +124,9 @@ Name: wfc3_biasfile
 
 Description:
 ------------
-This special-purpose function composes a database query against the CDBS 
+This special-purpose function composes a database query against the CDBS
 database to find an applicable WFC3 BIAS reference file.   A special
-query is needed because the APERTURE keyword must be added as a 
+query is needed because the APERTURE keyword must be added as a
 search field for MOST exposure modes, with the exception of custom-sized
 (available, but unsupported) subarrays, and detecting these custom
 subarrays can't be done in the standard reference file selection rules.
@@ -135,7 +135,7 @@ Arguments:
 ----------
 thereffile (I) - a Reffile object containing information about the reference
                  file and its selection parameters
-aSource (I)   - Input source object containing a dictionary of 
+aSource (I)   - Input source object containing a dictionary of
                  keyword name/value pairs.  These form the
                  inputsource for the database query parameters.
 Returns:
@@ -186,17 +186,17 @@ History:
     querytxt = string.replace(querytxt,"EXPOSURE_START", exposure_start)
 
     # add the file selection fields (row_2)
-    querytxt = querytxt + self.wfc3_bias_file_selection("2", thereffile, 
+    querytxt = querytxt + self.wfc3_bias_file_selection("2", thereffile,
                                                         aSource)
     # add second template
     querytxt = querytxt + query_template_b
-    
+
     # add the file selection fields again (row_1)
-    querytxt = querytxt + self.wfc3_bias_file_selection("1", thereffile, 
+    querytxt = querytxt + self.wfc3_bias_file_selection("1", thereffile,
                                                         aSource)
-    
+
     # replace any None values with null
-    query1 = string.replace(querytxt, "None", "null")                         
+    query1 = string.replace(querytxt, "None", "null")
 
     # get results in a list of lists
     result = [[]]

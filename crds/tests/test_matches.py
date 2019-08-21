@@ -20,13 +20,13 @@ HERE = os.path.dirname(__file__) or "."
 def dt_matches_files():
     """
     >>> old_state = test_config.setup()
-    
+
     >>> MatchesScript("crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits")()
      lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' OBSTYPE='IMAGING' FW1OFFST='N/A' FW2OFFST='N/A' FWSOFFST='N/A' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
     0
     >>> config.set_crds_state(old_state)
     """
-    
+
 def dt_matches_files_omit_parameters_brief():
     """
     >>> old_state = test_config.setup()
@@ -54,13 +54,13 @@ def dt_matches_datasets_minimize_headers_contexts_condition():
     0
     >>> config.set_crds_state(old_state)
     """
-    
+
 # ==================================================================================
 
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    from crds.tests import test_matches, tstmod    
+    from crds.tests import test_matches, tstmod
     return tstmod(test_matches)
 
 if __name__ == "__main__":

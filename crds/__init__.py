@@ -49,7 +49,7 @@ from crds.bestrefs import assign_bestrefs
 
 # ============================================================================
 
-'''This code section supports moving modules from the root crds namespace into 
+'''This code section supports moving modules from the root crds namespace into
 sub-packages while still supporting the original CRDS package external interface.
 This allows the code to be partitioned without changing external imports.  This
 is made more difficult by the inapplicability of namespace packages because this
@@ -126,4 +126,3 @@ _alias_subpackage_module("crds.misc", _MISC_MODULES)
 
 URL = os.environ.get("CRDS_SERVER_URL", "https://crds-serverless-mode.stsci.edu")
 api.set_crds_server(URL)
-

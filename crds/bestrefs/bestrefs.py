@@ -1,7 +1,7 @@
 """This module is a command line script which handles comparing the best
 reference recommendations for a particular context and dataset files.
 
-For more details on the several modes of operations and command line parameters browse the source or run:   
+For more details on the several modes of operations and command line parameters browse the source or run:
 
 % crds bestrefs --help
 """
@@ -46,7 +46,7 @@ class BestrefsScript(cmdline.Script, cmdline.UniqueErrorsMixin):
 
     description = """
 The crds.bestrefs program runs the CRDS library to interpret CRDS reference
-file assignment rules with respect to dataset parameters.  
+file assignment rules with respect to dataset parameters.
 
 crds.bestrefs has several use cases which have different modes for fetching
 input parameters, evaluating bestrefs and/or doing comparisons, and producing output.
@@ -57,10 +57,10 @@ keywords (e.g. DARKFILE) with best reference files.
 Other modes of crds.bestrefs are used to support CRDS reprocessing or to test new
 versions of CRDS rules.
 
-The crds.bestrefs program is not normally used for JWST and best references 
+The crds.bestrefs program is not normally used for JWST and best references
 are assigned automatically as a consequence of running the CAL code.
 
-* Determines best references with respect to a context or contexts.   
+* Determines best references with respect to a context or contexts.
 * Optionally updates the headers of file-based data with new recommendations.
 * Optionally compares new results to prior results.
 * Optionally prints source data names affected by the new context.
@@ -107,8 +107,8 @@ crds.bestrefs use cases
   new reference files are delivered, after the new CRDS context is selected for
   use by the archive pipeline.  It is run e.g. like this::
 
-    % crds bestrefs --affected-datasets --old-context  hst_0001.pmap --new-context hst_0002.pmap  
-  
+    % crds bestrefs --affected-datasets --old-context  hst_0001.pmap --new-context hst_0002.pmap
+
   --affected-datasets is a "bundle switch" that captures standard options for
   reprocessing.  See *crds bestrefs --help* for more information on individual
   switches.
@@ -279,7 +279,7 @@ than errors as the default.
 
         self.updates = OrderedDict()  # map of reference updates
         self.kill_list = OrderedDict()
-        
+
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
 
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
@@ -370,7 +370,7 @@ than errors as the default.
     @property
     def only_ids(self):
         return self._normalized(self.args.only_ids) or None
-    
+
     @property
     def drop_ids(self):
         return self._normalized(self.args.drop_ids)
@@ -380,11 +380,11 @@ than errors as the default.
             return [self.normalize_id(dataset) for dataset in id_list]
         else:
             return []
-        
+
     def normalize_id(self, dataset):
         """Convert a given `dataset` ID to uppercase.  For the sake of simplicity convert
         simple IDs into unassociated exposure IDs in <exposure>:<exposure> form.  This is a
-        convenience for JWST where currently the <product> term is always identical to 
+        convenience for JWST where currently the <product> term is always identical to
         <exposure>.  Where they're different as-in associated exposures for HST,  you must
         specify the drop ID fully to avoid misinterpretation as an unassociated exposure.
         """
@@ -730,7 +730,7 @@ than errors as the default.
             reftypes = self.determine_reftypes(instrument, dataset, context, header)
             if reftypes is None:
                 return {}
-        with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
+        with log.augment_exception("Failed computing bestrefs for data", repr(dataset),
                                    "with respect to", repr(context)):
             bestrefs = crds.getrecommendations(
                 header, reftypes=reftypes, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
@@ -739,7 +739,7 @@ than errors as the default.
     def determine_reftypes(self, instrument, dataset, context, header):
         """Based on instrument, context, header as well as command line parameters determine the list
         of reftypes that should be processed.
-        
+
         Incorporate knowledge from:
 
         1. --diffs-only   (context-to-context differences determine affected types)
@@ -768,7 +768,7 @@ than errors as the default.
             types = set(types) - set(self.args.skip_types)
         types = sorted(list(types))
         return types
-    
+
     @property
     def update_promise(self):
         """Return a string identifying that and update would or will occurr, depending on --update-bestrefs."""
@@ -787,7 +787,7 @@ than errors as the default.
     def screen_bestrefs(self, instrument, dataset, newrefs):
         """Return only the update tuples of _screen_bestrefs."""
         return self._screen_bestrefs(instrument, dataset, newrefs)[0]
-    
+
     def _screen_bestrefs(self, instrument, dataset, newrefs):
         """Scan best references dict `newrefs` for atypical results and issue errors and warnings.
 
@@ -817,7 +817,7 @@ than errors as the default.
                 kill_list.append(update)
 
         return updates, kill_list
-    
+
     def compare_bestrefs(self, instrument, dataset, oldrefs, newrefs):
         """Return only the update tuples of _compare_bestrefs()."""
         return self._compare_bestrefs(instrument, dataset, oldrefs, newrefs)[0]
@@ -960,7 +960,7 @@ than errors as the default.
     @property
     def unkilled_updates(self):
         """Return only members of self.updates for which there is no corresponding kill list of failed bestrefs."""
-        return { dataset:updates for (dataset, updates) in self.updates.items() 
+        return { dataset:updates for (dataset, updates) in self.updates.items()
                  if updates and dataset not in self.kill_list }
 
     def print_affected(self):
@@ -1020,7 +1020,7 @@ than errors as the default.
         for dataset in self.updates:
             updates = self.updates[dataset]
             self.log_and_track_error(
-                dataset, "any", "any", "COVERAGE:", self.updates_repr(updates))  
+                dataset, "any", "any", "COVERAGE:", self.updates_repr(updates))
 
     def updates_repr(self, updates):
         """Convert a single dataset's list of update tuples into a string which
@@ -1056,7 +1056,7 @@ def cleanpath(name):
 
 def assign_bestrefs(filepaths, context=None, reftypes=(),
                     sync_references=False, verbosity=-1):
-    """Assign best references to FITS files specified by `filepaths` 
+    """Assign best references to FITS files specified by `filepaths`
     filling in appropriate reference type keywords.
 
     Define best references using either .pmap `context` or the default
@@ -1069,7 +1069,7 @@ def assign_bestrefs(filepaths, context=None, reftypes=(),
     to the CRDS cache.
 
     Verbosity defines the level of CRDS log output:
-    
+
     verbosity=-3    feeling lucky, no output
     verbosity=-2    only errors
     verbosity=-1    only warnings and errors

@@ -13,7 +13,7 @@ def dt_get_context_history():
 
     Note this test is dependent on the JWST operational server.   A similar test
     can be performed for any of the I&T servers by changing the URL.   In I&T,
-    setup for this test will involve correctly configuring CRDS_PATH and 
+    setup for this test will involve correctly configuring CRDS_PATH and
     CRDS_SERVER_URL to point to the I&T CRDS cache and I&T CRDS Server respectively.
 
     >>> old_state = test_config.setup(url='https://jwst-crds.stsci.edu')
@@ -36,7 +36,7 @@ def dt_query_affected_datasets_list():
     tool has a mode for listing the context history to orient any human operator.
 
     >>> old_state = test_config.setup(url='https://jwst-crds.stsci.edu')
-    
+
     >>> QueryAffectedDatasetsScript("query_affected --list -x 0 -y 10")()
     (0, '2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings')
     (1, '2012-09-27 00:00:00', 'jwst_0000.pmap', 'First rules and references from jwst_gentools stub development cloning.')
@@ -49,7 +49,7 @@ def dt_query_affected_datasets_list():
     (8, '2014-07-08 16:09:39', 'jwst_0022.pmap', 'Multiple MIRI FLAT changes, new references, added SUBARRAY as matching parameter.  See diffs.')
     (9, '2014-07-18 11:34:48', 'jwst_0023.pmap', 'First MIRI PHOTOM reference for MIRIMAGE detector with real data.')
     (10, '2014-07-24 18:49:03', 'jwst_0025.pmap', 'Replaced PHOTOM references for NIRSPEC and NIRISS.')
-    
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -57,7 +57,7 @@ def dt_query_affected_datasets_list():
 
 def main():
     """Run module tests,  for now just doctests only.
-    
+
     test_config.setup() and cleanup() are done inline above because bracketing
     the tests here does not get picked up by nose test discovery.  Combining
     tests into one giant docstring works but is hard to analyze and debug when

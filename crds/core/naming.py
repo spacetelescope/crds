@@ -28,10 +28,10 @@ def generate_unique_name(filename, observatory=None, now=None):
 # =============================================================================================================
 
 def newer(name1, name2):
-    """Determine if `name1` is a more recent file than `name2` accounting for 
-    limited differences in naming conventions. Official CDBS and CRDS names are 
+    """Determine if `name1` is a more recent file than `name2` accounting for
+    limited differences in naming conventions. Official CDBS and CRDS names are
     comparable using a simple text comparison,  just not to each other.
-    
+
     >>> newer("s7g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
     False
 
@@ -76,42 +76,42 @@ def newer(name1, name2):
     True
 
     >>> newer("N/A", "hst_cos_deadtab_0002.rmap")
-    False                                                                                                                                    
+    False
     >>> newer("hst_cos_deadtab_0002.rmap", "N/A")
     True
-    
+
     >>> newer("16n1832tm_tmc.fits", "06n1832tm_tmc.fits")
     True
     >>> newer("06n1832tm_tmc.fits", "16n1832tm_tmc.fits")
     False
     >>> newer("06n1832tm_tmc.fits", "16n1832tm_tmg.fits")
     False
-    
+
     >>> newer("hst_cos_deadtab_0001.fits", "16n1832tm_tmg.fits")
     Traceback (most recent call last):
     ...
     NameComparisonError: Unhandled name comparison case:  ('crds', 'synphot')
-     
+
     >>> newer("07g1700gl_dead.fits", "16n1832tm_tmg.fits")
     Traceback (most recent call last):
     ...
-    NameComparisonError: Unhandled name comparison case:  ('newcdbs', 'synphot')    
-    
+    NameComparisonError: Unhandled name comparison case:  ('newcdbs', 'synphot')
+
     >>> newer("16n1832tm_tmg.fits", "7g1700gl_dead.fits")
     Traceback (most recent call last):
     ...
-    NameComparisonError: Unhandled name comparison case:  ('synphot', 'oldcdbs')    
-                                                                                                                                    
+    NameComparisonError: Unhandled name comparison case:  ('synphot', 'oldcdbs')
+
     >>> newer("hst_cos_deadtab_0001.fits", "17g1700gl_dead.fits")
     Traceback (most recent call last):
     ...
     NameComparisonError: Unhandled name comparison case:  ('crds', 'newcdbs')
-    
+
     >>> newer("17g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
     Traceback (most recent call last):
     ...
     NameComparisonError: Unhandled name comparison case:  ('newcdbs', 'crds')
-    
+
     """
     cases = {
         ("crds", "crds")  : "compare_crds",
@@ -119,7 +119,7 @@ def newer(name1, name2):
         ("newcdbs", "newcdbs") : "compare",
         ("oldsynphot", "oldsynphot") : "compare",
         ("newsynphot", "newsynphot") : "compare",
-        
+
         ("crds", "oldcdbs") : True,
         ("oldcdbs", "crds") : False,
 
@@ -141,7 +141,7 @@ def newer(name1, name2):
         if extension_rank(name1) == extension_rank(name2):
             serial1, serial2 = newstyle_serial(name1), newstyle_serial(name2)
             result = serial1 > serial2   # same extension compares by counter
-        else:  
+        else:
             result = extension_rank(name1) > extension_rank(name2)
     elif case == "compare":
         result = name1 > name2
@@ -170,15 +170,15 @@ def classify_name(name):
 
     >>> classify_name("07g1700gl_dead.fits")
     'newcdbs'
-    
+
     >>> classify_name("16n1832tm_tmc.fits")
     'newsynphot'
-    
+
     >>> classify_name("z6n1832tm_tmc.fits")
     'oldsynphot'
 
     Ad hoc names are generally mistakes which are immediately replaced.   Classify them
-    as oldcdbs (oldest) so that comparison with anything else is interpreted as a 
+    as oldcdbs (oldest) so that comparison with anything else is interpreted as a
     replacement with something newer,  and nominal.
 
     >>> classify_name("bbbbbb.fits")
@@ -203,7 +203,7 @@ def classify_name(name):
 
 def crds_name(name):
     """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap
-    
+
     >>> crds_name("s7g1700gl_dead.fits")
     False
     >>> crds_name("1c82030ml_dead.fits")
@@ -222,7 +222,7 @@ NEW_CDBS = re.compile(config.complete_re(r"[0-9][A-Za-z0-9]{8}_[A-Za-z0-9]{1,8}\
 
 def old_cdbs_name(name1):
     """Return True IFF name1 is and original CDBS-style name.
-    
+
     >>> old_cdbs_name("s7g1700gl_dead.fits")
     True
     >>> old_cdbs_name("1c82030ml_dead.fits")
@@ -237,10 +237,10 @@ def old_cdbs_name(name1):
     False
     """
     return OLD_CDBS.match(name1) is not None
-    
+
 def new_cdbs_name(name1):
     """Return True IFF name1 is an extended CDBS-style name.
-    
+
     >>> new_cdbs_name("s7g1700gl_dead.fits")
     False
     >>> new_cdbs_name("1c82030ml_dead.fits")
@@ -261,7 +261,7 @@ OLD_SYNPHOT_RE = re.compile(config.complete_re(r"[A-Za-z][a-zA-Za-z0-9]{7}m_(tmc
 
 def synphot_name(name):
     """Return True IFF `name` is the name of an ETC master table file of some kind.
-    
+
     >>> synphot_name("s7g1700gl_dead.fits")
     False
     >>> synphot_name("1c82030ml_dead.fits")
@@ -289,7 +289,7 @@ def old_synphot_name(name):
 
 def extension_rank(filename):
     """Return a date ranking for `filename` based on extension, lowest numbers are oldest.
-    
+
     >>> extension_rank("fooo.r0h")
     0.0
     >>> extension_rank("fooo.fits")
@@ -320,7 +320,7 @@ def newstyle_serial(name):
 
     >>> newstyle_serial("hst_0042.pmap")
     42
-    >>> newstyle_serial("hst_0990999.pmap")    
+    >>> newstyle_serial("hst_0990999.pmap")
     990999
     >>> newstyle_serial("hst_cos_0999.imap")
     999
@@ -335,4 +335,3 @@ def newstyle_serial(name):
         return int(serial_search.groups()[0], 10)
     else:
         return -1
-

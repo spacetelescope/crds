@@ -17,7 +17,7 @@ def dt_synphot_naming():
     >>> old_state = test_config.setup()
 
     >>> NOW = timestamp.parse_date("2018-11-14T00:00:00")
-    
+
     THERMAL
 
     >>> config.is_crds_name("wfc3_ir_f098m_002_th.fits")
@@ -93,7 +93,7 @@ def dt_synphot_naming():
     ('data', 'hst', 'synphot', 'tmctab', '2b516556m_tmc', '.fits')
     >>> naming.generate_unique_name("2b516556m_tmc.fits", "hst", NOW)
     '2be00000m_tmc.fits'
-    
+
     TMTTAB
 
     >>> config.is_crds_name("tae17277m_tmt.fits")
@@ -132,44 +132,44 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Checking for duplicate modes using intersection ['COMPNAME']
     CRDS - WARNING -  No comparison reference for '2b516556m_tmc.fits' in context 'hst_0691.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: data/2b516556m_tmc.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  81 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - ERROR -  >> *** Error:   Keyword #11, TDISP1: invalid format "26A".
     CRDS - ERROR -  >> *** Error:   Keyword #14, TDISP2: invalid format "18A".
     CRDS - ERROR -  >> *** Error:   Keyword #17, TDISP3: invalid format "56A".
     CRDS - ERROR -  >> *** Error:   Keyword #20, TDISP4: invalid format "68A".
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  21 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (4 columns x 3012 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 TIME                 26A       
-    CRDS - INFO -  >>    2 COMPNAME             18A       
-    CRDS - INFO -  >>    3 FILENAME             56A       
-    CRDS - INFO -  >>    4 COMMENT              68A       
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 TIME                 26A
+    CRDS - INFO -  >>    2 COMPNAME             18A
+    CRDS - INFO -  >>    3 FILENAME             56A
+    CRDS - INFO -  >>    4 COMMENT              68A
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     0         4     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     0         4
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 4 error(s). ****
     CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
     CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
@@ -188,41 +188,41 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Checking for duplicate modes using intersection ['COMPNAME', 'INNODE', 'KEYWORD', 'OUTNODE', 'THCOMPNAME']
     CRDS - WARNING -  No comparison reference for '2381905mm_tmg.fits' in context 'hst_0691.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: data/2381905mm_tmg.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  192 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  103 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (6 columns x 3656 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 COMPNAME             18A       
-    CRDS - INFO -  >>    2 KEYWORD              11A       
-    CRDS - INFO -  >>    3 INNODE               J         
-    CRDS - INFO -  >>    4 OUTNODE              J         
-    CRDS - INFO -  >>    5 THCOMPNAME           17A       
-    CRDS - INFO -  >>    6 COMMENT              68A       
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 COMPNAME             18A
+    CRDS - INFO -  >>    2 KEYWORD              11A
+    CRDS - INFO -  >>    3 INNODE               J
+    CRDS - INFO -  >>    4 OUTNODE              J
+    CRDS - INFO -  >>    5 THCOMPNAME           17A
+    CRDS - INFO -  >>    6 COMMENT              68A
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     0         0     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     0         0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
@@ -249,39 +249,39 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Table mode (('COMPNAME', 'nic2_dn'),) of new reference 'tae17277m_tmt.fits[1]' is NOT IN old reference '3241637sm_tmt.fits'
     CRDS - INFO -  Table mode (('COMPNAME', 'nic3_dn'),) of new reference 'tae17277m_tmt.fits[1]' is NOT IN old reference '3241637sm_tmt.fits'
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO V...)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO V...)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: data/tae17277m_tmt.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  32 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  54 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (4 columns x 144 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 TIME                 27A       
-    CRDS - INFO -  >>    2 COMPNAME             18A       
-    CRDS - INFO -  >>    3 FILENAME             50A       
-    CRDS - INFO -  >>    4 COMMENT              68A       
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 TIME                 27A
+    CRDS - INFO -  >>    2 COMPNAME             18A
+    CRDS - INFO -  >>    3 FILENAME             50A
+    CRDS - INFO -  >>    4 COMMENT              68A
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     0         0     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     0         0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
@@ -300,37 +300,37 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
     CRDS - WARNING -  No comparison reference for 'wfc3_ir_f098m_002_th.fits' in context 'hst_0691.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: data/wfc3_ir_f098m_002_th.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  17 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  20 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (2 columns x 5863 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 WAVELENGTH (ANGSTROM E         
-    CRDS - INFO -  >>    2 EMISSIVITY           E         
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 WAVELENGTH (ANGSTROM E
+    CRDS - INFO -  >>    2 EMISSIVITY           E
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     0         0     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     0         0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
@@ -349,37 +349,37 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
     CRDS - WARNING -  No comparison reference for 'wfc3_uvis_f469nf2_003_syn.fits' in context 'hst_0691.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: data/wfc3_uvis_f469nf2_003_syn.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  24 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  17 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (2 columns x 13 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 WAVELENGTH (ANGSTROM E         
-    CRDS - INFO -  >>    2 THROUGHPUT (TRANSMIS E         
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 WAVELENGTH (ANGSTROM E
+    CRDS - INFO -  >>    2 THROUGHPUT (TRANSMIS E
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     0         0     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     0         0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
@@ -462,7 +462,7 @@ def dt_synphot_refactor():
 
     >>> r = crds.get_cached_mapping("data/synphot_thermal.rmap")
     >>> header = dict(COMPNAME="NIC1_BEND", CREATED="2002-03-06 04:51:00",  DESCRIP="Use NIC2 values")
-    
+
     >>> v = log.set_verbose(55)
 
     For classic irrelevant parkey matching where values are normalized to N/A and ignored
@@ -473,7 +473,7 @@ def dt_synphot_refactor():
     CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: False 'keep_comments'
     CRDS - DEBUG -  Setting irrelevant parkey 'DESCRIP' to N/A
     {'COMPNAME': 'NIC1_BEND', 'CREATED': 'N/A', 'DESCRIP': 'N/A'}
-    
+
     For rmap updates which add comment keywords to the match tuples for web display
 
     >>> print(log.PP(r.map_irrelevant_parkeys_to_na(header, keep_comments=True)))
@@ -484,7 +484,7 @@ def dt_synphot_refactor():
      'DESCRIP': 'Use NIC2 values'}
 
     >>> _ = log.set_verbose(v)
-    
+
     TMC   rmap
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap data/2b516556m_tmc.fits")()
@@ -557,7 +557,7 @@ def dt_synphot_refactor():
 def dt_synphot_bestrefs():
     """
     >>> old_state = test_config.setup()
-    
+
     >>> r = crds.get_cached_mapping("data/synphot_thermal.rmap")
     >>> r.get_best_references({'COMPNAME':'NIC1_F110W', 'CREATED':'NO MATCH', 'DESCRIP':'NO MATCH'})
     {'thermal': 'nic1_f110w_002_th.fits'}

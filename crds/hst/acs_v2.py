@@ -12,7 +12,7 @@ import copy
 
 from .acs_common import *
 
-# ===========================================================================    
+# ===========================================================================
 
 def precondition_header_acs_biasfile_v2(rmap, header_in):
     """Mutate the incoming dataset header based upon hard coded rules
@@ -37,11 +37,11 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
         exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
         if (exptime < SM4):
             if naxis1 > ACS_HALF_CHIP_COLS:
-                if header["CCDAMP"] in ["A","D"]: 
+                if header["CCDAMP"] in ["A","D"]:
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
                                 "to AD for NAXIS1 = " + header["NAXIS1"])
                     header["CCDAMP"] = "AD"
-                elif header["CCDAMP"] in ["B","C"]:  
+                elif header["CCDAMP"] in ["B","C"]:
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C " +
                                 "to BC for NAXIS1 = " + header["NAXIS1"])
                     header["CCDAMP"] = "BC"
@@ -54,19 +54,19 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
             log.verbose("acs_biasfile_selection: bad NAXIS2.")
             # sys.exc_clear()
         else:
-            header["NAXIS2"] = utils.condition_value(str(naxis2)) 
+            header["NAXIS2"] = utils.condition_value(str(naxis2))
     dump_mutations(header_in, header)
-    return header  
+    return header
 
 def dump_mutations(header1, header2):
     log.verbose("In header1 not header2:", set(dict(header1).items()) - set(dict(header2).items()))
     log.verbose("In header2 not header1:", set(dict(header2).items()) - set(dict(header1).items()))
 
-# ===========================================================================    
+# ===========================================================================
 
 #   This section contains matching customizations.
 
-BIASFILE_PARKEYS = ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP') 
+BIASFILE_PARKEYS = ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')
 # , ('DATE-OBS', 'TIME-OBS')),
 
 def fallback_header_acs_biasfile_v2(rmap, header_in):
@@ -139,4 +139,3 @@ def acs_darkfile_filter(kmap_orig):
         except Exception:
             pass
     return kmap, header_additions
-

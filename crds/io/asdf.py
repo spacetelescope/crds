@@ -14,7 +14,7 @@ from .abstract import AbstractFile
 # ============================================================================
 
 class AsdfFile(AbstractFile):
-    
+
     format = "ASDF"
 
     @utils.gc_collected

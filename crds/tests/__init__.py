@@ -3,4 +3,3 @@ def tstmod(module):
     import doctest
     # doctest.ELLIPSIS_MARKER = '-etc-'
     return doctest.testmod(module, optionflags=doctest.ELLIPSIS)
-

@@ -131,7 +131,7 @@ class TestSubmission(object):
     def setup_class(cls, urlopen):
         '''This method is run once for each class before any tests are run.'''
         cls.old_state = test_config.setup()
-        
+
         # Create a temporary directory:
         cls.tmpdir = tempfile.mkdtemp(prefix='tmp_rc_submit_')
 
@@ -246,12 +246,12 @@ class TestSubmission(object):
     def test_validate_emptykey(self, key='file_type'):
         del self.s[key]  # Resets to empty str
         self.s.validate()
-    
+
     @raises(NoFilesSelected)
     def test_validate_emptyfiles(self):
         for filename in self.s.files:
             self.s.remove_file(filename)
-        
+
         # Do something here to pass field validation checks:
         self.s['file_type']           = 'value'
         self.s['correctness_testing'] = 'value'
@@ -265,7 +265,7 @@ class TestSubmission(object):
 
     def test_validate(self):
         self.s.add_file(list(self.tempfiles)[0])
-        
+
         # Do something here to pass field validation checks:
         self.s['file_type']           = 'value'
         self.s['correctness_testing'] = 'value'

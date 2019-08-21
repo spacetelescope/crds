@@ -2,7 +2,7 @@
 builds on the crds.client web api and enhances it with fully developed cache
 semantics.  crds.client is largely decoupled from the core CRDS modules and
 focuses on JSONRPC calls and file downloads.   The heavy_client extends those
-primitive functions to provide higher level APIs that are dependent on the 
+primitive functions to provide higher level APIs that are dependent on the
 core library to implement.
 """
 import os
@@ -22,7 +22,7 @@ from nose.tools import assert_raises, assert_true
 # ==================================================================================
 
 def dt_getreferences_rmap_na():
-    """ 
+    """
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
@@ -32,7 +32,7 @@ def dt_getreferences_rmap_na():
     {'flat': 'NOT FOUND n/a'}
 
     >>> test_config.cleanup(old_state)
-    
+
     >> config.get_crds_state()
     """
 
@@ -46,7 +46,7 @@ def dt_getreferences_rmap_omit():
     {}
 
     >>> test_config.cleanup(old_state)
-    
+
     >> config.get_crds_state()
     """
 
@@ -77,7 +77,7 @@ def dt_getreferences_imap_omit():
 def dt_getreferences_ignore_cache():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds.stsci.edu")
-    >>> header = { "META.INSTRUMENT.NAME":"MIRI", "META.EXPOSURE.TYPE":"MIR_IMAGE", 
+    >>> header = { "META.INSTRUMENT.NAME":"MIRI", "META.EXPOSURE.TYPE":"MIR_IMAGE",
     ...            "META.OBSERVATION.DATE":"2018-05-25", "META.OBSERVATION.TIME":"00:00:00" }
     >>> heavy_client.getreferences(header,
     ...   observatory="jwst", context="jwst_miri.imap", ignore_cache=True, reftypes=["flat"])   # doctest: +ELLIPSIS
@@ -113,7 +113,7 @@ def dt_cache_references_multiple_bad_files():
     CrdsLookupError: Error determining best reference for 'flat'  =   something went wrong for flat.
 
     >>> test_config.cleanup(old_state)
-    
+
     """
 
 def dt_get_context_name_literal():
@@ -145,7 +145,7 @@ def dt_get_context_name_symbolic():
     'jwst_...pmap'
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_translate_date_based_context():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
@@ -181,23 +181,23 @@ def dt_pickled_mappings(mapping):
     >>> pickle_file = config.locate_pickle("jwst_0016.pmap","jwst")
     >>> pickle_file   # doctest: +ELLIPSIS
     '.../pickles/jwst/jwst_0016.pmap.pkl'
-    
+
     >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=True, use_pickles=True, save_pickles=True)  # doctest: +ELLIPSIS
     CRDS - INFO -  Saved pickled context '.../crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl'
     >>> assert os.path.exists(pickle_file)
-    
+
     >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=True, use_pickles=True, save_pickles=False)  # doctest: +ELLIPSIS
      CRDS - INFO -  Loaded pickled context 'jwst_0016.pmap'
-   
+
     >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=False, use_pickles=False, save_pickles=False)  # doctest: +ELLIPSIS
 
     >>> _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=False, use_pickles=True, save_pickles=False)  # doctest: +ELLIPSIS
      CRDS - INFO -  Loaded pickled context 'jwst_0016.pmap'
-   
+
     >>> heavy_client.load_pickled_mapping("jwst_0016.pmap")
     CRDS - INFO -  Loaded pickled context 'jwst_0016.pmap'
     PipelineContext('jwst_0016.pmap')
-    
+
     >>> _ = log.set_verbose()
     >>> os.chmod(pickle_file, 0o444)
     >>> heavy_client.remove_pickled_mapping("jwst_0016.pmap")  # doctest: +ELLIPSIS
@@ -213,11 +213,11 @@ def dt_pickled_mappings(mapping):
 
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_check_parameters():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    
+
     >>> header = { "NAME" : "VALID_VALUE",  "NAME1" : 1.0, "META.VALID.NAME3" : 1,   "NAME4" : True}
     >>> heavy_client.check_parameters(header)
     {'NAME': 'VALID_VALUE', 'NAME1': 1.0, 'META.VALID.NAME3': 1, 'NAME4': True}
@@ -231,10 +231,10 @@ def dt_check_parameters():
     >>> header = { "META.BAD.VALUE" : object() }
     >>> heavy_client.check_parameters(header)
     {}
-    
+
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_check_context():
     """
     >>> heavy_client.check_context(None)
@@ -243,7 +243,7 @@ def dt_check_context():
 def dt_get_context_parkeys():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> heavy_client.get_context_parkeys("jwst.pmap","miri")    
+    >>> heavy_client.get_context_parkeys("jwst.pmap","miri")
     ['META.INSTRUMENT.TYPE', 'META.INSTRUMENT.LAMP_STATE', 'META.OBSERVATION.DATE', 'META.VISIT.TSOVISIT', 'REFTYPE']
     >>> heavy_client.get_context_parkeys("jwst_miri.imap","miri")
     ['META.INSTRUMENT.LAMP_STATE', 'META.OBSERVATION.DATE', 'META.VISIT.TSOVISIT', 'REFTYPE']
@@ -276,4 +276,3 @@ def tst():
 
 if __name__ == "__main__":
     print(tst())
-

@@ -27,26 +27,26 @@ class AstDumper(ast.NodeVisitor):
 
 ILLEGAL_NODES = {
     "visit_FunctionDef",
-    "visit_ClassDef", 
-    "visit_Return", 
+    "visit_ClassDef",
+    "visit_Return",
     "visit_Yield",
-    "visit_Delete", 
-    "visit_AugAssign", 
+    "visit_Delete",
+    "visit_AugAssign",
     "visit_Print",
-    "visit_For", 
-    "visit_While", 
-    "visit_If", 
-    "visit_With", 
-    "visit_Raise", 
-    "visit_TryExcept", 
+    "visit_For",
+    "visit_While",
+    "visit_If",
+    "visit_With",
+    "visit_Raise",
+    "visit_TryExcept",
     "visit_TryFinally",
-    "visit_Assert", 
-    "visit_Import", 
-    "visit_ImportFrom", 
+    "visit_Assert",
+    "visit_Import",
+    "visit_ImportFrom",
     "visit_Exec",
     "visit_Global",
     "visit_Pass",
-    "visit_Repr", 
+    "visit_Repr",
     "visit_Lambda",
     "visit_Attribute",
     "visit_Subscript",
@@ -107,13 +107,13 @@ class MappingVerifier(ast.NodeVisitor):
     """
     def __init__(self, *args, **keys):
         super(MappingVerifier, self).__init__(*args, **keys)
-        
-        # assert not set(self.LEGAL_NODES).intersection(self.ILLEGAL_NODES), "MappingVerifier config error."       
+
+        # assert not set(self.LEGAL_NODES).intersection(self.ILLEGAL_NODES), "MappingVerifier config error."
         for attr in LEGAL_NODES:
             setattr(self, attr, self.generic_visit)
         for attr in ILLEGAL_NODES:
             setattr(self, attr, self.visit_Illegal)
-        
+
     def compile_and_check(self, text, source="<ast>", mode="exec"):
         """Parse `text` to verify that it's a legal mapping, and return a
         compiled code object.
@@ -150,7 +150,7 @@ class MappingVerifier(ast.NodeVisitor):
     def visit_Unknown(self, node):
         """Handle new / unforseen node types."""
         self.assert_(node, False, "Unknown node type in mapping " + repr(node))
-    
+
 #     def generic_visit(self, node):
 #         # print "generic_visit", repr(node)
 #         return super(MappingVerifier, self).generic_visit(node)
@@ -175,4 +175,3 @@ class MappingVerifier(ast.NodeVisitor):
         self.generic_visit(node)
 
 MAPPING_VERIFIER = MappingVerifier()
-

@@ -1,7 +1,7 @@
 """This module consolidates a number of aspects of reference type definition which were
-originally reverse engineered from CDBS and several different spec files.  It is 
-organized around loading type specs or prototype rmaps from the "specs" subdirectory of 
-an observatory/subsystem package.   For HST this reduces defining new types to adding 
+originally reverse engineered from CDBS and several different spec files.  It is
+organized around loading type specs or prototype rmaps from the "specs" subdirectory of
+an observatory/subsystem package.   For HST this reduces defining new types to adding
 a prototype rmap and defining .tpn files in the observatory package.
 """
 import os.path
@@ -41,7 +41,7 @@ class TypeSpec(dict):
     """This class captures type definition parameters for a single type"""
 
     def __init__(self, header):
-        """Initialize this TypeSpec from dict `header`,  enforcing requirments and creating suitable 
+        """Initialize this TypeSpec from dict `header`,  enforcing requirments and creating suitable
         defaults for missing fields.
         """
         header = utils.Struct(header)
@@ -75,7 +75,7 @@ class TypeSpec(dict):
 # =============================================================================
 
 def load_specs(spec_path):
-    """Load either the combined .json formatted type specs (preferred) or specs from 
+    """Load either the combined .json formatted type specs (preferred) or specs from
     individual type spec files (if necessary).
     """
     combined_specs_path = os.path.join(spec_path, "combined_specs.json")
@@ -85,17 +85,17 @@ def load_specs(spec_path):
         headers = load_raw_specs(spec_path)
         with log.warn_on_exception("Failed to save type specs .json at", repr(combined_specs_path)):
             save_json_specs(headers, combined_specs_path)
-    type_specs = { instr : 
-                   { filekind : TypeSpec(headers[instr][filekind]) 
+    type_specs = { instr :
+                   { filekind : TypeSpec(headers[instr][filekind])
                      for filekind in headers[instr]
                      }
                    for instr in headers
                    }
     return type_specs
-    
+
 def load_raw_specs(spec_path):
     """Return a dictionary of TypeSpecs loaded from directory `spec_path` of form:
-    
+
     { instrument : { filetype : header_dict, ...}, ... }
     """
     with log.error_on_exception("Failed loading type specs from:", repr(spec_path)):
@@ -126,7 +126,7 @@ def from_package_file(observatory, pkg):
     and construct and return a TypeParameters object.
     """
     here = (os.path.dirname(pkg) or ".")
-    specs_path = os.path.join(here, "specs") 
+    specs_path = os.path.join(here, "specs")
     unified_defs = load_specs(specs_path)
     return TypeParameters(observatory, unified_defs)
 
@@ -156,7 +156,7 @@ class TypeParameters:
 
         with log.error_on_exception("Can't determine type text descriptions from specs."):
             self.text_descr = {
-                reftype.lower() : params["text_descr"] 
+                reftype.lower() : params["text_descr"]
                 for instr, reftypes in sorted_udef_items
                 for reftype, params in reftypes.items()
                 }
@@ -169,7 +169,7 @@ class TypeParameters:
                     }
                 for instr in self.unified_defs
                 }
-            
+
         with log.error_on_exception("Failed determining suffix_to_filekind"):
             self._suffix_to_filekind = _invert_instr_dict(self._filekind_to_suffix)
 
@@ -198,7 +198,7 @@ class TypeParameters:
     def locator(self):
         """Deferred evaluation do to import orders."""
         return utils.get_locator_module(self.observatory)  # pluggable by observatory
-            
+
     def filetype_to_filekind(self, instrument, filetype):
         """Map the value of a FILETYPE keyword onto it's associated
         keyword name,  i.e.  'dark image' --> 'darkfile'
@@ -249,7 +249,7 @@ class TypeParameters:
         for tpn_path in self.get_all_tpn_paths(instrument, filekind, field):
             tpns.extend(generic_tpn.get_tpninfos(tpn_path))
         return sorted(list(set(tpns)))
-    
+
 
     def reference_props_to_validator_keys(self, instrument, filekind, field="tpn"):
         """Return the sequence of validator keys associated with `filename`.   A validator key
@@ -266,7 +266,7 @@ class TypeParameters:
                 log.verbose("Adding validator key", repr(tpnfile), verbosity=70)
                 results.append(tpnfile)
             except Exception as exc:
-                log.verbose_warning("Can't find TPN key for", 
+                log.verbose_warning("Can't find TPN key for",
                     (instrument, filekind, field), ":", str(exc),
                                     verbosity=75)
         append_tpn_level(results, instrument, filekind)
@@ -309,10 +309,10 @@ class TypeParameters:
 
     def get_row_keys(self, instrument, filekind):
         """Return the row_keys which define unique table rows corresponding to mapping.
-        
+
         These are used for "mode" checks to issue warnings when unique rows are deleted
         in a certify comparison check against the preceding version of a table.
-        
+
         row_keys are now also utlized to perform "affected datasets" table row
         lookups which essentially requires emulating that aspect of the calibration
         software.  Consequently, row_keys now have a requirement for a higher level
@@ -322,12 +322,12 @@ class TypeParameters:
         parameters,  row_keys must be supported by the interface which connects the
         CRDS server to the appropriate system dataset parameter database,  DADSOPS
         for HST.   That interface must be updated when row_keys.dat is changed.
-        
+
         The certify mode checks have a shaky foundation since the concept of mode
         doesn't apply to all tables and sometimes "data" parameters are required to
         render rows unique.   The checks only issue warnings however so they can be
         ignored by file submitters.
-        
+
         For HST calibration references mapping is an rmap.
         """
         try:
@@ -335,7 +335,7 @@ class TypeParameters:
         except KeyError:
             log.verbose("No unique row keys defined for", repr((instrument, filekind)))
             return []
-        
+
     def get_row_keys_by_instrument(self, instrument):
         """To support defining the CRDS server interface to DADSOPS, return the
         sorted list of row keys necessary to perform all the table lookups
@@ -364,11 +364,10 @@ class TypeParameters:
 # =============================================================================
 
 def get_types_object(observatory):
-    """Each observatory package instantiates a types object from the observatory's 
+    """Each observatory package instantiates a types object from the observatory's
     type specs using generic code defined in this module;  any generic code related
     to types is defined here,  but ultimately the instantiate TYPES object is bound
     to a specific observatory and defined in that package.
     """
     pkg = utils.get_observatory_package(observatory)
     return getattr(pkg, "TYPES")
-

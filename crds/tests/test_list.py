@@ -23,7 +23,7 @@ usage: /Users/jmiller/work/workspace_crds/CRDS/crds/list.py
 crds.list prints out a variety of information about CRDS configuration, the
 cache, reference and mapping files, default context names, and dataset headers
 and ids used for CRDS reprocessing recommendations.
-    
+
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -120,36 +120,36 @@ optional arguments:
     Contexts to list can be specified in a variety of ways:
 
     -- To list the references contained by several contexts
-    
+
     % crds list  --references --contexts hst_0001.pmap hst_0002.pmap ...
-    vb41935ij_bia.fits 
-    vb41935kj_bia.fits 
+    vb41935ij_bia.fits
+    vb41935kj_bia.fits
     ...
-    
+
     -- To list the references in a numerical range of contexts
 
     % crds list --references --range 1:2 --references
-    vb41935lj_bia.fits 
+    vb41935lj_bia.fits
     vb41935oj_bia.fits
     ...
 
     -- To list all mappings, even those not referenced by an imap or pmap
-    
+
     % crds list --mappings --all
-    hst.pmap 
-    hst_0001.pmap 
-    hst_0002.pmap 
-    hst_acs.imap 
-    hst_acs_0001.imap 
-    hst_acs_0002.imap 
-    hst_acs_atodtab.rmap 
+    hst.pmap
+    hst_0001.pmap
+    hst_0002.pmap
+    hst_acs.imap
+    hst_acs_0001.imap
+    hst_acs_0002.imap
+    hst_acs_atodtab.rmap
     ...
 
     --references, --mappings, or both can be listed.
-    
+
     --------------------------------------------------------------------------
     2. Locally cached files (files already synced to your computer) can be listed:
-    
+
     % crds list --cached-mappings --full-path
     ...
 
@@ -263,7 +263,7 @@ optional arguments:
     5. Information about the default context can be printed.  There are two variations and a subtle distinction:
 
     % python m crds.list --operational-context
-    jwst_0204.pmap 
+    jwst_0204.pmap
 
     lists the context which has been *commanded* as default on the CRDS server.
 
@@ -271,7 +271,7 @@ optional arguments:
 
     % crds list --remote-context jwst-ops-pipeline
     jwst_0101.pmap
-    
+
     lists the context which is *in actual use* in the associated archive pipeline as reported by
     a cache sync echo.
 
@@ -303,12 +303,12 @@ optional arguments:
     jwst_0208.pmap
     jwst_0209.pmap
 
-    % crds list --resolve-contexts  --contexts jwst-miri-dark-operational 
+    % crds list --resolve-contexts  --contexts jwst-miri-dark-operational
     jwst_miri_dark_0012.rmap
 
     % crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
     jwst_niriss_superbias_0005.rmap
-    
+
 
 ----------
 TEST CASES
@@ -354,7 +354,7 @@ def dt_list_cached_mappings():
     -ignore-/mappings/hst/hst_0001.pmap
     -ignore-/mappings/hst/hst_0002.pmap
     -ignore-
-    >>> doctest.ELLIPSIS_MARKER = '...'    
+    >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
     """
 
@@ -391,7 +391,7 @@ def dt_list_cached_references():
 
 def dt_list_dataset_ids():
     """
-    >>> old_state = test_config.setup()  
+    >>> old_state = test_config.setup()
     >>> ListScript("crds.list --dataset-ids wfpc2")()   # doctest: +ELLIPSIS
     U20L0U01T:U20L0U01T
     U20L0U02T:U20L0U02T
@@ -400,10 +400,10 @@ def dt_list_dataset_ids():
     ...
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_list_dataset_headers():
     """
-    >>> old_state = test_config.setup()  
+    >>> old_state = test_config.setup()
     >>> ListScript("crds.list --dataset-headers U20L0U01T:U20L0U01T --minimize-header --contexts hst.pmap")()   # doctest: +ELLIPSIS
     Dataset pars for 'U20L0U01T:U20L0U01T' with respect to 'hst.pmap':
      {'ATODGAIN': '15.0',
@@ -437,7 +437,7 @@ def dt_list_dataset_headers_json():
 
 def dt_list_dataset_headers_bogus():
     """
-    >>> old_state = test_config.setup()  
+    >>> old_state = test_config.setup()
     >>> ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap")()   # doctest: +ELLIPSIS
     CRDS - ERROR -  Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset ...'BAR'
     >>> test_config.cleanup(old_state)
@@ -445,12 +445,12 @@ def dt_list_dataset_headers_bogus():
 
 def dt_list_dataset_headers_id_expansions_only():
     """
-    >>> old_state = test_config.setup()  
+    >>> old_state = test_config.setup()
     >>> ListScript("crds.list --dataset-headers I9ZF01010 --id-expansions-only --contexts hst.pmap")()   # doctest: +ELLIPSIS
-    I9ZF01010:I9ZF01DZQ 
-    I9ZF01010:I9ZF01E0Q 
-    I9ZF01010:I9ZF01E1Q 
-    I9ZF01010:I9ZF01E3Q 
+    I9ZF01010:I9ZF01DZQ
+    I9ZF01010:I9ZF01E0Q
+    I9ZF01010:I9ZF01E1Q
+    I9ZF01010:I9ZF01E3Q
     >>> test_config.cleanup(old_state)
     """
 
@@ -539,7 +539,7 @@ def dt_list_operational_context():
     hst_....pmap
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_list_references_by_context():
     """
     >>> old_state = test_config.setup()
@@ -548,7 +548,7 @@ def dt_list_references_by_context():
     s7g1700ql_dead.fits
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_list_references_by_context():
     """
     >>> old_state = test_config.setup()
@@ -557,7 +557,7 @@ def dt_list_references_by_context():
     s7g1700ql_dead.fits
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_list_cat_mappings():
     """
     >>> old_state = test_config.setup()
@@ -636,7 +636,7 @@ def dt_list_status():
     Readonly Cache = False
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_list_config():
     """
     >>> old_state = test_config.setup()
@@ -658,7 +658,7 @@ def dt_list_config():
 
 def main():
     """Run module tests,  for now just doctests only.
-    
+
     test_config.setup() and cleanup() are done inline above because bracketing
     the tests here does not get picked up by nose test discovery.  Combining
     tests into one giant docstring works but is hard to analyze and debug when

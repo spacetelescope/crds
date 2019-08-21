@@ -1,6 +1,6 @@
 """This module defines an abstract API for tables used in CRDS file certification row checks
-and bestrefs table effects determinations.  In both cases it basically provides a list of 
-SimpleTable objects,  one per segment/hdu for a table file and a simple object which gives 
+and bestrefs table effects determinations.  In both cases it basically provides a list of
+SimpleTable objects,  one per segment/hdu for a table file and a simple object which gives
 readonly row acess to each segment.
 """
 
@@ -28,7 +28,7 @@ def ntables(filename):
 @utils.cached
 def tables(filename):
     """Return [ SimpleTable(filename, segment), ... ] for each table segment in filename.
-    
+
     This function is self-cached.    Clear the cache using clear_cache().
     """
     if filename.endswith(".fits"):
@@ -44,7 +44,7 @@ def tables(filename):
         return tables
     else:
         return [ SimpleTable(filename, segment=1) ]
-    
+
 def clear_cache():
     """Clear the cached values for the tables interface."""
     tables.cache.clear()
@@ -67,22 +67,22 @@ class SimpleTable:
             self.colnames = tuple(name.upper() for name in tab.columns)
             self.rows = tuple(tuple(row) for row in tab)   # readonly
         log.verbose("Creating", repr(self), verbosity=60)
-        
+
     @property
     def columns(self):
         """Based on the row tuples,  create columns dict dynamically.  This permits closing astropy Table during __init__.
-        
+
         Retuns { colname : column, ... }
         """
         if self._columns is None:
             self._columns = dict(list(zip(self.colnames, list(zip(*self.rows)))))
         return self._columns
-        
+
     def __repr__(self):
         return (self.__class__.__name__ + "(" + repr(self.basename) + ", " + repr(self.segment) + ", colnames=" +
                 repr(self.colnames) + ", nrows=" + str(len(self.rows)) + ")")
-    
-    
+
+
 
 def test():
     import doctest, crds.io.tables

@@ -35,7 +35,7 @@ polls the server for new messages at some periodic rate in seconds:
     def __init__(self, *args, **keys):
         super(MonitorScript, self).__init__(*args, **keys)
         self._last_id = 0
-        
+
         self.result = None
 
     def add_args(self):
@@ -66,7 +66,7 @@ polls the server for new messages at some periodic rate in seconds:
                 self._last_id = np.max([int(msg.id) for msg in messages])
             return messages
         except exceptions.StatusChannelNotFoundError:
-            log.verbose("Channel", srepr(self.args.key), 
+            log.verbose("Channel", srepr(self.args.key),
                         "not found.  Waiting for processing to start.")
             return []
         except exceptions.ServiceError as exc:
@@ -74,7 +74,7 @@ polls the server for new messages at some periodic rate in seconds:
             raise
 
     def format_remote(self, *params):
-        """Format tuple of message `params` in a standardized way for messages 
+        """Format tuple of message `params` in a standardized way for messages
         coming from the remote process being monitored.
         """
         text = html.unescape(" ".join(params))
@@ -107,7 +107,7 @@ polls the server for new messages at some periodic rate in seconds:
             log.info(self.format_remote("DONE:", result))
 
         self.result = result
-        
+
         return status
 
     def handle_cancel(self, message):
@@ -127,16 +127,16 @@ polls the server for new messages at some periodic rate in seconds:
         log.error(self.format_remote("Processing failed:",  message.data))
 
         self.result = message.data["result"]
-        
+
         return _STATUS_FAILED
-    
+
     def handle_error(self, message):
         """Generic "error" handler issues an error message from remote process and
         continues monitoring.
         """
         log.error(self.format_remote(message.data))
         return None
-    
+
     def handle_verbose(self, message):
         """Generic "verbose" handler issues a debug message from remote process if
         this monitor is running verbosely.
@@ -145,7 +145,7 @@ polls the server for new messages at some periodic rate in seconds:
         return None
 
     def handle_warning(self, message):
-        """Generic "warning" handler issues a  warning from remote process and 
+        """Generic "warning" handler issues a  warning from remote process and
         contiues monitoring.
         """
         log.warning(self.format_remote(message.data))
@@ -155,4 +155,3 @@ polls the server for new messages at some periodic rate in seconds:
 
 if __name__ == "__main__":
     sys.exit(MonitorScript()())
-

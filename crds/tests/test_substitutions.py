@@ -20,7 +20,7 @@ def substitutions_validate_hst():
     """
     >>> old_state = test_config.setup(url="https://hst-serverless-mode.stsci.edu")
     >>> old_verbose = log.set_verbose()
-    >>> substitutions.validate_substitutions("hst-operational")  
+    >>> substitutions.validate_substitutions("hst-operational")
     CRDS - DEBUG -  Using CACHED CRDS reference assignment rules last updated on '...'
     CRDS - DEBUG -  For 'acs' parameter 'LRFWAVE' with value 'between 3710 3826' is unchecked.
     CRDS - DEBUG -  For 'acs' parameter 'LRFWAVE' with value 'between 3826 3936' is unchecked.
@@ -172,4 +172,3 @@ def main():
 
 if __name__ == "__main__":
     print(main())
-

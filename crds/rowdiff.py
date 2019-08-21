@@ -62,7 +62,7 @@ def list_intersection(a_list, b_list, transform=lambda element : element):
     Other Parameters
     ----------------
     transform : function(element)
-        A function to perform on each element while the intersection is 
+        A function to perform on each element while the intersection is
         being executed.
 
 """
@@ -80,7 +80,7 @@ def list_intersection(a_list, b_list, transform=lambda element : element):
 
 
 def get_hdulist(fits_reference):
-    """ Open an HDU list from the fits reference. 
+    """ Open an HDU list from the fits reference.
     Note that the reference may already be an HDUList
     """
     # If the reference is a string, presume its a file path
@@ -126,7 +126,7 @@ def hdus_consistent(a_hdulist, b_hdulist):
         if a_hdulist[index].header.get('XTENSION') != \
            b_hdulist[index].header.get('XTENSION'):
             raise RuntimeError('Extension %d different: FITS A = %s, FITS B = %s' % \
-                                   (index, 
+                                   (index,
                                     a_hdulist[index].header.get('XTENSION'),
                                     b_hdulist[index].header.get('XTENSION')))
 
@@ -158,13 +158,13 @@ def report_mode_diff(diff):
     Parameters
     ----------
     diff : tuple of (a_table, b_table, opcodes)
-        `a_table` and b_table are the astropy.table.Table 
+        `a_table` and b_table are the astropy.table.Table
         objects that difflib.SequenceMatcher
         was executed on. `opcodes` is that difference.
 
     Returns
     -------
-    result : 
+    result :
         A single string containing a human-readable version of the difference
 
     """
@@ -289,13 +289,13 @@ class RowDiff:
 
     Parameters
     ----------
-    fits_a, fits_b: string or HDUList objects 
+    fits_a, fits_b: string or HDUList objects
         The two FITS files to compare. If strings are given, they
         are presumed to be file paths to open.
 
     fields: sequence
         List of fields to compare on.
-      
+
     ignore_fields: sequence
         List of fields to ignore. Cannot specify both fields and ignore_fields
 
@@ -359,7 +359,7 @@ class RowDiff:
                 self.consistent = hdus_consistent(self.a_hdulist, self.b_hdulist)
             except RuntimeError as exc:
                 print("rowdiff:", str(exc))
-                
+
             # Set the differencing function.
             if self.mode_fields:
                 self.diff = self.modediff
@@ -375,8 +375,8 @@ class RowDiff:
 
             for hdu_index in range(len(self.a_hdulist)):
                 if isinstance(self.a_hdulist[hdu_index], _TableLikeHDU):
-                    self.diffs.append((hdu_index, 
-                                       self.diff(self.a_hdulist[hdu_index].data, 
+                    self.diffs.append((hdu_index,
+                                       self.diff(self.a_hdulist[hdu_index].data,
                                                  self.b_hdulist[hdu_index].data)))
 
     def modediff(self, a_fitstable, b_fitstable):
@@ -486,7 +486,7 @@ class RowDiff:
 
         values_possible = list()
         for field in mode_field_names:
-            values_possible.append(sorted(list(set(list(a_table_modes[field]) + 
+            values_possible.append(sorted(list(set(list(a_table_modes[field]) +
                                                    list(b_table_modes[field])))))
         values_combinations = list(product(*values_possible))
 
@@ -569,7 +569,7 @@ class RowDiff:
 
                     a_table_values = a_table_values[selected_rows]
                     b_table_values = b_table_values[selected_rows]
-                        
+
                 # We will be using string-based difflib for further
                 # operations, so convert the tables to strings.
                 a_string = table_to_string(a_table_values)
@@ -660,7 +660,7 @@ class RowDiff:
         # If there are changes, produce a text diff of the changes.
         result = None
         if sm.ratio() < 0.99:
-            unified_diff = difflib.unified_diff(a_string, b_string, 
+            unified_diff = difflib.unified_diff(a_string, b_string,
                                                 "Table A", "Table B")
             result = (sm_opcodes, unified_diff)
 
@@ -674,7 +674,7 @@ class RowDiff:
         -------
         result : String
             String of human readable version of the RowDiff object.
-        
+
         """
 
         # Initialize the result string.
@@ -682,7 +682,7 @@ class RowDiff:
 
         # Save time, see if there are any diffs.
         if len(self.diffs) > 0:
-            
+
             # Mode difference reporting
             if self.mode_fields:
                 diff_current = 0
@@ -700,21 +700,21 @@ class RowDiff:
                         result += result_mode
                     else:
                         result += '\n    Table A has all modes.\n'
-                        
+
                     result_mode = report_mode_diff(result_modes_vs_b)
                     if result_mode:
                         result += '\n    Table B changes:\n'
                         result += result_mode
                     else:
                         result += '\n    Table B has all modes.\n'
-                        
+
                     result_mode = report_mode_diff(result_a_vs_b)
                     if result_mode:
                         result += '\n    Table A to B changes:\n'
                         result += result_mode
                     else:
                         result += '\n    Table A and B share all modes.\n'
-                        
+
                     result_mode = report_mode_diff(common_mode_diffs)
                     if result_mode:
                         result += '\n    Common mode changes:\n'
@@ -722,7 +722,7 @@ class RowDiff:
                         result += result_mode
                     else:
                         result += '\n    All common modes are equivalent.\n'
-                        
+
             # Row difference reporting
             else:
                 result_temp = ''
@@ -753,7 +753,7 @@ class RowDiff:
                                 result_temp += '\n    Row difference, unified diff format:\n'
                                 for unified_diff_row in unified_diff:
                                     result_temp += '        %s\n' % unified_diff_row
-                                
+
                 if result_temp:
                     result += result_temp
                 else:
@@ -813,14 +813,14 @@ class RowDiffScript(cmdline.Script):
         Summary:
             Remove from a rows 0-3
             Add to b rows 4-35
-    
+
         Row difference, unified diff format:
             --- Table A
-    
+
             +++ Table B
-    
+
             @@ -1,8 +1,36 @@
-    
+
             -1, '1993-12-01', 224.84801, 2.5362999, -30.488701
             -2, '1993-12-01', 314.35199, -52.258701, -5.0489001
             -3, '1993-12-01', 44.669998, 0.87, 47.959999
@@ -844,39 +844,39 @@ class RowDiffScript(cmdline.Script):
     An example:
         % python -m rowdiff s9m1329lu_off.fits s9518396u_off.fits --mode-fields=detchip,obsdate
         Difference for HDU extension #1
-        
+
             Table A changes:
-        
+
                 Missing Modes:
         detchip  obsdate
         ------- ----------
               1 1994-06-16
               1 1995-09-23
             <lines removed>
-        
+
             Table B changes:
-        
+
                 Missing Modes:
         detchip  obsdate
         ------- ----------
               1 1993-12-01
               2 1993-12-01
             <lines removed>
-        
+
             Table A to B changes:
-        
+
                 Missing Modes:
         detchip  obsdate
         ------- ----------
               1 1993-12-01
-        
+
                 Duplicated Modes:
         detchip  obsdate
         ------- ----------
               4 1994-06-16
               4 1995-09-23
             <lines removed>
-        
+
                 Changed Modes:
                 From Table A:
         detchip  obsdate
@@ -884,7 +884,7 @@ class RowDiffScript(cmdline.Script):
               2 1993-12-01
               3 1993-12-01
               4 1993-12-01
-        
+
                 To Table B:
         detchip  obsdate
         ------- ----------
@@ -892,7 +892,7 @@ class RowDiffScript(cmdline.Script):
               1 1995-09-23
               1 1997-11-02
             <lines removed>
-        
+
             All common modes are equivalent.
 
     """
@@ -903,10 +903,10 @@ class RowDiffScript(cmdline.Script):
 
         self.add_argument("tableA", help="First table to compare")
         self.add_argument("tableB", help="Second table to compare")
-        self.add_argument("--ignore-fields", help="List of fields to ignore", 
+        self.add_argument("--ignore-fields", help="List of fields to ignore",
                           type=str)
         self.add_argument("--fields",
-                          help="List of fields to compare", 
+                          help="List of fields to compare",
                           type=str)
         self.add_argument("--mode-fields",
                           help="List of fields to do a mode compare",
@@ -932,7 +932,7 @@ class RowDiffScript(cmdline.Script):
             ignore_fields = self.args.ignore_fields.split(',')
         if self.args.mode_fields is not None:
             mode_fields = self.args.mode_fields.split(',')
-        
+
         print(RowDiff(tableA_path, tableB_path,
                       fields=fields,
                       ignore_fields=ignore_fields,

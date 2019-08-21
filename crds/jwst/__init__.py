@@ -30,4 +30,3 @@ PROVENANCE_KEYWORDS = ("META.DESCRIPTION", "META.PEDIGREE", "META.USEAFTER","MET
 USEAFTER_KEYWORDS = ("META.OBSERVATION.DATE", "META.OBSERVATION.TIME") # Dataset keywords matching in UseAfter selectors
 
 DEFAULT_SELECTORS = ("Match", "UseAfter")   # Normal selector hierarchy in rmap
-

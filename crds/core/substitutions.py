@@ -11,7 +11,7 @@ dictionary, if applicable.   For each `header_key`,  `condition_expr` expression
 with respect to the reference file header.  If the `condition_expr` is True,  the value of the
 `header_key` is literally replaced with `expansion` for the purpose of rmap matching.  The file
 is not modified,  the rmap reinterprets the file.
-    
+
 An example substitution rule is:
 
     { "CCDGAIN" : { "DETECTOR='WFC3' and CCDGAIN='-999'" : "1.0|2.0|4.0|8.0" }
@@ -30,11 +30,11 @@ from . import log, utils, selectors
 # ============================================================================
 
 HERE = os.path.dirname(__file__) or "."
-    
-# ============================================================================    
+
+# ============================================================================
 
 class HeaderExpander:
-    """HeaderExpander applies a set of expansion rules to a header.  It 
+    """HeaderExpander applies a set of expansion rules to a header.  It
     compiles the applicability expression of each rule.
 
     >>> from pprint import pprint as pp
@@ -81,25 +81,25 @@ class HeaderExpander:
             try:
                 applicable = eval(compiled, {}, header)  # compiled code is from static file.
             except Exception as exc:
-                log.verbose_warning("Header expansion for",repr(expr), 
+                log.verbose_warning("Header expansion for",repr(expr),
                             "failed for", repr(str(exc)))
                 continue
             if applicable:
-                log.verbose("Expanding", repr(expr), "yields", 
+                log.verbose("Expanding", repr(expr), "yields",
                             var + "=" + repr(expansion))
                 expanded[var] = expansion
             else:
                 log.verbose("Expanding", repr(expr), "doesn't apply.")
         log.verbose("Expanded header", self.required_header(expanded))
         return expanded
-    
+
     def required_keys(self):
         """Return the list of header keys required to evaluate all substitutions conditions."""
         required = []
         for (_var, expr) in self.mapping:
             required.extend(required_keys(expr))
         return sorted(set(required))
-    
+
     def required_header(self, header):
         """Ensure all required keywords for evaluating expansions are defined in `header`, at lest
         with a value of UNDEFINED.
@@ -111,21 +111,21 @@ class HeaderExpander:
         for (var, expr), (expansion, compiled) in self.mapping.items():
             if var not in values:
                 values[var] = set()
-            values[var] |= set([value for value in selectors.glob_list(expansion) 
+            values[var] |= set([value for value in selectors.glob_list(expansion)
                                 if not value.startswith("BETWEEN")])
         return { var : sorted(list(vals)) for (var, vals) in values.items() }
-        
+
 def required_keys(expr):
     """
     >>> required_keys("VAR1=='VAL1' and VAR2=='VAL2' and VAR3=='VAL3'")
     ['VAR1', 'VAR2', 'VAR3']
     """
     return sorted({term.split("=")[0].strip() for term in expr.split("and")})
-    
+
 
 class ReferenceHeaderExpanders(dict):
     """Container class for all expanders for all instruments of an observatory."""
-    
+
     @classmethod
     @utils.cached
     def load(cls, observatory):
@@ -160,7 +160,7 @@ class ReferenceHeaderExpanders(dict):
                                     "with value", repr(value), "is unchecked.")
                         continue
                     if value not in valid_values[parameter]:
-                        log.error("For", repr(instrument), "parameter", repr(parameter), "value", 
+                        log.error("For", repr(instrument), "parameter", repr(parameter), "value",
                                   repr(value), "is not in", valid_values[parameter])
 
 def expand_wildcards(rmapping, header):

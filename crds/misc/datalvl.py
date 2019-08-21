@@ -37,9 +37,9 @@ def get_type_to_level(refpath):
 
 def invert_cal_levels(cal_levels):
     """Invert and return the cal_levels mapping.
-    
+
     >>> cal_levels = {
-    ...    "2A": [ 
+    ...    "2A": [
     ...        "dark",
     ...        "gain",
     ...        "ipc",
@@ -81,4 +81,3 @@ def test():
     import doctest
     from crds.misc import datalvl
     doctest.testmod(datalvl)
-

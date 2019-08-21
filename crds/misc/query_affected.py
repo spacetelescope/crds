@@ -7,7 +7,7 @@ from crds.client import api
 class QueryAffectedDatasetsScript(cmdline.Script):
 
     description = """
-query_affected_datasets (QAD) queries the CRDS server for datasets affected by the specified 
+query_affected_datasets (QAD) queries the CRDS server for datasets affected by the specified
 CONTEXT(s), history INDICES, or DATES.  QAD relies on pre-computed results on the server,
 so QAD queries are only valid for historical context transitions from the context history.
 When no history interval is specified,  QAD uses the last processed context as the starting
@@ -21,14 +21,14 @@ Before going too far, a couple of points are in order:
     either switch-by-switch, or potentially multiple contexts at once, respectively.   Override the
     log_affected() or log_all_ids() methods to customize most logging.   QAD provides basic interaction
     with the context history, affected datasets service, recording state, and error handling.
-    
+
     2. crds.bestrefs can be used to compute the datasets affected by arbitrary context transitions
     when run locally.   The computation can require minutes to hours depending on number of instruments,
-    types, datasets, and tables potentially affected.    For this, the --affected-datasets switch 
+    types, datasets, and tables potentially affected.    For this, the --affected-datasets switch
     configures crds.bestrefs to perform an affected datasets computation using the bundle of standard
     options run on the CRDS servers.
-    
-Due to processing order on the server, new contexts appear in the context history as operational 
+
+Due to processing order on the server, new contexts appear in the context history as operational
 before the datasets affected have been computed.   This framework helps resolve that race condition
 and provides options for handling affected datasets computations which contained errors.
 
@@ -43,8 +43,8 @@ To support interactive experimentation, QAD supports listing the context history
     (87, '2014-10-14 09:34:29', 'hst_0289.pmap', 'Delivery of a new COS FUV BPIXTAB.')
 
 See also the -x and -y parameters below for customizing interactive query ranges.
-    
-With no history range specified, QAD selects the last history item processed as the starting point 
+
+With no history range specified, QAD selects the last history item processed as the starting point
 and the end of the current history as the stopping point.  Normally there's nothing new to report,
 the last thing processed was the end of the history and nothing has changed on the server.
 
@@ -54,8 +54,8 @@ the last thing processed was the end of the history and nothing has changed on t
     CRDS - INFO - 0 warnings
     CRDS - INFO - 1 infos
 
-Following a context change,  by default QAD will notice a difference between the last saved context 
-and the new last context in the history.  QAD is designed to be sub-classed but by default prints log 
+Following a context change,  by default QAD will notice a difference between the last saved context
+and the new last context in the history.  QAD is designed to be sub-classed but by default prints log
 information and recorded affected datasets output to STDERR.   It prints affected dataset IDs to STDOUT.
 Run periodically,  QAD will typically see at most a single context switch.
 
@@ -92,8 +92,8 @@ Run periodically,  QAD will typically see at most a single context switch.
     CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
     CRDS - INFO - 3 infos
-    
-    % cat ids 
+
+    % cat ids
     i9zf01010
     i9zf02010
     i9zf03010
@@ -103,7 +103,7 @@ Run periodically,  QAD will typically see at most a single context switch.
 
 STDERR output from multiple context switches is delimited by ########## lines.
 
-For the sake of custom queries,  QAD supports --starting-context (-x) and --stopping-context (-y) parameters to define the 
+For the sake of custom queries,  QAD supports --starting-context (-x) and --stopping-context (-y) parameters to define the
 history starting and stopping points.  -x and -y can be specified as CONTEXTS, HISTORY INDICES, or DATES.
 
     % query_affected_datasets -x 92 -y 94 > ids
@@ -166,25 +166,25 @@ history starting and stopping points.  -x and -y can be specified as CONTEXTS, H
     CRDS - INFO - 0 warnings
     CRDS - INFO - 4 infos
 
-QAD is designed to be run perdiodically,  say every 30 minutes,  to check with the CRDS server for 
+QAD is designed to be run perdiodically,  say every 30 minutes,  to check with the CRDS server for
 context updates.  If multiple context switches occur during one polling interval,  by default QAD
 includes IDs from all of them.   This is also true of interactive queries using -x and/or -y,  so
 it's possible to combine affected datasets from multiple switches when repeated IDs are expected.
 
-QAD also supports a --single-context-switch (-s) mode for printing results 1-by-1 in the advent of 
+QAD also supports a --single-context-switch (-s) mode for printing results 1-by-1 in the advent of
 multiple context switches in on polling interval.
 
 Since there is a race condition between when a context is made operational and when affected datasets results
 are available on the CRDS server,  QAD also supports a -i switch for ignoring unavailable results.  Alternately
 missing results are considered an error,  the main difference being the exit status.
 
-For initialzing,  specify -i to ignore any missing computations since QAD will attempt to process the 
+For initialzing,  specify -i to ignore any missing computations since QAD will attempt to process the
 entire history the first time it is run and precomputed results don't exist for all historical context
 switches.
 
 It's possible for precomputed results to contain bestrefs errors of some sort,  most likely due to invalid
 bestrefs selection parametersin the HST DADSOPS catalog.   By default the datasets from a computation which
-contained errors are excluded from the overall results.   Use -k to include the dataset IDs from computations 
+contained errors are excluded from the overall results.   Use -k to include the dataset IDs from computations
 which included errors.
 
 Conversely, to abort processing when an affected datasets computation included errors,  use -z to fail
@@ -201,10 +201,10 @@ The --quiet (-q) parameter suppresses the recorded log output from the affected 
     CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
     CRDS - INFO - 5 infos
-    
+
 NOTE:  CRDS logging is used in both query_affected_datasets and the original server-side affected datasets computations.  The
 final errors count shown above only applies to the client-side computing in query_affected_datasets,  so server-side errors are
-not *counted*.   However,  server-side errors are tracked and reduced to a single client-side error for each server-side 
+not *counted*.   However,  server-side errors are tracked and reduced to a single client-side error for each server-side
 bestrefs run with errors.
 
 The --verbose parameter includes debug output in excess of normal application logging,  possibly useful
@@ -218,13 +218,13 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             help="Print out the context history and exit.")
 
         self.add_argument("-x", "--starting-context", dest="starting_context",
-            help="Use the affected datasets computation starting with this history index integer, date, or context name. Defaults to last processed.", 
+            help="Use the affected datasets computation starting with this history index integer, date, or context name. Defaults to last processed.",
             metavar="INT_OR_NAME", default=None, type=str)
-        
-        self.add_argument("-y", "--stopping-context", dest="stopping_context", 
+
+        self.add_argument("-y", "--stopping-context", dest="stopping_context",
             help="Use the affected datasets computation starting with this history index integer, date, or context name. Defaults to end of history.",
             metavar="INT_OR_NAME", default=None, type=str)
-        
+
         self.add_argument("-s", "--single-context-switch", dest="single_context_switch", action="store_true",
             help="For default indexing, if multiple new contexts are available,  just process one new context and stop.")
 
@@ -236,7 +236,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
 
         self.add_argument("-z", "--fail-on-errant-history", dest="fail_on_errant_history", action="store_true",
             help="If bestrefs status indicates errors occurred, quit processing.  (fix the server and rerun).")
-        
+
         self.add_argument("-f", "--last-processed-file", dest="last_processed_file",
             help="File containing the tuple of the last history item successfully processed. Defaults to file in CRDS cache.")
 
@@ -251,7 +251,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         self.contributing_context_switches = 0
 
     def main(self):
-        """Top level processing method."""    
+        """Top level processing method."""
         self.require_server_connection()
         if self.args.list_history:
             return self.list_history()
@@ -264,7 +264,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         if effects:
             self.save_last_processed(effects)
         return log.errors()
-        
+
     def process(self,  effects):
         """Output the results of all the context transitions."""
         ids = []
@@ -275,24 +275,24 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
                 self.use_affected(i, affected)
                 self.contributing_context_switches += 1
         return sorted(set(ids))
-        
+
     def use_affected(self, i, affected):
         """PLUGIN: for doing something with each individual context switch set of effects. Default does nothing.
         i         -- the ending history index of the transition
         affected  -- dictionary of effects info
         """
         pass
-    
+
     def use_all_ids(self, effects, ids):
         """PLUGIN: for using all ids which passed availability and error screening. Default prints ids to stdout.
-        
+
         effects :    [ (history_index, affects info), ...]
-        
+
         ids :  sorted set of all ids affected by specified or implied contexts
         """
         if ids:
             print("\n".join(ids))
-        
+
     def log_affected(self, i, affected):
         """PLUGIN: Banner log and debug output for each context switch."""
         if log.get_verbose():
@@ -306,7 +306,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
     def log_all_ids(self, effects, ids):
         """PLUGIN: Summary output after all contexts processed."""
         if self.args.quiet:
-            return 
+            return
         if not effects:
             log.info("No new results are available.")
         else:
@@ -316,24 +316,24 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             log.info("Contributing context switches =", len(effects))
             log.info("Total products affected =", len(ids))
         log.standard_status()
-        
+
     def list_history(self):
         """Print out the context history."""
         for i in range(self.history_start, self.history_stop+1):
             print((i,) + self.history[i])
-   
+
     @property
-    @utils.cached         
+    @utils.cached
     def history(self):
         """Return the context history or fail.  Should nominally always work."""
         try:
             return api.get_context_history(self.observatory)
         except Exception as exc:
             self.fatal_error("get_context_history failed: ", str(exc).replace("OtherError:",""))
-            
+
     def get_affected(self, old_context, new_context):
-        """Return the affected datasets Struct for the transition from old_context to new_context,  
-        or None if the results aren't ready yet.   
+        """Return the affected datasets Struct for the transition from old_context to new_context,
+        or None if the results aren't ready yet.
         """
         try:
             affected = api.get_affected_datasets(self.observatory, old_context, new_context)
@@ -347,7 +347,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             else:
                 self.fatal_error("get_affected_datasets failed: ", str(exc).replace("OtherError:",""))
         return affected
-    
+
     def ignore_errors(self, i, affected):
         """Check each context switch for errors during bestrefs run. Fail or return False on errors."""
         ignore = False
@@ -359,7 +359,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
                 self.fatal_error(message)
             else:
                 log.error(message)
-        return ignore          
+        return ignore
 
     def polled(self):
         """Output the latest affected datasets taken from the history starting item onward.
@@ -396,7 +396,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             else:
                 item = 0
         return item
-    
+
     @property
     @utils.cached
     def history_stop(self):
@@ -411,7 +411,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             else:
                 item = len(self.history) - 1
         return item
-        
+
     def convert_context(self, context):
         """Convert an integer or context name into a history index."""
         try:
@@ -433,7 +433,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             self.fatal_error("Context = '{}' not found in history".format(context))
         assert 0 <= item < len(self.history),  "Invalid history item " + repr(item)
         return item
-    
+
     def save_last_processed(self, effects):
         """Record the last index history tuple successfully processed."""
         last_ix = effects[-1][0]
@@ -462,6 +462,6 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             return self.args.last_processed_file
         else:
             return os.path.join(config.get_crds_cfgpath(self.observatory), "ad_last_processed")
-            
+
 if __name__ == "__main__":
     sys.exit(QueryAffectedDatasetsScript()())

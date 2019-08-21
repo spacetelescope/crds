@@ -28,14 +28,14 @@ def dt_dataset():
 def dt_mapping():
     """
     command line parameter checking filter for mapping files.
-    
+
     >>> old_state = test_config.setup()
 
     >>> cmdline.mapping("foo.fits")
     Traceback (most recent call last):
     ...
     AssertionError: A .rmap, .imap, or .pmap file is required but got: 'foo.fits'
-    
+
     >>> cmdline.mapping("hst.pmap")
     'hst.pmap'
 
@@ -148,7 +148,7 @@ def dt_observatories_obs_pkg():
     >>> utils.clear_function_caches()
     >>> Script("cmdline.Script").observatory
     'hst'
-    
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -175,7 +175,7 @@ def dt_no_files_in_class():
     Traceback (most recent call last):
     ...
     NotImplementedError: Class must implement list of `self.args.files` raw file paths.
-    >>> test_config.cleanup(old_state) 
+    >>> test_config.cleanup(old_state)
    """
 
 def dt_get_files():
@@ -190,7 +190,7 @@ def dt_get_files():
     ['hst.pmap', 'hst_0002.pmap', 'hst_0001.pmap']
 
     >>> test_config.cleanup(old_state)
-    """    
+    """
 
 def dt_resolve_context():
     """
@@ -211,7 +211,7 @@ def dt_get_file_properties():
 
     >>> s = Script("cmdline.Script")
 
-    >>> s.get_file_properties("hst_acs_biasfile_0005.rmap") 
+    >>> s.get_file_properties("hst_acs_biasfile_0005.rmap")
     ('acs', 'biasfile')
     >>> s.get_file_properties("hst_acs_biasfile_0005.fits")
     ('acs', 'biasfile')
@@ -219,7 +219,7 @@ def dt_get_file_properties():
     >>> s = Script("crds.Script --jwst")
     >>> s.get_file_properties("data/valid.asdf")
     ('nirspec', 'wavecorr')
-   
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -266,7 +266,7 @@ def dt_are_all_mappings():
 
 
 
-class TestCmdline(test_config.CRDSTestCase):    
+class TestCmdline(test_config.CRDSTestCase):
     script_class = ListScript
     # server_url = "https://hst-crds-dev.stsci.edu"
     cache = test_config.CRDS_TESTING_CACHE
@@ -274,7 +274,7 @@ class TestCmdline(test_config.CRDSTestCase):
     def test_console_profile(self):
         self.run_script("crds.list --status --profile=console",
                         expected_errs=None)
-        
+
     def test_file_profile(self):
         self.run_script("crds.list --status --profile=profile.stats",
                         expected_errs=None)
@@ -305,7 +305,7 @@ class TestCmdline(test_config.CRDSTestCase):
         s = Script("cmdline.Script --ignore-cache")
         s.dump_mappings(["hst_acs.imap"])
 
-class TestContextsScript(test_config.CRDSTestCase):    
+class TestContextsScript(test_config.CRDSTestCase):
     script_class = ContextsScript
     # server_url = "https://hst-crds-dev.stsci.edu"
     cache = test_config.CRDS_TESTING_CACHE
@@ -344,10 +344,10 @@ class TestContextsScript(test_config.CRDSTestCase):
         assert contexts[0] == "hst.pmap", log.format(len(contexts), contexts)
         mappings = sorted(list(set(s.get_context_mappings())))
         assert len(mappings) == 116, log.format(len(mappings), mappings)
-        
+
 def main():
     """Run module tests,  for now just doctests only.
-    
+
     test_config.setup() and cleanup() are done inline above because bracketing
     the tests here does not get picked up by nose test discovery.  Combining
     tests into one giant docstring works but is hard to analyze and debug when

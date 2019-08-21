@@ -3,7 +3,7 @@ files.   It has been extended so that it is capable of handling FITS reference
 file checksums as well::
 
     % crds checksum  hst.pmap  hst_acs_0020.imap   hst_acs_darkfile_0057.rmap
-    
+
     % crds checksum ./test.fits
     % crds checksum --remove ./*.fits
     % crds checksum --verify ./*.fits
@@ -28,10 +28,10 @@ def update_checksum(file_):
     if not check_duplicates(file_):
         mapping = rmap.Mapping.from_file(file_, ignore_checksum=True)
         mapping.write()
-    
+
 # Interim step to making update_checksums universal.  Switch to update_mapping_checksums now.
 update_mapping_checksum = update_checksum
-    
+
 def check_duplicates(file_):
     """Before rewriting an rmap to update the checksum, certify to ensure no
     duplicates (or other certify errors) exist prior to rewriting checksum.
@@ -87,47 +87,47 @@ class ChecksumScript(cmdline.Script):
 
     description = """
     Add, remove, or verify checksums in CRDS rules or reference files.
-    
+
     1. Default operation is to ADD checksums::
-    
-    % crds checksum  *.rmap  
-    
+
+    % crds checksum  *.rmap
+
     % crds checksum  *.fits
-    
+
     2. Reference files may support REMOVING checksums::
-    
+
     % crds checksum --remove *.fits
-    
+
     NOTE: CRDS mapping / rules files do not support removing checksums.
-    
+
     3. Checksums can be VERIFIED without attempting to update or remove::
-    
+
     % crds checksum --verify  *.rmap
-    
+
     % crds checksum --verify *.fits
-    
+
     Currently only FITS references support checksum operations.
     Checksums can be added or verified on all CRDS mapping types.
     """
-    
-    epilog = """    
+
+    epilog = """
     """
 
     locate_file = cmdline.Script.locate_file_outside_cache
-    
+
     def add_args(self):
         self.add_argument(
             "files", type=str, nargs="+",
             help="Files to operate on, CRDS rule or reference files.")
-        
+
         self.add_argument(
-            "--remove", action="store_true", 
+            "--remove", action="store_true",
             help="Remove checksums when specified.  Invalid for CRDS mappings.")
-        
+
         self.add_argument(
-            "--verify", action="store_true", 
+            "--verify", action="store_true",
             help="Verify checksums when specified.")
-        
+
     def main(self):
         for file_ in self.files:
             with log.error_on_exception("Checksum operation FAILED"):
@@ -138,6 +138,6 @@ class ChecksumScript(cmdline.Script):
                 else:
                     add_checksum(file_)
         return log.errors()
-    
+
 if __name__ == "__main__":
     sys.exit(ChecksumScript()())

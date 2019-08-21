@@ -12,7 +12,7 @@ class CrdsError(Exception):
 
 class ServiceError(CrdsError):
     """The service call failed for some reason."""
-    
+
 class StatusChannelNotFoundError(ServiceError):
     """Requested status channel does not exist.  Typo or deleted."""
 
@@ -37,7 +37,7 @@ class CrdsWebAuthenticationError(CrdsWebError):
     """
 class CrdsExtraneousFileError(CrdsWebError):
     """Unexpected files are already in the ingest directory during a file submisssion."""
-    
+
 # -------------------------------------------------------------------------------------------
 
 class CrdsBackgroundError(CrdsError):
@@ -60,7 +60,7 @@ class CrdsBadReferenceError(CrdsError):
 
 class CrdsNetworkError(CrdsError):
     """First network service call failed, nominally connection refused."""
-    
+
 class CrdsLookupError(CrdsError, LookupError):
     """Filekind NOT FOUND for some reason defined in the exception string."""
 
@@ -103,17 +103,17 @@ class InconsistentParkeyError(MappingError):
 
 class MappingInsertionError(MappingError):
     """The insertion of a new file into a mapping (rmap) failed for some reason."""
-    
+
 # -------------------------------------------------------------------------------------------
 
 class ValidationError(CrdsError):
     """Some Selector key did not match the set of legal values."""
 
 class AmbiguousMatchError(CrdsError):
-    """Represents a MatchSelector which matched more than one equivalently 
-    weighted choice.   Ambiguous matches represents a problem in the RMAP 
-    for projects which don't allow these or Selectors which don't support 
-    them.   NOTE: allowing ambiguous matches is important to HST and the 
+    """Represents a MatchSelector which matched more than one equivalently
+    weighted choice.   Ambiguous matches represents a problem in the RMAP
+    for projects which don't allow these or Selectors which don't support
+    them.   NOTE: allowing ambiguous matches is important to HST and the
     canonical HST Match -> UseAfter pattern can support them under many
     circumstances.  The semantics for these are shaky since it's possible
     to have merge collisions which work out badly.
@@ -163,7 +163,7 @@ class InvalidVersionFormat(CrdsError):
 class IrrelevantReferenceTypeError(LookupError):
     """The reference determined by this rmap does not apply to the instrument
     mode specified by the dataset header.
-    
+
     Based on the "rmap_relevance" rmap header expression.
     """
 
@@ -171,7 +171,7 @@ class OmitReferenceTypeError(LookupError):
     """The reference determined by this rmap does not apply to the instrument
     mode specified by the dataset header,  and should be completely omitted from
     the bestrefs results dictionary.
-    
+
     Based on the "rmap_omit" rmap header expression.
     """
 
@@ -188,12 +188,12 @@ class YamlFormatError(FileFormatError):
 
 class UnsupportedFileOpError(CrdsError, NotImplementedError):
     """In CRDS,  some function is not supported for a particular file format."""
-    
+
 # -------------------------------------------------------------------------------------------
 
 class CertifyError(CrdsError):
     """Certify exception baseclass."""
-    
+
 class MissingKeywordError(CertifyError):
     """A required keyword was not defined."""
 
@@ -214,7 +214,7 @@ class InconsistentTpnReplaceError(CertifyError):
 
 class TypeSetupError(CertifyError):
     """An error occured while trying to locate file constraints and row mode variables."""
-    
+
 class MissingReferenceError(CertifyError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
@@ -222,10 +222,10 @@ class RequiredConditionError(CertifyError):
     """An ExpressionValidator evaluated to False with respect to a file header."""
 
 class BadKernelCenterPixelTooSmall(CertifyError):
-    """A convolution kernel array had a center pixel <= 1.0."""  
+    """A convolution kernel array had a center pixel <= 1.0."""
 
 class BadKernelSumError(CertifyError):
-    """A convolution kernel array had a sum too far from 1.0, or similar."""  
+    """A convolution kernel array had a sum too far from 1.0, or similar."""
 
 class MissingArrayError(CrdsError):
     """A specified (named?) array was not found in a reference file."""
@@ -257,4 +257,3 @@ class CrdsPipelineTypeDeterminationError(CrdsError):
 _exception_names = [ name for name in dir() if name.endswith("Error") ]
 
 __all__ = _exception_names
-

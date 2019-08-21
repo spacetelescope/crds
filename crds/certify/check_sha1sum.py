@@ -12,7 +12,7 @@ def check_sha1sums(filepaths, observatory=None):
     to CRDS for project `observatory`,  check to see if any are
     bit-for-bit identical with existing files as determined by
     the CRDS server's catalog and sha1sum matching.
-    
+
     filepaths  [str, ...]   paths of files to be checked for preexistence
     observartory   str    e.g. 'hst' or 'jwst'
 

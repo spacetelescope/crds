@@ -63,42 +63,42 @@ def certify_bad_checksum():
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
     CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: data/s7g1700gl_dead_bad_xsum.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  23 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - ERROR -  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
     CRDS - ERROR -  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
     CRDS - ERROR -  >> *** Error:   checking data fill: Data fill area invalid
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  31 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (3 columns x 10 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 SEGMENT              4A        
-    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
-    CRDS - INFO -  >>    3 LIVETIME             D         
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 SEGMENT              4A
+    CRDS - INFO -  >>    2 OBS_RATE (count /s / D
+    CRDS - INFO -  >>    3 LIVETIME             D
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     2         1     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     2         1
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 2 warning(s) and 1 error(s). ****
     CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
     CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
@@ -117,38 +117,38 @@ def certify_good_checksum():
     CRDS - INFO -  Certifying 'data/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     CRDS - INFO -  FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
     CRDS - INFO -  Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: data/s7g1700gl_dead_good_xsum.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  23 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  31 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (3 columns x 10 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 SEGMENT              4A        
-    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
-    CRDS - INFO -  >>    3 LIVETIME             D         
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 SEGMENT              4A
+    CRDS - INFO -  >>    2 OBS_RATE (count /s / D
+    CRDS - INFO -  >>    3 LIVETIME             D
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     0         0     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     0         0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
@@ -159,187 +159,187 @@ def certify_good_checksum():
 
 INTERPRET_FITSVERIFY = """
 Running fitsverify.
- 
-              fitsverify 4.18 (CFITSIO V3.370)              
-              --------------------------------              
- 
- 
+
+              fitsverify 4.18 (CFITSIO V3.370)
+              --------------------------------
+
+
 File: ./s7g1700gl_dead_bad_xsum.fits
 
 2 Header-Data Units in this file.
- 
+
 =================== HDU 1: Primary Array ===================
- 
+
 23 header keywords
 
-Null data array; NAXIS = 0 
- 
+Null data array; NAXIS = 0
+
 =================== HDU 2: BINARY Table ====================
- 
+
 *** Warning: Data checksum is not consistent with  the DATASUM keyword
 *** Warning: HDU checksum is not in agreement with CHECKSUM.
 
 31 header keywords
- 
+
    (3 columns x 10 rows)
 
  Col# Name (Units)       Format
-   1 SEGMENT              4A        
-   2 OBS_RATE (count /s / D         
+   1 SEGMENT              4A
+   2 OBS_RATE (count /s / D
    3 LIVETIME             D
- 
+
 ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
- 
+
  HDU#  Name (version)       Type             Warnings  Errors
- 1                          Primary Array    0         0     
- 2                          Binary Table     2         1     
- 
+ 1                          Primary Array    0         0
+ 2                          Binary Table     2         1
+
 Verification found 2 warning(s) and 0 error(s). ****
 """
 
 INTERPRET_FITSVERIFY2 = """
-              fitsverify 4.18 (CFITSIO V3.410)              
-              --------------------------------              
- 
- 
+              fitsverify 4.18 (CFITSIO V3.410)
+              --------------------------------
+
+
 File: jwst_nircam_photom_nrcalong.fits
 
 3 Header-Data Units in this file.
- 
+
 =================== HDU 1: Primary Array ===================
- 
+
  33 header keywords
- 
- Null data array; NAXIS = 0 
- 
+
+ Null data array; NAXIS = 0
+
 =================== HDU 2: BINARY Table ====================
- 
+
  27 header keywords
- 
+
  PHOTOM(1)  (8 columns x 41 rows)
- 
+
  Col# Name (Units)       Format
-   1 filter               12A       
-   2 pupil                12A       
-   3 order                E         
-   4 photmjsr             E         
-   5 uncertainty          I         
-   6 nelem                I         
-   7 wavelength           3000E     
-   8 relresponse          3000E     
- 
+   1 filter               12A
+   2 pupil                12A
+   3 order                E
+   4 photmjsr             E
+   5 uncertainty          I
+   6 nelem                I
+   7 wavelength           3000E
+   8 relresponse          3000E
+
 =================== HDU 3: Image Exten. ====================
- 
+
 *** Error:   Unregistered XTENSION value "ASDF    ".
- 
+
  9 header keywords
- 
-ASDF 8-bit integer pixels,  1 axes (2880), 
- 
+
+ASDF 8-bit integer pixels,  1 axes (2880),
+
 ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
- 
+
  HDU#  Name (version)       Type             Warnings  Errors
- 1                          Primary Array    0         0     
- 2     PHOTOM (1)           Binary Table     0         0     
- 3     ASDF                 Image Array      0         1     
- 
+ 1                          Primary Array    0         0
+ 2     PHOTOM (1)           Binary Table     0         0
+ 3     ASDF                 Image Array      0         1
+
 **** Verification found 0 warning(s) and 1 error(s). ****
 """
-    
+
 def certify_interpret_fitsverify():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
 
     >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY)  # doctest: +ELLIPSIS
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> Running fitsverify.
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: ./s7g1700gl_dead_bad_xsum.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 23 header keywords
-    CRDS - INFO -  >> 
-    CRDS - INFO -  >> Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >> Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - ERROR -  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
     CRDS - ERROR -  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 31 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>    (3 columns x 10 rows)
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 SEGMENT              4A        
-    CRDS - INFO -  >>    2 OBS_RATE (count /s / D         
+    CRDS - INFO -  >>    1 SEGMENT              4A
+    CRDS - INFO -  >>    2 OBS_RATE (count /s / D
     CRDS - INFO -  >>    3 LIVETIME             D
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2                          Binary Table     2         1     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2                          Binary Table     2         1
+    CRDS - INFO -  >>
     CRDS - INFO -  >> Verification found 2 warning(s) and 0 error(s). ****
     CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
     CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
 
     >>> certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY2)  # doctest: +ELLIPSIS
-    CRDS - INFO -  >> 
-    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)              
-    CRDS - INFO -  >>               --------------------------------              
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>               fitsverify -ignore- (CFITSIO -ignore-)
+    CRDS - INFO -  >>               --------------------------------
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>
     CRDS - INFO -  >> File: jwst_nircam_photom_nrcalong.fits
-    CRDS - INFO -  >> 
+    CRDS - INFO -  >>
     CRDS - INFO -  >> 3 Header-Data Units in this file.
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  33 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >>  Null data array; NAXIS = 0 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >>  Null data array; NAXIS = 0
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  27 header keywords
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  PHOTOM(1)  (8 columns x 41 rows)
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
-    CRDS - INFO -  >>    1 filter               12A       
-    CRDS - INFO -  >>    2 pupil                12A       
-    CRDS - INFO -  >>    3 order                E         
-    CRDS - INFO -  >>    4 photmjsr             E         
-    CRDS - INFO -  >>    5 uncertainty          I         
-    CRDS - INFO -  >>    6 nelem                I         
-    CRDS - INFO -  >>    7 wavelength           3000E     
-    CRDS - INFO -  >>    8 relresponse          3000E     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>    1 filter               12A
+    CRDS - INFO -  >>    2 pupil                12A
+    CRDS - INFO -  >>    3 order                E
+    CRDS - INFO -  >>    4 photmjsr             E
+    CRDS - INFO -  >>    5 uncertainty          I
+    CRDS - INFO -  >>    6 nelem                I
+    CRDS - INFO -  >>    7 wavelength           3000E
+    CRDS - INFO -  >>    8 relresponse          3000E
+    CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 3: Image Exten. ====================
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >> RECATEGORIZED *** Error:   Unregistered XTENSION value "ASDF    ".
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  9 header keywords
-    CRDS - INFO -  >>  
-    CRDS - INFO -  >> ASDF 8-bit integer pixels,  1 axes (2880), 
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
+    CRDS - INFO -  >> ASDF 8-bit integer pixels,  1 axes (2880),
+    CRDS - INFO -  >>
     CRDS - INFO -  >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
-    CRDS - INFO -  >>  1                          Primary Array    0         0     
-    CRDS - INFO -  >>  2     PHOTOM (1)           Binary Table     0         0     
-    CRDS - INFO -  >>  3     ASDF                 Image Array      0         1     
-    CRDS - INFO -  >>  
+    CRDS - INFO -  >>  1                          Primary Array    0         0
+    CRDS - INFO -  >>  2     PHOTOM (1)           Binary Table     0         0
+    CRDS - INFO -  >>  3     ASDF                 Image Array      0         1
+    CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 1 error(s). ****
     CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
     CRDS - INFO -  Fitsverify output contains errors or warnings CRDS recategorizes as INFOs.
@@ -356,16 +356,16 @@ def certify_dump_provenance_fits():
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying 'data/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
     CRDS - INFO - FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
-    CRDS - INFO - [0] COMMENT = 'Created by S. Beland and IDT and P. Hodge converted to user coord.' 
-    CRDS - INFO - [0] DESCRIP initial version 
-    CRDS - INFO - [0] DETECTOR FUV 
-    CRDS - INFO - [0] FILETYPE DEADTIME REFERENCE TABLE 
-    CRDS - INFO - [0] HISTORY   Modified to account for chamge of coordinates 
-    CRDS - INFO - [0] HISTORY fuv_080509_r_dead.fits renamed to s7g1700gl_dead.fits on Jul 16 2008 
-    CRDS - INFO - [0] INSTRUME COS 
-    CRDS - INFO - [0] PEDIGREE GROUND 16/07/2008 16/07/2010 
-    CRDS - INFO - [0] USEAFTER Oct 01 1996 00:00:00 
-    CRDS - INFO - [0] VCALCOS 2.0 
+    CRDS - INFO - [0] COMMENT = 'Created by S. Beland and IDT and P. Hodge converted to user coord.'
+    CRDS - INFO - [0] DESCRIP initial version
+    CRDS - INFO - [0] DETECTOR FUV
+    CRDS - INFO - [0] FILETYPE DEADTIME REFERENCE TABLE
+    CRDS - INFO - [0] HISTORY   Modified to account for chamge of coordinates
+    CRDS - INFO - [0] HISTORY fuv_080509_r_dead.fits renamed to s7g1700gl_dead.fits on Jul 16 2008
+    CRDS - INFO - [0] INSTRUME COS
+    CRDS - INFO - [0] PEDIGREE GROUND 16/07/2008 16/07/2010
+    CRDS - INFO - [0] USEAFTER Oct 01 1996 00:00:00
+    CRDS - INFO - [0] VCALCOS 2.0
     CRDS - INFO - DATE-OBS = '1996-10-01'
     CRDS - INFO - TIME-OBS = '00:00:00'
     CRDS - INFO - ########################################
@@ -644,7 +644,7 @@ def certify_jwst_missing_optional_parkey():
     0
     >>> test_config.cleanup(old_state)
     """
-    
+
 def certify_jwst_invalid_asdf():
     """
     >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
@@ -695,7 +695,7 @@ def certify_jwst_invalid_yaml():
     1
     >>> test_config.cleanup(old_state)
     """
- 
+
 def certify_test_jwst_load_all_type_constraints():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
@@ -709,7 +709,7 @@ def certify_test_hst_load_all_type_constraints():
     >>> generic_tpn.load_all_type_constraints("hst")
     >>> test_config.cleanup(old_state)
     """
-    
+
 def certify_validator_bad_presence_condition():
     """
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
@@ -719,7 +719,7 @@ def certify_validator_bad_presence_condition():
     SyntaxError: invalid syntax
     >>> test_config.cleanup(old_state)
     """
-    
+
 def certify_JsonCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
@@ -728,7 +728,7 @@ def certify_JsonCertify_valid():
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
     """
-            
+
 def certify_YamlCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
@@ -737,7 +737,7 @@ def certify_YamlCertify_valid():
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
     """
-            
+
 def certify_AsdfCertify_valid():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
@@ -749,7 +749,7 @@ def certify_AsdfCertify_valid():
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
-    
+
 def certify_FitsCertify_opaque_name():
     """
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
@@ -757,7 +757,7 @@ def certify_FitsCertify_opaque_name():
     CRDS - INFO -  Certifying 'data/opaque_fts.tmp' as 'FITS' relative to context 'hst.pmap'
     >>> test_config.cleanup(old_state)
     """
-    
+
 def certify_AsdfCertify_opaque_name():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
@@ -779,7 +779,7 @@ def certify_rmap_compare():
     """
 
 def certify_jwst_bad_fits():
-    """    
+    """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
@@ -808,7 +808,7 @@ def certify_duplicate_rmap_case_error():
     >>> test_config.cleanup(old_state)
     """
 
-    
+
 def checksum_duplicate_rmap_case_error():
     """
     Verify that the crds rmap checksum update tool does not silently drop duplicate rmap entries
@@ -827,13 +827,13 @@ def undefined_expr_identifiers():
     implement and expression constraint.   validators.expr_identifiers() scans a Tpn header
     expression for the header keywords upon which it depends.   This enables CRDS To short
     circuit checks for which critical keywords are not defined at all.
-    
+
     >>> validators.expr_identifiers("((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))")
     ['EXP_TYPE']
-    
+
     >>> validators.expr_identifiers("nir_filter(INSTRUME,REFTYPE,EXP_TYPE)")
     ['INSTRUME', 'REFTYPE', 'EXP_TYPE']
-    
+
     >>> validators.expr_identifiers("(len(SCI_ARRAY.SHAPE)==2)")
     ['SCI_ARRAY']
 
@@ -1080,20 +1080,20 @@ def dt_acs_idctab_char_plus_column():
 def test_certify_check_rmap_updates():
     """
     This test verifies trial rmap updates under the control of the CRDS certify program.
-    
+
     It checks for two primary conditions:
-    
+
     1. That submitted files with identical matching criteria which would replace one another are errors.
-    
+
     2. That new files which overlap the matching criteria of existing files without being identical are detected.
-    
+
     Handling of (2) varies by project,  because for HST it is grudgingly permitted due to its
     existence in CDBS and the need for identical rmap behavior to CDBS.  For JWST,  where
     overlaps are avoidable,  non-identical overlaps are warnings during file submission and fatal errors
     if encountered at runtime. For HST,  warnings are only visible in --verbose mode,  but for JWST they
     are always visible.   Using warnings avoids the automatic cancellation of large file submissions,
     holding open a choice between choosing to cancel or choosing to submit manual rmap fixes instead.
-    
+
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
     >>> TestCertifyScript("crds.certify data/s7g1700gl_dead_overlap.fits data/s7g1700gl_dead_dup1.fits data/s7g1700gl_dead_dup2.fits --check-rmap-updates --comparison-context hst_0508.pmap --verbose")()  # doctest: +ELLIPSIS
     CRDS - DEBUG -  Command: ['crds.certify', 'data/s7g1700gl_dead_overlap.fits', 'data/s7g1700gl_dead_dup1.fits', 'data/s7g1700gl_dead_dup2.fits', '--check-rmap-updates', '--comparison-context', 'hst_0508.pmap', '--verbose']
@@ -1192,13 +1192,13 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Modify found '1996-10-01 00:00:00' as primitive 's7g1700gl_dead_dup1.fits' replacing with 's7g1700gl_dead_dup2.fits'
     CRDS - ERROR -  ----------------------------------------
     Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
-     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00'))) 
+     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00')))
     Each reference would replace the other in the rmap.
     Either reference file matching parameters need correction
     or additional matching parameters should be added to the rmap
     to enable CRDS to differentiate between the two files.
-    See the file submission section of the CRDS server user's guide here:  
-        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    See the file submission section of the CRDS server user's guide here:
+        https://jwst-crds.stsci.edu/static/users_guide/index.html
     for more explanation.
     CRDS - INFO -  Inserting s7g1700gl_dead_overlap.fits into 'hst_cos_deadtab_0250.rmap'
     CRDS - DEBUG -  Unexpanded header [('DETECTOR', 'FUV|NUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
@@ -1222,12 +1222,12 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
     CRDS - WARNING -  ----------------------------------------
     Match case
-     (('DETECTOR', 'FUV'),) 
+     (('DETECTOR', 'FUV'),)
     is an equal weight special case of
-     (('DETECTOR', 'FUV|NUV'),) 
+     (('DETECTOR', 'FUV|NUV'),)
     For some parameter sets, CRDS interprets both matches as equally good.
-    See the file submission section of the CRDS server user's guide here:  
-        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    See the file submission section of the CRDS server user's guide here:
+        https://jwst-crds.stsci.edu/static/users_guide/index.html
     for more explanation.
      ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
@@ -1239,12 +1239,12 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
     CRDS - WARNING -  ----------------------------------------
     Match case
-     (('DETECTOR', 'NUV'),) 
+     (('DETECTOR', 'NUV'),)
     is an equal weight special case of
-     (('DETECTOR', 'FUV|NUV'),) 
+     (('DETECTOR', 'FUV|NUV'),)
     For some parameter sets, CRDS interprets both matches as equally good.
-    See the file submission section of the CRDS server user's guide here:  
-        https://jwst-crds.stsci.edu/static/users_guide/index.html 
+    See the file submission section of the CRDS server user's guide here:
+        https://jwst-crds.stsci.edu/static/users_guide/index.html
     for more explanation.
      ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
@@ -1256,7 +1256,7 @@ def test_certify_check_rmap_updates():
     1
     >>> test_config.cleanup(old_state)
     """
-    
+
 # ==================================================================================
 class TestCertify(test_config.CRDSTestCase):
 
@@ -1267,13 +1267,13 @@ class TestCertify(test_config.CRDSTestCase):
     def tearDown(self, *args, **keys):
         super(TestCertify, self).tearDown(*args, **keys)
         log.set_exception_trap(self._old_debug)
-        
+
     # ------------------------------------------------------------------------------
-        
+
     def test_validator_bad_presence(self):
         tinfo = certify.TpnInfo('DETECTOR','H','C','Q', ('WFC','HRC','SBC'))
         assert_raises(ValueError, certify.validator, tinfo)
-        
+
     def test_validator_bad_keytype(self):
         tinfo = certify.TpnInfo('DETECTOR','Q','C','R', ('WFC','HRC','SBC'))
         assert_raises(ValueError, certify.validator, tinfo)
@@ -1314,7 +1314,7 @@ class TestCertify(test_config.CRDSTestCase):
         cval.check("foo.fits", header)
 
     # ------------------------------------------------------------------------------
-        
+
     def test_logical_validator_good(self):
         tinfo = certify.TpnInfo('ROKIN','H','L','R',())
         cval = certify.validator(tinfo)
@@ -1338,7 +1338,7 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
 
     # ------------------------------------------------------------------------------
-        
+
     def test_integer_validator_bad_format(self):
         info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ('FOO',))
         assert_raises(ValueError, certify.validator, info)
@@ -1379,14 +1379,14 @@ class TestCertify(test_config.CRDSTestCase):
         assert_true(isinstance(cval, certify.IntValidator))
         header = {"READPATT": "41"}
         assert_raises(ValueError, cval.check, "foo.fits", header)
- 
+
     def test_integer_validator_range_boundary_good(self):
         info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
         cval = certify.validator(info)
         assert_true(isinstance(cval, certify.IntValidator))
         header = {"READPATT": "40"}
         cval.check("foo.fits", header)
- 
+
     def test_integer_validator_range_format_bad(self):
         info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
         cval = certify.validator(info)
@@ -1395,9 +1395,9 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
         info = certify.TpnInfo('READPATT', 'H', 'I', 'R', ("x:40",))
         assert_raises(ValueError, certify.validator, info)
- 
+
     # ------------------------------------------------------------------------------
-        
+
     def test_real_validator_bad_format(self):
         info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('FOO',))
         assert_raises(ValueError, certify.validator, info)
@@ -1431,14 +1431,14 @@ class TestCertify(test_config.CRDSTestCase):
         assert_true(isinstance(cval, certify.RealValidator))
         header = {"READPATT": "40.21"}
         assert_raises(ValueError, cval.check, "foo.fits", header)
- 
+
     def test_real_validator_range_boundary_good(self):
         info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.4:40.1",))
         cval = certify.validator(info)
         assert_true(isinstance(cval, certify.RealValidator))
         header = {"READPATT": "40.1"}
         cval.check("foo.fits", header)
- 
+
     def test_real_validator_range_format_bad(self):
         info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
         cval = certify.validator(info)
@@ -1447,7 +1447,7 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
         info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
         assert_raises(ValueError, certify.validator, info)
- 
+
     def test_real_validator_float_zero(self):
         info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ('1','0.0'))
         cval = certify.validator(info)
@@ -1463,7 +1463,7 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
 
     # ------------------------------------------------------------------------------
-        
+
     def test_double_validator_bad_format(self):
         info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ('FOO',))
         assert_raises(ValueError, certify.validator, info)
@@ -1497,14 +1497,14 @@ class TestCertify(test_config.CRDSTestCase):
         assert_true(isinstance(cval, certify.DoubleValidator))
         header = {"READPATT": "40.21"}
         assert_raises(ValueError, cval.check, "foo.fits", header)
- 
+
     def test_double_validator_range_boundary_good(self):
         info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.4:40.1",))
         cval = certify.validator(info)
         assert_true(isinstance(cval, certify.DoubleValidator))
         header = {"READPATT": "40.1"}
         cval.check("foo.fits", header)
- 
+
     def test_double_validator_range_format_bad(self):
         info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
         cval = certify.validator(info)
@@ -1513,9 +1513,9 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
         info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
         assert_raises(ValueError, certify.validator, info)
- 
+
     # ------------------------------------------------------------------------------
-        
+
     def test_expression_validator_passes(self):
         tinfo = certify.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR==\'FOO\')and(SUBARRAY==\'BAR\'))',))
         cval = certify.validator(tinfo)
@@ -1536,7 +1536,7 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(SyntaxError, certify.validator, tinfo)
 
     # ------------------------------------------------------------------------------
-        
+
     def test_conditionally_required_bad_format(self):
         # typical subtle expression error, "=" vs. "=="
         tinfo = certify.TpnInfo('DETECTOR','X', 'X', '(SUBARRAY="BAR")', ("FOO","BAR","BAZ"))
@@ -1568,9 +1568,9 @@ class TestCertify(test_config.CRDSTestCase):
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ("FOO","BAR","BAZ"))
         checker = certify.validator(info)
         assert_true(not checker.conditionally_required)  #
-        
+
     def test_conditional_warning_true_present(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT", "PIXAR_SR":"999.0"}
@@ -1578,7 +1578,7 @@ class TestCertify(test_config.CRDSTestCase):
         checker.handle_missing(header)
 
     def test_conditional_warning_true_absent(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT", "PIXAR_SR":"999.0"}
@@ -1586,7 +1586,7 @@ class TestCertify(test_config.CRDSTestCase):
         checker.handle_missing(header)
 
     def test_conditional_warning_false_present(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_FLAT-MRS", "PIXAR_SR":"999.0"}
@@ -1594,7 +1594,7 @@ class TestCertify(test_config.CRDSTestCase):
         checker.handle_missing(header)
 
     def test_conditional_warning_false_absent(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_FLAT-MRS"}
@@ -1602,7 +1602,7 @@ class TestCertify(test_config.CRDSTestCase):
         checker.handle_missing(header)
 
     def test_conditional_optional_true_present(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT", "PIXAR_SR":"999.0"}
@@ -1610,7 +1610,7 @@ class TestCertify(test_config.CRDSTestCase):
         checker.handle_missing(header)
 
     def test_conditional_optional_true_absent(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_LRS-FIXEDSLIT"}
@@ -1618,7 +1618,7 @@ class TestCertify(test_config.CRDSTestCase):
         checker.handle_missing(header)
 
     def test_conditional_optional_false_present(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_FLAT-MRS", "PIXAR_SR":"999.0"}
@@ -1626,7 +1626,7 @@ class TestCertify(test_config.CRDSTestCase):
         checker.handle_missing(header)
 
     def test_conditional_optional_false_absent(self):
-        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())        
+        info = certify.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
         checker = certify.validator(info)
         assert_true(checker.conditionally_required)
         header = {"EXP_TYPE":"MIR_FLAT-MRS"}
@@ -1646,12 +1646,12 @@ class TestCertify(test_config.CRDSTestCase):
         checker.check("test.fits", {"DETECTOR":"FOO"})
         new_warns = log.warnings()
         assert_true(new_warns - warns >= 1, "No warning issued for unsupported group .tpn constraint type.")
-        
+
     def test_tpn_repr(self):
         # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ("FOO","BAR","BAZ"))
         repr(certify.Validator(info))
- 
+
     def test_tpn_check_value_method_not_implemented(self):
         # typical subtle expression error, "=" vs. "=="
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ("FOO","BAR","BAZ"))
@@ -1668,7 +1668,7 @@ class TestCertify(test_config.CRDSTestCase):
         assert_true(checker.handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
         info = certify.TpnInfo('DETECTOR','H', 'C', 'F', ("FOO","BAR","BAZ"))
         checker = certify.validator(info)
-        assert_true(checker.handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")        
+        assert_true(checker.handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED")
 
     def test_tpn_handle_missing_conditional(self):
         # typical subtle expression error, "=" vs. "=="
@@ -1676,12 +1676,12 @@ class TestCertify(test_config.CRDSTestCase):
         checker = certify.validator(info)
         assert_raises(certify.MissingKeywordError, checker.handle_missing, header={"READPATT":"FOO"})
         assert_true(checker.handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED")
-        
+
 
     def test_missing_column_validator(self):
         info = certify.TpnInfo('FOO','C', 'C', 'R', ("X","Y","Z"))
         checker = certify.validator(info)
-        assert_raises(certify.MissingKeywordError, checker.check, self.data("v8q14451j_idc.fits"), 
+        assert_raises(certify.MissingKeywordError, checker.check, self.data("v8q14451j_idc.fits"),
                       header={"DETECTOR":"IRRELEVANT"})
 
     def test_tpn_excluded_keyword(self):
@@ -1701,7 +1701,7 @@ class TestCertify(test_config.CRDSTestCase):
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["THIS","THAT","OTHER"])
         checker = certify.validator(info)
         checker.check("test.fits", {"DETECTOR":"THAT|THIS"})
-                
+
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["THAT","OTHER"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"DETECTOR":"THAT|THIS"})
@@ -1712,11 +1712,11 @@ class TestCertify(test_config.CRDSTestCase):
         checker = certify.validator(info)
         checker.check("test.fits", {"DETECTOR":"([abc]+)"})
         assert_raises(ValueError, checker.check, "test.fits", {"DETECTOR": "([def]+)"})
-                                    
+
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["{.*1234}","BETWEEN_300_400","#OTHER#"])
         checker = certify.validator(info)
         checker.check("test.fits", {"DETECTOR":"{.*1234}"})
-                                    
+
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["(THIS)","BETWEEN_300_400","#OTHER#"])
         checker = certify.validator(info)
         checker.check("test.fits", {"DETECTOR":"BETWEEN_300_400"})
@@ -1728,12 +1728,12 @@ class TestCertify(test_config.CRDSTestCase):
         # This demos synatax/check for "NOT FOO" in rmap match tuples
         info = certify.TpnInfo('DETECTOR','H', 'C', 'R', ["NOT_FOO","BETWEEN_300_400","#OTHER#"])
         checker = certify.validator(info)
-        checker.check("test.fits", {"DETECTOR":"NOT_FOO"})                           
-                                    
+        checker.check("test.fits", {"DETECTOR":"NOT_FOO"})
+
     def test_tpn_pedigree_missing(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        assert_raises(certify.MissingKeywordError, 
+        assert_raises(certify.MissingKeywordError,
             checker.check, "test.fits", {"DETECTOR":"This is a test"})
 
     def test_tpn_pedigree_dummy(self):
@@ -1801,56 +1801,56 @@ class TestCertify(test_config.CRDSTestCase):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
         assert_raises(ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02"})
-        
+
     def test_tpn_pedigree_bad_datetime_format_1(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        assert_raises(ValueError, checker.check, "test.fits", 
+        assert_raises(ValueError, checker.check, "test.fits",
                       {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017-01-02 -"})
-        
+
     def test_tpn_pedigree_bad_datetime_format_2(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        assert_raises(ValueError, checker.check, 
+        assert_raises(ValueError, checker.check,
                       "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 - 2017/01/02"})
-        
+
     def test_tpn_pedigree_bad_datetime_format_3(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
-        assert_raises(ValueError, checker.check, 
+        assert_raises(ValueError, checker.check,
                       "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01T00:00:00 2017-01-02"})
-        
+
     def test_tpn_jwstpedigree_dashdate(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
         checker = certify.validator(info)
         checker.check(
             "test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 2017-01-02"})
-        
+
     def test_tpn_jwstpedigree_ground_dates(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
         checker = certify.validator(info)
         assert_raises(
             ValueError, checker.check, "test.fits",
             {"PEDIGREE":"GROUND 2018-01-01 2018-01-25"})
-        
+
     def test_tpn_jwstpedigree_nodate_format_3(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
         checker = certify.validator(info)
         assert_raises(
             ValueError, checker.check, "test.fits", {"PEDIGREE":"INFLIGHT"})
-        
+
     def test_tpn_jwstpedigree_missing_format_3(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
         checker = certify.validator(info)
         assert_raises(
             certify.MissingKeywordError, checker.check, "test.fits", {})
-        
+
     def test_tpn_jwstpedigree_no_model_3(self):
         info = certify.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
         checker = certify.validator(info)
         assert_raises(
             ValueError, checker.check, "test.fits", {"PEDIGREE":"MODEL"})
-        
+
     def test_tpn_pedigree_missing_column(self):
         info = certify.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
         checker = certify.validator(info)
@@ -1861,9 +1861,9 @@ class TestCertify(test_config.CRDSTestCase):
         checker = certify.validator(info)
         header = data_file.get_header(self.data("16j16005o_apd.fits"))
         checker.check_column("data/16j16005o_apd.fits", header)
-        
+
 # ------------------------------------------------------------------------------
-        
+
     def test_sybdate_validator(self):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
         cval = certify.validator(tinfo)
@@ -1896,59 +1896,59 @@ class TestCertify(test_config.CRDSTestCase):
 
     def certify_rmap_missing_parkey(self):
         self.certify_files([self.data("hst_missing_parkey.rmap")], observatory="hst")
-    
+
     def certify_no_corresponding_rmap(self):
-        self.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap")  
-  
+        self.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap")
+
     def certify_missing_provenance(self):
         self.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap",
-                              dum_provenance=True, provenance=["GAIN"])  
-    
+                              dum_provenance=True, provenance=["GAIN"])
+
 # ------------------------------------------------------------------------------
     def test_check_dduplicates(self):
         self.certify_files([self.data("hst.pmap")], observatory="hst")
         self.certify_files([self.data("hst_acs.imap")], observatory="hst")
         self.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
-        
+
     def test_check_comment(self):
         self.certify_files([self.data("hst.pmap")], observatory="hst")
         self.certify_files([self.data("hst_acs.imap")], observatory="hst")
         self.certify_files([self.data("hst_acs_darkfile_comment.rmap")], observatory="hst")
-        
+
     def test_table_mode_checks_identical(self):
-        self.certify_files([self.data("v8q14451j_idc.fits")], observatory="hst", 
+        self.certify_files([self.data("v8q14451j_idc.fits")], observatory="hst",
                               context="hst.pmap", compare_old_reference=True)
 
     def test_table_mode_checks_missing_modes(self):
-        self.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst", 
+        self.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst",
                               context="hst.pmap", compare_old_reference=True)
-        
+
     def test_UnknownCertifier_missing(self):
         # log.set_exception_trap("test")
-        assert_raises(FileNotFoundError, certify.certify_file, 
+        assert_raises(FileNotFoundError, certify.certify_file,
             self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap")
-        
+
     def test_FitsCertify_bad_value(self):
         assert_raises(ValueError, certify.certify_file,
             self.data("s7g1700gm_dead_broken.fits"), observatory="hst", context="hst.pmap")
-        
+
     # ------------------------------------------------------------------------------
-        
+
     # def test_certify_deep_sync(self):
     #     script = certify.CertifyScript(
     #         "crds.certify --deep --comparison-context hst_0317.pmap zbn1927fl_gsag.fits --sync-files")
     #     errors = script()
     #     assert_true(errors == 0)
-        
+
     # def test_certify_sync_comparison_reference(self):
     #     script = certify.CertifyScript(
     #         "crds.certify --comparison-reference zbn1927fl_gsag.fits zbn1927fl_gsag.fits --sync-files")
     #     script()
-        
+
     def test_certify_dont_recurse_mappings(self):
         script = certify.CertifyScript("crds.certify crds://hst_0317.pmap --dont-recurse-mappings")
         errors = script()
-        
+
     def test_certify_kernel_unity_validator_good(self):
         header = {'SCI_ARRAY': utils.Struct({'COLUMN_NAMES': None,
                                 'DATA': np.array([[ 0.        ,  0.0276    ,  0.        ],
@@ -1961,7 +1961,7 @@ class TestCertify(test_config.CRDSTestCase):
                 }
         info = certify.TpnInfo('SCI','D','X','R',('&KernelUnity',))
         checker = certify.KernelunityValidator(info)
-        checker.check("test.fits", header)        
+        checker.check("test.fits", header)
 
     def test_certify_kernel_unity_validator_bad(self):
         header = {'SCI_ARRAY': utils.Struct({'COLUMN_NAMES': None,
@@ -1975,7 +1975,7 @@ class TestCertify(test_config.CRDSTestCase):
                 }
         info = certify.TpnInfo('SCI','D','X','R',('&KernelUnity',))
         checker = certify.KernelunityValidator(info)
-        assert_raises(exceptions.BadKernelSumError, checker.check, "test.fits", header)        
+        assert_raises(exceptions.BadKernelSumError, checker.check, "test.fits", header)
 
 
 # ==================================================================================
@@ -1995,4 +1995,3 @@ def main():
 
 if __name__ == "__main__":
     print(main())
-

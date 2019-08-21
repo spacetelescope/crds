@@ -9,7 +9,7 @@ from .acs_v2 import precondition_header_acs_biasfile_v2, fallback_header_acs_bia
 # ways for CRDS.
 #
 '''
-This is special case code which CDBS implements in cdbsquery.py 
+This is special case code which CDBS implements in cdbsquery.py
 (see crds/hst/cdbs/cdbs_bestrefs/cdbsquery.py or get the latest from Mike Swam / OPUS)
 
 Fundamentally, cdbsquery searches the reference file database
@@ -23,7 +23,7 @@ reffile_ops matching parameters, and other things,  are specified in the CDBS fi
 reference_file_defs.xml.   Parameters listed here are important in some way for
 matching.
 
-Ideally,  CDBS and CRDS implement something like:   
+Ideally,  CDBS and CRDS implement something like:
 
    match(dataset parameters, reference parameters) --> reference.
 
@@ -37,7 +37,7 @@ CRDS encodes the matching parameters of reference_file_ops in a
 more compact way,  the rmaps.   The rmaps are interpreted by CRDS code
 in selectors.py rather than by a SQL engine.
 
-In practice,  CDBS special case code like that below does this:   
+In practice,  CDBS special case code like that below does this:
 
    match(f(dataset parameters), reference parameters) -->  reference or g(dataset)
 
@@ -48,7 +48,7 @@ matching in the reference database.  There might be no column for that
 parameter but it is needed later.
 
 2. The special case code fudges some of the dataset parameters,
-replacing dataset[X] with f(dataset),  where the fudged value of one 
+replacing dataset[X] with f(dataset),  where the fudged value of one
 matching parameter may depend on the value of many other parameters.
 
 3. Sometimes fallback code,  g(dataset),  is used as a secondary solution
@@ -61,9 +61,9 @@ In CDBS:
 "dataset" can come from a FITS header.
 
 At match time,  "reference" comes from the reffile_ops database.   Matching is
-done by doing a gigantic anded SQL query which equates reffile_ops columns with 
-specific dataset values,  doing a gigantic anded SQL query,  and also choosing 
-the maximum applicable USEAFTER.  In cdbsquery,  the query is built one 
+done by doing a gigantic anded SQL query which equates reffile_ops columns with
+specific dataset values,  doing a gigantic anded SQL query,  and also choosing
+the maximum applicable USEAFTER.  In cdbsquery,  the query is built one
 parameter at a time.   Some parameters are omitted from the query.
 
 At new reference submission time, "reference" comes from the ref file
@@ -72,7 +72,7 @@ header and is exploded in to refile_ops database rows.
 In CRDS:
 
 "dataset" comes from the same places, either a database or dataset file header.
-  
+
 At rmap generation time,  "reference" comes from the reffile_ops database and
 is encoded into rmaps.
 
@@ -129,16 +129,16 @@ on nested selectors.
         day = doy
         timetuple = (temptuple[0],month,day,temptuple[3],temptuple[4],
                      temptuple[5],temptuple[6],temptuple[7],temptuple[8])
-      elif (aSource._keywords.has_key('TVSTART') and 
+      elif (aSource._keywords.has_key('TVSTART') and
             aSource._keywords['TVSTART'][0] != ' '):
         # thermal vac keyword for COS/WFC3 testing
         opusutil.PrintMsg("D","Trying TVSTART for exposure start:"+
                           aSource._keywords['TVSTART'][0]+'|')
         timetuple = time.strptime(aSource._keywords['TVSTART'][0],
                                   "%Y-%m-%dT%H:%M:%S")
-      elif (aSource._keywords.has_key('DATE-OBS') and 
+      elif (aSource._keywords.has_key('DATE-OBS') and
             aSource._keywords['DATE-OBS'][0] != ' ' and
-            aSource._keywords.has_key('TIME-OBS') and 
+            aSource._keywords.has_key('TIME-OBS') and
             aSource._keywords['TIME-OBS'][0] != ' ') :
         opusutil.PrintMsg("D","Trying DATE-OBS,TIME-OBS for exposure start.")
         timetuple = time.strptime(aSource._keywords['DATE-OBS'][0]+' '+
@@ -225,11 +225,11 @@ on nested selectors.
       #  since numbers are not quoted but string are)
       try:
         querytxt = (querytxt + "and acs_row_"+querynum+"." +
-                 string.lower(k._field) + " = '" + 
+                 string.lower(k._field) + " = '" +
                  aSource._keywords[k._field][0] + "' ")
       except TypeError:
         querytxt = (querytxt + "and acs_row_"+querynum+"." +
-                 string.lower(k._field) + " = " + 
+                 string.lower(k._field) + " = " +
                  str(aSource._keywords[k._field][0]) + " ")
     #
     return querytxt

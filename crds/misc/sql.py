@@ -1,4 +1,4 @@
-"""This module defines a command line tool for executing SQL queries on downloaded versions of 
+"""This module defines a command line tool for executing SQL queries on downloaded versions of
 the CRDS catalog database.  It is a wrapper around a sqlite3 database download service and the
 sqlite3 command line program which can be used to query  it.
 """
@@ -46,7 +46,7 @@ crds sql "select name, state, pedigree from crds_hst_catalog"
 ('h241320ln_ilm.fits', 'operational', 'DUMMY 04/02/1997')
 ...
 """
-    
+
     def add_args(self):
         super(CrdsSqlQueryScript, self).add_args()
         self.add_argument("sql_query", nargs="*", help="sqlite3 query to run on cached database.")
@@ -138,7 +138,7 @@ crds sql "select name, state, pedigree from crds_hst_catalog"
         """Return a query row formatted for output."""
         row = squash_unicode(row)
         return row
-    
+
 # ===================================================================
 
 def squash_unicode(row):
@@ -150,7 +150,7 @@ def squash_unicode(row):
         else:
             row2.append(field)
     return tuple(row2)
-        
+
 # ===================================================================
 
 if __name__ == "__main__":

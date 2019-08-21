@@ -29,25 +29,25 @@ optional arguments:
   --pdb                 Run under pdb.
 
 Reference files are nominally differenced using FITS-diff or diff.
-    
-Mapping files are differenced using CRDS machinery to recursively compare too mappings and 
+
+Mapping files are differenced using CRDS machinery to recursively compare too mappings and
 their sub-mappings.
-    
+
 Differencing two mappings will find all the logical differences between the two contexts
 and any nested mappings.
-    
-By specifying --mapping-text-diffs,  UNIX diff will be run on mapping files in addition to 
+
+By specifying --mapping-text-diffs,  UNIX diff will be run on mapping files in addition to
 CRDS logical diffs.
-    
+
 By specifying --primitive-diffs,  FITS diff will be run on all references which are replaced
 in the logical differences between two mappings.
-    
+
 For example:
-    
+
     % crds diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
-    
+
 Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
-    
+
     NOTE: mapping logical differences (the default) to not compare CRDS mapping headers.
 
 ----------
@@ -193,7 +193,7 @@ def dt_diff_asdf():
 
      >>> DiffScript("crds.diff data/jwst_nircam_specwcs_0010.asdf data/jwst_nircam_specwcs_0010.asdf")() # doctest: +ELLIPSIS
      0
- 
+
     >>> test_config.cleanup(old_state)
     """
 
@@ -436,7 +436,7 @@ def dt_diff_row_change():
     1
     >>> test_config.cleanup(old_state)
     """
-    
+
 def dt_diff_print_affected_modes():
     """
     >>> old_state = test_config.setup()
@@ -454,32 +454,32 @@ def dt_diff_print_all_new_files():
     CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
     CRDS - INFO - 0 infos
-    hst_0002.pmap  
-    hst_0003.pmap  
-    hst_0004.pmap  
-    hst_0005.pmap  
-    hst_0006.pmap  
-    hst_0007.pmap  
-    hst_0008.pmap  
-    hst_acs.imap acs 
-    hst_acs_0002.imap acs 
+    hst_0002.pmap
+    hst_0003.pmap
+    hst_0004.pmap
+    hst_0005.pmap
+    hst_0006.pmap
+    hst_0007.pmap
+    hst_0008.pmap
+    hst_acs.imap acs
+    hst_acs_0002.imap acs
     hst_acs_biasfile.rmap acs biasfile
     hst_acs_biasfile_0002.rmap acs biasfile
-    hst_cos_0001.imap cos 
-    hst_cos_0002.imap cos 
+    hst_cos_0001.imap cos
+    hst_cos_0002.imap cos
     hst_cos_flatfile_0002.rmap cos flatfile
     hst_cos_flatfile_0003.rmap cos flatfile
     hst_cos_fluxtab.rmap cos fluxtab
     hst_cos_xtractab.rmap cos xtractab
-    hst_stis_0001.imap stis 
-    hst_stis_0002.imap stis 
+    hst_stis_0001.imap stis
+    hst_stis_0002.imap stis
     hst_stis_biasfile_0001.rmap stis biasfile
     hst_stis_biasfile_0002.rmap stis biasfile
     hst_stis_darkfile_0001.rmap stis darkfile
     hst_stis_darkfile_0002.rmap stis darkfile
-    hst_wfc3_0001.imap wfc3 
-    hst_wfc3_0002.imap wfc3 
-    hst_wfc3_0003.imap wfc3 
+    hst_wfc3_0001.imap wfc3
+    hst_wfc3_0002.imap wfc3
+    hst_wfc3_0003.imap wfc3
     hst_wfc3_darkfile_0001.rmap wfc3 darkfile
     hst_wfc3_darkfile_0004.rmap wfc3 darkfile
     hst_wfc3_flshfile_0001.rmap wfc3 flshfile
@@ -554,7 +554,7 @@ def dt_diff_print_affected_types():
     """
     >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-types")()
-    cos        deadtab   
+    cos        deadtab
     1
     >>> test_config.cleanup(old_state)
     """
@@ -612,7 +612,7 @@ def dt_diff_recurse_added_deleted_na():
 
 def main():
     """Run module tests,  for now just doctests only.
-    
+
     test_config.setup() and cleanup() are done inline above because bracketing
     the tests here does not get picked up by nose test discovery.  Combining
     tests into one giant docstring works but is hard to analyze and debug when

@@ -16,7 +16,7 @@ def reformat_date(date, sep=" "):
 
 def format_date(date, sep=" "):
     """Format a datestring `d` in CRDS standard form.
-    
+
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
     """
@@ -29,13 +29,13 @@ ALPHABETICAL_RE = re.compile(r"[A-Za-z]{3,10}")
 
 def parse_date(date):
     """Parse any date-time string into a datetime object.
-    
+
     >>> parse_date("Dec 01 1993 00:00:00 UT")
     datetime.datetime(1993, 12, 1, 0, 0)
-    
+
     >>> parse_date('Feb 08 2006 01:02AM')
     datetime.datetime(2006, 2, 8, 1, 2)
-    
+
     >>> parse_date('12/21/1999 05:42:35')
     datetime.datetime(1999, 12, 21, 5, 42, 35)
 
@@ -47,7 +47,7 @@ def parse_date(date):
 
     >>> parse_date("19970114:053714")
     datetime.datetime(1997, 1, 14, 5, 37, 14)
-    
+
     >>> dtval = parse_date(datetime.datetime.now())
     >>> isinstance(dtval, datetime.datetime)
     True
@@ -64,13 +64,13 @@ def parse_date(date):
     if "UNDEFINED" in date:
         raise exceptions.InvalidDatetimeError(
             "One or more required date/time values is UNDEFINED")
-    
+
     if date.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
         date = date[:-3]
 
     if T_SEPERATED_DATE_RE.match(date):
         date = date.replace("T", " ")
-        
+
     if ALPHABETICAL_RE.search(date):
         return parse_alphabetical_date(date)
     else:
@@ -91,7 +91,7 @@ def month_num(month, initial_date=None):
         raise ValueError(
             "Invalid month value " + repr(month) + " in base date " +
             repr(initial_date)) from exc
-    
+
 def parse_alphabetical_date(date):
     """Parse date/time strings with alphabetical months into datetime's.
 
@@ -109,7 +109,7 @@ def parse_alphabetical_date(date):
 
     >>> parse_alphabetical_date("03-Jan-2013")
     datetime.datetime(2013, 1, 3, 0, 0)
-    
+
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
     """
@@ -118,7 +118,7 @@ def parse_alphabetical_date(date):
         date = date.lower().replace(" am", "am")
     while date.lower().endswith(" pm"):
         date = date.lower().replace(" pm", "pm")
-    
+
     date = date.replace("-", " ")
     date = date.replace("/", " ")
 
@@ -128,7 +128,7 @@ def parse_alphabetical_date(date):
         month, day, year = date.split()          # 'Feb 08 2006'
         time = "00:00AM"
 
-    if day.endswith(","):     # 
+    if day.endswith(","):     #
         day = day[:-1]
 
     try:
@@ -143,13 +143,13 @@ def parse_alphabetical_date(date):
 
     ihour, iminute, isecond, imicrosecond = parse_time(time)
 
-    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
+    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond,
                              imicrosecond)
 
 def parse_time(time):
-    """Parse a time string into (hour, minute, second, microsecond), 
+    """Parse a time string into (hour, minute, second, microsecond),
     including AM/PM.
-    
+
     >>> parse_time('12:00')
     (12, 0, 0, 0)
 
@@ -167,7 +167,7 @@ def parse_time(time):
 
     >>> parse_time(' 13:02 PM ')
     (13, 2, 0, 0)
-    
+
     >>> parse_time('12:42 AM')
     (0, 42, 0, 0)
 
@@ -205,18 +205,18 @@ TWENTY_FIRST_CENT_RE = re.compile(r"^\d\d/\d\d/[0-3]\d$")
 DATE_COLON_TIME_RE = re.compile(r"^\d\d\d\d\d\d\d\d:\d\d\d\d\d\d$")
 
 def parse_numerical_date(dstr):
-    """Parse a datetime string with the month expressed as a number in various 
+    """Parse a datetime string with the month expressed as a number in various
     formats.   Return a datetime object.
-    
+
     >>> parse_numerical_date('12/21/1999 05:42')
     datetime.datetime(1999, 12, 21, 5, 42)
-    
+
     >>> parse_numerical_date('12/21/1999 05:42:35')
     datetime.datetime(1999, 12, 21, 5, 42, 35)
-    
+
     >>> parse_numerical_date('1999-12-21 05:42:00')
     datetime.datetime(1999, 12, 21, 5, 42)
-    
+
     >>> parse_numerical_date('12-21-1999 05:42:00')
     datetime.datetime(1999, 12, 21, 5, 42)
 
@@ -239,7 +239,7 @@ def parse_numerical_date(dstr):
         time = "00:00:00"
     else:
         time = " ".join(parts[1:])
-        
+
     ihour, iminute, isecond, imicrosecond = parse_time(time)
 
     if MONTH_DAY_YEAR_RE.match(date):
@@ -262,24 +262,24 @@ def parse_numerical_date(dstr):
         imicrosecond = 0
     else:
         raise ValueError("Unknown numerical date format: " + repr(dstr))
-    
+
     imonth, iday, iyear, = int(month), int(day), int(year)
- 
-    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
+
+    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond,
                              imicrosecond)
 
 # ============================================================================
 
 class DateParser:
     """Abstract baseclass for defining date parsers."""
-    
+
     format = re.compile("^$")
     should_be = "DATE FORMAT NOT DEFINED"
 
     @classmethod
     def _get_date_dict(cls, match):
         raise NotImplementedError("Data Parser is an abstract class.")
-    
+
     @classmethod
     def get_datetime(cls, datestr):
         match = cls.format.match(datestr)
@@ -304,11 +304,11 @@ class Slashdate(DateParser):
     should_be = "DD/MM/YYYY"
 
     @classmethod
-    def _get_date_dict(cls, match):    
+    def _get_date_dict(cls, match):
         return dict(month=int(match.group("month")),
                     day=int(match.group("day")),
                     year=int(match.group("year")))
-        
+
 class Dashdate(DateParser):
     """Originally Slashdate supported HST PEDIGREE dates, later extended to JWST PEDIGREE dates.
 
@@ -322,9 +322,9 @@ class Dashdate(DateParser):
     """
     format = re.compile(r"(?P<year>\d\d\d\d)\-(?P<month>\d\d)\-(?P<day>\d\d)")
     should_be = "YYYY-MM-DD"
-    
+
     @classmethod
-    def _get_date_dict(cls, match):    
+    def _get_date_dict(cls, match):
         return dict(month=int(match.group("month")),
                     day=int(match.group("day")),
                     year=int(match.group("year")))
@@ -336,10 +336,10 @@ class Sybdate(DateParser):
 
     >>> Sybdate.get_datetime("Mar 21 2001 12:00:00")
     datetime.datetime(2001, 3, 21, 12, 0)
-    
+
     >>> Sybdate.get_datetime("Mar 21 2001 12:00:00 am")
     datetime.datetime(2001, 3, 21, 0, 0)
-    
+
     >>> Sybdate.get_datetime("Mar 21 2001 12:00:00 PM")
     datetime.datetime(2001, 3, 21, 12, 0)
 
@@ -382,7 +382,7 @@ class Sybdate(DateParser):
             items["hour"] = str(hour)
             del items["meridian"]
         return dict([(name, int(x)) for (name, x) in items.items() if x])
-    
+
 class Jwstdate(DateParser):
     """
     >>> Jwstdate.get_datetime("2001-03-21T00:00:00")
@@ -410,19 +410,19 @@ class Jwstdate(DateParser):
     def _get_date_dict(cls, match):
         items = match.groupdict()
         return dict([(name, int(x)) for (name, x) in items.items() if x])
-    
+
 class Anydate(DateParser):
     """
     Historically Anydate was an HST format limited to Sybdate and Slashdate:
-    
+
     >>> Anydate.get_datetime("25 / 12 / 2014")
     datetime.datetime(2014, 12, 25, 0, 0)
 
-    >>> Anydate.get_datetime("Mar 21 2001 12:00:00") 
+    >>> Anydate.get_datetime("Mar 21 2001 12:00:00")
     datetime.datetime(2001, 3, 21, 12, 0)
-    
+
     Consequently, the CRDS (and JWST FITS) internal time format is not an Anydate:
-    
+
     >>> Anydate.get_datetime("2001-03-21T00:00:00")
     Traceback (most recent call last):
     ...
@@ -431,7 +431,7 @@ class Anydate(DateParser):
     This is controversial but conservatism suggests limiting the format to historical possibilities in
     case there is any downstream software incapable of handling the newer CRDS/FITS format.
     """
-    
+
     @classmethod
     def get_datetime(cls, datestr):
         try:
@@ -442,7 +442,7 @@ class Anydate(DateParser):
             return Sybdate.get_datetime(datestr)
         except ValueError as exc:
             raise ValueError("Invalid Anydate format " + repr(datestr)) from exc
-    
+
 
 #class Shortdate(DateParser):
 #    pass
@@ -464,18 +464,18 @@ def is_datetime(datetime_str):
     """Raise an assertion error if `datetime_str` doesn't look like a CRDS date.
     Otherwise return `datetime_str`.   This is used to match the composite
     datetime string used by the UseAfter selector.
-    
+
     >>> is_datetime('2001-03-21T00:00:00')
     '2001-03-21T00:00:00'
-    
+
     >>> is_datetime('2001-03-21 00:00:00')
     '2001-03-21 00:00:00'
-    
+
     >>> is_datetime('2001-03-99 00:00:00')
     Traceback (most recent call last):
     ...
     CrdsError: day is out of range for month
-    
+
     >>> is_datetime('2001-03-21X00:00:00')
     Traceback (most recent call last):
     ...
@@ -530,4 +530,3 @@ def test():
 
 if __name__ == "__main__":
     print(test())
-

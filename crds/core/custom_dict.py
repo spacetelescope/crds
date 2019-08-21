@@ -16,14 +16,14 @@ class TransformedDict(MutableMapping):
     """A dictionary that applies an arbitrary key and value altering functions
     before accessing the keys and values.
     """
-    
+
     def __init__(self, initializer=()):
         self._contents = dict()
         self.update(dict(initializer))
 
     def __getstate__(self):
         return dict(_contents = self._contents)
-    
+
     def __setstate__(self, state):
         self._contents = state["_contents"]
 
@@ -56,7 +56,7 @@ class TransformedDict(MutableMapping):
             return self[key]
         except KeyError:
             return default
-    
+
     def __repr__(self):
         """
         >>> TransformedDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
@@ -78,7 +78,7 @@ class LazyFileDict(TransformedDict):
     single instrument under a given context.
 
     Values included in special_values_set are excluded from nested loading
-    and kept as literals,  e.g. N/A 
+    and kept as literals,  e.g. N/A
     """
 
     special_values_set = set()   # Override in sub-classes as needed
@@ -114,7 +114,7 @@ class LazyFileDict(TransformedDict):
         a literal.
         """
         return isinstance(value, str) and value in cls.special_values_set
-        
+
     def __getitem__(self, name):
         name = self.transform_key(name)
         if name in self._xx_selector:
@@ -154,17 +154,17 @@ class LazyFileDict(TransformedDict):
 
     def normal_keys(self):
         """Each of these keys has a corresponding value which IS NOT special.
-        
+
         NOTE:  Does not require full load.
         """
         return sorted([key for key in self.keys() if not self.is_special_value(self._xx_selector[key])])
 
     def special_keys(self):
         """Each of these keys has a corresponding values which IS special.
-        
+
         NOTE:  Does not require full load.
         """
-        return sorted([key for key in self.keys() if self.is_special_value(self._xx_selector[key]) ]) 
+        return sorted([key for key in self.keys() if self.is_special_value(self._xx_selector[key]) ])
 
     def values(self):
         """Return all the values of this LazyFileDict,  implicitly loading them all.
@@ -175,7 +175,7 @@ class LazyFileDict(TransformedDict):
 
     def normal_values(self):
         """Normal values exclude the special values like N/A but can include exotic values like tuples or dicsts.
-        
+
         NOTE:  REQUIRES FULL LOAD
         """
         return [self[key] for key in self.normal_keys()]
@@ -201,7 +201,7 @@ class LazyFileDict(TransformedDict):
     def special_items(self):
         """Return only those items that have exempt literal values with no recursive loading."""
         return self._items(self.special_keys())
-    
+
     def _items(self, keys):
         """Constructs item list taken from self based on `keys`."""
         return [(key, self[key]) for key in sorted(keys)]

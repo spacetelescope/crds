@@ -34,45 +34,45 @@ __all__ = [
     "get_server_info",
     "get_cached_server_info",  # deprecated
     "cache_references",
-    
-    "set_crds_server", 
+
+    "set_crds_server",
     "get_crds_server",
-    
+
     "list_mappings",
     "list_references",
-    
+
     "get_url",
     "get_file_info",
     "get_file_info_map",
     "get_sqlite_db",
-    
+
     "get_mapping_names",
     "get_reference_names",
-    
+
     "dump_references",
     "dump_mappings",
     "dump_files",
-    
+
     "get_best_references",
     "cache_best_references",
-    
+
     "get_dataset_headers_by_id",
     "get_dataset_headers_by_instrument",
     "get_dataset_ids",
     "get_best_references_by_ids",
     "get_aui_best_references",
     "get_best_references_by_header_map",
-    
+
     "get_required_parkeys",
     "get_affected_datasets",
     "get_context_history",
-    
+
     "push_remote_context",
     "get_remote_context",
-        
+
     "jpoll_pull_messages",
     "jpoll_abort",
-    
+
     "get_system_versions",
     ]
 
@@ -85,7 +85,7 @@ URL_SUFFIX = "/json/"
 S = None    # Proxy server
 
 def set_crds_server(url):
-    """Configure the CRDS JSON services server to `url`,  
+    """Configure the CRDS JSON services server to `url`,
     e.g. 'http://localhost:8000'
     """
     if not url.startswith("https://") and "localhost" not in url:
@@ -95,7 +95,7 @@ def set_crds_server(url):
     global URL, S
     URL = url + URL_SUFFIX
     S = CheckingProxy(URL, version="1.0")
-    
+
 def get_crds_server():
     """Return the base URL for the CRDS JSON RPC server.
     """
@@ -135,7 +135,7 @@ def is_known_mapping(mapping):
 @utils.cached
 def get_mapping_names(pipeline_context):
     """Get the complete set of pmap, imap, and rmap basenames required
-    for the specified pipeline_context.   context can be an observatory, 
+    for the specified pipeline_context.   context can be an observatory,
     pipeline, or instrument context.
     """
     return [str(x) for x in S.get_mapping_names(pipeline_context)]
@@ -144,7 +144,7 @@ def get_reference_url(pipeline_context, reference):
     """Returns a URL for the specified reference file.    DEPRECATED
     """
     return S.get_reference_url(pipeline_context, reference)
-    
+
 def get_url(pipeline_context, filename):
     """Return the URL for a CRDS reference or mapping file.   DEPRECATED"""
     return S.get_url(pipeline_context, filename)
@@ -211,16 +211,16 @@ def get_reference_names(pipeline_context):
     return [str(x) for x in S.get_reference_names(pipeline_context)]
 
 def get_best_references(pipeline_context, header, reftypes=None):
-    """Get best references for dict-like `header` relative to 
+    """Get best references for dict-like `header` relative to
     `pipeline_context`.
-    
+
     pipeline_context  CRDS context for lookup,   e.g.   'hst_0001.pmap'
     header            dict-like mapping { lookup_parameter : value }
-    reftypes         If None,  return all reference types;  otherwise return 
-                     best refs for the specified list of reftypes. 
+    reftypes         If None,  return all reference types;  otherwise return
+                     best refs for the specified list of reftypes.
 
     Returns          { reftype : reference_basename ... }
-    
+
     Raises           CrdsLookupError,  typically for problems with header values
     """
     header = { str(key):str(value) for (key,value) in header.items() }
@@ -237,14 +237,14 @@ def get_best_references(pipeline_context, header, reftypes=None):
             else:
                 exc_str = str(refname)[len("NOT FOUND"):]
                 raise CrdsLookupError(
-                    "Error determining best reference for", 
+                    "Error determining best reference for",
                     srepr(filetype), "=", repr(exc_str))
     return bestrefs
 
 def get_best_references_by_ids(context, dataset_ids, reftypes=None, include_headers=False):
     """Get best references for the specified `dataset_ids` and reference types.  If
     reftypes is None,  all types are returned.
-    
+
     Returns { dataset_id : { reftype: bestref, ... }, ... }
     """
     try:
@@ -256,9 +256,9 @@ def get_best_references_by_ids(context, dataset_ids, reftypes=None, include_head
 def get_best_references_by_header_map(context, header_map, reftypes=None):
     """Get best references for header_map = { dataset_id : header, ...}, } and reference types
     where a header is a dictionary of matching parameters.
-      
+
     If reftypes is None,  all types are returned.
-    
+
     Returns { dataset_id : { reftype: bestref, ... }, ... }
     """
     try:
@@ -271,7 +271,7 @@ def get_best_references_by_header_map(context, header_map, reftypes=None):
 def get_aui_best_references(date, dataset_ids):
     """Get best references for date and reference types
     where a header is a dictionary of matching parameters.
-      
+
     Returns { dataset_id : { reftype: bestref, ... }, ... }
     """
     try:
@@ -283,7 +283,7 @@ def get_aui_best_references(date, dataset_ids):
 @utils.cached
 def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing
-    files for `observatory`.  
+    files for `observatory`.
     """
     return str(S.get_default_context(observatory))
 
@@ -295,14 +295,14 @@ def get_context_by_date(date, observatory=None):
 @utils.cached
 def get_server_info():
     """Return a dictionary of critical parameters about the server such as:
-    
+
     operational_context  - the context in use in the operational pipeline
 
-    edit_context         - the context which was last edited, not 
-                           necessarily archived or operational yet.   
+    edit_context         - the context which was last edited, not
+                           necessarily archived or operational yet.
 
     crds*                - the CRDS package versions on the server.
-    
+
     This is intended as a single flexible network call which can be used to
     initialize a higher level getreferences() call,  providing information on
     what context, software, and network mode should be used for processing.
@@ -329,7 +329,7 @@ def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     """Return { dataset_id : { header } } for `dataset_ids`."""
     context = os.path.basename(context)
     return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
-    
+
 def get_dataset_ids(context, instrument, datasets_since=None):
     """Return [ dataset_id, ...] for `instrument`."""
     context = os.path.basename(context)
@@ -339,7 +339,7 @@ def get_dataset_ids(context, instrument, datasets_since=None):
 def get_required_parkeys(context):
     """Return a mapping from instruments to lists of parameter names required to
     compute bestrefs under `context`,  i.e. matching header keys.
-    
+
     { instrument : [ matching_parkey_name, ... ], ... }
     """
     context = os.path.basename(context)
@@ -404,7 +404,7 @@ def get_remote_context(observatory, pipeline_name):
 
 def jpoll_pull_messages(key, since_id=None):
     """Return a list of jpoll json message objects from the channel associated
-    with `key` sent after datetime string `since` or since the last pull if 
+    with `key` sent after datetime string `since` or since the last pull if
     since is not specified.
     """
     messages = []
@@ -443,7 +443,7 @@ def get_server_observatory():
 
 def get_default_observatory():
     """Based on the environment, cache, and server,  determine the default observatory.
-    
+
     1. CRDS_OBSERVATORY env var
     2. CRDS_SERVER_URL env var
     3. Observatory(Server default context)
@@ -468,12 +468,12 @@ def observatory_from_string(string):
 def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files):
     """Output progress information for `activity` on file `name` at `path`."""
     return "{activity}  {path!s:<55}  {bytes} bytes  ({nth_file} / {total_files} files) ({bytes_so_far} / {total_bytes} bytes)".format(
-        activity=activity, 
-        path=path, 
+        activity=activity,
+        path=path,
         bytes=utils.human_format_number(bytes),
-        nth_file=nth_file+1, 
-        total_files=total_files, 
-        bytes_so_far=utils.human_format_number(bytes_so_far).strip(), 
+        nth_file=nth_file+1,
+        total_files=total_files,
+        bytes_so_far=utils.human_format_number(bytes_so_far).strip(),
         total_bytes=utils.human_format_number(total_bytes).strip())
 
 # ==============================================================================
@@ -486,16 +486,16 @@ class FileCacher:
         self.ignore_cache = ignore_cache
         self.raise_exceptions = raise_exceptions
         self.info_map = {}
-    
+
     def get_local_files(self, names):
-        """Given a list of basename `mapping_names` which are pertinent to the 
-        given `pipeline_context`,   cache the mappings locally where they can 
+        """Given a list of basename `mapping_names` which are pertinent to the
+        given `pipeline_context`,   cache the mappings locally where they can
         be used by CRDS.
         """
         if isinstance(names, dict):
             names = names.values()
         localpaths = {}
-        
+
         # Add in GEIS format "conjugate" data files,  .rmaps specify only .rXh
         names2 = names[:]
         for refname in names2:
@@ -563,7 +563,7 @@ class FileCacher:
                         log.error("Failure downloading file", repr(name), ":", str(exc))
             return bytes_so_far
         return 0
-    
+
     def download(self, name, localpath):
         """Download a single file."""
         # This code is complicated by the desire to blow away failed downloads.  For the specific
@@ -584,7 +584,7 @@ class FileCacher:
         except:  #  mainly for control-c,  catch it and throw it.
             self.remove_file(localpath)
             raise
-        
+
     def remove_file(self, localpath):
         """Removes file at `localpath`."""
         log.verbose("Removing file", repr(localpath))
@@ -601,13 +601,13 @@ class FileCacher:
             generator = self.get_data_http(name)
             self.generator_download(generator, localpath)
         self.verify_file(name, localpath)
-        
+
     def generator_download(self, generator, localpath):
         """Read all bytes from `generator` until file is downloaded to `localpath.`"""
         with open(localpath, "wb+") as outfile:
             for data in generator:
                 outfile.write(data)
-                
+
     def plugin_download(self, filename, localpath):
         """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath."""
         url = self.get_url(filename)
@@ -623,7 +623,7 @@ class FileCacher:
                 raise CrdsDownloadError(
                     "Plugin download fail status =", repr(status),
                     "with command:", srepr(plugin_cmd))
-        
+
     def get_data_http(self, filename):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
         url = self.get_url(filename)
@@ -678,11 +678,11 @@ class FileCacher:
 # ==============================================================================
 
 def dump_mappings3(pipeline_context, ignore_cache=False, mappings=None, raise_exceptions=True):
-    """Given a `pipeline_context`, determine the closure of CRDS mappings for it and 
+    """Given a `pipeline_context`, determine the closure of CRDS mappings for it and
     cache them on the local file system.
-    
+
     If mappings is not None,  sync exactly that list of mapping names,  not their closures.
-    
+
     Returns:   { mapping_basename :   mapping_local_filepath ... }, downloads, bytes
     """
     assert isinstance(ignore_cache, bool)
@@ -690,7 +690,7 @@ def dump_mappings3(pipeline_context, ignore_cache=False, mappings=None, raise_ex
         mappings = get_mapping_names(pipeline_context)
     mappings = list(reversed(sorted(set(mappings))))
     return FileCacher(pipeline_context, ignore_cache, raise_exceptions).get_local_files(mappings)
-  
+
 def dump_mappings(*args, **keys):
     """See dump_mappings3.
 
@@ -699,12 +699,12 @@ def dump_mappings(*args, **keys):
     return dump_mappings3(*args, **keys)[0]
 
 def dump_references3(pipeline_context, baserefs=None, ignore_cache=False, raise_exceptions=True):
-    """Given a pipeline `pipeline_context` and list of `baserefs` reference 
+    """Given a pipeline `pipeline_context` and list of `baserefs` reference
     file basenames,  obtain the set of reference files and cache them on the
     local file system.
-    
+
     If `basrefs` is None,  sync the closure of references referred to by `pipeline_context`.
-    
+
     Returns:  { ref_basename :  reference_local_path }, downloads, bytes
     """
     if baserefs is None:
@@ -722,11 +722,11 @@ def dump_references(*args, **keys):
 
     Returns { ref_basename :  reference_local_path }
     """
-    return dump_references3(*args, **keys)[0]    
+    return dump_references3(*args, **keys)[0]
 
 def dump_files(pipeline_context=None, files=None, ignore_cache=False, raise_exceptions=True):
     """Unified interface to dump any file in `files`, mapping or reference.
-    
+
     Returns localpaths,  downloads count,  bytes downloaded
     """
     if pipeline_context is None:
@@ -746,12 +746,12 @@ def dump_files(pipeline_context=None, files=None, ignore_cache=False, raise_exce
     else:
         r_paths, r_downloads, r_bytes = {}, 0, 0
     return dict(list(m_paths.items())+list(r_paths.items())), m_downloads + r_downloads, m_bytes + r_bytes
-    
+
 # =====================================================================================================
 
 def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes=None):
     """Given the FITS `header` of a dataset and a `pipeline_context`, determine
-    the best set of reference files for processing the dataset,  cache them 
+    the best set of reference files for processing the dataset,  cache them
     locally,  and return the mapping  { filekind : local_file_path }.
     """
     best_refs = get_best_references(pipeline_context, header, reftypes=reftypes)
@@ -761,19 +761,19 @@ def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a CRDS context `pipeline_context` and `bestrefs` dictionary, download missing
     reference files and cache them on the local file system.
-    
-    bestrefs    { reference_keyword :  reference_basename } 
-    
-    Returns:   { reference_keyword :  reference_local_filepath ... }   
+
+    bestrefs    { reference_keyword :  reference_basename }
+
+    Returns:   { reference_keyword :  reference_local_filepath ... }
     """
     wanted = _get_cache_filelist_and_report_errors(bestrefs)
-    
+
     localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False).get_local_files(wanted)[0]
 
     refs = _squash_unicode_in_bestrefs(bestrefs, localrefs)
 
     return refs
-    
+
 def _get_cache_filelist_and_report_errors(bestrefs):
     """Compute the list of files to download based on the `bestrefs` dictionary,
     skimming off and reporting errors, and raising an exception on the last error seen.
@@ -832,10 +832,10 @@ def _squash_unicode_in_bestrefs(bestrefs, localrefs):
 
 # =====================================================================================================
 
-# These functions are deprecated and only work when the full CRDS library is installed,  and only for 
+# These functions are deprecated and only work when the full CRDS library is installed,  and only for
 # some data file formats (.fits).
 
-def cache_best_references_for_dataset(pipeline_context, dataset, 
+def cache_best_references_for_dataset(pipeline_context, dataset,
                                       ignore_cache=False):
     """
     determine the best set of reference files,  cache the references
@@ -845,7 +845,7 @@ def cache_best_references_for_dataset(pipeline_context, dataset,
     return cache_best_references(pipeline_context, header, ignore_cache)
 
 def get_minimum_header(context, dataset, ignore_cache=False):
-    """Given a `dataset` and a `context`,  extract relevant header 
+    """Given a `dataset` and a `context`,  extract relevant header
     information from the `dataset`.
     """
     import crds
