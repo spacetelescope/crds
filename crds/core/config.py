@@ -1009,7 +1009,7 @@ def complete_re(regex_str):
     """Add ^$ to `regex_str` to force match to entire string."""
     return "^" + regex_str + "$"
 
-OBSERVATORY_RE_STR = r"[a-zA-Z_0-9]{1,8}"
+OBSERVATORY_RE_STR = r"[a-zA-Z]{1,8}"
 OBSERVATORY_RE = re.compile(complete_re(OBSERVATORY_RE_STR))
 FILE_RE_STR = r"[A-Za-z0-9\._\- ]{1,128}|N/A|OMIT"
 FILE_RE = re.compile(complete_re(FILE_RE_STR)) # at min *should not* contain % < > \ { }
@@ -1061,9 +1061,9 @@ def is_reference(reference):
 
 # max len name component == 32.  max components == 3.
 # no digits in CRDS name components,  except serial no
-CRDS_OBS_RE_STR = r"(?P<observatory>" + r"[a-z][a-z]{1,8})"     # No hyphens
-CRDS_INSTR_RE_STR = r"(?P<instrument>" + r"[a-z][a-z]{1,16})"   # No hyphens
-CRDS_FILEKIND_RE_STR = r"(?P<filekind>" + r"[a-z][a-z\-]{1,32})"
+CRDS_OBS_RE_STR = r"(?P<observatory>" + r"[a-z][a-z]{1,8})" # No hyphens or digits
+CRDS_INSTR_RE_STR = r"(?P<instrument>" + r"[a-z][a-z0-9]{1,16})"   # No hyphens
+CRDS_FILEKIND_RE_STR = r"(?P<filekind>" + r"[a-z][a-z0-9\-]{1,32})"
 CRDS_BASE_NAME_RE_STR = (r"(" +
         CRDS_OBS_RE_STR + r"(_" +
             CRDS_INSTR_RE_STR + r"(_" +
@@ -1308,6 +1308,9 @@ def is_mapping_spec(mapping):
 
     >>> is_mapping_spec("hst-foo")
     False
+
+    >>> is_mapping_spec("hst_wfc3_0001.imap")
+    True
     """
     return is_mapping(mapping) or (isinstance(mapping, str) and bool(CONTEXT_RE.match(mapping)))
 
