@@ -211,7 +211,7 @@ Example get_synophot runs:
         tab_name = references[0]
 
         # rmap object locate() not module function.
-        tab_path = rmap.locate_file(tab_name)
+        tab_path = config.locate_file(tab_name)
 
         # CRDS abstract table object nominally from HDU 1
         table = tables.tables(tab_path)[0]

@@ -111,7 +111,7 @@ def get_file_properties(filename):
 
     >> get_file_properties("test_data/s7g1700gl_dead.fits")
     """
-    if rmap.is_mapping(filename):
+    if config.is_mapping(filename):
         try:
             return decompose_newstyle_name(filename)[2:4]
         except Exception:

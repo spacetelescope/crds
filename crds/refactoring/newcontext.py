@@ -79,7 +79,7 @@ def insert_mapping(context, mapping):
     that <type> of <instrument> should be set to "N/A".
     """
     # 'ACS' : 'hst_acs.imap',
-    where = rmap.locate_mapping(context)
+    where = config.locate_mapping(context)
     # readonly caching is ok because this call is always made on a newly named
     # copy of the original rmap;  the only thing mutated is the uncached new mapping.
     loaded = rmap.asmapping(context, cache="readonly")
@@ -95,8 +95,8 @@ def insert_mapping(context, mapping):
 
 def copy_mapping(old_map, new_map):
     """Make a copy of mapping `old_map` named `new_map`."""
-    old_path = rmap.locate_mapping(old_map)
-    new_path = rmap.locate_mapping(new_map)
+    old_path = config.locate_mapping(old_map)
+    new_path = config.locate_mapping(new_map)
     assert not os.path.exists(new_path), "New mapping file " + repr(new_map) + " already exists."
     shutil.copyfile(old_path, new_path)
 
@@ -150,7 +150,7 @@ def fake_name(old_map):
         new_map = fake_name(new_map)
     else:
         raise ValueError("Unrecognized mapping filename " + repr(old_map))
-    if os.path.exists(rmap.locate_mapping(new_map)):
+    if os.path.exists(config.locate_mapping(new_map)):
         # recurse until there's a free name,  or eventually fail.
         return fake_name(new_map)
     else:

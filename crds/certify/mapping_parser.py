@@ -9,7 +9,7 @@ errors in hand edited rmaps.
 """
 from collections import namedtuple
 
-from crds.core import rmap, selectors, log, exceptions
+from crds.core import rmap, selectors, log, exceptions, config
 
 # NOTE:  #-comments are treated as white space and currently dropped when an rmap is rewritten
 # as a new version.
@@ -87,7 +87,7 @@ def profile_parse(filename="hst_cos_deadtab.rmap"):
     """
     import cProfile
     import pstats
-    filename = rmap.locate_mapping(filename)
+    filename = config.locate_mapping(filename)
     statsname = os.path.splitext(filename)[0] + ".stats"
     cProfile.runctx('result = MAPPING_PARSER(open("{}").read()).mapping()'.format(filename),
                     locals(), globals(), statsname)
@@ -109,7 +109,7 @@ def parse_mapping(filename):
         MAPPING_PARSER = parsley.makeGrammar(MAPPING_GRAMMAR, selectors.SELECTORS)
 
     log.verbose("Parsing", repr(filename))
-    filename = rmap.locate_mapping(filename)
+    filename = config.locate_mapping(filename)
     with log.augment_exception("Parsing error in", repr(filename), exception_class=exceptions.MappingFormatError):
         with open(filename) as pfile:
             parser = MAPPING_PARSER(pfile.read())

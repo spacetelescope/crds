@@ -714,7 +714,7 @@ class MappingCertifier(Certifier):
 
 def get_existing_path(reference, observatory):
     """Return the path of `reference` located relative to `mapping`."""
-    path = rmap.locate_file(reference, observatory)
+    path = config.locate_file(reference, observatory)
     if not os.path.exists(path):
         raise ValidationError("Path " + repr(path) + " does not exist.")
     return path
@@ -1093,10 +1093,10 @@ For more information on the checks being performed,  use --verbose or --verbosit
         closure_files = set()
         for file_ in files:
             more_files = {file_}
-            if rmap.is_mapping(file_):
+            if config.is_mapping(file_):
                 with self.error_on_exception(file_, "Problem loading submappings of", repr(file_)):
                     mapping = crds.get_cached_mapping(file_, ignore_checksum="warn")
-                    more_files = {rmap.locate_mapping(name) for name in mapping.mapping_names()}
-                    more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
+                    more_files = {config.locate_mapping(name) for name in mapping.mapping_names()}
+                    more_files = (more_files - {config.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files
         return sorted(closure_files)
