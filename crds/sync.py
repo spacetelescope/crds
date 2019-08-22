@@ -515,7 +515,7 @@ class SyncScript(cmdline.ContextsScript):
                 files2.add(filename[:-1] + "d")
         for filename in files:
             with log.error_on_exception("Failed purging", kind, repr(filename)):
-                where = rmap.locate_file(filename, self.observatory)
+                where = config.locate_file(filename, self.observatory)
                 utils.remove(where, observatory=self.observatory)
 
     # ------------------------------------------------------------------------------------------
@@ -583,7 +583,7 @@ class SyncScript(cmdline.ContextsScript):
 
     def verify_file(self, file, info, bytes_so_far, total_bytes, nth_file, total_files):
         """Check one `file` against the provided CRDS database `info` dictionary."""
-        path = rmap.locate_file(file, observatory=self.observatory)
+        path = config.locate_file(file, observatory=self.observatory)
         base = os.path.basename(file)
         n_bytes = int(info["size"])
 
@@ -653,7 +653,7 @@ class SyncScript(cmdline.ContextsScript):
         new_mode = config.get_crds_ref_subdir_mode(self.observatory)  # did it really change.
         for refpath in old_refpaths:
             with log.error_on_exception("Failed relocating:", repr(refpath)):
-                desired_loc = rmap.locate_file(os.path.basename(refpath), observatory=self.observatory)
+                desired_loc = config.locate_file(os.path.basename(refpath), observatory=self.observatory)
                 if desired_loc != refpath:
                     if os.path.exists(desired_loc):
                         if not self.args.organize_delete_junk:

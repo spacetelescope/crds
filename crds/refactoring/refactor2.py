@@ -211,7 +211,7 @@ def get_refactoring_header(rmapping, refname, required_keywords):
     rmapping = rmap.asmapping(rmapping)
     # A fallback source of information is the reference file headers
     header = rmapping.get_refactor_header(
-        rmap.locate_file(refname, rmapping.observatory),
+        config.locate_file(refname, rmapping.observatory),
         extra_keys=("META.OBSERVATION.DATE", "META.OBSERVATION.TIME", "DATE-OBS","TIME-OBS") + required_keywords)
     # The primary source of information is the original rmap and the matching values defined there
     headers2 = matches.find_match_paths_as_dict(rmapping.filename, refname)

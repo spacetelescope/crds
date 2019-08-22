@@ -50,7 +50,7 @@ def add_checksum(file_):
     if config.is_reference(file_):
         with log.error_on_exception("Failed updating checksum for", repr(file_)):
             data_file.add_checksum(file_)
-    elif rmap.is_mapping(file_):
+    elif config.is_mapping(file_):
         update_mapping_checksum(file_)
     else:
         raise exceptions.CrdsError(
@@ -61,7 +61,7 @@ def remove_checksum(file_):
     log.info("Removing checksum for", repr(file_))
     if config.is_reference(file_):
         data_file.remove_checksum(file_)
-    elif rmap.is_mapping(file_):
+    elif config.is_mapping(file_):
         raise exceptions.CrdsError("Mapping checksums cannot be removed for:", repr(file_))
     else:
         raise exceptions.CrdsError(
@@ -72,7 +72,7 @@ def verify_checksum(file_):
     log.info("Verifying checksum for", repr(file_))
     if config.is_reference(file_):
         data_file.verify_checksum(file_)
-    elif rmap.is_mapping(file_):
+    elif config.is_mapping(file_):
         if config.CRDS_IGNORE_MAPPING_CHECKSUM.get():
             log.warning("Mapping checksums are disabled by config.CRDS_IGNORE_MAPPING_CHECKSM.")
         rmap.load_mapping(file_)

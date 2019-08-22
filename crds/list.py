@@ -547,7 +547,7 @@ jwst_niriss_superbias_0005.rmap
         """Consult the server and print the names of all references associated with
         the given contexts.
         """
-        references = [ rmap.locate_file(filename, self.observatory) if self.args.full_path else filename
+        references = [ config.locate_file(filename, self.observatory) if self.args.full_path else filename
                        for filename in self.get_context_references() ]
         _print_list(references)
 
@@ -555,7 +555,7 @@ jwst_niriss_superbias_0005.rmap
         """Consult the server and print the names of all CRDS mappings associated
         with the given contexts.
         """
-        mappings = [ rmap.locate_file(filename, self.observatory) if self.args.full_path else filename
+        mappings = [ config.locate_file(filename, self.observatory) if self.args.full_path else filename
                        for filename in self.get_context_mappings() ]
         _print_list(mappings)
 

@@ -184,9 +184,9 @@ class MappingDifferencer(Differencer):
 
     def __init__(self, *args, **keys):
         super(MappingDifferencer, self).__init__(*args, **keys)
-        assert rmap.is_mapping(self.old_file), \
+        assert config.is_mapping(self.old_file), \
             "File " + repr(self.old_file) + " is not a CRDS mapping."
-        assert rmap.is_mapping(self.new_file), \
+        assert config.is_mapping(self.new_file), \
             "File " + repr(self.new_file) + " is not a CRDS mapping."
         assert os.path.splitext(self.old_file)[-1] == os.path.splitext(self.new_file)[-1], \
             "Files " + repr(self.old_file) + " and " + repr(self.new_file) + \
@@ -272,7 +272,7 @@ class MappingDifferencer(Differencer):
             for step in diff:
                 # Walking down the diff steps 1-by-1 eventually hits an rmap comparison which
                 # will define both instrument and type.  pmaps and imaps leave at least one blank.
-                if len(step) == 2 and rmap.is_mapping(step[0]):
+                if len(step) == 2 and config.is_mapping(step[0]):
                     instrument, filekind = utils.get_file_properties(self.observatory, step[0])
                 # This is inefficient since diff doesn't vary by step,  but set logic cleans up the redundancy
                 # New rmaps imply reprocessing the entire type.
@@ -301,7 +301,7 @@ class MappingDifferencer(Differencer):
         diffs = remove_boring(diffs)
         for diff in diffs:
             for step in diff:
-                if len(step) == 2 and rmap.is_mapping(step[0]):
+                if len(step) == 2 and config.is_mapping(step[0]):
                     if diff_str in diff_action(diff):
                         log.verbose("Found", repr(diff_str), "diff between", repr(step[0:1]))
                         return True
@@ -470,7 +470,7 @@ def mapping_pairs(differences):
     pairs = set()
     for diff in differences:
         for pair in diff:
-            if len(pair) == 2 and rmap.is_mapping(pair[0]):
+            if len(pair) == 2 and config.is_mapping(pair[0]):
                 pairs.add(pair)
     return sorted(pairs)
 
@@ -926,7 +926,7 @@ Mutually Exclusive Modes
         """Print the references or mappings which are in the second (new) context and not
         the firtst (old) context.
         """
-        if not rmap.is_mapping(self.old_file) or not rmap.is_mapping(self.new_file):
+        if not config.is_mapping(self.old_file) or not config.is_mapping(self.new_file):
             log.error("--print-new-files really only works for mapping differences.")
             return -1
         old = crds.get_pickled_mapping(self.old_file)   # reviewed
@@ -950,10 +950,10 @@ Mutually Exclusive Modes
         """
         updated = get_updated_files(self.old_file, self.new_file)
         for mapping in updated:
-            if rmap.is_mapping(mapping):
+            if config.is_mapping(mapping):
                 print(mapping, self.instrument_filekind(mapping))
         for reference in updated:
-            if not rmap.is_mapping(reference):
+            if not config.is_mapping(reference):
                 print(reference, self.instrument_filekind(reference))
         return 1 if updated else 0
 
@@ -984,7 +984,7 @@ Mutually Exclusive Modes
 
     def print_affected_modes(self):
         """Print out all the affected mode tuples associated with the differences."""
-        assert rmap.is_mapping(self.old_file) and rmap.is_mapping(self.new_file), \
+        assert config.is_mapping(self.old_file) and config.is_mapping(self.new_file), \
             "for --print-affected-modes both files must be mappings."
         modes = mapping_affected_modes(self.old_file, self.new_file, self.args.include_header_diffs)
         for affected in modes:
