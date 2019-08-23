@@ -8,9 +8,9 @@ from crds.core.exceptions import CrdsError, CrdsWebError
 from . import background
 
 # from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
+DISABLED = []
 try:
     import requests
-    DISABLED = []
 except (ImportError, RuntimeError):
     log.verbose_warning("Import of 'requests' failed.  submit disabled.")
     DISABLED.append("requests")

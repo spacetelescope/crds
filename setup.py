@@ -87,12 +87,15 @@ setup(name="crds",
       author_email="jmiller@stsci.edu",
       url="https://hst-crds.stsci.edu",
       license="BSD",
-      install_requires=["astropy", "numpy", "mock", "filelock", "lockfile"],
+      install_requires=["astropy", "numpy", "filelock"],
       extras_require={
           "jwst": ["jwst"],
-          "submission": ["requests", "lxml", "parsley", "fitsverify"],
+          "submission": ["requests", "lxml", "parsley"],
+          "dev" : ["ipython", "jupyter"],
+          "test" : ["lockfile", "mock", "nose", "pytest", "pylint", "flake8"],
+          "docs" : ["sphinx","sphinx_rtd_theme",]
       },
-      tests_require=["nose", "mock", "pylint"],
+      tests_require=["lockfile", "mock", "nose", "pytest", "pylint", "flake8"],
       zip_safe=False,
       classifiers=[
           'Intended Audience :: Science/Research',
