@@ -401,6 +401,8 @@ jwst_niriss_superbias_0005.rmap
         if self.args.required_parkeys:
             self.list_required_parkeys()
 
+        return log.errors()
+
     def list_resolved_contexts(self):
         """Print out the literal interpretation of the contexts implied by the script's
         context specifiers.
