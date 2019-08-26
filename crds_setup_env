@@ -1,0 +1,32 @@
+#! /bin/bash
+
+if [ "$1" == "os-x" ]; then
+    export CONDA_INSTALLER=Miniconda3-latest-MacOSX-x86_64.sh
+elif [ "$1" == "linux" ]; then
+    export CONDA_INSTALLER=Miniconda3-latest-Linux-x86_64.sh
+else
+    echo "usage:  crds_setup_env  [os-x|linux]"
+fi
+echo "Installing $CONDA_INSTALLER"
+
+rm -rf ~/miniconda3.old
+mv ~/miniconda3 ~/miniconda3.old
+
+rm -f Miniconda3-latest-*.sh*
+wget --no-check-certificate https://repo.anaconda.com/miniconda/${CONDA_INSTALLER}
+
+sh ${CONDA_INSTALLER}
+rm -f ${CONDA_INSTALLER}
+conda update --yes -n base -c  conda
+conda config --add channels http://ssb.stsci.edu/astroconda
+conda create -n crds-env python=3.7 # conda
+conda activate crds-env
+
+pip install numpy
+pip install git+https://github.com/spacetelescope/jwst
+
+pip uninstall --yes crds
+# pip install git+https://github.com/spacetelescope/crds.git#egg=crds["submission","test","dev","docs"]
+pip install .["submission","test","dev","docs"]
+
+conda install --yes fitsverify

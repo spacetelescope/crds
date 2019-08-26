@@ -24,7 +24,9 @@ import os
 import sphinx
 from distutils.version import LooseVersion
 
-import sphinx_astropy
+import sphinx_rtd_theme
+# import sphinx_astropy
+# from sphinx_astropy.conf import *
 
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../../../crds'))
@@ -54,6 +56,7 @@ extensions = [
     'sphinx_automodapi.automodsumm',
     'sphinx_automodapi.autodoc_enhancements',
     'sphinx_automodapi.smart_resolver',
+    'sphinx_rtd_theme',
     ]
 
 
@@ -113,17 +116,37 @@ todo_include_todos = False
 
 
 # -- Options for HTML output ----------------------------------------------
+html_theme = "sphinx_rtd_theme"
+html_theme_options = {
+    'canonical_url': '',
+    # 'analytics_id': 'UA-XXXXXXX-1',  #  Provided by Google in your dashboard
+    'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    'style_nav_header_background': 'white',
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# import sphinx_rtd_theme
-# html_theme = "sphinx_rtd_theme"
-# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# import astropy_sphinx_theme
+# html_theme_path = astropy_sphinx_theme.get_html_theme_path()
+# html_theme = 'bootstrap-astropy'
 
-import stsci_rtd_theme
-html_theme = 'stsci_rtd_theme'
-html_theme_path = [stsci_rtd_theme.get_html_theme_path()]
+# html_theme_options = {
+#     'logotext1': 'crds',  # white,  semi-bold
+#     'logotext2': '',  # orange, light
+#     'logotext3': '',   # white,  light
+#     'astropy_project_menubar': False
+#     }
 
 # html_theme = 'alabaster'
 
