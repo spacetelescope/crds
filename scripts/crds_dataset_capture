@@ -7,8 +7,9 @@ import os
 
 # ===================================================================
 
-from crds.core import timestamp, log
+from crds.core import timestamp, log, utils
 from crds.core.pysh import *
+from crds import list
 
 # ===================================================================
 
@@ -20,23 +21,39 @@ line.  It's a convenience wrapper that automates more primitive
 features in 'crds list'.
 """)
 
-instruments = sys.argv[1:]
+def capture(instrument):
+    ids_file = instrument + ".ids.txt"
+    headers_file = instrument + ".headers.json"
 
-now = timestamp.now("T").replace(":","-").split(".")[0]
-capture_dir = "capture-" + now
+    old_out = sys.stdout
 
-log.info("Capturing", repr(instruments), "to", repr(capture_dir))
-sh("mkdir ${capture_dir}")
-os.chdir(capture_dir)
-
-for instrument in instruments:
-    ids_file = instrument + ".ids." + now + ".txt"
     log.info("Capturing", repr(ids_file))
-    sh("crds list --dataset-ids ${instrument} >${ids_file}")
+    with open(ids_file, "w+") as sys.stdout:
+        errors = list.ListScript(f"crd.list --dataset-ids {instrument} --stats --log-time")()
 
-for instrument in instruments:
-    ids_file     = instrument + ".ids." + now + ".txt"
-    headers_file = instrument + ".headers." + now + ".json"
     log.info("Capturing", repr(ids_file), "to", repr(headers_file))
-    sh("crds list --dataset-headers @${ids_file} --json >${headers_file}")
+    with open(headers_file, "w+") as sys.stdout:
+        errors += list.ListScript(f"crds.list --dataset-headers @{ids_file} --json --stats --log-time")()
+
+    sys.stdout = old_out
+    return errors
+
+def main(instruments):
+    now = timestamp.now("T").replace(":","-").split(".")[0]
+    capture_dir = "capture-" + now
+
+    log.set_log_time(True)
+
+    log.info("="*80)
+    log.info("Capturing", repr(instruments), "to", repr(capture_dir))
+    sh("mkdir ${capture_dir}")
+    os.chdir(capture_dir)
+
+    errors = 0
+    for instrument in instruments:
+        errors += capture(instrument)
+    return errors
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
 

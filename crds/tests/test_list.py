@@ -341,6 +341,7 @@ def dt_list_mappings():
     ...
     hst_wfpc2_shadfile.rmap
     hst_wfpc2_wf4tfile.rmap
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -354,6 +355,7 @@ def dt_list_cached_mappings():
     -ignore-/mappings/hst/hst_0001.pmap
     -ignore-/mappings/hst/hst_0002.pmap
     -ignore-
+    0
     >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
     """
@@ -371,6 +373,7 @@ def dt_list_references():
     x781756sj_dkc.fits
     x781933ij_drk.fits
     x781933jj_dkc.fits
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -385,6 +388,7 @@ def dt_list_cached_references():
     -ignore-/crds-cache-test/references/hst/z1r1943el_1dx.fits
     -ignore-/crds-cache-test/references/hst/z2d19237l_1dx.fits
     -ignore-/crds-cache-test/references/hst/z2d1925ql_2zx.fits
+    0
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -398,6 +402,7 @@ def dt_list_dataset_ids():
     U20L0U03T:U20L0U03T
     U21U0201T:U21U0201T
     ...
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -421,6 +426,7 @@ def dt_list_dataset_headers():
      'SHUTTER': 'A',
      'TIME-OBS': '10:07:16.929999',
      'dataset_id': 'U20L0U01T:U20L0U01T'}
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -431,6 +437,7 @@ def dt_list_dataset_headers_json():
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> ListScript("crds.list --dataset-headers U20L0U01T:U20L0U01T --contexts hst.pmap --json")()   # doctest: +ELLIPSIS
     -ignore-
+    0
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -440,6 +447,7 @@ def dt_list_dataset_headers_bogus():
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap")()   # doctest: +ELLIPSIS
     CRDS - ERROR -  Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset ...'BAR'
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -451,6 +459,7 @@ def dt_list_dataset_headers_id_expansions_only():
     I9ZF01010:I9ZF01E0Q
     I9ZF01010:I9ZF01E1Q
     I9ZF01010:I9ZF01E3Q
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -465,6 +474,7 @@ def dt_list_required_parkeys_pmap():
     stis = ['INSTRUME', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CCDOFFST', 'CENWAVE', 'DATE-OBS', 'DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'REFTYPE', 'TIME-OBS']
     wfc3 = ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CHINJECT', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 'FILTER', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'PHOTCORR', 'REFTYPE', 'SAMP_SEQ', 'SHUTRPOS', 'SUBARRAY', 'SUBTYPE', 'TIME-OBS']
     wfpc2 = ['INSTRUME', 'ATODGAIN', 'DATE-OBS', 'FILTER1', 'FILTER2', 'FILTNAM1', 'FILTNAM2', 'IMAGETYP', 'LRFWAVE', 'MODE', 'REFTYPE', 'SERIALS', 'SHUTTER', 'TIME-OBS']
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -493,6 +503,7 @@ def dt_list_required_parkeys_imap():
     pfltfile: ['DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'DATE-OBS', 'TIME-OBS', 'FLATCORR']
     shadfile: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'SHADCORR']
     spottab: ['DETECTOR', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS']
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -501,6 +512,7 @@ def dt_list_required_parkeys_rmap():
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --required-parkeys --contexts hst_acs_darkfile.rmap")() # doctest: +ELLIPSIS
     hst_acs_darkfile.rmap: ['DETECTOR', 'CCDAMP', 'CCDGAIN', 'DATE-OBS', 'TIME-OBS', 'DARKCORR']
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -513,6 +525,7 @@ def dt_list_resolve_contexts_range():
     hst_0003.pmap
     hst_0004.pmap
     hst_0005.pmap
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -521,6 +534,7 @@ def dt_list_resolve_contexts_date():
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --resolve-contexts --contexts hst-2014-11-11T00:00:00")() # doctest: +ELLIPSIS
     hst_0297.pmap
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -546,6 +560,7 @@ def dt_list_references_by_context():
     >>> ListScript("crds.list --references --contexts hst-cos-deadtab-2014-11-11T00:00:00")() # doctest: +ELLIPSIS
     s7g1700gl_dead.fits
     s7g1700ql_dead.fits
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -555,6 +570,7 @@ def dt_list_references_by_context():
     >>> ListScript("crds.list --references --contexts hst-cos-deadtab-2014-11-11T00:00:00")() # doctest: +ELLIPSIS
     s7g1700gl_dead.fits
     s7g1700ql_dead.fits
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -634,6 +650,7 @@ def dt_list_status():
     Python Executable = '...'
     Python Version = '...'
     Readonly Cache = False
+    0
     >>> test_config.cleanup(old_state)
     """
 
@@ -653,6 +670,7 @@ def dt_list_config():
     ...
     Python Environment
     ...
+    0
     >>> test_config.cleanup(old_state)
     """
 
