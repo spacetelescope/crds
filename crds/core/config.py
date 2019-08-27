@@ -726,6 +726,22 @@ def get_download_plugin():
                 return program + " --no-check-certificate --quiet ${SOURCE_URL}  -O ${OUTPUT_PATH}"
     return None
 
+# -------------------------------------------------------------------------------------
+
+# This permits an AWS environment to override the URLs normally supplied by the
+# CRDS server with locally defined (S3) source URLs.  This can keep actual file
+# downloads local to AWS and scalable with S3.
+
+CRDS_MAPPING_URL = StrConfigItem("CRDS_MAPPING_URL", None,
+    "Defines the URL/URI from which CRDS mapping files are downloaded.",
+    lower=True)
+
+CRDS_REFERENCE_URL = StrConfigItem("CRDS_REFERENCE_URL", None,
+    "Defines the URL/URI from which CRDS mapping files are downloaded.",
+    lower=True)
+
+# -------------------------------------------------------------------------------------
+
 DOWNLOAD_CHECKSUMS = BooleanConfigItem(
     "CRDS_DOWNLOAD_CHECKSUMS", True, "Verify downloaded files match server's sha1sum.  If false,  allow bad checksums.")
 
@@ -740,6 +756,8 @@ def get_length_flag():
     """Return True if the environment is configured for verifying downloaded file lengths.
     """
     return DOWNLOAD_LENGTHS.get()
+
+# -------------------------------------------------------------------------------------
 
 CLIENT_RETRY_COUNT = IntConfigItem(
     "CRDS_CLIENT_RETRY_COUNT", 1, "Integer number of times CRDS should retry download errors.  No retries == 1.")
@@ -764,6 +782,8 @@ def disable_retries():
     """Set the defaults for only one try for each network transaction."""
     CLIENT_RETRY_COUNT.set(1)
     CLIENT_RETRY_DELAY_SECONDS.set(0)
+
+# -------------------------------------------------------------------------------------
 
 CRDS_DEFAULT_SERVERS = {
     "hst" : "https://hst-crds.stsci.edu",
@@ -932,7 +952,7 @@ def locate_file(filepath, observatory):
     return relocate_file(filepath, observatory)
 
 def pop_crds_uri(filepath):
-    """Pop off crds:// from a filepath,  yielding an pathless filename."""
+    """Pop off crds:// from a filepath,  yielding a pathless filename."""
     if filepath.startswith("crds://"):
         filepath = filepath[len("crds://"):]
         assert not os.path.dirname(filepath), "crds:// must prefix a filename with no path."
@@ -1059,6 +1079,8 @@ def is_reference(reference):
     extension = os.path.splitext(reference)[-1].lower()
     return bool(re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension))
 
+# -------------------------------------------------------------------------------------
+
 # max len name component == 32.  max components == 3.
 # no digits in CRDS name components,  except serial no
 CRDS_OBS_RE_STR = r"(?P<observatory>" + r"[a-z][a-z]{1,8})" # No hyphens or digits
@@ -1086,6 +1108,8 @@ CRDS_NAME_RE = re.compile(CRDS_NAME_RE_STR)   # intentionally not complete. no ^
 # s7g1700gl_dead.fits
 CDBS_NAME_RE_STR = r"[a-z0-9_]{1,52}\.(fits|r\d[hd])"
 CDBS_NAME_RE = re.compile(complete_re(CDBS_NAME_RE_STR))
+
+# -------------------------------------------------------------------------------------
 
 def is_valid_reference_name(filename):
     """Return True IFF `filename` has a valid CRDS reference filename format.
@@ -1202,6 +1226,8 @@ PIPELINE_CONTEXT_RE = re.compile(complete_re(PIPELINE_CONTEXT_RE_STR))
 
 MAPPING_RE_STR = CRDS_NAME_RE_STR + r"[pir]map"
 MAPPING_RE = re.compile(complete_re(MAPPING_RE_STR))
+
+# -------------------------------------------------------------------------------------
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
