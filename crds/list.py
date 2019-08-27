@@ -651,6 +651,11 @@ jwst_niriss_superbias_0005.rmap
         _print_dict("CRDS Server Info", server,
                     ["observatory", "status", "connected", "operational_context", "last_synced",
                      "reference_url", "mapping_url", "effective_mode"])
+        download_urls = dict(
+            mapping_url = api.get_root_url("xyz.pmap"),
+            reference_url= api.get_root_url("xyz.fits"),
+            )
+        _print_dict("Actual Download URLs", download_urls, ["mapping_url","reference_url"])
         if self.observatory == "hst":
             cal_vars = { var : os.environ[var] for var in os.environ
                           if len(var) == 4 and var.lower().endswith("ref") }

@@ -157,11 +157,15 @@ def get_root_url(filename, observatory=None):
         observatory = get_default_observatory()
     info = get_server_info()
     if config.is_mapping(filename):
-        url = info["mapping_url"][observatory]
+        url = config.CRDS_MAPPING_URL.get()
+        if url == "none":
+            url = info["mapping_url"][observatory]
     else:
-        url = info["reference_url"][observatory]
+        url = config.CRDS_REFERENCE_URL.get()
+        if url == "none":
+            url = info["reference_url"][observatory]
     if not url.endswith("/"):
-            url += "/"
+        url += "/"
     return url
 
 def get_file_info(pipeline_context, filename):
