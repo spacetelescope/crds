@@ -619,7 +619,7 @@ class FileCacher:
         plugin_cmd = plugin_cmd.replace("${SOURCE_URL}", url)
         plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
         log.verbose("Running download plugin:", repr(plugin_cmd))
-        status = os.system(plugin_cmd)
+        status = os.WEXITSTATUS(os.system(plugin_cmd))
         if status != 0:
             if status == 2:
                 raise KeyboardInterrupt("Interrupted plugin.")

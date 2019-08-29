@@ -34,4 +34,4 @@ elif "--profile" in sys.argv:
 else:
     status = os.system("nosetests")
 os.system("python -m crds.list --status --log-time")
-sys.exit(status)
+sys.exit(os.WEXITSTATUS(status))
