@@ -453,8 +453,10 @@ def get_default_observatory():
     3. Observatory(Server default context)
     4. jwst
     """
-    return os.environ.get("CRDS_OBSERVATORY", None) or \
-           observatory_from_string(get_crds_server()) or \
+    obs = config.OBSERVATORY.get()
+    if obs != "none":
+        return obs
+    return observatory_from_string(get_crds_server()) or \
            get_server_observatory() or \
            "jwst"
 
