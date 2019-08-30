@@ -2,7 +2,7 @@ import sys
 import os
 import doctest
 
-from crds.core import log, cmdline, utils
+from crds.core import log, cmdline, utils, config
 from crds.core.cmdline import Script, ContextsScript, UniqueErrorsMixin
 from crds import tests
 from crds.tests import test_config
@@ -144,7 +144,7 @@ def dt_observatories_obs_pkg():
 
     >>> _ = os.environ.pop("CRDS_SERVER_URL", None)
 
-    >>> os.environ["CRDS_OBSERVATORY"] = "hst"
+    >>> _ = config.OBSERVATORY.set("hst")
     >>> utils.clear_function_caches()
     >>> Script("cmdline.Script").observatory
     'hst'

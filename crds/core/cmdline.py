@@ -219,8 +219,8 @@ class Script:
         if self.args.hst:
             return self.set_server("hst")
 
-        obs = os.environ.get("CRDS_OBSERVATORY", None)
-        if obs:
+        obs = config.OBSERVATORY.get()
+        if obs != "none":
             return self.set_server(obs.lower())
 
         url = os.environ.get("CRDS_SERVER_URL", None)
