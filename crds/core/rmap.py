@@ -242,6 +242,17 @@ class Mapping:
             raise AttributeError("Invalid or missing header key " + repr(attr))
 
     @classmethod
+    def from_s3(cls, basename, *args, **keys):
+        log.verbose("Loading mapping from S3", repr(basename), verbosity=55)
+        s3_url = config.locate_mapping_s3(basename)
+        bucket_name, key = s3_url.replace("s3://", "").split("/", 1)
+        import boto3
+        s3 = boto3.resource("s3")
+        obj = s3.Object(bucket_name, key)
+        text = obj.get()["Body"].read().decode("utf-8")
+        return cls.from_string(text, basename, *args, **keys)
+
+    @classmethod
     def from_file(cls, basename, *args, **keys):
         """Load a mapping file `basename` and do syntax and basic validation.  If `path` is
         specified, recursively load all files relative to `path` and include path in the
@@ -1588,7 +1599,10 @@ def _load_mapping(mapping, **keys):
     elif mapping.endswith(".rmap"):
         cls = ReferenceMapping
     else:
-        m = Mapping.from_file(mapping, **keys)
+        if config.S3_ENABLED:
+            m = Mapping.from_s3(mapping, **keys)
+        else:
+            m = Mapping.from_file(mapping, **keys)
         mapping_type = m.header["mapping"].lower()
         if  mapping_type == "pipeline":
             cls = PipelineContext
@@ -1598,7 +1612,11 @@ def _load_mapping(mapping, **keys):
             cls = ReferenceMapping
         else:
             raise ValueError("Unknown mapping type for " + repr(mapping))
-    return cls.from_file(mapping, **keys)
+
+    if config.S3_ENABLED:
+        return cls.from_s3(mapping, **keys)
+    else:
+        return cls.from_file(mapping, **keys)
 
 def asmapping(filename_or_mapping, cached=False, **keys):
     """Return the Mapping object corresponding to `filename_or_mapping`.
