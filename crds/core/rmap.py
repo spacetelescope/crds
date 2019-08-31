@@ -244,12 +244,8 @@ class Mapping:
     @classmethod
     def from_s3(cls, basename, *args, **keys):
         log.verbose("Loading mapping from S3", repr(basename), verbosity=55)
-        s3_url = config.locate_mapping_s3(basename)
-        bucket_name, key = s3_url.replace("s3://", "").split("/", 1)
-        import boto3
-        s3 = boto3.resource("s3")
-        obj = s3.Object(bucket_name, key)
-        text = obj.get()["Body"].read().decode("utf-8")
+        s3_uri = config.get_uri(basename)
+        text = utils.get_uri_content(s3_uri)
         return cls.from_string(text, basename, *args, **keys)
 
     @classmethod
@@ -265,8 +261,7 @@ class Mapping:
             basename = filename
         else:
             filename = config.locate_mapping(basename)
-        with  open(filename) as pfile:
-            text = pfile.read()
+        text = utils.get_uri_content(filename)
         return cls.from_string(text, basename, *args, **keys)
 
     @classmethod

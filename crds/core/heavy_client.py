@@ -515,9 +515,6 @@ def get_config_info(observatory):
     """
     try:
         info = ConfigInfo(api.get_server_info())
-        info.status = "server"
-        info.connected = True
-        log.verbose("Connected to server at", srepr(api.get_crds_server()))
         if info.effective_mode != "remote":
             if not config.writable_cache_or_verbose("Using cached configuration and default context."):
                 info = load_server_info(observatory)
@@ -709,8 +706,10 @@ def load_pickled_mapping(mapping):
     in the hierarchy is read.  In general pickles for sub-mappings should not
     exist because of storage waste.
     """
-    pickle_file = config.locate_pickle(mapping)
-    pickled = open(pickle_file, "rb").read()
+    pickle_uri = config.get_uri(mapping + ".pkl")
+    if pickle_uri == "none":
+        pickle_uri = config.locate_pickle(mapping)
+    pickled = utils.get_uri_content(pickle_uri, mode="binary")
     loaded = pickle.loads(pickled)
     log.info("Loaded pickled context", repr(mapping))
     return loaded

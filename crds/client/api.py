@@ -9,6 +9,9 @@ import re
 import zlib
 import html
 from urllib import request
+import warnings
+import json
+import ast
 
 # ==============================================================================
 
@@ -143,30 +146,57 @@ def get_mapping_names(pipeline_context):
 def get_reference_url(pipeline_context, reference):
     """Returns a URL for the specified reference file.    DEPRECATED
     """
+    warnings.warn("get_reference_url() is deprecated and will be removed 2019-01-01.",
+                  DeprecationWarning)
     return S.get_reference_url(pipeline_context, reference)
 
 def get_url(pipeline_context, filename):
     """Return the URL for a CRDS reference or mapping file.   DEPRECATED"""
+    warnings.warn("get_mapping_url() is deprecated and will be removed 2019-01-01.",
+                  DeprecationWarning)
     return S.get_url(pipeline_context, filename)
 
-def get_root_url(filename, observatory=None):
-    """Based on the server info,  return the base URL the server indicates
-    should be used to download `filename`.
+def get_flex_uri(filename, observatory=None):
+    """If environment variables define the base URI for `filename`, append
+    filename and return the combined URI.
+
+    If no environment override has been specified, obtain the base URI from
+    the server_info config,  append filename, and return the combined URI.
+
+    If `filename` is a config file and no environment override is defined,
+    return "none".
     """
     if observatory is None:
         observatory = get_default_observatory()
-    info = get_server_info()
-    if config.is_mapping(filename):
-        url = config.CRDS_MAPPING_URL.get()
-        if url == "none":
-            url = info["mapping_url"][observatory]
+    uri = config.get_uri(filename)
+    if uri == "none":
+        info = get_server_info()
+        if config.is_config(filename):
+            uri = _unpack_info(info, "config_url", observatory)
+        elif config.is_pickle(filename):
+            uri = _unpack_info(info, "pickle_url", observatory)
+        elif config.is_mapping(filename):
+            uri = _unpack_info(info, "mapping_url", observatory)
+        elif config.is_reference(filename):
+            uri = _unpack_info(info, "reference_url", observatory)
+        else:
+            raise CrdsError("Can't identify file type for:", srepr(filename))
+        if uri == "none":
+            return uri
+        if not uri.endswith("/"):
+            uri += "/"
+        uri += filename
+    return uri
+
+def _unpack_info(info, section, observatory):
+    """Return info[section][observatory] if info[section] is defined.
+    Otherwise return "none".
+    """
+    sect = info.get(section)
+    if sect:
+       return sect[observatory]
     else:
-        url = config.CRDS_REFERENCE_URL.get()
-        if url == "none":
-            url = info["reference_url"][observatory]
-    if not url.endswith("/"):
-        url += "/"
-    return url
+        return "none"
 
 def get_file_info(pipeline_context, filename):
     """Return a dictionary of CRDS information about `filename`."""
@@ -311,16 +341,44 @@ def get_server_info():
     initialize a higher level getreferences() call,  providing information on
     what context, software, and network mode should be used for processing.
     """
-    try:
-        info = S.get_server_info()
-        info["server"] = get_crds_server()
+    info = _get_server_info()
+    info["server"] = get_crds_server()
+    if "unchecked" in info.get("reference_url", "UNDEFINED"):
         info["reference_url"] = info.pop("reference_url")["unchecked"]
+    if "unchecked" in info.get("mapping_url", "UNDEFINED"):
         info["mapping_url"] = info.pop("mapping_url")["unchecked"]
-        return info
-    except ServiceError as exc:
+    if "unchecked" in info.get("config_url", "UNDEFINED"):
+        info["config_url"] = info.pop("config_url")["unchecked"]
+    if "unchecked" in info.get("pickle_url", "UNDEFINED"):
+        info["pickle_url"] = info.pop("pickle_url")["unchecked"]
+    return info
+
+def _get_server_info():
+    """Fetch the server info dict.   If CRDS_CONFIG_URI is set then
+    download that URL and load json from the contents.  Otherwise,
+    call the CRDS server JSONRPC get_server_info() API.
+
+    Returns  server info dict
+    """
+    config_uri = config.get_uri("server_config")
+    try:
+        if config_uri != "none":
+            log.verbose(f"Loading config from URI '{config_uri}'.")
+            content = utils.get_uri_content(config_uri)
+            info = ast.literal_eval(content)
+            info["status"] = "uri"
+            info["connected"] = False
+        else:
+            config_uri = f"JSON RPC service at '{get_crds_server()}'"
+            info = S.get_server_info()
+            log.verbose("Connected to server at", srepr(get_crds_server()))
+            info["status"] = "server"
+            info["connected"] = True
+    except Exception as exc:
         raise CrdsNetworkError(
-            "network connection failed:", srepr(get_crds_server()),
-            ":", srepr(exc)) from exc
+            f"Failed downloading cache config from: {config_uri}:",
+            srepr(exc)) from exc
+    return info
 
 get_cached_server_info = get_server_info
 
@@ -657,7 +715,7 @@ class FileCacher:
 
     def get_url(self, filename):
         """Return the URL used to fetch `filename` of `pipeline_context`."""
-        return get_root_url(filename, self.observatory) + filename
+        return get_flex_uri(filename, self.observatory)
 
     def verify_file(self, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""

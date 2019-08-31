@@ -732,12 +732,20 @@ def get_download_plugin():
 # CRDS server with locally defined (S3) source URLs.  This can keep actual file
 # downloads local to AWS and scalable with S3.
 
-CRDS_MAPPING_URL = StrConfigItem("CRDS_MAPPING_URL", None,
+CRDS_CONFIG_URI = StrConfigItem("CRDS_CONFIG_URI", None,
+    "Defines the URL/URI from which CRDS config files are downloaded.",
+    lower=True)
+
+CRDS_MAPPING_URI = StrConfigItem("CRDS_MAPPING_URI", None,
     "Defines the URL/URI from which CRDS mapping files are downloaded.",
     lower=True)
 
-CRDS_REFERENCE_URL = StrConfigItem("CRDS_REFERENCE_URL", None,
-    "Defines the URL/URI from which CRDS mapping files are downloaded.",
+CRDS_REFERENCE_URI = StrConfigItem("CRDS_REFERENCE_URI", None,
+    "Defines the URL/URI from which CRDS reference files are downloaded.",
+    lower=True)
+
+CRDS_PICKLE_URI = StrConfigItem("CRDS_PICKLE_URI", None,
+    "Defines the URL/URI from which CRDS pickle files are downloaded.",
     lower=True)
 
 # -------------------------------------------------------------------------------------
@@ -1438,6 +1446,22 @@ def mapping_to_filekind(context_file):
     return os.path.basename(context_file).split("_")[2].split(".")[0]
 
 # -------------------------------------------------------------------------------------
+def is_config(filename):
+    """Return True IFF `filename` names a CRDS configuration file."""
+    filename = os.path.basename(filename)
+    if filename in ["server_config"]:
+        return True
+    return False
+
+# -------------------------------------------------------------------------------------
+def is_pickle(filename):
+    """Return True IFF `filename` names a CRDS pickle file."""
+    filename = os.path.basename(filename)
+    if filename.endswith(".pkl"):
+        return True
+    return False
+
+# -------------------------------------------------------------------------------------
 
 def get_crds_state():
     """Capture the current CRDS configuration and return it as a dictionary.
@@ -1519,31 +1543,41 @@ def simplify_version(version):
 # (no instrument in the key).
 
 S3_ENABLED = BooleanConfigItem("CRDS_S3_ENABLED", False, "When True, enables S3 streaming")
-S3_BUCKET_NAME = StrConfigItem("CRDS_S3_BUCKET_NAME", None,
-    "Name of the S3 bucket that contains both mapping and reference files",
-    lower=True
-)
 
 OBSERVATORY = StrConfigItem("CRDS_OBSERVATORY", None,
     "Configured observatory, required for S3 streaming",
     lower=True
 )
 
-def locate_mapping_s3(mappath):
-    return _locate_file_s3(mappath, "mappings/")
+# -------------------------------------------------------------------------------------
+def get_uri(filename):
+    """Return an appropriate s3:// or https:// URI for the specified filename based
+    on optional CRDS config variables:
 
-def locate_reference_s3(ref):
-    return _locate_file_s3(ref, "references/")
+    CRDS_CONFIG_URI
+    CRDS_MAPPING_URI
+    CRDS_REFERENCE_URI
+    CRDS_PICKLE_URI
 
-def _locate_file_s3(filename, prefix):
-    assert S3_BUCKET_NAME != "none", "CRDS_S3_BUCKET_NAME is required for S3 streaming"
-    assert OBSERVATORY != "none", "CRDS_OBSERVATORY is required for S3 streaming"
-
-    upper_filename = filename.upper()
-    if "NOT FOUND" in upper_filename or "N/A" in upper_filename:
-        return filename
-
-    return "s3://" + S3_BUCKET_NAME + "/" + prefix + OBSERVATORY + "/" + os.path.basename(filename)
+    If the appropriate env var is not defined,  return "none".
+    """
+    if is_config(filename):
+        uri = CRDS_CONFIG_URI.get()
+    elif is_pickle(filename):
+        uri = CRDS_PICKLE_URI.get()
+    elif is_mapping(filename):
+        uri = CRDS_MAPPING_URI.get()
+    elif is_reference(filename):
+        uri = CRDS_REFERENCE_URI.get()
+    else:
+        raise CrdsError(f"Uknown file type for: '{filename}'")
+    if uri == "none":
+        return  uri
+    else:
+        if not uri.endswith("/"):
+            uri += "/"
+        uri += filename
+        return uri
 
 # -------------------------------------------------------------------------------------
 
