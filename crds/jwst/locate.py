@@ -608,6 +608,9 @@ def _hack_fits_translation(model_key):
 
 log.append_crds_filter(add_fits_keywords)
 
+def disable_fits_annotations():
+    log.remove_crds_filter(add_fits_keywords)
+
 # ============================================================================
 
 def test():

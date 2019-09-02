@@ -12,7 +12,7 @@ import re
 
 # ============================================================================
 
-from astropy.io.fits import FITSDiff
+# from astropy.io.fits import FITSDiff     # deferred
 
 # ============================================================================
 
@@ -333,6 +333,7 @@ class FitsDifferencer(Differencer):
         loc_new_file = self.locate_file2(self.new_file)
 
         # Do the standard diff.
+        from astropy.io.fits import FITSDiff           # deferred
         fdiff = FITSDiff(loc_old_file, loc_new_file)
 
         # Do the diff by rows.

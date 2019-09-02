@@ -8,14 +8,19 @@ import difflib
 from itertools import product
 import numpy as np
 
-from astropy.table import Table
-from astropy.io.fits import TableDataDiff
-from astropy.io.fits.hdu.hdulist import fitsopen
-from astropy.io.fits.hdu.table import _TableLikeHDU
+# ==========================================================================
 
-from crds.core  import rmap, cmdline
+# Deferred
+# from astropy.table import Table
+# from astropy.io.fits import TableDataDiff
+# from astropy.io.fits.hdu.hdulist import fitsopen
+# from astropy.io.fits.hdu.table import _TableLikeHDU
 
-#==========================================================================
+# ==========================================================================
+
+from crds.core  import cmdline
+
+# ==========================================================================
 # Utilities
 
 
@@ -41,7 +46,7 @@ def table_to_string(a_table):
     return result
 
 
-def list_intersection(a_list, b_list, transform=lambda element : element):
+def list_intersection(a_list, b_list, transform=lambda element: element):
     """Return a list of the intersection of two lists.
 
     Parameters
@@ -84,6 +89,7 @@ def get_hdulist(fits_reference):
     Note that the reference may already be an HDUList
     """
     # If the reference is a string, presume its a file path
+    from astropy.io.fits.hdu.hdulist import fitsopen
     result = fits_reference
     if isinstance(fits_reference, str):
         try:
@@ -278,7 +284,7 @@ def selected(element, wanted):
     return element in wanted
 
 
-#==========================================================================
+# ==========================================================================
 class RowDiff:
     """Perform FITS table difference by rows
 
@@ -373,6 +379,7 @@ class RowDiff:
             if not self.consistent:
                 return
 
+            from astropy.io.fits.hdu.table import _TableLikeHDU
             for hdu_index in range(len(self.a_hdulist)):
                 if isinstance(self.a_hdulist[hdu_index], _TableLikeHDU):
                     self.diffs.append((hdu_index,
@@ -417,6 +424,7 @@ class RowDiff:
             mode_constraints = {}
 
         # Do a full FITS Table Data diff
+        from astropy.io.fits import TableDataDiff
         data_diff = TableDataDiff(a_fitstable, b_fitstable,
                                   ignore_fields=self.ignore_fields,
                                   numdiffs=1)
@@ -439,40 +447,13 @@ class RowDiff:
                                               lambda element: element.lower())
 
         # Convert from FITS table to Astropy Table
+        from astropy.table import Table    # Deferred
         a_table = Table(a_fitstable)
         b_table = Table(b_fitstable)
-
-        #**DEBUG**
-        # If doing masks, use the below
-        """
-        a_table = Table(a_fitstable, masked=True)
-        b_table = Table(b_fitstable, masked=True)
-        """
 
         # Rename the columns to lowercase.
         column_name_lower(a_table)
         column_name_lower(b_table)
-
-        # If mode_fields is presented as a dictionary,
-        # mask the tables based on the values.
-        #**DEBUG**
-        # All below may or may not be used. Currently commented.
-        """
-        a_mode_mask = None
-        b_mode_mask = None
-        for mode_field in mode_constraints:
-            a_mask = ~ (a_table[mode_field] == mode_constraints[mode_field])
-            b_mask = ~ (b_table[mode_field] == mode_constraints[mode_field])
-            if a_mode_mask is not None:
-                a_mode_mask = a_mode_mask | a_mask
-                b_mode_mask = b_mode_mask | b_mask
-            else:
-                a_mode_mask = a_mask
-                b_mode_mask = b_mask
-        if a_mode_mask is not None:
-            a_table.mask = a_mode_mask
-            b_table.mask = b_mode_mask
-        """
 
         # Sort on the mode fields. We do this on the full tables
         # because later on we are going to examin the full tables
@@ -609,6 +590,7 @@ class RowDiff:
         """
 
         # Do a full FITS Table Data diff
+        from astropy.io.fits import TableDataDiff
         data_diff = TableDataDiff(a_fitstable, b_fitstable,
                                   ignore_fields=self.ignore_fields,
                                   numdiffs=1)
@@ -635,6 +617,7 @@ class RowDiff:
             return None
 
         # Convert from FITS table to Astropy Table
+        from astropy.table import Table
         a_table = Table(a_fitstable)
         b_table = Table(b_fitstable)
 
@@ -741,7 +724,7 @@ class RowDiff:
 
                                 if op == 'replace':
                                     result_temp += '        a rows %d-%d differ from b rows %d-%d\n' % \
-                                    (a_start, a_end, b_start, b_end)
+                                                   (a_start, a_end, b_start, b_end)
                                 elif op == 'delete':
                                     result_temp += '        Remove from a rows %d-%d\n' % (a_start, a_end)
                                 elif op == 'insert':

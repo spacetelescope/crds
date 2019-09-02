@@ -295,6 +295,7 @@ remove_console_handler = THE_LOGGER.remove_console_handler
 add_stream_handler = THE_LOGGER.add_stream_handler
 remove_stream_handler = THE_LOGGER.remove_stream_handler
 append_crds_filter = THE_LOGGER.append_crds_filter
+remove_crds_filter = THE_LOGGER.remove_crds_filter
 prepend_crds_filter = THE_LOGGER.prepend_crds_filter
 format = THE_LOGGER.format
 
