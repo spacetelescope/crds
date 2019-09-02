@@ -12,7 +12,7 @@ import datetime
 
 # ================================================================================================
 
-from astropy.utils.exceptions import AstropyUserWarning
+# from astropy.utils.exceptions import AstropyUserWarning    # deferred
 
 # ================================================================================================
 
@@ -36,6 +36,7 @@ def hijack_warnings(func):
         warnings state afterwards and return result of `func`.
         """
         # warnings.resetwarnings()
+        from astropy.utils.exceptions import AstropyUserWarning
         with warnings.catch_warnings():
             old_showwarning = warnings.showwarning
             warnings.showwarning = hijacked_showwarning

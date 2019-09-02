@@ -9,7 +9,7 @@ import json
 
 # ============================================================================
 
-from astropy.io import fits
+# from astropy.io import fits   # deferred
 
 # ============================================================================
 
@@ -738,6 +738,7 @@ def _fits_info_lines(path):
 @utils.capture_output
 def _captured_fits_info(path):
     """Return fits info as a string."""
+    from astropy.io import fits   # deferred
     fits.info(path)
 
 def _pp_lines(obj):

@@ -6,20 +6,19 @@ elif [ "$1" == "linux" ]; then
     export CONDA_INSTALLER=Miniconda3-latest-Linux-x86_64.sh
 else
     echo "usage:  crds_setup_env  [os-x|linux]"
+    exit -1
 fi
 echo "Installing $CONDA_INSTALLER"
 
-rm -rf ~/miniconda3.old
-mv ~/miniconda3 ~/miniconda3.old
-
-rm -f Miniconda3-latest-*.sh*
+rm -f ${CONDA_INSTALLER}*
 wget --no-check-certificate https://repo.anaconda.com/miniconda/${CONDA_INSTALLER}
 
-sh ${CONDA_INSTALLER}
+bash ${CONDA_INSTALLER}  -b -p $HOME/miniconda3
 rm -f ${CONDA_INSTALLER}
+
 conda update --yes -n base -c  conda
 conda config --add channels http://ssb.stsci.edu/astroconda
-conda create -n crds-env python=3.7 # conda
+conda create --yes -n crds-env python=3.7 # conda
 conda activate crds-env
 
 pip install numpy
