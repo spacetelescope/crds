@@ -1561,7 +1561,9 @@ def get_uri(filename):
 
     If the appropriate env var is not defined,  return "none".
     """
-    if is_config(filename):
+    if is_exception_condition(filename):
+        return filename
+    elif is_config(filename):
         uri = CRDS_CONFIG_URI.get()
     elif is_pickle(filename):
         uri = CRDS_PICKLE_URI.get()
@@ -1570,7 +1572,7 @@ def get_uri(filename):
     elif is_reference(filename):
         uri = CRDS_REFERENCE_URI.get()
     else:
-        raise CrdsError(f"Uknown file type for: '{filename}'")
+        raise exceptions.CrdsError(f"Uknown file type for: '{filename}'")
     if uri == "none":
         return  uri
     else:
@@ -1578,6 +1580,12 @@ def get_uri(filename):
             uri += "/"
         uri += filename
         return uri
+
+def is_exception_condition(filename):
+    """Return True IFF `filename` describes some form of error or warning condition
+    instead of a true filename.
+    """
+    return filename.upper().startswith("NOT FOUND")
 
 # -------------------------------------------------------------------------------------
 
