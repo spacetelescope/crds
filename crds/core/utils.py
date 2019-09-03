@@ -16,6 +16,7 @@ import datetime
 import ast
 import gc
 import json
+import warnings
 
 # ===================================================================
 
@@ -27,6 +28,18 @@ import json
 
 from . import log, config, pysh, exceptions
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
+
+# ===================================================================
+
+def deprecate(deprecated, after_date, alternative):
+    """Issue a standard deprecation warning for `deprecated` feature
+    (e.g. function name) to be removed `after_date` with suggested
+    `alternative` feature as the replacement functionality.
+    """
+    message = f"Feature {deprecated} has been deprecated " \
+              f"and will be removed sometime after {after_date}. " \
+              f"Feature {alternative} provides alternative functionality."
+    warnings.warn(message, DeprecationWarning)
 
 # ===================================================================
 

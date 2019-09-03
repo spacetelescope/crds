@@ -124,7 +124,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
     if config.S3_ENABLED:
         best_refs_paths = {}
         for reftype, filename in bestrefs.items():
-            best_refs_paths[reftype] = config.locate_reference_s3(filename)
+            best_refs_paths[reftype] = api.get_flex_uri(filename)
     else:
         # Attempt to cache the recommended references,  which unlike dump_mappings
         # should work without network access if files are already cached.

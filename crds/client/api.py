@@ -126,6 +126,8 @@ def list_references(observatory=None, glob_pattern="*"):
 def get_mapping_url(pipeline_context, mapping):
     """Returns a URL for the specified pmap, imap, or rmap file.   DEPRECATED
     """
+    utils.deprecate(
+        "crds.client.get_mapping_url()", "2020-09-01", "crds.client.get_flex_uri()")
     return S.get_mapping_url(pipeline_context, mapping)
 
 def is_known_mapping(mapping):
@@ -146,14 +148,15 @@ def get_mapping_names(pipeline_context):
 def get_reference_url(pipeline_context, reference):
     """Returns a URL for the specified reference file.    DEPRECATED
     """
-    warnings.warn("get_reference_url() is deprecated and will be removed 2019-01-01.",
-                  DeprecationWarning)
+    utils.deprecate(
+        "crds.client.get_reference_url()", "2020-09-01", "crds.client.get_flex_uri()")
     return S.get_reference_url(pipeline_context, reference)
 
 def get_url(pipeline_context, filename):
-    """Return the URL for a CRDS reference or mapping file.   DEPRECATED"""
-    warnings.warn("get_mapping_url() is deprecated and will be removed 2019-01-01.",
-                  DeprecationWarning)
+    """Return the URL for a CRDS reference or mapping file.   DEPRECATED
+    """
+    utils.deprecate(
+        "crds.client.get_url()", "2020-09-01", "crds.client.get_flex_uri()")
     return S.get_url(pipeline_context, filename)
 
 def get_flex_uri(filename, observatory=None):
@@ -343,14 +346,22 @@ def get_server_info():
     """
     info = _get_server_info()
     info["server"] = get_crds_server()
+    # The original CRDS info struct features both "checked" and "unchecked"
+    # versions of the download URLs where the unchecked version is a simple
+    # static file which has been used exclusively for performance reasons.
+    # This should eventually be simplified to a single URL which will nominally
+    # be the unchecked version.  Roughly 2020-09-01 is should be possible to
+    # simplify the server config and remove the code below from future
+    # clients...  while older clients will continue to work with the simplified
+    # server.
     if "unchecked" in info.get("reference_url", "UNDEFINED"):
-        info["reference_url"] = info.pop("reference_url")["unchecked"]
+        info["reference_url"] = info["reference_url"]["unchecked"]
     if "unchecked" in info.get("mapping_url", "UNDEFINED"):
-        info["mapping_url"] = info.pop("mapping_url")["unchecked"]
+        info["mapping_url"] = info["mapping_url"]["unchecked"]
     if "unchecked" in info.get("config_url", "UNDEFINED"):
-        info["config_url"] = info.pop("config_url")["unchecked"]
+        info["config_url"] = info["config_url"]["unchecked"]
     if "unchecked" in info.get("pickle_url", "UNDEFINED"):
-        info["pickle_url"] = info.pop("pickle_url")["unchecked"]
+        info["pickle_url"] = info["pickle_url"]["unchecked"]
     return info
 
 def _get_server_info():
