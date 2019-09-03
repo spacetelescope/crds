@@ -44,7 +44,8 @@ __all__ = [
     "list_mappings",
     "list_references",
 
-    "get_url",
+    "get_url",      # deprecated
+    "get_flex_uri",
     "get_file_info",
     "get_file_info_map",
     "get_sqlite_db",
