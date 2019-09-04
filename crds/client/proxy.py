@@ -107,10 +107,6 @@ class ServiceCallBinding:
     def _call(self, *args, **kwargs):
         """Core of RPC dispatch without error interpretation, logging, or return value decoding."""
         params = kwargs if len(kwargs) else args
-        # if Any.kind(params) == Object and self.__version != '2.0':
-        #   raise Exception('Unsupport arg type for JSON-RPC 1.0 '
-        #                  '(the default version for this client, '
-        #                  'pass version="2.0" to use keyword arguments)')
         jsonrpc_params = {"jsonrpc": self.__version,
                           "method": self.__service_name,
                           'params': params,
@@ -156,16 +152,13 @@ class ServiceCallBinding:
         except Exception as exc:
             raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc)) from exc
 
-
-
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
-            decoded = str(html.unescape(jsonrpc["error"]["message"]))
+            decoded = html.unescape(jsonrpc["error"]["message"])
             raise self.classify_exception(decoded)
         else:
             result = crds_decode(jsonrpc["result"])
-            result = fix_strings(result)
             if isinstance(result, (str,int,float,bool)):
                 log.verbose("RPC OK -->", repr(result))
             else:
@@ -181,19 +174,6 @@ class ServiceCallBinding:
         else:
             msg = "CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(decoded)
             return exceptions.ServiceError(msg)
-
-def fix_strings(rval):
-    """Convert unicode to strings."""
-    if isinstance(rval, str):
-        return str(rval)
-    elif isinstance(rval, tuple):
-        return tuple([fix_strings(x) for x in rval])
-    elif isinstance(rval, list):
-        return [fix_strings(x) for x in rval]
-    elif isinstance(rval, dict):
-        return { fix_strings(key):fix_strings(val) for (key, val) in rval.items()}
-    else:
-        return rval
 
 # ============================================================================
 
