@@ -597,7 +597,8 @@ def load_server_info(observatory):
                          " for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL."):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
-        info.download_metadata = proxy.crds_decode(info.download_metadata)
+        if "download_metdata" in info:
+            info.download_metadata = proxy.crds_decode(info.download_metadata)
         info.status = "cache"
     return info
 
