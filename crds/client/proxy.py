@@ -191,8 +191,8 @@ def crds_encode(obj):
     and base64 encooded.   This is nominally to be called on the server.
     """
     json_str = json.dumps(obj)
-    utf8 = json_str.encode("utf-8")
-    compressed = gzip.compress(utf8)
+    ascii = json_str.encode("ascii")
+    compressed = gzip.compress(ascii)
     b64 = base64.b64encode(compressed)
     return dict(crds_encoded = "1.0",
                 crds_payload = b64)
@@ -208,8 +208,8 @@ def crds_decode(msg):
     if isinstance(msg, dict) and "crds_encoded" in msg:
         b64 = msg["crds_payload"]
         compressed = base64.b64decode(b64)
-        utf8 = gzip.decompress(compressed)
-        json_str = utf8.decode("utf-8")
+        ascii = gzip.decompress(compressed)
+        json_str = ascii.decode("ascii")
         obj = json.loads(json_str)
         return obj
     else:
