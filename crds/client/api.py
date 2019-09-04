@@ -365,6 +365,9 @@ def get_server_info():
         info["pickle_url"] = info["pickle_url"]["unchecked"]
     if "download_metadata" in info:
         info["download_metadata"] = proxy.crds_decode(info["download_metadata"])
+    else:
+        info["download_metadata"] = get_file_info_map(
+            get_default_observatory(), fields=["size", "sha1sum"])
     return info
 
 def _get_server_info():
