@@ -620,7 +620,8 @@ class FileCacher:
 
     def download_files(self, downloads, localpaths):
         """Serial file-by-file download."""
-        self.info_map = get_server_info(self.observatory)["download_metadata"]
+        self.info_map = { filename: metadata for (filename, metadata) in
+                          get_server_info()["download_metadata"].items() if filename in downloads}
         if config.writable_cache_or_verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70):
             bytes_so_far = 0
             total_files = len(downloads)
@@ -691,6 +692,8 @@ class FileCacher:
         plugin_cmd = config.get_download_plugin()
         plugin_cmd = plugin_cmd.replace("${SOURCE_URL}", url)
         plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
+        plugin_cmd = plugin_cmd.replace("${FILE_SIZE}", self.info_map[filename]["size"])
+        plugin_cmd = plugin_cmd.replace("${FILE_SHA1SUM}", self.info_map[filename]["sha1sum"])
         log.verbose("Running download plugin:", repr(plugin_cmd))
         status = os.WEXITSTATUS(os.system(plugin_cmd))
         if status != 0:

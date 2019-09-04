@@ -121,7 +121,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
     final_context, bestrefs = _initial_recommendations("getreferences",
         parameters, reftypes, context, ignore_cache, observatory, fast)
 
-    if config.S3_ENABLED:
+    if config.S3_RETURN_URI:
         best_refs_paths = {}
         for reftype, filename in bestrefs.items():
             best_refs_paths[reftype] = api.get_flex_uri(filename)

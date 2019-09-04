@@ -1544,6 +1544,8 @@ def simplify_version(version):
 
 S3_ENABLED = BooleanConfigItem("CRDS_S3_ENABLED", False, "When True, enables S3 streaming")
 
+S3_RETURN_URI = BooleanConfigItem("CRDS_S3_RETURN_URI", False, "When True, getreferences() returns S3 URIs instead of cache paths.")
+
 OBSERVATORY = StrConfigItem("CRDS_OBSERVATORY", None,
     "Configured observatory, required for S3 streaming",
     lower=True
