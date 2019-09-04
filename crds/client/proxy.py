@@ -189,27 +189,35 @@ class ServiceCallBinding:
 def crds_encode(obj):
     """Return a JSON-compatible encoding of `obj`,  nominally json-ified, compressed,
     and base64 encooded.   This is nominally to be called on the server.
+
+    >>> obj = dict(p1="this", p2="that")
+    >>> msg = crds_encode(obj)
+    >>> isinstance(msg["crds_payload"], str)
+    True
     """
     json_str = json.dumps(obj)
-    ascii = json_str.encode("ascii")
-    compressed = gzip.compress(ascii)
+    utf8 = json_str.encode()
+    compressed = gzip.compress(utf8)
     b64 = base64.b64encode(compressed)
+    ascii = b64.decode("ascii")
     return dict(crds_encoded = "1.0",
-                crds_payload = b64)
+                crds_payload = ascii)
 
 def crds_decode(msg):
     """Decode something which was crds_encode'd,  or return it unaltered if
     it wasn't.
-
-    >>> msg = crds_encode(dict(p1="this", p2="that"))
+    
+    >>> obj = dict(p1="this", p2="that")
+    >>> msg = crds_encode(obj)
     >>> crds_decode(msg)
     {'p1': 'this', 'p2': 'that'}
     """
     if isinstance(msg, dict) and "crds_encoded" in msg:
-        b64 = msg["crds_payload"]
+        ascii = msg["crds_payload"]
+        b64 = ascii.encode("ascii")
         compressed = base64.b64decode(b64)
-        ascii = gzip.decompress(compressed)
-        json_str = ascii.decode("ascii")
+        utf8 = gzip.decompress(compressed)
+        json_str = utf8.decode()
         obj = json.loads(json_str)
         return obj
     else:
