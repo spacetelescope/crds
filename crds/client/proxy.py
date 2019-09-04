@@ -10,6 +10,8 @@ import os
 
 from urllib import request
 import html
+import gzip
+import base64
 
 # import crds
 from crds.core import exceptions, log, config
@@ -208,15 +210,35 @@ def crds_encode(obj):
     """Return a JSON-compatible encoding of `obj`,  nominally json-ified, compressed,
     and base64 encooded.   This is nominally to be called on the server.
     """
+    json_str = json.dumps(obj)
+    utf8 = json_str.encode("utf-8")
+    compressed = gzip.compress(utf8)
+    b64 = base64.b64encode(compressed)
     return dict(crds_encoded = "1.0",
-                crds_payload = json.dumps(obj).encode('zlib').encode('base64'))
+                crds_payload = b64)
 
 def crds_decode(msg):
     """Decode something which was crds_encode'd,  or return it unaltered if
     it wasn't.
+
+    >>> msg = crds_encode(dict(p1="this", p2="that"))
+    >>> crds_decode(msg)
+    {'p1': 'this', 'p2': 'that'}
     """
     if isinstance(msg, dict) and "crds_encoded" in msg:
-        json_str = msg["crds_payload"].decode('base64').decode('zlib')
-        return json.loads(json_str)
+        b64 = msg["crds_payload"]
+        compressed = base64.b64decode(b64)
+        utf8 = gzip.decompress(compressed)
+        json_str = utf8.decode("utf-8")
+        obj = json.loads(json_str)
+        return obj
     else:
         return msg
+
+def main():
+    import doctest
+    from crds.client import proxy
+    return doctest.testmod(proxy)
+
+if __name__ == "__main__":
+    print(main())

@@ -363,6 +363,8 @@ def get_server_info():
         info["config_url"] = info["config_url"]["unchecked"]
     if "unchecked" in info.get("pickle_url", "UNDEFINED"):
         info["pickle_url"] = info["pickle_url"]["unchecked"]
+    if "download_metadata" in info:
+        info["download_metadata"] = proxy.crds_decode(info["download_metadata"])
     return info
 
 def _get_server_info():
@@ -618,8 +620,7 @@ class FileCacher:
 
     def download_files(self, downloads, localpaths):
         """Serial file-by-file download."""
-        self.info_map = get_file_info_map(
-            self.observatory, downloads, ["size", "rejected", "blacklisted", "state", "sha1sum", "instrument"])
+        self.info_map = get_server_info(self.observatory)["download_metadata"]
         if config.writable_cache_or_verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70):
             bytes_so_far = 0
             total_files = len(downloads)
