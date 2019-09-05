@@ -11,7 +11,7 @@ export CRDS_REFERENCE_URI=s3://account/crds_cache/references/jwst
 # export CRDS_REFERENCE_URI=https://s3.us-east-1.amazonaws.com/account/crds_cache/references/jwst
 export CRDS_CONFIG_URI=s3://account/crds_cache/config/jwst
 
-export CRDS_USE_PICKLES=0
+export CRDS_USE_PICKLED_CONTEXTS=0
 export CRDS_PICKLE_URI=s3://account/crds_cache/mappings/jwst
 
 export CRDS_DOWNLOAD_MODE=plugin
