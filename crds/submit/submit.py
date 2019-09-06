@@ -54,7 +54,7 @@ this command line interface must be members of the CRDS operators group
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
         super(ReferenceSubmissionScript, self).add_args()
         self.add_argument("--files", nargs="*", help="Files to submit.  A file preceded with @ is treated as containing the list of files.")
-        self.add_argument("--derive-from-context", type=cmdline.context_spec, default="edit",
+        self.add_argument("--derive-from-context", type=cmdline.context_spec, default=None,
                           help="Set of CRDS rules these files will be added to.  Defaults to edit context.")
         self.add_argument("--change-level", type=str, choices=["SEVERE","MODERATE","TRIVIAL"], default="SEVERE",
                           help="The degree to which the new files are expected to impact science results.")
@@ -94,12 +94,14 @@ this command line interface must be members of the CRDS operators group
         self.instrument = list(self.instruments_filekinds.keys())[0] if len(self.instruments_filekinds) == 1 else "none"
         self.connection = web.CrdsDjangoConnection(
             locked_instrument=self.instrument, username=self.username, password=password, base_url=self.base_url)
-        if self.args.derive_from_context in ["edit", "ops"]:
-            self.pmap_mode = "pmap_" + self.args.derive_from_context
-            self.pmap_name = self.resolve_context(self.observatory + "-" + self.args.derive_from_context)
+        if self.args.derive_from_context is None:
+            self.args.derive_from_context = self.observatory + "-edit"
+        if self.args.derive_from_context.endswith(("-edit", "-operational")):
+            # this actually floats for concurrent deliveries
+            self.pmap_mode = "pmap_" + self.args.derive_from_context.split("-")[-1]
         else:
             self.pmap_mode = "pmap_text"
-            self.pmap_name = self.args.derive_from_context
+        self.pmap_name = self.resolve_context(self.args.derive_from_context)
         assert config.is_context(self.pmap_name), "Invalid pmap_name " + repr(self.pmap_name)
         assert not (self.args.keep_existing_files and self.args.wipe_existing_files), \
             "--keep-existing-files and --wipe-existing-files are mutually exclusive."
