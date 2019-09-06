@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.4.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "HST maintenance, 2019 Q3 development"
+__version__ = "7.4.1"   # XXXX  see also ../setup.cfg
+__rationale__ = "2019 Q3: Support for S3-backed serverless operation, conversion to pip-based installs and Travis."
 
 __all__ = [
     "getrecommendations",
