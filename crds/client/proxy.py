@@ -10,6 +10,8 @@ import os
 
 from urllib import request
 import html
+import gzip
+import base64
 
 # import crds
 from crds.core import exceptions, log, config
@@ -105,10 +107,6 @@ class ServiceCallBinding:
     def _call(self, *args, **kwargs):
         """Core of RPC dispatch without error interpretation, logging, or return value decoding."""
         params = kwargs if len(kwargs) else args
-        # if Any.kind(params) == Object and self.__version != '2.0':
-        #   raise Exception('Unsupport arg type for JSON-RPC 1.0 '
-        #                  '(the default version for this client, '
-        #                  'pass version="2.0" to use keyword arguments)')
         jsonrpc_params = {"jsonrpc": self.__version,
                           "method": self.__service_name,
                           'params': params,
@@ -154,16 +152,13 @@ class ServiceCallBinding:
         except Exception as exc:
             raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc)) from exc
 
-
-
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
-            decoded = str(html.unescape(jsonrpc["error"]["message"]))
+            decoded = html.unescape(jsonrpc["error"]["message"])
             raise self.classify_exception(decoded)
         else:
             result = crds_decode(jsonrpc["result"])
-            result = fix_strings(result)
             if isinstance(result, (str,int,float,bool)):
                 log.verbose("RPC OK -->", repr(result))
             else:
@@ -180,19 +175,6 @@ class ServiceCallBinding:
             msg = "CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(decoded)
             return exceptions.ServiceError(msg)
 
-def fix_strings(rval):
-    """Convert unicode to strings."""
-    if isinstance(rval, str):
-        return str(rval)
-    elif isinstance(rval, tuple):
-        return tuple([fix_strings(x) for x in rval])
-    elif isinstance(rval, list):
-        return [fix_strings(x) for x in rval]
-    elif isinstance(rval, dict):
-        return { fix_strings(key):fix_strings(val) for (key, val) in rval.items()}
-    else:
-        return rval
-
 # ============================================================================
 
 # These operate transparently in the proxy and are optionally used by the server.
@@ -207,16 +189,44 @@ def fix_strings(rval):
 def crds_encode(obj):
     """Return a JSON-compatible encoding of `obj`,  nominally json-ified, compressed,
     and base64 encooded.   This is nominally to be called on the server.
+
+    >>> obj = dict(p1="this", p2="that")
+    >>> msg = crds_encode(obj)
+    >>> isinstance(msg["crds_payload"], str)
+    True
     """
+    json_str = json.dumps(obj)
+    utf8 = json_str.encode()
+    compressed = gzip.compress(utf8)
+    b64 = base64.b64encode(compressed)
+    ascii = b64.decode("ascii")
     return dict(crds_encoded = "1.0",
-                crds_payload = json.dumps(obj).encode('zlib').encode('base64'))
+                crds_payload = ascii)
 
 def crds_decode(msg):
     """Decode something which was crds_encode'd,  or return it unaltered if
     it wasn't.
+    
+    >>> obj = dict(p1="this", p2="that")
+    >>> msg = crds_encode(obj)
+    >>> crds_decode(msg)
+    {'p1': 'this', 'p2': 'that'}
     """
     if isinstance(msg, dict) and "crds_encoded" in msg:
-        json_str = msg["crds_payload"].decode('base64').decode('zlib')
-        return json.loads(json_str)
+        ascii = msg["crds_payload"]
+        b64 = ascii.encode("ascii")
+        compressed = base64.b64decode(b64)
+        utf8 = gzip.decompress(compressed)
+        json_str = utf8.decode()
+        obj = json.loads(json_str)
+        return obj
     else:
         return msg
+
+def main():
+    import doctest
+    from crds.client import proxy
+    return doctest.testmod(proxy)
+
+if __name__ == "__main__":
+    print(main())

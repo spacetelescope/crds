@@ -61,7 +61,7 @@ from . import rmap, log, utils, config
 from .constants import ALL_OBSERVATORIES
 from .log import srepr
 from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsConfigError, CrdsDownloadError
-from crds.client import api
+from crds.client import api, proxy
 # import crds  forward
 
 # ============================================================================
@@ -121,10 +121,10 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
     final_context, bestrefs = _initial_recommendations("getreferences",
         parameters, reftypes, context, ignore_cache, observatory, fast)
 
-    if config.S3_ENABLED:
+    if config.S3_RETURN_URI:
         best_refs_paths = {}
         for reftype, filename in bestrefs.items():
-            best_refs_paths[reftype] = config.locate_reference_s3(filename)
+            best_refs_paths[reftype] = api.get_flex_uri(filename)
     else:
         # Attempt to cache the recommended references,  which unlike dump_mappings
         # should work without network access if files are already cached.
@@ -515,9 +515,6 @@ def get_config_info(observatory):
     """
     try:
         info = ConfigInfo(api.get_server_info())
-        info.status = "server"
-        info.connected = True
-        log.verbose("Connected to server at", srepr(api.get_crds_server()))
         if info.effective_mode != "remote":
             if not config.writable_cache_or_verbose("Using cached configuration and default context."):
                 info = load_server_info(observatory)
@@ -557,7 +554,7 @@ def update_config_info(observatory):
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
     path = config.get_crds_cfgpath(observatory)
-
+    info.download_metadata = proxy.crds_encode(info.download_metadata)
     server_config_path = os.path.join(path, "server_config")
     cache_atomic_write(server_config_path, pprint.pformat(info), "SERVER INFO")
 
@@ -600,6 +597,8 @@ def load_server_info(observatory):
                          " for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL."):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
+        if "download_metdata" in info:
+            info.download_metadata = proxy.crds_decode(info.download_metadata)
         info.status = "cache"
     return info
 
@@ -709,8 +708,10 @@ def load_pickled_mapping(mapping):
     in the hierarchy is read.  In general pickles for sub-mappings should not
     exist because of storage waste.
     """
-    pickle_file = config.locate_pickle(mapping)
-    pickled = open(pickle_file, "rb").read()
+    pickle_uri = config.get_uri(mapping + ".pkl")
+    if pickle_uri == "none":
+        pickle_uri = config.locate_pickle(mapping)
+    pickled = utils.get_uri_content(pickle_uri, mode="binary")
     loaded = pickle.loads(pickled)
     log.info("Loaded pickled context", repr(mapping))
     return loaded

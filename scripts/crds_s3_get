@@ -1,0 +1,3 @@
+#! /bin/sh
+
+aws s3 cp --quiet --no-progress --only-show-errors  $1  $2

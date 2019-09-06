@@ -16,6 +16,7 @@ import datetime
 import ast
 import gc
 import json
+import warnings
 
 # ===================================================================
 
@@ -27,6 +28,18 @@ import json
 
 from . import log, config, pysh, exceptions
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
+
+# ===================================================================
+
+def deprecate(deprecated, after_date, alternative):
+    """Issue a standard deprecation warning for `deprecated` feature
+    (e.g. function name) to be removed `after_date` with suggested
+    `alternative` feature as the replacement functionality.
+    """
+    message = f"Feature {deprecated} has been deprecated " \
+              f"and will be removed sometime after {after_date}. " \
+              f"Feature {alternative} provides alternative functionality."
+    warnings.warn(message, DeprecationWarning)
 
 # ===================================================================
 
@@ -659,6 +672,47 @@ def copytree(src, dst, symlinks=False, fnc_directory=_no_message,
         else:
             fnc_file("Coping", log.srepr(srcname), "to", log.srepr(dstname))
             shutil.copy(srcname, dstname)
+
+# ===================================================================
+
+def get_s3_uri_content(s3_uri, mode="text"):
+    """Perform a direct read of an AWS S3 URI using the AWS SDK.
+
+    Returns  contents of `s3_uri`.
+    """
+    log.verbose(f"Fetching content from URI: '{s3_uri}'")
+    bucket_name, key = s3_uri.replace("s3://", "").split("/", 1)
+    import boto3
+    s3 = boto3.resource("s3")
+    obj = s3.Object(bucket_name, key)
+    binary = obj.get()["Body"].read()
+    if mode == "text":
+        text = binary.decode("utf-8")
+        return text
+    return binary
+
+def get_url_content(url, mode="text"):
+    """Return the contents of `url` as a string."""
+    log.verbose(f"Fetching content from URL: '{url}'")
+    import requests
+    r = requests.get(url)
+    r.raise_for_status()
+    if mode == "text":
+        return r.text
+    return r.content
+
+def get_uri_content(uri, mode="text"):
+    """Reads and returns the contents of the given s3://, https://
+    or filename uri.   Reads to memory, intended for small files.
+    """
+    if uri.startswith("s3://"):
+        return get_s3_uri_content(uri, mode)
+    elif uri.startswith(("http://", "https://")):
+        return get_url_content(uri, mode)
+    else:
+        mode = "r" if (mode=="text") else "rb"
+        with open(uri, mode) as file:
+            return file.read()
 
 # ===================================================================
 
