@@ -363,12 +363,20 @@ def get_server_info():
         info["config_url"] = info["config_url"]["unchecked"]
     if "unchecked" in info.get("pickle_url", "UNDEFINED"):
         info["pickle_url"] = info["pickle_url"]["unchecked"]
-    if "download_metadata" in info:
-        info["download_metadata"] = proxy.crds_decode(info["download_metadata"])
-    else:
-        info["download_metadata"] = get_file_info_map(
+    # Add fallback download_metadata for using new client with old servers
+    # Put into direct-from-server encoded form decoded later get_download_metadata()
+    # but stored in server_config as is.
+    if "download_metadata" not in info:
+        metadata = get_file_info_map(
             get_default_observatory(), fields=["size", "sha1sum"])
+        info["download_metadata"] = proxy.crds_encode(metadata)
     return info
+
+@utils.cached
+def get_download_metadata():
+    "Defer and cache decoding of download_metadata field of server info."""
+    info = get_server_info()
+    return proxy.crds_decode(info["download_metadata"])
 
 def _get_server_info():
     """Fetch the server info dict.   If CRDS_CONFIG_URI is set then
@@ -623,8 +631,10 @@ class FileCacher:
 
     def download_files(self, downloads, localpaths):
         """Serial file-by-file download."""
-        self.info_map = { filename: metadata for (filename, metadata) in
-                          get_server_info()["download_metadata"].items() if filename in downloads}
+        download_metadata = get_download_metadata()
+        self.info_map = {}
+        for filename in downloads:
+            self.info_map[filename] = download_metadata.get(filename, "NOT FOUND unknown to server")
         if config.writable_cache_or_verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70):
             bytes_so_far = 0
             total_files = len(downloads)
