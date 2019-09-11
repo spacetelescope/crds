@@ -266,17 +266,6 @@ def get_best_references(pipeline_context, header, reftypes=None):
         bestrefs = S.get_best_references(pipeline_context, dict(header), reftypes)
     except Exception as exc:
         raise CrdsLookupError(str(exc)) from exc
-    # Due to limitations of jsonrpc,  exception handling is kludged in here.
-    for filetype, refname in bestrefs.items():
-        if "NOT FOUND" in refname:
-            if refname.upper() == "NOT FOUND N/A":
-                log.verbose("Reference type", srepr(filetype),
-                            "not applicable.", verbosity=80)
-            else:
-                exc_str = str(refname)[len("NOT FOUND"):]
-                raise CrdsLookupError(
-                    "Error determining best reference for",
-                    srepr(filetype), "=", repr(exc_str))
     return bestrefs
 
 def get_best_references_by_ids(context, dataset_ids, reftypes=None, include_headers=False):
