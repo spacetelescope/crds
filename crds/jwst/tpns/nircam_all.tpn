@@ -31,7 +31,7 @@ META.INSTRUMENT.CHANNEL     H   C   O   SHORT,LONG,ANY,N/A
 
 # Obsolete:  MASKA210R,MASKA430R,MASKBLWB,MASKBSWB
 
-META.SUBARRAY.NAME          H   C   O   SUB160,SUB160P,SUB320,SUB320A335R,SUB320A430R,\
+META.SUBARRAY.NAME          H   C   O   SUB128,SUB160,SUB160P,SUB320,SUB320A335R,SUB320A430R,\
                                         SUB320ALWB,SUB320B335R,SUB320B430R,SUB320BLWB,\
                                         SUB32TATS,SUB32TATSGRISM,SUB400P,\
                                         SUB640,SUB640A210R,SUB640ASWB,SUB640B210R,SUB640BSWB,\
@@ -47,6 +47,8 @@ META.SUBARRAY.NAME          H   C   O   SUB160,SUB160P,SUB320,SUB320A335R,SUB320
                                         SUBNDB210R,SUBNDB335R,SUBNDB430R,\
                                         SUBNDBLWBL,SUBNDBLWBS,SUBNDBSWBL,SUBNDBSWBS,\
                                         \
+                                        SUBSTRIPE256,\
+                                        \
                                         MASK210R,MASK335R,MASK430R,MASKLWB,MASKSWB,\
                                         \
                                         MASKA210R,MASKA430R,MASKBLWB,MASKBSWB,\
@@ -56,4 +58,3 @@ META.SUBARRAY.NAME          H   C   O   SUB160,SUB160P,SUB320,SUB320A335R,SUB320
 
 
 include includes/nir_subarray_baseline.tpn
-
