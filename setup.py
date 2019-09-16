@@ -93,7 +93,7 @@ setup(name="crds",
           "submission": ["requests", "lxml", "parsley"],
           "dev" : ["ipython", "jupyter"],
           "test" : ["lockfile", "mock", "nose", "pytest", "pylint", "flake8"],
-          "docs" : ["sphinx","sphinx_rtd_theme",],
+          "docs" : ["sphinx","sphinx_rtd_theme","docutils"],
           "aws" : ["boto3"]
       },
       tests_require=["lockfile", "mock", "nose", "pytest", "pylint", "flake8"],
