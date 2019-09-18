@@ -1164,7 +1164,11 @@
             "unique_rowkeys":null
         },
         "reset":{
-            "derived_from":"jwst_miri_reset_0001.rmap",
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2019-09-18",
             "extra_keys":null,
             "file_ext":".fits",
             "filekind":"RESET",
@@ -1172,16 +1176,20 @@
             "instrument":"MIRI",
             "ld_tpn":"miri_reset_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_miri_reset_0002.rmap",
+            "name":"jwst_miri_reset.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
                     "META.SUBARRAY.NAME",
                     "META.EXPOSURE.READPATT"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"14df9cb96858cb3db4b1dca0a6d01f5a53abafd2",
+            "sha1sum":"62334ee094931da1ffee0326ad2788f7f6919428",
             "suffix":"reset",
             "text_descr":"Reset Correction",
             "tpn":"miri_reset.tpn",
