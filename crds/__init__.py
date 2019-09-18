@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.4.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "2019 Q3: Support for S3-backed serverless operation, conversion to pip-based installs and Travis."
+__version__ = "7.4.1.1"   # XXXX  see also ../setup.cfg
+__rationale__ = "2019 Q3: Updated support for MIRI RESET."
 
 __all__ = [
     "getrecommendations",
