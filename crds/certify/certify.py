@@ -591,6 +591,8 @@ class FitsCertifier(ReferenceCertifier):
 
 RECATEGORIZED_MESSAGE = {
     'Unregistered XTENSION value' : log.info,
+    'The OGIP long string keyword convention is used' : log.info,
+    'recommended LONGSTRN keyword.' : log.info,
     'checksum is not' : log.error,
     'Invalid CHECKSUM' : log.error,
     'dyld: Library not loaded:' : log.warning,  # bad fitsverify not running,  not a known problem with reference.
