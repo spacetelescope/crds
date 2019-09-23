@@ -291,7 +291,8 @@ class SyncScript(cmdline.ContextsScript):
 
         # verification is relative to sync'ed files,  and can include file replacement if
         # defects are found.
-        if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
+        if (self.args.check_files or self.args.check_sha1sum or self.args.repair_files or
+            self.args.purge_blacklisted or self.args.purge_rejected):
             self.verify_files(verify_file_list)
 
         # context pickles should only be (re)generated after mappings are fully sync'ed and verified
