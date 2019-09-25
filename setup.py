@@ -78,6 +78,8 @@ setup_pars = {
     "scripts" : glob.glob("scripts/*"),
     }
 
+TEST_DEPS = ["lockfile", "mock", "nose", "pytest", "pylint", "flake8", "bandit"]
+
 setup(name="crds",
       provides=["crds"],
       version = '7.4.1.1',
@@ -91,12 +93,12 @@ setup(name="crds",
       extras_require={
           "jwst": ["jwst"],
           "submission": ["requests", "lxml", "parsley"],
-          "dev" : ["ipython", "jupyter"],
-          "test" : ["lockfile", "mock", "nose", "pytest", "pylint", "flake8"],
+          "dev" : ["ipython","jupyterlab"],
+          "test" : TEST_DEPS,
           "docs" : ["sphinx","sphinx_rtd_theme","docutils"],
           "aws" : ["boto3"]
       },
-      tests_require=["lockfile", "mock", "nose", "pytest", "pylint", "flake8"],
+      tests_require=TEST_DEPS,
       zip_safe=False,
       classifiers=[
           'Intended Audience :: Science/Research',

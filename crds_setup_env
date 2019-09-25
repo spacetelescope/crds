@@ -1,31 +1,47 @@
 #! /bin/bash
 
-if [ "$1" == "os-x" ]; then
-    export CONDA_INSTALLER=Miniconda3-latest-MacOSX-x86_64.sh
-elif [ "$1" == "linux" ]; then
-    export CONDA_INSTALLER=Miniconda3-latest-Linux-x86_64.sh
-else
-    echo "usage:  crds_setup_env  [os-x|linux]"
-    exit -1
-fi
-echo "Installing $CONDA_INSTALLER"
+export OS=${1:-`uname -s`}
+export SHELL=${2:-bash}
+export WHERE=${3:-"$HOME/miniconda3"}
 
+case $OS in
+    Darwin)
+        export CONDA_INSTALLER=Miniconda3-latest-MacOSX-x86_64.sh
+        ;;
+    Linux)
+        export CONDA_INSTALLER=Miniconda3-latest-Linux-x86_64.sh
+        ;;
+    *)
+        echo "usage:  $0  [Darwin|Linux] [bash|csh|zsh] [path_to_install_dir]"
+        exit -1
+        ;;
+esac
+
+case $SHELL in
+    bash)
+    ;;
+    csh)
+    ;;
+    zsh)
+    ;;
+    *)
+        echo "Invalid SHELL selected = $SHELL"
+        exit -1
+        ;;
+esac
+
+echo "Installing   OS=$OS  SHELL=$SHELL  WHERE=$WHERE"
+
+rm -rf $WHERE
 rm -f ${CONDA_INSTALLER}*
 wget --no-check-certificate https://repo.anaconda.com/miniconda/${CONDA_INSTALLER}
 
-bash ${CONDA_INSTALLER}  -b -p $HOME/miniconda3
+bash ${CONDA_INSTALLER}  -b -p $WHERE
 rm -f ${CONDA_INSTALLER}
 
-conda update --yes -n base -c  conda
-conda config --add channels http://ssb.stsci.edu/astroconda
+source $WHERE/etc/profile.d/conda.sh
+conda update --yes -n base -c defaults conda
+conda init $SHELL
+
 conda create --yes -n crds-env python=3.7 # conda
 conda activate crds-env
-
-pip install numpy
-pip install git+https://github.com/spacetelescope/jwst
-
-pip uninstall --yes crds
-# pip install git+https://github.com/spacetelescope/crds.git#egg=crds["submission","test","dev","docs"]
-pip install .["submission","test","dev","docs"]
-
-conda install --yes fitsverify

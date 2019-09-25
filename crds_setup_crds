@@ -1,0 +1,11 @@
+#! /bin/bash
+
+pip install --upgrade numpy
+pip install --upgrade git+https://github.com/spacetelescope/jwst
+pip uninstall --yes crds
+
+# pip install git+https://github.com/spacetelescope/crds.git#egg=crds["submission","test"]
+pip install --upgrade .["submission","test"]
+
+conda config --add channels http://ssb.stsci.edu/astroconda
+conda install --yes fitsverify

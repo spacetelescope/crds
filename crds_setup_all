@@ -1,0 +1,10 @@
+#! /bin/bash
+
+./crds_setup_env $*  ||  exit -1
+
+
+export WHERE=${3:-"$HOME/miniconda3"}
+source $WHERE/etc/profile.d/conda.sh
+conda activate crds-env
+
+source ./crds_setup_crds
