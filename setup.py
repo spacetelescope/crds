@@ -96,7 +96,7 @@ setup(name="crds",
           "dev" : ["ipython","jupyterlab"],
           "test" : TEST_DEPS,
           "docs" : ["sphinx","sphinx_rtd_theme","docutils"],
-          "aws" : ["boto3"]
+          "aws" : ["awscli", "boto3"]
       },
       tests_require=TEST_DEPS,
       zip_safe=False,
