@@ -80,6 +80,8 @@ setup_pars = {
 
 TEST_DEPS = ["lockfile", "mock", "nose", "pytest", "pylint", "flake8", "bandit"]
 
+SUBMISSION_DEPS = ["requests", "lxml", "parsley"]
+
 setup(name="crds",
       provides=["crds"],
       version = '7.4.1.1',
@@ -89,7 +91,7 @@ setup(name="crds",
       author_email="jmiller@stsci.edu",
       url="https://hst-crds.stsci.edu",
       license="BSD",
-      install_requires=["astropy", "numpy", "filelock"],
+      install_requires=["astropy", "numpy", "filelock"] + SUBMISSION_DEPS,
       extras_require={
           "jwst": ["jwst"],
           "submission": ["requests", "lxml", "parsley"],
