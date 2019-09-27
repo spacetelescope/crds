@@ -95,10 +95,10 @@ setup(name="crds",
       extras_require={
           "jwst": ["jwst"],
           "submission": ["requests", "lxml", "parsley"],
-          "dev" : ["ipython","jupyterlab"],
+          "dev" : ["ipython","jupyterlab","ansible"],
           "test" : TEST_DEPS,
           "docs" : ["sphinx","sphinx_rtd_theme","docutils"],
-          "aws" : ["boto3"]
+          "aws" : ["boto3","awscli"]
       },
       tests_require=TEST_DEPS,
       zip_safe=False,
