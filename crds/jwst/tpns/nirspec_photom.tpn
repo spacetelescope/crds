@@ -1,9 +1,0 @@
-include includes/nir_photom.tpn
-
-PHOTOM     A      X      ((EXP_TYPE)in['NRS_IFU','NRS_MSASPEC'])   (has_columns(PHOTOM_ARRAY,['FILTER','GRATING','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE']))
-PHOTOM     A      X      R                                         (has_column_type(PHOTOM_ARRAY,'FILTER','STRING'))
-PHOTOM     A      X      R                                         (has_column_type(PHOTOM_ARRAY,'GRATING','STRING'))
-
-PHOTOM     A      X      ((EXP_TYPE)in['NRS_FIXEDSLIT','NRS_BRIGHTOBJ'])   (has_columns(PHOTOM_ARRAY,['FILTER','GRATING','SLIT','PHOTMJSR','UNCERTAINTY','NELEM','WAVELENGTH','RELRESPONSE','RELUNCERTAINTY']))
-PHOTOM     A      X      ((EXP_TYPE)in['NRS_FIXEDSLIT','NRS_BRIGHTOBJ'])   (has_column_type(PHOTOM_ARRAY,'SLIT','STRING'))
-

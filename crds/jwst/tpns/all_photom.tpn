@@ -2,13 +2,8 @@ REFTYPE    H      C      R      PHOTOM
 
 EXP_TYPE    H     C      O
 
-PIXAR_SR    H     R      O
-PIXAR_A2    H     R      O
+# PIXAR_SR    H     R      (warning(is_imaging_mode(EXP_TYPE)))
+# PIXAR_A2    H     R      (warning(is_imaging_mode(EXP_TYPE)))
 
-# PHOTOM     A      X      (not('IFU')in(DETECTOR))                             (is_table(PHOTOM_ARRAY))
-# PHOTOM     A      X      (not('IFU')in(DETECTOR))                             (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT'))
-# PHOTOM     A      X      (not('IFU')in(DETECTOR))                             (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT'))
-# PHOTOM     A      X      (not('IFU')in(DETECTOR))                             (has_column_type(PHOTOM_ARRAY,'NELEM','INT'))
-# PHOTOM     A      X      (not('IFU')in(DETECTOR))                             (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))
-# PHOTOM     A      X      (not('IFU')in(DETECTOR))                             (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY'))
-
+PIXAR_SR      H     R      W
+PIXAR_A2      H     R      W
