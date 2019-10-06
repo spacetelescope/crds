@@ -597,7 +597,8 @@ class SyncScript(cmdline.ContextsScript):
             verbosity=10 if self.args.check_sha1sum else 60)
 
         if not os.path.exists(path):
-            log.error("File", repr(base), "doesn't exist at", repr(path))
+            if base not in self.bad_files:
+                log.error("File", repr(base), "doesn't exist at", repr(path))
             return
 
         # Checks which force repairs should do if/else to avoid repeat repair
