@@ -368,8 +368,12 @@ class SyncScript(cmdline.ContextsScript):
         verify_file_list = active_mappings
         if self.args.fetch_references or self.args.purge_references:
             active_references = self.get_synced_references()
+            if self.args.purge_rejected or self.args.purge_blacklisted:
+                references = active_references - self.bad_files
+            else:
+                references = active_references
             if self.args.fetch_references:
-                self.fetch_files(self.contexts[0], active_references)
+                self.fetch_files(self.contexts[0], references)
                 verify_file_list += active_references
             if self.args.purge_references:
                 self.purge_references(active_references)
@@ -388,8 +392,6 @@ class SyncScript(cmdline.ContextsScript):
             active_references = self.get_context_references()
         # Handle GEIS paired data files
         active_references = set(active_references + self.get_conjugates(active_references))
-        if self.args.purge_rejected or self.args.purge_blacklisted:
-            active_references -= self.bad_files
         return active_references
 
     def update_context(self):
@@ -595,7 +597,8 @@ class SyncScript(cmdline.ContextsScript):
             verbosity=10 if self.args.check_sha1sum else 60)
 
         if not os.path.exists(path):
-            log.error("File", repr(base), "doesn't exist at", repr(path))
+            if base not in self.bad_files:
+                log.error("File", repr(base), "doesn't exist at", repr(path))
             return
 
         # Checks which force repairs should do if/else to avoid repeat repair
