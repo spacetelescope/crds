@@ -73,7 +73,7 @@ from pkg_resources import parse_version
 
 # --------------------------------------------------------------------------------------
 
-# from jwst import version     DEFERRED
+# from jwst import __version__     DEFERRED
 
 # --------------------------------------------------------------------------------------
 import crds
@@ -105,8 +105,7 @@ def _get_missing_calver(cal_ver=None):
     unchanged.
     """
     if cal_ver is None:
-        from jwst import version
-        cal_ver = version.__version__
+        from jwst import __version__ as calver
     return cal_ver
 
 def _get_missing_context(context=None):

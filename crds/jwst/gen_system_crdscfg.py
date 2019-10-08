@@ -21,7 +21,7 @@ import yaml
 
 # ----------------------------------------------------------------------------------------------
 
-from jwst import version
+from jwst import __version__ as jwst_version
 from jwst.stpipe import pipeline
 from jwst import pipeline as pipepkg
 
@@ -34,7 +34,7 @@ from crds.core.log import srepr
 # ----------------------------------------------------------------------------------------------
 VERSION_RE_STR = r"(\d+\.\d+.\d+).*"
 
-CAL_VER = re.match(r"^" + VERSION_RE_STR, version.__version__).group(1)
+CAL_VER = re.match(r"^" + VERSION_RE_STR, jwst_version).group(1)
 
 GENERATION_DATE = timestamp.now("T").split(".")[0]
 
