@@ -1800,7 +1800,8 @@
             "tpn":"nircam_photom.tpn",
             "unique_rowkeys":[
                 "FILTER",
-                "PUPIL"
+                "PUPIL",
+                "ORDER"
             ]
         },
         "psfmask":{
