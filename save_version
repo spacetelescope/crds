@@ -59,7 +59,7 @@ sha1: {git_sha1}
             f'__version__ = "{semantic_version}"')
 
     rewrite("crds/__init__.py",
-            r'__rationale__\s*=\s*"(\w|\s|[-+,.%$&*()!@#~])+"',
+            r'__rationale__\s*=\s*"(\w|\s|[-+:,.%$&*()!@#~])+"',
             f'__rationale__ = "{rationale}"')
 
 # -----------------------------------------------------------------

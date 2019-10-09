@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.4.1.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "2019 Q3: Updated support for MIRI RESET."
+__version__ = "7.4.1.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "2019 Q4: Updates to JWST PHOTOM checks, setup scrupts."
 
 __all__ = [
     "getrecommendations",
