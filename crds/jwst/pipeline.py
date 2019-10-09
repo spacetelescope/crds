@@ -105,7 +105,8 @@ def _get_missing_calver(cal_ver=None):
     unchanged.
     """
     if cal_ver is None:
-        from jwst import __version__ as calver
+        from jwst import __version__ as calver2
+        return calver2
     return cal_ver
 
 def _get_missing_context(context=None):
