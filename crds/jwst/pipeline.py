@@ -10,8 +10,12 @@ things like "reference types used by a pipeline."
 >>> header_to_reftypes(test_header("0.13.0", "MIR_IMAGE"))
 ['area', 'camera', 'collimator', 'dark', 'dflat', 'disperser', 'distortion', 'drizpars', 'fflat', 'filteroffset', 'flat', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'linearity', 'mask', 'msa', 'ote', 'persat', 'photom', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'sflat', 'specwcs', 'superbias', 'trapdensity', 'trappars', 'wavelengthrange', 'wfssbkg']
 
->>> header_to_reftypes(test_header("0.13.0", "MIR_LRS-FIXEDSLIT"))
-['area', 'barshadow', 'camera', 'collimator', 'cubepar', 'dark', 'dflat', 'disperser', 'distortion', 'drizpars', 'extract1d', 'fflat', 'filteroffset', 'flat', 'fore', 'fpa', 'fringe', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'linearity', 'mask', 'msa', 'msaoper', 'ote', 'pathloss', 'persat', 'photom', 'readnoise', 'refpix', 'regions', 'resol', 'rscd', 'saturation', 'sflat', 'specwcs', 'straymask', 'superbias', 'trapdensity', 'trappars', 'wavecorr', 'wavelengthrange', 'wfssbkg']
+
+>>> header = test_header("0.13.0", "MIR_LRS-FIXEDSLIT")
+>>> header_to_pipelines(header)
+['calwebb_detector1.cfg', 'calwebb_nrslamp-spec2.cfg']
+>>> header_to_reftypes(header)
+['barshadow', 'camera', 'collimator', 'cubepar', 'dark', 'disperser', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'fore', 'fpa', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'linearity', 'mask', 'msa', 'msaoper', 'ote', 'persat', 'readnoise', 'refpix', 'regions', 'resol', 'rscd', 'saturation', 'specwcs', 'superbias', 'trapdensity', 'trappars', 'wavecorr', 'wavelengthrange', 'wfssbkg']
 
 >>> header_to_pipelines(test_header("0.7.0", "FGS_DARK"))
 ['calwebb_dark.cfg', 'skip_2b.cfg']
@@ -33,12 +37,18 @@ things like "reference types used by a pipeline."
 >>> header_to_pipelines(test_header("0.7.0", "MIR_LRS-FIXEDSLIT"))
 ['calwebb_sloper.cfg', 'calwebb_spec2.cfg']
 
+>>> header = test_header("0.13.8", "MIR_IMAGE", visitype="GENERIC")
+>>> _get_pipelines("MIR_IMAGE", "0.13.8", "jwst_0552.pmap")
+['calwebb_detector1.cfg', 'calwebb_image2.cfg']
+>>> header_to_pipelines(header)
+['calwebb_detector1.cfg', 'calwebb_image2.cfg']
+
+>>> header = test_header("0.13.8", "MIR_IMAGE", visitype="PRIME_WFSC_ROUTINE")
+>>> header_to_pipelines(header)
+['calwebb_detector1.cfg', 'calwebb_wfs-image2.cfg']
+
 >>> _get_missing_calver("0.7.0")
 '0.7.0'
-
->>> s = _get_missing_calver(None)
->>> isinstance(s, str)
-True
 
 >>> s = _get_missing_calver()
 >>> isinstance(s, str)
@@ -61,6 +71,9 @@ True
 
 >>> os.path.basename(_get_config_refpath("jwst_0477.pmap", "0.10.1"))
 'jwst_system_crdscfg_b7.2.yaml'
+
+>>> os.path.basename(_get_config_refpath("jwst_0552.pmap", "0.13.8"))
+'jwst_system_crdscfg_b7.4.yaml'
 """
 
 import os.path
@@ -77,13 +90,13 @@ from pkg_resources import parse_version
 
 # --------------------------------------------------------------------------------------
 import crds
-from crds.core import log, utils
+from crds.core import log, utils, config
 from crds.core.log import srepr
 from crds.client import api
 
 # --------------------------------------------------------------------------------------
 
-def test_header(calver, exp_type, tsovisit="F", lamp_state="OFF"):
+def test_header(calver, exp_type, tsovisit="F", lamp_state="OFF", visitype="GENERIC"):
     """Create a header-like dictionary from `calver` and `exp_type` to
     support testing header-based functions.
     """
@@ -94,6 +107,7 @@ def test_header(calver, exp_type, tsovisit="F", lamp_state="OFF"):
         "META.EXPOSURE.TYPE" : exp_type,
         "META.VISIT.TSOVISIT" : tsovisit,
         "META.INSTRUMENT.LAMP_STATE" : lamp_state,
+        "META.VISIT.TITLE" : visitype,
         }
     return header
 
@@ -151,11 +165,19 @@ def header_to_pipelines(header, context=None):
         for cfg in pipelines:
             for param, exceptions in config_manager.pipeline_exceptions.items():
                 exceptions = dict(exceptions)
-                dont_replace = exceptions.pop("dont_replace")
-                default_missing  = exceptions.pop("default_missing")
+                dont_replace = exceptions.pop("dont_replace", [])
+                do_replace = exceptions.pop("do_replace", [])
+                default_missing  = exceptions.pop("default_missing", "UNDEFINED")
                 paramval = header.get(param.upper(), default_missing)
-                if paramval not in dont_replace:
-                    cfg = exceptions.get(cfg, cfg)
+                for dont in dont_replace:
+                    if re.match(config.complete_re(dont), paramval):
+                        break
+                else:
+                    if dont_replace:
+                        cfg = exceptions.get(cfg, cfg)
+                for do in do_replace:
+                    if re.match(config.complete_re(do), paramval):
+                        cfg = exceptions.get(cfg, cfg)
             pipelines2.append(cfg)
         pipelines = pipelines2
     log.verbose("Applicable pipelines for", srepr(exp_type), "are", srepr(pipelines))
@@ -217,7 +239,8 @@ REFPATHS = [
     ('0.9.3', "jwst_system_crdscfg_b7.1.3.yaml"),
     ('0.10.0', "jwst_system_crdscfg_b7.2.yaml"),
     ('0.13.0', "jwst_system_crdscfg_b7.3.yaml"),
-    ('999.0.0', "jwst_system_crdscfg_b7.3.yaml"),   # latest backstop
+    ('0.13.8', "jwst_system_crdscfg_b7.4.yaml"),
+    ('999.0.0', "jwst_system_crdscfg_b7.4.yaml"),   # latest backstop
 ]
 
 def _get_config_refpath(context, cal_ver):
@@ -287,11 +310,28 @@ def _versions_lt(v1, v2):
     >>> _versions_gte("0.10.1", "0.10.1dev20000")
     True
     """
-    return parse_version(v1) < parse_version(v2)
+    return _reduce_ver(v1) < _reduce_ver(v2)
 
 def _versions_gte(v1, v2):
     """"""
-    return parse_version(v1) >= parse_version(v2)
+    return _reduce_ver(v1) >= _reduce_ver(v2)
+
+def _reduce_ver(ver):
+    """
+    >>> _reduce_ver("1")
+    (1, 0, 0)
+    >>> _reduce_ver("1.2")
+    (1, 2, 0)
+    >>> _reduce_ver("1.2.3")
+    (1, 2, 3)
+    >>> _reduce_ver("1.2.3.4")
+    (1, 2, 3)
+    """
+    ver = parse_version(ver).base_version
+    parts = ver.split(".")
+    while len(parts) < 3:
+        parts.append("0")
+    return tuple(map(int, parts))[:3]
 
 class CrdsCfgManager:
     """The CrdsCfgManager handles using SYSTEM CRDSCFG information to compute things."""
