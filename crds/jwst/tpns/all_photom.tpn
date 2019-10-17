@@ -1,6 +1,3 @@
 REFTYPE    H      C      R      PHOTOM
 
 EXP_TYPE    H     C      O
-
-PIXAR_SR    H     R      (warning(is_imaging_mode(EXP_TYPE)))
-PIXAR_A2    H     R      (warning(is_imaging_mode(EXP_TYPE)))
