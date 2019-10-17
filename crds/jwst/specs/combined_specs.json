@@ -938,66 +938,6 @@
             "tpn":"miri_mask.tpn",
             "unique_rowkeys":null
         },
-        "pars-refpixstep":{
-            "classes":[
-                "Match",
-                "UseAfter"
-            ],
-            "derived_from":"Hand made 2019-08-08",
-            "extra_keys":null,
-            "file_ext":".asdf",
-            "filekind":"PARS-REFPIXSTEP",
-            "filetype":"PARS-REFPIXSTEP",
-            "instrument":"MIRI",
-            "ld_tpn":"miri_pars-refpixstep_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"jwst_miri_pars-refpixstep.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.EXPOSURE.TYPE"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
-                ]
-            ],
-            "sha1sum":"a7c54388fd563058bc4e780ad2395206806deb75",
-            "suffix":"pars-refpixstep",
-            "text_descr":"MIRI imager refpixstep parameters",
-            "tpn":"miri_pars-refpixstep.tpn",
-            "unique_rowkeys":null
-        },
-        "pars-tweakreg":{
-            "classes":[
-                "Match",
-                "UseAfter"
-            ],
-            "derived_from":"Hand made 2019-07-16",
-            "extra_keys":null,
-            "file_ext":".asdf",
-            "filekind":"PARS-TWEAKREG",
-            "filetype":"PARS-TWEAKREG",
-            "instrument":"MIRI",
-            "ld_tpn":"miri_pars-tweakreg_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"jwst_miri_pars-tweakreg.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.EXPOSURE.TYPE"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
-                ]
-            ],
-            "sha1sum":"01ff24a6ed037c46b2b9c201a9be83e8efe09aaa",
-            "suffix":"pars-tweakreg",
-            "text_descr":"MIRI imager tweakreg parameters",
-            "tpn":"miri_pars-tweakreg.tpn",
-            "unique_rowkeys":null
-        },
         "pathloss":{
             "classes":[
                 "Match",
