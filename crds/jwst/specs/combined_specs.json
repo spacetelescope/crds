@@ -143,6 +143,40 @@
             "tpn":"fgs_amplifier.tpn",
             "unique_rowkeys":null
         },
+        "apcorr":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2019-10-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"APCORR",
+            "filetype":"APCORR",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_apcorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_fgs_apcorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"7387f05499abb91d8139810203092f89ae772a0d",
+            "suffix":"apcorr",
+            "text_descr":"Aperture Correction",
+            "tpn":"fgs_apcorr.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL",
+                "EEFRACTION"
+            ]
+        },
         "area":{
             "derived_from":"Hand made 2016-02-18",
             "extra_keys":null,
@@ -592,6 +626,40 @@
             "text_descr":"Detector Amplifier Readout Parameters",
             "tpn":"miri_amplifier.tpn",
             "unique_rowkeys":null
+        },
+        "apcorr":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2019-10-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"APCORR",
+            "filetype":"APCORR",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_apcorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_apcorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"feff7e1b44316ab06978e0f697795255ae9776f1",
+            "suffix":"apcorr",
+            "text_descr":"Aperture Correction",
+            "tpn":"miri_apcorr.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL",
+                "EEFRACTION"
+            ]
         },
         "area":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
@@ -1485,6 +1553,40 @@
             "tpn":"nircam_amplifier.tpn",
             "unique_rowkeys":null
         },
+        "apcorr":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2019-10-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"APCORR",
+            "filetype":"APCORR",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_apcorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_apcorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"241ee5fe9b603fee5e76d3b702d5b2101e230b31",
+            "suffix":"apcorr",
+            "text_descr":"Aperture Correction",
+            "tpn":"nircam_apcorr.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL",
+                "EEFRACTION"
+            ]
+        },
         "area":{
             "derived_from":"Hand made 2015-07-13 13:06:00",
             "extra_keys":null,
@@ -2100,7 +2202,7 @@
             ],
             "derived_from":"Hand made 2019-10-22",
             "extra_keys":null,
-            "file_ext":".asdf",
+            "file_ext":".fits",
             "filekind":"APCORR",
             "filetype":"APCORR",
             "instrument":"NIRISS",
@@ -2117,7 +2219,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"6d014276549a43f946589ef8a5fa2718f3265e7f",
+            "sha1sum":"d7d497e0414078ff19a4c88fd201a5801dc3c2b7",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"niriss_apcorr.tpn",
@@ -2748,6 +2850,40 @@
             "text_descr":"Detector Amplifier Readout Parameters",
             "tpn":"nirspec_amplifier.tpn",
             "unique_rowkeys":null
+        },
+        "apcorr":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2019-10-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"APCORR",
+            "filetype":"APCORR",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_apcorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_apcorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"d5930eda2e5e07f3e9350dfb2be54b8c0ccc48cf",
+            "suffix":"apcorr",
+            "text_descr":"Aperture Correction",
+            "tpn":"nirspec_apcorr.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL",
+                "EEFRACTION"
+            ]
         },
         "area":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
