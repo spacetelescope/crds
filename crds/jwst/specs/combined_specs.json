@@ -2093,6 +2093,40 @@
             "tpn":"niriss_amplifier.tpn",
             "unique_rowkeys":null
         },
+        "apcorr":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2019-10-22",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"APCORR",
+            "filetype":"APCORR",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_apcorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_apcorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"6d014276549a43f946589ef8a5fa2718f3265e7f",
+            "suffix":"apcorr",
+            "text_descr":"Aperture Correction",
+            "tpn":"niriss_apcorr.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "PUPIL",
+                "EEFRACTION"
+            ]
+        },
         "area":{
             "derived_from":"Hand made 2015-07-13 13:06:00",
             "extra_keys":null,
