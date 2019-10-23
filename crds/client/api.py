@@ -851,7 +851,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     wanted = _get_cache_filelist_and_report_errors(bestrefs)
 
     if config.S3_RETURN_URI:
-        localrefs = {name: api.get_flex_uri(name) for name in wanted}
+        localrefs = {name: get_flex_uri(name) for name in wanted}
     else:
         localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False).get_local_files(wanted)[0]
 
