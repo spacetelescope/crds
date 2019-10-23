@@ -122,16 +122,10 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
     final_context, bestrefs = _initial_recommendations("getreferences",
         parameters, reftypes, context, ignore_cache, observatory, fast)
 
-    if config.S3_RETURN_URI:
-        bestrefs = api.get_cache_filelist_and_report_errors(bestrefs)
-        best_refs_paths = {}
-        for reftype, filename in bestrefs.items():
-            best_refs_paths[reftype] = api.get_flex_uri(filename)
-    else:
-        # Attempt to cache the recommended references,  which unlike dump_mappings
-        # should work without network access if files are already cached.
-        best_refs_paths = api.cache_references(
-            final_context, bestrefs, ignore_cache=ignore_cache)
+    # Attempt to cache the recommended references,  which unlike dump_mappings
+    # should work without network access if files are already cached.
+    best_refs_paths = api.cache_references(
+        final_context, bestrefs, ignore_cache=ignore_cache)
 
     return best_refs_paths
 
