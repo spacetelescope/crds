@@ -123,6 +123,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
         parameters, reftypes, context, ignore_cache, observatory, fast)
 
     if config.S3_RETURN_URI:
+        bestrefs = api.get_cache_filelist_and_report_errors(bestrefs)
         best_refs_paths = {}
         for reftype, filename in bestrefs.items():
             best_refs_paths[reftype] = api.get_flex_uri(filename)

@@ -848,7 +848,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
 
     Returns:   { reference_keyword :  reference_local_filepath ... }
     """
-    wanted = _get_cache_filelist_and_report_errors(bestrefs)
+    wanted = get_cache_filelist_and_report_errors(bestrefs)
 
     localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False).get_local_files(wanted)[0]
 
@@ -856,7 +856,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
 
     return refs
 
-def _get_cache_filelist_and_report_errors(bestrefs):
+def get_cache_filelist_and_report_errors(bestrefs):
     """Compute the list of files to download based on the `bestrefs` dictionary,
     skimming off and reporting errors, and raising an exception on the last error seen.
 
