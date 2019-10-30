@@ -89,6 +89,7 @@ LEGAL_NODES = {
     'visit_Not',
     'visit_NameConstant',
     'visit_USub',
+    'visit_Constant',
 }
 
 CUSTOMIZED_NODES = {
