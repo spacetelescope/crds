@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.4.1.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "2019 Q4: Updates to JWST PHOTOM checks, setup scripts."
+__version__ = "7.4.1.3"   # XXXX  see also ../setup.cfg
+__rationale__ = "2019 Q4: JWST DMS7.4 pre-release #2,  NIRCAM CORONMSK."
 
 __all__ = [
     "getrecommendations",
