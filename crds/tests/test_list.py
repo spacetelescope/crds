@@ -640,6 +640,7 @@ def dt_list_status():
     """
     >>> old_state = test_config.setup()
     >>> ListScript("crds.list --status")() # doctest: +ELLIPSIS
+    CRDS Summary = '...'
     CRDS Version = '...'
     CRDS_MODE = 'auto'
     CRDS_PATH = '...'
