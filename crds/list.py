@@ -678,6 +678,7 @@ jwst_niriss_superbias_0005.rmap
              ("Effective Context", heavy_client.get_context_name(self.observatory)),
              ("Last Synced", server.last_synced),
              ("CRDS Version", heavy_client.version_info()),
+             ("CRDS Summary", crds.__rationale__),
              ("Python Version", pyinfo["Python Version"]),
              ("Python Executable", pyinfo["Python Executable"]),
              ])
