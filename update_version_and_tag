@@ -12,7 +12,6 @@ set -o pipefail
 
 git fetch ${REMOTE} --tags
 git checkout ${REMOTE}/master
-git checkout master
 echo "$(git branch)" | grep ${BRANCH} && git branch -D "${BRANCH}"
 git checkout -b ${BRANCH}
 
@@ -23,7 +22,7 @@ git add setup.cfg
 git add setup.py
 git commit -m "Updated version info to ${VERSION}"
 
-git branch -d master
+git branch -D master
 git checkout ${REMOTE}/master
 git merge ${BRANCH}
 echo "$(git tag)" | grep ${VERSION} && git tag -d ${VERSION}
