@@ -167,15 +167,11 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"99308622d2a08d57125e6b92e8718765a9d3445f",
+            "sha1sum":"7e553aaa5f9810e7548f7c4afe0526cac4aa0039",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"fgs_apcorr.tpn",
-            "unique_rowkeys":[
-                "FILTER",
-                "PUPIL",
-                "EEFRACTION"
-            ]
+            "unique_rowkeys":"EEFRACTION"
         },
         "area":{
             "derived_from":"Hand made 2016-02-18",
