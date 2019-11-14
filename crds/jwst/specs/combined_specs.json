@@ -160,14 +160,14 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.INSTRUMENT.DETECTOR"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"7387f05499abb91d8139810203092f89ae772a0d",
+            "sha1sum":"99308622d2a08d57125e6b92e8718765a9d3445f",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"fgs_apcorr.tpn",
