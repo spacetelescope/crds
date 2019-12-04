@@ -7,11 +7,10 @@ os:
 sudo: false
 
 env:
-    # CONDA_JWST_DEPENDENCIES is used because CONDA_DEPENDENCIES is not truly global.
     global:
         - MAIN_CMD='python setup.py'
         - CONDA_CHANNELS='http://ssb.stsci.edu/astroconda'
-        - CONDA_DEPENDENCIES='fitsverify'
+        - CONDA_DEPENDENCIES='cfitsio>3.440 fitsverify'
         - PIP_DEPENDENCIES='numpy coveralls'
         - CRDS_SERVER_URL='https://hst-crds.stsci.edu'
         - CRDS_TEST_ROOT=/tmp
