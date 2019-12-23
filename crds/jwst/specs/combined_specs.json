@@ -640,13 +640,14 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"63de6e9efd98c551fc60a30cd3d19d1a4032eebd",
+            "sha1sum":"5f074e0902bd69bdfb664fdec2f19e6866ee058d",
             "suffix":"cubepar",
             "text_descr":"IFU Cube defaults",
             "tpn":"miri_cubepar.tpn",
             "unique_rowkeys":[
-                "GRATING",
-                "FILTER"
+                "CHANNEL",
+                "BAND",
+                "WAVELENGTH"
             ]
         },
         "dark":{
