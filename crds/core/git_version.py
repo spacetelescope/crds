@@ -1,9 +1,9 @@
 
 
-__version__ = '2937ebeeb39d4299d97cb140630ab2186cef82de'
+__version__ = '52c0d14171bc00f901e7ec059c8c4138706e49d1'
 
 __full_version_info__ = '''
-branch: ccd-624-remove-miri-subprism
-sha1: 2937ebeeb39d4299d97cb140630ab2186cef82de
+branch: b7.4.1.4
+sha1: 52c0d14171bc00f901e7ec059c8c4138706e49d1
 '''
     

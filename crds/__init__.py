@@ -11,7 +11,7 @@ warnings.filterwarnings(
 # ============================================================================
 
 __version__ = "7.4.1.4"   # XXXX  see also ../setup.cfg
-__rationale__ = "2019 Q4: JWST DMS-7.4 post release development #1"
+__rationale__ = "Server-side security fixes"
 
 __all__ = [
     "getrecommendations",
