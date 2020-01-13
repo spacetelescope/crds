@@ -630,7 +630,7 @@
                 "Match",
                 "UseAfter"
             ],
-            "derived_from":"Hand made 2019-10-22",
+            "derived_from":"Hand made 2020-01-13",
             "extra_keys":null,
             "file_ext":".fits",
             "filekind":"APCORR",
@@ -649,13 +649,13 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"feff7e1b44316ab06978e0f697795255ae9776f1",
+            "sha1sum":"fc3a2806fc8b41d78fd36af1fdd92881d1c87709",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"miri_apcorr.tpn",
             "unique_rowkeys":[
                 "FILTER",
-                "PUPIL",
+                "SUBARRAY",
                 "EEFRACTION"
             ]
         },
