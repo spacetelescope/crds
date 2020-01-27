@@ -12,5 +12,5 @@
     'suffix': 'tds',
     'text_descr': 'Time Dependent Sensitivity Table',
     'tpn': 'cos_tds.tpn',
-    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'SEGMENT'),
+    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'SEGMENT', 'CENWAVE'),
 }
