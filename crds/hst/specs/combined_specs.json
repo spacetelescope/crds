@@ -947,7 +947,8 @@
             "unique_rowkeys":[
                 "APERTURE",
                 "OPT_ELEM",
-                "SEGMENT"
+                "SEGMENT",
+                "CENWAVE"
             ]
         },
         "tracetab":{
