@@ -371,9 +371,11 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         assert self.history_start <= self.history_stop, "Invalid history interval,  start >= stop."
         effects = []
         for i in range(self.history_start, self.history_stop):
-            log.info("Fetching effects for", (i,) + self.history[i+1])
             old_context = self.history[i][1]
             new_context = self.history[i+1][1]
+            if old_context > new_context:   # skip over backward transitions,  no output.
+                continue
+            log.info("Fetching effects for", (i,) + self.history[i+1])
             affected = self.get_affected(old_context, new_context)
             if affected:
                 effects.append((i, affected))
