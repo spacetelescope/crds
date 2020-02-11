@@ -78,7 +78,7 @@ setup_pars = {
     "scripts" : glob.glob("scripts/*"),
     }
 
-TEST_DEPS = ["lockfile", "mock", "nose", "pytest", "pylint", "flake8", "bandit"]
+TEST_DEPS = ["lockfile", "mock", "nose", "pytest", "pylint", "flake8", "bandit",]
 
 SUBMISSION_DEPS = ["requests", "lxml", "parsley"]
 
@@ -95,7 +95,8 @@ setup(name="crds",
       extras_require={
           "jwst": ["jwst"],
           "submission": ["requests", "lxml", "parsley"],
-          "dev" : ["ipython","jupyterlab","ansible","helm"],
+          "dev" : ["ipython","jupyterlab","ansible","helm",
+                   "nose-cprof", "coverage"],
           "test" : TEST_DEPS,
           "docs" : ["sphinx","sphinx_rtd_theme","docutils"],
           "aws" : ["boto3","awscli"],

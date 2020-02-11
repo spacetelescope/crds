@@ -586,14 +586,16 @@ def cache_atomic_write(replace_path, contents, fail_warning):
 
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
-    server_config = os.path.join(config.get_crds_cfgpath(observatory), "server_config")
     with log.fatal_error_on_exception("CRDS server connection and cache load FAILED.  Cannot continue.\n"
                          " See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/\n"
                          " for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL."):
-        with open(server_config) as file_:
-            info = ConfigInfo(ast.literal_eval(file_.read()))
+        server_config = config.get_uri("server_config")
+        if server_config == "none":
+            server_config = config.locate_config("server_config", observatory)
+        config_data = utils.get_uri_content(server_config)
+        info = ConfigInfo(ast.literal_eval(config_data))
         info.status = "cache"
-    return info
+        return info
 
 # XXXX Careful with version string length here, FITS has a 68 char limit which degrades to CONTINUE records
 # XXXX which cause problems for other systems.

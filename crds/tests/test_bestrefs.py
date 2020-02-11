@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+import datetime
 
 from crds import bestrefs
 from crds.bestrefs import BestrefsScript
@@ -425,8 +426,14 @@ class TestBestrefs(test_config.CRDSTestCase):
     # server_url = "https://hst-crds-dev.stsci.edu"
     cache = test_config.CRDS_TESTING_CACHE
 
+    def get_10_days_ago(self):
+        now = datetime.datetime.now()
+        now -= datetime.timedelta(days=10)
+        return now.isoformat().split("T")[0]
+
     def test_bestrefs_affected_datasets(self):
-        self.run_script("crds.bestrefs --affected-datasets --old-context hst_0543.pmap --new-context hst_0544.pmap --datasets-since 2017-06-01",
+        self.run_script(f"crds.bestrefs --affected-datasets --old-context hst_0543.pmap --new-context hst_0544.pmap "
+                        f"--datasets-since {self.get_10_days_ago()}",
                         expected_errs=0)
 
     def test_bestrefs_from_pickle(self):
@@ -444,8 +451,8 @@ class TestBestrefs(test_config.CRDSTestCase):
                         expected_errs=1)
 
     def test_bestrefs_to_json(self):
-        self.run_script("crds.bestrefs --instrument cos --new-context hst_0315.pmap --save-pickle test_cos.json --datasets-since 2015-01-01 --stats",
-                        expected_errs=None)
+        self.run_script(f"crds.bestrefs --instrument cos --new-context hst_0315.pmap --save-pickle test_cos.json "
+                        f"--datasets-since {self.get_10_days_ago()}", expected_errs=None)
         os.remove("test_cos.json")
 
     def test_bestrefs_at_file(self):

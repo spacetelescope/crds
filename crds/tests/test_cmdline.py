@@ -271,14 +271,14 @@ class TestCmdline(test_config.CRDSTestCase):
     # server_url = "https://hst-crds-dev.stsci.edu"
     cache = test_config.CRDS_TESTING_CACHE
 
-    def test_console_profile(self):
-        self.run_script("crds.list --status --profile=console",
-                        expected_errs=None)
+    # def test_console_profile(self):
+    #     self.run_script("crds.list --status --profile=console",
+    #                     expected_errs=None)
 
-    def test_file_profile(self):
-        self.run_script("crds.list --status --profile=profile.stats",
-                        expected_errs=None)
-        os.remove("profile.stats")
+    # def test_file_profile(self):
+    #     self.run_script("crds.list --status --profile=profile.stats",
+    #                     expected_errs=None)
+    #     os.remove("profile.stats")
 
     def test_file_outside_cache_pathless(self):
         s = Script("cmdline.Script")
