@@ -8,6 +8,7 @@ import os
 import time
 import multiprocessing
 import tempfile
+import doctest
 
 # ===================================================================
 
@@ -127,7 +128,9 @@ def dt_lockfile_locking():
 
 def dt_default_disabled():
     """
-    Default locking configuration, enabled.
+    Default locking configuration, disabled.   All bets are off
+    for unlocked program output behavior...  just make sure it
+    doesn't crash.
 
     >>> old_state = test_config.setup()
     >>> _ = config.USE_LOCKING.set(False)
@@ -136,19 +139,16 @@ def dt_default_disabled():
     CRDS - DEBUG -  CRDS_USE_LOCKING = False. Cannot support downloading CRDS files while multiprocessing.
     >>> crds_cache_locking.status()
     'disabled, multiprocessing'
-    >>> try_multiprocessing()
-    ttttteeeeessssstttttiiiiinnnnnggggg
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
+    >>> try_multiprocessing() # doctest: +ELLIPSIS
+    -ignore-
+    >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
     """
 
 def dt_default_readonly():
     """
-    Default locking configuration, enabled.
+    Default locking configuration, readonly cache, locking disabled.
 
     >>> old_state = test_config.setup()
     >>> _ = config.set_cache_readonly()
@@ -156,13 +156,10 @@ def dt_default_readonly():
     >>> crds_cache_locking.init_locks()
     >>> crds_cache_locking.status()
     'disabled, multiprocessing'
-    >>> try_multiprocessing()
-    ttttteeeeessssstttttiiiiinnnnnggggg
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
+    >>> try_multiprocessing() # doctest: +ELLIPSIS
+    -ignore-
+    >>> doctest.ELLIPSIS_MARKER = '...'
     >>> test_config.cleanup(old_state)
     """
 
