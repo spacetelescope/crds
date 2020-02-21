@@ -1461,6 +1461,20 @@ class TestCertify(test_config.CRDSTestCase):
         header = {"READPATT": "0.0003"}
         assert_raises(ValueError, cval.check, "foo.fits", header)
 
+    def test_real_validator_range_inf_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("5.5:inf",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "100000.0"}
+        cval.check("foo.fits", header)
+
+    def test_real_validator_range_inf_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'R', 'R', ("5.5:inf",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.RealValidator))
+        header = {"READPATT": "5.4"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
+
     # ------------------------------------------------------------------------------
 
     def test_double_validator_bad_format(self):
@@ -1512,6 +1526,20 @@ class TestCertify(test_config.CRDSTestCase):
         assert_raises(ValueError, cval.check, "foo.fits", header)
         info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
         assert_raises(ValueError, certify.validator, info)
+
+    def test_double_validator_range_inf_good(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("5.5:inf",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "100000.0"}
+        cval.check("foo.fits", header)
+
+    def test_double_validator_range_inf_bad(self):
+        info = certify.TpnInfo('READPATT', 'H', 'D', 'R', ("5.5:inf",))
+        cval = certify.validator(info)
+        assert_true(isinstance(cval, certify.DoubleValidator))
+        header = {"READPATT": "5.4"}
+        assert_raises(ValueError, cval.check, "foo.fits", header)
 
     # ------------------------------------------------------------------------------
 
