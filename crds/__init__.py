@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.4.1.4"   # XXXX  see also ../setup.cfg
-__rationale__ = "Server-side security fixes"
+__version__ = "7.4.1.5"   # XXXX  see also ../setup.cfg
+__rationale__ = "Adjust validations for NIRSpec REFPIX, COS TDSTAB, and ACS CCDTAB submissions"
 
 __all__ = [
     "getrecommendations",
