@@ -17,6 +17,7 @@ import ast
 import gc
 import json
 import warnings
+import time
 
 # ===================================================================
 
@@ -702,6 +703,23 @@ def get_url_content(url, mode="text"):
     return r.content
 
 def get_uri_content(uri, mode="text"):
+    """Reads and returns the contents of the given s3://, https://
+    or filename uri.   Reads to memory, intended for small files.
+    """
+    saved = None
+    for i in range(1, config.get_client_retry_count()+1):
+        try:
+            return _get_uri_content(uri, mode)
+        except Exception as exc:
+            saved = exc
+            delay = config.get_client_retry_delay_seconds()
+            log.info(f"crds.core.utils.get_uri_content({uri}, {mode}) retrying {i}"
+                     f"delaying {delay} seconds.")
+            time.sleep(delay)
+    log.error(f"crds.core.utils.get_uri_content({uri}, {mode}) all {i} tries failed.")
+    raise saved
+
+def _get_uri_content(uri, mode="text"):
     """Reads and returns the contents of the given s3://, https://
     or filename uri.   Reads to memory, intended for small files.
     """
