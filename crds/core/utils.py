@@ -713,10 +713,10 @@ def get_uri_content(uri, mode="text"):
         except Exception as exc:
             saved = exc
             delay = config.get_client_retry_delay_seconds()
-            log.info(f"crds.core.utils.get_uri_content({uri}, {mode}) retrying {i}"
+            log.verbose(f"crds.core.utils.get_uri_content('{uri}', '{mode}') retrying {i}",
                      f"delaying {delay} seconds.")
             time.sleep(delay)
-    log.error(f"crds.core.utils.get_uri_content({uri}, {mode}) all {i} tries failed.")
+    log.verbose(f"crds.core.utils.get_uri_content('{uri}', '{mode}') all {i} tries failed.")
     raise saved
 
 def _get_uri_content(uri, mode="text"):
