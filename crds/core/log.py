@@ -115,7 +115,7 @@ import contextlib
 DEFAULT_VERBOSITY_LEVEL = 50
 
 class CrdsLogger:
-    def __init__(self, name="CRDS", enable_console=True, level=logging.DEBUG, enable_time=True):
+    def __init__(self, name="CRDS", enable_console=True, level=logging.INFO, enable_time=True):
         self.name = name
 
         self.handlers = []  # logging handlers, used e.g. to add console or file output streams
@@ -195,7 +195,12 @@ class CrdsLogger:
 
     def should_output(self, *args, **keys):
         verbosity = keys.get("verbosity", DEFAULT_VERBOSITY_LEVEL)
-        return not self.verbose_level < verbosity
+        do_output = not self.verbose_level < verbosity
+        if do_output:
+            self.logger.setLevel(logging.DEBUG)
+        else:
+            self.logger.setLevel(logging.INFO)
+        return do_output
 
     def verbose(self, *args, **keys):
         if self.should_output(*args, **keys):
