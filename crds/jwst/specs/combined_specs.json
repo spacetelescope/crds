@@ -1568,6 +1568,7 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.INSTRUMENT.DETECTOR",
                     "META.EXPOSURE.TYPE"
                 ],
                 [
@@ -1575,7 +1576,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"241ee5fe9b603fee5e76d3b702d5b2101e230b31",
+            "sha1sum":"fa68b4bbe9e83e7d824b90e2120856692fd84554",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"nircam_apcorr.tpn",
