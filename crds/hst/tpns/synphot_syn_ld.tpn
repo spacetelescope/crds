@@ -21,3 +21,6 @@ DATE                H        C         R
 
 WAVELENGTH      C        R             R
 THROUGHPUT      C        R             W
+
+# Warn when the first and last throughput values are not both equal to 0:
+EXT1            D        X             R    (warn_only((EXT1_ARRAY.DATA.field("THROUGHPUT")[[0,-1]]==0.0).all()))
