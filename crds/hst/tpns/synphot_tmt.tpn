@@ -18,6 +18,13 @@ DESCRIP             H        C         R
 PEDIGREE            H        C         R    &PEDIGREE
 
 TIME                C        C         R    &SYBDATE
+
 COMPNAME            C        C         R
-FILENAME            C        C         W    &FileExists
+COMPNAME            C        X         R    ((len(VALUE)>0)and(VALUE==VALUE.lower()))
+
+FILENAME            C        C         R
+FILENAME            C        X         R    ((len(VALUE)>0)and(VALUE==VALUE.lower()))
+
 COMMENT             C        C         R
+
+EXT1                D        X         R    &SYNPHOT_LOOKUP

@@ -97,7 +97,7 @@ class Certifier:
         list of Validators used to check that reference file type.
         """
         # Get the cache key for this filetype.
-        checkers = validators.get_validators(self.observatory, self.filename)
+        checkers = validators.get_validators(self.observatory, self.filename, context=self.context)
         checkers = self.set_rmap_parkeys_to_required(checkers)
         return checkers
 

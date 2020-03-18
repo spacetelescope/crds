@@ -246,8 +246,8 @@ class TestReftypes(test_config.CRDSTestCase):
     # ------------------------------------------------------------------------------
 
     def test_validator_bad_presence(self):
-        #         tinfo = certify.TpnInfo('DETECTOR','H','C','Q', ('WFC','HRC','SBC'))
-        #         assert_raises(ValueError, certify.validator, tinfo)
+        #         tinfo = certify.generic_tpn.TpnInfo('DETECTOR','H','C','Q', ('WFC','HRC','SBC'))
+        #         assert_raises(ValueError, certify.validators.validator, tinfo)
         pass
 
 # ==================================================================================

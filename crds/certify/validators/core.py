@@ -1,7 +1,3 @@
-"""This module defines replacement functionality for the CDBS "certify" program
-used to check parameter values in .fits reference files.   It verifies that FITS
-files define required parameters and that they have legal values.
-"""
 import os
 import re
 import copy
@@ -19,9 +15,10 @@ from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds.core.exceptions import BadKernelSumError, BadKernelCenterPixelTooSmall
 from crds.io import tables
 from crds import data_file
+from crds.certify import generic_tpn
+from crds.certify.generic_tpn import TpnInfo # generic TpnInfo code
 
-from . import generic_tpn, validator_helpers
-from .generic_tpn import TpnInfo   # generic TpnInfo code
+from . import helpers as validator_helpers
 
 # ============================================================================
 
@@ -50,9 +47,10 @@ class Validator:
     """Validator is an Abstract class that applies TpnInfo objects to reference files.  Each
     Validator handles a single constraint defined in a .tpn file.
     """
-    def __init__(self, info):
+    def __init__(self, info, context=None):
         self.info = info
         self.name = info.name
+        self.context = context
         self._presence_condition_code = None
 
         if self.info.datatype not in generic_tpn.TpnInfo.datatypes:
@@ -643,6 +641,37 @@ def expr_identifiers(expr):
     no_underscores = [key for key in no_numbers if key != "_"]
     return no_underscores
 
+# ----------------------------------------------------------------------------
+
+class ColumnExpressionValidator(Validator):
+    """Value is an expression on the column value that must evaluate to True."""
+
+    def __init__(self, info, *args, **keys):
+        super(ColumnExpressionValidator, self).__init__(info, *args, **keys)
+        self._expr = info.values[0]
+        self._expr_code = compile(self._expr, repr(self.info), "eval")
+
+    def check_value(self, filename, value):
+        if value in [None, "UNDEFINED"]: # missing optional or excluded keyword
+            return True
+        value = self.condition(value)
+
+        try:
+            satisfied = eval(self._expr_code, {"VALUE": value}, self._eval_namespace)
+        except Exception as exc:
+            raise RequiredConditionError("Failed checking constraint", repr(self._expr), ":", str(exc))
+
+        if not satisfied:
+            raise RequiredConditionError("Constraint", str(self._expr), "is not satisfied.")
+        elif satisfied == "W":  # from warn_only() helper
+            log.warning("Constraint", str(self._expr), "is not satisfied.")
+            satisfied = True
+
+        return satisfied
+
+    def check_header(self, filename, header):
+        return True
+
 # ---------------------------------------------------------------------------
 
 class KernelunityValidator(Validator):
@@ -760,53 +789,3 @@ class FileexistsValidator(Validator):
             crds_name = crds_name.split("[")[0]
         log.verbose("Conditioned filepath", repr(value), "to", repr(crds_name))
         return crds_name
-
-
-# ----------------------------------------------------------------------------
-
-def validator(info):
-    """Given TpnInfo object `info`, construct and return a Validator for it."""
-    if len(info.values) == 1 and len(info.values[0]) and \
-        info.values[0][0] == "&":
-        # This block handles &-types like &PEDIGREE and &SYBDATE
-        # only called on static TPN infos.
-        class_name = info.values[0][1:].capitalize() + "Validator"
-        rval = eval(class_name)(info)
-    elif info.datatype == "C":
-        rval = CharacterValidator(info)
-    elif info.datatype == "R":
-        rval = RealValidator(info)
-    elif info.datatype == "D":
-        rval = DoubleValidator(info)
-    elif info.datatype == "I":
-        rval = IntValidator(info)
-    elif info.datatype == "L":
-        rval = LogicalValidator(info)
-    elif info.datatype == "X":
-        rval = ExpressionValidator(info)
-    else:
-        raise ValueError("Unimplemented datatype " + repr(info.datatype))
-    return rval
-
-# ============================================================================
-
-def get_validators(observatory, refpath):
-    """Given `observatory` and a path to a reference file `refpath`,  load the
-    corresponding validators that define individual constraints that reference
-    should satisfy.
-    """
-    tpns = get_reffile_tpninfos(observatory, refpath)
-    checkers = [validator(x) for x in tpns]
-    log.verbose("Validators for", repr(refpath), "("+str(len(checkers))+"):\n", log.PP(checkers), verbosity=65)
-    return checkers
-
-def get_reffile_tpninfos(observatory, refpath):
-    """Load just the TpnInfo objects for `observatory` and the given `refpath`.
-    This entails both "class" TpnInfo's from CDBS as well as TpnInfo objects
-    derived from the JWST data models.
-    """
-    locator = utils.get_locator_module(observatory)
-    instrument, filekind = locator.get_file_properties(refpath)
-    tpns = list(locator.get_all_tpninfos(instrument, filekind, "tpn"))
-    tpns.extend(locator.get_extra_tpninfos(refpath))
-    return tpns
