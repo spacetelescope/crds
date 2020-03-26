@@ -758,6 +758,8 @@ def certify_FitsCertify_opaque_name():
     >>> test_config.cleanup(old_state)
     """
 
+# CRDS is able to recognize ASDF files without the .asdf extension, but the cal code is not.
+# Leaving this test here in case jwst decides to change its mind someday.
 def certify_AsdfCertify_opaque_name():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
@@ -766,6 +768,7 @@ def certify_AsdfCertify_opaque_name():
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
+    CRDS - ERROR -  data/opaque_asd.tmp Validation error : JWST Data Models: Unrecognized file type for: data/opaque_asd.tmp
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
