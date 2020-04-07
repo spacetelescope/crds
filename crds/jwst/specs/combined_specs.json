@@ -1556,7 +1556,7 @@
                 "Match",
                 "UseAfter"
             ],
-            "derived_from":"Hand made 2019-10-22",
+            "derived_from":"Hand made 2020-05-06",
             "extra_keys":null,
             "file_ext":".fits",
             "filekind":"APCORR",
@@ -1568,7 +1568,6 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR",
                     "META.EXPOSURE.TYPE"
                 ],
                 [
@@ -1576,7 +1575,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"fa68b4bbe9e83e7d824b90e2120856692fd84554",
+            "sha1sum":"7e922270697b909ae131a3e482176ee5e443a9d0",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"nircam_apcorr.tpn",
