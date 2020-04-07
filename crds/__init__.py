@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.4.1.5"   # XXXX  see also ../setup.cfg
-__rationale__ = "Adjust validations for NIRSpec REFPIX, COS TDSTAB, and ACS CCDTAB submissions"
+__version__ = "7.4.1.6"   # XXXX  see also ../setup.cfg
+__rationale__ = "Support changes to COS TDSTAB format"
 
 __all__ = [
     "getrecommendations",
