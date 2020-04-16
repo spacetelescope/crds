@@ -17,4 +17,4 @@ PUPIL                      C   C   R   CLEARP,F090W,F115W,F140M,F150W,F158M,\
 
 EEFRACTION                 C   R   (is_imaging_mode(EXP_TYPE))   0.0:1.0
 
-APCORR                     C   R   R   1.0:1.8e308
+APCORR                     A   X   R   (has_column_type(APCORR_ARRAY,'APCORR','FLOAT'))
