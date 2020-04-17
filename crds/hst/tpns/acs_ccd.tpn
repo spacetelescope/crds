@@ -19,3 +19,4 @@ USEAFTER  	H	C	R	&SYBDATE
 PEDIGREE  	H	C	R	&PEDIGREE
 OVRHFLS         C       D       R       0:inf
 OVRHUFLS        C       D       R       0:inf
+ATODSAT         C       I       R       60000:70000
