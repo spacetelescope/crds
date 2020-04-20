@@ -3,33 +3,33 @@ CRDS Rules (Mappings)
 
 CRDS mappings are organized in a 3 tier hierarchy:  pipeline (.pmap),
 instrument (.imap), and reference (.rmap).   Based on dataset parameters,
-the pipeline context is used to select an instrument mapping,  the instrument 
-mapping is used to select a reference mapping,  and finally the reference 
-mapping is used to select a reference file.   
+the pipeline context is used to select an instrument mapping,  the instrument
+mapping is used to select a reference mapping,  and finally the reference
+mapping is used to select a reference file.
 
 CRDS mappings are written in a subset of Python and given the proper global
-definitions can be parsed directly by the Python interpreter.   Nothing 
+definitions can be parsed directly by the Python interpreter.   Nothing
 precludes writing a parser for CRDS mappings in some other language.
 
 .. figure:: images/file_relationships.png
    :scale: 50 %
    :alt: diagram of file relationships, .pmap -> .imap -> .rmap -> .reference
-   
+
 
 Naming
 ------
 
-The CRDS HST mapping prototypes which are generated from information scraped from 
+The CRDS HST mapping prototypes which are generated from information scraped from
 the CDBS web site are named with the forms::
 
   <observatory> .pmap                               e.g. hst.pmap
-  <observatory> _ <instrument> .imap                e.g. hst_acs.imap 
+  <observatory> _ <instrument> .imap                e.g. hst_acs.imap
   <observatory> _ <instrument> _ <filekind> .rmap   e.g. hst_acs_darkfile.rmap
-  
+
 The names of subsequent derived mappings include a version number::
 
   <observatory> _ <version> .pmap                               e.g. hst_00001.pmap
-  <observatory> _ <instrument> _ <version> .imap                e.g. hst_acs_00047.imap 
+  <observatory> _ <instrument> _ <version> .imap                e.g. hst_acs_00047.imap
   <observatory> _ <instrument> _ <filekind> _ <version> .rmap   e.g. hst_acs_darkfile_00012.rmap
 
 Basic Structure
@@ -40,8 +40,8 @@ All mappings have the same basic structure consisting of a "header" section foll
 header
 ......
 
-The header provides meta data describing the mapping.  A critical field in the mapping header is the "parkey" 
-field which names the dataset parameters (nominally FITS keywords or JWST data model names) which are used by 
+The header provides meta data describing the mapping.  A critical field in the mapping header is the "parkey"
+field which names the dataset parameters (nominally FITS keywords or JWST data model names) which are used by
 the selector to do a best references lookup.
 
 comment
@@ -53,7 +53,7 @@ selector
 ........
 
 The selector provides matching rules used to look up the results of the mapping.  The selector is a nested tree
-structure consisting of top-level selectors and sub-selectors. 
+structure consisting of top-level selectors and sub-selectors.
 
 Pipeline Mappings (.pmap)
 -------------------------
@@ -73,7 +73,7 @@ A sample pipeline mapping for HST looks like::
     comment = """This is an optional mapping section used to add multiline commentary,
     perhaps to describe mapping evolution or unusual behaviors.
     """
-    
+
     selector = {
         'ACS' : 'hst_acs.imap',
         'COS' : 'hst_cos.imap',
@@ -83,8 +83,18 @@ A sample pipeline mapping for HST looks like::
         'WFPC2' : 'hst_wfpc2.imap',
     }
 
-A pipeline mapping matches the dataset "INSTRUME" header keyword against its selector to look up an instrument 
+A pipeline mapping matches the dataset "INSTRUME" header keyword against its selector to look up an instrument
 mapping file.
+
+Restricting the ASDF Standard version
+.....................................
+
+The pipeline mapping supports an optional ``asdf_standard_requirement`` header field
+that restricts the ASDF Standard version of all .asdf files and .fits files that contain
+an embedded ASDF file.  The value should be a pip-style version specification,
+e.g., ``==1.4.0``, ``~=1.4.0``, ``>=1.4.0, <1.4.5``.  When a file containing ASDF data is
+certified against a context that includes an ``asdf_standard_requirement``, it will
+fail unless the ASDF Standard version obeys the requirement.
 
 Instrument Mappings (.imap)
 ---------------------------
@@ -100,7 +110,7 @@ A sample instrument mapping for HST's COS instrument looks like::
         'parkey' : ('REFTYPE',),
         'sha1sum' : '85184c1656b487e7af686a7ab75262dcefc882e8',
     }
-    
+
     selector = {
         'badttab' : 'hst_cos_badttab_0250.rmap',
         'bpixtab' : 'hst_cos_bpixtab_0254.rmap',
@@ -133,7 +143,7 @@ best reference recommendation for a particular dataset.  An instrument mapping l
 all modes of the instrument,  some of which may not be appropriate for a particular mode.
 
 For HST, the header keywords FILETYPE or CDBSFILE are used to define a reference\'s type and corresponding rmap.
-FILETYPE is in turn translated to the keyword names used to record reference files in datasets 
+FILETYPE is in turn translated to the keyword names used to record reference files in datasets
 (CRDS names these "filekind"),  and these appear directly in rmap names, e.g. FILETYPE=BIAS translates to BIASFILE which
 appears in the rmap hst_acs_biasfile_0250.rmap.  NOTE: the HST .imap\'s incorrectly specify REFTYPE in the .imap\'s
 but the value is unused.
@@ -160,7 +170,7 @@ A sample reference mapping for HST COS DEADTAB looks like::
         'rmap_relevance' : '(DEADCORR != "OMIT")',
         'sha1sum' : 'bde314f1848b67891d6309b30eaa5c95611f86e2',
     }
-    
+
     selector = Match({
         ('FUV',) : UseAfter({
             '1996-10-01 00:00:00' : 's7g1700gl_dead.fits',
@@ -170,29 +180,29 @@ A sample reference mapping for HST COS DEADTAB looks like::
         }),
     })
 
-Reference mapping selectors are constructed as a nested hierarchy of selection operators which match against 
+Reference mapping selectors are constructed as a nested hierarchy of selection operators which match against
 various dataset header keywords.
 
 Active Header Fields
 --------------------
 
-Many rmap header fields are passive metadata.   A number of optional rmap header fields,  however,  actively affect 
+Many rmap header fields are passive metadata.   A number of optional rmap header fields,  however,  actively affect
 best reference lookups and results::
 
     header = {
               ...,
-    
+
         'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
 
         'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
-        
+
         'reffile_switch' : 'BIASCORR',
 
         'reffile_required' : 'YES',
 
         'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
         'rmap_omit' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
-    
+
         'parkey_relevance' : {
             'binaxis1' : '(DETECTOR == "UVIS")',
             'binaxis2' : '(DETECTOR == "UVIS")',
@@ -205,14 +215,14 @@ best reference lookups and results::
             'fallback_header' : 'fallback_header_acs_biasfile_v2',
             'precondition_header' : 'precondition_header_acs_biasfile_v2',
         },
-    
+
               ...,
     }
 
 Required Parameters
 ...................
 
-Required matching parameters for computing best references are defined by the union of 3 header fields:  *parkey*, 
+Required matching parameters for computing best references are defined by the union of 3 header fields:  *parkey*,
 *extra_keys*, and  *reffile_switch*.   There is no requirement to use all 3 forms,  the latter two forms were added
 to model and emulate aspects of HST's CDBS system,  the precursor to CRDS.
 
@@ -224,13 +234,13 @@ The primary location for defining best references matching parameters is the *pa
 The simplest form of *parkey* is a tuple of parameter names used in a lookup by a non-nested selector,  as is
 seen in pipeline and instrument mappings above.
 
-In reference mappings,  the header *parkey* field is a tuple of tuples.  Each stage of the nested selector 
+In reference mappings,  the header *parkey* field is a tuple of tuples.  Each stage of the nested selector
 consumes the next tuple of header keys.  The same parameter set and matching structure is shared by all sections
 of a single rmap.   For mode-specific parameters,  two approaches are availble:  use a separate .rmap for each
 parameter combination, or fill in unused parameters for a particular mode with the value 'N/A'.
 
-For the HST COS DEADTAB example above,   the Match operator matches against the value of the dataset keyword 
-'DETECTOR'.   Based on that match, the selected UseAfter operator matches against the dataset's 'DATE-OBS' and 
+For the HST COS DEADTAB example above,   the Match operator matches against the value of the dataset keyword
+'DETECTOR'.   Based on that match, the selected UseAfter operator matches against the dataset's 'DATE-OBS' and
 'TIME-OBS' keywords to lookup the name of a reference file.
 
 There is no default for parkey.
@@ -249,13 +259,13 @@ If omitted, *extra_keys* defaults to (),  no extra keys.
 reffile_switch
 ,,,,,,,,,,,,,,
 
-Nominally names a dataset keyword generally of the form <type>CORR with keyword values 'PERFORM' and 'OMIT'.  
+Nominally names a dataset keyword generally of the form <type>CORR with keyword values 'PERFORM' and 'OMIT'.
 
-If *reffile_switch* is not 'NONE',  it specifies an extra keyword value is to fetch from the dataset.  
+If *reffile_switch* is not 'NONE',  it specifies an extra keyword value is to fetch from the dataset.
 
-If *reffile_switch* is omitted or 'NONE',  no keyword value is fetched from the dataset.   
+If *reffile_switch* is omitted or 'NONE',  no keyword value is fetched from the dataset.
 
-The runtime checking *reffile_switch* is used for must be explicitly implemented as part of an *rmap_relevance* or 
+The runtime checking *reffile_switch* is used for must be explicitly implemented as part of an *rmap_relevance* or
 *rmap_omit* expression as seen in the example header; *reffile_switch* only specifies an extra parameter to fetch
 for use in logical expressions and matching.  It is logically equivalent to adding the parameter to *extra_keys*.
 
@@ -290,16 +300,16 @@ If *reffile_required* is 'NO',  failing to find a match results in assigning the
 rmap_relevance
 ..............
 
-*rmap_relevance* is a logical expression which is evaluated in the context of dataset header variables.  
+*rmap_relevance* is a logical expression which is evaluated in the context of dataset header variables.
 
-If *rmap_relevance* evaluates to True, then a full match is performed and the resulting bestref is returned.  
+If *rmap_relevance* evaluates to True, then a full match is performed and the resulting bestref is returned.
 
 If *rmap_relevance* evaluates to False, then the match is short circuited and 'N/A' is assigned.
 
 parkey_relevance
 ................
 
-*parkey_relevance* defines a mapping from dataset matching parameters to logical expressions.   
+*parkey_relevance* defines a mapping from dataset matching parameters to logical expressions.
 
 *parkey_relevance* is evaluated in the context of the entire set of matching parameters and mutates
 the specified parameter to 'N/A' if the expression evaluates to False,  i.e. the parameter is not relevant
@@ -314,7 +324,7 @@ The *hooks* header section defines functions which are used for special case pro
 assignments.   The existing hooks were devised to emulate similar special case handling performed by CRDS's
 predecessor system CDBS.
 
-The original <100 series of HST rules had implicit hooks.  CRDS rules >200 have hooks which are explicitly 
+The original <100 series of HST rules had implicit hooks.  CRDS rules >200 have hooks which are explicitly
 named in the 'hooks' section of the header which indicates that customized matching is being performed.   Running
 crds.bestrefs with --verbosity=60 wil issue log messages describing hook operations.
 
@@ -429,16 +439,16 @@ Many CRDS match expressions consist of a series of match patterns separated by v
 as "or" and means that a match occurs if either pattern matches that dataset header.   For example, the expression::
 
    ("either_this|that","1|2|3")  : "some_file.fits"
-   
+
 will match::
 
    ("either_this", "2")
-   
+
 and also::
-   
+
    ("that", "1")
 
-Wild Cards * 
+Wild Cards *
 ,,,,,,,,,,,,
 
 By default,  * is interpreted in CRDS as a glob pattern,  much like UNIX shell file name matching.  * matches any
@@ -477,7 +487,7 @@ Relational Expressions
 Relational expressions are bracketed by the pound character #.   Relational
 expressions do numerical comparisons on the header value to determine a match.
 Relational expressions have implicit variables and support the operators::
- 
+
    > >= < <= == and or
 
 The expression::
@@ -490,16 +500,16 @@ Between
 ,,,,,,,
 
 A special relational operator "between" is used to simply express a range
-of numbers >= to the lower bound and < the upper bound,  similar to Python 
+of numbers >= to the lower bound and < the upper bound,  similar to Python
 slicing::
 
   ("between 1  47",) : "some_file.fits"
 
-will match any number greater than or equal to 1 and less than 47.   This is 
+will match any number greater than or equal to 1 and less than 47.   This is
 equivalent to::
 
   ("# >=1 and <47 #",) : "some_file.fits"
-  
+
 Note that "between" matches sensibly stack into a complete range.  The expressions::
 
   ("between 1 47",) : "some_file.fits"
@@ -510,7 +520,7 @@ provide complete coverage for the range between 1 and 90.
 N/A
 ,,,
 
-Some rmaps have match tuple values of "N/A",  or Not Applicable.   
+Some rmaps have match tuple values of "N/A",  or Not Applicable.
 A value of N/A is matched as a special version of "*", matching anything,  but
 not affecting the "weight" of the match::
 
@@ -518,8 +528,8 @@ not affecting the "weight" of the match::
 
 There are a couple uses for N/A parameters.    First,  sometimes a parameter is
 irrelevant in the context of the other parameters.   So for an rmap which covers
-multiple instrument modes,  a parameter may not apply to all modes. Second, 
-sometimes a parameter is relevant to custom lookup code,  but is not used by the 
+multiple instrument modes,  a parameter may not apply to all modes. Second,
+sometimes a parameter is relevant to custom lookup code,  but is not used by the
 match directly.  In this second case,   the "N/A" parameter may be used by custom
 header preconditioning code to assist in mutating the other parameter values
 that *are* used in the match.
@@ -573,9 +583,9 @@ parameters,   CRDS is left with a list of candidate matches.
 For each literal, \*, or regular expression parameter that matched,  CRDS
 increases its sense of the goodness of the match by 1.   For each N/A that was
 ignored, CRDS doesn't change the weight of the match.   The highest ranked match
-is the one CRDS chooses as best.   When more than one match tuple has the same 
-highest rank, we call this an "ambiguous" match.   Ambiguous matches will 
-either be merged,  or treated as errors/exceptions that cause the match to fail.   
+is the one CRDS chooses as best.   When more than one match tuple has the same
+highest rank, we call this an "ambiguous" match.   Ambiguous matches will
+either be merged,  or treated as errors/exceptions that cause the match to fail.
 Talk about ambiguity.
 
 For the initial HST rmaps, there are a number of match cases which overlap,
@@ -585,8 +595,8 @@ handling ambiguities here is to merge the two or more equal weighted UseAfter
 lists into a single combined UseAfter which is then searched.
 
 The ultimate goal of CRDS is to produce clear non-overlapping rules.  However,
-since the initial rmaps are generated from historical mission data in CDBS,  
-there are eccentricities which need to be accomodated by merging or eventually 
+since the initial rmaps are generated from historical mission data in CDBS,
+there are eccentricities which need to be accomodated by merging or eventually
 addressed by human beings who will simplify the rules by hand.
 
 UseAfter
@@ -626,8 +636,8 @@ to make a selection::
       '<5':      'cref_flatfield_73.fits',
       'default': 'cref_flatfield_123.fits',
    })
-   
-While similar to relational expressions in Match(),   SelectVersion() is 
+
+While similar to relational expressions in Match(),   SelectVersion() is
 dedicated, simpler,  and more self-documenting.  With the exception of default,
 versions are examined in sorted order.
 
@@ -676,4 +686,3 @@ enclose the supplied parameter value::
 Here,  a parameter value of 1.3 returns the value::
 
     ('cref_flatfield_120.fits', 'cref_flatfield_124.fits')
-
