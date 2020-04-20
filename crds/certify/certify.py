@@ -201,6 +201,10 @@ class ReferenceCertifier(Certifier):
             if self._dump_provenance_flag:
                 self.dump_provenance()
 
+        with self.error_on_exception(
+                "Checking ASDF Standard version for", repr(self.filename)):
+                self.check_asdf_standard_version()
+
     def load(self):
         """Load and parse header from self.filename."""
         from crds.io import abstract
@@ -465,6 +469,25 @@ class ReferenceCertifier(Certifier):
             if np.any(old_value != new_value):
                 different += 1
         return different
+
+    def check_asdf_standard_version(self):
+        """
+        If the file is an ASDF file or contains an embedded ASDF file,
+        confirm that the file's ASDF Standard version obeys the context
+        requirement.
+        """
+        if self.context:
+            asdf_standard_version = data_file.get_asdf_standard_version(self.filename)
+            if asdf_standard_version:
+                pmap = crds.get_pickled_mapping(self.context, ignore_checksum="warn")
+                asdf_standard_requirement = pmap.get_asdf_standard_requirement()
+                if not asdf_standard_version in asdf_standard_requirement:
+                    log.error(
+                        "ASDF Standard version",
+                        asdf_standard_version,
+                        "does not fulfill context requirement of",
+                        str(asdf_standard_requirement)
+                    )
 
 # ============================================================================
 

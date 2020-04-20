@@ -48,3 +48,13 @@ class AsdfFile(AbstractFile):
             if histall:
                 history = "\n".join(histall)
         return history
+
+    def get_asdf_standard_version(self):
+        """
+        Return the ASDF Standard version associated with this file as a string,
+        or `None` if the file is neither an ASDF file nor contains an embedded
+        ASDF file.
+        """
+        import asdf
+        with asdf.open(self.filepath) as handle:
+            return str(handle.version)
