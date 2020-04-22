@@ -239,6 +239,22 @@ class FitsFile(AbstractFile):
             for hdu in hdus:
                 hdu.verify("warn")
 
+    def get_asdf_standard_version(self):
+        """
+        Return the ASDF Standard version associated with this file as a string,
+        or `None` if the file is neither an ASDF file nor contains an embedded
+        ASDF file.
+        """
+        with fits.open(self.filepath) as hdus:
+            asdf_hdu = next((hdu for hdu in hdus if hdu.name == "ASDF"), None)
+            if asdf_hdu is None:
+                return None
+            else:
+                import asdf
+                buff = io.BytesIO(asdf_hdu.data)
+                with asdf.open(buff) as handle:
+                    return str(handle.version)
+
 def test():
     from crds.io import fits
     import doctest

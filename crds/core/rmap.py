@@ -59,6 +59,8 @@ from collections import namedtuple
 
 # ===================================================================
 
+from pkg_resources import Requirement
+
 from . import log, utils, config, selectors, substitutions
 
 # XXX For backward compatability until refactored away.
@@ -721,6 +723,10 @@ class PipelineContext(ContextMapping):
         for instrument, imap in self.selections.normal_items():
             self._check_nested("instrument", instrument, imap)
 
+        # Will raise pkg_resources.RequirementParseError if the requirement
+        # is malformed:
+        self.get_asdf_standard_requirement()
+
     def get_best_references(self, header, include=None):
         """Return the best references for keyword map `header`.  If `include`
         is None,  collect all filekinds,  else only those listed.
@@ -829,6 +835,15 @@ class PipelineContext(ContextMapping):
         """
         return { instrument : list(self.parkey) + self.selections[instrument].get_required_parkeys()
                  for instrument in self.selections.normal_keys() }
+
+    def get_asdf_standard_requirement(self):
+        raw_requirement = self.header.get("asdf_standard_requirement", None)
+        if raw_requirement:
+            raw_requirement = "asdf_standard " + raw_requirement
+        else:
+            raw_requirement = "asdf_standard"
+
+        return Requirement.parse(raw_requirement)
 
 # ===================================================================
 

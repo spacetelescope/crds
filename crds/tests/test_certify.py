@@ -1259,6 +1259,42 @@ def test_certify_check_rmap_updates():
     >>> test_config.cleanup(old_state)
     """
 
+def test_asdf_standard_requirement_fail():
+    """
+    This test is currently a little vague on output because one of two errors are possible:
+    - Failure due to asdf_standard_requirement
+    - Failure due to the asdf library not handling the ASDF Standard version at all
+    Once the servers have asdf 2.6.0+ installed, we can lock down the output a little more.
+
+    This test verifies trial rmap updates under the control of the CRDS certify program.
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> TestCertifyScript("crds.certify data/jwst_nircam_specwcs_1_5_0.asdf --comparison-context jwst_0591.pmap")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/jwst_nircam_specwcs_1_5_0.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
+    ...
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  ... infos
+    1
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_asdf_standard_requirement_succeed():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> TestCertifyScript("crds.certify data/jwst_nircam_specwcs_1_4_0.asdf --comparison-context jwst_0591.pmap")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/jwst_nircam_specwcs_1_4_0.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
+    CRDS - INFO -  Checking JWST datamodels.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  4 infos
+    0
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 class TestCertify(test_config.CRDSTestCase):
 

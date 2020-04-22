@@ -332,3 +332,11 @@ class AbstractFile:
         else:
             rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
         return rval
+
+    def get_asdf_standard_version(self):
+        """
+        Return the ASDF Standard version associated with this file as a string,
+        or `None` if the file is neither an ASDF file nor contains an embedded
+        ASDF file.
+        """
+        return None

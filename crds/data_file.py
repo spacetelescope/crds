@@ -109,6 +109,14 @@ def verify_checksum(filepath):
     file_obj = file_factory(filepath)
     return file_obj.verify_checksum()
 
+def get_asdf_standard_version(filepath):
+    """
+    Retrieve the ASDF Standard version associated with the file,
+    or `None` if not applicable.
+    """
+    file_obj = file_factory(filepath)
+    return file_obj.get_asdf_standard_version()
+
 # ================================================================================================================
 
 def get_array_properties(filename, array_name, keytype="A"):
