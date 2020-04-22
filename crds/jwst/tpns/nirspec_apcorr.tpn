@@ -1,0 +1,14 @@
+# Template file used by certify to check reference files
+# NIRSpec APCORR specs
+#----------------------------------------------------------
+include includes/apcorr.tpn
+
+FILTER                     C   C   R   CLEAR,F070LP,F100LP,F110W,F140X,\
+                                       F170LP,F290LP,OPAQUE,P750L,\
+                                       MULTIPLE,N/A,ANY
+GRATING                    C   C   R   G140M,G235M,G395M,G140H,G235H,G395H,\
+                                       PRISM,MIRROR,ANY,N/A
+SLIT                       C   C   (EXP_TYPE==NRS_FIXEDSLIT)  S200A1,S200A2,S200B1,S400A1,S1600A1,\
+                                                              NONE,N/A,ANY
+
+PIXPHASE                   C   R   R
