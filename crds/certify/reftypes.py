@@ -294,12 +294,14 @@ class TypeParameters:
         instrument, filekind = self.locator.get_file_properties(filename)
         lines = []
         for tpn in reversed(self.get_all_tpn_paths(instrument, filekind, field)):
-            label = "From TPN: " + os.path.basename(tpn)
-            underline = len(label) * "-"
-            lines += [ label, underline ]
-            lines += generic_tpn.load_tpn_lines(tpn)
-            lines += [""]
-        return "\n".join(lines)
+            with log.verbose_warning_on_exception(
+                    "Failed loading tpn", repr(tpn)):
+                label = "From TPN: " + os.path.basename(tpn)
+                underline = len(label) * "-"
+                lines += [ label, underline ]
+                lines += generic_tpn.load_tpn_lines(tpn)
+                lines += [""]
+        return "\n".join(lines) + "\n"
 
     def reference_name_to_ld_tpn_text(self, filename):
         """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
