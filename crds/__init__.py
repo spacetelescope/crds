@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.4.1.6"   # XXXX  see also ../setup.cfg
-__rationale__ = "Support changes to COS TDSTAB format"
+__version__ = "7.4.1.7"   # XXXX  see also ../setup.cfg
+__rationale__ = "Updated ACS CCDTAB .tpn"
 
 __all__ = [
     "getrecommendations",
