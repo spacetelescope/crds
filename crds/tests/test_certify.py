@@ -1071,7 +1071,7 @@ def dt_acs_idctab_char_plus_column():
     CRDS - INFO -  Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
     CRDS - INFO -  All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
     CRDS - INFO -  Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
-    CRDS - WARNING -  Change in row format betwween 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
+    CRDS - WARNING -  Change in row format between 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  2 warnings
