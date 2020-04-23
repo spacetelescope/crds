@@ -2873,14 +2873,14 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"d5930eda2e5e07f3e9350dfb2be54b8c0ccc48cf",
+            "sha1sum":"d099a40e07351e8cd7d4c4fefd4b2c7f8036a62b",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"nirspec_apcorr.tpn",
             "unique_rowkeys":[
                 "FILTER",
-                "PUPIL",
-                "EEFRACTION"
+                "GRATING",
+                "SLIT"
             ]
         },
         "area":{

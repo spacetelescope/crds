@@ -1,0 +1,24 @@
+# Common APCORR specs
+
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+
+# Common
+APCORR                     A   X   R   (is_table(APCORR_ARRAY))
+
+# Imaging
+EEFRACTION                 C   R   (is_imaging_mode(EXP_TYPE))   0.0:1.0
+
+# Spectrographic
+NELEM_WL                   C   I   (not(is_imaging_mode(EXP_TYPE)))
+NELEM_SIZE                 C   I   (not(is_imaging_mode(EXP_TYPE)))
+APCORR                     A   X   (not(is_imaging_mode(EXP_TYPE)))   (has_column_type(APCORR_ARRAY,'WAVELENGTH','FLOAT'))
+APCORR                     A   X   (not(is_imaging_mode(EXP_TYPE)))   (has_column_type(APCORR_ARRAY,'SIZE','u1'))
+APCORR                     A   X   (not(is_imaging_mode(EXP_TYPE)))   (has_column_type(APCORR_ARRAY,'APCORR','FLOAT'))
+APCORR                     A   X   (not(is_imaging_mode(EXP_TYPE)))   (has_column_type(APCORR_ARRAY,'APCORR_ERR','FLOAT'))

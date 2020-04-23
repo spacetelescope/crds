@@ -1,79 +1,45 @@
-#
-# From https://jira.stsci.edu/browse/CRDS-193, MIRI RSCD only
-#
-# TFORM1 = '4A ' /Character string
-# TTYPE1 = 'SUBARRAY' /Label for column 1
-
-# TFORM2 = '4A ' /Character string
-# TTYPE2 = 'READPATT' /Label for column 2
-
-# TFORM3 = '4A ' /Character string
-# TTYPE3 = 'ROWS ' /Label for column 3
-
-# TFORM4 = '1E ' /Real*4 (floating point)
-# TTYPE4 = 'TAU ' /Label for column 4
-# TUNIT4 = 'Frames ' /Units of column 4
-
-# TFORM5 = '1E ' /Real*4 (floating point)
-# TTYPE5 = 'ASCALE ' /Label for column 5
-
-# TFORM6 = '1E ' /Real*4 (floating point)
-# TTYPE6 = 'POW ' /Label for column 6
-
-# TFORM7 = '1E ' /Real*4 (floating point)
-# TTYPE7 = 'ILLUM_ZP' /Label for column 7
-
-# TFORM8 = '1E ' /Real*4 (floating point)
-# TTYPE8 = 'ILLUM_SLOPE' /Label for column 8
-
-# TFORM9 = '1E ' /Real*4 (floating point)
-# TTYPE9 = 'ILLUM2 ' /Label for column 9
-
-# TFORM10 = '1E ' /Real*4 (floating point)
-# TTYPE10 = 'PARAM3 ' /Label for column 10
-
-# TFORM11 = '1E ' /Real*4 (floating point)
-# TTYPE11 = 'CROSSOPT' /Label for column 11
-
-# TFORM12 = '1E ' /Real*4 (floating point)
-# TTYPE12 = 'SAT_ZP ' /Label for column 12
-
-# TFORM13 = '1E ' /Real*4 (floating point)
-# TTYPE13 = 'SAT_SLOPE' /Label for column 13
-
-# TFORM14 = '1E ' /Real*4 (floating point)
-# TTYPE14 = 'SAT_2 ' /Label for column 14
-
-# TFORM15 = '1E ' /Real*4 (floating point)
-# TTYPE15 = 'SAT_MZP ' /Label for column 15
-
-# TFORM16 = '1E ' /Real*4 (floating point)
-# TTYPE16 = 'SAT_ROWTERM' /Label for column 16
-
-# TFORM17 = '1E ' /Real*4 (floating point)
-# TTYPE17 = 'SAT_SCALE' /Label for column 17
-
+# MIRI RSCD
 REFTYPE    H      C      R      RSCD
 
-RSCD        A     X      R   (is_table(RSCD_ARRAY))
-RSCD        A     X      R   (has_columns(RSCD_ARRAY,['SUBARRAY','READPATT','ROWS','TAU','ASCALE','POW','ILLUM_ZP','ILLUM_SLOPE','ILLUM2','PARAM3','CROSSOPT','SAT_ZP','SAT_SLOPE','SAT_2','SAT_MZP','SAT_ROWTERM','SAT_SCALE']))
+RSCD_GROUP_SKIP  A     X      R   (is_table(RSCD_GROUP_SKIP_ARRAY))
+RSCD_GROUP_SKIP  A     X      R   (has_columns(RSCD_GROUP_SKIP_ARRAY,['SUBARRAY','READPATT','GROUP_SKIP']))
+RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'SUBARRAY','STRING'))
+RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'READPATT','STRING'))
+RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'GROUP_SKIP','INT'))
 
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SUBARRAY','STRING'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'READPATT','STRING'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ROWS','STRING'))
+RSCD_GEN   A      X      R     (is_table(RSCD_GEN_ARRAY))
+RSCD_GEN   A      X      R     (has_columns(RSCD_GEN_ARRAY,['SUBARRAY','READPATT','LOWER_CUTOFF','ALPHA_EVEN','ALPHA_ODD']))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'SUBARRAY','STRING'))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'READPATT','STRING'))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'ALPHA_EVEN','FLOAT'))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'ALPHA_ODD','FLOAT'))
 
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'TAU','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ASCALE','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'POW','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ILLUM_ZP','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ILLUM_SLOPE','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'ILLUM2','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'PARAM3','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'CROSSOPT','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_ZP','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_SLOPE','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_2','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_MZP','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_ROWTERM','FLOAT'))
-RSCD        A     X      R   (has_column_type(RSCD_ARRAY,'SAT_SCALE','FLOAT'))
+RSCD_INT1  A      X      R     (is_table(RSCD_INT1_ARRAY))
+RSCD_INT1  A      X      R     (has_columns(RSCD_INT1_ARRAY,['SUBARRAY','READPATT','ROWS','A0','A1','A2','A3']))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'SUBARRAY','STRING'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'READPATT','STRING'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'ROWS','STRING'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A0','FLOAT'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A1','FLOAT'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A2','FLOAT'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A3','FLOAT'))
 
+RSCD_INT2  A      X      R     (is_table(RSCD_INT2_ARRAY))
+RSCD_INT2  A      X      R     (has_columns(RSCD_INT2_ARRAY,['SUBARRAY','READPATT','ROWS','B0','B1','B2','B3']))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'SUBARRAY','STRING'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'READPATT','STRING'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'ROWS','STRING'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B0','FLOAT'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B1','FLOAT'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B2','FLOAT'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B3','FLOAT'))
+
+RSCD_INT3  A      X      R     (is_table(RSCD_INT3_ARRAY))
+RSCD_INT3  A      X      R     (has_columns(RSCD_INT3_ARRAY,['SUBARRAY','READPATT','ROWS','C0','C1','C2','C3']))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'SUBARRAY','STRING'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'READPATT','STRING'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'ROWS','STRING'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C0','FLOAT'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C1','FLOAT'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C2','FLOAT'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C3','FLOAT'))
