@@ -16,7 +16,10 @@ import json
 import crds
 from crds.core import config, log, rmap, heavy_client, cmdline, utils
 from crds.core import crds_cache_locking
+
 from crds import data_file
+
+from crds.certify import reftypes
 
 from crds.client import api
 
@@ -336,13 +339,16 @@ jwst_niriss_superbias_0005.rmap
             help="print brief, basic, CRDS configuration information.")
 
         self.add_argument("--cat", nargs="*", dest="cat", metavar="FILES", default=None,
-            help="print the text of the specified mapping files.")
+            help="print the text of the specified mapping files or header and format info for references.")
         self.add_argument("--keywords", nargs="+",
             help="limited list of keywords to be catted from reference headers.")
         self.add_argument("--add-filenames", action="store_true",
             help="prefix each line of a cat'ed file with the filename.")
         self.add_argument("--no-arrays", action="store_true",
             help="Don't --cat array properties that are slow to compute. Use for large files.")
+
+        self.add_argument("--tpns", nargs="*", dest="tpns", metavar="FILES", default=None,
+            help="print the certify constraints (.tpn's) associated with the specified or implied files.")
 
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
             help="print the name of the operational context on the central CRDS server.")
@@ -363,6 +369,9 @@ jwst_niriss_superbias_0005.rmap
         """List files."""
         if self.args.cat is not None: # including []
             return self.cat_files()
+
+        if self.args.tpns:
+            return self.list_tpns()
 
         if self.args.file_properties is not None: # including []
             return self.list_file_properties()
@@ -702,6 +711,21 @@ jwst_niriss_superbias_0005.rmap
                         print(name + ":",  rmapping.get_required_parkeys())
             else:
                 print(name + ":",  mapping.get_required_parkeys())
+
+    def list_tpns(self):
+        """Print out the .tpn information related to each of the files either
+        specified via the --tpns <files...> argument or implied by any of the
+        other standard --list mechanisms like --mappings or --references.
+        """
+        constrained_files = self.get_words(self.args.tpns) + self.implied_files
+        for filename in constrained_files:
+            path = self.locate_file(filename)
+            if config.is_mapping(path):
+                tpn_text = reftypes.get_types_object(self.observatory).reference_name_to_ld_tpn_text(path)
+            else:
+                tpn_text = reftypes.get_types_object(self.observatory).reference_name_to_tpn_text(path)
+            log.divider(f"TpnInfos for '{path}'")
+            print(tpn_text)
 
 def _get_python_info():
     """Collect and return information about the Python environment"""
