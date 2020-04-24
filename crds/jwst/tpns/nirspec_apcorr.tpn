@@ -1,14 +1,22 @@
 # Template file used by certify to check reference files
 # NIRSpec APCORR specs
 #----------------------------------------------------------
-include includes/apcorr.tpn
+
+# Common
+APCORR                     A   X   R   (is_table(APCORR_ARRAY))
 
 FILTER                     C   C   R   CLEAR,F070LP,F100LP,F110W,F140X,\
                                        F170LP,F290LP,OPAQUE,P750L,\
                                        MULTIPLE,N/A,ANY
 GRATING                    C   C   R   G140M,G235M,G395M,G140H,G235H,G395H,\
                                        PRISM,MIRROR,ANY,N/A
-SLIT                       C   C   (EXP_TYPE==NRS_FIXEDSLIT)  S200A1,S200A2,S200B1,S400A1,S1600A1,\
-                                                              NONE,N/A,ANY
+SLIT                       C   C   O   S200A1,S200A2,S200B1,S400A1,S1600A1,\
+                                       NONE,N/A,ANY
 
-PIXPHASE                   C   R   R
+NELEM_WL                   C   I   R
+NELEM_SIZE                 C   I   R
+APCORR                     A   X   R  (has_column_type(APCORR_ARRAY,'WAVELENGTH','FLOAT'))
+APCORR                     A   X   R  (has_column_type(APCORR_ARRAY,'SIZE','FLOAT'))
+APCORR                     A   X   R  (has_column_type(APCORR_ARRAY,'APCORR','FLOAT'))
+APCORR                     A   X   R  (has_column_type(APCORR_ARRAY,'APCORR_ERR','FLOAT'))
+APCORR                     A   X   R  (has_column_type(APCORR_ARRAY,'PIXPHASE','FLOAT'))
