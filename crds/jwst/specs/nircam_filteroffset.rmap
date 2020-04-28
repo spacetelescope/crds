@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'miri_filteroffset 2020-04-28 16:00:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'filteroffset',
+    'filetype' : 'FILTEROFFSET',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_filteroffset_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.MODULE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'reference_to_dataset' : {
+        'CHANNEL' : 'META.INSTRUMENT.CHANNEL',
+        'MODULE' : 'META.INSTRUMENT.MODULE',
+    },
+    'sha1sum' : '2829aefe66add1820f02913e8f32a17d2e0dcd60',
+    'suffix' : 'filteroffset',
+    'text_descr' : 'Filter Offset',
+}
+
+selector = Match({
+})

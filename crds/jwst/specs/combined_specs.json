@@ -1681,6 +1681,37 @@
             "tpn":"nircam_drizpars.tpn",
             "unique_rowkeys":null
         },
+        "filteroffset":{
+            "derived_from":"miri_filteroffset 2020-04-28 16:00:00",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"filteroffset",
+            "filetype":"FILTEROFFSET",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_filteroffset_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_filteroffset_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.CHANNEL",
+                    "META.INSTRUMENT.MODULE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "CHANNEL":"META.INSTRUMENT.CHANNEL",
+                "MODULE":"META.INSTRUMENT.MODULE"
+            },
+            "sha1sum":"2829aefe66add1820f02913e8f32a17d2e0dcd60",
+            "suffix":"filteroffset",
+            "text_descr":"Filter Offset",
+            "tpn":"nircam_filteroffset.tpn",
+            "unique_rowkeys":null
+        },
         "flat":{
             "derived_from":"cloning tool 0.03b (2012-09-11)",
             "extra_keys":null,
