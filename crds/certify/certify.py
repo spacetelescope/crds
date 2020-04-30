@@ -425,7 +425,7 @@ class ReferenceCertifier(Certifier):
         old_sample = list(old_modes.values())[0]
         new_sample = list(new_modes.values())[0]
         if len(old_sample) != len(new_sample) or old_all_cols != new_all_cols:
-            log.warning("Change in row format betwween", repr(old_reference_ex), "and", repr(new_reference_ex))
+            log.warning("Change in row format between", repr(old_reference_ex), "and", repr(new_reference_ex))
             log.verbose("Old sample:", repr(old_sample))
             log.verbose("New sample:", repr(new_sample))
             return
