@@ -108,6 +108,34 @@
         }
     },
     "fgs":{
+        "abvegaoffset":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2020-04-29",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"ABVEGAOFFSET",
+            "filetype":"ABVEGAOFFSET",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_abvegaoffset_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_fgs_abvega-offset.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"988afb2566a9246059a1f9d9c1cd3dfb1b84a104",
+            "suffix":"abvegaoffset",
+            "text_descr":"AB to Vega magnitude offset",
+            "tpn":"fgs_abvegaoffset.tpn",
+            "unique_rowkeys":null
+        },
         "all":{
             "extra_keys":null,
             "file_ext":".fits",
@@ -590,6 +618,34 @@
         }
     },
     "miri":{
+        "abvegaoffset":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2020-04-29",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"ABVEGAOFFSET",
+            "filetype":"ABVEGAOFFSET",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_abvegaoffset_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_abvega-offset.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"a84577714c4747823520a69ed48c174ff3409971",
+            "suffix":"abvegaoffset",
+            "text_descr":"AB to Vega magnitude offset",
+            "tpn":"miri_abvegaoffset.tpn",
+            "unique_rowkeys":null
+        },
         "all":{
             "extra_keys":null,
             "file_ext":".fits",
@@ -1516,6 +1572,34 @@
         }
     },
     "nircam":{
+        "abvegaoffset":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2020-04-29",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"ABVEGAOFFSET",
+            "filetype":"ABVEGAOFFSET",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_abvegaoffset_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_abvega-offset.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"9ca8b541c70ce1ca511542d0668717815321e87a",
+            "suffix":"abvegaoffset",
+            "text_descr":"AB to Vega magnitude offset",
+            "tpn":"nircam_abvegaoffset.tpn",
+            "unique_rowkeys":null
+        },
         "all":{
             "extra_keys":null,
             "file_ext":".fits",
@@ -2189,6 +2273,34 @@
         }
     },
     "niriss":{
+        "abvegaoffset":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2020-04-29",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"ABVEGAOFFSET",
+            "filetype":"ABVEGAOFFSET",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_abvegaoffset_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_abvega-offset.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"ca95226ed5c98a3a7beeef2804d7340cb2c9a3e6",
+            "suffix":"abvegaoffset",
+            "text_descr":"AB to Vega magnitude offset",
+            "tpn":"niriss_abvegaoffset.tpn",
+            "unique_rowkeys":null
+        },
         "all":{
             "extra_keys":null,
             "file_ext":".fits",
