@@ -77,21 +77,21 @@ def dt_synphot_naming():
 
     TMCTAB
 
-    >>> config.is_crds_name("2b516556m_tmc.fits")
+    >>> config.is_crds_name("43h1909cm_tmc.fits")
     False
-    >>> config.is_cdbs_name("2b516556m_tmc.fits")
+    >>> config.is_cdbs_name("43h1909cm_tmc.fits")
     True
-    >>> config.is_reference("2b516556m_tmc.fits")
+    >>> config.is_reference("43h1909cm_tmc.fits")
     True
-    >>> config.is_mapping("2b516556m_tmc.fits")
+    >>> config.is_mapping("43h1909cm_tmc.fits")
     False
-    >>> hst_locate.get_file_properties("2b516556m_tmc.fits")
+    >>> hst_locate.get_file_properties("43h1909cm_tmc.fits")
     ('synphot', 'tmctab')
-    >>> hst_locate.ref_properties_from_cdbs_path("data/2b516556m_tmc.fits")
-    ('data', 'hst', 'synphot', 'tmctab', '2b516556m_tmc', '.fits')
-    >>> hst_locate.ref_properties_from_header("data/2b516556m_tmc.fits")
-    ('data', 'hst', 'synphot', 'tmctab', '2b516556m_tmc', '.fits')
-    >>> naming.generate_unique_name("2b516556m_tmc.fits", "hst", NOW)
+    >>> hst_locate.ref_properties_from_cdbs_path("data/43h1909cm_tmc.fits")
+    ('data', 'hst', 'synphot', 'tmctab', '43h1909cm_tmc', '.fits')
+    >>> hst_locate.ref_properties_from_header("data/43h1909cm_tmc.fits")
+    ('data', 'hst', 'synphot', 'tmctab', '43h1909cm_tmc', '.fits')
+    >>> naming.generate_unique_name("43h1909cm_tmc.fits", "hst", NOW)
     '2be00000m_tmc.fits'
 
     TMTTAB
@@ -122,41 +122,38 @@ def dt_synphot_certify_refs():
 
     TMC   reference
 
-    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/2b516556m_tmc.fits --comparison-context hst_0691.pmap")() # doctest: +ELLIPSIS
+    >>> certify.CertifyScript("crds.certify  --run-fitsverify data/43h1909cm_tmc.fits --comparison-context hst_0772.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/2b516556m_tmc.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
-    CRDS - INFO -  FITS file '2b516556m_tmc.fits' conforms to FITS standards.
-    CRDS - WARNING -  Checking 'FILENAME' failed: Required CRDS file 'acs_block1_002_syn.fits' does not exist in CRDS cache.
-    CRDS - INFO -  Mode columns defined by spec for new reference '2b516556m_tmc.fits[1]' are: ['COMPNAME']
-    CRDS - INFO -  All column names for this table new reference '2b516556m_tmc.fits[1]' are: ['TIME', 'COMPNAME', 'FILENAME', 'COMMENT']
+    CRDS - INFO -  Certifying 'data/43h1909cm_tmc.fits' (1/1) as 'FITS' relative to context 'hst_0772.pmap'
+    CRDS - INFO -  FITS file '43h1909cm_tmc.fits' conforms to FITS standards.
+    CRDS - INFO -  Comparing reference '43h1909cm_tmc.fits' against '43h1240om_tmc.fits'
+    CRDS - INFO -  Mode columns defined by spec for old reference '43h1240om_tmc.fits[1]' are: ['COMPNAME']
+    CRDS - INFO -  All column names for this table old reference '43h1240om_tmc.fits[1]' are: ['TIME', 'COMPNAME', 'FILENAME', 'COMMENT']
     CRDS - INFO -  Checking for duplicate modes using intersection ['COMPNAME']
-    CRDS - WARNING -  No comparison reference for '2b516556m_tmc.fits' in context 'hst_0691.pmap'. Skipping tables comparison.
+    CRDS - INFO -  Mode columns defined by spec for new reference '43h1909cm_tmc.fits[1]' are: ['COMPNAME']
+    CRDS - INFO -  All column names for this table new reference '43h1909cm_tmc.fits[1]' are: ['TIME', 'COMPNAME', 'FILENAME', 'COMMENT']
+    CRDS - INFO -  Checking for duplicate modes using intersection ['COMPNAME']
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>
     CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
     CRDS - INFO -  >>               --------------------------------
     CRDS - INFO -  >>
     CRDS - INFO -  >>
-    CRDS - INFO -  >> File: data/2b516556m_tmc.fits
+    CRDS - INFO -  >> File: data/43h1909cm_tmc.fits
     CRDS - INFO -  >>
     CRDS - INFO -  >> 2 Header-Data Units in this file.
     CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 1: Primary Array ===================
     CRDS - INFO -  >>
-    CRDS - INFO -  >>  81 header keywords
+    CRDS - INFO -  >>  121 header keywords
     CRDS - INFO -  >>
     CRDS - INFO -  >>  Null data array; NAXIS = 0
     CRDS - INFO -  >>
     CRDS - INFO -  >> =================== HDU 2: BINARY Table ====================
     CRDS - INFO -  >>
-    CRDS - ERROR -  >> *** Error:   Keyword #11, TDISP1: invalid format "26A".
-    CRDS - ERROR -  >> *** Error:   Keyword #14, TDISP2: invalid format "18A".
-    CRDS - ERROR -  >> *** Error:   Keyword #17, TDISP3: invalid format "56A".
-    CRDS - ERROR -  >> *** Error:   Keyword #20, TDISP4: invalid format "68A".
-    CRDS - INFO -  >>
     CRDS - INFO -  >>  21 header keywords
     CRDS - INFO -  >>
-    CRDS - INFO -  >>    (4 columns x 3012 rows)
+    CRDS - INFO -  >>    (4 columns x 2713 rows)
     CRDS - INFO -  >>
     CRDS - INFO -  >>  Col# Name (Units)       Format
     CRDS - INFO -  >>    1 TIME                 26A
@@ -168,16 +165,14 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  >>
     CRDS - INFO -  >>  HDU#  Name (version)       Type             Warnings  Errors
     CRDS - INFO -  >>  1                          Primary Array    0         0
-    CRDS - INFO -  >>  2                          Binary Table     0         4
+    CRDS - INFO -  >>  2                          Binary Table     0         0
     CRDS - INFO -  >>
-    CRDS - INFO -  >> **** Verification found 0 warning(s) and 4 error(s). ****
-    CRDS - INFO -  Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
-    CRDS - ERROR -  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
+    CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
-    CRDS - INFO -  5 errors
-    CRDS - INFO -  2 warnings
-    CRDS - INFO -  44 infos
-    5
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  46 infos
+    0
 
     >>> certify.CertifyScript("crds.certify  --run-fitsverify data/2381905mm_tmg.fits --comparison-context hst_0691.pmap")()   # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
@@ -236,7 +231,7 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/tae17277m_tmt.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
     CRDS - INFO -  FITS file 'tae17277m_tmt.fits' conforms to FITS standards.
-    CRDS - WARNING -  Checking 'FILENAME' failed: Required CRDS file 'nic2_bend_001_th.fits' does not exist in CRDS cache.
+    CRDS - ERROR -  Malformed FILENAME value at index 1 (missing or invalid path prefix)
     CRDS - INFO -  Comparing reference 'tae17277m_tmt.fits' against '3241637sm_tmt.fits'
     CRDS - INFO -  Mode columns defined by spec for old reference '3241637sm_tmt.fits[1]' are: ['COMPNAME']
     CRDS - INFO -  All column names for this table old reference '3241637sm_tmt.fits[1]' are: ['TIME', 'COMPNAME', 'FILENAME', 'COMMENT']
@@ -250,7 +245,7 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Table mode (('COMPNAME', 'nic3_dn'),) of new reference 'tae17277m_tmt.fits[1]' is NOT IN old reference '3241637sm_tmt.fits'
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO V...)
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
     CRDS - INFO -  >>               --------------------------------
     CRDS - INFO -  >>
     CRDS - INFO -  >>
@@ -284,10 +279,10 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
-    CRDS - INFO -  0 errors
-    CRDS - INFO -  1 warnings
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
     CRDS - INFO -  50 infos
-    0
+    1
 
     THERMAL reference
 
@@ -295,13 +290,14 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/wfc3_ir_f098m_002_th.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
     CRDS - INFO -  FITS file 'wfc3_ir_f098m_002_th.fits' conforms to FITS standards.
+    CRDS - ERROR -  New filename version (002) must exceed previous version (002)
     CRDS - INFO -  Mode columns defined by spec for new reference 'wfc3_ir_f098m_002_th.fits[1]' are: ['WAVELENGTH']
     CRDS - INFO -  All column names for this table new reference 'wfc3_ir_f098m_002_th.fits[1]' are: ['WAVELENGTH', 'EMISSIVITY']
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
     CRDS - WARNING -  No comparison reference for 'wfc3_ir_f098m_002_th.fits' in context 'hst_0691.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO V...)
     CRDS - INFO -  >>               --------------------------------
     CRDS - INFO -  >>
     CRDS - INFO -  >>
@@ -333,10 +329,10 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
-    CRDS - INFO -  0 errors
+    CRDS - INFO -  1 errors
     CRDS - INFO -  1 warnings
     CRDS - INFO -  40 infos
-    0
+    1
 
     THRUPUT reference
 
@@ -344,13 +340,14 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/wfc3_uvis_f469nf2_003_syn.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
     CRDS - INFO -  FITS file 'wfc3_uvis_f469nf2_003_syn.fits' conforms to FITS standards.
+    CRDS - ERROR -  New filename version (003) must exceed previous version (003)
     CRDS - INFO -  Mode columns defined by spec for new reference 'wfc3_uvis_f469nf2_003_syn.fits[1]' are: ['WAVELENGTH']
     CRDS - INFO -  All column names for this table new reference 'wfc3_uvis_f469nf2_003_syn.fits[1]' are: ['WAVELENGTH', 'THROUGHPUT']
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
     CRDS - WARNING -  No comparison reference for 'wfc3_uvis_f469nf2_003_syn.fits' in context 'hst_0691.pmap'. Skipping tables comparison.
     CRDS - INFO -  Running fitsverify.
     CRDS - INFO -  >>
-    CRDS - INFO -  >>               fitsverify ... (CFITSIO ...)
+    CRDS - INFO -  >>               fitsverify ... (CFITSIO V...)
     CRDS - INFO -  >>               --------------------------------
     CRDS - INFO -  >>
     CRDS - INFO -  >>
@@ -382,10 +379,10 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  >>
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
-    CRDS - INFO -  0 errors
+    CRDS - INFO -  1 errors
     CRDS - INFO -  1 warnings
     CRDS - INFO -  40 infos
-    0
+    1
 
     >>> test_config.cleanup(old_state)
     """
@@ -487,15 +484,15 @@ def dt_synphot_refactor():
 
     TMC   rmap
 
-    >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap data/2b516556m_tmc.fits")()
-    CRDS - INFO -  Inserting 2b516556m_tmc.fits into 'synphot_tmctab.rmap'
+    >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap data/43h1909cm_tmc.fits")()
+    CRDS - INFO -  Inserting 43h1909cm_tmc.fits into 'synphot_tmctab.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap")()
-    (('data/synphot_tmctab.rmap', '/tmp/synphot_tmctab.test.rmap'), 'added Match rule for 2b516556m_tmc.fits')
+    (('data/synphot_tmctab.rmap', '/tmp/synphot_tmctab.test.rmap'), 'added Match rule for 43h1909cm_tmc.fits')
     1
 
     TMG   rmap
@@ -576,11 +573,11 @@ def dt_synphot_diff():
 
     TMC   reference
 
-    >>> diff.DiffScript("crds.diff data/16n1832tm_tmc.fits data/2b516556m_tmc.fits")()   # doctest: +ELLIPSIS
+    >>> diff.DiffScript("crds.diff data/43h1240om_tmc.fits data/43h1909cm_tmc.fits")()   # doctest: +ELLIPSIS
     <BLANKLINE>
      fitsdiff: ...
-     a: data/16n1832tm_tmc.fits
-     b: data/2b516556m_tmc.fits
+     a: data/43h1240om_tmc.fits
+     b: data/43h1909cm_tmc.fits
      Maximum number of different data values to be reported: 10
      Relative tolerance: 0.0, Absolute tolerance: 0.0
     <BLANKLINE>
@@ -588,52 +585,189 @@ def dt_synphot_diff():
     <BLANKLINE>
        Headers contain differences:
          Headers have different number of cards:
-          a: 48
-          b: 80
+          a: 116
+          b: 120
          Inconsistent duplicates of keyword 'HISTORY':
-          Occurs 38 time(s) in a, 70 times in (b)
-         Keyword COMMENT  has different values:
-            a> = Reference file created by WFC3
-             ? --                          ^^ ^
-            b> Reference file created by ReDCaT Team
-             ?                           ^^^ ^^^^^^^
-    ...
+          Occurs 106 time(s) in a, 110 times in (b)
+         Keyword USEAFTER has different values:
+            a> Mar 17 2020 08:40:38
+             ?              ^  ----
+            b> Mar 17 2020 15:09:14
+             ?             +++ ^ +
     <BLANKLINE>
     Extension HDU 1:
     <BLANKLINE>
-       Headers contain differences:
-         Keyword NAXIS2   has different values:
-            a> 3008
-            b> 3012
-    <BLANKLINE>
        Data contains differences:
-         Table rows differ:
-          a: 3008
-          b: 3012
-         No further data comparison performed.
+         Column COMMENT data differs in row 88:
+            a> acs/sbc encircled energy table
+            b> encircled energy table for ACS/SBC
+         Column FILENAME data differs in row 88:
+            a> cracscomp$acs_sbc_aper_003_syn.fits[aper#]
+             ?                          ^
+            b> cracscomp$acs_sbc_aper_004_syn.fits[aper#]
+             ?                          ^
+         Column TIME data differs in row 88:
+            a> Apr 30 2018 11:10:11
+            b> Mar 17 2020 15:09:14
+         3 different table data element(s) found (0.03% different).
     <BLANKLINE>
-     Row differences for HDU extension #1
-    <BLANKLINE>
-        Summary:
-            a rows 92-94 differ from b rows 92-94
-            a rows 107-107 differ from b rows 107-107
-            a rows 109-113 differ from b rows 109-113
-            a rows 177-194 differ from b rows 177-194
-            a rows 197-208 differ from b rows 197-212
-            a rows 210-307 differ from b rows 214-311
-            a rows 2298-2299 differ from b rows 2302-2303
-            a rows 2301-2302 differ from b rows 2305-2306
-            a rows 2304-2333 differ from b rows 2308-2337
-    <BLANKLINE>
-        Row difference, unified diff format:
-            --- Table A
-    <BLANKLINE>
-            +++ Table B
-    <BLANKLINE>
-            @@ -90,9 +90,9 @@
+         HDU extension #1 contains no differences
     ...
 
     >>> test_config.cleanup(old_state)
+    """
+
+def dt_synphot_core_integration_test():
+    """
+    >>> old_state = test_config.setup()
+    >>> from crds.misc.synphot import SynphotCoreIntegrationTest
+
+    Passing tests
+
+    >>> test = SynphotCoreIntegrationTest("hst_0779.pmap")
+    >>> test.run()
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from TMC COMPNAME
+    CRDS - INFO -  Checking for components present in TMC COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from TMT COMPNAME
+    CRDS - INFO -  Checking for components present in TMT COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from throughput table COMPNAME
+    CRDS - INFO -  Checking for components present in throughput table COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from thermal table COMPNAME
+    CRDS - INFO -  Checking for components present in thermal table COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Confirming correctly formed TMC filenames
+    CRDS - INFO -  Confirming correctly formed TMT filenames
+    True
+
+    Components present in graph but missing from lookup/component files
+
+    >>> test = SynphotCoreIntegrationTest("hst_0779.pmap", graph_file="data/hst_synphot_extra_tmg.fits")
+    >>> test.run()
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from TMC COMPNAME
+    CRDS - ERROR -  Components present in TMG COMPNAME but missing from TMC COMPNAME: xtra_thruput_comp
+    CRDS - INFO -  Checking for components present in TMC COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from TMT COMPNAME
+    CRDS - ERROR -  Components present in TMG THCOMPNAME but missing from TMT COMPNAME: xtra_thermal_comp
+    CRDS - INFO -  Checking for components present in TMT COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from throughput table COMPNAME
+    CRDS - ERROR -  Components present in TMG COMPNAME but missing from throughput table COMPNAME: xtra_thruput_comp
+    CRDS - INFO -  Checking for components present in throughput table COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from thermal table COMPNAME
+    CRDS - ERROR -  Components present in TMG THCOMPNAME but missing from thermal table COMPNAME: xtra_thermal_comp
+    CRDS - INFO -  Checking for components present in thermal table COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Confirming correctly formed TMC filenames
+    CRDS - INFO -  Confirming correctly formed TMT filenames
+    False
+
+    Components missing from graph but present in lookup/component files
+
+    >>> test = SynphotCoreIntegrationTest("hst_0779.pmap", graph_file="data/hst_synphot_missing_tmg.fits")
+    >>> test.run()
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from TMC COMPNAME
+    CRDS - INFO -  Checking for components present in TMC COMPNAME but missing from TMG COMPNAME
+    CRDS - ERROR -  Components present in TMC COMPNAME but missing from TMG COMPNAME: wfirst_wfi_prism
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from TMT COMPNAME
+    CRDS - INFO -  Checking for components present in TMT COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from throughput table COMPNAME
+    CRDS - INFO -  Checking for components present in throughput table COMPNAME but missing from TMG COMPNAME
+    CRDS - ERROR -  Components present in throughput table COMPNAME but missing from TMG COMPNAME: wfirst_wfi_prism
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from thermal table COMPNAME
+    CRDS - INFO -  Checking for components present in thermal table COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Confirming correctly formed TMC filenames
+    CRDS - INFO -  Confirming correctly formed TMT filenames
+    False
+
+    Invalid filename in throughput lookup table
+
+    >>> test = SynphotCoreIntegrationTest("hst_0779.pmap", throughput_lookup_file="data/hst_synphot_malformed_filename_tmc.fits")
+    >>> test.run()
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from TMC COMPNAME
+    CRDS - INFO -  Checking for components present in TMC COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from TMT COMPNAME
+    CRDS - INFO -  Checking for components present in TMT COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from throughput table COMPNAME
+    CRDS - INFO -  Checking for components present in throughput table COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from thermal table COMPNAME
+    CRDS - INFO -  Checking for components present in thermal table COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Confirming correctly formed TMC filenames
+    CRDS - ERROR -  Malformed TMC filename, expected 'crwfpccomp$wfpc_pol60_003_syn.fits', found 'crwfpccomp$wfpc_foo_003_syn.fits'
+    CRDS - INFO -  Confirming correctly formed TMT filenames
+    False
+
+    Invalid filename in thermal lookup table
+
+    >>> test = SynphotCoreIntegrationTest("hst_0779.pmap", thermal_lookup_file="data/hst_synphot_malformed_filename_tmt.fits")
+    >>> test.run()
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from TMC COMPNAME
+    CRDS - INFO -  Checking for components present in TMC COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from TMT COMPNAME
+    CRDS - INFO -  Checking for components present in TMT COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Checking for components present in TMG COMPNAME but missing from throughput table COMPNAME
+    CRDS - INFO -  Checking for components present in throughput table COMPNAME but missing from TMG COMPNAME
+    CRDS - INFO -  Checking for components present in TMG THCOMPNAME but missing from thermal table COMPNAME
+    CRDS - INFO -  Checking for components present in thermal table COMPNAME but missing from TMG THCOMPNAME
+    CRDS - INFO -  Confirming correctly formed TMC filenames
+    CRDS - INFO -  Confirming correctly formed TMT filenames
+    CRDS - ERROR -  Malformed TMT filename, expected 'crwfc3comp$wfc3_ir_f167n_002_th.fits', found 'crwfc3comp$wfc3_ir_foo_002_th.fits'
+    False
+    """
+
+def dt_synphot_obsmodes_integration_test():
+    """
+    >>> old_state = test_config.setup()
+    >>> from crds.misc.synphot import SynphotObsmodeIntegrationTest
+
+    Passing tests
+
+    >>> test = SynphotObsmodeIntegrationTest(
+    ... "hst_0779.pmap",
+    ... "data/synphot_root",
+    ... "data/hst_synphot_passing_obs.fits"
+    ... )
+    >>> test.run()
+    CRDS - INFO -  Creating bandpass objects from 1 observation modes
+    CRDS - INFO -  Congratulations, all observation modes succeeded!
+    True
+
+    Passing tests in multiprocessing mode
+
+    >>> test = SynphotObsmodeIntegrationTest(
+    ... "hst_0779.pmap",
+    ... "data/synphot_root",
+    ... "data/hst_synphot_passing_obs.fits",
+    ... processes=4
+    ... )
+    >>> test.run()
+    CRDS - INFO -  Creating bandpass objects from 1 observation modes
+    CRDS - INFO -  Congratulations, all observation modes succeeded!
+    True
+
+    Failure due to missing component files
+
+    >>> test = SynphotObsmodeIntegrationTest(
+    ... "hst_0779.pmap",
+    ... "data/synphot_root",
+    ... obsmodes_file="data/hst_synphot_failing_obs.fits"
+    ... )
+    >>> test.run()
+    CRDS - INFO -  Creating bandpass objects from 1 observation modes
+    CRDS - ERROR -  Exception from stsynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
+    CRDS - INFO -  1 / 1 observation modes failed
+    False
+
+    Failure in multiprocessing mode
+
+    >>> test = SynphotObsmodeIntegrationTest(
+    ... "hst_0779.pmap",
+    ... "data/synphot_root",
+    ... obsmodes_file="data/hst_synphot_failing_obs.fits",
+    ... processes=4
+    ... )
+    >>> test.run()
+    CRDS - INFO -  Creating bandpass objects from 1 observation modes
+    CRDS - ERROR -  Exception from stsynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
+    CRDS - INFO -  1 / 1 observation modes failed
+    False
+
     """
 
 # ==============================================================

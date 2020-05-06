@@ -25,7 +25,7 @@ install:
     - pip install git+https://github.com/spacetelescope/jwst
     - pip uninstall --yes crds
     - ./install
-    - pip install .["submission","test","docs"]
+    - pip install .["submission","test","docs","synphot"]
     - pip freeze
     - ./setup_test_cache $CRDS_TEST_ROOT
 

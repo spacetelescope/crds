@@ -19,7 +19,7 @@ to rule or reference files.  CRDS certify performs these forms of checks::
  7. .rmap update checks
  8. sha1sum checks (bit-for-bit identical file rejection)
 
-This section discusses syntax for (1),  file constraints CRDS defines 
+This section discusses syntax for (1),  file constraints CRDS defines
 itself internally.
 
 Overview of .tpn Files
@@ -72,7 +72,7 @@ definitions for keyword constraints like &USEAFTER or &PEDIGREE.
 
 Explicit Directives
 ...................
-    
+
 Typical constraint directives result in a CRDS TpnInfo() object being defined
 in CRDS certify, which corresponds 1:1 to a CRDS Validator() object/subclass.
 The TpnInfo() is a bundle of constraint information, a Validator() is a class
@@ -206,7 +206,7 @@ additional helper functions or custom validators might provide a way out.
 
 While the idea of modernizing .tpn syntax is pretty obvious, the downsides of
 switching to more readable file formats like JSON or YAML are a combination of::
-  
+
   * Up-front work
   * Additional testing for multiple projects
   * Constraints which become more verbose and less dense.
@@ -232,7 +232,7 @@ data models paths flattened into a single string, e.g.::
 
 Array Names
 !!!!!!!!!!!
-  
+
 Array names are specified as the bare HDU name in the <name> field, e.g. SCI.
 These are referenced within expressions as <name>_ARRAY.  These are case
 insensitive and specified in all capital letters, numbers, or underscores much
@@ -295,13 +295,15 @@ Column names generally apply to the name of a FITS table column and the
 corresponding constraint applies only to the values of that single column in
 isolation.
 
+Column expressions
+
 Array Format (A)
 !!!!!!!!!!!!!!!!
 
 Array format constraints apply to lightweight array properties taken from
 FITS HDU data::
 
- utils.Struct( 
+ utils.Struct(
      SHAPE = hdu.data.shape,
      KIND = generic_class,
      DATA_TYPE = typespec,
@@ -327,7 +329,7 @@ Array Data (D)
 Array data checks are heavy weight and entail loading the actual reference data
 so that constraints can be applied to it::
 
- utils.Struct( 
+ utils.Struct(
      SHAPE = hdu.data.shape,
      KIND = generic_class,
      DATA_TYPE = typespec,
@@ -376,9 +378,9 @@ The datatype is written as a single character with these translations::
  }
 
 The X datatype indicates that the constraint will be a boolean expression and
-hence has no data type;  it is abstract,  referring to no particular keyword
-or array by definition...  although frequently expressions are used to check
-type.
+hence has no data type.  For 'A' and 'D' keytypes, the expression is abstract,
+referring to no particular keyword or array by definition.  In the case of 'C'
+keytypes, the expression is only permitted to refer to the current column value.
 
 <Presence> Field
 ++++++++++++++++
@@ -491,8 +493,8 @@ expression is satisfied.
 
 Note that an expression return value of False indicates a constraint does not
 apply at all.  An expression return value of True indicates the constraint is
-REQUIRED.  
-   
+REQUIRED.
+
 Helper functions in .tpn files are distinguished by being written in all lower
 case; this prevents collisions with keyword, column, or array names which are
 always written in upper case.
@@ -508,7 +510,7 @@ enumerations of literal values::
 numerical ranges::
 
   1:10
-  
+
 constraint expressions:
 
   (not("IRS2")in(READPATT))
@@ -516,7 +518,7 @@ constraint expressions:
 custom validator identifiers::
 
   &PEDIGREE
-  
+
 or nothing at all.
 
 Enumerations
@@ -526,7 +528,7 @@ Value enumerations list the possible literal values that can be assigned to
 a keyword, e.g.::
 
  FGS,NIRCAM,NIRISS,NIRSPEC,MIRI,SYSTEM
-   
+
 Ranges
 !!!!!!
 
@@ -558,7 +560,7 @@ where validator values have meanings like::
 
 Custom constraint validators can perform arbitrary processing to validate a
 single keyword value, i.e. specify precise date formats, etc.  Custom
-constraint validators are defined in the crds.certify.validators module with
+constraint validators are defined in the crds.certify.validators submodules with
 classes named like e.g.  PedigreeValidator, UseafterValidator,
 JwstdateValidator.
 
@@ -584,7 +586,7 @@ An example expression constraint is::
 
 which asserts that XSTART + XSIZE - 1 should fall within the boundaries of
 the detector's 2048 X-dimension.
-  
+
 When specified within CRDS .tpn files, JWST CAL data models paths (ie. keyword
 names) are flattened to simple strings that resemble FITS keywords in all upper
 case::
@@ -603,6 +605,9 @@ to the SCI HDU properties.  In this case SCI_ARRAY is a true utils.Struct()
 object so it refers to Struct() properties within the eval() expression using
 normal Python object attribute access, e.g. SCI_ARRAY.SHAPE not
 SCI_ARRAY_SHAPE.
+
+In expression constraints over (C)olumn keytypes, the only variable available
+is VALUE, which contains the column value currently under consideration.
 
 Expression warn_only() Mutator/Wrapper
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -723,4 +728,3 @@ literal like 'jwst_0442.pmap'.  Likewise, exhaustive testing may require
 running certify on 'hst-edit' as well after setting::
 
   $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
-

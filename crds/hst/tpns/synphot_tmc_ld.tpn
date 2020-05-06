@@ -15,7 +15,13 @@ COMMENT             H        C         R
 HISTORY             H        C         R
 
 TIME                C        C         R
+
 COMPNAME            C        C         R
-FILENAME            C        C         R  
+COMPNAME            C        X         R    ((len(VALUE)>0)and(VALUE==VALUE.lower()))
+
+FILENAME            C        C         R
+FILENAME            C        X         R    ((len(VALUE)>0)and(VALUE==VALUE.lower()))
+
 COMMENT             C        C         R
 
+EXT1                D        X         R    &SYNPHOT_LOOKUP

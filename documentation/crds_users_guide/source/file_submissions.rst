@@ -82,7 +82,7 @@ entail related two factor authorization not shown.
    :scale: 50 %
    :alt: MyST authentication
 
-Auth.mast Authorization 
+Auth.mast Authorization
 +++++++++++++++++++++++
 
 auth.mast may request that you authorize CRDS to obtain a token.  These
@@ -127,7 +127,7 @@ Care should be taken with the locking mechanism and file submissions.  **DO NOT*
   any submission, it will open the possibility for conflict and require earlier
   submissions waiting for confirmation to be *forced*.
 
-* You cannot login for more than one instrument at a time.  
+* You cannot login for more than one instrument at a time.
 
 * Don't perform multiple file submissions for the same instrument at the same
   time.  Finish and confirm or cancel each file submission before proceeding
@@ -179,12 +179,12 @@ References* form collects more metadata and creates a record of the submission
 before proceeding to the original functions.
 
 The specified reference files are checked on the server using crds.certify and
-if they pass are submitted to CRDS.  
+if they pass are submitted to CRDS.
 
 .. figure:: images/web_batch_submit_references.png
    :scale: 50 %
    :alt: batch reference submission inputs
-   
+
 Upload Files
 ++++++++++++
 
@@ -218,11 +218,11 @@ Uploading files is accomplished by:
 **IMPORTANT**  Just adding files to the file list does not upload them.   You
 must click *Start upload* to initiate the file transfer.
 
-Derive From Context 
+Derive From Context
 +++++++++++++++++++
 
-The specified context is used as the starting point for new automatically 
-generated context files and also determines any predecessors of the submitted 
+The specified context is used as the starting point for new automatically
+generated context files and also determines any predecessors of the submitted
 references for comparison during certification.   If all the submitted reference
 files pass certification,  new .rmap's, .imap, and .pmap are generated
 automatically to refer to the newly added references.
@@ -259,7 +259,7 @@ new files are being added but need additional testing in OPS.   Deriving
 from the *Operational Context* is a crude kind of reversion since CRDS
 effectively branches around any existing subsequent contexts.
 
-Recent 
+Recent
 !!!!!!
 
 *Recent* lists a number of recently added contexts based on delivery
@@ -272,7 +272,7 @@ User Specified
 Any valid CRDS context can be typed in directly as *User Specified* and used
 as the baseline for the next context.   This is also a kind of reversion and
 branching.
-   
+
 Auto Rename
 +++++++++++
 
@@ -291,8 +291,11 @@ which it is desirable to keep.
   * For HST calibration references which are assigned unique names prior to
     being submitted to CRDS, it is appropriate to turn Auto Rename off.
 
-  * For SYNPHOT references,  in general it is appropriate to turn Auto
-    Rename off.
+  * For SYNPHOT references, it was previously recommended to turn Auto Rename
+    off, so that thermal and throughput table files would retain their
+    hand-selected names.  Now, thermal/throughput table files are never renamed
+    (regardless of Auto Rename value), so the checkbox only controls renaming
+    of the TMG, TMC, TMT, and obsmodes files, and should generally be left on.
 
   * For hand-edited CRDS rules files (pmaps, imaps, rmaps) it can be
     appropriate to turn Auto Rename off if file naming and header fields
@@ -302,7 +305,7 @@ Compare Old Reference
 +++++++++++++++++++++
 
 When checked CRDS will certify incoming tabular references against the files
-they replace with respect to the derivation context.   For other references this 
+they replace with respect to the derivation context.   For other references this
 input is irrelevant and ignored.
 
 Results
@@ -311,7 +314,7 @@ Results
 .. figure:: images/web_batch_submit_results.png
    :scale: 50 %
    :alt: batch submission results
-   
+
 The results page lists the following items:
 
 * *Starting Context* is the context this submission derove from.
@@ -330,11 +333,11 @@ The results page lists the following items:
   CRDS.  The status of a successful certification can be "OK" or "Warnings".
   The status of a failed certification will be "ERRORS".  Failed certifications
   automatically cancel a file submission.
-  
+
   Warnings should be reviewed by opening the accordion panel.  Some CRDS
   warnings describe conditions which *MUST* be addressed by future manual rmap
   updates or cancelling the submission.   In particular,
-   
+
 **IMPORTANT**  The results page only indicates the files which will be added to
 CRDS if the submission is *confirmed*.   Prior to confirmation of the submission,
 neither the submitted references nor the generated mappings are officially in CRDS.
@@ -358,13 +361,13 @@ being lost.
 .. figure:: images/web_collision_warnings.png
    :scale: 50 %
    :alt: collision warnings
-   
+
 Collision tracking for CRDS mappings files is done based upon header fields,
 nominally the *name* and *derived_from* fields.  These fields are automatically
 updated when mappings are submitted or generated.
 
 Collision tracking for reference files is currently filename based.   The submitted
-name of a reference file is assumed to be the same as the file it 
+name of a reference file is assumed to be the same as the file it
 was derived from.   This fits a work-flow where a reference is first downloaded
 from CRDS, modified under the same name,  and re-uploaded.   Nominally,  submitted
 files are automatically re-named.
@@ -374,11 +377,11 @@ Confirm, Force, Cancel
 
 If everything looks good the last step is to click the *Confirm* button.
 Confirming finalizes the submission process,  submits the files
-for archive pickup,  and makes them a permanent part of CRDS visible in the 
-database browser and potentially redistributable.   
+for archive pickup,  and makes them a permanent part of CRDS visible in the
+database browser and potentially redistributable.
 
-A confirmed submission cannot be revoked,  but neither will it go into use until 
-the pipeline or a user requests it either by updating the default context on 
+A confirmed submission cannot be revoked,  but neither will it go into use until
+the pipeline or a user requests it either by updating the default context on
 the CRDS server or by specifying the new rules explicitly.
 
 *Cancelling* a batch submission based on warnings or bad rmap modifications
@@ -392,6 +395,36 @@ Following any CRDS batch reference submission,  the default *edit* context
 is updated to that pipeline mapping making it the default starting point for
 future submissions.
 
+SYNPHOT Particulars
++++++++++++++++++++
+
+SYNPHOT file submissions differ from other instruments in the following
+ways:
+
+  * Auto Rename does not apply to all file types; for ``thruput`` and ``thermal``
+    files, Auto Rename is ignored and the files are never renamed.
+
+  * On submit, if new ``tmctab`` and/or ``tmttab`` files are required but
+    not included by the user, CRDS will automatically regenerate those files
+    and add them to the submission.
+
+  * If the individual file certify checks pass, then CRDS will perform additional
+    "integration tests" on the full ensemble of SYNPHOT files.  The first
+    integration test confirms consistency of component names between the files.
+    The second test iterates through a list of valid observation mode strings
+    and confirms that the stsynphot library is able to instantiate each mode
+    without error.
+
+The SYNPHOT integration test results are displayed on the Results page in
+an additional accordion panel:
+
+.. figure:: images/synphot_integration_test_results.png
+   :scale: 50 %
+   :alt: SYNPHOT integration test results
+
+Before confirming a SYNPHOT submission, be sure to also check the integration
+test results for warnings.
+
 Submit Mappings
 ...............
 
@@ -399,13 +432,13 @@ Submit Mappings
 files which don't have to be related.   This can be used to submit context files
 which refer to files from *Submit References* and with fewer restrictions on
 allowable changes.   Typically only .rmaps are submitted this way.   Mappings
-submitted this way must also pass through crds.certify.   
+submitted this way must also pass through crds.certify.
 
 .. figure:: images/web_submit_mappings.png
    :scale: 50 %
    :alt: create contexts inputs
 
-   
+
 Mapping Change Procedure
 ++++++++++++++++++++++++
 
@@ -437,7 +470,7 @@ The manual rmap update process is to:
    to load the context into Python to do other tests with the .rmap::
 
      % crds checksum ./jwst_miri_dark_0004.rmap
-    
+
    The internal checksum is also used to verify the upload integrity when you
    finally submit the file to CRDS.  An out-of-date checksum or corrupted file
    will generate a warning.
@@ -533,7 +566,7 @@ Verify that the correct .pmap is being set.
 Submit References
 .................
 
-*Submit References* provides a lower level interface for submitting a list of 
+*Submit References* provides a lower level interface for submitting a list of
 references.   No mappings are generated to refer to the submitted files.
 Submitted references must still pass through crds.certify.
 
@@ -588,7 +621,7 @@ The default command line behavior can be overridden by setting environment varia
 *CRDS_ALLOW_BAD_RULES* and/or *CRDS_ALLOW_BAD_REFERENCES*.
 
 .. _`Delete References`:
-   
+
 Delete References
 .................
 
@@ -612,7 +645,7 @@ Changes to rules which result from delete references are presented on a results
 page which must be confirmed or cancelled as with other file submissions.
 
 .. _`Add References`:
-   
+
 Add References
 ..............
 
@@ -636,7 +669,7 @@ Files field of the input form, separated by spaces, commas, and/or newlines.
 Changes to rules which result from add references are presented on a results
 page which must be confirmed or cancelled as with other file submissions.
 Rules changes from add references should be carefully reviewed to ensure that
-the resulting rmap update is as intended.  
+the resulting rmap update is as intended.
 
 In particular, other rmap differences from a branched context are not added,
 so additional test parameters or other header and structural changes of any
@@ -651,7 +684,7 @@ Certify Files
 .. figure:: images/web_certify_file.png
    :scale: 50 %
    :alt: certify file inputs
-   
+
 If the certified file is a reference table,  the specified context is used to
 locate a comparison file.
 
@@ -671,9 +704,9 @@ Identical Files
 
 CRDS detects if submitted files are bit-for-bit-identical to existing files or
 each other by comparing their sha1sums::
-  
+
    CRDS - ERROR - In 'jwst_miri_dark_0057_b.fits' : Duplicate file check : File 'jwst_miri_dark_0057_b.fits' is identical to existing CRDS file 'jwst_miri_dark_0057.fits'
-  
+
 CRDS rejects identical files since there is a likelihood that the wrong files
 have been delivered by mistake.
 
@@ -700,7 +733,7 @@ described in detail here: :ref:`header-certify-constraints`.  These
 specifications and checks can be reviewed on the website by looking up the
 details of any particular reference file of the same instrument and type:
 
-..: 
+..:
 
 .. figure:: images/certify_tpn_listing.png
    :scale: 50 %
@@ -735,7 +768,7 @@ This message::
   CRDS - WARNING - NoTypeWarning : jwst.datamodels.util : model_type not found. Opening .../jwst_miri_specwcs_lrscdp7.fits as a ReferenceFileModel
 
 resulted from a reference file that used an invalid value for DATAMODL.
-  
+
 You have the option of ignoring these warnings, but CRDS is probably not using
 the most appropriate model to validate your file, only a more generic model.
 When your file is later processed by the CAL software, CAL will use the correct
@@ -766,12 +799,12 @@ work with cfitsio as well as astropy.
 
      CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
      CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-   
+
    Checksums are not required, but if you do define them they should be correct
    so that file users are not bombarded with warnings from FITS libraries.
    Hence,  the CRDS server rejects files with bad checksums based on the errors
    defined for fitsverify.
-   
+
    **SOLUTION 1:** Use your FITS s/w or *crds checksum* to update your CHECKSUM
     and DATASUM keywords::
 
@@ -857,7 +890,7 @@ type's specification and columns available in the table::
 In this hypothetical example, CRDS will check that no value of DATE appears
 more than once, and every value of DATE appearing in the old version of the
 table appears in the new version of the table.
-    
+
 Note that the intersection can vary if e.g. columns in a table vary by FITS
 HDU; there is no expectation that every mode column mentioned in the CRDS
 type specification are in every HDU.
@@ -880,7 +913,7 @@ a parameter combination which should be unique, CRDS will issue a warning::
 In this hypothetical case, both row 129 and row 131 have the DATE value
 56924.0417.  Based on the type specification,  CRDS has defined this as
 something unexpected.  If on review it is determined that the duplicate rows
-are innocuous or expected, this warning can be ignored. 
+are innocuous or expected, this warning can be ignored.
 
 Missing Mode Rows Warning
 !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -895,7 +928,7 @@ is missing from the next version::
 
 If on review it is determined that these rows were dropped intentionally,
 this warning can be ignored.
-  
+
 Rmap Update Errors
 ++++++++++++++++++
 
@@ -916,7 +949,7 @@ the file submission with a message like this::
 
     CRDS - ERROR -  ----------------------------------------
     Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
-     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00'))) 
+     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00')))
     Each reference would replace the other in the rmap.
 
 **SOLUTION 1:** Generally this means there was an error generating or handling
@@ -947,9 +980,9 @@ issue a WARNING like this::
 
     CRDS - WARNING -  ----------------------------------------
     Match case
-     (('DETECTOR', 'FUV'),) 
+     (('DETECTOR', 'FUV'),)
     is an equal weight special case of
-     (('DETECTOR', 'FUV|NUV'),) 
+     (('DETECTOR', 'FUV|NUV'),)
     For some parameter sets, CRDS interprets both matches as equally good.
 
 This section explains the related issues and what to do.
@@ -1032,9 +1065,9 @@ Why CRDS Categorizes Files
 CRDS rmaps *create* categories which are expected to be a taxonomy.
 
 Looking at an excerpt of the ACS DARKFILE rmap,  organization is good::
-  
+
       DETECTOR  CCDAMP              CCDGAIN
-      
+
       ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
         '1992-01-01 00:00:00' : 'lcb12060j_drk.fits',
         '2002-03-01 00:00:00' : 'n3o1022cj_drk.fits',
@@ -1046,7 +1079,7 @@ Looking at an excerpt of the ACS DARKFILE rmap,  organization is good::
 The meaning of the Match case above is that each file supports every
 combination of the DETECTOR, 7 values of CCDAMP, and 4 values of CCDGAIN
 for a total of 28 discrete parameter combinations.
-        
+
 These categories can be arbitrarily complex and vary for each rmap.
 
 Browse Submission History

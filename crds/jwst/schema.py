@@ -20,7 +20,7 @@ import re
 
 import crds
 from crds.core import log, utils, heavy_client, config
-from crds.certify import TpnInfo
+from crds.certify.generic_tpn import TpnInfo
 
 # ====================================================================================
 

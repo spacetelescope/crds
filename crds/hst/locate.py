@@ -318,7 +318,7 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
 
             for pmap_name in reversed(sorted(rmap.list_mappings("*.pmap", observatory="hst"))):
 
-                r = certify.find_governing_rmap(pmap_name, ref)
+                r = certify.certify.find_governing_rmap(pmap_name, ref)
 
                 if not r:
                     continue
