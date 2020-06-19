@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Hand made 2020-06-19',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-spec2pipeline',
+    'filetype' : 'PARS-SPEC2PIPELINE',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pars-spec2pipeline.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.LAMP_MODE', 'META.INSTRUMENT.LAMP_STATE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'd4575df2ab497212b01ba3bf09965839d34c79f1',
+    'suffix' : 'pars-spec2pipeline',
+    'text_descr' : 'Spec2Pipeline runtime parameters',
+}
+
+selector = Match({
+})
