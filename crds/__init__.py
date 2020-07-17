@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.5.0.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "HST automated synphot delivery"
+__version__ = "7.5.0.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "New reference type pars-spec2pipeline"
 
 __all__ = [
     "getrecommendations",
