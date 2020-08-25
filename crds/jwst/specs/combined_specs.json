@@ -2601,6 +2601,32 @@
             "tpn":"niriss_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-image2pipeline":{
+            "derived_from":"Hand made 2020-08-18",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-image2pipeline",
+            "filetype":"PARS-IMAGE2PIPELINE",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-image2pipeline_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-image2pipeline.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"36566118852d56882dc425fe69859233b4656402",
+            "suffix":"pars-image2pipeline",
+            "text_descr":"Image2Pipeline runtime parameters",
+            "tpn":"niriss_pars-image2pipeline.tpn",
+            "unique_rowkeys":null
+        },
         "pathloss":{
             "classes":[
                 "Match",
@@ -3702,6 +3728,34 @@
             "suffix":"ote",
             "text_descr":"Transform through the Optical Telescope Element",
             "tpn":"nirspec_ote.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-spec2pipeline":{
+            "derived_from":"Hand made 2020-06-19",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-spec2pipeline",
+            "filetype":"PARS-SPEC2PIPELINE",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pars-spec2pipeline_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pars-spec2pipeline.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.LAMP_MODE",
+                    "META.INSTRUMENT.LAMP_STATE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"d4575df2ab497212b01ba3bf09965839d34c79f1",
+            "suffix":"pars-spec2pipeline",
+            "text_descr":"Spec2Pipeline runtime parameters",
+            "tpn":"nirspec_pars-spec2pipeline.tpn",
             "unique_rowkeys":null
         },
         "pathloss":{
