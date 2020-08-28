@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.5.0.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "New reference type pars-spec2pipeline"
+__version__ = "7.5.0.3"   # XXXX  see also ../setup.cfg
+__rationale__ = "Updates for new step parameter reference types"
 
 __all__ = [
     "getrecommendations",
