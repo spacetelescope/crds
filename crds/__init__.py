@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.5.0.3"   # XXXX  see also ../setup.cfg
-__rationale__ = "Updates for new step parameter reference types"
+__version__ = "7.6.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "JWST DMS 7.6, Sep2020 Release #1"
 
 __all__ = [
     "getrecommendations",
