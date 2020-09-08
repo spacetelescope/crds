@@ -1041,23 +1041,15 @@ Match() solutions:
 Solution for Equal Weight Matches
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To avoid losing the work entailed by a file submission completely,  equal
-weight match cases are reported as warnings to give lattitude in how to
-address the problem.   There are generally three solutions:
+To avoid losing the work entailed by a file submission completely, equal
+weight match cases are reported as warnings to give latitude in how to
+address the problem.   There are generally two solutions:
 
 1. Cancel the submission and regenerate the reference files with different
    parameter values which coincide with an existing category.
 
 2. Accept the submission but immediately edit the rmap to combine overlapping
    Match() categories.
-
-3. Last ditch: Accept the submission, but immediately set a "merge_overlaps" :
-   "TRUE" value in the rmap header.  Submit the new rmap using Submit Mappings.
-   merge_overlaps will cause disjoint categories to by dynamically shuffled
-   together for USEAFTER lookups.
-
-**NOTE:** For HST "merge_overlaps" defaults to "TRUE", but for JWST
-"merge_overlaps" defaults to "FALSE".
 
 Why CRDS Categorizes Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
