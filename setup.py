@@ -116,5 +116,10 @@ setup(name="crds",
           'Programming Language :: Python :: 3',
           'Topic :: Scientific/Engineering :: Astronomy',
       ],
+      project_urls={
+          'Bug Reports': 'https://github.com/spacetelescope/crds/issues/',
+          'Source': 'https://github.com/spacetelescope/crds/',
+          'Help': 'https://hsthelp.stsci.edu/',
+      },
       **setup_pars
 )
