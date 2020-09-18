@@ -249,7 +249,7 @@ this command line interface must be members of the CRDS operators group
         """Return a dictionary mapping form variables to value strings for the basic command
         line submission parameters.
         """
-        return dict(
+        result = dict(
             pmap_mode = self.pmap_mode,
             pmap_name = self.pmap_name,
             instrument = self.instrument,
@@ -259,6 +259,11 @@ this command line interface must be members of the CRDS operators group
             auto_rename = not self.args.dont_auto_rename,
             compare_old_reference = not self.args.dont_compare_old_reference,
         )
+
+        if self.pmap_mode == "pmap_text":
+            result["pmap_text"] = self.pmap_name
+
+        return result
 
     def submission_complete(self, args):
         """Threaded completion function for any submission,  returns web response."""

@@ -147,7 +147,7 @@ class TestSubmission(object):
         urlopen.return_value = open(cls.mockup_form)
 
         # Instantiate the Submission object used in these tests:
-        cls.s = Submission('hst', 'dev')
+        cls.s = Submission('hst', 'dev', context='hst_0723.pmap')
 
     @classmethod
     def teardown_class(cls):
