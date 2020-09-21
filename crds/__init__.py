@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "7.6.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "JWST DMS 7.6, Sep2020 Release #1"
+__version__ = "10.0.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "Reset version sequence to mark the start of semantic versioning.  Also includes a fix for programmatic file submission."
 
 __all__ = [
     "getrecommendations",
