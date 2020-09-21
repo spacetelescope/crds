@@ -103,8 +103,9 @@ class Submission(object):
 
     Parameters:
         observatory (str, {hst, jwst}):  Used in determining which CRDS for submission
-        string (str, {ops, test, dev, bit, cit}):  Used in determining which CRDS for submission'''
-    def __init__(self, observatory, string, *args, **kwargs):
+        string (str, {ops, test, dev, bit, cit}):  Used in determining which CRDS for submission
+        context (str): Derived-from context.  If omitted, will default to the observatory's edit context.'''
+    def __init__(self, observatory, string, context=None, *args, **kwargs):
         observatory, string = observatory.lower(), string.lower()
         if observatory not in ['hst', 'jwst']:
             raise ValueError('Observatory "{}" must be either "hst" or "jwst".')
@@ -112,6 +113,7 @@ class Submission(object):
             raise ValueError('String "{}" must be either "ops", "test", "dev", "bit" or "cit".')
         self._observatory = observatory
         self._string = string
+        self._context = context
 
         config.base_url = BASE_URLS[self.string][self.observatory]
         if not os.environ.get('CRDS_SERVER_URL'):
@@ -261,6 +263,11 @@ class Submission(object):
         return self._string
 
     @property
+    def context(self):
+        '''User specified derived-from context for the submission.'''
+        return self._context
+
+    @property
     def files(self):
         '''Set of files associated with the submission.'''
         return list(self._files)
@@ -325,6 +332,10 @@ class Submission(object):
             "--change-level", self["change_level"],
             "--description", self["description"],
             ]
+
+        if self.context is not None:
+            argv.extend(["--derive-from-context", self.context])
+
         log.verbose(argv)
         script = RedCatApiScript(argv)
         script._extra_redcat_parameters = dict(self)
