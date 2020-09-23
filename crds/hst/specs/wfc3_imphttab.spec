@@ -12,5 +12,5 @@
     'suffix': 'imp',
     'text_descr': 'Photometry Keyword Table',
     'tpn': 'wfc3_imp.tpn',
-    'unique_rowkeys': ('OBSMODE', 'DATACOL', 'PHOTFLAM1', 'PHOTFLAM2'),
+    'unique_rowkeys': ('OBSMODE',),
 }

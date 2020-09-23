@@ -22,9 +22,41 @@ PARNUM              H        I         R
 USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R
+
 OBSMODE             C        C         R
-DATACOL             C        C         R    PHOTFLAM,PHOTPLAM,PHOTBW,PHTFLAM1,PHTFLAM2
-PHOTFLAM            C        D         R
-PHOTPLAM            C        D         O
-PHOTBW              C        D         O
-PHTFLAM1            C        D         O
+DATACOL             C        C         R    PHOTBW,PHOTBW1,PHOTFLAM,PHOTFLAM1,PHOTPLAM,PHOTPLAM1,PHTFLAM1,PHTFLAM11,PHTFLAM2,PHTFLAM21
+PEDIGREE            C        C         R
+DESCRIP             C        C         R
+
+NELEM1              C        X         O    (VALUE>=0)
+PAR1NAMES           C        X         O    ((VALUE=='MJD#')or(VALUE==''))
+
+PHOTBW              A        X         O                                                        (has_column_type(PHOTBW_ARRAY,'PHOTBW','FLOAT'))
+PHOTBW              A        X         (optional(has_columns(PHOTBW_ARRAY,['PHOTBW1'])))        (has_column_type(PHOTBW_ARRAY,'PHOTBW1','FLOAT_ARRAY'))
+PHOTBW              A        X         (optional(has_columns(PHOTBW_ARRAY,['PHOTBW1'])))        (has_column_type(PHOTBW_ARRAY,'NELEM1','INT'))
+PHOTBW              A        X         (optional(has_columns(PHOTBW_ARRAY,['PHOTBW1'])))        (has_column_type(PHOTBW_ARRAY,'PAR1NAMES','STR'))
+PHOTBW              A        X         (optional(has_columns(PHOTBW_ARRAY,['PHOTBW1'])))        (has_column_type(PHOTBW_ARRAY,'PAR1VALUES','FLOAT_ARRAY'))
+
+PHOTFLAM            A        X         O                                                        (has_column_type(PHOTFLAM_ARRAY,'PHOTFLAM','FLOAT'))
+PHOTFLAM            A        X         (optional(has_columns(PHOTFLAM_ARRAY,['PHOTFLAM1'])))    (has_column_type(PHOTFLAM_ARRAY,'PHOTFLAM1','FLOAT_ARRAY'))
+PHOTFLAM            A        X         (optional(has_columns(PHOTFLAM_ARRAY,['PHOTFLAM1'])))    (has_column_type(PHOTFLAM_ARRAY,'NELEM1','INT'))
+PHOTFLAM            A        X         (optional(has_columns(PHOTFLAM_ARRAY,['PHOTFLAM1'])))    (has_column_type(PHOTFLAM_ARRAY,'PAR1NAMES','STR'))
+PHOTFLAM            A        X         (optional(has_columns(PHOTFLAM_ARRAY,['PHOTFLAM1'])))    (has_column_type(PHOTFLAM_ARRAY,'PAR1VALUES','FLOAT_ARRAY'))
+
+PHOTPLAM            A        X         O                                                        (has_column_type(PHOTPLAM_ARRAY,'PHOTPLAM','FLOAT'))
+PHOTPLAM            A        X         (optional(has_columns(PHOTPLAM_ARRAY,['PHOTPLAM1'])))    (has_column_type(PHOTPLAM_ARRAY,'PHOTPLAM1','FLOAT_ARRAY'))
+PHOTPLAM            A        X         (optional(has_columns(PHOTPLAM_ARRAY,['PHOTPLAM1'])))    (has_column_type(PHOTPLAM_ARRAY,'NELEM1','INT'))
+PHOTPLAM            A        X         (optional(has_columns(PHOTPLAM_ARRAY,['PHOTPLAM1'])))    (has_column_type(PHOTPLAM_ARRAY,'PAR1NAMES','STR'))
+PHOTPLAM            A        X         (optional(has_columns(PHOTPLAM_ARRAY,['PHOTPLAM1'])))    (has_column_type(PHOTPLAM_ARRAY,'PAR1VALUES','FLOAT_ARRAY'))
+
+PHTFLAM1            A        X         O                                                        (has_column_type(PHTFLAM1_ARRAY,'PHTFLAM1','FLOAT'))
+PHTFLAM1            A        X         (optional(has_columns(PHTFLAM1_ARRAY,['PHTFLAM11'])))    (has_column_type(PHTFLAM1_ARRAY,'PHTFLAM11','FLOAT_ARRAY'))
+PHTFLAM1            A        X         (optional(has_columns(PHTFLAM1_ARRAY,['PHTFLAM11'])))    (has_column_type(PHTFLAM1_ARRAY,'NELEM1','INT'))
+PHTFLAM1            A        X         (optional(has_columns(PHTFLAM1_ARRAY,['PHTFLAM11'])))    (has_column_type(PHTFLAM1_ARRAY,'PAR1NAMES','STR'))
+PHTFLAM1            A        X         (optional(has_columns(PHTFLAM1_ARRAY,['PHTFLAM11'])))    (has_column_type(PHTFLAM1_ARRAY,'PAR1VALUES','FLOAT_ARRAY'))
+
+PHTFLAM2            A        X         O                                                        (has_column_type(PHTFLAM2_ARRAY,'PHTFLAM2','FLOAT'))
+PHTFLAM2            A        X         (optional(has_columns(PHTFLAM2_ARRAY,['PHTFLAM21'])))    (has_column_type(PHTFLAM2_ARRAY,'PHTFLAM21','FLOAT_ARRAY'))
+PHTFLAM2            A        X         (optional(has_columns(PHTFLAM2_ARRAY,['PHTFLAM21'])))    (has_column_type(PHTFLAM2_ARRAY,'NELEM1','INT'))
+PHTFLAM2            A        X         (optional(has_columns(PHTFLAM2_ARRAY,['PHTFLAM21'])))    (has_column_type(PHTFLAM2_ARRAY,'PAR1NAMES','STR'))
+PHTFLAM2            A        X         (optional(has_columns(PHTFLAM2_ARRAY,['PHTFLAM21'])))    (has_column_type(PHTFLAM2_ARRAY,'PAR1VALUES','FLOAT_ARRAY'))
