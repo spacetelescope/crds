@@ -1,0 +1,21 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'roman_wfi_flat_0000.rmap',
+    'description' : 'Hand edited for roman baseline 2020-10-09.   Prototype / fake sample only,  update for Roman.',
+    'filekind' : 'FLAT',
+    'filetype' : 'FLAT',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_flat_0000.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'da7c170c8f57a70d2eeea5b69c50566e186e39d2',
+    'suffix' : 'flat',
+    'text_descr' : 'Flat Field',
+}
+
+selector = Match({
+    ('WFI-1', 'MULTIPLE', 'CLEAR') : UseAfter({
+        '2014-01-01 00:00:00' : 'roman_wfi_flat_0000.asdf',
+    }),
+})

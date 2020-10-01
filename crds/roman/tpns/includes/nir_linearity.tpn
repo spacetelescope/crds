@@ -1,0 +1,17 @@
+include nir_subarray.tpn
+
+# SCI_ARRAY is renamed COEFFS_ARRAY for linearity only.  Thanks universe!
+
+replace SCI COEFFS
+replace COEFFS_TYPE 'FLOAT'
+include nir_sci_array_refpix.tpn
+
+include nir_opt_err_array.tpn
+
+include nir_dq_array.tpn
+
+include nir_dq_def_array.tpn
+
+COEFFS    A      X      R     (ndim(COEFFS_ARRAY,3))
+DQ        A      X      O     (ndim(DQ_ARRAY,2))
+

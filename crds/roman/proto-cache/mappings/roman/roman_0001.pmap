@@ -1,0 +1,14 @@
+header = {
+    'asdf_standard_requirement' : '<1.5',
+    'derived_from' : 'roman_0000.pmap',
+    'description' : 'Hand edited for roman baseline.',
+    'mapping' : 'PIPELINE',
+    'name' : 'roman_0001.pmap',
+    'observatory' : 'ROMAN',
+    'parkey' : ('META.INSTRUMENT.NAME',),
+    'sha1sum' : '943b05559a851fbe64d6b4ae807abd0e048bb248',
+}
+
+selector = {
+    'WFI' : 'roman_wfi_0001.imap',
+}

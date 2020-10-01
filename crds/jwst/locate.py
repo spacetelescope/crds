@@ -380,9 +380,6 @@ def condition_matching_header(rmapping, header):
 
 # ============================================================================
 
-class MissingDependencyError(Exception):
-    """A required package is missing."""
-
 def fits_to_parkeys(fits_header):
     """Map a FITS header onto rmap parkeys appropriate for JWST."""
     parkeys = {}

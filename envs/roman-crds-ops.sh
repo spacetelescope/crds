@@ -20,10 +20,10 @@
 # The URL used to locate the CRDS server which distributes files, status, and computes best references
 # setenv CRDS_SERVER_URL  http://hst-crds.stsci.edu
 # setenv CRDS_SERVER_URL  http://jwst-crds.stsci.edu
-# setenv CRDS_SERVER_URL  http://crds-non-networked.foo.bar   
-setenv CRDS_SERVER_URL  https://jwst-crds-b5it.stsci.edu    # development
-setenv CRDS_PATH ${HOME}/crds_cache_b5it
-setenv CRDS_READONLY_CACHE 0
+# setenv CRDS_SERVER_URL  http://crds-non-networked.foo.bar
+export CRDS_SERVER_URL=https://roman-crds.stsci.edu
+export CRDS_PATH=${HOME}/crds_cache_ops
+export CRDS_READONLY_CACHE=0
 
 # --------------------------------------------------------------------------------------------------------------------
 # To override server recommendations for the operational pipeline context (.pmap)
@@ -38,7 +38,6 @@ setenv CRDS_READONLY_CACHE 0
 #  local  -- CRDS will compute best references using the local installation
 #  remote -- CRDS will ask the server to compute best references
 #  auto   -- CRDS will only compute best references on the server if the client is deemed obsolete
-#            by comparing client and server software versions.   
+#            by comparing client and server software versions.
 #
 # setenv CRDS_MODE auto
-

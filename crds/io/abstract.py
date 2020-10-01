@@ -42,6 +42,7 @@ def hijack_warnings(func):
             warnings.showwarning = hijacked_showwarning
             warnings.simplefilter("always", AstropyUserWarning)
             try:
+                # XXXX Roman TODO adapt for romancal + datamodels refactoring as needed
                 from jwst.datamodels.validate import ValidationWarning
             except:
                 log.verbose_warning(

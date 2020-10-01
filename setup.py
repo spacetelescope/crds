@@ -6,6 +6,19 @@ from distutils.core import setup
 
 import setuptools
 
+# Define data files included by each observatory package relative
+# to each observatory/mission directory.
+STD_MISSION_FILES = [
+    '*.dat',
+    '*.yaml',
+    '*.json',
+    'tpns/*.tpn',
+    'tpns/includes/*.tpn',
+    'specs/*.spec',
+    'specs/*.rmap',
+    'specs/*.json',
+]
+
 setup_pars = {
     "packages" : [
         'crds',
@@ -24,6 +37,7 @@ setup_pars = {
         'crds.hst',
         'crds.jwst',
         'crds.tobs',
+        'crds.roman',
 
         'crds.tests',
         ],
@@ -43,41 +57,16 @@ setup_pars = {
 
         'crds.hst' : 'crds/hst',
         'crds.jwst' : 'crds/jwst',
+        'crds.roman' : 'crds/roman',
         'crds.tobs' : 'crds/tobs',
 
         'crds.tests' : 'crds/tests',
         },
     "package_data" : {
-        'crds.hst': [
-            '*.dat',
-            '*.yaml',
-            '*.json',
-            'tpns/*.tpn',
-            'tpns/includes/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            'specs/*.json',
-            ],
-        'crds.jwst': [
-            '*.dat',
-            '*.yaml',
-            '*.json',
-            'tpns/*.tpn',
-            'tpns/includes/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            'specs/*.json',
-            ],
-        'crds.tobs': [
-            '*.dat',
-            '*.yaml',
-            '*.json',
-            'tpns/*.tpn',
-            'tpns/includes/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            'specs/*.json',
-            ],
+        'crds.hst': STD_MISSION_FILES,
+        'crds.jwst': STD_MISSION_FILES,
+        'crds.roman': STD_MISSION_FILES,
+        'crds.tobs': STD_MISSION_FILES,
         },
     "scripts" : glob.glob("scripts/*"),
     }

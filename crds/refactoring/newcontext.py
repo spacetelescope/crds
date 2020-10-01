@@ -89,7 +89,7 @@ def insert_mapping(context, mapping):
     else:
         key = loaded.get_item_key(mapping)
         replacement = mapping
-    key, replaced = loaded.set_item(key, replacement)
+    key, replaced = loaded.set_item(key, os.path.basename(replacement))
     loaded.write(where)
     return key, replaced, replacement
 

@@ -1,0 +1,14 @@
+include nir_subarray.tpn
+
+replace SCI DQ
+replace XDIM_MAX 2304
+replace YDIM_MAX 2048
+replace DQ_TYPE 'INT'
+include nir_sci_array_both.tpn
+
+DQ       A           X         R   (ndim(DQ_ARRAY,2))
+
+# include includes/nir_dq_array.tpn
+
+include nir_dq_def_array.tpn
+

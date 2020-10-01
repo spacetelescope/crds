@@ -1,0 +1,76 @@
+{
+    "all":{
+        "all":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filetype":"xxx",
+            "instrument":"all",
+            "ld_tpn":"all_all_ld.tpn",
+            "suffix":"xxx",
+            "text_descr":"All instruments and reference file types.",
+            "tpn":"all_all.tpn",
+            "unique_rowkeys":null
+        },
+        "flat":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"FLAT",
+            "filetype":"FLAT",
+            "instrument":"ALL",
+            "ld_tpn":"all_flat_ld.tpn",
+            "observatory":"ROMAN",
+            "suffix":"FLAT",
+            "text_descr":"Group for constraints for FLAT for all instruments.",
+            "tpn":"all_flat.tpn",
+            "unique_rowkeys":null
+        }
+    },
+    "wfi":{
+        "all":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"ALL",
+            "filetype":"ALL",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_all_ld.tpn",
+            "observatory":"ROMAN",
+            "suffix":"ALL",
+            "text_descr":"Group for constraints for all types of WFI instrument.",
+            "tpn":"wfi_all.tpn",
+            "unique_rowkeys":null
+        },
+        "flat":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Derived from JWST for Roman 2020-10-07",
+            "description":"Hand edited for roman baseline 2020-10-09.   Prototype / fake sample only,  update for Roman.",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"FLAT",
+            "filetype":"FLAT",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_flat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"roman_wfi_flat_0000.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"5fa673a0b200e6e654ef198cd8f70a6c78e37e52",
+            "suffix":"flat",
+            "text_descr":"Flat Field",
+            "tpn":"wfi_flat.tpn",
+            "unique_rowkeys":null
+        }
+    }
+}

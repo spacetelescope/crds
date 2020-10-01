@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'roman_wfi_0000.imap',
+    'description' : 'Hand edited for roman baseline 2020-10-09.   Prototype / sample only,  revise as needed.',
+    'instrument' : 'WFI',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'roman_wfi_0001.imap',
+    'observatory' : 'ROMAN',
+    'parkey' : ('META.REFTYPE',),
+    'sha1sum' : '30e920e345b3c639dd68d809794e9fb3257314d5',
+}
+
+selector = {
+    'FLAT' : 'roman_wfi_flat_0001.rmap',
+}

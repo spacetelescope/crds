@@ -9,7 +9,7 @@ import collections
 import glob
 import json
 
-from crds.core import rmap, log, utils
+from crds.core import rmap, log, utils, exceptions
 from . import generic_tpn
 
 # =============================================================================
@@ -45,8 +45,12 @@ class TypeSpec(dict):
         defaults for missing fields.
         """
         header = utils.Struct(header)
-        assert "suffix" in header
-        assert "text_descr" in header or header.filetype == "all"
+        if "suffix" not in header:
+            raise exceptions.CrdsTypeSpecError("Missing 'suffix' field in type spec.")
+        if "filetype" not in header:
+            raise exceptions.CrdsTypeSpecError("Missing 'filetype' field in type spec.")
+        if  "text_descr" not in header and  header.filetype != "all":
+            raise exceptions.CrdsTypeSpecError("Missing 'text_descr' field in type spec.")
         if "tpn" not in header:
             header.tpn = header.instrument.lower() + "_" + header.suffix + ".tpn"
         if "ld_tpn" not in header:
@@ -305,7 +309,7 @@ class TypeParameters:
 
     def reference_name_to_ld_tpn_text(self, filename):
         """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
-        return reference_name_to_tpn_text(filename, "ld_tpn")
+        return self.reference_name_to_tpn_text(filename, "ld_tpn")
 
 # =============================================================================
 

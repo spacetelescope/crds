@@ -351,10 +351,10 @@ ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
 # Refactoring options
 
 PASS_INVALID_VALUES = BooleanConfigItem("PASS_INVALID_VALUES", False,
-    "When True,  return invalid values detected by JWST calibrartion code data model schema. These are still be errors.")
+    "When True,  return invalid values detected by data model schema. These are still be errors.")
 
 ALLOW_SCHEMA_VIOLATIONS = BooleanConfigItem("CRDS_ALLOW_SCHEMA_VIOLATIONS", False,
-    "When True, don't map JWST data model warnings onto CRDS errors.")
+    "When True, don't map data model warnings onto CRDS errors.")
 
 ALLOW_BAD_PARKEY_VALUES = BooleanConfigItem("CRDS_ALLOW_BAD_PARKEY_VALUES", False,
     "When True, turn off parkey value checking when loading rmaps.  For refactoring with bad 'legacy' references.")
@@ -796,6 +796,7 @@ def disable_retries():
 CRDS_DEFAULT_SERVERS = {
     "hst" : "https://hst-crds.stsci.edu",
     "jwst" : "https://jwst-crds.stsci.edu",
+    "roman" : "https://roman-crds.stsci.edu",
     # None : "https://crds-serverless-mode.stsci.edu"
 }
 

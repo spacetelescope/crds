@@ -201,7 +201,7 @@ class Mapping:
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
         assert self.observatory in ALL_OBSERVATORIES, \
-            "Invalid observatory " + repr(self.obsevatory) + " in " + repr(self.filename)
+            "Invalid observatory " + repr(self.observatory) + " in " + repr(self.filename)
 
     def check_instrument(self):
         """Verify self.instrument is a supported instrument."""

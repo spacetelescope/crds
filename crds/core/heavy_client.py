@@ -292,7 +292,7 @@ def warn_bad_reference(observatory, reftype, reference):
 
 def check_observatory(observatory):
     """Make sure `observatory` is valid."""
-    assert observatory in ["hst", "jwst", "tobs"]
+    assert observatory in ALL_OBSERVATORIES
 
 def check_parameters(header):
     """Make sure dict-like `header` is a mapping from strings to simple types.

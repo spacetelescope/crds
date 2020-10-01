@@ -68,16 +68,22 @@ def get_observatory(filepath, original_name=None):
     for observatory in constants.ALL_OBSERVATORIES:
         if original_name.startswith(observatory + "_"):
             return observatory
+    observatory = "hst"
     if original_name.endswith(".fits"):
         try:
             observatory = pyfits.getval(filepath, keyword="TELESCOP")
         except KeyError:
-            observatory = "hst"
-        return observatory.lower()
-    elif original_name.endswith((".asdf", ".yaml", ".json", ".text", ".txt")):
+            pass
+    elif original_name.endswith(".asdf"):
+        try:
+            import asdf
+            with asdf.open(filepath) as handle:
+                observatory = handle["meta"]["telescope"]
+        except KeyError:
+            pass
+    elif original_name.endswith((".yaml", ".json", ".text", ".txt")):
         return "jwst"
-    else:
-        return "hst"
+    return observatory.lower()
 
 # ----------------------------------------------------------------------------------------------
 
