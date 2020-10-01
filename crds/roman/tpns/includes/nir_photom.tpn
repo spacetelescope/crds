@@ -1,0 +1,7 @@
+PHOTOM     A      X      R                             (is_table(PHOTOM_ARRAY))
+PHOTOM     A      X      R                             (has_column_type(PHOTOM_ARRAY,'PHOTMJSR','FLOAT'))
+PHOTOM     A      X      R                             (has_column_type(PHOTOM_ARRAY,'UNCERTAINTY','FLOAT'))
+PHOTOM     A      X      R                             (has_column_type(PHOTOM_ARRAY,'NELEM','INT'))
+PHOTOM     A      X      R                             (has_column_type(PHOTOM_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))
+PHOTOM     A      X      R                             (has_column_type(PHOTOM_ARRAY,'RELRESPONSE','FLOAT_ARRAY'))
+

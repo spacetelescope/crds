@@ -1,0 +1,29 @@
+# Applies to NIRCAM, NIRISS, FGS (i.e. all NIR instruments except NIRSPEC)
+#
+# This is an abstract parameterized .tpn based on XDIM_MAX which is either 2048 or 2304
+# depending on whether refpix are possible or not.
+#
+
+# READPATT  H           C         O
+ 
+SCI       A           X         R                           (array_exists(SCI_ARRAY))
+SCI       A           X         R                           (is_image(SCI_ARRAY))
+SCI       A           X         R                           (has_type(SCI_ARRAY,SCI_TYPE))
+
+SUBARRAY_INBOUNDS_X        X    X       (all_subarray(EXP_TYPE!='FGS_ID-STACK'))  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+SUBARRAY_INBOUNDS_X        X    X       (all_subarray(EXP_TYPE=='FGS_ID-STACK'))  (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=XDIM_MAX)
+
+SUBARRAY_INBOUNDS_Y        X    X       (all_subarray())                          (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+
+SCI                        A    X       (all_subarray())                          (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+SCI       A           X         (full_frame(EXP_TYPE!='FGS_ID-STACK'))      (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       A           X         (full_frame(EXP_TYPE=='FGS_ID-STACK'))      (SCI_ARRAY.SHAPE[-2:]==(2048,XDIM_MAX))
+
+SCI       A           X         (subarray(EXP_TYPE=='FGS_ID-STACK'))        (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-2]-1<=XDIM_MAX)
+SCI       A           X         (subarray(EXP_TYPE!='FGS_ID-STACK'))        (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+
+SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+
+
+

@@ -1,0 +1,44 @@
+# This TPN defines checks for the NIR-related SUBARRAY supporting keywords
+# These constrain keyword values to a type and make them required.
+
+# For these constraints to apply,  they must first be included in a more
+# specialized .tpn and the EXP_TYPE must be an imaging mode.
+
+META.SUBARRAY.NAME          H   C   (is_imaging_mode(EXP_TYPE))
+SUBARRAY                    H   C   O
+META.SUBARRAY.XSTART        H   I   (is_imaging_mode(EXP_TYPE))
+META.SUBARRAY.YSTART        H   I   (is_imaging_mode(EXP_TYPE))
+META.SUBARRAY.XSIZE         H   I   (is_imaging_mode(EXP_TYPE))
+META.SUBARRAY.YSIZE         H   I   (is_imaging_mode(EXP_TYPE))
+META.SUBARRAY.FASTAXIS      H   I   (is_imaging_mode(EXP_TYPE))
+META.SUBARRAY.SLOWAXIS      H   I   (is_imaging_mode(EXP_TYPE))
+
+FULLFRAME_XSTART            X   X   (full_frame(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_XSTART==1)
+FULLFRAME_YSTART            X   X   (full_frame(INSTRUME!='NIRSPEC'))   (META_SUBARRAY_YSTART==1)
+
+DETECTOR                    H   C   O
+NRCA1_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA1'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+NRCA2_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA2'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+NRCA3_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA3'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+NRCA4_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCA4'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+NRCALONG_AXIS               X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCALONG')) ((FASTAXIS==-1)and(SLOWAXIS==2))
+
+NRCB1_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB1'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+NRCB2_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB2'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+NRCB3_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB3'))    ((FASTAXIS==1)and(SLOWAXIS==-2))
+NRCB4_AXIS                  X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCB4'))    ((FASTAXIS==-1)and(SLOWAXIS==2))
+NRCBLONG_AXIS               X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRCBLONG')) ((FASTAXIS==1)and(SLOWAXIS==-2))
+
+MIRIMAGE_AXIS               X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIMAGE'))    ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFULONG_AXIS             X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIFULONG'))  ((FASTAXIS==1)and(SLOWAXIS==2))
+MIRIFUSHORT_AXIS            X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='MIRIFUSHORT')) ((FASTAXIS==1)and(SLOWAXIS==2))
+
+NRS1_AXIS                   X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRS1'))    ((FASTAXIS==2)and(SLOWAXIS==1))
+NRS2_AXIS                   X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NRS2'))    ((FASTAXIS==-2)and(SLOWAXIS==-1))
+
+NIS_AXIS                    X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='NIS'))    ((FASTAXIS==-2)and(SLOWAXIS==-1))
+
+GUIDER1_AXIS                X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER1')) ((FASTAXIS==-2)and(SLOWAXIS==-1))
+GUIDER2_AXIS                X   X   (is_imaging_mode(EXP_TYPE)and(DETECTOR=='GUIDER2')) ((FASTAXIS==2)and(SLOWAXIS==-1))
+
+                                

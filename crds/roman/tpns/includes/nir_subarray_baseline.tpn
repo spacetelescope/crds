@@ -1,0 +1,21 @@
+# Handles only FGS, MIRI, NIRISS, NIRCAM.  Not NIRSPEC.
+
+META.SUBARRAY.NAME          H   C   O
+
+#
+# nominally 2048,2048
+# 2304 is FGS_ID-STACK exception of 36x(64x64) subimages, subarray irrelevant?
+# X and Y over-extended for different reasons
+#
+
+META.SUBARRAY.XSTART        H   I   (optional(EXP_TYPE=='FGS_ID-STACK'))  1:2304
+META.SUBARRAY.XSTART        H   I   (optional(EXP_TYPE!='FGS_ID-STACK'))  1:2048
+
+META.SUBARRAY.YSTART        H   I   O                                     1:2048
+
+META.SUBARRAY.XSIZE         H   I   (optional(EXP_TYPE=='FGS_ID-STACK'))  1:2304
+META.SUBARRAY.YSIZE         H   I   (optional(EXP_TYPE!='FGS_ID-STACK'))  1:2048
+
+META.SUBARRAY.FASTAXIS      H   I   O  1,-1,2,-2
+META.SUBARRAY.SLOWAXIS      H   I   O  1,-1,2,-2
+

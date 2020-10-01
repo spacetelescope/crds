@@ -1,0 +1,11 @@
+# This .tpn defines constraints related to array objects vs. header keywords.
+# Required relationships between subarray keywords are is_defined in a subarray .tpn
+# This file pertains to array properties and their relationships to header keywords.
+
+DQ_DEF       A           X         O             (is_table(DQ_DEF_ARRAY))
+DQ_DEF       A           X         O             (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
+DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'BIT','INT'))
+DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
+DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
+DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+

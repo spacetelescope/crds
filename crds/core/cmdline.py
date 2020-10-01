@@ -218,6 +218,8 @@ class Script:
             return self.set_server("jwst")
         if self.args.hst:
             return self.set_server("hst")
+        if self.args.roman:
+            return self.set_server("roman")
 
         obs = config.OBSERVATORY.get()
         if obs != "none":
@@ -298,6 +300,8 @@ class Script:
             help="Force observatory to JWST for determining header conventions.""")
         self.add_argument("-H", "--hst",  dest="hst", action="store_true",
             help="Force observatory to HST for determining header conventions.""")
+        self.add_argument("--roman",  dest="roman", action="store_true",
+            help="Force observatory to Roman for determining header conventions.""")
         self.add_argument("--stats", action="store_true",
             help="Track and print timing statistics.")
         self.add_argument("--profile",
