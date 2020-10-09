@@ -1,0 +1,27 @@
+header = {
+    'derived_from' : 'Hand-crafted on 2020-10-09',
+    'filekind' : 'DFLTFILE',
+    'filetype' : 'DELTA FLAT',
+    'instrument' : 'WFC3',
+    'ld_tpn' : 'wfc3_dfl_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfc3_dfltfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'CCDAMP', 'FILTER', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey_relevance' : {
+        'BINAXIS1' : '(DETECTOR == "UVIS")',
+        'BINAXIS2' : '(DETECTOR == "UVIS")',
+    },
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'FLATCORR',
+    'rmap_relevance' : '(FLATCORR != "OMIT")',
+    'sha1sum' : 'dfee183bcab450b867c506d653863b08fb39acf3',
+    'suffix' : 'dfl',
+    'text_descr' : 'Delta Flat Field Image',
+    'tpn' : 'wfc3_dfl.tpn',
+    'unique_rowkeys' : None,
+}
+
+selector = Match({
+})
