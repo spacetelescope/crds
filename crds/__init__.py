@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.0.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "Reset version sequence to mark the start of semantic versioning.  Also includes a fix for programmatic file submission."
+__version__ = "10.1.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "Updates to WFC3 IMPHTTAB and DFLTFILE reference types"
 
 __all__ = [
     "getrecommendations",
