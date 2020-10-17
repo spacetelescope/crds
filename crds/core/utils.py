@@ -1205,7 +1205,7 @@ def fix_json_strings(source_json):
 reference_to_instrument = file_to_instrument
 reference_to_locator = file_to_locator
 
-def get_plugin(plugin_name, observatory=None):
+def get_observatory_plugin(plugin_name, observatory=None):
     """Get the mission-specific plugin object `plugin_name` which is typically a
     customization function.
 

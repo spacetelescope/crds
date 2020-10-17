@@ -482,6 +482,15 @@ def get_cross_strapped_pairs(header):
 
 # ============================================================================
 
+def get_hijack_warning_pars():
+    """Parameters used by roman to re-map warnings from package dependencies to
+    CRDS so that they are counted and visible in web output.
+    """
+    from romancal.datamodels.validation import ValidationWarning
+    return "roman", ValidationWarning
+
+# ============================================================================
+
 def test():
     """Run the module doctests."""
     import doctest

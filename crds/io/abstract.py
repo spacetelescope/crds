@@ -25,9 +25,12 @@ APPEND_KEYS = ["COMMENT", "HISTORY"]
 
 # ===========================================================================
 
-# NOTE:  hijack_warnings needs to be nestable
+# The point of hijack_warnings is to remap warnings from other packages to CRDS
+# so that they are counted and logged and visible in web output.
+# hijack_warnings needs to be nestable
 # XXX: hijack_warnings is non-reentrant and FAILS with THREADS
-
+# This is hard to make a plugin because it is used at compile time and unit tests
+# switch back and forth between observatories.
 def hijack_warnings(func):
     """Decorator that redirects warning messages to CRDS warnings."""
     @functools.wraps(func)
@@ -35,24 +38,27 @@ def hijack_warnings(func):
         """Reassign warnings to CRDS warnings prior to executing `func`,  restore
         warnings state afterwards and return result of `func`.
         """
-        # warnings.resetwarnings()
-        from astropy.utils.exceptions import AstropyUserWarning
         with warnings.catch_warnings():
-            old_showwarning = warnings.showwarning
-            warnings.showwarning = hijacked_showwarning
+            # save and replace warnings.showwarning
+            old_showwarning, warnings.showwarning = \
+                warnings.showwarning, hijacked_showwarning
+
+            # Always handle astropy warnings
+            from astropy.utils.exceptions import AstropyUserWarning
             warnings.simplefilter("always", AstropyUserWarning)
+
             try:
-                # XXXX Roman TODO adapt for romancal + datamodels refactoring as needed
-                from jwst.datamodels.validate import ValidationWarning
+                # for unit tests it's critical this executes at runtime vs. compile-time
+                plugin = utils.get_observatory_plugin("get_hijack_warning_pars")
+                observatory, ValidationWarning = plugin()
             except:
                 log.verbose_warning(
-                    "JWST ValidationWarning import failed.  "
-                    "Not a problem for HST.",
+                    f"get_hijack_warning_pars() failed. Datamodels warnings will not be seen in web output.",
                     verbosity=70)
             else:
-                warnings.filterwarnings("always", r".*", ValidationWarning, r".*jwst.*")
+                warnings.filterwarnings("always", r".*", ValidationWarning, f".*{observatory}.*")
                 if not config.ALLOW_SCHEMA_VIOLATIONS:
-                    warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, r".*jwst.*")
+                    warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*{observatory}.*")
             try:
                 result = func(*args, **keys)
             finally:

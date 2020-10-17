@@ -610,6 +610,15 @@ def disable_fits_annotations():
 
 # ============================================================================
 
+def get_hijack_warning_pars():
+    """Parameters used by roman to re-map warnings from package dependencies to
+    CRDS so that they are counted and visible in web output.
+    """
+    from jwst.datamodels.validation import ValidationWarning
+    return "jwst", ValidationWarning
+
+# ============================================================================
+
 def test():
     """Run the module doctests."""
     import doctest
