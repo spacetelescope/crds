@@ -13,10 +13,10 @@ from crds.core import log, utils, timestamp, selectors, config
 from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
 from crds.core.exceptions import TpnDefinitionError, RequiredConditionError
 from crds.core.exceptions import BadKernelSumError, BadKernelCenterPixelTooSmall
+from crds.core import generic_tpn
+from crds.core.generic_tpn import TpnInfo # generic TpnInfo code
 from crds.io import tables
 from crds import data_file
-from crds.certify import generic_tpn
-from crds.certify.generic_tpn import TpnInfo # generic TpnInfo code
 
 from . import helpers as validator_helpers
 

@@ -16,10 +16,9 @@ import json
 import crds
 from crds.core import config, log, rmap, heavy_client, cmdline, utils
 from crds.core import crds_cache_locking
+from crds.core import reftypes
 
 from crds import data_file
-
-from crds.certify import reftypes
 
 from crds.client import api
 

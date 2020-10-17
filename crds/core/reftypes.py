@@ -9,7 +9,7 @@ import collections
 import glob
 import json
 
-from crds.core import rmap, log, utils, exceptions
+from . import rmap, log, utils, exceptions
 from . import generic_tpn
 
 # =============================================================================
@@ -307,11 +307,13 @@ class TypeParameters:
                 lines += [""]
         # Extra tpns from datamodels have no .tpn serialization
         # hence displayed a TpnInfo object reprs.
-        extras_title = f"From {self.observatory} datamodels:"
-        underline = "-"*len(extras_title)
-        lines += [extras_title, underline]
-        for tpn in self.locator.get_extra_tpninfos(filename):
-            lines += [repr(tpn)]
+        extra_tpns = self.locator.get_extra_tpninfos(filename)
+        if  extra_tpns:
+            extras_title = f"From {self.observatory} datamodels:"
+            underline = "-"*len(extras_title)
+            lines += [extras_title, underline]
+            for tpn in extra_tpns:
+                lines += [repr(tpn)]
         return "\n".join(lines) + "\n"
 
     def reference_name_to_ld_tpn_text(self, filename):

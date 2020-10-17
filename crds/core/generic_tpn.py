@@ -50,6 +50,7 @@ import re
 # ============================================================================
 
 from crds.core import log, utils, exceptions
+#     from crds.core import rmap, heavy_client    # deferred
 
 # ============================================================================
 
