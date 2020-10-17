@@ -17,6 +17,7 @@ import crds
 
 from crds.core import pysh, log, config, utils, rmap, cmdline
 from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKeywordError, MappingInsertionError
+from crds.core import reftypes
 
 from crds import data_file, diff
 from crds.io import tables
@@ -26,7 +27,6 @@ from crds.refactoring import refactor
 
 from . import mapping_parser
 from . import validators
-from . import reftypes
 from . import check_sha1sum
 
 # ============================================================================
