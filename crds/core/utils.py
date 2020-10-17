@@ -29,6 +29,8 @@ import warnings
 from . import log, config, pysh, exceptions
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
+# from crds.client import api  # deferred import below to simplify basic dependencies
+
 # ===================================================================
 
 def deprecate(deprecated, after_date, alternative):
@@ -1202,6 +1204,22 @@ def fix_json_strings(source_json):
 # dataset files.
 reference_to_instrument = file_to_instrument
 reference_to_locator = file_to_locator
+
+def get_plugin(plugin_name, observatory=None):
+    """Get the mission-specific plugin object `plugin_name` which is typically a
+    customization function.
+
+    Can be called from contexts where `observatory` is not known locally but
+    won't work correctly in all configurations of CRDS;  works best when
+    CRDS_OBSERVATORY is defined or `observatory` appears in CRDS_SERVER_URL.
+
+    Returns locator object named `plugin_name`.
+    """
+    if observatory is None:
+        from crds.client import api
+        observatory = api.get_default_observatory()
+    locator = get_locator_module(observatory)
+    return get_object(f"crds.{observatory}.locate.{plugin_name}")
 
 def test():
     """Run doctests."""
