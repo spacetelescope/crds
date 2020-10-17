@@ -305,6 +305,13 @@ class TypeParameters:
                 lines += [ label, underline ]
                 lines += generic_tpn.load_tpn_lines(tpn)
                 lines += [""]
+        # Extra tpns from datamodels have no .tpn serialization
+        # hence displayed a TpnInfo object reprs.
+        extras_title = f"From {self.observatory} datamodels:"
+        underline = "-"*len(extras_title)
+        lines += [extras_title, underline]
+        for tpn in self.locator.get_extra_tpninfos(filename):
+            lines += [repr(tpn)]
         return "\n".join(lines) + "\n"
 
     def reference_name_to_ld_tpn_text(self, filename):

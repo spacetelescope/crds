@@ -724,7 +724,7 @@ jwst_niriss_superbias_0005.rmap
                 tpn_text = reftypes.get_types_object(self.observatory).reference_name_to_ld_tpn_text(path)
             else:
                 tpn_text = reftypes.get_types_object(self.observatory).reference_name_to_tpn_text(path)
-            log.divider(f"TpnInfos for '{path}'")
+            log.divider(f"Certify constraints for '{path}'")
             print(tpn_text)
 
 def _get_python_info():
