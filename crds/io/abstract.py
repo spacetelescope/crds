@@ -38,31 +38,8 @@ def hijack_warnings(func):
         """Reassign warnings to CRDS warnings prior to executing `func`,  restore
         warnings state afterwards and return result of `func`.
         """
-        with warnings.catch_warnings():
-            # save and replace warnings.showwarning
-            old_showwarning, warnings.showwarning = \
-                warnings.showwarning, hijacked_showwarning
-
-            # Always handle astropy warnings
-            from astropy.utils.exceptions import AstropyUserWarning
-            warnings.simplefilter("always", AstropyUserWarning)
-
-            try:
-                # for unit tests it's critical this executes at runtime vs. compile-time
-                plugin = utils.get_observatory_plugin("get_hijack_warning_pars")
-                observatory, ValidationWarning = plugin()
-            except:
-                log.verbose_warning(
-                    f"get_hijack_warning_pars() failed. Datamodels warnings will not be seen in web output.",
-                    verbosity=70)
-            else:
-                warnings.filterwarnings("always", r".*", ValidationWarning, f".*{observatory}.*")
-                if not config.ALLOW_SCHEMA_VIOLATIONS:
-                    warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*{observatory}.*")
-            try:
-                result = func(*args, **keys)
-            finally:
-                warnings.showwarning = old_showwarning
+        hijack_warnings = utils.get_observatory_plugin("hijack_warnings")
+        result = hijack_warnings(func, *args, **keys)
         return result
     return wrapper
 
