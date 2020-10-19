@@ -107,6 +107,20 @@
             "unique_rowkeys":null
         }
     },
+    "calpars":{
+        "all":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"all",
+            "filetype":"all",
+            "instrument":"calpars",
+            "ld_tpn":"",
+            "suffix":"all",
+            "text_descr":"All calibration sofware-specific reference file types.",
+            "tpn":"",
+            "unique_rowkeys":null
+        }
+    },
     "fgs":{
         "abvegaoffset":{
             "classes":[
