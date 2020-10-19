@@ -176,6 +176,8 @@ def is_imaging_mode(exp_type):
     True
     >>> is_imaging_mode("NRS_IFU")
     False
+    >>> is_imaging_mode('NRS_VERIFY')
+    True
     """
     return exp_type in ["NRC_IMAGE", "NRC_TACQ", "NRC_TACONF", "NRC_CORON", "NRC_TSIMAGE",
                         "NRC_FOCUS", "NRC_DARK", "NRC_FLAT", "NRC_LED",
@@ -183,8 +185,8 @@ def is_imaging_mode(exp_type):
                         "MIR_IMAGE", "MIR_TACQ", "MIR_LYOT", "MIR_4QPM", "MIR_DARK",
                         "MIR_FLATIMAGE", "MIR_CORONCAL",
 
-                        "NRS_TASLIT", "NRS_TACQ", "NRS_TACONFIRM",
-                        "NRS_CONFIRM", "NRS_IMAGE", "NRS_FOCUS", "NRS_DARK", "NRS_MIMF",
+                        "NRS_CONFIRM", "NRS_DARK", "NRS_FOCUS", "NRS_IMAGE", "NRS_MIMF",
+                        "NRS_TACONFIRM", "NRS_TACQ", "NRS_TASLIT", "NRS_VERIFY",
 
                         "NIS_IMAGE", "NIS_TACQ", "NIS_TACONFIRM", "NIS_AMI",
                         "NIS_FOCUS", "NIS_DARK", "NIS_LAMP",

@@ -9,11 +9,11 @@
 #--------------------------------------------------------------------------
 USEAFTER_DATE	H	C	R	&SYBDATE
 OPUS_FLAG	H	C	R	Y,N
-COMPARISON_FILE	H	C	R    
+COMPARISON_FILE	H	C	R
 COMMENT		H	C	R
 INSTRUMENT	H	C	R	WFC3
 REFERENCE_FILE_TYPE H	C	R    	DFL
-CCDAMP          H       I       R
+CCDAMP          H       C       R
 FILTER          H       C       R
 DETECTOR	C	C	R	UVIS,IR
 CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE

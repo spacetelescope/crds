@@ -263,7 +263,7 @@ class Selector:
         if "merge_overlaps" in self._rmap_header:
             self._merge_overlaps = str(self._rmap_header["merge_overlaps"]).upper() in ["TRUE", "1"]
         else:
-            self._merge_overlaps =  self._rmap_header.get("observatory", None) == "hst"
+            self._merge_overlaps = True
         if selections is not None:
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
