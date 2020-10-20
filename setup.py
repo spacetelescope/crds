@@ -74,7 +74,7 @@ SUBMISSION_DEPS = ["requests", "lxml", "parsley"]
 
 setup(name="crds",
       provides=["crds"],
-      version = '10.0.0',
+      version = '10.1.0',
       description="Calibration Reference Data System,  HST/JWST reference file management",
       long_description=open('README.rst').read(),
       author="STScI CRDS s/w developers",
