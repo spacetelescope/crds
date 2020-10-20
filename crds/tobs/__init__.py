@@ -1,6 +1,6 @@
 import os.path
 
-from crds.certify import reftypes
+from crds.core import reftypes
 
 HERE  = os.path.dirname(__file__) or "."
 

@@ -18,7 +18,7 @@ import ast
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
 # import crds
-from crds.core import utils, log, config
+from crds.core import utils, log, config, constants
 from crds.core.log import srepr
 
 from crds.core.exceptions import ServiceError, CrdsLookupError
@@ -533,13 +533,11 @@ def get_default_observatory():
            "jwst"
 
 def observatory_from_string(string):
-    """If "jwst" or "hst" is in `string`, return it,  otherwise return None."""
-    if "jwst" in string:
-        return "jwst"
-    elif "hst" in string:
-        return "hst"
-    else:
-        return None
+    """If an observatory name is in `string`, return it,  otherwise return None."""
+    for observatory in constants.ALL_OBSERVATORIES:
+        if observatory in string:
+            return observatory
+    return None
 
 # ==============================================================================
 
@@ -602,10 +600,9 @@ class FileCacher:
     def observatory_from_context(self):
         """Determine the observatory from `pipeline_context`,  based on name if possible."""
         import crds
-        if "jwst" in self.pipeline_context:
-            observatory = "jwst"
-        elif "hst" in self.pipeline_context:
-            observatory = "hst"
+        for observatory in constants.ALL_OBSERVATORIES:
+            if observatory in self.pipeline_context:
+                return observatory
         else:
             observatory = crds.get_pickled_mapping(self.pipeline_context).observatory  # reviewed
         return observatory

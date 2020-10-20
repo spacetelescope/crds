@@ -8,6 +8,7 @@ in the certification of reference files.
 """
 import os.path
 import re
+import warnings
 
 # =======================================================================
 
@@ -380,9 +381,6 @@ def condition_matching_header(rmapping, header):
 
 # ============================================================================
 
-class MissingDependencyError(Exception):
-    """A required package is missing."""
-
 def fits_to_parkeys(fits_header):
     """Map a FITS header onto rmap parkeys appropriate for JWST."""
     parkeys = {}
@@ -610,6 +608,33 @@ log.append_crds_filter(add_fits_keywords)
 
 def disable_fits_annotations():
     log.remove_crds_filter(add_fits_keywords)
+
+# ============================================================================
+
+def hijack_warnings(func, *args, **keys):
+    """Re-map dependency warnings to CRDS warnings so they're counted and logged
+    to web output.   astropy and datamodels are remapped.
+    """
+    with warnings.catch_warnings():
+        # save and replace warnings.showwarning
+        old_showwarning, warnings.showwarning = \
+            warnings.showwarning, abstract.hijacked_showwarning
+
+        # Always handle astropy warnings
+        from astropy.utils.exceptions import AstropyUserWarning
+        warnings.simplefilter("always", AstropyUserWarning)
+
+        from jwst.datamodels.validate import ValidationWarning
+        warnings.filterwarnings("always", r".*", ValidationWarning, f".*jwst.*")
+        if not config.ALLOW_SCHEMA_VIOLATIONS:
+            warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*jwst.*")
+
+        try:
+            result = func(*args, **keys)
+        finally:
+            warnings.showwarning = old_showwarning
+
+    return result
 
 # ============================================================================
 

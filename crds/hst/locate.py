@@ -14,6 +14,7 @@ be implemented for JWST.
 import os.path
 import datetime
 import time
+import warnings
 
 # =======================================================================
 
@@ -627,6 +628,28 @@ def locate_dir(instrument, mode=None):
 def fits_to_parkeys(header):
     """Map a FITS header onto rmap parkeys appropriate for this observatory."""
     return dict(header)
+
+# ============================================================================
+
+def hijack_warnings(func, *args, **keys):
+    """Re-map dependency warnings to CRDS warnings so they're counted and logged
+    to web output.
+    """
+    with warnings.catch_warnings():
+        # save and replace warnings.showwarning
+        old_showwarning, warnings.showwarning = \
+            warnings.showwarning, abstract.hijacked_showwarning
+
+        # Always handle astropy warnings
+        from astropy.utils.exceptions import AstropyUserWarning
+        warnings.simplefilter("always", AstropyUserWarning)
+
+        try:
+            result = func(*args, **keys)
+        finally:
+            warnings.showwarning = old_showwarning
+
+    return result
 
 # =======================================================================
 
