@@ -512,18 +512,22 @@ Manual .imap update
 
 3. Download or copy the identified .imap.
 
-4. Manually edit the .imap to make your required changes, e.g. removing a
-type or setting a type to N/A.   Note that adding types can generally be
-done just by submitting the new .rmap normally.
+4. Manually edit the .imap to make your required changes, e.g. removing a type
+   or setting a type to N/A. Note that adding types can generally be done just by
+   submitting the new .rmap normally.
 
-5. Submit the .imap using Submit Mappings with::
+5. Though file renaming will be done by the submission process, ensure the .imap
+   input name has the form "observatory_instrument.imap". The ingest will then
+   processes the file as an imap and not an rmap.
+
+6. Submit the .imap using Submit Mappings with::
   * Generate Contexts OFF
   * Auto-rename ON
 
-6. Confirm your submission
+7. Confirm your submission
 
-7. Follow the procedure for manually updating a .pmap to refer to
-your newly named .imap
+8. Follow the procedure for manually updating a .pmap to refer to
+   your newly named .imap
 
 Manual .pmap update
 !!!!!!!!!!!!!!!!!!!
