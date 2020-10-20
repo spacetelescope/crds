@@ -236,6 +236,9 @@ class MissingColumnError(CrdsError):
 class DuplicateSha1sumError(CrdsError):
     """This file is bit-for-bit identical with a file already in CRDS."""
 
+class CrdsTypeSpecError(CrdsError):
+    """Something was wrong with a CRDS type spec registering a type with CRDS."""
+
 # -------------------------------------------------------------------------------------------
 
 class NameComparisonError(CrdsError):

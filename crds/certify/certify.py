@@ -17,6 +17,7 @@ import crds
 
 from crds.core import pysh, log, config, utils, rmap, cmdline
 from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKeywordError, MappingInsertionError
+from crds.core import reftypes
 
 from crds import data_file, diff
 from crds.io import tables
@@ -26,7 +27,6 @@ from crds.refactoring import refactor
 
 from . import mapping_parser
 from . import validators
-from . import reftypes
 from . import check_sha1sum
 
 # ============================================================================
@@ -701,8 +701,9 @@ class MappingCertifier(Certifier):
             if derived_from.name == self.basename:
                 log.verbose("Mapping", repr(self.filename), "did not change relative to context", repr(self.context))
             else:
-                log.info("Mapping", repr(self.basename), "corresponds to", repr(derived_from.name),
-                         "from context", repr(self.context), "for checking mapping differences.")
+                if not self.basename.endswith(".pmap"):
+                    log.info("Mapping", repr(self.basename), "corresponds to", repr(derived_from.name),
+                             "from context", repr(self.context), "for checking mapping differences.")
                 diff.mapping_check_diffs(mapping, derived_from)
         else:
             if self.context is not None:

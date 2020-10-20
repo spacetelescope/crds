@@ -496,7 +496,7 @@ def reformat_useafter(filename, header):
     DATE-OBS and TIME-OBS.   Honor the ALLOW_BAD_USEAFTER to provide a safe default
     for early junk USEAFTER values;  1900-01-01T00:00:00.
     """
-    useafter = str(header.get("USEAFTER", "UNDEFINED"))
+    useafter = str(header.get("USEAFTER", header.get("META.USEAFTER", "UNDEFINED")))
     try:
         return reformat_date(useafter)
     except Exception as exc:

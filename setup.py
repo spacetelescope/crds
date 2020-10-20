@@ -6,6 +6,19 @@ from distutils.core import setup
 
 import setuptools
 
+# Define data files included by each observatory package relative
+# to each observatory/mission directory.
+STD_MISSION_FILES = [
+    '*.dat',
+    '*.yaml',
+    '*.json',
+    'tpns/*.tpn',
+    'tpns/includes/*.tpn',
+    'specs/*.spec',
+    'specs/*.rmap',
+    'specs/*.json',
+]
+
 setup_pars = {
     "packages" : [
         'crds',
@@ -48,36 +61,9 @@ setup_pars = {
         'crds.tests' : 'crds/tests',
         },
     "package_data" : {
-        'crds.hst': [
-            '*.dat',
-            '*.yaml',
-            '*.json',
-            'tpns/*.tpn',
-            'tpns/includes/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            'specs/*.json',
-            ],
-        'crds.jwst': [
-            '*.dat',
-            '*.yaml',
-            '*.json',
-            'tpns/*.tpn',
-            'tpns/includes/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            'specs/*.json',
-            ],
-        'crds.tobs': [
-            '*.dat',
-            '*.yaml',
-            '*.json',
-            'tpns/*.tpn',
-            'tpns/includes/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            'specs/*.json',
-            ],
+        'crds.hst': STD_MISSION_FILES,
+        'crds.jwst': STD_MISSION_FILES,
+        'crds.tobs': STD_MISSION_FILES,
         },
     "scripts" : glob.glob("scripts/*"),
     }
@@ -88,11 +74,10 @@ SUBMISSION_DEPS = ["requests", "lxml", "parsley"]
 
 setup(name="crds",
       provides=["crds"],
-      version = '10.1.0',
+      version = '10.0.0',
       description="Calibration Reference Data System,  HST/JWST reference file management",
       long_description=open('README.rst').read(),
-      author="Todd Miller",
-      author_email="jmiller@stsci.edu",
+      author="STScI CRDS s/w developers",
       url="https://hst-crds.stsci.edu",
       license="BSD",
       install_requires=["astropy", "numpy", "filelock"] + SUBMISSION_DEPS,
@@ -117,6 +102,7 @@ setup(name="crds",
           'Topic :: Scientific/Engineering :: Astronomy',
       ],
       project_urls={
+          'Documentation' : 'https://hst-crds.stsci.edu/static/users_guide/index.html',
           'Bug Reports': 'https://github.com/spacetelescope/crds/issues/',
           'Source': 'https://github.com/spacetelescope/crds/',
           'Help': 'https://hsthelp.stsci.edu/',
