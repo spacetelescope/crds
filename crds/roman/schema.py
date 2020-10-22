@@ -25,7 +25,6 @@ from crds.core.generic_tpn import TpnInfo
 # ====================================================================================
 
 
-# XXXX roman  -- EXP_TYPE value prefixes for Roman
 INSTR_PREFIX = {
     "wfi" : "WFI_",
     }

@@ -2,7 +2,7 @@
     "all":{
         "all":{
             "extra_keys":null,
-            "file_ext":".fits",
+            "file_ext":".asdf",
             "filetype":"xxx",
             "instrument":"all",
             "ld_tpn":"all_all_ld.tpn",
@@ -13,7 +13,7 @@
         },
         "flat":{
             "extra_keys":null,
-            "file_ext":".fits",
+            "file_ext":".asdf",
             "filekind":"FLAT",
             "filetype":"FLAT",
             "instrument":"ALL",
@@ -28,7 +28,7 @@
     "wfi":{
         "all":{
             "extra_keys":null,
-            "file_ext":".fits",
+            "file_ext":".asdf",
             "filekind":"ALL",
             "filetype":"ALL",
             "instrument":"WFI",
@@ -47,7 +47,7 @@
             "derived_from":"Derived from JWST for Roman 2020-10-07",
             "description":"Hand edited for roman baseline 2020-10-09.   Prototype / fake sample only,  update for Roman.",
             "extra_keys":null,
-            "file_ext":".fits",
+            "file_ext":".asdf",
             "filekind":"FLAT",
             "filetype":"FLAT",
             "instrument":"WFI",
@@ -58,8 +58,7 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.PUPIL"
+                    "META.INSTRUMENT.FILTER"
                 ],
                 [
                     "META.OBSERVATION.DATE",

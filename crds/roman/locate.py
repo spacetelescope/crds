@@ -71,8 +71,7 @@ def get_datamodels():
     dependencies when supporting other observatories.
     """
     try:
-        from jwst import datamodels  # this is fatal.
-        # XXXX TODO roman # from roman import datamodels  # this is fatal.
+        from roman import datamodels
     except ImportError:
         log.error(
             "CRDS requires installation of the 'roman' package to operate on Roman files.")
@@ -329,8 +328,6 @@ def reference_keys_to_dataset_keys(rmapping, header):
             "META.INSTRUMENT.P_CHANNEL" : "META.INSTRUMENT.CHANNEL",
 
             "META.INSTRUMENT.P_FILTER" : "META.INSTRUMENT.FILTER",
-
-            "META.INSTRUMENT.P_PUPIL"  : "META.INSTRUMENT.PUPIL",
 
             "META.INSTRUMENT.P_MODULE"  : "META.INSTRUMENT.MODULE",
 
