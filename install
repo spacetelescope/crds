@@ -2,13 +2,6 @@
 
 cd `dirname $0`
 
-# The clean script removes temporary and junk files that should not be
-# committed to the source code repo.
-if (test -e clean)
-then
-    ./clean
-fi
-
 if [ "$1" = "--skip-types" ]; then
     shift;
     dont_skip_types=0
@@ -16,6 +9,19 @@ else
     dont_skip_types=1
 fi
 
+dev_install=0
+if [ "$1" == "--dev" ]; then
+    shift;
+    dev_install=1
+fi
+
+# The clean script removes temporary and junk files that should not be
+# committed to the source code repo.
+if [ $dev_install = 0 ]; then
+    if (test -e clean); then
+        ./clean
+    fi
+fi
 
 rm -f install.log
 
@@ -50,18 +56,24 @@ if [ $dont_skip_types = 1 ]; then
     python -m crds.tobs
 fi
 
-pip install .
+if [ $dev_install = 0 ]; then
+    echo "Doing setup install..."
+    pip install .
+fi
 st=$st$?
 
 # Optional CRDS test data is only installed by developers using ./install
 # to install CRDS from source code.  To support testing the
 # setup_test_cache script should also be run to install other test files.
-python setup_data.py install --force >>install.log
-st=$st$?
+if [ $dev_install = 0 ]; then
+    echo "Setup data..."
+    python setup_data.py install --force >>install.log
+    st=$st$?
 
-if (test -e clean)
-then
-    ./clean
+    if (test -e clean)
+    then
+        ./clean
+    fi
 fi
 
 echo final status $st
