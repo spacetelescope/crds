@@ -142,17 +142,15 @@ def match_context_key(key):
 @utils.cached
 def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
-    should be a mapping or FITS reference file.
+    should be a mapping or ASDF reference file.
 
-    >> get_file_properties("./hst_acs_biasfile_0001.rmap")
-    ('acs', 'biasfile')
+    >> get_file_properties("./roman_wfi_dark_0001.rmap")
+    ('wfi', 'dark')
 
-    >> get_file_properties("./hst_acs_biasfile_0001.pmap")
+    >> get_file_properties("./roman_wfi_dark_0001.pmap")
     Traceback (most recent call last):
     ...
-    AssertionError: Invalid .pmap filename './hst_acs_biasfile_0001.pmap'
-
-    >> get_file_properties("test_data/s7g1700gl_dead.fits")
+    AssertionError: Invalid .pmap filename './roman_wfi_dark_0001.pmap'
     """
     if config.is_mapping(filename):
         try:
@@ -176,29 +174,29 @@ def get_file_properties(filename):
 
 def decompose_newstyle_name(filename):
     """
-    >> decompose_newstyle_name("./hst.pmap")
-    ('.', 'hst', '', '', '', '.pmap')
+    >> decompose_newstyle_name("./roman.pmap")
+    ('.', 'roman', '', '', '', '.pmap')
 
-    >> decompose_newstyle_name("./hst_0001.pmap")
-    ('.', 'hst', '', '', '0001', '.pmap')
+    >> decompose_newstyle_name("./roman_0001.pmap")
+    ('.', 'roman', '', '', '0001', '.pmap')
 
     >> decompose_newstyle_name("./hst_acs.imap")
-    ('.', 'hst', 'acs', '', '', '.imap')
+    ('.', 'roman', 'wfi', '', '', '.imap')
 
-    >> decompose_newstyle_name("./hst_acs_0001.imap")
-    ('.', 'hst', 'acs', '', '0001', '.imap')
+    >> decompose_newstyle_name("./roman_wfi_0001.imap")
+    ('.', 'roman', 'wfi', '', '0001', '.imap')
 
-    >> decompose_newstyle_name("./hst_acs_biasfile.rmap")
-    ('.', 'hst', 'acs', 'biasfile', '', '.rmap')
+    >> decompose_newstyle_name("./roman_wfi_dark.rmap")
+    ('.', 'roman', 'wfi', 'dark', '', '.rmap')
 
-    >> decompose_newstyle_name("./hst_acs_biasfile_0001.rmap")
-    ('.', 'hst', 'acs', 'biasfile', '0001', '.rmap')
+    >> decompose_newstyle_name("./roman_wfi_dark_0001.rmap")
+    ('.', 'roman', 'wfi', 'biasfile', '0001', '.rmap')
 
-    >> decompose_newstyle_name("./hst_acs_biasfile.fits")
-    ('.', 'hst', 'acs', 'biasfile', '', '.fits')
+    >> decompose_newstyle_name("./roman_wfi_dark.asdf")
+    ('.', 'roman', 'wfi', 'dark', '', '.asdf')
 
-    >> decompose_newstyle_name("./hst_acs_biasfile_0001.fits")
-    ('.', 'hst', 'acs', 'biasfile', '0001', '.fits')
+    >> decompose_newstyle_name("./roman_wfi_dark_0001.asdf")
+    ('.', 'roman', 'wfi', 'dark', '0001', '.asdf')
     """
     path, parts, ext = _get_fields(filename)
     observatory = parts[0]
@@ -255,7 +253,7 @@ def list_get(l, index, default):
         return default
 
 def get_reference_properties(filename):
-    """Figure out FITS (instrument, filekind, serial) based on `filename`.
+    """Figure out ASDF (instrument, filekind, serial) based on `filename`.
     """
     try:   # Hopefully it's a nice new standard filename, easy
         return decompose_newstyle_name(filename)
@@ -267,7 +265,7 @@ def get_reference_properties(filename):
 # =======================================================================
 
 def ref_properties_from_header(filename):
-    """Look inside FITS `filename` header to determine instrument, filekind.
+    """Look inside ASDF `filename` header to determine instrument, filekind.
     """
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
