@@ -1,4 +1,4 @@
-# Contraints defined  in this file apply to every REFTYPE of the WFI instrument
+# Contraints defined in this file apply to every REFTYPE of the WFI instrument
 
 # Template file used by certify to check reference files
 # Some fields may be abbreviated to their first character:
@@ -9,12 +9,11 @@
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
-META.INSTRUMENT.NAME        H   C   R                   WFI
+META.INSTRUMENT.NAME        H   C   R   WFI
 
-META.INSTRUMENT.PUPIL       H   C   O   CLEAR,ANY,N/A
+META.INSTRUMENT.DETECTOR    H   C   O   WFI01,WFI02,WFI03,WFI04,WFI05,WFI06,WFI07,WFI08,WFI09,\
+                                        WFI10,WFI11,WFI12,WFI13,WFI14,WFI15,WFI16,WFI17,WFI18,\
+                                        ANY,N/A
 
-META.INSTRUMENT.DETECTOR    H   C   O   WFI-1,ANY,N/A
-
-META.INSTRUMENT.FILTER      H   C   O   MULTIPLE,ANY,N/A
-
-# include includes/nir_subarray_baseline.tpn
+META.INSTRUMENT.FILTER      H   C   O   F062,F087,F106,F129,W146,F158,F184,GRISM,PRISM,CLEAR,\
+                                        N/A,ANY,UNKNOWN

@@ -1,21 +1,19 @@
-"""This module defines functions for loading JWST's data model schema files which
-describe reference parameters and their values.   The schema files are used to
+"""This module defines functions for loading Roman's data model schema files which
+describe reference parameters and their values.  The schema files are used to
 validate reference and rmap parameters to screen out illegal values.
 
 The primary functions provided by this module are:
 
-1. Scraping the cal code data models schema for keyword value enumerations
-2. Defining translations to and from "data model paths" like META.SUBARRAY.NAME and
-"physical keyword values, e.g. FITS" like SUBARRAY.
+1. Scraping the romancal data model schema for keyword value enumerations
 
-See the tpn.py and locator.py modules,  as well as crds.certify and crds.rmap,
-and crds.selectors for more information.
+See the locator.py module, as well as crds.certify, crds.rmap, and crds.selectors
+for more information.
 """
 import re
 
 # ====================================================================================
 
-# from jwst import datamodels   # deferred
+# from romancal import datamodels   # deferred
 # from . import locate  # deferred
 
 import crds
@@ -24,25 +22,11 @@ from crds.core.generic_tpn import TpnInfo
 
 # ====================================================================================
 
-
-INSTR_PREFIX = {
-    "wfi" : "WFI_",
-    }
-
 def get_exptypes(instrument=None):
-    """Using an arbitrary reference from an instrument that matches using EXP_TYPE,  return
-    the set of all EXP_TYPE values defined in the JWST schema.   XXX kludged
+    """Using an arbitrary reference from an instrument that matches using EXP_TYPE, return
+    the set of all EXP_TYPE values defined in the Roman schema.
     """
-    tpninfos = get_schema_tpninfos(config.locate_file("roman_area_0005.asdf", "roman"))
-    values = set()
-    for info in tpninfos:
-        if info.name in ["EXP_TYPE", "META.EXPOSURE.TYPE"]:
-            values = values | set(info.values)
-    if instrument is None:
-        return sorted(list(values))
-    else:
-        return sorted([value for value in values
-                       if value.startswith(INSTR_PREFIX[instrument.lower()])])
+    raise NotImplementedError("get_exptypes is not yet implemented for Roman")
 
 def get_schema_tpninfos(refpath):
     """Load the list of TPN info tuples corresponding to `instrument` and
@@ -59,7 +43,7 @@ def reference_to_schema_name(reference_name):
     """This function will eventually identify the schema associated with `reference_name`
     unless replaced by similar functionality in the models package.
 
-    Returns None  meaning "default/core schema"
+    Returns None meaning "default/core schema"
     """
     return None
 
@@ -87,11 +71,6 @@ def refpath_to_parkeys(refpath):
         p = crds.get_pickled_mapping(context)   # reviewed
         instrument, filekind = locate.get_file_properties(refpath)
         keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
-        # The below turned out to be bad because CRDS-only values aren't in datamodels
-        # so in this case the datamodels schema are too narrow for these and will reject
-        # e.g. SYSTEM or it's types.
-        #         keys.append("META.INSTRUMENT.NAME")
-        #         keys.append("META.REFTYPE")
     return sorted(keys)
 
 # =============================================================================
@@ -103,7 +82,7 @@ def _load_schema(schema_name=None):
     """Return the core data model schema."""
     from . import locate
     datamodels = locate.get_datamodels()
-    model = datamodels.DataModel(schema=schema_name)
+    model = datamodels.RomanDataModel(schema=schema_name)
     return model.schema
 
 def _schema_to_flat(schema):
@@ -213,48 +192,6 @@ def _flat_to_tpns(flat=None, schema_name=None):
             else:
                 log.warning("No TPN form for", repr(key), repr(value))
     return sorted(tpns)
-
-# XXXX roman  fits_to_dm  not needed,  no more FITS?
-
-# def _get_dm_to_fits(schema=None):
-#     """Return mapping from DM dotted path string to FITS keyword."""
-#     if schema is None:
-#         schema = _load_schema()
-#     fits = {}
-#     flat = _schema_to_flat(schema)
-#     for key, val in flat.items():
-#         if key.lower().endswith(".fits_keyword"):
-#             fits[str(key[:-len(".fits_keyword")])] = str(val)
-#     return fits
-
-# def _get_fits_to_dm(schema=None):
-#     """Return mapping from FITS keyword to DM dotted path string."""
-#     return utils.invert_dict(_get_dm_to_fits(schema))
-
-# DM_TO_FITS = None
-# FITS_TO_DM = None
-
-# def dm_to_fits(key):
-#     """Return the FITS keyword for DM `key` or None.
-
-#     >>> dm_to_fits('META.SUBARRAY.NAME')
-#     'SUBARRAY'
-#     """
-#     global DM_TO_FITS
-#     if DM_TO_FITS is None:
-#         DM_TO_FITS = _get_dm_to_fits()
-#     return DM_TO_FITS.get(key.upper(), None)
-
-# def fits_to_dm(key):
-#     """Return the DM keyword for FITS `key` or None.
-
-#     >>> fits_to_dm('SUBARRAY')
-#     'META.SUBARRAY.NAME'
-#     """
-#     global FITS_TO_DM
-#     if FITS_TO_DM is None:
-#         FITS_TO_DM = _get_fits_to_dm()
-#     return FITS_TO_DM.get(key.upper(), None)
 
 # =============================================================================
 

@@ -11,14 +11,9 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 META.TELESCOPE          H   C   R       ROMAN
-META.INSTRUMENT.NAME   H   C   R
-META.REFTYPE       H   C   R
-META.USEAFTER   H   C   R               &JWSTDATE
-META.PEDIGREE   H   C   R               &JWSTPEDIGREE
-META.AUTHOR     H   C   R
-META.DESCRIPTION H   C  R
-HISTORY     H   C  R
-
-# Added automatically when files are created with the CAL code data models
-# Determines verification performed by CAL code data models so can be critical
-META.MODEL_TYPE  H   C  W
+META.INSTRUMENT.NAME    H   C   R
+META.REFTYPE            H   C   R
+META.USEAFTER           H   C   R       &JWSTDATE
+META.PEDIGREE           H   C   R       &JWSTPEDIGREE
+META.AUTHOR             H   C   R
+META.DESCRIPTION        H   C   R

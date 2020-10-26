@@ -4,7 +4,7 @@
     'filekind' : 'ALL',
     'filetype' : 'ALL',
     'suffix' : 'ALL',
-    'text_descr' : 'Group for constraints for all types of WFI instrument.',
+    'text_descr' : 'All WFI reference file types.',
     'ld_tpn': 'wfi_all_ld.tpn',
     'tpn': 'wfi_all.tpn',
 }

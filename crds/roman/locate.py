@@ -7,7 +7,7 @@ specific policies/plugins for Roman:
 in the certification of reference files.
 
 XXXX Roman NOTE: This code was derived from the JWST locate.py module and
-contains substantial dupliucation.  However, because the functions often depend
+contains substantial duplication.  However, because the functions often depend
 on project-specific modules, globals, or functions the code is not usable
 without some refactoring.  Other plugins may vary simply because
 ASDF+datamodels Roman is already different than the FITS+datamodels world of
@@ -71,16 +71,16 @@ def get_datamodels():
     dependencies when supporting other observatories.
     """
     try:
-        from roman import datamodels
+        from romancal import datamodels
     except ImportError:
         log.error(
-            "CRDS requires installation of the 'roman' package to operate on Roman files.")
+            "CRDS requires installation of the 'romancal' package to operate on Roman files.")
         raise
     global MODEL
     if MODEL is None:
         with log.error_on_exception(
-                "Failed constructing basic Roman DataModel"):
-            MODEL = datamodels.DataModel()
+                "Failed constructing basic RomanDataModel"):
+            MODEL = datamodels.RomanDataModel()
     return datamodels
 
 # =============================================================================
@@ -377,9 +377,6 @@ def reference_keys_to_dataset_keys(rmapping, header):
                          "to value of", repr(rkey), "=", repr(rval))
                 header[dkey] = rval
 
-    #  XXXX  roman  no more FITS
-    # header = abstract.cross_strap_header(header)
-
     if "META.SUBARRAY.NAME" not in header:
         header["META.SUBARRAY.NAME"] = "UNDEFINED"
 
@@ -418,24 +415,9 @@ def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return "crds://"
 
-# META.REF_FILE.SPECWCS.NAME.FITS_KEYWORD
-
-
-# XXXX Roman TODO   this is a guess;  define the dotted object path needed to
-# set the datamodels field for these.  Then transform it to a "flat form" string.
 def filekind_to_keyword(filekind):
-    """Return the "keyword" at which a assigned reference should be recorded.
-
-    See also the JWST version of this plugin which translated to R_ FITS keywords.
-
-    >>> filekind_to_keyword("flat")
-    'META.REF_FILE.FLAT.NAME'
-    """
-    return f"META.REF_FILE.{filekind.upper()}.NAME"
-
-@utils.cached
-def warn_filekind_once(filekind):
-    log.warning("No apparent Roman cal code data models schema support for", log.srepr(filekind))
+    """Return the "keyword" at which a assigned reference should be recorded."""
+    raise NotImplementedError("filekind_to_keyword not implemented for Roman")
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
@@ -493,7 +475,7 @@ def hijack_warnings(func, *args, **keys):
         from astropy.utils.exceptions import AstropyUserWarning
         warnings.simplefilter("always", AstropyUserWarning)
 
-        from romancal.datamodels.validate import ValidationWarning
+        from sdatamodels.validate import ValidationWarning
         warnings.filterwarnings("always", r".*", ValidationWarning, f".*roman.*")
         if not config.ALLOW_SCHEMA_VIOLATIONS:
             warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*roman.*")
