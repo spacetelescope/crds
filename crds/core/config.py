@@ -796,6 +796,7 @@ def disable_retries():
 CRDS_DEFAULT_SERVERS = {
     "hst" : "https://hst-crds.stsci.edu",
     "jwst" : "https://jwst-crds.stsci.edu",
+    "roman" : "https://roman-crds.stsci.edu",
     # None : "https://crds-serverless-mode.stsci.edu"
 }
 

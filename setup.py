@@ -37,6 +37,7 @@ setup_pars = {
         'crds.hst',
         'crds.jwst',
         'crds.tobs',
+        'crds.roman',
 
         'crds.tests',
         ],
@@ -56,6 +57,7 @@ setup_pars = {
 
         'crds.hst' : 'crds/hst',
         'crds.jwst' : 'crds/jwst',
+        'crds.roman' : 'crds/roman',
         'crds.tobs' : 'crds/tobs',
 
         'crds.tests' : 'crds/tests',
@@ -63,6 +65,7 @@ setup_pars = {
     "package_data" : {
         'crds.hst': STD_MISSION_FILES,
         'crds.jwst': STD_MISSION_FILES,
+        'crds.roman': STD_MISSION_FILES,
         'crds.tobs': STD_MISSION_FILES,
         },
     "scripts" : glob.glob("scripts/*"),
@@ -75,7 +78,7 @@ SUBMISSION_DEPS = ["requests", "lxml", "parsley"]
 setup(name="crds",
       provides=["crds"],
       version = '10.1.0',
-      description="Calibration Reference Data System,  HST/JWST reference file management",
+      description="Calibration Reference Data System,  HST/JWST/Roman reference file management",
       long_description=open('README.rst').read(),
       author="STScI CRDS s/w developers",
       url="https://hst-crds.stsci.edu",
@@ -83,6 +86,7 @@ setup(name="crds",
       install_requires=["astropy", "numpy", "filelock"] + SUBMISSION_DEPS,
       extras_require={
           "jwst": ["jwst"],
+          "roman" : ["romancal"],
           "submission": ["requests", "lxml", "parsley"],
           "dev" : ["ipython","jupyterlab","ansible","helm",
                    "nose-cprof", "coverage"],

@@ -1,0 +1,39 @@
+With the maturation of the CAL codebase, datamodels, and addition of Roman
+datamodels schema and keyword values, these .tpn's will need to be updated
+and/or dropped.   Key differences are that Roman is nominally pure ASDF
+and the keyword value enumerations for roman will be different.
+
+Array checks are defined for JWST's FITS formatted files and standard HDU
+structures.  These will need to change or be dropped for Roman as file formats
+become better known and CRDS is adapted to more fully support ASDF.
+Currently CRDS has no standard way to load ASDF array properties and/or
+array data,  some equialent for standard SCI, ERR, DQ, etc FITS HDUs will
+be needed,  or CRDS will need to defer to romancal or the datamodels
+more for any array checking performed  prior to accepting reference files
+into CRDS.
+
+NOTE: Reference file checks are good to have but their absence is not fatal, it
+just means CRDS will be more promiscuous about accepting new files and may
+accept invalid files.
+
+NOTE: The original design of .tpns from CDBS used them to validate incoming
+reference files and database rows used for reference file matching.
+Constraints in .tpn files defined keyword values for refernce files which were
+permitted to include wildcards / substitution values.  _ld.tpn files were used
+to validate database rows after reference file values were fully enumerated
+into discrete/real parameter values.  _ld.tpn files validate discrete values
+which were directly matched to discrete values from datasets.
+
+In CRDS,  .tpn files are used to validate the values of incoming reference files,
+while _ld.tpn files are used to validate rmap files which supplanted the CDBS
+matching database.
+
+Transitioning to CRDS, the use of substitution values which must be planned and
+pre-defined was replaced with P_xxxx pattern keywords which typically specify
+an or-barred set of values, any of which that reference file supports.  Unlike
+CDBS which exploded substitions into discrete values,  P_xxxx patterns are
+directly injected into rmaps in unexpanded form keeping the rmap smaller and
+easier to understand.
+
+See CRDS user's guide for more info on certify and .tpn file organization,
+syntax, and semantics.
