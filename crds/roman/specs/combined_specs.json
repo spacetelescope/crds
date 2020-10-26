@@ -1,0 +1,30 @@
+{
+    "all":{
+        "all":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filetype":"xxx",
+            "instrument":"all",
+            "ld_tpn":"all_all_ld.tpn",
+            "suffix":"xxx",
+            "text_descr":"All instruments and reference file types.",
+            "tpn":"all_all.tpn",
+            "unique_rowkeys":null
+        }
+    },
+    "wfi":{
+        "all":{
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"ALL",
+            "filetype":"ALL",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_all_ld.tpn",
+            "observatory":"ROMAN",
+            "suffix":"ALL",
+            "text_descr":"All WFI reference file types.",
+            "tpn":"wfi_all.tpn",
+            "unique_rowkeys":null
+        }
+    }
+}
