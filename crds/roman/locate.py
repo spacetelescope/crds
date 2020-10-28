@@ -473,7 +473,7 @@ def hijack_warnings(func, *args, **keys):
         from astropy.utils.exceptions import AstropyUserWarning
         warnings.simplefilter("always", AstropyUserWarning)
 
-        from sdatamodels.validate import ValidationWarning
+        from stdatamodels.validate import ValidationWarning
         warnings.filterwarnings("always", r".*", ValidationWarning, f".*roman.*")
         if not config.ALLOW_SCHEMA_VIOLATIONS:
             warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*roman.*")
