@@ -42,10 +42,11 @@ st=0
 if [ $dont_skip_types = 1 ]; then
     find . -name combined_specs.json | xargs rm
 
-    find crds/hst/specs crds/jwst/specs crds/tobs/specs -name '*.*map' | xargs python -m crds.refactoring.checksum
+    find crds/hst/specs crds/jwst/specs crds/roman/specs crds/tobs/specs -name '*.*map' | xargs python -m crds.refactoring.checksum
 
     python -m crds.hst
     python -m crds.jwst
+    python -m crds.roman
     python -m crds.tobs
 fi
 
