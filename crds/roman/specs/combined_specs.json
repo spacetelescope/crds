@@ -2,7 +2,7 @@
     "all":{
         "all":{
             "extra_keys":null,
-            "file_ext":".fits",
+            "file_ext":".asdf",
             "filetype":"xxx",
             "instrument":"all",
             "ld_tpn":"all_all_ld.tpn",
@@ -15,7 +15,7 @@
     "wfi":{
         "all":{
             "extra_keys":null,
-            "file_ext":".fits",
+            "file_ext":".asdf",
             "filekind":"ALL",
             "filetype":"ALL",
             "instrument":"WFI",
