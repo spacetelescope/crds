@@ -750,6 +750,18 @@ def certify_AsdfCertify_valid():
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
+def certify_AsdfCertify_valid_with_astropy_time():
+    """
+    >>> doctest.ELLIPSIS_MARKER = '-ignore-'
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> certify.certify_file("data/valid_with_astropy_time.asdf", observatory="jwst",context="jwst_0365.pmap") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/valid_with_astropy_time.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
+    CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
+    CRDS - INFO -  Checking JWST datamodels.
+    >>> test_config.cleanup(old_state)
+    >>> doctest.ELLIPSIS_MARKER = '...'
+    """
+
 def certify_FitsCertify_opaque_name():
     """
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")

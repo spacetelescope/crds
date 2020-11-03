@@ -5,17 +5,21 @@ a date and time in a sortable string representation (isoformat).
 import datetime
 import re
 
+from astropy.time import Time
+
 from . import config, exceptions, log
 
 # =======================================================================
 
 def reformat_date(date, sep=" "):
-    """Reformat datestring `d` in any recognized format in CRDS standard form."""
+    """Reformat datestring `d` in any recognized format in CRDS standard form.
+    Also handles datetime objects and astropy Time."""
     parsed = parse_date(date)
     return format_date(parsed, sep=sep)
 
 def format_date(date, sep=" "):
-    """Format a datestring `d` in CRDS standard form.
+    """Format a datestring `d` in CRDS standard form.  Also handles datetime
+    objects and astropy Time.
 
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
@@ -24,11 +28,13 @@ def format_date(date, sep=" "):
         date = parse_date(date)
     return date.isoformat(sep)
 
-T_SEPERATED_DATE_RE = re.compile(r"^\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d(:\d\d(:\d\d(.\d+)?)?)?$")
+T_SEPARATED_DATE_RE = re.compile(r"^\d\d\d\d[-/]\d\d[-/]\d\dT\d\d(:\d\d){1,2}(\.\d{1,6})?$")
 ALPHABETICAL_RE = re.compile(r"[A-Za-z]{3,10}")
+ASTROPY_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 def parse_date(date):
-    """Parse any date-time string into a datetime object.
+    """Parse any date-time string into a datetime object.  Also
+    handles datetime objects and astropy Time.
 
     >>> parse_date("Dec 01 1993 00:00:00 UT")
     datetime.datetime(1993, 12, 1, 0, 0)
@@ -52,6 +58,15 @@ def parse_date(date):
     >>> isinstance(dtval, datetime.datetime)
     True
 
+    >>> parse_date(Time("1999-12-21T05:42:35"))
+    datetime.datetime(1999, 12, 21, 5, 42, 35)
+
+    >>> parse_date(Time("1999-12-21T05:42:35.123"))
+    datetime.datetime(1999, 12, 21, 5, 42, 35)
+
+    >>> parse_date(Time(2451533.738647963, format="jd", scale="tt"))
+    datetime.datetime(1999, 12, 21, 5, 42, 35)
+
     >>> parse_date("2008-10-15T08:44:44.619 UNDEFINED")
     Traceback (most recent call last):
     ...
@@ -61,6 +76,9 @@ def parse_date(date):
     if isinstance(date, datetime.datetime):
         date = str(date)
 
+    if isinstance(date, Time):
+        date = date.utc.strftime(ASTROPY_TIME_FORMAT)
+
     if "UNDEFINED" in date:
         raise exceptions.InvalidDatetimeError(
             "One or more required date/time values is UNDEFINED")
@@ -68,7 +86,7 @@ def parse_date(date):
     if date.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
         date = date[:-3]
 
-    if T_SEPERATED_DATE_RE.match(date):
+    if T_SEPARATED_DATE_RE.match(date):
         date = date.replace("T", " ")
 
     if ALPHABETICAL_RE.search(date):

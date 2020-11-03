@@ -9,6 +9,7 @@ import re
 # ================================================================================================
 
 import datetime
+from astropy.time import Time
 
 # ================================================================================================
 
@@ -311,7 +312,7 @@ class AbstractFile:
             rval = str(value)
         elif isinstance(value, (list, tuple)):
             rval = tuple(self._simple_type(val) for val in value)
-        elif isinstance(value, datetime.datetime):
+        elif isinstance(value, (datetime.datetime, Time)):
             rval = timestamp.reformat_date(value).replace(" ", "T")
         else:
             rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
