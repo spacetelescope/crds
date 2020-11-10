@@ -624,7 +624,14 @@ def hijack_warnings(func, *args, **keys):
         from astropy.utils.exceptions import AstropyUserWarning
         warnings.simplefilter("always", AstropyUserWarning)
 
-        from jwst.datamodels.validate import ValidationWarning
+        # ValidationWarning was moved to stdatamodels after jwst
+        # 0.17.1.  The backup import from jwst can be removed
+        # once older versions are no longer being used.
+        try:
+            from stdatamodels.validate import ValidationWarning
+        except ImportError:
+            from jwst.datamodels.validate import ValidationWarning
+
         warnings.filterwarnings("always", r".*", ValidationWarning, f".*jwst.*")
         if not config.ALLOW_SCHEMA_VIOLATIONS:
             warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*jwst.*")
