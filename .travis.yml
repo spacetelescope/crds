@@ -23,6 +23,7 @@ install:
     - git clone git://github.com/astropy/ci-helpers.git
     - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
     - pip install git+https://github.com/spacetelescope/jwst
+    - pip install git+https://github.com/spacetelescope/romancal
     - pip uninstall --yes crds
     - ./install
     - pip install .["submission","test","docs","synphot"]

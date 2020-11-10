@@ -10,7 +10,7 @@ from nose.tools import assert_raises, assert_true
 
 from crds.core import utils, log, exceptions
 from crds.certify import reftypes
-from crds import hst, jwst
+from crds import hst, jwst, roman
 
 from crds.tests import test_config
 
@@ -65,6 +65,26 @@ def reftypes_jwst_save_json_specs():
     """
     >>> old_state = test_config.setup()
     >>> SPECS = os.path.join(os.path.abspath(jwst.HERE), "specs")
+    >>> specs = reftypes.load_raw_specs(SPECS)
+    >>> f = tempfile.NamedTemporaryFile(delete=False)
+    >>> f.close()
+    >>> reftypes.save_json_specs(specs, f.name) # doctest: +ELLIPSIS
+    CRDS - INFO -  Saved combined type specs to '...'
+    >>> test_config.cleanup(old_state)
+    """
+
+def reftypes_roman_load_raw_specs():
+    """
+    >>> old_state = test_config.setup()
+    >>> SPECS = os.path.join(os.path.abspath(roman.HERE), "specs")
+    >>> spec = reftypes.load_raw_specs(SPECS)
+    >>> test_config.cleanup(old_state)
+    """
+
+def reftypes_roman_save_json_specs():
+    """
+    >>> old_state = test_config.setup()
+    >>> SPECS = os.path.join(os.path.abspath(roman.HERE), "specs")
     >>> specs = reftypes.load_raw_specs(SPECS)
     >>> f = tempfile.NamedTemporaryFile(delete=False)
     >>> f.close()
@@ -164,6 +184,27 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
     >>> test_config.cleanup(old_state)
     """
 
+def reftypes_roman_reference_name_to_tpn_infos():
+    """
+    >>> old_state = test_config.setup()
+    >>> types = reftypes.get_types_object("roman")
+    >>> infos = types.reference_name_to_tpninfos("roman_wfi_flat.asdf")
+    >>> print(log.PP(infos))
+    [('META.AUTHOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('META.DESCRIPTION', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', 'ANY', 'N/A')),
+     ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('WFI',)),
+     ('META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('F062', 'F087', 'F106', 'F129', 'W146', 'F158', 'F184', 'GRISM', 'PRISM', 'CLEAR', 'DARK', 'ENGINEERING', 'N/A', 'ANY', 'UNKNOWN')),
+     ('META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('META.PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTPEDIGREE',)),
+     ('META.REFTYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('META.TELESCOPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('ROMAN',)),
+     ('META.USEAFTER', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTDATE',))]
+    >>> test_config.cleanup(old_state)
+    """
+
 def reftypes_hst_get_filekinds():
     """
     >>> old_state = test_config.setup()
@@ -179,6 +220,15 @@ def reftypes_jwst_get_filekinds():
     >>> types = reftypes.get_types_object("jwst")
     >>> types.get_filekinds("niriss")
     ['abvegaoffset', 'all', 'amplifier', 'apcorr', 'area', 'dark', 'distortion', 'drizpars', 'extract1d', 'flat', 'gain', 'ipc', 'linearity', 'mask', 'pars-image2pipeline', 'pathloss', 'persat', 'photom', 'readnoise', 'regions', 'saturation', 'specwcs', 'superbias', 'throughput', 'trapdensity', 'trappars', 'wavelengthrange', 'wcsregions', 'wfssbkg']
+    >>> test_config.cleanup(old_state)
+    """
+
+def reftypes_roman_get_filekinds():
+    """
+    >>> old_state = test_config.setup()
+    >>> types = reftypes.get_types_object("roman")
+    >>> types.get_filekinds("wfi")
+    ['all', 'flat']
     >>> test_config.cleanup(old_state)
     """
 

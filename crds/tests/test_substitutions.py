@@ -163,6 +163,16 @@ def substitutions_validate_jwst():
     >>> test_config.cleanup(old_state)
     """
 
+def substitutions_validate_roman():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", cache=test_config.CRDS_TESTING_CACHE)
+    >>> old_verbose = log.set_verbose()
+    >>> substitutions.validate_substitutions("roman-operational")  # doctest: +ELLIPSIS
+    CRDS - DEBUG -  Using CACHED CRDS reference assignment rules last updated on '...'
+    CRDS - DEBUG -  Instrument 'wfi' has no substitutions.
+    >>> _ = log.set_verbose(old_verbose)
+    >>> test_config.cleanup(old_state)
+    """
 # ==================================================================================
 
 def main():
