@@ -227,8 +227,8 @@ def reftypes_roman_get_filekinds():
     """
     >>> old_state = test_config.setup()
     >>> types = reftypes.get_types_object("roman")
-    >>> types.get_filekinds("wfi")
-    ['all', 'flat']
+    >>> {'all', 'flat'}.issubset(types.get_filekinds("wfi"))
+    True
     >>> test_config.cleanup(old_state)
     """
 
