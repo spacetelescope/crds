@@ -696,6 +696,13 @@ def certify_jwst_invalid_yaml():
     >>> test_config.cleanup(old_state)
     """
 
+def certify_test_roman_load_all_type_constraints():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> generic_tpn.load_all_type_constraints("roman")
+    >>> test_config.cleanup(old_state)
+    """
+
 def certify_test_jwst_load_all_type_constraints():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
