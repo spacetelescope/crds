@@ -23,6 +23,7 @@ from . import test_config
 def multiprocessing_instance(output_file_name):
     """Pretend to do something generic."""
     output_file = open(output_file_name, "a")
+
     with crds_cache_locking.get_cache_lock():
         for char in "testing":
             output_file.write(char)
@@ -34,7 +35,11 @@ def multiprocessing_instance(output_file_name):
 
 def try_multiprocessing():
     """Run some test functions using multiprocessing."""
-    pool = multiprocessing.Pool(5)
+    # Starting with Python 3.8, the default start method in macOS is
+    # "spawn", which causes the CRDS lock to be recreated for each
+    # process.
+    context = multiprocessing.get_context("fork")
+    pool = context.Pool(5)
     with tempfile.NamedTemporaryFile(mode="a") as output_file:
         pool.map(multiprocessing_instance, [output_file.name]*5)
         pool.close()
