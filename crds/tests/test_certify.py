@@ -757,6 +757,36 @@ def certify_AsdfCertify_valid():
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
 
+def certify_roman_valid_asdf():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi16_f158_flat_small.asdf", observatory="roman")
+    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context None
+    CRDS - INFO -  Checking Roman datamodels.
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_roman_invalid_asdf_schema():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_schema.asdf", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context None
+    CRDS - INFO -  Checking Roman datamodels.
+    CRDS - ERROR -  data/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : Roman Data Models: sequence item...: expected str instance, Time found
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_roman_invalid_asdf_tpn():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_tpn.asdf", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context None
+    CRDS - ERROR -  In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'META.INSTRUMENT.OPTICAL_ELEMENT...' : Value 'BAD' is not one of...
+    CRDS - INFO -  Checking Roman datamodels.
+    CRDS - WARNING -  ValidationWarning : stdatamodels.validate...
+    >>> test_config.cleanup(old_state)
+    """
+
 def certify_AsdfCertify_valid_with_astropy_time():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
@@ -800,6 +830,15 @@ def certify_rmap_compare():
     >>> test_config.cleanup(old_state)
     """
 
+def certify_roman_rmap_compare():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("roman_wfi_flat_0004.rmap", context="roman_0004.pmap")
+    CRDS - INFO -  Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'
+    >>> test_config.cleanup(old_state)
+    """
+
+
 def certify_jwst_bad_fits():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
@@ -829,6 +868,16 @@ def certify_duplicate_rmap_case_error():
     >>> test_config.cleanup(old_state)
     """
 
+def certify_roman_duplicate_rmap_case_error():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
+    >>> certify.certify_file("data/roman_wfi_flat_0004_duplicate.rmap")
+    CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context None
+    CRDS - ERROR -  Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter
+    CRDS - WARNING -  Checksum error : sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'
+    >>> test_config.cleanup(old_state)
+    """
+
 
 def checksum_duplicate_rmap_case_error():
     """
@@ -840,6 +889,25 @@ def checksum_duplicate_rmap_case_error():
     >>> checksum.add_checksum("data/hst_cos_tdstab_duplicate.rmap")
     CRDS - INFO -  Adding checksum for 'data/hst_cos_tdstab_duplicate.rmap'
     CRDS - ERROR -  Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter
+    >>> test_config.cleanup(old_state)
+    """
+
+def checksum_roman_duplicate_rmap_case_error():
+    """
+    >>> from crds.refactoring import checksum
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
+    >>> checksum.add_checksum("data/roman_wfi_flat_0004_duplicate.rmap")
+    CRDS - INFO -  Adding checksum for 'data/roman_wfi_flat_0004_duplicate.rmap'
+    CRDS - ERROR -  Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_roman_bad_tpn_value_rmap_case_error():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
+    >>> certify.certify_file("data/roman_wfi_flat_0004_badtpn.rmap", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context None
+    CRDS - ERROR -  Match('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.OPTICAL_ELEMENT...') : ('WFI21', 'F158') :  parameter='META.INSTRUMENT.DETECTOR...' value='WFI21' is not in ('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', '*', 'N/A')
     >>> test_config.cleanup(old_state)
     """
 
