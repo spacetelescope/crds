@@ -759,6 +759,7 @@ def certify_AsdfCertify_valid():
 
 def certify_roman_valid_asdf():
     """
+    Required Roman test: confirm that a valid asdf file is recognized as such.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_f158_flat_small.asdf", observatory="roman")
     CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context None
@@ -768,6 +769,8 @@ def certify_roman_valid_asdf():
 
 def certify_roman_invalid_asdf_schema():
     """
+    Required Roman test: confirm that an asdf file that does not conform to its schema definition
+    triggers an error in DataModels.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_schema.asdf", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context None
@@ -778,6 +781,9 @@ def certify_roman_invalid_asdf_schema():
 
 def certify_roman_invalid_asdf_tpn():
     """
+    Required Roman test: confirm that an asdf file that does not conform to its tpn definition
+    triggers an error in crds. Note: as the tpn often replicates schema implementation, this also
+    triggers an error in Datamodels.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_tpn.asdf", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context None
@@ -832,6 +838,7 @@ def certify_rmap_compare():
 
 def certify_roman_rmap_compare():
     """
+    Required Roman test: confirm that a calibration mapping file properly compares to its context.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("roman_wfi_flat_0004.rmap", context="roman_0004.pmap")
     CRDS - INFO -  Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'
@@ -870,6 +877,8 @@ def certify_duplicate_rmap_case_error():
 
 def certify_roman_duplicate_rmap_case_error():
     """
+    Required Roman test: verify that a calibration mapping file containing duplicate match cases
+    fails.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
     >>> certify.certify_file("data/roman_wfi_flat_0004_duplicate.rmap")
     CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context None
@@ -894,6 +903,8 @@ def checksum_duplicate_rmap_case_error():
 
 def checksum_roman_duplicate_rmap_case_error():
     """
+    Required Roman test: verify that the crds rmap checksum update tool does not silently drop
+    duplicate rmap entries when updating the checksum and rewriting the file.
     >>> from crds.refactoring import checksum
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
     >>> checksum.add_checksum("data/roman_wfi_flat_0004_duplicate.rmap")
@@ -902,8 +913,10 @@ def checksum_roman_duplicate_rmap_case_error():
     >>> test_config.cleanup(old_state)
     """
 
-def certify_roman_bad_tpn_value_rmap_case_error():
+def certify_roman_invalid_rmap_tpn():
     """
+    Required Roman test: verify that a calibration mapping file that violates tpn rules produces an
+    error.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
     >>> certify.certify_file("data/roman_wfi_flat_0004_badtpn.rmap", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context None
