@@ -793,6 +793,43 @@ def certify_roman_invalid_asdf_tpn():
     >>> test_config.cleanup(old_state)
     """
 
+def certify_roman_valid_spec_asdf():
+    """
+    Required Roman test: confirm that a valid spectroscopic asdf file is recognized as such.
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi16_grism_flat_small.asdf", observatory="roman")
+    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_small.asdf' as 'ASDF' relative to context None
+    CRDS - INFO -  Checking Roman datamodels.
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_roman_invalid_spec_asdf_schema():
+    """
+    Required Roman test: confirm that a spectroscopic asdf file that does not conform to its schema
+    definition triggers an error in DataModels.
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_schema.asdf", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context None
+    CRDS - INFO -  Checking Roman datamodels.
+    CRDS - ERROR -  data/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : Roman Data Models: sequence item...: expected str instance, Time found
+    >>> test_config.cleanup(old_state)
+    """
+
+def certify_roman_invalid_spec_asdf_tpn():
+    """
+    Required Roman test: confirm that a spectroscopic asdf file that does not conform to its tpn
+    definition triggers an error in crds. Note: as the tpn often replicates schema implementation,
+    this also triggers an error in Datamodels.
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_tpn.asdf", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context None
+    CRDS - ERROR -  In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'META.INSTRUMENT.OPTICAL_ELEMENT...' : Value 'BAD' is not one of...
+    CRDS - INFO -  Checking Roman datamodels.
+    CRDS - WARNING -  ValidationWarning : stdatamodels.validate...
+    >>> test_config.cleanup(old_state)
+    """
+
+
 def certify_AsdfCertify_valid_with_astropy_time():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
