@@ -1,5 +1,19 @@
 #! /bin/sh
 
+# ####
+# Usage
+#    install [--skip-types] [--dev]
+#
+# Options
+#    --skip-types : If not new reftypes have been defined, do not rebuild the reftype specs.
+#
+#    --dev : If working in an `edit` install of the package, i.e. `pip install -e`, there is
+#            no need to any further `pip install` operations since all code changes are immediately visible.
+#
+# Notes
+#    If both options are given, this script will do nothing.
+# ####
+
 cd `dirname $0`
 
 skip_types=0
