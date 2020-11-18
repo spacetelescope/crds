@@ -2,11 +2,10 @@
 
 cd `dirname $0`
 
+skip_types=0
 if [ "$1" = "--skip-types" ]; then
     shift;
-    dont_skip_types=0
-else
-    dont_skip_types=1
+    skip_types=1
 fi
 
 dev_install=0
@@ -45,7 +44,7 @@ st=0
 # or changing CRDS type specs,  after which the combined spec file is effectively
 # source code.
 
-if [ $dont_skip_types = 1 ]; then
+if [ $skip_types = 0 ]; then
     find . -name combined_specs.json | xargs rm
 
     find crds/hst/specs crds/jwst/specs crds/roman/specs crds/tobs/specs -name '*.*map' | xargs python -m crds.refactoring.checksum
