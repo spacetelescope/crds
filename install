@@ -1,21 +1,40 @@
 #! /bin/sh
 
+# ####
+# Usage
+#    install [--skip-types] [--dev]
+#
+# Options
+#    --skip-types : If not new reftypes have been defined, do not rebuild the reftype specs.
+#
+#    --dev : If working in an `edit` install of the package, i.e. `pip install -e`, there is
+#            no need to any further `pip install` operations since all code changes are immediately visible.
+#
+# Notes
+#    If both options are given, this script will do nothing.
+# ####
+
 cd `dirname $0`
+
+skip_types=0
+if [ "$1" = "--skip-types" ]; then
+    shift;
+    skip_types=1
+fi
+
+dev_install=0
+if [ "$1" == "--dev" ]; then
+    shift;
+    dev_install=1
+fi
 
 # The clean script removes temporary and junk files that should not be
 # committed to the source code repo.
-if (test -e clean)
-then
-    ./clean
+if [ $dev_install = 0 ]; then
+    if (test -e clean); then
+        ./clean
+    fi
 fi
-
-if [ "$1" = "--skip-types" ]; then
-    shift;
-    dont_skip_types=0
-else
-    dont_skip_types=1
-fi
-
 
 rm -f install.log
 
@@ -39,7 +58,7 @@ st=0
 # or changing CRDS type specs,  after which the combined spec file is effectively
 # source code.
 
-if [ $dont_skip_types = 1 ]; then
+if [ $skip_types = 0 ]; then
     find . -name combined_specs.json | xargs rm
 
     find crds/hst/specs crds/jwst/specs crds/roman/specs crds/tobs/specs -name '*.*map' | xargs python -m crds.refactoring.checksum
@@ -50,18 +69,24 @@ if [ $dont_skip_types = 1 ]; then
     python -m crds.tobs
 fi
 
-pip install .
+if [ $dev_install = 0 ]; then
+    echo "Doing setup install..."
+    pip install .
+fi
 st=$st$?
 
 # Optional CRDS test data is only installed by developers using ./install
 # to install CRDS from source code.  To support testing the
 # setup_test_cache script should also be run to install other test files.
-python setup_data.py install --force >>install.log
-st=$st$?
+if [ $dev_install = 0 ]; then
+    echo "Setup data..."
+    python setup_data.py install --force >>install.log
+    st=$st$?
 
-if (test -e clean)
-then
-    ./clean
+    if (test -e clean)
+    then
+        ./clean
+    fi
 fi
 
 echo final status $st
