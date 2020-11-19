@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.1.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "Updates to WFC3 IMPHTTAB and DFLTFILE reference types"
+__version__ = "10.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "Define known JWST step parameter reftypes"
 
 __all__ = [
     "getrecommendations",

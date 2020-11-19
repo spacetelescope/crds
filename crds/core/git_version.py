@@ -1,9 +1,9 @@
 
 
-__version__ = '804a30a1161a0e0282c40e46bb49d2e72bb47958'
+__version__ = 'f920deb266b3533ed7f85de4096d3049f04feed1'
 
 __full_version_info__ = '''
-branch: b10.1.0
-sha1: 804a30a1161a0e0282c40e46bb49d2e72bb47958
+branch: b10.2
+sha1: f920deb266b3533ed7f85de4096d3049f04feed1
 '''
     
