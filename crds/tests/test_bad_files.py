@@ -32,6 +32,14 @@ JWST_HEADER = {
     "meta.subarray.name" : "FULL",
     }
 
+ROMAN_HEADER = {
+    "meta.instrument.name": "WFI",
+    "meta.instrument.detector": "WFI01",
+    "meta.instrument.optical_element": "F158",
+    "meta.observation.date": "1880-01-01",
+    "meta.observation.time": "00:00:00"
+    }
+
 def dt_bad_references_error_cache_config():
     """
     CRDS can designate files as scientifically invalid which is reflected in the catalog
@@ -205,6 +213,59 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     Traceback (most recent call last):
     ...
     CrdsBadRulesError: Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
+    <BLANKLINE>
+
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_bad_rules_roman_getreferences_error():
+    """
+    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE, url="https://roman-serverless-mode.stsci.edu")
+    >>> config.ALLOW_BAD_RULES.reset()
+    >>> config.ALLOW_BAD_REFERENCES.reset()
+
+    >>> crds.getreferences(ROMAN_HEADER, observatory='roman', context='roman_0005.pmap', reftypes=['flat'])
+    Traceback (most recent call last):
+    ...
+    CrdsBadRulesError: Final context 'roman_0005.pmap' is marked as scientifically invalid based on: ['roman_wfi_flat_0005.rmap']
+    <BLANKLINE>
+
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_bad_rules_roman_getreferences_warning():
+    """
+    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE, url="https://roman-serverless-mode.stsci.edu")
+    >>> config.ALLOW_BAD_RULES.set("1")
+    False
+
+    >>> config.ALLOW_BAD_REFERENCES.set("1")
+    False
+
+    >>> refs = crds.getreferences(ROMAN_HEADER, observatory='roman', context='roman_0005.pmap', reftypes=["flat"])   # doctest: +ELLIPSIS
+    CRDS - WARNING -  Final context 'roman_0005.pmap' is marked as scientifically invalid based on: ['roman_wfi_flat_0005.rmap']
+    <BLANKLINE>
+    CRDS - WARNING -  Recommended reference 'roman_wfi_flat_0788.asdf' of type 'flat' is designated scientifically invalid.
+    <BLANKLINE>
+
+    >>> list(refs.keys()) == ['flat']
+    True
+
+    >>> os.path.basename(refs['flat'])
+    'roman_wfi_flat_0788.asdf'
+
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_bad_rules_roman_bestrefs_script_error():
+    """
+    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE, url="https://roman-serverless-mode.stsci.edu")
+    >>> config.ALLOW_BAD_RULES.reset()
+
+    >>> crds.getrecommendations(ROMAN_HEADER, reftypes=["flat"], context="roman_0005.pmap", observatory="roman")    # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+    ...
+    CrdsBadRulesError: Final context 'roman_0005.pmap' is marked as scientifically invalid based on: ['roman_wfi_flat_0005.rmap']
     <BLANKLINE>
 
     >>> test_config.cleanup(old_state)
