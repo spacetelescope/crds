@@ -54,11 +54,24 @@ HERE = os.path.dirname(__file__) or "."
 # Stub like HST for now
 
 def header_to_reftypes(header, context="roman-operational"):
-    """Based on `header` return the default list of appropriate reference type names."""
+    """Based on `header` return the default list of appropriate reference type names.
+
+    >>> ref_types = header_to_reftypes(None)
+    >>> print(ref_types)
+    []
+
+    """
     return []  # translates to "all types" for instrument defined by header.
 
 def header_to_pipelines(header, context="roman-operational"):
-    """Based on `header` return the default list of appropriate reference type names."""
+    """Based on `header` return the default list of appropriate reference type names.
+
+    >>> header_to_pipelines(None)
+    Traceback (most recent call last):
+    ...
+    NotImplementedError: Roman has not defined header_to_pipelines().
+
+    """
     raise NotImplementedError("Roman has not defined header_to_pipelines().")
 
 # =======================================================================
@@ -69,6 +82,10 @@ def get_datamodels():
     """Defer datamodels loads until we definitely have a roman usecase.
     Enables light observatory package imports which don't require all
     dependencies when supporting other observatories.
+    
+    >>> get_datamodels() # doctest: +ELLIPSIS
+    <module 'romancal.datamodels' from .../romancal/datamodels/__init__.py'>
+
     """
     try:
         from romancal import datamodels
@@ -86,7 +103,12 @@ def get_datamodels():
 # =============================================================================
 
 def tpn_path(tpn_file):
-    """Return the full filepath of `tpn_file`."""
+    """Return the full filepath of `tpn_file`.
+
+    >>> tpn_path('tpn_file.tpn') # doctest: +ELLIPSIS
+    '.../crds/roman/tpns/tpn_file.tpn'
+
+    """
     return os.path.join(HERE, "tpns", tpn_file)
 
 def get_extra_tpninfos(refpath):
@@ -100,6 +122,10 @@ def get_extra_tpninfos(refpath):
 
     These tend to have a superset of acceptable values for any particular instrument,
     particularly since CRDS has historically only loaded the core schema.
+
+    >>> get_extra_tpninfos(None)
+    []
+
     """
     return []   # use this to ignore datamodels schema for CRDS value checking
     # XXXX roman  -- datamodels schema scraping can potentially be enabled once
