@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "Define known JWST step parameter reftypes"
+__version__ = "10.3.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "Roman DMS Build 0.0"
 
 __all__ = [
     "getrecommendations",
