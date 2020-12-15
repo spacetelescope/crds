@@ -705,15 +705,11 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"fc3a2806fc8b41d78fd36af1fdd92881d1c87709",
+            "sha1sum":"6e3daf7207207f3fd1700fbfc99e23baa9733b9e",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"miri_apcorr.tpn",
-            "unique_rowkeys":[
-                "FILTER",
-                "SUBARRAY",
-                "EEFRACTION"
-            ]
+            "unique_rowkeys":null
         },
         "area":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
