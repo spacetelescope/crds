@@ -82,7 +82,7 @@ def get_datamodels():
     """Defer datamodels loads until we definitely have a roman usecase.
     Enables light observatory package imports which don't require all
     dependencies when supporting other observatories.
-    
+
     >>> get_datamodels() # doctest: +ELLIPSIS
     <module 'romancal.datamodels' from .../romancal/datamodels/__init__.py'>
 
@@ -135,6 +135,20 @@ def get_extra_tpninfos(refpath):
     # return schema.get_schema_tpninfos(refpath)
 
 def project_check(refpath):
+    """
+    >>> get_data_model_flat_dict('crds/tests/data/roman_wfi16_f158_flat_small.asdf')
+    {'asdf_library.author': 'Space Telescope Science Institute', 'asdf_library.homepage': 'http://github.com/spacetelescope/asdf', 'asdf_library.name': 'asdf', 'asdf_library.version': '2.7.1', 'history.entries.0.description': 'Creation of dummy flat file for CRDS testing during DMS build 0.0.', 'history.entries.0.time': '2020-11-04T20:01:23', 'history.entries.1.description': 'Update of dummy flat file to test history entries.', 'history.entries.1.time': '2020-11-04T20:02:13', 'history.extensions.0.extension_class': 'astropy.io.misc.asdf.extension.AstropyAsdfExtension', 'history.extensions.0.software.name': 'astropy', 'history.extensions.0.software.version': '4.1', 'history.extensions.1.extension_class': 'asdf.extension.BuiltinExtension', 'history.extensions.1.software.name': 'asdf', 'history.extensions.1.software.version': '2.7.1', 'data': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'dq': array([[0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0]], dtype=uint16), 'err': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'meta.author': 'Space Telescope Science Institute', 'meta.date': '2020-12-02T22:56:06.721', 'meta.description': 'Flat reference file.', 'meta.filename': 'roman_wfi16_f158_flat_small.asdf', 'meta.instrument.detector': 'WFI16', 'meta.instrument.name': 'WFI', 'meta.instrument.optical_element': 'F158', 'meta.model_type': 'FlatModel', 'meta.pedigree': 'DUMMY', 'meta.reftype': 'FLAT', 'meta.telescope': 'ROMAN', 'meta.useafter': '2020-01-01T00:00:00.000'}
+
+    """
     return get_data_model_flat_dict(refpath)
 
 def get_data_model_flat_dict(filepath):
@@ -145,6 +159,19 @@ def get_data_model_flat_dict(filepath):
     e.g.  meta.instrument.name  -->  "META.INSTRUMENT.NAME'
 
     Returns   { file_keyword : keyword_value, ... }
+
+    >>> get_data_model_flat_dict('crds/tests/data/roman_wfi16_f158_flat_small.asdf')
+    {'asdf_library.author': 'Space Telescope Science Institute', 'asdf_library.homepage': 'http://github.com/spacetelescope/asdf', 'asdf_library.name': 'asdf', 'asdf_library.version': '2.7.1', 'history.entries.0.description': 'Creation of dummy flat file for CRDS testing during DMS build 0.0.', 'history.entries.0.time': '2020-11-04T20:01:23', 'history.entries.1.description': 'Update of dummy flat file to test history entries.', 'history.entries.1.time': '2020-11-04T20:02:13', 'history.extensions.0.extension_class': 'astropy.io.misc.asdf.extension.AstropyAsdfExtension', 'history.extensions.0.software.name': 'astropy', 'history.extensions.0.software.version': '4.1', 'history.extensions.1.extension_class': 'asdf.extension.BuiltinExtension', 'history.extensions.1.software.name': 'asdf', 'history.extensions.1.software.version': '2.7.1', 'data': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'dq': array([[0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0]], dtype=uint16), 'err': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'meta.author': 'Space Telescope Science Institute', 'meta.date': '2020-12-02T22:56:06.721', 'meta.description': 'Flat reference file.', 'meta.filename': 'roman_wfi16_f158_flat_small.asdf', 'meta.instrument.detector': 'WFI16', 'meta.instrument.name': 'WFI', 'meta.instrument.optical_element': 'F158', 'meta.model_type': 'FlatModel', 'meta.pedigree': 'DUMMY', 'meta.reftype': 'FLAT', 'meta.telescope': 'ROMAN', 'meta.useafter': '2020-01-01T00:00:00.000'}
+
     """
     datamodels = get_datamodels()
     log.info("Checking Roman datamodels.")
@@ -161,6 +188,10 @@ def get_data_model_flat_dict(filepath):
 def match_context_key(key):
     """Set the case of a context key appropriately for this project, Roman
     always uses upper case.
+
+    >>> match_context_key('aB.$QqZ4nB')
+    'AB.$QQZ4NB'
+
     """
     return key.upper()
 
@@ -171,13 +202,20 @@ def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
     should be a mapping or ASDF reference file.
 
-    >> get_file_properties("./roman_wfi_dark_0001.rmap")
-    ('wfi', 'dark')
+    >>> get_file_properties('crds/tests/data/roman_wfi16_f158_flat_small.asdf')
+    ('wfi', 'flat')
 
-    >> get_file_properties("./roman_wfi_dark_0001.pmap")
+    >>> get_file_properties('crds/tests/data/roman_wfi_flat_0004.rmap')
+    ('wfi', 'flat')
+
+    >>> get_file_properties('crds/tests/data/roman_0001.pmap')
+    ('', '')
+
+    >>> get_file_properties('crds/tests/data/ascii_tab.csv') # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
-    AssertionError: Invalid .pmap filename './roman_wfi_dark_0001.pmap'
+    TypeError: string indices must be integers
+
     """
     if config.is_mapping(filename):
         try:
@@ -201,29 +239,36 @@ def get_file_properties(filename):
 
 def decompose_newstyle_name(filename):
     """
-    >> decompose_newstyle_name("./roman.pmap")
+    >>> decompose_newstyle_name('./roman.pmap')
     ('.', 'roman', '', '', '', '.pmap')
 
-    >> decompose_newstyle_name("./roman_0001.pmap")
+    >>> decompose_newstyle_name('./roman_0001.pmap')
     ('.', 'roman', '', '', '0001', '.pmap')
 
-    >> decompose_newstyle_name("./hst_acs.imap")
-    ('.', 'roman', 'wfi', '', '', '.imap')
-
-    >> decompose_newstyle_name("./roman_wfi_0001.imap")
+    >>> decompose_newstyle_name("./roman_wfi_0001.imap")
     ('.', 'roman', 'wfi', '', '0001', '.imap')
 
-    >> decompose_newstyle_name("./roman_wfi_dark.rmap")
-    ('.', 'roman', 'wfi', 'dark', '', '.rmap')
+    >>> decompose_newstyle_name("./roman_wfi_flat.rmap")
+    ('.', 'roman', 'wfi', 'flat', '', '.rmap')
 
-    >> decompose_newstyle_name("./roman_wfi_dark_0001.rmap")
-    ('.', 'roman', 'wfi', 'biasfile', '0001', '.rmap')
+    >>> decompose_newstyle_name("./roman_wfi_flat.asdf")
+    ('.', 'roman', 'wfi', 'flat', '', '.asdf')
 
-    >> decompose_newstyle_name("./roman_wfi_dark.asdf")
-    ('.', 'roman', 'wfi', 'dark', '', '.asdf')
+    >>> decompose_newstyle_name("./hst_acs.imap")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid instrument 'acs'
 
-    >> decompose_newstyle_name("./roman_wfi_dark_0001.asdf")
-    ('.', 'roman', 'wfi', 'dark', '0001', '.asdf')
+    >>> decompose_newstyle_name("./roman_wfi_dark_0001.rmap")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid filekind 'dark'
+
+    >>> decompose_newstyle_name("./roman_wfi_flat_abcd.rmap")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid id field <built-in function id>
+
     """
     path, parts, ext = _get_fields(filename)
     observatory = parts[0]
@@ -248,7 +293,7 @@ def decompose_newstyle_name(filename):
 
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
-    assert re.match(r"\d*", serial), "Invalid id field " + repr(id)
+    assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
     # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
@@ -256,11 +301,24 @@ def decompose_newstyle_name(filename):
 def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and
     return (instrument, filekind).
+
+    >>> properties_inside_mapping('crds/tests/data/roman_0001.pmap')
+    ('', '')
+
+    >>> properties_inside_mapping('crds/tests/data/roman_wfi_flat_0004.rmap')
+    ('wfi', 'flat')
+
+    >>> properties_inside_mapping('crds/tests/data/roman_wfi_0001.imap')
+    ('wfi', '')
+
+    >>> properties_inside_mapping('crds/tests/data/roman_wfi_flat_0004.rmap')
+    ('wfi', 'flat')
+
     """
     map = rmap.fetch_mapping(filename)
-    if map.filekind == "PIPELINE":
+    if map.mapping == "pipeline":
         result = "", ""
-    elif map.filekind == "INSTRUMENT":
+    elif map.mapping == "instrument":
         result = map.instrument, ""
     else:
         result = map.instrument, map.filekind
