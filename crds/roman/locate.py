@@ -18,6 +18,7 @@ log annotation, i.e.  AKA keyword cross-strapping.
 import os.path
 import re
 import warnings
+from collections import namedtuple
 
 # =======================================================================
 
@@ -325,6 +326,26 @@ def properties_inside_mapping(filename):
     return result
 
 def _get_fields(filename):
+    """
+    >>> _get_fields("")
+    ('', [''], '')
+
+    >>> _get_fields("a/b.c")
+    ('a', ['b'], '.c')
+
+    >>> _get_fields("_")
+    ('', ['', ''], '')
+
+    >>> _get_fields("__")
+    ('', ['', '', ''], '')
+
+    >>> _get_fields("a_b_c")
+    ('', ['a', 'b', 'c'], '')
+
+    >>> _get_fields("_a_b_c_")
+    ('', ['', 'a', 'b', 'c', ''], '')
+
+    """
     path = os.path.dirname(filename)
     name = os.path.basename(filename)
     name, ext = os.path.splitext(name)
@@ -332,6 +353,24 @@ def _get_fields(filename):
     return path, parts, ext
 
 def list_get(l, index, default):
+    """
+    >>> list_get([], 0, None)
+
+    >>> list_get([], -1, 7)
+    7
+
+    >>> list_get(None, 0, None)
+    Traceback (most recent call last):
+    ...
+    TypeError: 'NoneType' object is not subscriptable
+
+    >>> list_get([1], 1, 9)
+    9
+
+    >>> list_get([1, 2, 3, 4], 2, 8)
+    3
+
+    """
     try:
         return l[index]
     except IndexError:
@@ -339,6 +378,18 @@ def list_get(l, index, default):
 
 def get_reference_properties(filename):
     """Figure out ASDF (instrument, filekind, serial) based on `filename`.
+
+    >>> get_reference_properties('crds/tests/data/roman_0001.pmap')
+    ('crds/tests/data', 'roman', '', '', '0001', '.pmap')
+
+    >>> get_reference_properties("./roman_wfi_flat.asdf")
+    ('.', 'roman', 'wfi', 'flat', '', '.asdf')
+
+    >>> get_reference_properties('crds/tests/data/s7g1700gl_dead_bad_xsum.fits')
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.CrdsNamingError: Can't identify instrument of 's7g1700gl_dead_bad_xsum.fits' : Invalid instrument 'cos'
+
     """
     try:   # Hopefully it's a nice new standard filename, easy
         return decompose_newstyle_name(filename)
@@ -351,6 +402,20 @@ def get_reference_properties(filename):
 
 def ref_properties_from_header(filename):
     """Look inside ASDF `filename` header to determine instrument, filekind.
+
+    >>> ref_properties_from_header('crds/tests/data/roman_wfi16_f158_flat_small.asdf')
+    ('crds/tests/data', 'roman', 'wfi', 'flat', 'roman_wfi16_f158_flat_small', '.asdf')
+
+    >>> ref_properties_from_header('crds/tests/data/s7g1700gl_dead_bad_xsum.fits')
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.CrdsNamingError: Can't identify instrument of 's7g1700gl_dead_bad_xsum.fits' : Invalid instrument 'cos'
+
+    >>> ref_properties_from_header('crds/tests/data/roman_wfi16_f158_badtype_small.asf')
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.CrdsNamingError: Can't identify META.REFTYPE of 'roman_wfi16_f158_badtype_small.asf'
+
     """
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
@@ -397,6 +462,12 @@ def reference_keys_to_dataset_keys(rmapping, header):
     version is checked and used since it will be used to replace the discrete
     valued keyword in the header which is certified and used to define the rmap
     updates.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'crds/tests/data/roman_wfi16_f158_badtype_small.asf'), \
+    {'META.INSTRUMENT.P_HOOLIGAN':'abc'})
+    hooligan
+
     """
     header = dict(header)
 
