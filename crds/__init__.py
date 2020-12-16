@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "Roman DMS Build 0.0"
+__version__ = "10.3.1"   # XXXX  see also ../setup.cfg
+__rationale__ = "Enable new MIRI APCORR references"
 
 __all__ = [
     "getrecommendations",
