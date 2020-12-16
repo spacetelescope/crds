@@ -463,11 +463,104 @@ def reference_keys_to_dataset_keys(rmapping, header):
     valued keyword in the header which is certified and used to define the rmap
     updates.
 
-    >>> reference_keys_to_dataset_keys( \
-    namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'crds/tests/data/roman_wfi16_f158_badtype_small.asf'), \
-    {'META.INSTRUMENT.P_HOOLIGAN':'abc'})
-    hooligan
+    Note, can't test unrecognized "P_" keywords because the logging appeares to go to stderr which doctests don't check.
 
+    ==================================================
+    Test adding a translation.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({'MOUSE' : 'RAT'}, ''), \
+    {"MOUSE" : "MICKEY", "RAT" : "MORTIMER"})
+    {'MOUSE': 'MICKEY', 'RAT': 'MICKEY', 'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    ==================================================
+    Test replacing translated values with untranslated values.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({'MOUSE' : 'RAT'}, ''), \
+    {"META.EXPOSURE.P_EXPTYPE" : None, \
+    "META.INSTRUMENT.P_BAND" : "UNDEFINED", \
+    "META.INSTRUMENT.P_DETECTOR"  : "RADAR", \
+    "META.INSTRUMENT.P_CHANNEL" : None, \
+    "META.INSTRUMENT.CHANNEL" : None, \
+    "META.INSTRUMENT.P_FILTER" : "UNDEFINED", \
+    "META.INSTRUMENT.FILTER" : None, \
+    "META.INSTRUMENT.P_MODULE" : "LUNAR", \
+    "META.INSTRUMENT.MODULE" : None, \
+    "META.SUBARRAY.P_SUBARRAY" : None, \
+    "META.SUBARRAY.NAME" : "YELLOW", \
+    "META.INSTRUMENT.P_GRATING" : "UNDEFINED", \
+    "META.INSTRUMENT.GRATING" : "MOZZARELLA", \
+    "META.EXPOSURE.PREADPATT" : "CHECKERBOARD", \
+    "META.EXPOSURE.READPATT" : "CHESSBOARD"})
+    {'META.EXPOSURE.P_EXPTYPE': None, 'META.INSTRUMENT.P_BAND': 'UNDEFINED', 'META.INSTRUMENT.P_DETECTOR': 'RADAR', 'META.INSTRUMENT.P_CHANNEL': None, 'META.INSTRUMENT.CHANNEL': None, 'META.INSTRUMENT.P_FILTER': 'UNDEFINED', 'META.INSTRUMENT.FILTER': None, 'META.INSTRUMENT.P_MODULE': 'LUNAR', 'META.INSTRUMENT.MODULE': 'LUNAR', 'META.SUBARRAY.P_SUBARRAY': None, 'META.SUBARRAY.NAME': 'YELLOW', 'META.INSTRUMENT.P_GRATING': 'UNDEFINED', 'META.INSTRUMENT.GRATING': 'MOZZARELLA', 'META.EXPOSURE.PREADPATT': 'CHECKERBOARD', 'META.EXPOSURE.READPATT': 'CHECKERBOARD', 'META.INSTRUMENT.DETECTOR': 'RADAR', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    ==================================================
+    Test setting missing subarray and exposure type values.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, ''), \
+    {})
+    {'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, ''), \
+    {'META.SUBARRAY.NAME' : 'REDOCTOBER', \
+    'META.EXPOSURE.TYPE' : 'NORTHFACE'})
+    {'META.SUBARRAY.NAME': 'REDOCTOBER', 'META.EXPOSURE.TYPE': 'NORTHFACE'}
+
+    ==================================================
+    Test preserving existing subarry adn exposure type values.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, ''), \
+    {'META.SUBARRAY.NAME' : 'REDOCTOBER', \
+    'META.EXPOSURE.TYPE' : 'NORTHFACE'})
+    {'META.SUBARRAY.NAME': 'REDOCTOBER', 'META.EXPOSURE.TYPE': 'NORTHFACE'}
+
+    ==================================================
+    Test preseverving existing DATE/TIME if no USEAFTER value.
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
+    {'META.OBSERVATION.DATE' : '1879-03-14', \
+     'META.OBSERVATION.TIME' : '12:34:56'})
+    {'META.OBSERVATION.DATE': '1879-03-14', 'META.OBSERVATION.TIME': '12:34:56', 'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    ==================================================
+    Test setting DATE/TIME with no USEAFTER, but allowed "bad use after".
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> config.ALLOW_BAD_USEAFTER.set("1")
+    False
+    >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), {})
+    {'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED', 'META.OBSERVATION.DATE': '1900-01-01', 'META.OBSERVATION.TIME': '00:00:00'}
+
+    ==================================================
+    Test setting DATE/TIME from USEAFTER.
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> config.ALLOW_BAD_USEAFTER.set("1")
+    False
+    >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
+    {'META.USEAFTER' : '1770-12-01T01:23:45', \
+     'META.OBSERVATION.DATE' : '1879-03-14', \
+     'META.OBSERVATION.TIME' : '12:34:56'})
+    {'META.USEAFTER': '1770-12-01T01:23:45', 'META.OBSERVATION.DATE': '1770-12-01', 'META.OBSERVATION.TIME': '01:23:45', 'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+    
+    ==================================================
+    Test bad formatted USEAFTER.
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
+    {'META.USEAFTER' : 'bad user after', \
+     'META.OBSERVATION.DATE' : '1879-03-14', \
+     'META.OBSERVATION.TIME' : '12:34:56'})
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.InvalidUseAfterFormat: Bad USEAFTER time format = 'bad user after'
+    
     """
     header = dict(header)
 
