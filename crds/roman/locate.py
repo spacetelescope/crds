@@ -648,28 +648,66 @@ def reference_keys_to_dataset_keys(rmapping, header):
 # =============================================================================
 
 def condition_matching_header(rmapping, header):
-    """Normalize header values for .rmap reference insertion."""
+    """Normalize header values for .rmap reference insertion.
+
+    >>> condition_matching_header(None, {1:2, 3:4, 5:6})
+    {1: 2, 3: 4, 5: 6}
+
+    """
     return dict(header)   # NOOP for Roman,  may have to revisit
 
 # ============================================================================
 
 def fits_to_parkeys(fits_header):
+    """
+    >>> condition_matching_header(None, {1:2, 3:4, 5:6})
+    {1: 2, 3: 4, 5: 6}
+
+    """
+
     return dict(fits_header)
 
 # ============================================================================
 
 def get_env_prefix(instrument):
-    """Return the environment variable prefix (IRAF prefix) for `instrument`."""
+    """Return the environment variable prefix (IRAF prefix) for `instrument`.
+
+    >>> get_env_prefix(None)
+    'crds://'
+
+    """
     return "crds://"
 
 def filekind_to_keyword(filekind):
-    """Return the "keyword" at which a assigned reference should be recorded."""
+    """Return the "keyword" at which a assigned reference should be recorded.
+
+    >>> filekind_to_keyword(None)
+    Traceback (most recent call last):
+    ...
+    NotImplementedError: filekind_to_keyword not implemented for Roman
+
+    """
     raise NotImplementedError("filekind_to_keyword not implemented for Roman")
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
+
+    >>> locate_file('crds/tests/data/roman_wfi16_f158_flat_small.asdf', None) # doctest: +ELLIPSIS
+    '.../references/roman/wfi/roman_wfi16_f158_flat_small.asdf'
+
+    >>> locate_file('crds/tests/data/roman_wfi16_f158_flat_small.asdf', 'instrument') # doctest: +ELLIPSIS
+    '.../references/roman/wfi/roman_wfi16_f158_flat_small.asdf'
+
+    >>> locate_file('crds/tests/data/roman_wfi16_f158_flat_small.asdf', 'flat') # doctest: +ELLIPSIS
+    '.../references/roman/roman_wfi16_f158_flat_small.asdf'
+
+    >>> locate_file('crds/tests/data/roman_wfi16_f158_flat_small.asdf', 'other') # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+    ...
+    ValueError: Unhandled reference file location mode 'other'
+
     """
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="roman")
@@ -683,7 +721,24 @@ def locate_file(refname, mode=None):
     return  os.path.join(rootdir, os.path.basename(refname))
 
 def locate_dir(instrument, mode=None):
-    """Locate the instrument specific directory for a reference file."""
+    """Locate the instrument specific directory for a reference file.
+
+    >>> locate_dir('wfi', None) # doctest: +ELLIPSIS
+    '.../references/roman/wfi'
+
+    >>> locate_dir('wfi', 'instrument') # doctest: +ELLIPSIS
+    '.../references/roman/wfi'
+
+    >>> locate_dir('wfi', 'flat') # doctest: +ELLIPSIS
+    '.../references/roman'
+
+    >>> locate_dir('wfi', 'other') # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid CRDS cache subdirectory mode = 'other'
+
+    """
+
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="roman")
     else:
@@ -700,10 +755,13 @@ def locate_dir(instrument, mode=None):
         raise ValueError("Unhandled reference file location mode " + repr(mode))
     return rootdir
 
-
 def get_cross_strapped_pairs(header):
     """Roman does not use FITS files so there is no cross-strapping between datamodels
     notation and FITS keywords.   Returns []
+
+    >>> get_cross_strapped_pairs(None)
+    []
+
     """
     return []
 
@@ -712,6 +770,12 @@ def get_cross_strapped_pairs(header):
 def hijack_warnings(func, *args, **keys):
     """Re-map dependency warnings to CRDS warnings so they're counted and logged
     to web output.   astropy and datamodels are remapped.
+
+    Can't do much testing since the doctest ignores stderr.
+
+    >>> hijack_warnings(lambda *args, **keys: print('hooligan'), None, None)
+    hooligan
+
     """
     with warnings.catch_warnings():
         # save and replace warnings.showwarning
