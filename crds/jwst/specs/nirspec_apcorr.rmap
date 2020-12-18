@@ -9,10 +9,9 @@ header = {
     'name' : 'jwst_nirspec_apcorr.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'd099a40e07351e8cd7d4c4fefd4b2c7f8036a62b',
+    'sha1sum' : '2f9109d36be7428b072f48b555aaf26a5494d7ae',
     'suffix' : 'apcorr',
     'text_descr' : 'Aperture Correction',
-    'unique_rowkeys' : ('FILTER', 'GRATING', 'SLIT'),
 }
 
 comment = """
