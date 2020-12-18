@@ -704,6 +704,7 @@ def locate_file(refname, mode=None):
         FAIL: Doctest: crds.tests.test_list.dt_list_cached_references
         FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
         FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
+    XXXX TODO: Enable the mode=None test case and resolve the ensuing test failures in other modules.
     >> locate_file('tests/data/roman_wfi16_f158_flat_small.asdf', None) # doctest: +ELLIPSIS
     '.../references/roman/wfi/roman_wfi16_f158_flat_small.asdf'
 
@@ -744,6 +745,7 @@ def locate_dir(instrument, mode=None):
         FAIL: Doctest: crds.tests.test_list.dt_list_cached_references
         FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
         FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
+    XXXX TODO: Enable the mode=None test case and resolve the ensuing test failures in other modules.
     >> locate_dir('wfi', None) # doctest: +ELLIPSIS
     '.../references/roman/wfi'
 
