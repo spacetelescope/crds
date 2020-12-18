@@ -705,7 +705,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"6e3daf7207207f3fd1700fbfc99e23baa9733b9e",
+            "sha1sum":"e2255db2e45b01b85aa4686d6e1811ad77ff33b8",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"miri_apcorr.tpn",
@@ -4806,15 +4806,11 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"d099a40e07351e8cd7d4c4fefd4b2c7f8036a62b",
+            "sha1sum":"2f9109d36be7428b072f48b555aaf26a5494d7ae",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"nirspec_apcorr.tpn",
-            "unique_rowkeys":[
-                "FILTER",
-                "GRATING",
-                "SLIT"
-            ]
+            "unique_rowkeys":null
         },
         "area":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
