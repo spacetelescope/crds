@@ -24,6 +24,9 @@ META.EXPOSURE.TYPE          H   C   O   FGS_DARK,FGS_FOCUS,FGS_IMAGE,FGS_INTFLAT
 # remove from .tpn when no longer present in active context.
 META.SUBARRAY.NAME         H    C   O    8X8,32X32,128X128,2048X64,\
                                          \
+                                         SUBIDSTRIPCENTER,SUBIDSTRIPLL​,\
+                                         SUBTUNE32CENTERG1,SUBTUNE32CENTERG2,SUBTUNE32LLG1,SUBTUNE32LLG2,\
+                                         \
                                          SUB128CENTER,SUB128DIAGONAL,SUB128LLCORNER,\
                                          SUB32CENTER,SUB32DIAGONAL,SUB32LLCORNER,\
                                          SUB8CENTER,SUB8DIAGONAL,SUB8LLCORNER,\
