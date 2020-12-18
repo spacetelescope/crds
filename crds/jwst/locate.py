@@ -181,7 +181,7 @@ def decompose_newstyle_name(filename):
 
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
-    assert re.match(r"\d*", serial), "Invalid id field " + repr(id)
+    assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
     # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
@@ -191,9 +191,9 @@ def properties_inside_mapping(filename):
     return (instrument, filekind).
     """
     map = rmap.fetch_mapping(filename)
-    if map.filekind == "PIPELINE":
+    if map.mapping == "pipeline":
         result = "", ""
-    elif map.filekind == "INSTRUMENT":
+    elif map.mapping == "instrument":
         result = map.instrument, ""
     else:
         result = map.instrument, map.filekind

@@ -9,7 +9,7 @@ header = {
     'name' : 'jwst_miri_apcorr.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '6e3daf7207207f3fd1700fbfc99e23baa9733b9e',
+    'sha1sum' : 'e2255db2e45b01b85aa4686d6e1811ad77ff33b8',
     'suffix' : 'apcorr',
     'text_descr' : 'Aperture Correction',
 }

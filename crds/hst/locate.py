@@ -214,7 +214,7 @@ def decompose_newstyle_name(filename):
     assert observatory == "hst"
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
-    # assert re.match("\d*", serial), "Invalid id field " + repr(id)
+    # assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
 
     # extension may vary for upload temporary files.
 

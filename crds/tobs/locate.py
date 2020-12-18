@@ -149,7 +149,7 @@ def decompose_newstyle_name(filename):
         repr(instrument) + " in name " + repr(filename)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + \
         repr(filekind) + " in name " + repr(filename)
-    assert re.match("\d*", serial), "Invalid id field " + \
+    assert re.fullmatch(r"\d*", serial), "Invalid id field " + \
         repr(id) + " in name " + repr(filename)
     # extension may vary for upload temporary files.
 
