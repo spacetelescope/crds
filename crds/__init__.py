@@ -11,7 +11,7 @@ warnings.filterwarnings(
 # ============================================================================
 
 __version__ = "10.3.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "Enable new MIRI APCORR references"
+__rationale__ = "New JWST FGS subarrays, APCORR format, and Roman tests"
 
 __all__ = [
     "getrecommendations",
