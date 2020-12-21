@@ -181,7 +181,22 @@ def decompose_newstyle_name(filename):
 
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
+
+    # The original regular expresssion "\d*\" matches anything in the below assert statement, so it's basically a no-op.
+    # The correct way to do it is with fullmatch. However, that generates a bunch of test failures that need
+    # to be reconciled before making the change:
+    #     ERROR: test_throughput_lookup_generation (crds.tests.test_synphot_lookup_generator.TestSynphotLookupGenerator)
+    #     FAIL: Doctest: crds.tests.test_bad_files.dt_bad_references_fast_mode
+    #     FAIL: Doctest: crds.tests.test_bad_files.dt_bad_rules_jwst_getreferences_warning
+    #     FAIL: Doctest: crds.tests.test_certify.certify_recursive
+    #     FAIL: Doctest: crds.tests.test_certify.certify_table_comparison_context
+    #     FAIL: Doctest: crds.tests.test_heavy_client.dt_getreferences_ignore_cache
+    #     FAIL: Doctest: crds.tests.test_list.dt_list_cached_references
+    #     FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
+    #
+    # XXXX TODO: Change to us fullmatch and resolve all the ensuing test failures.
     assert re.match(r"\d*", serial), "Invalid id field " + repr(id)
+    #assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
     # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
@@ -191,9 +206,9 @@ def properties_inside_mapping(filename):
     return (instrument, filekind).
     """
     map = rmap.fetch_mapping(filename)
-    if map.filekind == "PIPELINE":
+    if map.mapping == "pipeline":
         result = "", ""
-    elif map.filekind == "INSTRUMENT":
+    elif map.mapping == "instrument":
         result = map.instrument, ""
     else:
         result = map.instrument, map.filekind

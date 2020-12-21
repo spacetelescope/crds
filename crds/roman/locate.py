@@ -18,6 +18,7 @@ log annotation, i.e.  AKA keyword cross-strapping.
 import os.path
 import re
 import warnings
+from collections import namedtuple
 
 # =======================================================================
 
@@ -54,11 +55,24 @@ HERE = os.path.dirname(__file__) or "."
 # Stub like HST for now
 
 def header_to_reftypes(header, context="roman-operational"):
-    """Based on `header` return the default list of appropriate reference type names."""
+    """Based on `header` return the default list of appropriate reference type names.
+
+    >>> ref_types = header_to_reftypes(None)
+    >>> print(ref_types)
+    []
+
+    """
     return []  # translates to "all types" for instrument defined by header.
 
 def header_to_pipelines(header, context="roman-operational"):
-    """Based on `header` return the default list of appropriate reference type names."""
+    """Based on `header` return the default list of appropriate reference type names.
+
+    >>> header_to_pipelines(None)
+    Traceback (most recent call last):
+    ...
+    NotImplementedError: Roman has not defined header_to_pipelines().
+
+    """
     raise NotImplementedError("Roman has not defined header_to_pipelines().")
 
 # =======================================================================
@@ -69,6 +83,10 @@ def get_datamodels():
     """Defer datamodels loads until we definitely have a roman usecase.
     Enables light observatory package imports which don't require all
     dependencies when supporting other observatories.
+
+    >>> get_datamodels() # doctest: +ELLIPSIS
+    <module 'romancal.datamodels' from .../romancal/datamodels/__init__.py'>
+
     """
     try:
         from romancal import datamodels
@@ -86,7 +104,12 @@ def get_datamodels():
 # =============================================================================
 
 def tpn_path(tpn_file):
-    """Return the full filepath of `tpn_file`."""
+    """Return the full filepath of `tpn_file`.
+
+    >>> tpn_path('tpn_file.tpn') # doctest: +ELLIPSIS
+    '.../crds/roman/tpns/tpn_file.tpn'
+
+    """
     return os.path.join(HERE, "tpns", tpn_file)
 
 def get_extra_tpninfos(refpath):
@@ -100,6 +123,10 @@ def get_extra_tpninfos(refpath):
 
     These tend to have a superset of acceptable values for any particular instrument,
     particularly since CRDS has historically only loaded the core schema.
+
+    >>> get_extra_tpninfos(None)
+    []
+
     """
     return []   # use this to ignore datamodels schema for CRDS value checking
     # XXXX roman  -- datamodels schema scraping can potentially be enabled once
@@ -109,6 +136,20 @@ def get_extra_tpninfos(refpath):
     # return schema.get_schema_tpninfos(refpath)
 
 def project_check(refpath):
+    """
+    >>> get_data_model_flat_dict('tests/data/roman_wfi16_f158_flat_small.asdf')
+    {'asdf_library.author': 'Space Telescope Science Institute', 'asdf_library.homepage': 'http://github.com/spacetelescope/asdf', 'asdf_library.name': 'asdf', 'asdf_library.version': '2.7.1', 'history.entries.0.description': 'Creation of dummy flat file for CRDS testing during DMS build 0.0.', 'history.entries.0.time': '2020-11-04T20:01:23', 'history.entries.1.description': 'Update of dummy flat file to test history entries.', 'history.entries.1.time': '2020-11-04T20:02:13', 'history.extensions.0.extension_class': 'astropy.io.misc.asdf.extension.AstropyAsdfExtension', 'history.extensions.0.software.name': 'astropy', 'history.extensions.0.software.version': '4.1', 'history.extensions.1.extension_class': 'asdf.extension.BuiltinExtension', 'history.extensions.1.software.name': 'asdf', 'history.extensions.1.software.version': '2.7.1', 'data': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'dq': array([[0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0]], dtype=uint16), 'err': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'meta.author': 'Space Telescope Science Institute', 'meta.date': '2020-12-02T22:56:06.721', 'meta.description': 'Flat reference file.', 'meta.filename': 'roman_wfi16_f158_flat_small.asdf', 'meta.instrument.detector': 'WFI16', 'meta.instrument.name': 'WFI', 'meta.instrument.optical_element': 'F158', 'meta.model_type': 'FlatModel', 'meta.pedigree': 'DUMMY', 'meta.reftype': 'FLAT', 'meta.telescope': 'ROMAN', 'meta.useafter': '2020-01-01T00:00:00.000'}
+
+    """
     return get_data_model_flat_dict(refpath)
 
 def get_data_model_flat_dict(filepath):
@@ -119,6 +160,19 @@ def get_data_model_flat_dict(filepath):
     e.g.  meta.instrument.name  -->  "META.INSTRUMENT.NAME'
 
     Returns   { file_keyword : keyword_value, ... }
+
+    >>> get_data_model_flat_dict('tests/data/roman_wfi16_f158_flat_small.asdf')
+    {'asdf_library.author': 'Space Telescope Science Institute', 'asdf_library.homepage': 'http://github.com/spacetelescope/asdf', 'asdf_library.name': 'asdf', 'asdf_library.version': '2.7.1', 'history.entries.0.description': 'Creation of dummy flat file for CRDS testing during DMS build 0.0.', 'history.entries.0.time': '2020-11-04T20:01:23', 'history.entries.1.description': 'Update of dummy flat file to test history entries.', 'history.entries.1.time': '2020-11-04T20:02:13', 'history.extensions.0.extension_class': 'astropy.io.misc.asdf.extension.AstropyAsdfExtension', 'history.extensions.0.software.name': 'astropy', 'history.extensions.0.software.version': '4.1', 'history.extensions.1.extension_class': 'asdf.extension.BuiltinExtension', 'history.extensions.1.software.name': 'asdf', 'history.extensions.1.software.version': '2.7.1', 'data': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'dq': array([[0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0, 0, 0, 0]], dtype=uint16), 'err': array([[0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.],
+           [0., 0., 0., 0.]], dtype=float32), 'meta.author': 'Space Telescope Science Institute', 'meta.date': '2020-12-02T22:56:06.721', 'meta.description': 'Flat reference file.', 'meta.filename': 'roman_wfi16_f158_flat_small.asdf', 'meta.instrument.detector': 'WFI16', 'meta.instrument.name': 'WFI', 'meta.instrument.optical_element': 'F158', 'meta.model_type': 'FlatModel', 'meta.pedigree': 'DUMMY', 'meta.reftype': 'FLAT', 'meta.telescope': 'ROMAN', 'meta.useafter': '2020-01-01T00:00:00.000'}
+
     """
     datamodels = get_datamodels()
     log.info("Checking Roman datamodels.")
@@ -135,6 +189,10 @@ def get_data_model_flat_dict(filepath):
 def match_context_key(key):
     """Set the case of a context key appropriately for this project, Roman
     always uses upper case.
+
+    >>> match_context_key('aB.$QqZ4nB')
+    'AB.$QQZ4NB'
+
     """
     return key.upper()
 
@@ -145,13 +203,20 @@ def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
     should be a mapping or ASDF reference file.
 
-    >> get_file_properties("./roman_wfi_dark_0001.rmap")
-    ('wfi', 'dark')
+    >>> get_file_properties('tests/data/roman_wfi16_f158_flat_small.asdf')
+    ('wfi', 'flat')
 
-    >> get_file_properties("./roman_wfi_dark_0001.pmap")
+    >>> get_file_properties('tests/data/roman_wfi_flat_0004.rmap')
+    ('wfi', 'flat')
+
+    >>> get_file_properties('tests/data/roman_0001.pmap')
+    ('', '')
+
+    >>> get_file_properties('tests/data/ascii_tab.csv') # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
-    AssertionError: Invalid .pmap filename './roman_wfi_dark_0001.pmap'
+    TypeError: string indices must be integers
+
     """
     if config.is_mapping(filename):
         try:
@@ -175,29 +240,36 @@ def get_file_properties(filename):
 
 def decompose_newstyle_name(filename):
     """
-    >> decompose_newstyle_name("./roman.pmap")
+    >>> decompose_newstyle_name('./roman.pmap')
     ('.', 'roman', '', '', '', '.pmap')
 
-    >> decompose_newstyle_name("./roman_0001.pmap")
+    >>> decompose_newstyle_name('./roman_0001.pmap')
     ('.', 'roman', '', '', '0001', '.pmap')
 
-    >> decompose_newstyle_name("./hst_acs.imap")
-    ('.', 'roman', 'wfi', '', '', '.imap')
-
-    >> decompose_newstyle_name("./roman_wfi_0001.imap")
+    >>> decompose_newstyle_name("./roman_wfi_0001.imap")
     ('.', 'roman', 'wfi', '', '0001', '.imap')
 
-    >> decompose_newstyle_name("./roman_wfi_dark.rmap")
-    ('.', 'roman', 'wfi', 'dark', '', '.rmap')
+    >>> decompose_newstyle_name("./roman_wfi_flat.rmap")
+    ('.', 'roman', 'wfi', 'flat', '', '.rmap')
 
-    >> decompose_newstyle_name("./roman_wfi_dark_0001.rmap")
-    ('.', 'roman', 'wfi', 'biasfile', '0001', '.rmap')
+    >>> decompose_newstyle_name("./roman_wfi_flat.asdf")
+    ('.', 'roman', 'wfi', 'flat', '', '.asdf')
 
-    >> decompose_newstyle_name("./roman_wfi_dark.asdf")
-    ('.', 'roman', 'wfi', 'dark', '', '.asdf')
+    >>> decompose_newstyle_name("./hst_acs.imap")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid instrument 'acs'
 
-    >> decompose_newstyle_name("./roman_wfi_dark_0001.asdf")
-    ('.', 'roman', 'wfi', 'dark', '0001', '.asdf')
+    >>> decompose_newstyle_name("./roman_wfi_dark_0001.rmap")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid filekind 'dark'
+
+    >>> decompose_newstyle_name("./roman_wfi_flat_abcd.rmap")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid id field <built-in function id>
+
     """
     path, parts, ext = _get_fields(filename)
     observatory = parts[0]
@@ -222,7 +294,7 @@ def decompose_newstyle_name(filename):
 
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
-    assert re.match(r"\d*", serial), "Invalid id field " + repr(id)
+    assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
     # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
@@ -230,17 +302,50 @@ def decompose_newstyle_name(filename):
 def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and
     return (instrument, filekind).
+
+    >>> properties_inside_mapping('tests/data/roman_0001.pmap')
+    ('', '')
+
+    >>> properties_inside_mapping('tests/data/roman_wfi_flat_0004.rmap')
+    ('wfi', 'flat')
+
+    >>> properties_inside_mapping('tests/data/roman_wfi_0001.imap')
+    ('wfi', '')
+
+    >>> properties_inside_mapping('tests/data/roman_wfi_flat_0004.rmap')
+    ('wfi', 'flat')
+
     """
     map = rmap.fetch_mapping(filename)
-    if map.filekind == "PIPELINE":
+    if map.mapping == "pipeline":
         result = "", ""
-    elif map.filekind == "INSTRUMENT":
+    elif map.mapping == "instrument":
         result = map.instrument, ""
     else:
         result = map.instrument, map.filekind
     return result
 
 def _get_fields(filename):
+    """
+    >>> _get_fields("")
+    ('', [''], '')
+
+    >>> _get_fields("a/b.c")
+    ('a', ['b'], '.c')
+
+    >>> _get_fields("_")
+    ('', ['', ''], '')
+
+    >>> _get_fields("__")
+    ('', ['', '', ''], '')
+
+    >>> _get_fields("a_b_c")
+    ('', ['a', 'b', 'c'], '')
+
+    >>> _get_fields("_a_b_c_")
+    ('', ['', 'a', 'b', 'c', ''], '')
+
+    """
     path = os.path.dirname(filename)
     name = os.path.basename(filename)
     name, ext = os.path.splitext(name)
@@ -248,6 +353,24 @@ def _get_fields(filename):
     return path, parts, ext
 
 def list_get(l, index, default):
+    """
+    >>> list_get([], 0, None)
+
+    >>> list_get([], -1, 7)
+    7
+
+    >>> list_get(None, 0, None)
+    Traceback (most recent call last):
+    ...
+    TypeError: 'NoneType' object is not subscriptable
+
+    >>> list_get([1], 1, 9)
+    9
+
+    >>> list_get([1, 2, 3, 4], 2, 8)
+    3
+
+    """
     try:
         return l[index]
     except IndexError:
@@ -255,6 +378,18 @@ def list_get(l, index, default):
 
 def get_reference_properties(filename):
     """Figure out ASDF (instrument, filekind, serial) based on `filename`.
+
+    >>> get_reference_properties('tests/data/roman_0001.pmap')
+    ('tests/data', 'roman', '', '', '0001', '.pmap')
+
+    >>> get_reference_properties("./roman_wfi_flat.asdf")
+    ('.', 'roman', 'wfi', 'flat', '', '.asdf')
+
+    >>> get_reference_properties('tests/data/s7g1700gl_dead_bad_xsum.fits')
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.CrdsNamingError: Can't identify instrument of 's7g1700gl_dead_bad_xsum.fits' : Invalid instrument 'cos'
+
     """
     try:   # Hopefully it's a nice new standard filename, easy
         return decompose_newstyle_name(filename)
@@ -267,6 +402,20 @@ def get_reference_properties(filename):
 
 def ref_properties_from_header(filename):
     """Look inside ASDF `filename` header to determine instrument, filekind.
+
+    >>> ref_properties_from_header('tests/data/roman_wfi16_f158_flat_small.asdf')
+    ('tests/data', 'roman', 'wfi', 'flat', 'roman_wfi16_f158_flat_small', '.asdf')
+
+    >>> ref_properties_from_header('tests/data/s7g1700gl_dead_bad_xsum.fits')
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.CrdsNamingError: Can't identify instrument of 's7g1700gl_dead_bad_xsum.fits' : Invalid instrument 'cos'
+
+    >>> ref_properties_from_header('tests/data/roman_wfi16_f158_badtype_small.asdf')
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.CrdsNamingError: Can't identify META.REFTYPE of 'roman_wfi16_f158_badtype_small.asdf'
+
     """
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
@@ -313,6 +462,104 @@ def reference_keys_to_dataset_keys(rmapping, header):
     version is checked and used since it will be used to replace the discrete
     valued keyword in the header which is certified and used to define the rmap
     updates.
+
+    Note, can't test unrecognized "P_" keywords because the logging appeares to go to stderr which doctests don't check.
+
+    ==================================================
+    Test adding a translation.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({'MOUSE' : 'RAT'}, ''), \
+    {"MOUSE" : "MICKEY", "RAT" : "MORTIMER"})
+    {'MOUSE': 'MICKEY', 'RAT': 'MICKEY', 'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    ==================================================
+    Test replacing translated values with untranslated values.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({'MOUSE' : 'RAT'}, ''), \
+    {"META.EXPOSURE.P_EXPTYPE" : None, \
+    "META.INSTRUMENT.P_BAND" : "UNDEFINED", \
+    "META.INSTRUMENT.P_DETECTOR"  : "RADAR", \
+    "META.INSTRUMENT.P_CHANNEL" : None, \
+    "META.INSTRUMENT.CHANNEL" : None, \
+    "META.INSTRUMENT.P_FILTER" : "UNDEFINED", \
+    "META.INSTRUMENT.FILTER" : None, \
+    "META.INSTRUMENT.P_MODULE" : "LUNAR", \
+    "META.INSTRUMENT.MODULE" : None, \
+    "META.SUBARRAY.P_SUBARRAY" : None, \
+    "META.SUBARRAY.NAME" : "YELLOW", \
+    "META.INSTRUMENT.P_GRATING" : "UNDEFINED", \
+    "META.INSTRUMENT.GRATING" : "MOZZARELLA", \
+    "META.EXPOSURE.PREADPATT" : "CHECKERBOARD", \
+    "META.EXPOSURE.READPATT" : "CHESSBOARD"})
+    {'META.EXPOSURE.P_EXPTYPE': None, 'META.INSTRUMENT.P_BAND': 'UNDEFINED', 'META.INSTRUMENT.P_DETECTOR': 'RADAR', 'META.INSTRUMENT.P_CHANNEL': None, 'META.INSTRUMENT.CHANNEL': None, 'META.INSTRUMENT.P_FILTER': 'UNDEFINED', 'META.INSTRUMENT.FILTER': None, 'META.INSTRUMENT.P_MODULE': 'LUNAR', 'META.INSTRUMENT.MODULE': 'LUNAR', 'META.SUBARRAY.P_SUBARRAY': None, 'META.SUBARRAY.NAME': 'YELLOW', 'META.INSTRUMENT.P_GRATING': 'UNDEFINED', 'META.INSTRUMENT.GRATING': 'MOZZARELLA', 'META.EXPOSURE.PREADPATT': 'CHECKERBOARD', 'META.EXPOSURE.READPATT': 'CHECKERBOARD', 'META.INSTRUMENT.DETECTOR': 'RADAR', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    ==================================================
+    Test setting missing subarray and exposure type values.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, ''), \
+    {})
+    {'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, ''), \
+    {'META.SUBARRAY.NAME' : 'REDOCTOBER', \
+    'META.EXPOSURE.TYPE' : 'NORTHFACE'})
+    {'META.SUBARRAY.NAME': 'REDOCTOBER', 'META.EXPOSURE.TYPE': 'NORTHFACE'}
+
+    ==================================================
+    Test preserving existing subarry adn exposure type values.
+
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, ''), \
+    {'META.SUBARRAY.NAME' : 'REDOCTOBER', \
+    'META.EXPOSURE.TYPE' : 'NORTHFACE'})
+    {'META.SUBARRAY.NAME': 'REDOCTOBER', 'META.EXPOSURE.TYPE': 'NORTHFACE'}
+
+    ==================================================
+    Test preseverving existing DATE/TIME if no USEAFTER value.
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> reference_keys_to_dataset_keys( \
+    namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
+    {'META.OBSERVATION.DATE' : '1879-03-14', \
+     'META.OBSERVATION.TIME' : '12:34:56'})
+    {'META.OBSERVATION.DATE': '1879-03-14', 'META.OBSERVATION.TIME': '12:34:56', 'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    ==================================================
+    Test setting DATE/TIME with no USEAFTER, but allowed "bad use after".
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> config.ALLOW_BAD_USEAFTER.set("1")
+    False
+    >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), {})
+    {'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED', 'META.OBSERVATION.DATE': '1900-01-01', 'META.OBSERVATION.TIME': '00:00:00'}
+
+    ==================================================
+    Test setting DATE/TIME from USEAFTER.
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> config.ALLOW_BAD_USEAFTER.set("1")
+    False
+    >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
+    {'META.USEAFTER' : '1770-12-01T01:23:45', \
+     'META.OBSERVATION.DATE' : '1879-03-14', \
+     'META.OBSERVATION.TIME' : '12:34:56'})
+    {'META.USEAFTER': '1770-12-01T01:23:45', 'META.OBSERVATION.DATE': '1770-12-01', 'META.OBSERVATION.TIME': '01:23:45', 'META.SUBARRAY.NAME': 'UNDEFINED', 'META.EXPOSURE.TYPE': 'UNDEFINED'}
+
+    ==================================================
+    Test bad formatted USEAFTER.
+
+    >>> config.ALLOW_BAD_USEAFTER.reset()
+    >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
+    {'META.USEAFTER' : 'bad user after', \
+     'META.OBSERVATION.DATE' : '1879-03-14', \
+     'META.OBSERVATION.TIME' : '12:34:56'})
+    Traceback (most recent call last):
+    ...
+    crds.core.exceptions.InvalidUseAfterFormat: Bad USEAFTER time format = 'bad user after'
     """
     header = dict(header)
 
@@ -400,28 +647,78 @@ def reference_keys_to_dataset_keys(rmapping, header):
 # =============================================================================
 
 def condition_matching_header(rmapping, header):
-    """Normalize header values for .rmap reference insertion."""
+    """Normalize header values for .rmap reference insertion.
+
+    >>> condition_matching_header(None, {1:2, 3:4, 5:6})
+    {1: 2, 3: 4, 5: 6}
+
+    """
     return dict(header)   # NOOP for Roman,  may have to revisit
 
 # ============================================================================
 
 def fits_to_parkeys(fits_header):
+    """
+    >>> condition_matching_header(None, {1:2, 3:4, 5:6})
+    {1: 2, 3: 4, 5: 6}
+
+    """
+
     return dict(fits_header)
 
 # ============================================================================
 
 def get_env_prefix(instrument):
-    """Return the environment variable prefix (IRAF prefix) for `instrument`."""
+    """Return the environment variable prefix (IRAF prefix) for `instrument`.
+
+    >>> get_env_prefix(None)
+    'crds://'
+
+    """
     return "crds://"
 
 def filekind_to_keyword(filekind):
-    """Return the "keyword" at which a assigned reference should be recorded."""
+    """Return the "keyword" at which a assigned reference should be recorded.
+
+    >>> filekind_to_keyword(None)
+    Traceback (most recent call last):
+    ...
+    NotImplementedError: filekind_to_keyword not implemented for Roman
+
+    """
     raise NotImplementedError("filekind_to_keyword not implemented for Roman")
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
+
+    The mode=None test case is disabled because it mysteriously causes these tests to
+    fail when running the runtests script:
+        ERROR: test_throughput_lookup_generation (crds.tests.test_synphot_lookup_generator.TestSynphotLookupGenerator)
+        FAIL: Doctest: crds.tests.test_bad_files.dt_bad_references_fast_mode
+        FAIL: Doctest: crds.tests.test_bad_files.dt_bad_rules_jwst_getreferences_warning
+        FAIL: Doctest: crds.tests.test_certify.certify_recursive
+        FAIL: Doctest: crds.tests.test_certify.certify_table_comparison_context
+        FAIL: Doctest: crds.tests.test_heavy_client.dt_getreferences_ignore_cache
+        FAIL: Doctest: crds.tests.test_list.dt_list_cached_references
+        FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
+        FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
+    XXXX TODO: Enable the mode=None test case and resolve the ensuing test failures in other modules.
+    >> locate_file('tests/data/roman_wfi16_f158_flat_small.asdf', None) # doctest: +ELLIPSIS
+    '.../references/roman/wfi/roman_wfi16_f158_flat_small.asdf'
+
+    >>> locate_file('tests/data/roman_wfi16_f158_flat_small.asdf', 'instrument') # doctest: +ELLIPSIS
+    '.../references/roman/wfi/roman_wfi16_f158_flat_small.asdf'
+
+    >>> locate_file('tests/data/roman_wfi16_f158_flat_small.asdf', 'flat') # doctest: +ELLIPSIS
+    '.../references/roman/roman_wfi16_f158_flat_small.asdf'
+
+    >>> locate_file('tests/data/roman_wfi16_f158_flat_small.asdf', 'other') # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+    ...
+    ValueError: Unhandled reference file location mode 'other'
+
     """
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="roman")
@@ -435,7 +732,36 @@ def locate_file(refname, mode=None):
     return  os.path.join(rootdir, os.path.basename(refname))
 
 def locate_dir(instrument, mode=None):
-    """Locate the instrument specific directory for a reference file."""
+    """Locate the instrument specific directory for a reference file.
+
+    The mode=None test case is disabled because it mysteriously causes these tests to
+    fail when running the runtests script:
+        ERROR: test_throughput_lookup_generation (crds.tests.test_synphot_lookup_generator.TestSynphotLookupGenerator)
+        FAIL: Doctest: crds.tests.test_bad_files.dt_bad_references_fast_mode
+        FAIL: Doctest: crds.tests.test_bad_files.dt_bad_rules_jwst_getreferences_warning
+        FAIL: Doctest: crds.tests.test_certify.certify_recursive
+        FAIL: Doctest: crds.tests.test_certify.certify_table_comparison_context
+        FAIL: Doctest: crds.tests.test_heavy_client.dt_getreferences_ignore_cache
+        FAIL: Doctest: crds.tests.test_list.dt_list_cached_references
+        FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
+        FAIL: Doctest: crds.tests.test_synphot_hst.dt_synphot_core_integration_test
+    XXXX TODO: Enable the mode=None test case and resolve the ensuing test failures in other modules.
+    >> locate_dir('wfi', None) # doctest: +ELLIPSIS
+    '.../references/roman/wfi'
+
+    >>> locate_dir('wfi', 'instrument') # doctest: +ELLIPSIS
+    '.../references/roman/wfi'
+
+    >>> locate_dir('wfi', 'flat') # doctest: +ELLIPSIS
+    '.../references/roman'
+
+    >>> locate_dir('wfi', 'other') # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid CRDS cache subdirectory mode = 'other'
+
+    """
+
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="roman")
     else:
@@ -452,10 +778,13 @@ def locate_dir(instrument, mode=None):
         raise ValueError("Unhandled reference file location mode " + repr(mode))
     return rootdir
 
-
 def get_cross_strapped_pairs(header):
     """Roman does not use FITS files so there is no cross-strapping between datamodels
     notation and FITS keywords.   Returns []
+
+    >>> get_cross_strapped_pairs(None)
+    []
+
     """
     return []
 
@@ -464,6 +793,12 @@ def get_cross_strapped_pairs(header):
 def hijack_warnings(func, *args, **keys):
     """Re-map dependency warnings to CRDS warnings so they're counted and logged
     to web output.   astropy and datamodels are remapped.
+
+    Can't do much testing since the doctest ignores stderr.
+
+    >>> hijack_warnings(lambda *args, **keys: print('hooligan'), None, None)
+    hooligan
+
     """
     with warnings.catch_warnings():
         # save and replace warnings.showwarning

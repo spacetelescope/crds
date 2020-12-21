@@ -1,0 +1,12 @@
+header = {
+    'derived_from' : 'Initial delivery',
+    'instrument' : 'WFI',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'roman_wfi_0001.imap',
+    'observatory' : 'ROMAN',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '8c33a797852c8063edb143e4d5e1325eb4e891b3',
+}
+
+selector = {
+}

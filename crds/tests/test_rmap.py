@@ -522,7 +522,7 @@ class TestRmap(test_config.CRDSTestCase):
         self.assertEqual(rmap.list_mappings("*.imap", "hst"), [
                 'hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap', 'hst_acs_9999.imap',
                 'hst_cos.imap', 'hst_nicmos.imap', 'hst_stis.imap', 'hst_wfc3.imap', 'hst_wfpc2.imap',
-                'jwst_fgs_na.imap', 'jwst_miri_omit.imap', 'jwst_niriss_na_omit.imap'])
+                'jwst_fgs_na.imap', 'jwst_miri_omit.imap', 'jwst_niriss_na_omit.imap', 'roman_wfi_0001.imap'])
 
     def test_rmap_list_references(self):
         os.environ["CRDS_REFPATH_SINGLE"] = self.data_dir
