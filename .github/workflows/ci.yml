@@ -37,7 +37,7 @@ jobs:
         run: |
           wget --quiet --output-document - http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz | tar -xz -C $HOME
           cd $HOME/cfitsio-3.49
-          ./configure --prefix=/home/crds/venv --enable-reentrant --disable-curl
+          ./configure --enable-reentrant --disable-curl
           make shared
           make install
       - name: Install Python dependencies
