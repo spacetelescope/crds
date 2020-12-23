@@ -41,6 +41,8 @@ jobs:
         run: |
           pip install pyyaml
           conda install cfitsio>3.440 fitsverify
+          ls -l $CONDA/lib
+          ls -l $CONDA
           fitsverify
       #     pip install git+https://github.com/spacetelescope/jwst
       #     pip install git+https://github.com/spacetelescope/romancal
