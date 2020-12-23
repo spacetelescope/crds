@@ -23,7 +23,7 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
-          - macos-11.0
+          - macos-latest
         python-version:
           - 3.7
           - 3.8
@@ -33,15 +33,15 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Set up conda
+      - name: Install fitsverify
         run: |
-          echo "$CONDA/bin" >> $GITHUB_PATH
-          sudo chmod -R 777 $CONDA
-      - name: Install dependencies
+          wget --quiet --output-document - http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz | tar -xz -C $HOME
+          cd $HOME/cfitsio-3.49
+          ./configure --prefix=/home/crds/venv --enable-reentrant --disable-curl
+          make shared
+          make install
+      - name: Install Python dependencies
         run: |
-          conda install fitsverify
-          ls -l $CONDA/lib
-          ls -l $CONDA
           fitsverify
       #     pip install git+https://github.com/spacetelescope/jwst
       #     pip install git+https://github.com/spacetelescope/romancal
