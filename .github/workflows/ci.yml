@@ -40,11 +40,12 @@ jobs:
         run: |
           pip install pyyaml
           conda install cfitsio>3.440 fitsverify
-           pip install git+https://github.com/spacetelescope/jwst
-           pip install git+https://github.com/spacetelescope/romancal
-           pip uninstall --yes crds
-           ./install
-           pip install .[submission,test,docs,synphot]
-           ./setup_test_cache $CRDS_TEST_ROOT
-      - name: Run tests
-        run: ./runtests --cover
+          fitsverify
+      #     pip install git+https://github.com/spacetelescope/jwst
+      #     pip install git+https://github.com/spacetelescope/romancal
+      #     pip uninstall --yes crds
+      #     ./install
+      #     pip install .[submission,test,docs,synphot]
+      #     ./setup_test_cache $CRDS_TEST_ROOT
+      # - name: Run tests
+      #   run: ./runtests --cover
