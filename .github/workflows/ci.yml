@@ -37,9 +37,13 @@ jobs:
         run: |
           wget --quiet --output-document - http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz | tar -xz -C $HOME
           cd $HOME/cfitsio-3.49
-          ./configure --enable-reentrant --disable-curl
+          ./configure --prefix=/usr/local --enable-reentrant --disable-curl
           make shared
           make install
+          wget --quiet --output-document - https://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.20.tar.gz | tar -xz -C $HOME
+          cd $HOME/fitsverify-4.20
+          gcc -o /home/crds/venv/bin/fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -lcfitsio
+          cp fitsverify /usr/local/bin
       - name: Install Python dependencies
         run: |
           fitsverify
