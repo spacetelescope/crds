@@ -32,7 +32,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Cache /usr/local
+        id: cache-usr-local
+        uses: actions/cache@v2
+        with:
+          path: /usr/local
+          key: ${{ runner.os }}-cfitsio-3.49-fitsverify-4.20
       - name: Install fitsverify
+        if: steps.cache-usr-local.outputs.cache-hit != 'true'
         run: |
           wget --quiet --output-document - http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz | tar -xz -C $HOME
           cd $HOME/cfitsio-3.49
@@ -43,9 +50,10 @@ jobs:
           cd $HOME/fitsverify-4.20
           gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -lcfitsio
           sudo cp fitsverify /usr/local/bin
-      - name: Install Python dependencies
-        run: |
+      - name: Test fitsverify
           fitsverify
+      # - name: Install Python dependencies
+      #   run: |
       #     pip install git+https://github.com/spacetelescope/jwst
       #     pip install git+https://github.com/spacetelescope/romancal
       #     pip uninstall --yes crds
