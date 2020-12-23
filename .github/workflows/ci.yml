@@ -41,9 +41,9 @@ jobs:
         run: |
           pip install pyyaml
           conda install fitsverify
+          if [ -f $CONDA/lib/libcfitsio.dylib ] && [ ! -f $CONDA/lib/libcfitsio.6.dylib ]; then ln -s $CONDA/lib/libcfitsio.dylib $CONDA/lib/libcfitsio.6.dylib; fi
           ls -l $CONDA/lib
           ls -l $CONDA
-          find . -name libcfitsio*
           fitsverify
       #     pip install git+https://github.com/spacetelescope/jwst
       #     pip install git+https://github.com/spacetelescope/romancal
