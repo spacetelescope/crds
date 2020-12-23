@@ -17,6 +17,7 @@ jobs:
       CRDS_SERVER_URL: https://hst-crds.stsci.edu
       CRDS_TEST_ROOT: /tmp
       LD_LIBRARY_PATH: $CONDA/lib
+      DYLD_LIBRARY_PATH: $CONDA/lib
     strategy:
       fail-fast: false
       matrix:
