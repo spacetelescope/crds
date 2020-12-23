@@ -16,8 +16,7 @@ jobs:
       CONDA_CHANNELS: http://ssb.stsci.edu/astroconda
       CRDS_SERVER_URL: https://hst-crds.stsci.edu
       CRDS_TEST_ROOT: /tmp
-      LD_LIBRARY_PATH: $CONDA/lib
-      DYLD_LIBRARY_PATH: $CONDA/lib
+      LD_LIBRARY_PATH: /usr/local/lib
     strategy:
       fail-fast: false
       matrix:
