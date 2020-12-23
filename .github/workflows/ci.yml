@@ -52,6 +52,7 @@ jobs:
           sudo cp fitsverify /usr/local/bin
       - name: Test fitsverify
           fitsverify
+          pip install pyyaml
       # - name: Install Python dependencies
       #   run: |
       #     pip install git+https://github.com/spacetelescope/jwst
