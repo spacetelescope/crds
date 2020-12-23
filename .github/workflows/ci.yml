@@ -42,7 +42,7 @@ jobs:
           sudo make install
           wget --quiet --output-document - https://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.20.tar.gz | tar -xz -C $HOME
           cd $HOME/fitsverify-4.20
-          gcc -o /home/crds/venv/bin/fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -lcfitsio
+          gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -lcfitsio
           sudo cp fitsverify /usr/local/bin
       - name: Install Python dependencies
         run: |
