@@ -23,7 +23,7 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
-          - macos-latest
+          - macos-11.0
         python-version:
           - 3.7
           - 3.8
@@ -39,9 +39,7 @@ jobs:
           sudo chmod -R 777 $CONDA
       - name: Install dependencies
         run: |
-          pip install pyyaml
           conda install fitsverify
-          if [ -f $CONDA/lib/libcfitsio.dylib ] && [ ! -f $CONDA/lib/libcfitsio.6.dylib ]; then ln -s $CONDA/lib/libcfitsio.dylib $CONDA/lib/libcfitsio.6.dylib; fi
           ls -l $CONDA/lib
           ls -l $CONDA
           fitsverify
