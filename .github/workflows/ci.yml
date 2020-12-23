@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pyyaml
-          conda install cfitsio>3.440 fitsverify
+          conda install fitsverify
           ls -l $CONDA/lib
           ls -l $CONDA
           find . -name libcfitsio*
