@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  pull_request:
+
+jobs:
+  pytest:
+    name: ${{ matrix.runs-on }} Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.runs-on }}
+    env:
+      CONDA_CHANNELS: http://ssb.stsci.edu/astroconda
+      CRDS_SERVER_URL: https://hst-crds.stsci.edu
+      CRDS_TEST_ROOT: /tmp
+      LD_LIBRARY_PATH: $CONDA/lib
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+          - ubuntu-latest
+          - macos-latest
+        python-version:
+          - 3.7
+          - 3.8
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up conda
+        run: |
+          echo "$CONDA/bin" >> $GITHUB_PATH
+          sudo chmod -R 777 $CONDA
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+          conda install cfitsio>3.440 fitsverify
+           pip install git+https://github.com/spacetelescope/jwst
+           pip install git+https://github.com/spacetelescope/romancal
+           pip uninstall --yes crds
+           ./install
+           pip install .[submission,test,docs,synphot]
+           ./setup_test_cache $CRDS_TEST_ROOT
+      - name: Run tests
+        run: ./runtests --cover
