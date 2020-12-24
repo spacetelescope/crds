@@ -1,6 +1,6 @@
 header = {
     'classes' : ('Match', 'UseAfter'),
-    'derived_from' : 'Hand made 2019-10-22',
+    'derived_from' : 'CRDS-395 updates 2020-12',
     'file_ext' : '.fits',
     'filekind' : 'APCORR',
     'filetype' : 'APCORR',
@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_apcorr.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '2f9109d36be7428b072f48b555aaf26a5494d7ae',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.GRATING'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '5b521d6db6c0bd4d2122f6b3ba3856039e9f6c4b',
     'suffix' : 'apcorr',
     'text_descr' : 'Aperture Correction',
 }
@@ -66,6 +66,7 @@ aperture correction values will be multiplicative corrections greater than or
 equal to 1.0.
 
 Originally requested and discussed on Jira CRDS-295.
+Updated through CRDS-395, CRDS-402, CCD-891
 """
 
 selector = Match({
