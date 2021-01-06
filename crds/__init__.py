@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "NIRSpec APCOR spec updates"
+__version__ = "10.3.3"   # XXXX  see also ../setup.cfg
+__rationale__ = "Add additional MIRI read patterns"
 
 __all__ = [
     "getrecommendations",
