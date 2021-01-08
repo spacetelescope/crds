@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.3"   # XXXX  see also ../setup.cfg
-__rationale__ = "Add additional MIRI read patterns"
+__version__ = "10.3.4"   # XXXX  see also ../setup.cfg
+__rationale__ = "Remove problematic whitespace from FGS subarray name"
 
 __all__ = [
     "getrecommendations",
