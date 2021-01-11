@@ -1074,6 +1074,8 @@ def is_reference(reference):
     True
     >>> is_reference("something.r0h")
     True
+    >>> is_reference("something.r0d")
+    True
     >>> is_reference("something.foo")
     False
     >>> is_reference("/some/path/something.fits")
@@ -1086,7 +1088,7 @@ def is_reference(reference):
     False
     """
     extension = os.path.splitext(reference)[-1].lower()
-    return bool(re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension))
+    return bool(re.match(r"\.fits|\.asdf|\.r\d[hd]|\.yaml|\.json|\.text", extension))
 
 # -------------------------------------------------------------------------------------
 
