@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.4"   # XXXX  see also ../setup.cfg
-__rationale__ = "Remove problematic whitespace from FGS subarray name"
+__version__ = "10.3.5"   # XXXX  see also ../setup.cfg
+__rationale__ = "Fix issue preventing download of GEIS data files"
 
 __all__ = [
     "getrecommendations",
