@@ -407,6 +407,33 @@
             "tpn":"fgs_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-tweakregstep":{
+            "derived_from":"jwst_fgs_pars-tweakregstep_0001.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-tweakregstep",
+            "filetype":"pars-tweakregstep",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_pars-tweakregstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_fgs_pars-tweakregstep_0002.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"6ccd33286b8f37a98578759a1419f33fc5fa584f",
+            "suffix":"pars-tweakregstep",
+            "text_descr":"TweakRegStep runtime parameters",
+            "tpn":"fgs_pars-tweakregstep.tpn",
+            "unique_rowkeys":null
+        },
         "persat":{
             "derived_from":"handmade spec 06-22-2017",
             "extra_keys":null,
@@ -3675,6 +3702,34 @@
             "tpn":"nircam_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-tweakregstep":{
+            "derived_from":"jwst_nircam_pars-tweakregstep_0001.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-tweakregstep",
+            "filetype":"pars-tweakregstep",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_pars-tweakregstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_pars-tweakregstep_0002.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"9cca929d31e8e473408419e56ce41517b1331bf3",
+            "suffix":"pars-tweakregstep",
+            "text_descr":"TweakRegStep runtime parameters",
+            "tpn":"nircam_pars-tweakregstep.tpn",
+            "unique_rowkeys":null
+        },
         "persat":{
             "derived_from":"handmade spec 06-22-2017",
             "extra_keys":null,
@@ -4389,6 +4444,34 @@
             "suffix":"pars-image2pipeline",
             "text_descr":"Image2Pipeline runtime parameters",
             "tpn":"niriss_pars-image2pipeline.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-tweakregstep":{
+            "derived_from":"jwst_niriss_pars-tweakregstep_0002.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-tweakregstep",
+            "filetype":"pars-tweakregstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-tweakregstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-tweakregstep_0003.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"40661bfd968848d6b064c8c3878572bdfc8e8997",
+            "suffix":"pars-tweakregstep",
+            "text_descr":"TweakRegStep runtime parameters",
+            "tpn":"niriss_pars-tweakregstep.tpn",
             "unique_rowkeys":null
         },
         "pathloss":{
