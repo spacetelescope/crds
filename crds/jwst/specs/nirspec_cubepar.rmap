@@ -1,6 +1,6 @@
 header = {
     'classes' : ('Match', 'UseAfter'),
-    'derived_from' : 'Hand made 2017-04-18',
+    'derived_from' : 'Updated 2021-01-20',
     'file_ext' : '.fits',
     'filekind' : 'CUBEPAR',
     'filetype' : 'CUBEPAR',
@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_cubepar.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'aa2fdb9023440ac8f69d83aa37b3c29a0500bd31',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.LAMP_MODE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '5cf226a54521d12a82acd33ab4934064a3d3f04a',
     'suffix' : 'cubepar',
     'text_descr' : 'IFU Cube defaults',
     'unique_rowkeys' : ('DISPERSER', 'FILTER', 'WAVELENGTH'),
