@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.5"   # XXXX  see also ../setup.cfg
-__rationale__ = "Fix issue preventing download of GEIS data files"
+__version__ = "10.3.6"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update CUBEPAR selection to include LAMP_MODE"
 
 __all__ = [
     "getrecommendations",
