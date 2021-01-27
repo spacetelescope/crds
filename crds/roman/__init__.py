@@ -18,7 +18,8 @@ INSTRUMENT_FIXERS = {
 TYPE_FIXERS = {
 }
 
-PROVENANCE_KEYWORDS = ("META.DESCRIPTION", "META.PEDIGREE", "META.USEAFTER","HISTORY", "META.AUTHOR", "META.MODEL_TYPE")
+# List of keywords whose values are logged in certifier output when "dump provenance" is enabled:
+PROVENANCE_KEYWORDS = ("META.DESCRIPTION", "META.PEDIGREE", "META.USEAFTER", "HISTORY", "META.AUTHOR")
 
 USEAFTER_KEYWORDS = ("META.OBSERVATION.DATE", "META.OBSERVATION.TIME") # Dataset keywords matching in UseAfter selectors
 
