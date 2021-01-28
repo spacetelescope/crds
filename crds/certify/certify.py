@@ -9,6 +9,7 @@ from collections import defaultdict
 import gc
 import uuid
 
+import asdf
 import numpy as np
 
 # ============================================================================
@@ -599,8 +600,8 @@ class FitsCertifier(ReferenceCertifier):
         if self.run_fitsverify:
             self.fitsverify()
 
-        # Project-specific checks,  for JWST instantiates data model.
-        self.locator.project_check(self.filename)
+        # Project-specific checks, for JWST instantiates data model.
+        self.locator.project_check(self.filename, self.get_corresponding_rmap())
 
     def fitsverify(self):
         """Run optional external fitsverify program from cfitsio library, installed separately from CRDS."""
@@ -678,8 +679,22 @@ class AsdfCertifier(ReferenceCertifier):
         """Certify an unknown format file."""
         super(AsdfCertifier, self).certify()
 
-        # Project-specific checks,  for JWST instantiates data model.
-        self.locator.project_check(self.filename)
+        self.check_schema()
+
+        # Project-specific checks, for JWST instantiates data model.
+        self.locator.project_check(self.filename, self.get_corresponding_rmap())
+
+    def check_schema(self):
+        """
+        If schema_uri is set, verify that the file validates
+        against that schema.
+        """
+        rmap = self.get_corresponding_rmap()
+        if rmap.schema_uri is not None:
+            # The file will be validated against the schema when it
+            # is opened:
+            with asdf.open(self.filename, custom_schema=rmap.schema_uri):
+                pass
 
 # ============================================================================
 

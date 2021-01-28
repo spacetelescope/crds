@@ -72,8 +72,9 @@ def get_extra_tpninfos(refpath):
     # that will require enhanced schema scraping.
     # return schema.get_schema_tpninfos(refpath)
 
-def project_check(refpath):
-    return get_data_model_flat_dict(refpath)
+def project_check(refpath, rmap):
+    if not rmap.filekind.startswith("pars-"):
+        get_data_model_flat_dict(refpath)
 
 def get_data_model_flat_dict(filepath):
     """Get the header from `filepath` using the jwst data model."""

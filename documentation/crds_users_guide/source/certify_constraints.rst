@@ -479,7 +479,7 @@ keywords, conditional warnings, conditional subarray expressions, etc::
    subarray(expr)     -->   False or 'S'
    any_subarray(expr) -->   False or 'A'
    required(expr)     -->   False or 'R'
-   warn(expr)         -->   False or 'W'
+   warning(expr)         -->   False or 'W'
 
 For example, an expression further refined by the full_frame() helper::
 

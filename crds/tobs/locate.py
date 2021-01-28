@@ -41,7 +41,7 @@ def get_extra_tpninfos(refpath):
     return []
 
 def project_check(refpath):
-    return
+    pass
 
 def get_exptypes(instrument=None):
     """Return the list of EXP_TYPE values for instrument,  or for all

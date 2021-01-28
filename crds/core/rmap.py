@@ -1038,6 +1038,8 @@ class ReferenceMapping(Mapping):
         self.instrument = self.header["instrument"]
         self.filekind = self.header["filekind"]
 
+        self.schema_uri = self.header.get("schema_uri", None)
+
         self._reffile_switch = self.header.get("reffile_switch", "NONE").upper()
         self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
         self._reffile_required = self.header.get("reffile_required", "NONE").upper()
@@ -1124,6 +1126,7 @@ class ReferenceMapping(Mapping):
         self.check_observatory()
         self.check_instrument()
         self.check_filekind()
+        self.check_schema_uri()
         if "reference_to_dataset" in self.header:
             parkeys = self.get_required_parkeys()
             for _reference, dataset in self.reference_to_dataset.items():
@@ -1131,6 +1134,17 @@ class ReferenceMapping(Mapping):
                     "reference_to_dataset dataset keyword not in parkey keywords."
         with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
             self.selector.validate_selector(self.tpn_valid_values)
+
+    def check_schema_uri(self):
+        """
+        Check that the schema URI corresponds to a schema that
+        ASDF knows how to load.
+        """
+        import asdf
+
+        if self.schema_uri is not None:
+            with log.augment_exception("Invalid ASDF schema URI:", self.schema_uri):
+                asdf.schema.load_schema(self.schema_uri)
 
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated

@@ -137,13 +137,14 @@ def get_extra_tpninfos(refpath):
     # being specified in CRDS .tpn files.
     # return schema.get_schema_tpninfos(refpath)
 
-def project_check(refpath):
+def project_check(refpath, rmap):
     """
     >>> get_data_model_flat_dict('tests/data/roman_wfi16_f158_flat_small.asdf')
     {'asdf_library.author': 'Space Telescope Science Institute', 'asdf_library.homepage': 'http://github.com/spacetelescope/asdf', 'asdf_library.name': 'asdf', 'asdf_library.version': '2.7.1', 'history.entries.0.description': 'Creation of dummy flat file for CRDS testing during DMS build 0.0.', 'history.entries.0.time': '2020-11-04T20:01:23', 'history.entries.1.description': 'Update of dummy flat file to test history entries.', 'history.entries.1.time': '2020-11-04T20:02:13', 'history.extensions.0.extension_class': 'astropy.io.misc.asdf.extension.AstropyAsdfExtension', 'history.extensions.0.software.name': 'astropy', 'history.extensions.0.software.version': '4.1', 'history.extensions.1.extension_class': 'asdf.extension.BuiltinExtension', 'history.extensions.1.software.name': 'asdf', 'history.extensions.1.software.version': '2.7.1', 'meta.author': 'Space Telescope Science Institute', 'meta.date': '2020-12-02T22:56:06.721', 'meta.description': 'Flat reference file.', 'meta.filename': 'roman_wfi16_f158_flat_small.asdf', 'meta.instrument.detector': 'WFI16', 'meta.instrument.name': 'WFI', 'meta.instrument.optical_element': 'F158', 'meta.model_type': 'FlatModel', 'meta.pedigree': 'DUMMY', 'meta.reftype': 'FLAT', 'meta.telescope': 'ROMAN', 'meta.useafter': '2020-01-01T00:00:00.000'}
 
     """
-    return get_data_model_flat_dict(refpath)
+    if not rmap.filekind.startswith("pars-"):
+        get_data_model_flat_dict(refpath)
 
 def get_data_model_flat_dict(filepath):
     """Get the header from `filepath` using the roman data model.  Data model
