@@ -1,6 +1,6 @@
 header = {
     'classes' : ('Match',),
-    'derived_from' : 'Initial hand made version 2018-09-13. Jira CCD-148.',
+    'derived_from' : 'Hand made 2019-03-18',
     'extra_keys' : (),
     'file_ext' : '.fits',
     'filekind' : 'TMTTAB',
@@ -8,14 +8,14 @@ header = {
     'instrument' : 'SYNPHOT',
     'ld_tpn' : 'synphot_tmt_ld.tpn',
     'mapping' : 'REFERENCE',
-    'name' : 'synphot_tmt.rmap',
+    'name' : 'hst_synphot_tmttab_0001.rmap',
     'observatory' : 'HST',
     'parkey' : ((),),
     'reffile_format' : 'TABLE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
-    'rmap_relevance' : '(False)',
-    'sha1sum' : '377b9ccfabf209e0514a07f17f29e7feabe7100f',
+    'rmap_omit' : 'True',
+    'sha1sum' : 'a2a473256b9368ff759f3e1ddc5b5c1c9653ac01',
     'suffix' : 'tmt',
     'text_descr' : 'Thermal Component Lookup Table',
     'tpn' : 'synphot_tmt.tpn',
@@ -23,4 +23,5 @@ header = {
 }
 
 selector = Match({
+    () : '3241637sm_tmt.fits',
 })

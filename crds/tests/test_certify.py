@@ -431,50 +431,49 @@ def certify_missing_keyword():
 
 def certify_recursive():
     """
-    >>> TestCertifyScript("crds.certify crds://hst_cos.imap --exist --dont-parse")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    >>> TestCertifyScript("crds.certify crds://hst_cos.imap --exist --dont-parse --comparison-context hst.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_badttab.rmap' (2/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_badttab.rmap' (2/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_bpixtab.rmap' (3/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_bpixtab.rmap' (3/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_brftab.rmap' (4/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_brftab.rmap' (4/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_brsttab.rmap' (5/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_brsttab.rmap' (5/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_deadtab.rmap' (6/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_deadtab.rmap' (6/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_fluxtab.rmap' (9/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_fluxtab.rmap' (9/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_geofile.rmap' (10/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_geofile.rmap' (10/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_gsagtab.rmap' (11/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_gsagtab.rmap' (11/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_hvtab.rmap' (12/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_hvtab.rmap' (12/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_lamptab.rmap' (13/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_lamptab.rmap' (13/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_phatab.rmap' (14/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_phatab.rmap' (14/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_spwcstab.rmap' (15/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_spwcstab.rmap' (15/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_tdstab.rmap' (16/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_tdstab.rmap' (16/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_walktab.rmap' (17/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_walktab.rmap' (17/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
     CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
-    CRDS - INFO - 40 infos
+    CRDS - INFO - 39 infos
     0
     """
 
@@ -524,10 +523,9 @@ def certify_table_comparison_context():
 
 def certify_table_comparison_reference():
     """
-    >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-reference data/y9j16159l_hv.fits")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying with --comparison-reference, no default --comparison-context defined.
+    >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-reference data/y9j16159l_hv.fits --comparison-context hst_0857.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
+    CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0857.pmap' and comparison reference 'data/y9j16159l_hv.fits'
     CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
     CRDS - INFO -  Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
     CRDS - INFO -  All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
@@ -558,48 +556,14 @@ def certify_table_comparison_reference():
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  10 warnings
-    CRDS - INFO -  17 infos
-    0
-    """
-
-def certify_comparison_context_none_all_references():
-    """
-    >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-context None")()
-    CRDS - INFO -  Comparison context explicitly specified as 'none',  no --comparison-context will be used.
-    CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
-    CRDS - INFO -  FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
-    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
-    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
-    CRDS - INFO -  Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
-    CRDS - INFO -  All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
-    CRDS - INFO -  Checking for duplicate modes using intersection ['DATE']
-    CRDS - WARNING -  No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
-    CRDS - INFO -  ########################################
-    CRDS - INFO -  0 errors
-    CRDS - INFO -  1 warnings
-    CRDS - INFO -  11 infos
-    0
-    """
-
-def certify_comparison_context_none_all_mappings():
-    """
-    >>> TestCertifyScript("crds.certify crds://hst_cos_deadtab.rmap --comparison-context None")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Comparison context explicitly specified as 'none',  no --comparison-context will be used.
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_deadtab.rmap' (1/1) as 'MAPPING' relative to context None
-    CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 4 infos
+    CRDS - INFO -  16 infos
     0
     """
 
 def certify_duplicate_sha1sum():
     """
     >>> TestCertifyScript("crds.certify data/s7g1700gl_dead.fits --check-sha1sums")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying only references,  defaulting --comparison-context to operational context.
+    CRDS - INFO -  Defaulting --comparison-context to operational context.
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context '...'
     CRDS - ERROR -  instrument='COS' type='DEADTAB' data='data/s7g1700gl_dead.fits' ::  Duplicate file check : File 's7g1700gl_dead.fits' is identical to existing CRDS file 's7g1700gl_dead.fits'
@@ -730,7 +694,7 @@ def certify_validator_bad_presence_condition():
 def certify_JsonCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.json", observatory="jwst",context="jwst_0034.pmap")
+    >>> certify.certify_file("data/valid.json", "jwst_0034.pmap", observatory="jwst")
     CRDS - INFO -  Certifying 'data/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
@@ -739,7 +703,7 @@ def certify_JsonCertify_valid():
 def certify_YamlCertify_valid():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.yaml", observatory="jwst",context="jwst_0034.pmap")
+    >>> certify.certify_file("data/valid.yaml", "jwst_0034.pmap", observatory="jwst")
     CRDS - INFO -  Certifying 'data/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
@@ -749,7 +713,7 @@ def certify_AsdfCertify_valid():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid.asdf", observatory="jwst",context="jwst_0365.pmap") # doctest: +ELLIPSIS
+    >>> certify.certify_file("data/valid.asdf", "jwst_0365.pmap", observatory="jwst") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
@@ -761,8 +725,8 @@ def certify_roman_valid_asdf():
     """
     Required Roman test: confirm that a valid asdf file is recognized as such.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
-    >>> certify.certify_file("data/roman_wfi16_f158_flat_small.asdf", observatory="roman")
-    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context None
+    >>> certify.certify_file("data/roman_wfi16_f158_flat_small.asdf", "roman_0003.pmap", observatory="roman")
+    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
     CRDS - INFO -  Checking Roman datamodels.
     >>> test_config.cleanup(old_state)
     """
@@ -772,8 +736,8 @@ def certify_roman_invalid_asdf_schema():
     Required Roman test: confirm that an asdf file that does not conform to its schema definition
     triggers an error in DataModels.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
-    >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_schema.asdf", observatory="roman") # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context None
+    >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
     CRDS - INFO -  Checking Roman datamodels.
     CRDS - ERROR -  data/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : Roman Data Models: sequence item...: expected str instance, Time found
     >>> test_config.cleanup(old_state)
@@ -785,8 +749,8 @@ def certify_roman_invalid_asdf_tpn():
     triggers an error in crds. Note: as the tpn often replicates schema implementation, this also
     triggers an error in Datamodels.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
-    >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_tpn.asdf", observatory="roman") # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context None
+    >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
     CRDS - ERROR -  In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'META.INSTRUMENT.OPTICAL_ELEMENT...' : Value 'BAD' is not one of...
     CRDS - INFO -  Checking Roman datamodels.
     CRDS - WARNING -  ValidationWarning : stdatamodels.validate...
@@ -797,8 +761,8 @@ def certify_roman_valid_spec_asdf():
     """
     Required Roman test: confirm that a valid spectroscopic asdf file is recognized as such.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
-    >>> certify.certify_file("data/roman_wfi16_grism_flat_small.asdf", observatory="roman")
-    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_small.asdf' as 'ASDF' relative to context None
+    >>> certify.certify_file("data/roman_wfi16_grism_flat_small.asdf", "roman_0003.pmap", observatory="roman")
+    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
     CRDS - INFO -  Checking Roman datamodels.
     >>> test_config.cleanup(old_state)
     """
@@ -808,8 +772,8 @@ def certify_roman_invalid_spec_asdf_schema():
     Required Roman test: confirm that a spectroscopic asdf file that does not conform to its schema
     definition triggers an error in DataModels.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
-    >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_schema.asdf", observatory="roman") # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context None
+    >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
     CRDS - INFO -  Checking Roman datamodels.
     CRDS - ERROR -  data/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : Roman Data Models: sequence item...: expected str instance, Time found
     >>> test_config.cleanup(old_state)
@@ -821,8 +785,8 @@ def certify_roman_invalid_spec_asdf_tpn():
     definition triggers an error in crds. Note: as the tpn often replicates schema implementation,
     this also triggers an error in Datamodels.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
-    >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_tpn.asdf", observatory="roman") # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context None
+    >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
     CRDS - ERROR -  In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'META.INSTRUMENT.OPTICAL_ELEMENT...' : Value 'BAD' is not one of...
     CRDS - INFO -  Checking Roman datamodels.
     CRDS - WARNING -  ValidationWarning : stdatamodels.validate...
@@ -834,7 +798,7 @@ def certify_AsdfCertify_valid_with_astropy_time():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/valid_with_astropy_time.asdf", observatory="jwst",context="jwst_0365.pmap") # doctest: +ELLIPSIS
+    >>> certify.certify_file("data/valid_with_astropy_time.asdf", "jwst_0365.pmap", observatory="jwst") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/valid_with_astropy_time.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
@@ -845,7 +809,7 @@ def certify_AsdfCertify_valid_with_astropy_time():
 def certify_FitsCertify_opaque_name():
     """
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
-    >>> certify.certify_file("data/opaque_fts.tmp", observatory="hst",context="hst.pmap")
+    >>> certify.certify_file("data/opaque_fts.tmp", "hst.pmap", observatory="hst")
     CRDS - INFO -  Certifying 'data/opaque_fts.tmp' as 'FITS' relative to context 'hst.pmap'
     >>> test_config.cleanup(old_state)
     """
@@ -856,7 +820,7 @@ def certify_AsdfCertify_opaque_name():
     """
     >>> doctest.ELLIPSIS_MARKER = '-ignore-'
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/opaque_asd.tmp", observatory="jwst",context="jwst_0365.pmap") # doctest: +ELLIPSIS
+    >>> certify.certify_file("data/opaque_asd.tmp", "jwst_0365.pmap", observatory="jwst") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
@@ -868,7 +832,7 @@ def certify_AsdfCertify_opaque_name():
 def certify_rmap_compare():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("jwst_miri_distortion_0025.rmap", context="jwst_0357.pmap")
+    >>> certify.certify_file("jwst_miri_distortion_0025.rmap", "jwst_0357.pmap")
     CRDS - INFO -  Certifying 'jwst_miri_distortion_0025.rmap' as 'MAPPING' relative to context 'jwst_0357.pmap'
     >>> test_config.cleanup(old_state)
     """
@@ -877,7 +841,7 @@ def certify_roman_rmap_compare():
     """
     Required Roman test: confirm that a calibration mapping file properly compares to its context.
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
-    >>> certify.certify_file("roman_wfi_flat_0004.rmap", context="roman_0004.pmap")
+    >>> certify.certify_file("roman_wfi_flat_0004.rmap", "roman_0004.pmap")
     CRDS - INFO -  Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'
     >>> test_config.cleanup(old_state)
     """
@@ -886,16 +850,17 @@ def certify_roman_rmap_compare():
 def certify_jwst_bad_fits():
     """
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
-    >>> certify.certify_file("data/niriss_ref_photom_bad.fits", observatory="jwst", context=None) # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context None
+    >>> certify.certify_file("data/niriss_ref_photom_bad.fits", "jwst_0541.pmap", observatory="jwst") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context 'jwst_0541.pmap'
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
     CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
+    CRDS - WARNING -  Failed resolving comparison reference for table checks...
     CRDS - INFO -  Mode columns defined by spec for new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
     CRDS - INFO -  All column names for this table new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
     CRDS - INFO -  Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
-    CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context None. Skipping tables comparison.
+    CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - WARNING -  ValidationWarning : ...stdatamodels.validate...
     CRDS - WARNING -  NoTypeWarning : ...jwst.datamodels...
@@ -905,10 +870,12 @@ def certify_jwst_bad_fits():
 def certify_duplicate_rmap_case_error():
     """
     >>> old_state = test_config.setup(url="https://hst-crds-serverless.stsci.edu", observatory="hst")
-    >>> certify.certify_file("data/hst_cos_tdstab_duplicate.rmap", observatory="hst")
-    CRDS - INFO -  Certifying 'data/hst_cos_tdstab_duplicate.rmap' as 'MAPPING' relative to context None
+    >>> certify.certify_file("data/hst_cos_tdstab_duplicate.rmap", "hst.pmap", observatory="hst")
+    CRDS - INFO -  Certifying 'data/hst_cos_tdstab_duplicate.rmap' as 'MAPPING' relative to context 'hst.pmap'
     CRDS - ERROR -  Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter
     CRDS - WARNING -  Checksum error : sha1sum mismatch in 'hst_cos_tdstab_duplicate.rmap'
+    CRDS - INFO -  Mapping 'hst_cos_tdstab_duplicate.rmap' corresponds to 'hst_cos_tdstab.rmap' from context 'hst.pmap' for checking mapping differences.
+    CRDS - INFO -  Checking diffs from 'hst_cos_tdstab.rmap' to 'hst_cos_tdstab_duplicate.rmap'
     >>> test_config.cleanup(old_state)
     """
 
@@ -916,11 +883,12 @@ def certify_roman_duplicate_rmap_case_error():
     """
     Required Roman test: verify that a calibration mapping file containing duplicate match cases
     fails.
-    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
-    >>> certify.certify_file("data/roman_wfi_flat_0004_duplicate.rmap")
-    CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context None
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi_flat_0004_duplicate.rmap", "roman_0003.pmap")
+    CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
     CRDS - ERROR -  Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter
     CRDS - WARNING -  Checksum error : sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'
+    CRDS - ERROR -  data/roman_wfi_flat_0004_duplicate.rmap Validation error : Failed to determine 'roman' instrument or reftype for 'data/roman_wfi_flat_0004_duplicate.rmap' : 'sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap''
     >>> test_config.cleanup(old_state)
     """
 
@@ -954,10 +922,13 @@ def certify_roman_invalid_rmap_tpn():
     """
     Required Roman test: verify that a calibration mapping file that violates tpn rules produces an
     error.
-    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
-    >>> certify.certify_file("data/roman_wfi_flat_0004_badtpn.rmap", observatory="roman") # doctest: +ELLIPSIS
-    CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context None
-    CRDS - ERROR -  Match('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.OPTICAL_ELEMENT...') : ('WFI21', 'F158') :  parameter='META.INSTRUMENT.DETECTOR...' value='WFI21' is not in ('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', '*', 'N/A')
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
+    >>> certify.certify_file("data/roman_wfi_flat_0004_badtpn.rmap", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
+    CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
+    CRDS - ERROR -  Match('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.OPTICAL_ELEMENT...') : ('WFI21', 'F158') :  parameter='META.INSTRUMENT.DETECTOR...' value='WFI21' is not in (...)
+    CRDS - INFO -  Mapping 'roman_wfi_flat_0004_badtpn.rmap' corresponds to 'roman_wfi_flat_0001.rmap' from context 'roman_0003.pmap' for checking mapping differences.
+    CRDS - INFO -  Checking diffs from 'roman_wfi_flat_0001.rmap' to 'roman_wfi_flat_0004_badtpn.rmap'
+    CRDS - WARNING -  Rule change at ('data/roman_wfi_flat_0004_badtpn.rmap', ('WFI21', 'F158'), ('2020-01-01', '00:00:00')) added Match rule for 'roman_wfi_flat_0003.asdf'
     >>> test_config.cleanup(old_state)
     """
 
@@ -2173,42 +2144,42 @@ class TestCertify(test_config.CRDSTestCase):
         return certify.certify_files(*args, **keys)
 
     def certify_rmap_missing_parkey(self):
-        self.certify_files([self.data("hst_missing_parkey.rmap")], observatory="hst")
+        self.certify_files([self.data("hst_missing_parkey.rmap")], "hst.pmap", observatory="hst")
 
     def certify_no_corresponding_rmap(self):
-        self.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap")
+        self.certify_files([self.data("acs_new_idc.fits")], "hst.pmap", observatory="hst")
 
     def certify_missing_provenance(self):
-        self.certify_files([self.data("acs_new_idc.fits")], observatory="hst", context="hst.pmap",
+        self.certify_files([self.data("acs_new_idc.fits")], "hst.pmap", observatory="hst",
                               dum_provenance=True, provenance=["GAIN"])
 
 # ------------------------------------------------------------------------------
     def test_check_dduplicates(self):
-        self.certify_files([self.data("hst.pmap")], observatory="hst")
-        self.certify_files([self.data("hst_acs.imap")], observatory="hst")
-        self.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
+        self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs_darkfile.rmap")], "hst.pmap", observatory="hst")
 
     def test_check_comment(self):
-        self.certify_files([self.data("hst.pmap")], observatory="hst")
-        self.certify_files([self.data("hst_acs.imap")], observatory="hst")
-        self.certify_files([self.data("hst_acs_darkfile_comment.rmap")], observatory="hst")
+        self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs_darkfile_comment.rmap")], "hst.pmap", observatory="hst")
 
     def test_table_mode_checks_identical(self):
-        self.certify_files([self.data("v8q14451j_idc.fits")], observatory="hst",
-                              context="hst.pmap", compare_old_reference=True)
+        self.certify_files([self.data("v8q14451j_idc.fits")], "hst.pmap", observatory="hst",
+                              compare_old_reference=True)
 
     def test_table_mode_checks_missing_modes(self):
-        self.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst",
-                              context="hst.pmap", compare_old_reference=True)
+        self.certify_files([self.data("v8q1445xx_idc.fits")], "hst.pmap", observatory="hst",
+                              compare_old_reference=True)
 
     def test_UnknownCertifier_missing(self):
         # log.set_exception_trap("test")
         assert_raises(FileNotFoundError, certify.certify_file,
-            self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap")
+            self.data("non-existent-file.txt"), "jwst.pmap", observatory="jwst")
 
     def test_FitsCertify_bad_value(self):
         assert_raises(ValueError, certify.certify_file,
-            self.data("s7g1700gm_dead_broken.fits"), observatory="hst", context="hst.pmap")
+            self.data("s7g1700gm_dead_broken.fits"), "hst.pmap", observatory="hst")
 
     # ------------------------------------------------------------------------------
 
