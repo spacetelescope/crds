@@ -26,6 +26,38 @@
             "tpn":"wfi_all.tpn",
             "unique_rowkeys":null
         },
+        "dark":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2020-02-05",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"DARK",
+            "filetype":"DARK",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_dark_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"wfi_dark.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.NAME",
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"3dd2560f5109b513553144143581da07e6937f43",
+            "suffix":"dark",
+            "text_descr":"Dark",
+            "tpn":"wfi_dark.tpn",
+            "unique_rowkeys":null
+        },
         "flat":{
             "classes":[
                 "Match",
