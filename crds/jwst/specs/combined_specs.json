@@ -407,6 +407,33 @@
             "tpn":"fgs_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-outlierdetectionstep":{
+            "derived_from":"Copied from niriss_pars-outlierdetectionstep 20210208",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-outlierdetectionstep",
+            "filetype":"pars-outlierdetectionstep",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_pars-outlierdetectionstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_fgs_pars-outlierdetectionstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"74c64daf6ac43e46a331d403d831c1ba3b00ab43",
+            "suffix":"pars-outlierdetectionstep",
+            "text_descr":"OutlierDetectionStep runtime parameters",
+            "tpn":"fgs_pars-outlierdetectionstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-tweakregstep":{
             "derived_from":"jwst_fgs_pars-tweakregstep_0001.rmap",
             "extra_keys":null,
@@ -2189,14 +2216,16 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.SUBARRARY.NAME"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"7fe4844e1a97d57ffe47cf69b2caf80a65fb4f92",
+            "sha1sum":"125bcb808fa0247fbd208403ba9f2e3705edaafd",
             "suffix":"pars-outlierdetectionstep",
             "text_descr":"OutlierDetectionStep runtime parameters",
             "tpn":"miri_pars-outlierdetectionstep.tpn",
@@ -3702,6 +3731,34 @@
             "tpn":"nircam_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-outlierdetectionstep":{
+            "derived_from":"Copied from miri_pars-outlierdetectionstep 20210208",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-outlierdetectionstep",
+            "filetype":"pars-outlierdetectionstep",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_pars-outlierdetectionstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_pars-outlierdetectionstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"eb0246d3e48e40c640cbfe3621e0613fdd325011",
+            "suffix":"pars-outlierdetectionstep",
+            "text_descr":"OutlierDetectionStep runtime parameters",
+            "tpn":"nircam_pars-outlierdetectionstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-tweakregstep":{
             "derived_from":"jwst_nircam_pars-tweakregstep_0001.rmap",
             "extra_keys":null,
@@ -4444,6 +4501,34 @@
             "suffix":"pars-image2pipeline",
             "text_descr":"Image2Pipeline runtime parameters",
             "tpn":"niriss_pars-image2pipeline.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-outlierdetectionstep":{
+            "derived_from":"Copied from nircam_pars-outlierdetectionstep 20210208",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-outlierdetectionstep",
+            "filetype":"pars-outlierdetectionstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-outlierdetectionstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-outlierdetectionstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"15fc3a6ce4b0fd4d0fa9a563747f42516c3b7ba7",
+            "suffix":"pars-outlierdetectionstep",
+            "text_descr":"OutlierDetectionStep runtime parameters",
+            "tpn":"niriss_pars-outlierdetectionstep.tpn",
             "unique_rowkeys":null
         },
         "pars-tweakregstep":{
