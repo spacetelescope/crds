@@ -2245,14 +2245,14 @@
                 [
                     "META.EXPOSURE.TYPE",
                     "META.INSTRUMENT.FILTER",
-                    "META.SUBARRARY.NAME"
+                    "META.SUBARRAY.NAME"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"125bcb808fa0247fbd208403ba9f2e3705edaafd",
+            "sha1sum":"07aa806dc2068e1ed0f6a0922032178ed9817705",
             "suffix":"pars-outlierdetectionstep",
             "text_descr":"OutlierDetectionStep runtime parameters",
             "tpn":"miri_pars-outlierdetectionstep.tpn",
