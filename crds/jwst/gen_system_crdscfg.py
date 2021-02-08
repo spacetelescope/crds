@@ -22,8 +22,7 @@ import yaml
 # ----------------------------------------------------------------------------------------------
 
 from jwst import __version__ as jwst_version
-from jwst.stpipe import pipeline
-from jwst import pipeline as pipepkg
+from jwst.stpipe import Pipeline
 
 # ----------------------------------------------------------------------------------------------
 
@@ -92,7 +91,7 @@ class CrdsCfgGenerator:
             log.info("Processing", repr(pipeline_cfg))
             cfgdir = "configs" # os.path.dirname(pipepkg.__file__) or ""
             cfgpath = os.path.join(cfgdir, pipeline_cfg)
-            p = pipeline.Pipeline.from_config_file(cfgpath)
+            p = Pipeline.from_config_file(cfgpath)
             steps_to_reftypes = {}
             for name, stepcfg in p.steps.items():
                 if stepcfg.get("skip", True):
