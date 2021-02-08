@@ -186,17 +186,18 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
 
 def reftypes_roman_reference_name_to_tpn_infos():
     """
-    >>> old_state = test_config.setup()
+    >>> old_state = test_config.setup() # doctest: +ELLIPSIS
     >>> types = reftypes.get_types_object("roman")
     >>> infos = types.reference_name_to_tpninfos("roman_wfi_flat.asdf")
     >>> print(log.PP(infos))
     [('META.AUTHOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.DESCRIPTION', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', 'ANY', 'N/A')),
+     ('META.EXPOSURE.TYPE', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
+     ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
      ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('WFI',)),
-     ('META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('F062', 'F087', 'F106', 'F129', 'W146', 'F158', 'F184', 'GRISM', 'PRISM', 'CLEAR', 'DARK', 'ENGINEERING', 'N/A', 'ANY', 'UNKNOWN')),
+     ('META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
      ('META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTPEDIGREE',)),
      ('META.REFTYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),

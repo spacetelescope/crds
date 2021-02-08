@@ -260,7 +260,7 @@ def decompose_newstyle_name(filename):
     ...
     AssertionError: Invalid instrument 'acs'
 
-    >>> decompose_newstyle_name("./roman_wfi_dark_0001.rmap")
+    >>> decompose_newstyle_name("./roman_wfi_lark_0001.rmap")
     Traceback (most recent call last):
     ...
     AssertionError: Invalid filekind 'dark'
