@@ -10,6 +10,8 @@ import os.path
 import re
 import warnings
 
+from asdf.tags.core import NDArrayType
+
 # =======================================================================
 
 from crds.core import rmap, config, utils, timestamp, log, exceptions
