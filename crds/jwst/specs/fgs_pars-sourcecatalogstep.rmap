@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Copied from miri_pars-sourcecatalogstep.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-sourcecatalogstep',
+    'filetype' : 'pars-sourcecatalogstep',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_pars-sourcecatalogstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.DETECTOR'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'd8da456a253586110d21d8c325558cb741c3e23d',
+    'suffix' : 'pars-sourcecatalogstep',
+    'text_descr' : 'SourceCatalogStep runtime parameters',
+}
+
+selector = Match({
+})

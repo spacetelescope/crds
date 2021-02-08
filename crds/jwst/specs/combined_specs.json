@@ -434,6 +434,33 @@
             "tpn":"fgs_pars-outlierdetectionstep.tpn",
             "unique_rowkeys":null
         },
+        "pars-sourcecatalogstep":{
+            "derived_from":"Copied from miri_pars-sourcecatalogstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-sourcecatalogstep",
+            "filetype":"pars-sourcecatalogstep",
+            "instrument":"FGS",
+            "ld_tpn":"fgs_pars-sourcecatalogstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_fgs_pars-sourcecatalogstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"d8da456a253586110d21d8c325558cb741c3e23d",
+            "suffix":"pars-sourcecatalogstep",
+            "text_descr":"SourceCatalogStep runtime parameters",
+            "tpn":"fgs_pars-sourcecatalogstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-tweakregstep":{
             "derived_from":"jwst_fgs_pars-tweakregstep_0001.rmap",
             "extra_keys":null,
@@ -2530,14 +2557,15 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"c24443fadc8d84eb4c144f9fea4a8d53c2bad8a3",
+            "sha1sum":"7b7a6fe83a597e461a26acfffdd1e63d153bfd64",
             "suffix":"pars-sourcecatalogstep",
             "text_descr":"SourceCatalogStep runtime parameters",
             "tpn":"miri_pars-sourcecatalogstep.tpn",
@@ -3759,6 +3787,34 @@
             "tpn":"nircam_pars-outlierdetectionstep.tpn",
             "unique_rowkeys":null
         },
+        "pars-sourcecatalogstep":{
+            "derived_from":"Copied from miri_pars-sourcecatalogstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-sourcecatalogstep",
+            "filetype":"pars-sourcecatalogstep",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_pars-sourcecatalogstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_pars-sourcecatalogstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"74f8b2958f5b623f5be6f1fd1860ad6149c55108",
+            "suffix":"pars-sourcecatalogstep",
+            "text_descr":"SourceCatalogStep runtime parameters",
+            "tpn":"nircam_pars-sourcecatalogstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-tweakregstep":{
             "derived_from":"jwst_nircam_pars-tweakregstep_0001.rmap",
             "extra_keys":null,
@@ -4529,6 +4585,34 @@
             "suffix":"pars-outlierdetectionstep",
             "text_descr":"OutlierDetectionStep runtime parameters",
             "tpn":"niriss_pars-outlierdetectionstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-sourcecatalogstep":{
+            "derived_from":"Copied from miri_pars-sourcecatalogstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-sourcecatalogstep",
+            "filetype":"pars-sourcecatalogstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-sourcecatalogstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-sourcecatalogstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"a319db60d1363e178b7b7bee08fb0402559e8326",
+            "suffix":"pars-sourcecatalogstep",
+            "text_descr":"SourceCatalogStep runtime parameters",
+            "tpn":"niriss_pars-sourcecatalogstep.tpn",
             "unique_rowkeys":null
         },
         "pars-tweakregstep":{
