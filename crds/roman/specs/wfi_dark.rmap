@@ -1,6 +1,6 @@
 header = {
     'classes' : ('Match', 'UseAfter'),
-    'derived_from' : 'Hand made 2020-02-05',
+    'derived_from' : 'Hand made 2020-02-10',
     'file_ext' : '.asdf',
     'filekind' : 'DARK',
     'filetype' : 'DARK',
@@ -9,7 +9,7 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'wfi_dark.rmap',
     'observatory' : 'ROMAN',
-    'parkey' : (('META.INSTRUMENT.NAME', 'META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : '3dd2560f5109b513553144143581da07e6937f43',
     'suffix' : 'dark',
     'text_descr' : 'Dark',
