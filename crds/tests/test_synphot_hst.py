@@ -393,61 +393,66 @@ def dt_synphot_certify_rmaps():
 
     TMC   rmap
 
-    >>> certify.CertifyScript("crds.certify  data/synphot_tmctab.rmap")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    >>> certify.CertifyScript("crds.certify data/synphot_tmctab.rmap --comparison-context hst_0857.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/synphot_tmctab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  Certifying 'data/synphot_tmctab.rmap' (1/1) as 'MAPPING' relative to context 'hst_0857.pmap'
+    CRDS - INFO -  Mapping 'synphot_tmctab.rmap' corresponds to 'hst_synphot_tmctab_0021.rmap' from context 'hst_0857.pmap' for checking mapping differences.
+    CRDS - INFO -  Checking diffs from 'hst_synphot_tmctab_0021.rmap' to 'synphot_tmctab.rmap'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  5 infos
     0
 
     TMG   rmap
 
-    >>> certify.CertifyScript("crds.certify  data/synphot_tmgtab.rmap")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    >>> certify.CertifyScript("crds.certify data/synphot_tmgtab.rmap --comparison-context hst_0857.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/synphot_tmgtab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  Certifying 'data/synphot_tmgtab.rmap' (1/1) as 'MAPPING' relative to context 'hst_0857.pmap'
+    CRDS - INFO -  Mapping 'synphot_tmgtab.rmap' corresponds to 'hst_synphot_tmgtab_0007.rmap' from context 'hst_0857.pmap' for checking mapping differences.
+    CRDS - INFO -  Checking diffs from 'hst_synphot_tmgtab_0007.rmap' to 'synphot_tmgtab.rmap'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  5 infos
     0
 
     TMT   rmap
 
-    >>> certify.CertifyScript("crds.certify  data/synphot_tmttab.rmap")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    >>> certify.CertifyScript("crds.certify data/synphot_tmttab.rmap --comparison-context hst_0857.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/synphot_tmttab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  Certifying 'data/synphot_tmttab.rmap' (1/1) as 'MAPPING' relative to context 'hst_0857.pmap'
+    CRDS - INFO -  Mapping 'synphot_tmttab.rmap' corresponds to 'hst_synphot_tmttab_0001.rmap' from context 'hst_0857.pmap' for checking mapping differences.
+    CRDS - INFO -  Checking diffs from 'hst_synphot_tmttab_0001.rmap' to 'synphot_tmttab.rmap'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  5 infos
     0
 
     THERMAL rmap
 
-    >>> certify.CertifyScript("crds.certify  data/synphot_thermal.rmap")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    >>> certify.CertifyScript("crds.certify data/synphot_thermal.rmap --comparison-context hst_0857.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/synphot_thermal.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  Certifying 'data/synphot_thermal.rmap' (1/1) as 'MAPPING' relative to context 'hst_0857.pmap'
+    CRDS - INFO -  Mapping 'synphot_thermal.rmap' corresponds to 'hst_synphot_thermal_0002.rmap' from context 'hst_0857.pmap' for checking mapping differences.
+    CRDS - INFO -  Checking diffs from 'hst_synphot_thermal_0002.rmap' to 'synphot_thermal.rmap'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  5 infos
     0
 
     THRUPUT rmap
-    >>> certify.CertifyScript("crds.certify  data/synphot_thruput.rmap")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Certification includes mappings but is not --deep, no --comparison-context is defined.
+    >>> certify.CertifyScript("crds.certify data/synphot_thruput.rmap --comparison-context hst_0857.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
-    CRDS - INFO -  Certifying 'data/synphot_thruput.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO -  Certifying 'data/synphot_thruput.rmap' (1/1) as 'MAPPING' relative to context 'hst_0857.pmap'
+    CRDS - INFO -  Mapping 'synphot_thruput.rmap' corresponds to 'hst_synphot_thruput_0025.rmap' from context 'hst_0857.pmap' for checking mapping differences.
+    CRDS - INFO -  Checking diffs from 'hst_synphot_thruput_0025.rmap' to 'synphot_thruput.rmap'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  4 infos
+    CRDS - INFO -  5 infos
     0
 
     >>> test_config.cleanup(old_state)
@@ -465,16 +470,19 @@ def dt_synphot_refactor():
     For classic irrelevant parkey matching where values are normalized to N/A and ignored
 
     >>> print(log.PP(r.map_irrelevant_parkeys_to_na(header)))
-    CRDS - DEBUG -  Parkey synphot thermal created is relevant: False 'keep_comments'
-    CRDS - DEBUG -  Setting irrelevant parkey 'CREATED' to N/A
+    CRDS - DEBUG -  Parkey synphot thermal date is relevant: False 'keep_comments'
+    CRDS - DEBUG -  Setting irrelevant parkey 'DATE' to N/A
     CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: False 'keep_comments'
     CRDS - DEBUG -  Setting irrelevant parkey 'DESCRIP' to N/A
-    {'COMPNAME': 'NIC1_BEND', 'CREATED': 'N/A', 'DESCRIP': 'N/A'}
+    {'COMPNAME': 'NIC1_BEND',
+     'CREATED': '2002-03-06 04:51:00',
+     'DATE': 'N/A',
+     'DESCRIP': 'N/A'}
 
     For rmap updates which add comment keywords to the match tuples for web display
 
     >>> print(log.PP(r.map_irrelevant_parkeys_to_na(header, keep_comments=True)))
-    CRDS - DEBUG -  Parkey synphot thermal created is relevant: True 'keep_comments'
+    CRDS - DEBUG -  Parkey synphot thermal date is relevant: True 'keep_comments'
     CRDS - DEBUG -  Parkey synphot thermal descrip is relevant: True 'keep_comments'
     {'COMPNAME': 'NIC1_BEND',
      'CREATED': '2002-03-06 04:51:00',
@@ -485,67 +493,68 @@ def dt_synphot_refactor():
     TMC   rmap
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap data/43h1909cm_tmc.fits")()
-    CRDS - INFO -  Inserting 43h1909cm_tmc.fits into 'synphot_tmctab.rmap'
+    CRDS - INFO -  Inserting 43h1909cm_tmc.fits into 'hst_synphot_tmctab_0021.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_tmctab.rmap /tmp/synphot_tmctab.test.rmap")()
-    (('data/synphot_tmctab.rmap', '/tmp/synphot_tmctab.test.rmap'), 'added Match rule for 43h1909cm_tmc.fits')
+    (('data/synphot_tmctab.rmap', '/tmp/synphot_tmctab.test.rmap'), 'replaced 5182153pm_tmc.fits with 43h1909cm_tmc.fits')
     1
 
     TMG   rmap
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmgtab.rmap /tmp/synphot_tmgtab.test.rmap data/2381905mm_tmg.fits")()
-    CRDS - INFO -  Inserting 2381905mm_tmg.fits into 'hst_synphot_tmg.rmap'
+    CRDS - INFO -  Inserting 2381905mm_tmg.fits into 'hst_synphot_tmgtab_0007.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_tmgtab.rmap /tmp/synphot_tmgtab.test.rmap")()
-    (('data/synphot_tmgtab.rmap', '/tmp/synphot_tmgtab.test.rmap'), 'added Match rule for 2381905mm_tmg.fits')
+    (('data/synphot_tmgtab.rmap', '/tmp/synphot_tmgtab.test.rmap'), 'replaced 4cm1612bm_tmg.fits with 2381905mm_tmg.fits')
     1
 
     TMT   rmap
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_tmttab.rmap /tmp/synphot_tmttab.test.rmap data/tae17277m_tmt.fits")()
-    CRDS - INFO -  Inserting tae17277m_tmt.fits into 'synphot_tmt.rmap'
+    CRDS - INFO -  Inserting tae17277m_tmt.fits into 'hst_synphot_tmttab_0001.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_tmttab.rmap /tmp/synphot_tmttab.test.rmap")()
-    (('data/synphot_tmttab.rmap', '/tmp/synphot_tmttab.test.rmap'), 'added Match rule for tae17277m_tmt.fits')
+    (('data/synphot_tmttab.rmap', '/tmp/synphot_tmttab.test.rmap'), 'replaced 3241637sm_tmt.fits with tae17277m_tmt.fits')
     1
 
     THERMAL rmap
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_thermal.rmap /tmp/synphot_thermal.test.rmap data/wfc3_ir_f098m_002_th.fits")()
-    CRDS - INFO -  Inserting wfc3_ir_f098m_002_th.fits into 'hst_synphot_thermal.rmap'
+    CRDS - INFO -  Inserting wfc3_ir_f098m_002_th.fits into 'hst_synphot_thermal_0002.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_thermal.rmap /tmp/synphot_thermal.test.rmap")()
-    (('data/synphot_thermal.rmap', '/tmp/synphot_thermal.test.rmap'), ('WFC3_IR_F098M', '2019-08-15 08:00:00', 'Filter transmission for F098M XXX YYY ZZZ'), 'deleted Match rule for wfc3_ir_f098m_001_th.fits')
-    (('data/synphot_thermal.rmap', '/tmp/synphot_thermal.test.rmap'), ('WFC3_IR_F098M', 'NOV 16 2018', 'UPDATED TO CONVERT AIR WAVELENGTHS TO VACUUM.'), 'added Match rule for wfc3_ir_f098m_002_th.fits')
+    (('data/synphot_thermal.rmap', '/tmp/synphot_thermal.test.rmap'), ('WFC3_IR_F098M', '2006-08-15 08:00:00', 'Filter transmission for F098M'), 'deleted Match rule for wfc3_ir_f098m_002_th.fits')
+    (('data/synphot_thermal.rmap', '/tmp/synphot_thermal.test.rmap'), ('WFC3_IR_F098M', '2019-04-02T15:00:35', 'UPDATED TO CONVERT AIR WAVELENGTHS TO VACUUM.'), 'added Match rule for wfc3_ir_f098m_002_th.fits')
     1
 
     THRUPUT rmap
 
     >>> refactor.RefactorScript("crds.refactor insert data/synphot_thruput.rmap /tmp/synphot_thruput.test.rmap data/wfc3_uvis_f469nf2_003_syn.fits")()
-    CRDS - INFO -  Inserting wfc3_uvis_f469nf2_003_syn.fits into 'hst_synphot_thruput.rmap'
+    CRDS - INFO -  Inserting wfc3_uvis_f469nf2_003_syn.fits into 'hst_synphot_thruput_0025.rmap'
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
     CRDS - INFO -  1 infos
     0
 
     >>> diff.DiffScript("crds.diff  data/synphot_thruput.rmap /tmp/synphot_thruput.test.rmap")()
-    (('data/synphot_thruput.rmap', '/tmp/synphot_thruput.test.rmap'), ('WFC3_UVIS_F469NF2', 'NOV 16 2018', 'NORMALIZATION OF F469N FLAT CHIP 2---------------------------------'), 'added Match rule for wfc3_uvis_f469nf2_003_syn.fits')
+    (('data/synphot_thruput.rmap', '/tmp/synphot_thruput.test.rmap'), ('WFC3_UVIS_F469NF2', '2016-04-20 20:10:00', 'normalization of f469n flat chip 2---------------------------------'), 'deleted Match rule for wfc3_uvis_f469nf2_003_syn.fits')
+    (('data/synphot_thruput.rmap', '/tmp/synphot_thruput.test.rmap'), ('WFC3_UVIS_F469NF2', '2019-04-02T15:00:44', 'NORMALIZATION OF F469N FLAT CHIP 2---------------------------------'), 'added Match rule for wfc3_uvis_f469nf2_003_syn.fits')
     1
 
     >>> test_config.cleanup(old_state)
@@ -557,10 +566,14 @@ def dt_synphot_bestrefs():
 
     >>> r = crds.get_cached_mapping("data/synphot_thermal.rmap")
     >>> r.get_best_references({'COMPNAME':'NIC1_F110W', 'CREATED':'NO MATCH', 'DESCRIP':'NO MATCH'})
+    CRDS - WARNING -  Failed checking OMIT for 'synphot' 'thermal' with expr 'true' : name 'true' is not defined
+    CRDS - WARNING -  Failed checking OMIT for 'synphot' 'thermal' with expr 'true' : name 'true' is not defined
     {'thermal': 'nic1_f110w_002_th.fits'}
 
     >>> r = crds.get_cached_mapping("data/synphot_thruput.rmap")
     >>> r.get_best_references({'COMPNAME':'ACS_BLOCK1', 'CREATED':'NO MATCH', 'DESCRIP':'NO MATCH'})
+    CRDS - WARNING -  Failed checking OMIT for 'synphot' 'thruput' with expr 'true' : name 'true' is not defined
+    CRDS - WARNING -  Failed checking OMIT for 'synphot' 'thruput' with expr 'true' : name 'true' is not defined
     {'thruput': 'acs_block1_002_syn.fits'}
 
     >>> test_config.cleanup(old_state)

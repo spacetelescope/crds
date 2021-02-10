@@ -46,8 +46,8 @@ def tpn_path(tpn_file):
 def get_extra_tpninfos(refpath):
     return []
 
-def project_check(refpath):
-    return
+def project_check(refpath, rmap):
+    pass
 
 # =======================================================================
 

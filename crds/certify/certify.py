@@ -9,6 +9,7 @@ from collections import defaultdict
 import gc
 import uuid
 
+import asdf
 import numpy as np
 
 # ============================================================================
@@ -34,14 +35,19 @@ from . import check_sha1sum
 class Certifier:
     """Baseclass for all certifiers: references, mappings, etc."""
 
-    def __init__(self, filename, context=None, check_references=False,
+    def __init__(self, filename, context, check_references=False,
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=None,
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
                  original_name=None, run_fitsverify=False, check_sha1sum=False):
 
         self.filename = filename
-        self.context = context
+
+        if context is None:
+            raise ValueError("The 'context' argument must not be None")
+        else:
+            self.context = context
+
         self.check_references = check_references
         self.compare_old_reference = compare_old_reference
         self._dump_provenance_flag = dump_provenance
@@ -126,8 +132,6 @@ class Certifier:
         """Determine required parkeys in reference path `refname` according to pipeline
         mapping `context`.
         """
-        if self.context is None:
-            return []
         try:
             return self.get_corresponding_rmap().get_required_parkeys()
         except Exception as exc:
@@ -223,13 +227,12 @@ class ReferenceCertifier(Certifier):
         in `header` from the names used in reference files to the corresponding names matched in
         datasets.   Returns new `header`.
         """
-        if self.context:
-            rmapping = None
-            with log.verbose_warning_on_exception("No corresponding rmap"):
-                rmapping = self.get_corresponding_rmap()
-            if rmapping:
-                with self.error_on_exception("Error mapping reference names and values to dataset names and values"):
-                    header = rmapping.locate.reference_keys_to_dataset_keys(rmapping, header)
+        rmapping = None
+        with log.verbose_warning_on_exception("No corresponding rmap"):
+            rmapping = self.get_corresponding_rmap()
+        if rmapping:
+            with self.error_on_exception("Error mapping reference names and values to dataset names and values"):
+                header = rmapping.locate.reference_keys_to_dataset_keys(rmapping, header)
         return header
 
     @property
@@ -335,10 +338,7 @@ class ReferenceCertifier(Certifier):
         if self.comparison_reference:
             old_reference = self.comparison_reference
         else:
-            if self.context is not None:
-                old_reference = self.find_old_reference(self.context, self.filename)
-            else:
-                old_reference = None
+            old_reference = self.find_old_reference(self.context, self.filename)
             if old_reference is None or old_reference == self.basename:
                 # Load tables modes anyway,  looking for duplicate modes.
                 for tab in tables.tables(self.filename):
@@ -476,18 +476,17 @@ class ReferenceCertifier(Certifier):
         confirm that the file's ASDF Standard version obeys the context
         requirement.
         """
-        if self.context:
-            asdf_standard_version = data_file.get_asdf_standard_version(self.filename)
-            if asdf_standard_version:
-                pmap = crds.get_pickled_mapping(self.context, ignore_checksum="warn")
-                asdf_standard_requirement = pmap.get_asdf_standard_requirement()
-                if not asdf_standard_version in asdf_standard_requirement:
-                    log.error(
-                        "ASDF Standard version",
-                        asdf_standard_version,
-                        "does not fulfill context requirement of",
-                        str(asdf_standard_requirement)
-                    )
+        asdf_standard_version = data_file.get_asdf_standard_version(self.filename)
+        if asdf_standard_version:
+            pmap = crds.get_pickled_mapping(self.context, ignore_checksum="warn")
+            asdf_standard_requirement = pmap.get_asdf_standard_requirement()
+            if not asdf_standard_version in asdf_standard_requirement:
+                log.error(
+                    "ASDF Standard version",
+                    asdf_standard_version,
+                    "does not fulfill context requirement of",
+                    str(asdf_standard_requirement)
+                )
 
 # ============================================================================
 
@@ -599,8 +598,8 @@ class FitsCertifier(ReferenceCertifier):
         if self.run_fitsverify:
             self.fitsverify()
 
-        # Project-specific checks,  for JWST instantiates data model.
-        self.locator.project_check(self.filename)
+        # Project-specific checks, for JWST instantiates data model.
+        self.locator.project_check(self.filename, self.get_corresponding_rmap())
 
     def fitsverify(self):
         """Run optional external fitsverify program from cfitsio library, installed separately from CRDS."""
@@ -678,8 +677,22 @@ class AsdfCertifier(ReferenceCertifier):
         """Certify an unknown format file."""
         super(AsdfCertifier, self).certify()
 
-        # Project-specific checks,  for JWST instantiates data model.
-        self.locator.project_check(self.filename)
+        self.check_schema()
+
+        # Project-specific checks, for JWST instantiates data model.
+        self.locator.project_check(self.filename, self.get_corresponding_rmap())
+
+    def check_schema(self):
+        """
+        If schema_uri is set, verify that the file validates
+        against that schema.
+        """
+        rmap = self.get_corresponding_rmap()
+        if rmap.schema_uri is not None:
+            # The file will be validated against the schema when it
+            # is opened:
+            with asdf.open(self.filename, custom_schema=rmap.schema_uri):
+                pass
 
 # ============================================================================
 
@@ -706,8 +719,7 @@ class MappingCertifier(Certifier):
                              "from context", repr(self.context), "for checking mapping differences.")
                 diff.mapping_check_diffs(mapping, derived_from)
         else:
-            if self.context is not None:
-                log.info("No predecessor for", repr(mapping.name), "relative to context", repr(self.context))
+            log.info("No predecessor for", repr(mapping.name), "relative to context", repr(self.context))
 
         # Optionally check nested references,  only for rmaps.
         if not self.check_references or not mapping.specifies_references:
@@ -716,7 +728,7 @@ class MappingCertifier(Certifier):
         references = self.get_existing_reference_paths(mapping)
 
         if self.check_references == "contents":
-            certify_files(references, context=self.context,
+            certify_files(references, self.context,
                           dump_provenance=self._dump_provenance_flag,
                           check_references=self.check_references,
                           compare_old_reference=self.compare_old_reference,
@@ -780,7 +792,7 @@ def memory_cleanup(func):
 
 @data_file.hijack_warnings
 @memory_cleanup
-def certify_file(filename, context=None, dump_provenance=False, check_references=False,
+def certify_file(filename, context, dump_provenance=False, check_references=False,
                  compare_old_reference=False,
                  dont_parse=False, script=None, observatory=None,
                  comparison_reference=None, original_name=None, ith="",
@@ -816,7 +828,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
             log.info("Certifying", repr(original_name) + ith, "as", repr(filetype.upper()),
                      "relative to context", repr(context))
 
-        certifier = klass(filename, context=context, check_references=check_references,
+        certifier = klass(filename, context, check_references=check_references,
                           compare_old_reference=compare_old_reference,
                           dump_provenance=dump_provenance,
                           dont_parse=dont_parse, script=script, observatory=observatory,
@@ -846,7 +858,7 @@ def get_certifier_class(original_name, filepath):
     return filetype, klass
 
 @memory_cleanup
-def certify_files(files, context=None, dump_provenance=False, check_references=False,
+def certify_files(files, context, dump_provenance=False, check_references=False,
                   compare_old_reference=False, dont_parse=False, skip_banner=False,
                   script=None, observatory=None, comparison_reference=None,
                   run_fitsverify=False, check_rmap=True, check_sha1sums=False):
@@ -874,7 +886,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         ith = ' (' + str(fnum+1) + '/' + str(len(files)) + ')'
 
         certify_file(
-            filename, context=context, dump_provenance=dump_provenance, check_references=check_references,
+            filename, context, dump_provenance=dump_provenance, check_references=check_references,
             compare_old_reference=compare_old_reference, dont_parse=dont_parse, script=script, observatory=observatory,
             comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify, check_sha1sum=check_sha1sums)
 
@@ -928,7 +940,7 @@ def check_rmap_updates(observatory, context, filepaths):
         refactor.rmap_insert_references(old_rmap.filename, new_rmap, references2)
 
         banner()
-        certify_file(new_rmap, context=context)    # check for partial overlaps
+        certify_file(new_rmap, context)    # check for partial overlaps
 
 # ============================================================================
 
@@ -1034,7 +1046,11 @@ For more information on the checks being performed,  use --verbose or --verbosit
         else:
             all_files = set(self.files)
 
-        assert (self.args.comparison_context in [None, "none", "NONE", "None"]) or config.is_mapping_spec(self.args.comparison_context), \
+        if self.args.comparison_context in ["none", "NONE", "None"]:
+            log.warning("It is no longer possible to run the certifier without a comparison context.  Using default context instead.")
+            self.args.comparison_context = None
+
+        assert (self.args.comparison_context is None) or config.is_mapping_spec(self.args.comparison_context), \
             "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
         assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
@@ -1050,7 +1066,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
             self._sync_comparison_files(comparison_context, comparison_reference)
 
         certify_files(sorted(all_files),
-                      context=self.resolve_context(comparison_context),
+                      self.resolve_context(comparison_context),
                       comparison_reference=comparison_reference,
                       compare_old_reference=self.args.comparison_context or self.args.comparison_reference,
                       dump_provenance=self.args.dump_provenance,
@@ -1078,29 +1094,10 @@ For more information on the checks being performed,  use --verbose or --verbosit
         Return any value for comparison_context (possibly defaulted to ops context) or None.
         """
         if self.args.comparison_context is None:  # no switch specified
-            comparison_context = self._get_default_comparison_context(all_files)
-        elif self.args.comparison_context.lower() == "none":    # switch specifies "none"
-            log.info("Comparison context explicitly specified as 'none',  no --comparison-context will be used.")
-            comparison_context = None
+            log.info("Defaulting --comparison-context to operational context.")
+            comparison_context = self.default_context
         else:  # an explicit filename
             comparison_context = self.args.comparison_context
-        return comparison_context
-
-    def _get_default_comparison_context(self, all_files):
-        """Determine any reasonable commparison context when --comparison-context is not specified."""
-        if not self.args.comparison_reference:
-            if self.are_all_references(all_files):
-                log.info("Certifying only references,  defaulting --comparison-context to operational context.")
-                comparison_context = self.default_context
-            elif self.args.deep:
-                log.info("Certifying mappings with --deep,  defaulting --comparison-context to operational context.")
-                comparison_context = self.default_context
-            else:
-                log.info("Certification includes mappings but is not --deep, no --comparison-context is defined.")
-                comparison_context = None
-        else:
-            log.info("Certifying with --comparison-reference, no default --comparison-context defined.")
-            comparison_context = None
         return comparison_context
 
     def log_and_track_error(self, filename, *args, **keys):

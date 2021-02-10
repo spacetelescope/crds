@@ -569,6 +569,54 @@ selector = Match({
 })
 ''')
 
+    def test_rmap_schema_uri(self):
+        r = rmap.ReferenceMapping.from_string('''
+header = {
+    'derived_from' : 'jwst_nircam_pars-tweakregstep_0001.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-tweakregstep',
+    'filetype' : 'pars-tweakregstep',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_pars-tweakregstep_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'schema_uri' : 'http://stsci.edu/schemas/asdf/core/ndarray-1.0.0',
+    'sha1sum' : '186bb16c5b4ec498d9cc7d03ff564ae22f221d6f',
+    'suffix' : 'pars-tweakregstep',
+    'text_descr' : 'TweakRegStep runtime parameters',
+}
+
+selector = Match({
+})
+''', ignore_checksum=True)
+        self.assertEquals(r.schema_uri, 'http://stsci.edu/schemas/asdf/core/ndarray-1.0.0')
+        r.validate()
+
+    def test_rmap_schema_uri_missing(self):
+        r = rmap.ReferenceMapping.from_string('''
+header = {
+    'derived_from' : 'jwst_nircam_pars-tweakregstep_0001.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-tweakregstep',
+    'filetype' : 'pars-tweakregstep',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_pars-tweakregstep_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'schema_uri' : 'http://stsci.edu/schemas/asdf/core/does_not_exist-1.0.0',
+    'sha1sum' : '186bb16c5b4ec498d9cc7d03ff564ae22f221d6f',
+    'suffix' : 'pars-tweakregstep',
+    'text_descr' : 'TweakRegStep runtime parameters',
+}
+
+selector = Match({
+})
+''', ignore_checksum=True)
+        with self.assertRaises(FileNotFoundError):
+            r.validate()
+
     def test_rmap_get_best_references_include(self):
         r = rmap.get_cached_mapping("data/hst_acs_darkfile_comment.rmap")
         header = {
