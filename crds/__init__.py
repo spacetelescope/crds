@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.6"   # XXXX  see also ../setup.cfg
-__rationale__ = "Update CUBEPAR selection to include LAMP_MODE"
+__version__ = "10.3.7"   # XXXX  see also ../setup.cfg
+__rationale__ = "Add support for pars-outlierdetectionstep, pars-sourcecatalogstep, Roman dark updates, ASDF schema support"
 
 __all__ = [
     "getrecommendations",
