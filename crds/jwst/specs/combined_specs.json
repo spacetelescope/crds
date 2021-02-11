@@ -1602,13 +1602,15 @@
             "name":"",
             "observatory":"JWST",
             "parkey":[
-                [],
+                [
+                    "META.VISIT.TSOVISIT"
+                ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"14a6e276dc45b63c249da1f9087d2a7276cc2fd8",
+            "sha1sum":"45db150be0397c7711214562e1f5f07a84f1bac5",
             "suffix":"pars-detector1pipeline",
             "text_descr":"Step parameters for Detector1Pipeline",
             "tpn":"miri_pars-detector1pipeline.tpn",
