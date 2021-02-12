@@ -3877,6 +3877,33 @@
             "tpn":"nircam_pars-detector1pipeline.tpn",
             "unique_rowkeys":null
         },
+        "pars-image2pipeline":{
+            "derived_from":"Handmade SCSB 2021-02",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-image2pipeline",
+            "filetype":"pars-image2pipeline",
+            "instrument":"nircam",
+            "ld_tpn":"nircam_pars-image2pipeline_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"61064b08a1b418372620b6269502712995ae7c12",
+            "suffix":"pars-image2pipeline",
+            "text_descr":"Image2Pipeline runtime parameters",
+            "tpn":"nircam_pars-image2pipeline.tpn",
+            "unique_rowkeys":null
+        },
         "pars-outlierdetectionstep":{
             "derived_from":"Copied from miri_pars-outlierdetectionstep 20210208",
             "extra_keys":null,
