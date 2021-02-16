@@ -28,10 +28,9 @@ APPEND_KEYS = ["COMMENT", "HISTORY"]
 
 # The point of hijack_warnings is to remap warnings from other packages to CRDS
 # so that they are counted and logged and visible in web output.
-# hijack_warnings needs to be nestable
+# NOTE:  hijack_warnings needs to be nestable
 # XXX: hijack_warnings is non-reentrant and FAILS with THREADS
-# This is hard to make a plugin because it is used at compile time and unit tests
-# switch back and forth between observatories.
+
 def hijack_warnings(func):
     """Decorator that redirects warning messages to CRDS warnings."""
     @functools.wraps(func)
@@ -39,8 +38,27 @@ def hijack_warnings(func):
         """Reassign warnings to CRDS warnings prior to executing `func`,  restore
         warnings state afterwards and return result of `func`.
         """
-        hijack_warnings = utils.get_observatory_plugin("hijack_warnings")
-        result = hijack_warnings(func, *args, **keys)
+        # warnings.resetwarnings()
+        from astropy.utils.exceptions import AstropyUserWarning
+        with warnings.catch_warnings():
+            old_showwarning = warnings.showwarning
+            warnings.showwarning = hijacked_showwarning
+            warnings.simplefilter("always", AstropyUserWarning)
+            try:
+                from stdatamodels.validate import ValidationWarning
+            except:
+                log.verbose_warning(
+                    "stdatamodels ValidationWarning import failed.  "
+                    "Not a problem for HST.",
+                    verbosity=70)
+            else:
+                warnings.filterwarnings("always", r".*", ValidationWarning, r".*jwst.*")
+                if not config.ALLOW_SCHEMA_VIOLATIONS:
+                    warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, r".*jwst.*")
+            try:
+                result = func(*args, **keys)
+            finally:
+                warnings.showwarning = old_showwarning
         return result
     return wrapper
 
