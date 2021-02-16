@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Hand made 2020-08-18',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-image2pipeline',
+    'filetype' : 'PARS-IMAGE2PIPELINE',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pars-image2pipeline.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.VISIT.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'e28e099479dce9774ebe949eb6c5099938a12347',
+    'suffix' : 'pars-image2pipeline',
+    'text_descr' : 'Image2Pipeline runtime parameters',
+}
+
+selector = Match({
+})
