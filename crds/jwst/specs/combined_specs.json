@@ -3919,13 +3919,15 @@
             "name":"",
             "observatory":"JWST",
             "parkey":[
-                [],
+                [
+                    "META.VISIT.TSOVISIT"
+                ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"0435f22314ed15cbb2dd9134272583e360f78ae3",
+            "sha1sum":"222aaf71757f3da10e2c1d16ff16a9c7e01496c0",
             "suffix":"pars-detector1pipeline",
             "text_descr":"Step parameters for Detector1Pipeline",
             "tpn":"nircam_pars-detector1pipeline.tpn",
@@ -4803,13 +4805,15 @@
             "name":"",
             "observatory":"JWST",
             "parkey":[
-                [],
+                [
+                    "META.VISIT.TSOVISIT"
+                ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"e42412773c516a80dd93af04f887c67718f254b7",
+            "sha1sum":"94f42c1d5164bc38137f44c1209d4387c2e98390",
             "suffix":"pars-detector1pipeline",
             "text_descr":"Step parameters for Detector1Pipeline",
             "tpn":"niriss_pars-detector1pipeline.tpn",
@@ -6098,13 +6102,15 @@
             "name":"",
             "observatory":"JWST",
             "parkey":[
-                [],
+                [
+                    "META.VISIT.TSOVISIT"
+                ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"f9b306abe8567f879dad57cbb6f4cb696615842c",
+            "sha1sum":"a0e15a37dbdb3d3d8cd66fde9016a3deedc9a464",
             "suffix":"pars-detector1pipeline",
             "text_descr":"Step parameters for Detector1Pipeline",
             "tpn":"nirspec_pars-detector1pipeline.tpn",
