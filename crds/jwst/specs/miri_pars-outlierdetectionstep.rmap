@@ -8,10 +8,11 @@ header = {
     'name' : 'jwst_miri_pars-outlierdetectionstep.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '07aa806dc2068e1ed0f6a0922032178ed9817705',
+    'sha1sum' : '9f4fe503fb6b08e12053bba35951255d2afe8d1a',
     'suffix' : 'pars-outlierdetectionstep',
     'text_descr' : 'OutlierDetectionStep runtime parameters',
 }
 
 selector = Match({
+    ('N/A', 'N/A', 'N/A') : 'N/A',
 })

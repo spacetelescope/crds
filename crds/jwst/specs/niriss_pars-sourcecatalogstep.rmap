@@ -8,10 +8,11 @@ header = {
     'name' : 'jwst_niriss_pars-sourcecatalogstep.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'a319db60d1363e178b7b7bee08fb0402559e8326',
+    'sha1sum' : 'f0d8208fcb09436c000c8e1436f9f3cd6554b695',
     'suffix' : 'pars-sourcecatalogstep',
     'text_descr' : 'SourceCatalogStep runtime parameters',
 }
 
 selector = Match({
+    ('N/A', 'N/A', 'N/A') : 'N/A',
 })

@@ -8,10 +8,11 @@ header = {
     'name' : 'jwst_nircam_pars-outlierdetectionstep.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'eb0246d3e48e40c640cbfe3621e0613fdd325011',
+    'sha1sum' : 'd11aaab0c85beabf0b86574f61b6ce2ddf7fee0a',
     'suffix' : 'pars-outlierdetectionstep',
     'text_descr' : 'OutlierDetectionStep runtime parameters',
 }
 
 selector = Match({
+    ('N/A', 'N/A', 'N/A') : 'N/A',
 })

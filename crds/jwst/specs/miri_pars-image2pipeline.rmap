@@ -8,10 +8,11 @@ header = {
     'name' : 'jwst_miri_pars-image2pipeline.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.VISIT.TSOVISIT',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '38392e75a49dad4f1c0385d06914ec2b288e2b9f',
+    'sha1sum' : '6725a8284c228654a6ee3a5d3af42d2255e47b05',
     'suffix' : 'pars-image2pipeline',
     'text_descr' : 'Image2Pipeline runtime parameters',
 }
 
 selector = Match({
+    'N/A' : 'N/A',
 })

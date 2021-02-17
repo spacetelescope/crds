@@ -8,10 +8,11 @@ header = {
     'name' : 'jwst_nircam_pars-tweakregstep_0002.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '9cca929d31e8e473408419e56ce41517b1331bf3',
+    'sha1sum' : 'd9d3e0df6f155d2f257f32c2f1e47aa6a7ffd2e2',
     'suffix' : 'pars-tweakregstep',
     'text_descr' : 'TweakRegStep runtime parameters',
 }
 
 selector = Match({
+    ('N/A', 'N/A', 'N/A') : 'N/A',
 })
