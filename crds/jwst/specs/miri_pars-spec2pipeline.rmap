@@ -8,11 +8,10 @@ header = {
     'name' : 'jwst_miri_pars-spec2pipeline.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.VISIT.TSOVISIT',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '2f1b586d0a1d6cf8733314a51a398994ab393a97',
+    'sha1sum' : '1163c70abcfc51bf924c9abc7e3f241d5235b4b0',
     'suffix' : 'pars-spec2pipeline',
     'text_descr' : 'Spec2Pipeline runtime parameters',
 }
 
 selector = Match({
-    'N/A' : 'N/A',
 })

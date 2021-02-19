@@ -8,11 +8,10 @@ header = {
     'name' : 'jwst_niriss_pars-image2pipeline.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '32ff1e6de24c79ea7ac0fc79dc8ce392c8cd70ac',
+    'sha1sum' : '35f422f5eb66b3d9ebf6eae7b6c29b928102d51d',
     'suffix' : 'pars-image2pipeline',
     'text_descr' : 'Image2Pipeline runtime parameters',
 }
 
 selector = Match({
-    ('N/A', 'N/A') : 'N/A',
 })

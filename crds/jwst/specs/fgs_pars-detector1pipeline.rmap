@@ -9,7 +9,7 @@ header = {
     'name' : '',
     'observatory' : 'JWST',
     'parkey' : (('META.VISIT.TSOVISIT',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '3993aa707809a2245ca5c15ce56a020bedfe4907',
+    'sha1sum' : 'c09570be4d9ad91bde68ebc701cafa7cad4c6d05',
     'suffix' : 'pars-detector1pipeline',
     'text_descr' : 'Step parameters for Detector1Pipeline',
 }
@@ -20,5 +20,4 @@ This reftype provides the configuration for jwst.pipeline.Detector1Pipeline
 """
 
 selector = Match({
-    'N/A' : 'N/A',
 })

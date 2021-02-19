@@ -8,11 +8,10 @@ header = {
     'name' : 'jwst_fgs_pars-sourcecatalogstep.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.DETECTOR'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '6b490691589bc31e6b5551a8dbb6545c564f8045',
+    'sha1sum' : 'd8da456a253586110d21d8c325558cb741c3e23d',
     'suffix' : 'pars-sourcecatalogstep',
     'text_descr' : 'SourceCatalogStep runtime parameters',
 }
 
 selector = Match({
-    ('N/A', 'N/A') : 'N/A',
 })

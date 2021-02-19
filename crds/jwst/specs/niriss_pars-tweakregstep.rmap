@@ -8,11 +8,10 @@ header = {
     'name' : 'jwst_niriss_pars-tweakregstep_0003.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'baab32e0cf94e9df10d53afefc3cfb95e0aadead',
+    'sha1sum' : '40661bfd968848d6b064c8c3878572bdfc8e8997',
     'suffix' : 'pars-tweakregstep',
     'text_descr' : 'TweakRegStep runtime parameters',
 }
 
 selector = Match({
-    ('N/A', 'N/A', 'N/A') : 'N/A',
 })
