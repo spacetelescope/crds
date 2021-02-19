@@ -635,40 +635,6 @@ def disable_fits_annotations():
 
 # ============================================================================
 
-def hijack_warnings(func, *args, **keys):
-    """Re-map dependency warnings to CRDS warnings so they're counted and logged
-    to web output.   astropy and datamodels are remapped.
-    """
-    with warnings.catch_warnings():
-        # save and replace warnings.showwarning
-        old_showwarning, warnings.showwarning = \
-            warnings.showwarning, abstract.hijacked_showwarning
-
-        # Always handle astropy warnings
-        from astropy.utils.exceptions import AstropyUserWarning
-        warnings.simplefilter("always", AstropyUserWarning)
-
-        # ValidationWarning was moved to stdatamodels after jwst
-        # 0.17.1.  The backup import from jwst can be removed
-        # once older versions are no longer being used.
-        try:
-            from stdatamodels.validate import ValidationWarning
-        except ImportError:
-            from jwst.datamodels.validate import ValidationWarning
-
-        warnings.filterwarnings("always", r".*", ValidationWarning, f".*jwst.*")
-        if not config.ALLOW_SCHEMA_VIOLATIONS:
-            warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*jwst.*")
-
-        try:
-            result = func(*args, **keys)
-        finally:
-            warnings.showwarning = old_showwarning
-
-    return result
-
-# ============================================================================
-
 def test():
     """Run the module doctests."""
     import doctest

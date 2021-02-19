@@ -781,39 +781,6 @@ def get_cross_strapped_pairs(header):
 
 # ============================================================================
 
-def hijack_warnings(func, *args, **keys):
-    """Re-map dependency warnings to CRDS warnings so they're counted and logged
-    to web output.   astropy and datamodels are remapped.
-
-    Can't do much testing since the doctest ignores stderr.
-
-    >>> hijack_warnings(lambda *args, **keys: print('hooligan'), None, None)
-    hooligan
-
-    """
-    with warnings.catch_warnings():
-        # save and replace warnings.showwarning
-        old_showwarning, warnings.showwarning = \
-            warnings.showwarning, abstract.hijacked_showwarning
-
-        # Always handle astropy warnings
-        from astropy.utils.exceptions import AstropyUserWarning
-        warnings.simplefilter("always", AstropyUserWarning)
-
-        from stdatamodels.validate import ValidationWarning
-        warnings.filterwarnings("always", r".*", ValidationWarning, f".*roman.*")
-        if not config.ALLOW_SCHEMA_VIOLATIONS:
-            warnings.filterwarnings("error", r".*is not one of.*", ValidationWarning, f".*roman.*")
-
-        try:
-            result = func(*args, **keys)
-        finally:
-            warnings.showwarning = old_showwarning
-
-    return result
-
-# ============================================================================
-
 def test():
     """Run the module doctests."""
     import doctest
