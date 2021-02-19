@@ -7,12 +7,12 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_niriss_pars-outlierdetectionstep.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '7c3bf8a06e0cfe4b0279022fdccb9e6dc780674a',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8f1c8a0ef4bd46853f83f920f2e8c1e7e8de071d',
     'suffix' : 'pars-outlierdetectionstep',
     'text_descr' : 'OutlierDetectionStep runtime parameters',
 }
 
 selector = Match({
-    ('N/A', 'N/A', 'N/A') : 'N/A',
+    ('N/A', 'N/A', 'N/A', 'N/A') : 'N/A',
 })

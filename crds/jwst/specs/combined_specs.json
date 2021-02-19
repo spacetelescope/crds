@@ -2361,14 +2361,15 @@
                 [
                     "META.EXPOSURE.TYPE",
                     "META.INSTRUMENT.FILTER",
-                    "META.SUBARRAY.NAME"
+                    "META.SUBARRAY.NAME",
+                    "META.VISIT.TSOVISIT"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"9f4fe503fb6b08e12053bba35951255d2afe8d1a",
+            "sha1sum":"2b1dd2c756ee247e0e64070854a6b60cb5866fa7",
             "suffix":"pars-outlierdetectionstep",
             "text_descr":"OutlierDetectionStep runtime parameters",
             "tpn":"miri_pars-outlierdetectionstep.tpn",
@@ -3976,14 +3977,15 @@
                 [
                     "META.EXPOSURE.TYPE",
                     "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.PUPIL"
+                    "META.INSTRUMENT.PUPIL",
+                    "META.VISIT.TSOVISIT"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"d11aaab0c85beabf0b86574f61b6ce2ddf7fee0a",
+            "sha1sum":"171403f7635456537e5e393be1751b5de6b47979",
             "suffix":"pars-outlierdetectionstep",
             "text_descr":"OutlierDetectionStep runtime parameters",
             "tpn":"nircam_pars-outlierdetectionstep.tpn",
@@ -4861,14 +4863,15 @@
                 [
                     "META.EXPOSURE.TYPE",
                     "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.PUPIL"
+                    "META.INSTRUMENT.PUPIL",
+                    "META.VISIT.TSOVISIT"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"7c3bf8a06e0cfe4b0279022fdccb9e6dc780674a",
+            "sha1sum":"8f1c8a0ef4bd46853f83f920f2e8c1e7e8de071d",
             "suffix":"pars-outlierdetectionstep",
             "text_descr":"OutlierDetectionStep runtime parameters",
             "tpn":"niriss_pars-outlierdetectionstep.tpn",
