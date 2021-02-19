@@ -14,5 +14,4 @@ header = {
 }
 
 selector = Match({
-    ('N/A', 'N/A') : 'N/A',
 })
