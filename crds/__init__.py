@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.7"   # XXXX  see also ../setup.cfg
-__rationale__ = "Add support for pars-outlierdetectionstep, pars-sourcecatalogstep, Roman dark updates, ASDF schema support"
+__version__ = "10.3.8"   # XXXX  see also ../setup.cfg
+__rationale__ = "Support for HST ACS SATUFILE, additional JWST step parameter references, and bestrefs bug fix"
 
 __all__ = [
     "getrecommendations",
