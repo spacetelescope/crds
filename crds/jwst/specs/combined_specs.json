@@ -2682,7 +2682,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"48bffc5ff6c1f4671015fd74caffeb9c71e249f3",
+            "sha1sum":"7b7a6fe83a597e461a26acfffdd1e63d153bfd64",
             "suffix":"pars-sourcecatalogstep",
             "text_descr":"SourceCatalogStep runtime parameters",
             "tpn":"miri_pars-sourcecatalogstep.tpn",
@@ -2942,7 +2942,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"380734da361762b534b4201cc49006f862b25bab",
+            "sha1sum":"0c33a939fcc322dbe3f25fd68c2ec9ca383b1464",
             "suffix":"pars-tweakregstep",
             "text_descr":"TweakRegStep runtime parameters",
             "tpn":"miri_pars-tweakregstep.tpn",
