@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'Hand written 04-26-2012',
+    'instrument' : 'MIRI',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_miri.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '678c8240a86605ba31bfa323e575922a487a69c4',
+}
+
+selector = {
+    'flat' : 'jwst_miri_flat.rmap',
+    'photom' : 'jwst_miri_photom.rmap',
+}
