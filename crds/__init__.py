@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.8"   # XXXX  see also ../setup.cfg
-__rationale__ = "Support for HST ACS SATUFILE, additional JWST step parameter references, and bestrefs bug fix"
+__version__ = "10.3.9"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update JWST combined_specs.json"
 
 __all__ = [
     "getrecommendations",
