@@ -8,3 +8,6 @@ coverage
 
 documentation/crds_users_guide/build
 documentation/crds_users_guide/*.tar.gz
+
+# Development
+crds-dev.code-workspace
