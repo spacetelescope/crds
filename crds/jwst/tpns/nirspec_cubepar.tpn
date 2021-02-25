@@ -1,6 +1,6 @@
 
 # Make EXP_TYPE available in headers even if only UNDEFINED
 # Keyword cross-strapping doesn't work for UNDEFINED values...
-META.EXPOSURE.TYPE         H   C   R   NRS_IFU
+META.EXPOSURE.TYPE         H   C   R   NRS_AUTOFLAT,NRS_AUTOWAVE,NRS_IFU,NRS_LAMP
 META.INSTRUMENT.DETECTOR   H   C   R   NRS1,NRS2,ANY,N/A
 
