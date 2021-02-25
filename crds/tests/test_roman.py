@@ -1,10 +1,13 @@
+import os
+import subprocess
 import unittest
 import pathlib
 
-from crds.tests import test_config
+
 from crds.core import heavy_client
 from crds.core.exceptions import CrdsLookupError
 
+from crds.tests import test_config
 from nose.tools import raises
 
 
@@ -55,3 +58,32 @@ class TestRoman(unittest.TestCase):
             context="roman_0005.pmap",
             reftypes=["dark"]
         )
+
+    def test_list_references(self):
+        """ test_list_references: test satisfies Roman 303.2
+        """
+        env = os.environ.copy()
+
+        expected_result = {
+            "roman_wfi_flat_0003.asdf",
+            "roman_wfi_dark_0001.asdf"
+        }
+
+        list_command = [
+            'crds',
+            'list',
+            '--references',
+            '--contexts',
+            'roman_wfi_0004.imap'
+        ]
+
+        p = subprocess.Popen(
+            list_command,
+            env=env,
+            stdout=subprocess.PIPE
+
+        )
+        results, err = p.communicate()
+        results = results.decode('ascii').split("\n")
+
+        assert {item for item in results if item} == expected_result
