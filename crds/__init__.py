@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.11"   # XXXX  see also ../setup.cfg
-__rationale__ = "Final updates for Roman build 0.1"
+__version__ = "10.3.12"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update HST ACS SATUFILE to select on CCDAMP"
 
 __all__ = [
     "getrecommendations",
