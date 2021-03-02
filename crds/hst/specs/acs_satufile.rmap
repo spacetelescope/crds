@@ -8,7 +8,7 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'acs_satufile.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : (('DETECTOR', 'CCDAMP'), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'BIASCORR',
