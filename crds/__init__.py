@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.12"   # XXXX  see also ../setup.cfg
-__rationale__ = "Update HST ACS SATUFILE to select on CCDAMP"
+__version__ = "10.3.13"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update HST combined_specs.json"
 
 __all__ = [
     "getrecommendations",
