@@ -496,7 +496,8 @@
             "observatory":"HST",
             "parkey":[
                 [
-                    "DETECTOR"
+                    "DETECTOR",
+                    "CCDAMP"
                 ],
                 [
                     "DATE-OBS",
@@ -507,7 +508,7 @@
             "reffile_required":"YES",
             "reffile_switch":"BIASCORR",
             "rmap_relevance":"((DETECTOR != \"SBC\") and (BIASCORR != \"OMIT\"))",
-            "sha1sum":"d4b13fc110f5f2bc80f5d6ba759863b3fe7e15b0",
+            "sha1sum":"5950c4b74e301da1dd75ac93663e30c74e4f8d62",
             "suffix":"sat",
             "text_descr":"Full-Well Saturation Level Map",
             "tpn":"acs_sat.tpn",

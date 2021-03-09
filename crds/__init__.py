@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.10"   # XXXX  see also ../setup.cfg
-__rationale__ = "Update cubpars tpn validation"
+__version__ = "10.3.13"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update HST combined_specs.json"
 
 __all__ = [
     "getrecommendations",
