@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-03-09',
+    'file_ext' : '.asdf',
+    'filekind' : 'READNOISE',
+    'filetype' : 'READNOISE',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_readnoise_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_readnoise.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '5bea0b042d513fcd0ec2359f6fe6a2c4bb3940f0',
+    'suffix' : 'readnoise',
+    'text_descr' : 'Read Noise',
+    'tpn' : 'wfi_readnoise.tpn',
+}
+
+selector = Match({
+})
