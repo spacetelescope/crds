@@ -84,7 +84,7 @@ setup(name="crds",
       url="https://hst-crds.stsci.edu",
       license="BSD",
       python_requires=">=3.7",
-      install_requires=["astropy", "numpy", "filelock"] + SUBMISSION_DEPS,
+      install_requires=["astropy", "numpy", "filelock", "asdf"] + SUBMISSION_DEPS,
       extras_require={
           "jwst": ["jwst"],
           "roman" : ["romancal"],
