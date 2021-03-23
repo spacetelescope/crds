@@ -53,7 +53,7 @@ META.SUBARRAY.NAME          H   C   O   SUB128,SUB160,SUB160P,SUB320,SUB320A335R
                                         \
                                         MASKA210R,MASKA430R,MASKBLWB,MASKBSWB,\
                                         \
-                                        FULL,ANY,GENERIC,N/A
+                                        FULL,FULLP,ANY,GENERIC,N/A
 
 
 

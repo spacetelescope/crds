@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.13"   # XXXX  see also ../setup.cfg
-__rationale__ = "Update HST combined_specs.json"
+__version__ = "10.3.14"   # XXXX  see also ../setup.cfg
+__rationale__ = "Add FULLP to valid list of subarray names for NIRCam"
 
 __all__ = [
     "getrecommendations",
