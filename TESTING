@@ -21,11 +21,11 @@ do:
 The above configures CRDS to run the built-in unit tests using several file
 sources:
 
-- $CRDS_TEST_ROOT/crds-cache-test           
+- $CRDS_TEST_ROOT/crds-cache-test
   Dirty test cache with corrupted/hacked files, used by tests only.
   Has the dangerous property of like-named files (same as official names) with different contents.
 
-- $CRDS_TEST_ROOT/crds-cache-default-test    
+- $CRDS_TEST_ROOT/crds-cache-default-test
   Used when CRDS_PATH not set,  replaces /grp/crds/cache with minimal reference files for testing
   /grp/crds/cache is a complete HST + JWST readonly cache on the Central Store,  too large to distribute
 
@@ -50,7 +50,7 @@ Notes on crds-cache-default-test bootstrap file CRDS server setup:
       $ tar jcf crds-cache-default-test.tar.bz2 crds-cache-default-test
 
       The resulting bzip2 file is copied to the HST OPS VM at the
-      $CRDS/CRDS_server/sources/static directory where the source code of all the other
+      $CRDS/CRDS_server/crds_server/static directory where the source code of all the other
       server static files resides.  This will cause it to be re-installed in the Apache
       static directory whenever the server is re-installed.   Merely placing the bzip2
       file in the Apache static directory will result in a file life expectancy of 1 day,

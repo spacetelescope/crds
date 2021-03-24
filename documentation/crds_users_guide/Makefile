@@ -6,7 +6,7 @@
 #  Principle make targets:
 #
 #  make html         # for development,  look at build/html/index.html
-#  make serverhtml   # to install HTML in parallel CRDS_server repo checkout in sources/static
+#  make serverhtml   # to install HTML in parallel CRDS_server repo checkout in crds_server/static
 #  make latexpdf     # generate a PDF of the docs
 #
 
@@ -176,7 +176,7 @@ tarhtml: html
 	rm -rf users_guide
 
 serverhtml: tarhtml
-	mv users_guide.tar.gz ../../../CRDS_server/sources/static
-	cd ../../../CRDS_server/sources/static; \
+	mv users_guide.tar.gz ../../../CRDS_server/crds_server/static
+	cd ../../../CRDS_server/crds_server/static; \
 	tar zxf users_guide.tar.gz; \
 	rm users_guide.tar.gz
