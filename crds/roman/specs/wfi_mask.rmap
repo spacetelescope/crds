@@ -10,7 +10,7 @@ header = {
     'name' : 'wfi_mask.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '8fd9b3bb49c5fa053f11bebf6ac0c10eb32f6e1f',
+    'sha1sum' : '350b46d5bfdc0cf307cbe3c32b4e76cc92d08f30',
     'suffix' : 'mask',
     'text_descr' : 'Bad Pixel Mask',
     'tpn' : 'wfi_mask.tpn',
