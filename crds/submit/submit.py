@@ -125,7 +125,7 @@ this command line interface must be members of the CRDS operators group
             log.info("Upload started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
                      "[", utils.human_format_number(file_size),
                      "/", utils.human_format_number(total_size), " bytes ]")
-            self.connection.upload_file("/upload/new/", filename)
+            self.connection.upload_file(filename)
             stats.increment("bytes", file_size)
             stats.increment("files", 1)
             stats.log_status("files", "Upload complete", len(self.files))

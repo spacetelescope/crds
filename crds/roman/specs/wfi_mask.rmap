@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-03-25',
+    'file_ext' : '.asdf',
+    'filekind' : 'MASK',
+    'filetype' : 'MASK',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_mask.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_mask.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8fd9b3bb49c5fa053f11bebf6ac0c10eb32f6e1f',
+    'suffix' : 'mask',
+    'text_descr' : 'Bad Pixel Mask',
+    'tpn' : 'wfi_mask.tpn',
+}
+
+selector = Match({
+})
