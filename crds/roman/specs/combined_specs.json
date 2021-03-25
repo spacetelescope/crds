@@ -88,6 +88,36 @@
             "tpn":"wfi_flat.tpn",
             "unique_rowkeys":null
         },
+        "mask":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2021-03-25",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"MASK",
+            "filetype":"MASK",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_mask.tpn",
+            "mapping":"REFERENCE",
+            "name":"wfi_mask.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"350b46d5bfdc0cf307cbe3c32b4e76cc92d08f30",
+            "suffix":"mask",
+            "text_descr":"Bad Pixel Mask",
+            "tpn":"wfi_mask.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "classes":[
                 "Match",
