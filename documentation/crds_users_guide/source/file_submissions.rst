@@ -476,8 +476,9 @@ The manual rmap update process is to:
    will generate a warning.
 
 6. Typically for rmaps set::
- * Generate Contexts ON
- * Auto-Rename ON
+
+   * Generate Contexts ON
+   * Auto-Rename ON
 
 **NOTE:** See also `Delete References`_ and `Add References`_ for streamlined
 methods of adding and removing existing references to/from rmaps.
@@ -516,7 +517,8 @@ Manual .imap update
 type or setting a type to N/A.   Note that adding types can generally be
 done just by submitting the new .rmap normally.
 
-5. Submit the .imap using Submit Mappings with::
+5. Submit the .imap using Submit Mappings with:
+
   * Generate Contexts OFF
   * Auto-rename ON
 
@@ -532,7 +534,8 @@ Manual .pmap update
 
 2. Manually edit the .pmap to make any required changes.
 
-3. Submit the .pmap using Submit Mappings with::
+3. Submit the .pmap using Submit Mappings with:
+
   * Generate Contexts OFF
   * Auto-rename ON
 

@@ -1,7 +1,8 @@
 """This module codifies standard practices for scripted interactions with the
 web server file submission system.
 """
-import os.path
+import os
+import io
 
 from crds.core import log, utils
 from crds.core.exceptions import CrdsError, CrdsWebError
@@ -29,6 +30,8 @@ def log_section(section_name, section_value, verbosity=50, log_function=log.verb
     log_function(section_name, section_value, verbosity=verbosity+5)
 
 # ==================================================================================================
+
+_UPLOAD_CHUNK_SIZE = 2 * 1000 * 1000
 
 class CrdsDjangoConnection:
 
@@ -191,11 +194,31 @@ class CrdsDjangoConnection:
         """Login to the CRDS website and proceed to relative url `next`."""
         self.get("/logout/")
 
-    def upload_file(self, relative_url, filepath):
-        abs_url = self.abs_url(relative_url)
+    def upload_file(self, filepath):
+        abs_url = self.abs_url("/upload/chunked/")
         response = self.session.get(abs_url)
         log.verbose("COOKIES:", log.PP(response.cookies))
-        csrf_token = response.cookies['csrftoken']
-        files = { "files" : open(filepath, "rb") }
-        data = {'csrfmiddlewaretoken': csrf_token}
-        self.session.post(abs_url, files=files, data=data)
+        csrf_token = response.cookies["csrftoken"]
+        file_size = os.stat(filepath).st_size
+        filename = os.path.basename(filepath)
+
+        if file_size < _UPLOAD_CHUNK_SIZE:
+            files = {"files": (filename, open(filepath, "rb"))}
+            data = {"csrfmiddlewaretoken": csrf_token}
+            self.session.post(abs_url, files=files, data=data)
+        else:
+            with open(filepath, "rb") as f:
+                start_byte = 0
+                while True:
+                    chunk = f.read(_UPLOAD_CHUNK_SIZE)
+                    if len(chunk) == 0:
+                        break
+
+                    files = {"files": (filename, io.BytesIO(chunk))}
+                    data = {"csrfmiddlewaretoken": csrf_token}
+                    end_byte = start_byte + len(chunk) - 1
+                    content_range = f"bytes {start_byte}-{end_byte}/{file_size}"
+                    headers = {"Content-Range": content_range}
+                    response = self.session.post(abs_url, files=files, data=data, headers=headers)
+                    csrf_token = response.cookies["csrftoken"]
+                    start_byte = end_byte + 1
