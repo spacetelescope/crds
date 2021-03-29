@@ -6,10 +6,10 @@ if ( "$*" == "" ) then
     set dirs=". crds"
 else
     set dirs="$*"
-endif 
+endif
 
 if (-e ../CRDS_server) then
-    set dirs="$dirs ../CRDS_server/sources"
+    set dirs="$dirs ../CRDS_server/crds_server"
 endif
 
 foreach pat ('*.orig' '*.pyc' 'build' '__pycache__' '*~' '.*~' '#*#' '#.*#')
@@ -23,4 +23,3 @@ rm -rf dist MANIFEST
 rm -rf build
 rm -rf install.log
 git checkout -- crds/core/git_version.py
-
