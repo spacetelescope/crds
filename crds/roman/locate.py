@@ -143,8 +143,8 @@ def project_check(refpath, rmap):
     {'asdf_library.author': 'Space Telescope Science Institute', 'asdf_library.homepage': 'http://github.com/spacetelescope/asdf', 'asdf_library.name': 'asdf', 'asdf_library.version': '2.7.2', 'history.entries.0.description': 'Creation of dummy flat file for CRDS testing during DMS build 0.0.', 'history.entries.0.time': '2020-11-04T20:01:23', 'history.entries.1.description': 'Update of dummy flat file to test history entries.', 'history.entries.1.time': '2020-11-04T20:02:13', 'history.extensions.0.extension_class': 'astropy.io.misc.asdf.extension.AstropyAsdfExtension', 'history.extensions.0.software.name': 'astropy', 'history.extensions.0.software.version': '4.2', 'history.extensions.1.extension_class': 'asdf.extension.BuiltinExtension', 'history.extensions.1.software.name': 'asdf', 'history.extensions.1.software.version': '2.7.2', 'meta.author': 'Space Telescope Science Institute', 'meta.date': '2020-12-02T22:56:06.721', 'meta.description': 'Flat reference file.', 'meta.filename': 'roman_wfi16_f158_flat_small.asdf', 'meta.instrument.detector': 'WFI16', 'meta.instrument.name': 'WFI', 'meta.instrument.optical_element': 'F158', 'meta.model_type': 'FlatModel', 'meta.pedigree': 'DUMMY', 'meta.reftype': 'FLAT', 'meta.telescope': 'ROMAN', 'meta.useafter': '2020-01-01T00:00:00.000'}
 
     """
-    if not rmap.filekind.startswith("pars-"):
-        get_data_model_flat_dict(refpath)
+#    if not rmap.filekind.startswith("pars-"):
+#        get_data_model_flat_dict(refpath)
 
 def get_data_model_flat_dict(filepath):
     """Get the header from `filepath` using the roman data model.  Data model
@@ -412,7 +412,7 @@ def ref_properties_from_header(filename):
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_free_header(filename, (), None, "roman")
-    header["META.TELESCOPE"] = "roman"
+    header["ROMAN.META.TELESCOPE"] = "roman"
     name = os.path.basename(filename)
     try:
         instrument = utils.header_to_instrument(header).lower()
@@ -421,10 +421,10 @@ def ref_properties_from_header(filename):
         raise exceptions.CrdsNamingError(
             "Can't identify instrument of", repr(name), ":", str(exc)) from exc
     try:
-        filekind = header.get('META.REFTYPE', 'UNDEFINED').lower()
+        filekind = header.get('ROMAN.META.REFTYPE', 'UNDEFINED').lower()
         assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
     except Exception as exc:
-        raise exceptions.CrdsNamingError("Can't identify META.REFTYPE of", repr(name))
+        raise exceptions.CrdsNamingError("Can't identify ROMAN.META.REFTYPE of", repr(name))
     return path, "roman", instrument, filekind, serial, ext
 
 # =============================================================================
@@ -556,27 +556,27 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
     # Basic common pattern translations
     translations = {
-            "META.EXPOSURE.P_EXPTYPE" : "META.EXPOSURE.TYPE",
+            "ROMAN.META.EXPOSURE.P_EXPTYPE" : "ROMAN.META.EXPOSURE.TYPE",
 
-            "META.INSTRUMENT.P_BAND" : "META.INSTRUMENT.BAND",
+            "ROMAN.META.INSTRUMENT.P_BAND" : "ROMAN.META.INSTRUMENT.BAND",
 
-            "META.INSTRUMENT.P_DETECTOR"  : "META.INSTRUMENT.DETECTOR",
+            "ROMAN.META.INSTRUMENT.P_DETECTOR"  : "ROMAN.META.INSTRUMENT.DETECTOR",
 
-            "META.INSTRUMENT.P_CHANNEL" : "META.INSTRUMENT.CHANNEL",
+            "ROMAN.META.INSTRUMENT.P_CHANNEL" : "ROMAN.META.INSTRUMENT.CHANNEL",
 
-            "META.INSTRUMENT.P_FILTER" : "META.INSTRUMENT.FILTER",
+            "ROMAN.META.INSTRUMENT.P_FILTER" : "ROMAN.META.INSTRUMENT.FILTER",
 
-            "META.INSTRUMENT.P_MODULE"  : "META.INSTRUMENT.MODULE",
+            "ROMAN.META.INSTRUMENT.P_MODULE"  : "ROMAN.META.INSTRUMENT.MODULE",
 
-            "META.SUBARRAY.P_SUBARRAY" : "META.SUBARRAY.NAME",
+            "ROMAN.META.SUBARRAY.P_SUBARRAY" : "ROMAN.META.SUBARRAY.NAME",
 
-            "META.INSTRUMENT.P_GRATING" : "META.INSTRUMENT.GRATING",
+            "ROMAN.META.INSTRUMENT.P_GRATING" : "ROMAN.META.INSTRUMENT.GRATING",
 
-            "META.EXPOSURE.PREADPATT" : "META.EXPOSURE.READPATT",
-            "META.EXPOSURE.P_READPATT" : "META.EXPOSURE.READPATT",
+            "ROMAN.META.EXPOSURE.PREADPATT" : "ROMAN.META.EXPOSURE.READPATT",
+            "ROMAN.META.EXPOSURE.P_READPATT" : "ROMAN.META.EXPOSURE.READPATT",
 
             # vvvv Speculative,  not currently defined or required by CAL vvvvv
-            "META.INSTRUMENT.PCORONAGRAPH" : "META.INSTRUMENT.CORONAGRAPH",
+            "ROMAN.META.INSTRUMENT.PCORONAGRAPH" : "ROMAN.META.INSTRUMENT.CORONAGRAPH",
         }
 
     # Rmap header reference_to_dataset field tranlations,  can override basic!
@@ -614,22 +614,22 @@ def reference_keys_to_dataset_keys(rmapping, header):
                          "to value of", repr(rkey), "=", repr(rval))
                 header[dkey] = rval
 
-    if "META.SUBARRAY.NAME" not in header:
-        header["META.SUBARRAY.NAME"] = "UNDEFINED"
+    if "ROMAN.META.SUBARRAY.NAME" not in header:
+        header["ROMAN.META.SUBARRAY.NAME"] = "UNDEFINED"
 
-    if "META.EXPOSURE.TYPE" not in header:
-        header["META.EXPOSURE.TYPE"] = "UNDEFINED"
+    if "ROMAN.META.EXPOSURE.TYPE" not in header:
+        header["ROMAN.META.EXPOSURE.TYPE"] = "UNDEFINED"
 
     # If USEAFTER is defined,  or we're configured to fake it...
     #   don't invent one if its missing and we're not faking it.
-    if "META.USEAFTER" in header or config.ALLOW_BAD_USEAFTER:
+    if "ROMAN.META.USEAFTER" in header or config.ALLOW_BAD_USEAFTER:
 
         # Identify this as best as possible,
-        filename = header.get("META.FILENAME", None) or rmapping.filename
+        filename = header.get("ROMAN.META.FILENAME", None) or rmapping.filename
 
         reformatted = timestamp.reformat_useafter(filename, header).split()
-        header["META.OBSERVATION.DATE"] = reformatted[0]
-        header["META.OBSERVATION.TIME"] = reformatted[1]
+        header["ROMAN.META.OBSERVATION.DATE"] = reformatted[0]
+        header["ROMAN.META.OBSERVATION.TIME"] = reformatted[1]
 
     log.verbose("reference_to_dataset output header:\n", log.PP(header), verbosity=80)
 
