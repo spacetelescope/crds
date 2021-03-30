@@ -2,6 +2,7 @@
 This module defines the generic functions and abstract class used to manage
 file access in CRDS.
 '''
+from collections.abc import Mapping
 import functools
 import warnings
 import re
@@ -316,7 +317,7 @@ class AbstractFile:
             if not isinstance(key, str):  # skip non-string keys
                 continue
             value = tree[key]
-            if isinstance(value, (type(tree), dict)):
+            if isinstance(value, Mapping):
                 nested = self.to_simple_types(value)
                 for nested_key, nested_value in nested.items():
                     result[str(key.upper() + "." + nested_key)] = nested_value
