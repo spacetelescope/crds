@@ -88,6 +88,37 @@
             "tpn":"wfi_flat.tpn",
             "unique_rowkeys":null
         },
+        "gain":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2020-04-07",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"GAIN",
+            "filetype":"GAIN",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_gain_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"wfi_gain.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"f59d4e9a777343e9d99465ddd56159b516cd1bde",
+            "suffix":"gain",
+            "text_descr":"Gain image",
+            "tpn":"wfi_gain.tpn",
+            "unique_rowkeys":null
+        },
         "mask":{
             "classes":[
                 "Match",
