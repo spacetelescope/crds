@@ -16,7 +16,7 @@ INSTRUME            H        C         R    COS
 FILETYPE            H        C         R    "1D SPECTRAL TRACE TABLE"
 DETECTOR            H        C         R    FUV
 OBSTYPE             H        C         R    SPECTROSCOPIC
-LIFE_ADJ            H        I         R    -1,0,1,-11,2,3,4
+LIFE_ADJ            H        I         R    -1,0,1,-11,2,3,4,5,6
 VCALCOS             H        C         R
 USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE

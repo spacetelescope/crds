@@ -13,11 +13,11 @@
 #--------------------------------------------------------------------------
 USEAFTER_DATE       H        C         R    &SYBDATE
 OPUS_FLAG           H        C         R    Y,N
-COMPARISON_FILE     H        C         R    
+COMPARISON_FILE     H        C         R
 COMMENT             H        C         R
 INSTRUMENT      H        C         R    COS
 REFERENCE_FILE_TYPE H        C         R    LAMP
-LIFE_ADJ            H        I         R    0,1,-1,-11,2,-2,3,4
+LIFE_ADJ            H        I         R    0,1,-1,-11,2,-2,3,4,5,6
 DETECTOR            C        C         R    FUV,NUV
 OBSTYPE             C        C         R    SPECTROSCOPIC
 PEDIGREE        C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
