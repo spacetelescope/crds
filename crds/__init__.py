@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.3.14"   # XXXX  see also ../setup.cfg
-__rationale__ = "Add FULLP to valid list of subarray names for NIRCam"
+__version__ = "10.4.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "Chunked file uploads, COS LIFE_ADJ updates, add asdf to install_requires"
 
 __all__ = [
     "getrecommendations",
