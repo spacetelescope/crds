@@ -15,7 +15,7 @@
 #--------------------------------------------------------------------------
 USEAFTER_DATE       H        C         R    &SYBDATE
 OPUS_FLAG           H        C         R    Y,N
-COMPARISON_FILE     H        C         R    
+COMPARISON_FILE     H        C         R
 COMMENT             H        C         R
 INSTRUMENT      H        C         R    COS
 REFERENCE_FILE_TYPE H        C         R    1DX
@@ -35,7 +35,7 @@ CENWAVE             C        I         R    800,1222,1223,1291,1300,1309,1318,13
           2952,2979,2996,3018,3035,3057,3074,3094,\
           2635,2950,3000,3360
 APERTURE            C        C         R    PSA,BOA,WCA,FCA
-LIFE_ADJ            H        I         R    0,1,-1,-11,2,-2,3,4
+LIFE_ADJ            H        I         R    0,1,-1,-11,2,-2,3,4,5,6
 CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
 OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
 OBSERVATION_END_DATE    C    C         O    &SYBDATE
