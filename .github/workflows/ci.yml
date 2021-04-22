@@ -46,6 +46,7 @@ jobs:
         run: |
           pip install git+https://github.com/spacetelescope/asdf
           pip install git+https://github.com/spacetelescope/jwst
+          pip install git+https://github.com/spacetelescope/rad
           pip install git+https://github.com/spacetelescope/roman_datamodels
           pip uninstall --yes crds
           ./install
