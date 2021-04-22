@@ -9,6 +9,6 @@
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
-META.INSTRUMENT.NAME    H   C   R
+ROMAN.META.INSTRUMENT.NAME    H   C   R
 
-META.INSTRUMENT.DETECTOR      H   C   R
+ROMAN.META.INSTRUMENT.DETECTOR      H   C   R

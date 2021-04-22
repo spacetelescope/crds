@@ -9,7 +9,7 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'roman_wfi_flat_0004.rmap',
     'observatory' : 'ROMAN',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.OPTICAL_ELEMENT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT'), ('ROMAN.META.OBSERVATION.DATE', 'ROMAN.META.OBSERVATION.TIME')),
     'sha1sum' : 'c2f80fa5f832addba8e0d5120e966c96d68eabf7',
     'suffix' : 'flat',
     'text_descr' : 'Flat Field',
