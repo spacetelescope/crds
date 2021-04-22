@@ -727,7 +727,6 @@ def certify_roman_valid_asdf():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_f158_flat_small.asdf", "roman_0003.pmap", observatory="roman")
     CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    CRDS - INFO -  Checking Roman datamodels.
     >>> test_config.cleanup(old_state)
     """
 
@@ -738,8 +737,8 @@ def certify_roman_invalid_asdf_schema():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    CRDS - INFO -  Checking Roman datamodels.
-    CRDS - ERROR -  data/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : Roman Data Models: sequence item...: expected str instance, Time found
+    CRDS - ERROR -  data/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    ...
     >>> test_config.cleanup(old_state)
     """
 
@@ -751,9 +750,7 @@ def certify_roman_invalid_asdf_tpn():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_f158_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    CRDS - ERROR -  In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'META.INSTRUMENT.OPTICAL_ELEMENT...' : Value 'BAD' is not one of...
-    CRDS - INFO -  Checking Roman datamodels.
-    CRDS - WARNING -  ValidationWarning : stdatamodels.validate...
+    CRDS - ERROR -  In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]' : Value 'BAD' is not one of ...
     >>> test_config.cleanup(old_state)
     """
 
@@ -763,7 +760,6 @@ def certify_roman_valid_spec_asdf():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_grism_flat_small.asdf", "roman_0003.pmap", observatory="roman")
     CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    CRDS - INFO -  Checking Roman datamodels.
     >>> test_config.cleanup(old_state)
     """
 
@@ -774,8 +770,8 @@ def certify_roman_invalid_spec_asdf_schema():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    CRDS - INFO -  Checking Roman datamodels.
-    CRDS - ERROR -  data/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : Roman Data Models: sequence item...: expected str instance, Time found
+    CRDS - ERROR -  data/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    ...
     >>> test_config.cleanup(old_state)
     """
 
@@ -787,12 +783,10 @@ def certify_roman_invalid_spec_asdf_tpn():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi16_grism_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    CRDS - ERROR -  In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'META.INSTRUMENT.OPTICAL_ELEMENT...' : Value 'BAD' is not one of...
-    CRDS - INFO -  Checking Roman datamodels.
-    CRDS - WARNING -  ValidationWarning : stdatamodels.validate...
+    CRDS - ERROR -  In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = 'yesterday'
+    CRDS - ERROR -  In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.USEAFTER [USEAFTER]' : Invalid 'Jwstdate' format 'yesterday'...
     >>> test_config.cleanup(old_state)
     """
-
 
 def certify_AsdfCertify_valid_with_astropy_time():
     """
@@ -925,7 +919,7 @@ def certify_roman_invalid_rmap_tpn():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman", cache=test_config.CRDS_TESTING_CACHE)
     >>> certify.certify_file("data/roman_wfi_flat_0004_badtpn.rmap", "roman_0003.pmap", observatory="roman") # doctest: +ELLIPSIS
     CRDS - INFO -  Certifying 'data/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
-    CRDS - ERROR -  Match('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.OPTICAL_ELEMENT...') : ('WFI21', 'F158') :  parameter='META.INSTRUMENT.DETECTOR...' value='WFI21' is not in (...)
+    CRDS - ERROR -  Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT...') : ('WFI21', 'F158') :  parameter='ROMAN.META.INSTRUMENT.DETECTOR...' value='WFI21' is not in (...)
     CRDS - INFO -  Mapping 'roman_wfi_flat_0004_badtpn.rmap' corresponds to 'roman_wfi_flat_0001.rmap' from context 'roman_0003.pmap' for checking mapping differences.
     CRDS - INFO -  Checking diffs from 'roman_wfi_flat_0001.rmap' to 'roman_wfi_flat_0004_badtpn.rmap'
     CRDS - WARNING -  Rule change at ('data/roman_wfi_flat_0004_badtpn.rmap', ('WFI21', 'F158'), ('2020-01-01', '00:00:00')) added Match rule for 'roman_wfi_flat_0003.asdf'

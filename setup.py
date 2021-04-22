@@ -87,7 +87,7 @@ setup(name="crds",
       install_requires=["astropy", "numpy", "filelock", "asdf"] + SUBMISSION_DEPS,
       extras_require={
           "jwst": ["jwst"],
-          "roman" : ["romancal"],
+          "roman" : ["roman_datamodels"],
           "submission": ["requests", "lxml", "parsley"],
           "dev" : ["ipython","jupyterlab","ansible","helm",
                    "nose-cprof", "coverage"],
