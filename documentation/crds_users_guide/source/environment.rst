@@ -8,18 +8,18 @@ Basic Environment
 -----------------
 
 By default,  onsite at STScI,  CRDS runs from a global cache with no connection
-to the CRDS Server and typically no user environment setup required to do basic 
+to the CRDS Server and typically no user environment setup required to do basic
 best references.
 
-For more personalized configurations or one designed for offsite use,  the CRDS 
+For more personalized configurations or one designed for offsite use,  the CRDS
 environment needs to define a CRDS server (CRDS_SERVER_URL) and a CRDS file
 cache directory (CRDS_PATH).
 
 File Cache Location (CRDS_PATH)
 +++++++++++++++++++++++++++++++
 
-CRDS stores reference files, rules files, and configuration information such as the 
-current default context in a cache.   The location of the CRDS cache is defined by 
+CRDS stores reference files, rules files, and configuration information such as the
+current default context in a cache.   The location of the CRDS cache is defined by
 the CRDS_PATH environment setting.
 
 Default On Site CRDS_PATH
@@ -28,22 +28,22 @@ Default On Site CRDS_PATH
 By default,   CRDS behaves as if you set your environment like this::
 
     $ export CRDS_PATH=/grp/crds/cache
-    
+
 */grp/crds/cache* is on the Central Store and should be accessible to all users.  It
-is a readonly cache containing all rule and reference files associated with 
-all CRDS projects,  now HST + JWST.   
+is a readonly cache containing all rule and reference files associated with
+all CRDS projects,  now HST + JWST.
 
 While it is configuration free and self-maintaining, limitations of the default cache
 include:
-    
+
     1. A need for a direct connection to the STScI internal network
     2. Weak performance when accessed by VPN over the Internet
     3. Immutable files not well suited for experimentation
 
 User Local CRDS_PATH
 ....................
-To avoid Internet inefficiencies,  individual user's can construct demand-based CRDS caches 
-appropriate to their particular datasets.    Personal CRDS caches also enable processing and 
+To avoid Internet inefficiencies,  individual user's can construct demand-based CRDS caches
+appropriate to their particular datasets.    Personal CRDS caches also enable processing and
 many basic functions with no network access to the CRDS server.   Rem
 
 A remote or pipeline user defines a non-default CRDS cache by setting, e.g.::
@@ -60,13 +60,13 @@ a user must define any CRDS server they wish to use.
 
 Default Server
 ..............
-By default,  the CRDS client bestrefs functionality can run without a server 
+By default,  the CRDS client bestrefs functionality can run without a server
 provided they have access to an up-to-date CRDS cache.
 
 By **default** CRDS behaves as if you set::
 
     $ export CRDS_SERVER_URL=https://crds-serverless-mode.stsci.edu
-    
+
 Serverless mode limits CRDS to basic functions (bestrefs) but requires no server connection
 once the supporting CRDS cache has been synced.
 
@@ -86,7 +86,7 @@ can be configured like this::
 
     $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
 
-If CRDS cannot determine your project, and you did not specify CRDS_SERVER_URL, 
+If CRDS cannot determine your project, and you did not specify CRDS_SERVER_URL,
 CRDS_SERVER_URL will be defaulted to::
 
    $ export CRDS_SERVER_URL=https://crds-serverless-mode.stsci.edu
@@ -144,7 +144,7 @@ environment variables.  There are two forms of CRDS cache reference file
 organization: flat and with instrument sub-directories.  The HST calibration
 software environment variable settings depend on the CRDS cache layout.
 
-JWST calibration code refers to explicit cache paths at runtime and does 
+JWST calibration code refers to explicit cache paths at runtime and does
 not require these additional settings.
 
 Flat Cache Layout for */grp/crds/cache*
@@ -184,7 +184,7 @@ Reorganizing CRDS References
 ++++++++++++++++++++++++++++
 
 The crds.sync tool can be used to reorganize the directory structure of an
-existing CRDS cache.   These organizations determine whether or not 
+existing CRDS cache.   These organizations determine whether or not
 reference files are partitioned into instrument-specific sub-directories.
 
 To switch from flat to by-instrument::
@@ -213,6 +213,36 @@ the **CRDS_CONTEXT** environment variable::
 
 **CRDS_CONTEXT** does not override command line switches or parameters passed explicitly to the
 crds.getreferences() API function.
+
+AWS
+---
+
+The CRDS client can be configured to read files from Amazon's S3 service.  The STScI AWS environment
+currently hosts files in the following buckets:
+
++-----------------+---------------------+
+| Environment     | S3 Bucket Name      |
++=================+=====================+
+| HST OPS         | hst-crds-cache-ops  |
++-----------------+---------------------+
+| HST TEST        | hst-crds-cache-test |
++-----------------+---------------------+
+
+The S3 buckets contain only recent contexts.  They also exclude mapping files, so the client must be
+configured to load the context's rules from a pickle file.  Here is an example configuration for the
+HST OPS bucket::
+
+  export CRDS_CONFIG_URI=s3://hst-crds-cache-ops/config/hst/
+  export CRDS_DOWNLOAD_MODE=plugin
+  export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} --file-size ${FILE_SIZE} --file-sha1sum ${FILE_SHA1SUM}'
+  export CRDS_PATH=/path/to/local/cache
+  export CRDS_PICKLE_URI=s3://hst-crds-cache-ops/pickles/hst/
+  export CRDS_REFERENCE_URI=s3://hst-crds-cache-ops/references/hst/
+  export CRDS_SERVER_URL=https://hst-crds-serverless.stsci.edu
+  export CRDS_USE_PICKLED_CONTEXTS=1
+
+Your compute environment must be configured with AWS credentials that have been granted access
+to the bucket.
 
 Advanced Environment
 --------------------
@@ -245,7 +275,7 @@ terminal windows or for pipeline use.
 File Based Locking
 ..................
 
-Since Python's default multiprocessing locks cannot support multiple process trees or terminal windows,  
+Since Python's default multiprocessing locks cannot support multiple process trees or terminal windows,
 CRDS also supports file based locking by setting appropriate configuration variables::
 
     $ export CRDS_LOCKING_MODE=filelock
@@ -255,13 +285,13 @@ CRDS also supports file based locking by setting appropriate configuration varia
     Cache Locking = 'enabled, filelock'
     ...
     Readonly Cache = False
-    
+
 File based locking is not used by default for several reasons::
 
     1. They introduce a dependency on a 3rd party package.
     2. File locks created on network or other virtualized file systems may be unreliable.
     3. File lock behavior is OS dependent.
-    
+
 Restrictions on Locking
 .......................
 
@@ -269,11 +299,11 @@ There are multiple conditions in CRDS that determine when locking is really used
 
     1. CRDS_READONLY_CACHE must be undefined or 0
     2. The CRDS cache must be writable as determined by file system permissions
-    3. The CRDS_LOCK_PATH directory (nominally /tmp) should already exist   
+    3. The CRDS_LOCK_PATH directory (nominally /tmp) should already exist
     4. For file based locking,  a lock must be successfully created
     5. CRDS_USE_LOCKING must be undefined or 1
     6. For file based locking,  the lockfile or filelock Python package must be installed
-    
+
 The readonly nature of::
 
   */grp/crds/cache*
@@ -419,7 +449,7 @@ proceed immediately after fail.
 
 **CRDS_USE_LOCKING** boolean enabling/disabling CRDS cache locking,  currently
 only used for JWST and defaulting to enabled.   File locking is currently limited
-to JWST calibrations so HST sync and bestrefs tools must be run in single 
+to JWST calibrations so HST sync and bestrefs tools must be run in single
 processes or with CRDS_READONLY_CACHE=1.
 
 **CRDS_LOCKING_MODE**  chooses between multiprocessing, filelock, or lockfile
@@ -427,4 +457,3 @@ based locks.  multiprocessing is the default.  To support multiple
 terminal windows or pipeline processing,  file based locking must be used
 with filelock recommended and known problems having been observed with the
 lockfile package.
-
