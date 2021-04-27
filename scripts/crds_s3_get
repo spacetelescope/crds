@@ -2,6 +2,12 @@
 """
 S3 download plugin for CRDS.
 
+Exit status:
+0 - success
+10 - failed file size verification
+11 - failed checksum verification
+other codes - aws-cli failure.  See https://docs.aws.amazon.com/cli/latest/topic/return-codes.html
+
 As of 2021-04-23, copies of this script are maintained in the crds
 and caldp repositories.  Please ensure that any bug fixes make it into
 both!
@@ -16,8 +22,8 @@ import sys
 from crds.core.utils import checksum
 
 
-MAX_SLEEP_SECONDS = 20
-BASE_SLEEP_SECONDS = 2
+BAD_SIZE_STATUS = 10
+BAD_CHECKSUM_STATUS = 11
 
 
 def parse_args():
@@ -27,7 +33,6 @@ def parse_args():
     parser.add_argument("destination", help="Destination path on local filesystem")
     parser.add_argument("--file-size", help="Expected file size in bytes", type=int, default=None)
     parser.add_argument("--file-sha1sum", help="Expected file SHA-1 checksum", default=None)
-    parser.add_argument("--max-retries", help="Maximum number of retries on download failure", type=int, default=3)
 
     return parser.parse_args()
 
@@ -35,41 +40,30 @@ def parse_args():
 def main():
     args = parse_args()
 
-    next_attempt = 1
-    while True:
-        returncode = 0
+    result = subprocess.run([
+        "aws", "s3", "cp", "--no-progress",
+        args.source,
+        args.destination,
+    ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
 
-        result = subprocess.run([
-            "aws", "s3", "cp", "--no-progress",
-            args.source,
-            args.destination,
-        ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
+    if result.returncode != 0:
+        output = "\\n".join(result.stdout.strip().splitlines())
+        print(f"crds_s3_get: Failed to download '{args.source}' with return code {result.returncode}: {output}", file=sys.stderr)
+        sys.exit(result.returncode)
 
-        if result.returncode == 0:
-            if args.file_size is not None:
-                downloaded_size = os.path.getsize(args.destination)
-                if downloaded_size != args.file_size:
-                    print(f"crds_s3_get: '{args.source}' failed file size check.  Expected: {args.file_size} Received: {downloaded_size}")
-                    returncode = 1
+    if args.file_size is not None:
+        downloaded_size = os.path.getsize(args.destination)
+        if downloaded_size != args.file_size:
+            print(f"crds_s3_get: '{args.source}' failed file size check.  Expected: {args.file_size} Received: {downloaded_size}")
+            os.unlink(args.destination)
+            sys.exit(BAD_SIZE_STATUS)
 
-            if args.file_sha1sum is not None:
-                downloaded_sha1sum = checksum(args.destination)
-                if downloaded_sha1sum != args.file_sha1sum:
-                    print(f"crds_s3_get: '{args.source}' failed checksum.  Expected: {args.file_sha1sum} Received: {downloaded_sha1sum}")
-                    returncode = 1
-        else:
-            output = "\\n".join(result.stdout.strip().splitlines())
-            print(f"crds_s3_get: Failed to download '{args.source}' with return code {result.returncode}: {output}", file=sys.stderr)
-            returncode = result.returncode
-
-        next_attempt += 1
-        if returncode == 0 or next_attempt > args.max_retries + 1:
-            sys.exit(returncode)
-        else:
-            # Exponential backoff with jitter, see https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
-            sleep_time = min(MAX_SLEEP_SECONDS, random.random() * (BASE_SLEEP_SECONDS ** (next_attempt - 1)))
-            print(f"crds_s3_get: Retrying after {sleep_time} seconds", file=sys.stderr)
-            time.sleep(sleep_time)
+    if args.file_sha1sum is not None:
+        downloaded_sha1sum = checksum(args.destination)
+        if downloaded_sha1sum != args.file_sha1sum:
+            print(f"crds_s3_get: '{args.source}' failed checksum.  Expected: {args.file_sha1sum} Received: {downloaded_sha1sum}")
+            os.unlink(args.destination)
+            sys.exit(BAD_CHECKSUM_STATUS)
 
 
 if __name__ == "__main__":
