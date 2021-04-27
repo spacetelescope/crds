@@ -29,6 +29,10 @@ import warnings
 from . import log, config, pysh, exceptions
 from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
+# from ..client import proxy  # import deferred until required
+
+# from crds.client import api  # deferred import below to simplify basic dependencies
+
 # ===================================================================
 
 def deprecate(deprecated, after_date, alternative):
@@ -680,7 +684,13 @@ def get_s3_uri_content(s3_uri, mode="text"):
 
     Returns  contents of `s3_uri`.
     """
+    from ..client import proxy
+
     log.verbose(f"Fetching content from URI: '{s3_uri}'")
+    return proxy.apply_with_retries(_get_s3_uri_content, s3_uri, mode)
+
+
+def _get_s3_uri_content(s3_uri, mode):
     bucket_name, key = s3_uri.replace("s3://", "").split("/", 1)
     import boto3
     s3 = boto3.resource("s3")
@@ -691,9 +701,16 @@ def get_s3_uri_content(s3_uri, mode="text"):
         return text
     return binary
 
+
 def get_url_content(url, mode="text"):
     """Return the contents of `url` as a string."""
+    from ..client import proxy
+
     log.verbose(f"Fetching content from URL: '{url}'")
+    return proxy.apply_with_retries(_get_url_content, url, mode)
+
+
+def _get_url_content(url, mode):
     import requests
     r = requests.get(url)
     r.raise_for_status()
@@ -701,10 +718,13 @@ def get_url_content(url, mode="text"):
         return r.text
     return r.content
 
+
 def get_uri_content(uri, mode="text"):
     """Reads and returns the contents of the given s3://, https://
     or filename uri.   Reads to memory, intended for small files.
     """
+    from ..client import proxy
+
     if uri.startswith("s3://"):
         return get_s3_uri_content(uri, mode)
     elif uri.startswith(("http://", "https://")):
