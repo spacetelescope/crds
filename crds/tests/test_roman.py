@@ -29,11 +29,11 @@ class TestRoman(unittest.TestCase):
         """
         result = heavy_client.getreferences(
             {
-                "META.INSTRUMENT.NAME": "WFI",
-                "META.INSTRUMENT.DETECTOR": "WFI01",
-                "META.EXPOSURE.TYPE": "WFI_IMAGE",
-                "META.OBSERVATION.DATE": "2020-02-01",
-                "META.OBSERVATION.TIME": "00:00:00",
+                "ROMAN.META.INSTRUMENT.NAME": "WFI",
+                "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
+                "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
+                "ROMAN.META.OBSERVATION.DATE": "2020-02-01",
+                "ROMAN.META.OBSERVATION.TIME": "00:00:00",
             },
             observatory="roman",
             context="roman_0005.pmap",
@@ -48,11 +48,11 @@ class TestRoman(unittest.TestCase):
         """
         heavy_client.getreferences(
             {
-                "META.INSTRUMENT.NAME": "WFI",
-                "META.INSTRUMENT.DETECTOR": "WFI02",
-                "META.EXPOSURE.TYPE": "WFI_IMAGE",
-                "META.OBSERVATION.DATE": "2020-02-01",
-                "META.OBSERVATION.TIME": "00:00:00",
+                "ROMAN.META.INSTRUMENT.NAME": "WFI",
+                "ROMAN.META.INSTRUMENT.DETECTOR": "WFI02",
+                "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
+                "ROMAN.META.OBSERVATION.DATE": "2020-02-01",
+                "ROMAN.META.OBSERVATION.TIME": "00:00:00",
             },
             observatory="roman",
             context="roman_0005.pmap",

@@ -190,19 +190,19 @@ def reftypes_roman_reference_name_to_tpn_infos():
     >>> types = reftypes.get_types_object("roman")
     >>> infos = types.reference_name_to_tpninfos("roman_wfi_flat.asdf")
     >>> print(log.PP(infos))
-    [('META.AUTHOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.DESCRIPTION', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.EXPOSURE.TYPE', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
-     ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
-     ('META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('WFI',)),
-     ('META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
-     ('META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTPEDIGREE',)),
-     ('META.REFTYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
-     ('META.TELESCOPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('ROMAN',)),
-     ('META.USEAFTER', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTDATE',))]
+    [('ROMAN.META.AUTHOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('ROMAN.META.DESCRIPTION', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('ROMAN.META.EXPOSURE.TYPE', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
+     ('ROMAN.META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
+     ('ROMAN.META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('ROMAN.META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('ROMAN.META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('WFI',)),
+     ('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'OPTIONAL', values=(...)),
+     ('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('ROMAN.META.PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTPEDIGREE',)),
+     ('ROMAN.META.REFTYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
+     ('ROMAN.META.TELESCOPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('ROMAN',)),
+     ('ROMAN.META.USEAFTER', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTDATE',))]
     >>> test_config.cleanup(old_state)
     """
 
