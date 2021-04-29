@@ -16,4 +16,4 @@ export CRDS_USE_PICKLED_CONTEXTS=0
 export CRDS_PICKLE_URI=s3://account/crds_cache/pickles/jwst
 
 export CRDS_DOWNLOAD_MODE=plugin
-export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}'
+export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} --file-size ${FILE_SIZE} --file-sha1sum ${FILE_SHA1SUM}'
