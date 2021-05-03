@@ -5131,6 +5131,36 @@
             "tpn":"niriss_saturation.tpn",
             "unique_rowkeys":null
         },
+        "speckernel":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2021-05",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"SPECKERNEL",
+            "filetype":"SPECKERNEL",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_speckernel_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_speckernel.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"b52e314dbad92395d2fa86efb19b69d9583334c6",
+            "suffix":"speckernel",
+            "text_descr":"GR700XD Grism Spectrum Kernel File",
+            "tpn":"niriss_speckernel.tpn",
+            "unique_rowkeys":null
+        },
         "specwcs":{
             "classes":[
                 "Match",
@@ -5291,6 +5321,38 @@
             "suffix":"wavelengthrange",
             "text_descr":"Spectral Configurations",
             "tpn":"niriss_wavelengthrange.tpn",
+            "unique_rowkeys":null
+        },
+        "wavemap":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2021-05",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"WAVEMAP",
+            "filetype":"WAVEMAP",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_wavemap_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_wavemap.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"3f46d4d3fc7163a8d0f895c03fdeb6db7077bf7a",
+            "suffix":"wavemap",
+            "text_descr":"Grism Wavelength Mapping",
+            "tpn":"niriss_wavemap.tpn",
             "unique_rowkeys":null
         },
         "wcsregions":{
