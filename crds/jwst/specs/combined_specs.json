@@ -4266,6 +4266,7 @@
                 [
                     "META.INSTRUMENT.PUPIL",
                     "META.INSTRUMENT.MODULE",
+                    "META.INSTRUMENT.FILTER",
                     "META.EXPOSURE.TYPE"
                 ],
                 [
@@ -4278,7 +4279,7 @@
                 "MODULE":"META.INSTRUMENT.MODULE",
                 "PUPIL":"META.INSTRUMENT.PUPIL"
             },
-            "sha1sum":"9767ad3d8ad7b7bc7510127e62ae5df723f0cfce",
+            "sha1sum":"73011ca05ae4af576f23bfc263432ce84390d431",
             "suffix":"specwcs",
             "text_descr":"Wide Field Slitless Spectral World Coordinate System",
             "tpn":"nircam_specwcs.tpn",
