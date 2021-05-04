@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.4.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "Chunked file uploads, COS LIFE_ADJ updates, add asdf to install_requires"
+__version__ = "10.4.1"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update specs for NIRCam specwcs to include FILTER"
 
 __all__ = [
     "getrecommendations",
