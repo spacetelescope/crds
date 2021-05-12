@@ -5161,6 +5161,38 @@
             "tpn":"niriss_speckernel.tpn",
             "unique_rowkeys":null
         },
+        "specprofile":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2021-05",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"SPECPROFILE",
+            "filetype":"SPECPROFILE",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_specprofile_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_specprofile.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.SUBARRAY.NAME",
+                    "META.INSTRUMENT.FILTER"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"16e6119fb13458c8fbda49f0d03905707e6c7be4",
+            "suffix":"specprofile",
+            "text_descr":"  GR700XD Grism Trace Profile Mapping File",
+            "tpn":"niriss_specprofile.tpn",
+            "unique_rowkeys":null
+        },
         "specwcs":{
             "classes":[
                 "Match",

@@ -1,0 +1,30 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-05',
+    'file_ext' : '.fits',
+    'filekind' : 'SPECPROFILE',
+    'filetype' : 'SPECPROFILE',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_specprofile.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '16e6119fb13458c8fbda49f0d03905707e6c7be4',
+    'suffix' : 'specprofile',
+    'text_descr' : '  GR700XD Grism Trace Profile Mapping File',
+}
+
+comment = """
+GR700XD Grism Trace Profile Mapping File
+
+The reference file provides the trace profile mapping to the pixels for grism
+orders 1 to 3. Each order has a separate extension in the file. The trace
+profile image is oversampled and has some margin, so the dimensions are
+4136x4136 pixels. The trace values are unitless, and sum to 1.0 for each column
+where the full profile is sampled.
+
+Originally requested and discussed on Jira CRDS-429.
+"""
+
+selector = Match({
+})
