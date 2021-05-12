@@ -1,0 +1,30 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-05',
+    'file_ext' : '.fits',
+    'filekind' : 'SPECTRACE',
+    'filetype' : 'SPECTRACE',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_spectrace.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'd9a513975f964d0eb9f2705f0a35c5a8eb929a64',
+    'suffix' : 'spectrace',
+    'text_descr' : 'GR700XD Grism Trace Centre Table',
+}
+
+comment = """
+GR700XD Grism Trace Position Table
+
+The reference file provides the centre trace position on the detector in a FITS
+table for each order 1 to 3. There is one extension per order with table columns
+WAVELENGTH, X, Y, throughput, and tilt. Wavelengths are in microns, the tilt
+values are in degrees, the throughput is unitless, and the (X, Y) values are in
+pixels.
+
+Originally requested and discussed on Jira CRDS-429.
+"""
+
+selector = Match({
+})
