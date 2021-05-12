@@ -5341,17 +5341,17 @@
             "parkey":[
                 [
                     "META.EXPOSURE.TYPE",
-                    "META.INSTRUMENT.FILTER",
-                    "META.SUBARRAY.NAME"
+                    "META.SUBARRAY.NAME",
+                    "META.INSTRUMENT.FILTER"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"3f46d4d3fc7163a8d0f895c03fdeb6db7077bf7a",
+            "sha1sum":"99ffae2aabb2282601bdec51c05b3916a6fe4dbe",
             "suffix":"wavemap",
-            "text_descr":"Grism Wavelength Mapping",
+            "text_descr":"GR700XD Grism Wavelength Mapping File",
             "tpn":"niriss_wavemap.tpn",
             "unique_rowkeys":null
         },
