@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.4.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "Update specs for NIRCam specwcs to include FILTER"
+__version__ = "10.4.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "10.4.2"
 
 __all__ = [
     "getrecommendations",
