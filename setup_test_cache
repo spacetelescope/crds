@@ -16,4 +16,3 @@ python -m crds.sync --contexts hst_cos.imap --fetch-references --log-time --stat
 export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
 python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
 python -m crds.sync --files jwst_niriss_flat_0000.fits jwst_miri_flat_0006.fits --stats --log-time
-

@@ -43,15 +43,15 @@
             "observatory":"ROMAN",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR",
-                    "META.EXPOSURE.TYPE"
+                    "ROMAN.META.INSTRUMENT.DETECTOR",
+                    "ROMAN.META.EXPOSURE.TYPE"
                 ],
                 [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"57672c1c39734a997ea70e55deddd60a461b7d4a",
+            "sha1sum":"52d621cd93e6e0fe4c15999986acfeb1bf5ca73f",
             "suffix":"dark",
             "text_descr":"Dark",
             "tpn":"wfi_dark.tpn",
@@ -74,15 +74,15 @@
             "observatory":"ROMAN",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.OPTICAL_ELEMENT"
+                    "ROMAN.META.INSTRUMENT.DETECTOR",
+                    "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
                 [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"ed0366f855fce06ad9c439846e731157faad6a0e",
+            "sha1sum":"70ed77522aa53264b726dfab0198bb7d68d97907",
             "suffix":"flat",
             "text_descr":"Flat Field",
             "tpn":"wfi_flat.tpn",
@@ -105,14 +105,14 @@
             "observatory":"ROMAN",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR"
+                    "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
                 [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"b1a9f9830a83b1c71fff28d2fe9bf3fd1186ef67",
+            "sha1sum":"27f7d7010c7123bbbb3851ed03974e17b3935186",
             "suffix":"gain",
             "text_descr":"Gain image",
             "tpn":"wfi_gain.tpn",
@@ -135,14 +135,14 @@
             "observatory":"ROMAN",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR"
+                    "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
                 [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"350b46d5bfdc0cf307cbe3c32b4e76cc92d08f30",
+            "sha1sum":"0b666254d860b6d4ae43b041c65dbb3019246189",
             "suffix":"mask",
             "text_descr":"Bad Pixel Mask",
             "tpn":"wfi_mask.tpn",
@@ -165,14 +165,14 @@
             "observatory":"ROMAN",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR"
+                    "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
                 [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"5bea0b042d513fcd0ec2359f6fe6a2c4bb3940f0",
+            "sha1sum":"69a4f9968a36859403a2233936548306c9a8854f",
             "suffix":"readnoise",
             "text_descr":"Read Noise",
             "tpn":"wfi_readnoise.tpn",
