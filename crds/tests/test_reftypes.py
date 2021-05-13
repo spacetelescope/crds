@@ -220,7 +220,7 @@ def reftypes_jwst_get_filekinds():
     >>> old_state = test_config.setup()
     >>> types = reftypes.get_types_object("jwst")
     >>> types.get_filekinds("niriss")
-    ['abvegaoffset', 'all', 'amplifier', 'apcorr', 'area', 'dark', 'distortion', 'drizpars', 'extract1d', 'flat', 'gain', 'ipc', 'linearity', 'mask', 'pars-darkpipeline', 'pars-detector1pipeline', 'pars-image2pipeline', 'pars-outlierdetectionstep', 'pars-sourcecatalogstep', 'pars-spec2pipeline', 'pars-tweakregstep', 'pathloss', 'persat', 'photom', 'readnoise', 'regions', 'saturation', 'specwcs', 'superbias', 'throughput', 'trapdensity', 'trappars', 'wavelengthrange', 'wcsregions', 'wfssbkg']
+    ['abvegaoffset', 'all', 'amplifier', 'apcorr', 'area', 'dark', 'distortion', 'drizpars', 'extract1d', 'flat', 'gain', 'ipc', 'linearity', 'mask', 'pars-darkpipeline', 'pars-detector1pipeline', 'pars-image2pipeline', 'pars-outlierdetectionstep', 'pars-sourcecatalogstep', 'pars-spec2pipeline', 'pars-tweakregstep', 'pathloss', 'persat', 'photom', 'readnoise', 'regions', 'saturation', 'speckernel', 'specprofile', 'spectrace', 'specwcs', 'superbias', 'throughput', 'trapdensity', 'trappars', 'wavelengthrange', 'wavemap', 'wcsregions', 'wfssbkg']
     >>> test_config.cleanup(old_state)
     """
 
