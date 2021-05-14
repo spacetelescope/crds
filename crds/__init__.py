@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "10.4.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "10.4.2"
+__version__ = "11.0.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update Roman to tagged reference files"
 
 __all__ = [
     "getrecommendations",
