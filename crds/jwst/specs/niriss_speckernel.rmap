@@ -1,0 +1,26 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-05',
+    'file_ext' : '.fits',
+    'filekind' : 'SPECKERNEL',
+    'filetype' : 'SPECKERNEL',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_speckernel.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'b52e314dbad92395d2fa86efb19b69d9583334c6',
+    'suffix' : 'speckernel',
+    'text_descr' : 'GR700XD Grism Spectrum Kernel File',
+}
+
+comment = """
+GR700XD Grism Spectrum Kernel File
+
+The reference file provides the spectral convolution matrix at different wavelengths.
+
+Originally requested and discussed on Jira CRDS-431.
+"""
+
+selector = Match({
+})

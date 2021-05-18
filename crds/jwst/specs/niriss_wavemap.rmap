@@ -1,0 +1,29 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-05',
+    'file_ext' : '.fits',
+    'filekind' : 'WAVEMAP',
+    'filetype' : 'WAVEMAP',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_wavemap.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '99ffae2aabb2282601bdec51c05b3916a6fe4dbe',
+    'suffix' : 'wavemap',
+    'text_descr' : 'GR700XD Grism Wavelength Mapping File',
+}
+
+comment = """
+GR700XD Grism Wavelength Mapping File
+
+The reference file provides the wavelength mapping to the pixels for grism
+orders 1 to 3. Each order has a separate extension in the file. The wavelength
+image is oversampled and has some margin, so the dimensions are 4136x4136
+pixels. All wavelength values are in microns.
+
+Originally requested and discussed on Jira CRDS-428.
+"""
+
+selector = Match({
+})
