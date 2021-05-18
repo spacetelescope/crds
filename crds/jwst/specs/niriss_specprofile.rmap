@@ -9,7 +9,7 @@ header = {
     'name' : 'jwst_niriss_specprofile.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '16e6119fb13458c8fbda49f0d03905707e6c7be4',
+    'sha1sum' : '19220db2f37883d7483e191cf532b70bfbb71230',
     'suffix' : 'specprofile',
     'text_descr' : 'GR700XD Grism Trace Profile Mapping File',
 }
