@@ -11,7 +11,7 @@ header = {
     'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : '16e6119fb13458c8fbda49f0d03905707e6c7be4',
     'suffix' : 'specprofile',
-    'text_descr' : '  GR700XD Grism Trace Profile Mapping File',
+    'text_descr' : 'GR700XD Grism Trace Profile Mapping File',
 }
 
 comment = """
