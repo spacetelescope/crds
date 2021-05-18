@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.0.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "Update Roman to tagged reference files"
+__version__ = "11.0.1"   # XXXX  see also ../setup.cfg
+__rationale__ = "New reftypes for SOSS extract_1d"
 
 __all__ = [
     "getrecommendations",
