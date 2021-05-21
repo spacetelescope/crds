@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.0.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "New reftypes for SOSS extract_1d"
+__version__ = "11.0.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "Support Roman programmatic submissions"
 
 __all__ = [
     "getrecommendations",
