@@ -20,20 +20,31 @@ class NoFilesSelected(Exception):
 BASE_URLS = {
     'dev': {
         'hst':  'https://hst-crds-dev.stsci.edu/',
-        'jwst': 'https://jwst-crds-dev.stsci.edu/', },
+        'jwst': 'https://jwst-crds-dev.stsci.edu/',
+        'roman': 'https://roman-crds-dev.stsci.edu/',
+    },
     'test': {
         'hst':  'https://hst-crds-test.stsci.edu/',
-        'jwst': 'https://jwst-crds-test.stsci.edu/', },
+        'jwst': 'https://jwst-crds-test.stsci.edu/',
+        'roman': 'https://roman-crds-test.stsci.edu/',
+    },
     'ops': {
         'hst':  'https://hst-crds.stsci.edu/',   # 'ops' not in URL
-        'jwst': 'https://jwst-crds.stsci.edu/', },
+        'jwst': 'https://jwst-crds.stsci.edu/',
+        'roman': 'https://roman-crds.stsci.edu/',
+    },
     'bit': {
         'hst':  'https://hst-crds-bit.stsci.edu/',
-        'jwst': 'https://jwst-crds-bit.stsci.edu/', },
+        'jwst': 'https://jwst-crds-bit.stsci.edu/',
+    },
     'cit': {
         'hst':  'https://hst-crds-cit.stsci.edu/',
-        'jwst': 'https://jwst-crds-cit.stsci.edu/', },
-    }
+        'jwst': 'https://jwst-crds-cit.stsci.edu/',
+    },
+    'int': {
+        'roman': 'https://roman-crds-int.stsci.edu/',
+    },
+}
 
 URL_DESCRIPTION = 'submission_form/redcat_description.yml'
 
@@ -107,10 +118,10 @@ class Submission(object):
         context (str): Derived-from context.  If omitted, will default to the observatory's edit context.'''
     def __init__(self, observatory, string, context=None, *args, **kwargs):
         observatory, string = observatory.lower(), string.lower()
-        if observatory not in ['hst', 'jwst']:
-            raise ValueError('Observatory "{}" must be either "hst" or "jwst".')
-        if string not in ['dev', 'test', 'ops', 'bit', 'cit']:
-            raise ValueError('String "{}" must be either "ops", "test", "dev", "bit" or "cit".')
+        if observatory not in ['hst', 'jwst', 'roman']:
+            raise ValueError('Observatory "{}" must be one of "hst" or "jwst" or "roman".')
+        if string not in ['dev', 'test', 'ops', 'bit', 'cit', 'int']:
+            raise ValueError('String "{}" must be either "ops", "test", "dev", "bit", "cit", or "int".')
         self._observatory = observatory
         self._string = string
         self._context = context
