@@ -72,7 +72,7 @@ def background_complete(thread):
     Returns the result of background task.
     """
     if isinstance(thread, threading.Thread):
-        while thread.isAlive():
+        while thread.is_alive():
             thread.join(1.0)
         if thread.exc is None:
             return thread.result
