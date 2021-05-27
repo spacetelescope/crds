@@ -25,7 +25,7 @@ class TestRoman(unittest.TestCase):
         test_config.cleanup(self.old_state)
 
     def test_getreferences_with_valid_header(self):
-        """ test_getreferences_with_valid_header: test satisfies Roman 303.1
+        """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
         """
         result = heavy_client.getreferences(
             {
@@ -41,6 +41,23 @@ class TestRoman(unittest.TestCase):
         )
 
         assert pathlib.Path(result["dark"]).name == "roman_wfi_dark_0001.asdf"
+
+        result = heavy_client.getreferences(
+            {
+                "ROMAN.META.INSTRUMENT.NAME": "WFI",
+                "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
+                "ROMAN.META.EXPOSURE.TYPE": "WFI_GRISM",
+                "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT": "GRISM",
+                "ROMAN.META.OBSERVATION.DATE": "2020-02-01",
+                "ROMAN.META.OBSERVATION.TIME": "00:00:00",
+            },
+            observatory="roman",
+            context="roman_0005.pmap",
+            reftypes=["flat"]
+        )
+
+        assert pathlib.Path(result["flat"]).name == "roman_wfi_flat_0004.asdf"
+
 
     @raises(CrdsLookupError)
     def test_getreferences_with_invalid_header(self):
@@ -60,13 +77,13 @@ class TestRoman(unittest.TestCase):
         )
 
     def test_list_references(self):
-        """ test_list_references: test satisfies Roman 303.2
+        """ test_list_references: test satisfies Roman 303.2 and 628.2
         """
         env = os.environ.copy()
 
         expected_result = {
-            "roman_wfi_flat_0003.asdf",
-            "roman_wfi_dark_0001.asdf"
+            "roman_wfi_flat_0004.asdf",
+            "roman_wfi_dark_0001.asdf",
         }
 
         list_command = [
