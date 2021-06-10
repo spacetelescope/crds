@@ -103,7 +103,25 @@ def _configured_stsynphot(synphot_root):
         stsynphot.conf.rootdir = original_rootdir
 
 
-def _test_stsynphot_mode(synphot_root, obsmode):
+@contextmanager
+def _configured_pysynphot(synphot_root):
+    original_pysyn_cdbs = os.environ.get("PYSYN_CDBS")
+    try:
+        os.environ["PYSYN_CDBS"] = synphot_root
+        try:
+            import pysynphot
+        except ImportError:
+            raise ImportError("Missing pysynphot package.  Install the 'synphot' extras and try again.")
+
+        yield pysynphot
+    finally:
+        if original_pysyn_cdbs is None:
+            os.environ.pop("PYSYN_CDBS")
+        else:
+            os.environ["PYSYN_CDBS"] = original_pysyn_cdbs
+
+
+def _test_synphot_mode(synphot_root, obsmode):
     result = True
     errors = []
     warns = []
@@ -116,6 +134,17 @@ def _test_stsynphot_mode(synphot_root, obsmode):
         except Exception as e:
             errors.append("Exception from stsynphot with obsmode '{}': {}".format(obsmode, repr(e)))
             result = False
+
+    with warnings.catch_warnings(record=True) as warning_list:
+        with _configured_pysynphot(synphot_root) as pys:
+            try:
+                pys.ObsBandpass(obsmode)
+            except Exception as e:
+                errors.append("Exception from pysynphot with obsmode '{}': {}".format(obsmode, repr(e)))
+                result = False
+        for warning in warning_list:
+            if not str(warning.message).startswith("Extinction files not found in"):
+                warns.append("Warning from pysynphot with obsmode '{}': {}".format(obsmode, warning.message))
 
     return result, errors, warns
 
@@ -147,7 +176,7 @@ class SynphotObsmodeIntegrationTest(SynphotIntegrationTestBase):
 
         self.link = link
         self.processes = processes
-        self.batch_size = 100
+        self.batch_size = batch_size
 
     def populate_synphot_root(self):
         """
@@ -186,7 +215,7 @@ class SynphotObsmodeIntegrationTest(SynphotIntegrationTestBase):
                     for start_index in range(0, total_modes, self.batch_size):
                         end_index = start_index + self.batch_size
                         results = pool.starmap(
-                            _test_stsynphot_mode,
+                            _test_synphot_mode,
                             [(self.synphot_root, m) for m in hdul[-1].data["OBSMODE"][start_index:end_index]]
                         )
                         for i, (result, errors, warns) in enumerate(results):
@@ -201,7 +230,7 @@ class SynphotObsmodeIntegrationTest(SynphotIntegrationTestBase):
                                 progress_callback(start_index + i + 1, total_modes)
             else:
                 for i, obsmode in enumerate(hdul[-1].data["OBSMODE"]):
-                    result, errors, warns = _test_stsynphot_mode(self.synphot_root, obsmode)
+                    result, errors, warns = _test_synphot_mode(self.synphot_root, obsmode)
                     if not result:
                         failed += 1
                     for warning in warns:

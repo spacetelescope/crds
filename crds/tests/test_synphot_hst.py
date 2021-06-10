@@ -764,6 +764,7 @@ def dt_synphot_obsmodes_integration_test():
     >>> test.run()
     CRDS - INFO -  Creating bandpass objects from 1 observation modes
     CRDS - ERROR -  Exception from stsynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
+    CRDS - ERROR -  Exception from pysynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
     CRDS - INFO -  1 / 1 observation modes failed
     False
 
@@ -778,6 +779,7 @@ def dt_synphot_obsmodes_integration_test():
     >>> test.run()
     CRDS - INFO -  Creating bandpass objects from 1 observation modes
     CRDS - ERROR -  Exception from stsynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
+    CRDS - ERROR -  Exception from pysynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
     CRDS - INFO -  1 / 1 observation modes failed
     False
 
