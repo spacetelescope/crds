@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.0.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "Support Roman programmatic submissions"
+__version__ = "11.0.3"   # XXXX  see also ../setup.cfg
+__rationale__ = "add test for Roman 628"
 
 __all__ = [
     "getrecommendations",
