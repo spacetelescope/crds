@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.0.3"   # XXXX  see also ../setup.cfg
-__rationale__ = "add test for Roman 628"
+__version__ = "11.0.4"   # XXXX  see also ../setup.cfg
+__rationale__ = "Fix failing unit test"
 
 __all__ = [
     "getrecommendations",
