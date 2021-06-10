@@ -616,7 +616,6 @@ def certify_jwst_invalid_asdf():
     >>> TestCertifyScript("crds.certify data/invalid.asdf  --comparison-context jwst.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
-    -ignore-
     CRDS - ERROR -  instrument='UNKNOWN' type='UNKNOWN' data='data/invalid.asdf' ::  Validation error : -ignore- not appear -ignore- ASDF -ignore-
     CRDS - INFO -  ########################################
     CRDS - INFO -  -ignore- errors
