@@ -412,8 +412,8 @@ ways:
     "integration tests" on the full ensemble of SYNPHOT files.  The first
     integration test confirms consistency of component names between the files.
     The second test iterates through a list of valid observation mode strings
-    and confirms that the stsynphot library is able to instantiate each mode
-    without error.
+    and confirms that both the stsynphot and pysynphot libraries are able to
+    instantiate each mode without error.
 
 The SYNPHOT integration test results are displayed on the Results page in
 an additional accordion panel:
