@@ -1,0 +1,2413 @@
+#
+# This reference is used by the CRDS reprocessing recommendation system to define:
+#
+# 1. The calibration code pipelines (.cfg files) nominally used for each EXP_TYPE for
+# applicable levels of data.
+#
+# 2. The reference types required to process each EXP_TYPE.
+#
+# This file contains a combination of MANUAL inputs used by the generation algorithms
+# to create the fields used at runtime:  exptypes_to_pipelines and exptypes_to_reftypes.
+#
+# Regeneration is performed by updating the MANUAL sections of a reference file
+# and installing applicable calibration code and then doing:
+#
+# $ python -m crds.jwst.gen_system_crdscfg  old_reference.yaml  > new_reference.yaml
+#
+# The update concept is to take the last good reference,  modify the MANUAL inputs
+# as appropriate,  then do the above to complete the regeneration process.
+#
+# HOWEVER:  If at some stage it becomes difficult to regenerate automatically,  the only
+# fields used functionally for reprocessing are exptypes_to_pipelines and exptypes_to_reftypes.
+# Thus it should be possible to substitute direct edits to those fields for automatic generation
+# if automatic generation becomes problematic.
+#
+
+meta:
+    author: CRDS
+    description: "Used to determine cal code pipeline sequences and reference types for CRDS reprocessing."
+    history: "Generated from calibration code .cfg files and EXP_TYPE/LEVEL mapping."
+    instrument: SYSTEM
+    pedigree: GROUND
+    reftype: CRDSCFG
+    telescope: JWST
+    useafter: 1900-01-01T00:00:00
+    calibration_software_version: 0.17.1
+    crds_version: 7.5.0.3
+    generation_date: 2020-09-02T08:32:27
+
+# ----------------------------------------------------------------------------------------------
+# MANUAL UPDATE REQUIRED
+#
+# Exhastive list of pipeline .cfg's to process for steps and reftypes during generation.
+#
+# ----------------------------------------------------------------------------------------------
+
+pipeline_cfgs: [calwebb_dark.cfg, calwebb_detector1.cfg, calwebb_guider.cfg,
+                calwebb_image2.cfg, calwebb_nrslamp-spec2.cfg, calwebb_spec2.cfg,
+                calwebb_tso-image2.cfg, calwebb_tso-spec2.cfg, calwebb_tso1.cfg,
+                calwebb_wfs-image2.cfg]
+
+# ----------------------------------------------------------------------------------------------
+# MANUAL UPDATE REQUIRED
+#
+# Exhastive list of exp_type values
+#
+# ----------------------------------------------------------------------------------------------
+
+exp_types: [FGS_DARK, FGS_FOCUS, FGS_IMAGE, FGS_INTFLAT, FGS_SKYFLAT,
+            FGS_ACQ1, FGS_ACQ2, FGS_FINEGUIDE, FGS_ID-IMAGE, FGS_ID-STACK, FGS_TRACK,
+            MIR_4QPM, MIR_CORONCAL, MIR_DARKALL, MIR_DARKIMG, MIR_DARKMRS,
+            MIR_FLATALL, MIR_FLATIMAGE, MIR_FLATIMAGE-EXT, MIR_FLATMRS, MIR_FLATMRS-EXT,
+            MIR_IMAGE, MIR_LRS-FIXEDSLIT, MIR_LRS-SLITLESS, MIR_LYOT, MIR_MRS,
+            MIR_TACONFIRM, MIR_TACQ,
+            NIS_AMI, NIS_DARK, NIS_EXTCAL, NIS_FOCUS, NIS_IMAGE, NIS_LAMP,
+            NIS_SOSS, NIS_TACQ, NIS_TACONFIRM, NIS_WFSS,
+            NRC_CORON, NRC_DARK, NRC_FLAT, NRC_FOCUS, NRC_GRISM, NRC_IMAGE, NRC_WFSS,
+            NRC_LED, NRC_WFSC, NRC_TACONFIRM, NRC_TACQ, NRC_TSGRISM, NRC_TSIMAGE,
+            NRS_AUTOFLAT, NRS_AUTOWAVE, NRS_BRIGHTOBJ, NRS_CONFIRM, NRS_DARK,
+            NRS_FIXEDSLIT, NRS_FOCUS, NRS_IFU, NRS_IMAGE, NRS_LAMP, NRS_MIMF,
+            NRS_MSASPEC, NRS_MSATA, NRS_TACONFIRM, NRS_TACQ, NRS_TASLIT, NRS_WATA]
+
+# ----------------------------------------------------------------------------------------------
+# MANUAL UPDATE REQUIRED
+#
+# Order is important since the first pattern matching an exp_type in any given level wins.
+#
+# For each level, CRDS searches for a matching EXP_TYPE using glob matching,  searching
+# in order from top to bottom, using the first match only.   Each level will contribute one
+# .cfg for a given EXP_TYPE.
+#
+# skip_2b.cfg is a placeholder with no steps.
+# ----------------------------------------------------------------------------------------------
+
+levels: [ level2a, level2b]
+
+level_pipeline_exptypes:
+    level2a:
+        - calwebb_dark.cfg: [FGS_DARK, MIR_DARK, MIR_DARKIMG, MIR_DARKMRS, MIR_DARKALL, NRC_DARK, NIS_DARK, NRS_DARK]
+
+        - calwebb_guider.cfg: [FGS_ID-STACK, FGS_ID-IMAGE, FGS_ACQ1, FGS_ACQ2, FGS_TRACK, FGS_FINEGUIDE]
+
+        - calwebb_tso1.cfg: [MIR_LRS-SLITLESS, NRC_TSGRISM, NRC_TSIMAGE, NIS_SOSS, NRS_BRIGHTOBJ]
+
+        - calwebb_detector1.cfg: ["*"]
+
+    level2b:
+        - calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_MRS, NRS_FIXEDSLIT, NRS_LAMP, NRS_MSASPEC, NRS_IFU,
+                             NRS_AUTOWAVE, NIS_WFSS, NRC_WFSS, NRC_GRISM]
+
+        - calwebb_nrslamp-spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_MRS, NRS_FIXEDSLIT, NRS_MSASPEC, NRS_IFU,
+                                     NRS_AUTOWAVE, NIS_WFSS, NRC_WFSS]
+
+        - calwebb_tso-spec2.cfg: [MIR_LRS-SLITLESS, NRC_TSGRISM, NIS_SOSS, NRS_BRIGHTOBJ]
+
+        - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, NRC_WFSC, NRC_TACONFIRM,
+
+                             MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL, MIR_TACONFIRM,
+
+                             NIS_IMAGE, NIS_FOCUS, NIS_AMI, NIS_TACQ, NIS_TACONFIRM,
+
+                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
+                             NRS_WATA, NRS_MSATA,
+
+                             FGS_IMAGE, FGS_FOCUS]
+
+        - calwebb_tso-image2.cfg: [NRC_TSIMAGE]
+
+        - skip_2b.cfg: [NRS_AUTOWAVE, FGS_ACQ1, FGS_ACQ2,
+                        FGS_FINEGUIDE, FGS_ID-IMAGE, FGS_ID-STACK, FGS_TRACK, NIS_EXTCAL]
+
+# ----------------------------------------------------------------------------------------------
+#
+# MANUAL UPDATE REQUIRED
+#
+# This section defines types for exceptional steps that do not use all of their defined types
+# depending on EXP_TYPE.
+#
+# CRDS searches the cases top-to-bottom looking for an EXP_TYPE that glob-matches and
+# returns the first match.  The return value is used instead of the value from steps_to_reftypes.
+#
+# ----------------------------------------------------------------------------------------------
+
+pipeline_exceptions:
+
+    meta.visit.tsovisit:
+       default_missing: F
+       dont_replace: ["F", "FALSE", "NONE", "OFF"]
+       calwebb_detector1.cfg: calwebb_tso1.cfg
+       calwebb_image2.cfg:    calwebb_tso-image2.cfg
+       calwebb_spec2.cfg:     calwebb_tso-spec2.cfg
+       outlier_detection.cfg: outlier_detection_tso.cfg
+
+    meta.instrument.lamp_state:
+       default_missing: F
+       dont_replace: ["F", "FALSE", "NONE", "OFF"]
+       calwebb_spec2.cfg:     calwebb_nrslamp-spec2.cfg
+
+    meta.visit.title:
+        default: UNDEFINED
+        do_replace:  [".*WFSC.*"]
+        calwebb_image2.cfg:  calwebb_wfs-image2.cfg
+
+steps_to_reftypes_exceptions: []
+    # flat_field:
+        # - case1:
+        #     exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC, NRS_BRIGHTOBJ]
+        #    reftypes: [dflat, fflat, sflat]
+        # - case2:
+        #     exp_types: ["NRS_*"]
+        #     reftypes: [flat, dflat, fflat,  sflat]
+        # - case3:
+        #     exp_types: ["*"]
+        #     reftypes: [flat]
+
+# ----------------------------------------------------------------------------------------------
+#
+# AUTOMATICALLY GENERATED (or... was anyway) from here down
+#
+# This section defines mappings generated by reflecting on the JWST cal code distribution
+#
+# ----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+# vvvvvvvv GENERATED vvvvvvvv
+pipeline_cfgs_to_steps:
+  calwebb_dark.cfg:
+  - dq_init
+  - firstframe
+  - group_scale
+  - lastframe
+  - linearity
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  calwebb_detector1.cfg:
+  - dark_current
+  - dq_init
+  - firstframe
+  - gain_scale
+  - group_scale
+  - jump
+  - lastframe
+  - linearity
+  - persistence
+  - ramp_fit
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  calwebb_guider.cfg:
+  - dq_init
+  - flat_field
+  - guider_cds
+  calwebb_image2.cfg:
+  - assign_wcs
+  - bkg_subtract
+  - flat_field
+  - photom
+  - resample
+  calwebb_nrslamp-spec2.cfg:
+  - assign_wcs
+  - barshadow
+  - bkg_subtract
+  - cube_build
+  - extract_1d
+  - extract_2d
+  - flat_field
+  - fringe
+  - imprint_subtract
+  - msa_flagging
+  - pathloss
+  - photom
+  - resample_spec
+  - srctype
+  - straylight
+  - wavecorr
+  calwebb_spec2.cfg:
+  - assign_wcs
+  - barshadow
+  - bkg_subtract
+  - cube_build
+  - extract_1d
+  - extract_2d
+  - flat_field
+  - fringe
+  - imprint_subtract
+  - msa_flagging
+  - pathloss
+  - photom
+  - resample_spec
+  - srctype
+  - straylight
+  - wavecorr
+  calwebb_tso-image2.cfg:
+  - assign_wcs
+  - flat_field
+  - photom
+  calwebb_tso-spec2.cfg:
+  - assign_wcs
+  - extract_1d
+  - extract_2d
+  - flat_field
+  - fringe
+  - photom
+  - srctype
+  - wavecorr
+  calwebb_tso1.cfg:
+  - dark_current
+  - dq_init
+  - gain_scale
+  - group_scale
+  - jump
+  - linearity
+  - ramp_fit
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  calwebb_wfs-image2.cfg:
+  - assign_wcs
+  - bkg_subtract
+  - flat_field
+  - photom
+  skip_2b.cfg: []
+
+steps_to_reftypes:
+  assign_wcs:
+  - distortion
+  - filteroffset
+  - specwcs
+  - regions
+  - wavelengthrange
+  - camera
+  - collimator
+  - disperser
+  - fore
+  - fpa
+  - msa
+  - ote
+  - ifupost
+  - ifufore
+  - ifuslicer
+  barshadow:
+  - barshadow
+  bkg_subtract:
+  - wfssbkg
+  - wavelengthrange
+  cube_build:
+  - cubepar
+  - resol
+  dark_current:
+  - dark
+  dq_init:
+  - mask
+  extract_1d:
+  - extract1d
+  - apcorr
+  extract_2d:
+  - wavelengthrange
+  firstframe: &id001 []
+  flat_field:
+  - flat
+  - fflat
+  - sflat
+  - dflat
+  fringe:
+  - fringe
+  gain_scale:
+  - gain
+  group_scale: *id001
+  guider_cds: *id001
+  imprint_subtract: *id001
+  jump:
+  - gain
+  - readnoise
+  lastframe: *id001
+  linearity:
+  - linearity
+  msa_flagging:
+  - msaoper
+  pathloss:
+  - pathloss
+  persistence:
+  - trapdensity
+  - trappars
+  - persat
+  photom:
+  - photom
+  - area
+  ramp_fit:
+  - readnoise
+  - gain
+  refpix:
+  - refpix
+  resample: &id002
+  - drizpars
+  resample_spec: *id002
+  rscd:
+  - rscd
+  saturation:
+  - saturation
+  srctype: *id001
+  straylight:
+  - regions
+  superbias:
+  - superbias
+  wavecorr:
+  - wavecorr
+
+exptypes_to_pipelines:
+  FGS_ACQ1:
+  - calwebb_guider.cfg
+  - skip_2b.cfg
+  FGS_ACQ2:
+  - calwebb_guider.cfg
+  - skip_2b.cfg
+  FGS_DARK:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  FGS_FINEGUIDE:
+  - calwebb_guider.cfg
+  - skip_2b.cfg
+  FGS_FOCUS:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  FGS_ID-IMAGE:
+  - calwebb_guider.cfg
+  - skip_2b.cfg
+  FGS_ID-STACK:
+  - calwebb_guider.cfg
+  - skip_2b.cfg
+  FGS_IMAGE:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  FGS_INTFLAT:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  FGS_SKYFLAT:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  FGS_TRACK:
+  - calwebb_guider.cfg
+  - skip_2b.cfg
+  MIR_4QPM:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  MIR_CORONCAL:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  MIR_DARKALL:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  MIR_DARKIMG:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  MIR_DARKMRS:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  MIR_FLATALL:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  MIR_FLATIMAGE:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  MIR_FLATIMAGE-EXT:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  MIR_FLATMRS:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  MIR_FLATMRS-EXT:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  MIR_IMAGE:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  MIR_LRS-FIXEDSLIT:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  MIR_LRS-SLITLESS:
+  - calwebb_tso1.cfg
+  - calwebb_tso-spec2.cfg
+  MIR_LYOT:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  MIR_MRS:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  MIR_TACONFIRM:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  MIR_TACQ:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NIS_AMI:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NIS_DARK:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  NIS_EXTCAL:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  NIS_FOCUS:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NIS_IMAGE:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NIS_LAMP:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  NIS_SOSS:
+  - calwebb_tso1.cfg
+  - calwebb_tso-spec2.cfg
+  NIS_TACONFIRM:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NIS_TACQ:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NIS_WFSS:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRC_CORON:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRC_DARK:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  NRC_FLAT:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  NRC_FOCUS:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRC_GRISM:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRC_IMAGE:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRC_LED:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  NRC_TACONFIRM:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRC_TACQ:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRC_TSGRISM:
+  - calwebb_tso1.cfg
+  - calwebb_tso-spec2.cfg
+  NRC_TSIMAGE:
+  - calwebb_tso1.cfg
+  - calwebb_tso-image2.cfg
+  NRC_WFSC:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRC_WFSS:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRS_AUTOFLAT:
+  - calwebb_detector1.cfg
+  - skip_2b.cfg
+  NRS_AUTOWAVE:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRS_BRIGHTOBJ:
+  - calwebb_tso1.cfg
+  - calwebb_tso-spec2.cfg
+  NRS_CONFIRM:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_DARK:
+  - calwebb_dark.cfg
+  - skip_2b.cfg
+  NRS_FIXEDSLIT:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRS_FOCUS:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_IFU:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRS_IMAGE:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_LAMP:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRS_MIMF:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_MSASPEC:
+  - calwebb_detector1.cfg
+  - calwebb_spec2.cfg
+  NRS_MSATA:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_TACONFIRM:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_TACQ:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_TASLIT:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+  NRS_WATA:
+  - calwebb_detector1.cfg
+  - calwebb_image2.cfg
+
+exptypes_to_reftypes:
+  FGS_ACQ1:
+  - dflat
+  - fflat
+  - flat
+  - mask
+  - sflat
+  FGS_ACQ2:
+  - dflat
+  - fflat
+  - flat
+  - mask
+  - sflat
+  FGS_DARK:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  FGS_FINEGUIDE:
+  - dflat
+  - fflat
+  - flat
+  - mask
+  - sflat
+  FGS_FOCUS:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  FGS_ID-IMAGE:
+  - dflat
+  - fflat
+  - flat
+  - mask
+  - sflat
+  FGS_ID-STACK:
+  - dflat
+  - fflat
+  - flat
+  - mask
+  - sflat
+  FGS_IMAGE:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  FGS_INTFLAT:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  FGS_SKYFLAT:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  FGS_TRACK:
+  - dflat
+  - fflat
+  - flat
+  - mask
+  - sflat
+  MIR_4QPM:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  MIR_CORONCAL:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  MIR_DARKALL:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  MIR_DARKIMG:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  MIR_DARKMRS:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  MIR_FLATALL:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  MIR_FLATIMAGE:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  MIR_FLATIMAGE-EXT:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  MIR_FLATMRS:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  MIR_FLATMRS-EXT:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  MIR_IMAGE:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  MIR_LRS-FIXEDSLIT:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  MIR_LRS-SLITLESS:
+  - apcorr
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - wavecorr
+  - wavelengthrange
+  MIR_LYOT:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  MIR_MRS:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  MIR_TACONFIRM:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  MIR_TACQ:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NIS_AMI:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NIS_DARK:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  NIS_EXTCAL:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  NIS_FOCUS:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NIS_IMAGE:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NIS_LAMP:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  NIS_SOSS:
+  - apcorr
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - wavecorr
+  - wavelengthrange
+  NIS_TACONFIRM:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NIS_TACQ:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NIS_WFSS:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  NRC_CORON:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRC_DARK:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  NRC_FLAT:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  NRC_FOCUS:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRC_GRISM:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  NRC_IMAGE:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRC_LED:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  NRC_TACONFIRM:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRC_TACQ:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRC_TSGRISM:
+  - apcorr
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - wavecorr
+  - wavelengthrange
+  NRC_TSIMAGE:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - wavelengthrange
+  NRC_WFSC:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRC_WFSS:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  NRS_AUTOFLAT:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  NRS_AUTOWAVE:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  NRS_BRIGHTOBJ:
+  - apcorr
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - wavecorr
+  - wavelengthrange
+  NRS_CONFIRM:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_DARK:
+  - linearity
+  - mask
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  NRS_FIXEDSLIT:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  NRS_FOCUS:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_IFU:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  NRS_IMAGE:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_LAMP:
+  - dark
+  - gain
+  - linearity
+  - mask
+  - persat
+  - readnoise
+  - refpix
+  - rscd
+  - saturation
+  - superbias
+  - trapdensity
+  - trappars
+  NRS_MIMF:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_MSASPEC:
+  - apcorr
+  - area
+  - barshadow
+  - camera
+  - collimator
+  - cubepar
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - extract1d
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - fringe
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - msaoper
+  - ote
+  - pathloss
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - resol
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavecorr
+  - wavelengthrange
+  - wfssbkg
+  NRS_MSATA:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_TACONFIRM:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_TACQ:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_TASLIT:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+  NRS_WATA:
+  - area
+  - camera
+  - collimator
+  - dark
+  - dflat
+  - disperser
+  - distortion
+  - drizpars
+  - fflat
+  - filteroffset
+  - flat
+  - fore
+  - fpa
+  - gain
+  - ifufore
+  - ifupost
+  - ifuslicer
+  - linearity
+  - mask
+  - msa
+  - ote
+  - persat
+  - photom
+  - readnoise
+  - refpix
+  - regions
+  - rscd
+  - saturation
+  - sflat
+  - specwcs
+  - superbias
+  - trapdensity
+  - trappars
+  - wavelengthrange
+  - wfssbkg
+
+
