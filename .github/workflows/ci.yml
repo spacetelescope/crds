@@ -44,7 +44,7 @@ jobs:
           sudo cp fitsverify /usr/local/bin
       - name: Install Python dependencies
         run: |
-          pip install git+https://github.com/spacetelescope/roman_datamodels
+          pip install roman-datamodels==0.1.2
           pip install git+https://github.com/spacetelescope/jwst
           pip uninstall --yes crds
           ./install
