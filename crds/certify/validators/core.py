@@ -54,7 +54,7 @@ class Validator:
         self._presence_condition_code = None
 
         if self.info.datatype not in generic_tpn.TpnInfo.datatypes:
-            raise ValueError("Bad TPN datatype field " + repr(self.info.presence))
+            raise ValueError("Bad TPN datatype field " + repr(self.info.datatype))
 
         if not (self.info.presence in generic_tpn.TpnInfo.presences or
                 self.conditionally_required):
@@ -306,13 +306,8 @@ class KeywordValidator(Validator):
 class CharacterValidator(KeywordValidator):
     """Validates values of type Character."""
     def condition(self, value):
-        """Condition a header values by stripping, converting to all uppercase, and replacing
-        space with underscore.
-        """
-        chars = str(value).strip().upper()
-#         if " " in chars:
-#             chars = '"' + chars + '"'
-        return chars
+        """Condition a header values by stripping and converting to all uppercase."""
+        return str(value).strip().upper()
 
     def _check_value(self, filename, value):
         """Support rmap validation by handling esoteric values and or-groups."""
@@ -321,6 +316,12 @@ class CharacterValidator(KeywordValidator):
             self.verbose(filename, value, "is an or'ed parameter matching", values)
         for val in values:
             super(CharacterValidator, self)._check_value(filename, val)
+
+class CaseSensitiveCharacterValidator(CharacterValidator):
+    """Validates case-sensitive character values."""
+    def condition(self, value):
+        """Condition a header value by stripping."""
+        return str(value).strip()
 
 # ----------------------------------------------------------------------------
 

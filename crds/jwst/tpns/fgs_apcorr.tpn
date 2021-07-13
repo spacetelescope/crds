@@ -8,6 +8,8 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 
+META.MODEL_TYPE  H  S  R  FgsImgApcorrModel
+
 # FILTER                     C   C   R
 # PUPIL                      C   C   R
 

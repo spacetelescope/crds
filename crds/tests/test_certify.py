@@ -381,7 +381,6 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst_0034.pmap")()
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  EXP_TYPE = 'mir_image'
     CRDS - INFO -  META.AUTHOR [AUTHOR] = 'Todd Miller'
     CRDS - INFO -  META.DESCRIPTION [DESCRIP] = 'Brief notes on this reference.'
@@ -396,7 +395,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.INSTRUMENT.GRATING [GRATING] = 'UNDEFINED'
     CRDS - INFO -  META.INSTRUMENT.NAME [INSTRUME] = 'miri'
     CRDS - INFO -  META.INSTRUMENT.PUPIL [PUPIL] = 'UNDEFINED'
-    CRDS - INFO -  META.MODEL_TYPE [DATAMODL] = 'UNDEFINED'
+    CRDS - INFO -  META.MODEL_TYPE [DATAMODL] = 'DistortionModel'
     CRDS - INFO -  META.PEDIGREE [PEDIGREE] = 'dummy'
     CRDS - INFO -  META.REFTYPE [REFTYPE] = 'distortion'
     CRDS - INFO -  META.SUBARRAY.FASTAXIS [FASTAXIS] = 1
@@ -410,7 +409,7 @@ def certify_dump_provenance_generic():
     CRDS - INFO -  META.USEAFTER [USEAFTER] = '2015-01-25T12:00:00'
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  1 warnings
+    CRDS - INFO -  0 warnings
     CRDS - INFO -  29 infos
     0
     >>> test_config.cleanup(old_state)
@@ -598,12 +597,10 @@ def certify_jwst_missing_optional_parkey():
     CRDS - INFO -  FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
     CRDS - INFO -  Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'SHORT | MEDIUM |'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  NoTypeWarning : ...jwst.datamodels.util : model_type not found...
     CRDS - INFO -  ########################################
     CRDS - INFO -  0 errors
-    CRDS - INFO -  2 warnings
+    CRDS - INFO -  0 warnings
     CRDS - INFO -  7 infos
     0
     >>> test_config.cleanup(old_state)
@@ -695,7 +692,6 @@ def certify_JsonCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.json", "jwst_0034.pmap", observatory="jwst")
     CRDS - INFO -  Certifying 'data/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
     """
 
@@ -704,7 +700,6 @@ def certify_YamlCertify_valid():
     >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
     >>> certify.certify_file("data/valid.yaml", "jwst_0034.pmap", observatory="jwst")
     CRDS - INFO -  Certifying 'data/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     >>> test_config.cleanup(old_state)
     """
 
@@ -847,7 +842,6 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  Certifying 'data/niriss_ref_photom_bad.fits' as 'FITS' relative to context 'jwst_0541.pmap'
     CRDS - INFO -  FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     CRDS - ERROR -  In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
-    CRDS - WARNING -  Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
     CRDS - WARNING -  Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
     CRDS - WARNING -  Failed resolving comparison reference for table checks...
     CRDS - INFO -  Mode columns defined by spec for new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
@@ -855,8 +849,7 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : ...stdatamodels.validate...
-    CRDS - WARNING -  NoTypeWarning : ...jwst.datamodels...
+    CRDS - WARNING -  ValidationWarning : stdatamodels.validate ...
     >>> test_config.cleanup(old_state)
     """
 
@@ -1002,6 +995,7 @@ def load_nirspec_staturation_tpn_lines():
     DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
     DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
     DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
+    META.MODEL_TYPE  H  S  R  SaturationModel
     SCI   A   X    R  (ndim(SCI_ARRAY,2))
     DQ    A   X    O  (ndim(DQ_ARRAY,2))
     META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
@@ -1064,6 +1058,7 @@ def load_nirspec_staturation_tpn():
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
+     ('META.MODEL_TYPE', 'HEADER', 'CASE_SENSITIVE_CHARACTER', 'REQUIRED', values=('SaturationModel',)),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(SCI_ARRAY,2))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
      ('META.EXPOSURE.GAIN_FACTOR', 'HEADER', 'REAL', 'WARN', values=('1.0:10.0',))]
@@ -1104,6 +1099,7 @@ def load_miri_mask_tpn_lines():
     DQ       A           X         S             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
     DQ       A           X         S             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)
     DQ       A           X         S             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)
+    META.MODEL_TYPE  H  S  R  MaskModel
     DQ       A           X         O   (ndim(DQ_ARRAY,2))
     DQ_DEF       A           X         O             (is_table(DQ_DEF_ARRAY))
     DQ_DEF       A           X         O             (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
@@ -1146,6 +1142,7 @@ def load_miri_mask_tpn():
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)'),
+     ('META.MODEL_TYPE', 'HEADER', 'CASE_SENSITIVE_CHARACTER', 'REQUIRED', values=('MaskModel',)),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),

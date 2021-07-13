@@ -147,7 +147,7 @@ def reftypes_jwst_reference_name_to_tpn_infos():    # doctest: +ELLIPSIS
      ('META.INSTRUMENT.GRATING', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('G140M', 'G235M', 'G395M', 'G140H', 'G235H', 'G395H', 'PRISM', 'MIRROR', 'UNKNOWN', 'MULTIPLE', 'N/A', 'ANY')),
      ('META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=('MIRI',)),
      ('META.INSTRUMENT.PUPIL', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('CLEAR', 'CLEARP', 'F090W', 'F115W', 'F140M', 'F150W', 'F158M', 'F162M', 'F164N', 'F200W', 'F323N', 'F405N', 'F466N', 'F470N', 'FLAT', 'GDHS0', 'GDHS60', 'GR700XD', 'GRISMC', 'GRISMR', 'GRISMV2', 'GRISMV3', 'MASKBAR', 'MASKIPR', 'MASKRND', 'NRM', 'PINHOLES', 'WLM8', 'WLP8', 'ANY', 'N/A')),
-     ('META.MODEL_TYPE', 'HEADER', 'CHARACTER', condition="(warning(not(META_REFTYPE.startswith('pars-'))))", values=()),
+     ('META.MODEL_TYPE', 'HEADER', 'CASE_SENSITIVE_CHARACTER', 'REQUIRED', values=('FlatModel',)),
      ('META.PEDIGREE', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTPEDIGREE',)),
      ('META.REFTYPE', 'HEADER', 'CHARACTER', 'REQUIRED', values=()),
      ('META.SUBARRAY.FASTAXIS', 'HEADER', 'INTEGER', 'OPTIONAL', values=('1', '-1', '2', '-2')),

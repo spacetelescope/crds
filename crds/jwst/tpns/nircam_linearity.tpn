@@ -1,2 +1,3 @@
 include includes/nir_linearity.tpn
 
+META.MODEL_TYPE  H  S  R  LinearityModel
