@@ -1,2 +1,3 @@
 # include includes/miri_subarray_refpix.tpn
 
+META.MODEL_TYPE  H  S  R  DistortionModel,DistortionMRSModel

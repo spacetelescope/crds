@@ -1,3 +1,5 @@
+META.MODEL_TYPE  H  S  R  PathlossModel
+
 # Technically part of PS HDU and required for all ver with different values
 # this latter aspect is not checked.
 APERTURE  H    C   R

@@ -7,6 +7,8 @@ include includes/miri_subarray_both.tpn
 
 include includes/miri_sci_array_refpix.tpn
 
+META.MODEL_TYPE  H  S  R  PixelAreaModel
+
 # PIXAR_SR = FLOAT / (sr) Nominal pixel area for this detector
 # PIXAR_A2 = FLOAT / (arcsec2) Nominal pixel area for this detector
 

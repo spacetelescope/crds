@@ -31,6 +31,8 @@ def validator(info, context=None):
         rval = getattr(module, class_name)(info, context=context)
     elif info.datatype == "C":
         rval = core_validators.CharacterValidator(info, context=context)
+    elif info.datatype == "S":
+        rval = core_validators.CaseSensitiveCharacterValidator(info, context=context)
     elif info.datatype == "R":
         rval = core_validators.RealValidator(info, context=context)
     elif info.datatype == "D":

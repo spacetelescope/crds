@@ -1,3 +1,4 @@
+META.MODEL_TYPE  H  S  R  MiriIFUCubeParsModel
 
 # Make EXP_TYPE available in headers even if only UNDEFINED
 # Keyword cross-strapping doesn't work for UNDEFINED values...

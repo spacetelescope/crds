@@ -3,6 +3,8 @@ include includes/nir_err_array.tpn
 include includes/nir_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
+META.MODEL_TYPE  H  S  R  WfssBkgModel
+
 META.EXPOSURE.TYPE    H      C     R     NRC_WFSS
 
 SCI                   A      X     R     (ndim(SCI_ARRAY,2))
