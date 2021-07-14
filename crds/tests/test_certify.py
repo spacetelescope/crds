@@ -1410,6 +1410,23 @@ def test_asdf_library_version_fail():
     >>> test_config.cleanup(old_state)
     """
 
+def test_fits_asdf_extension_fail():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> TestCertifyScript("crds.certify data/jwst_nirspec_ipc_with_asdf_extension.fits --comparison-context jwst_0591.pmap")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/jwst_nirspec_ipc_with_asdf_extension.fits' (1/1) as 'FITS' relative to context 'jwst_0591.pmap'
+    CRDS - ERROR -  instrument='NIRSPEC' type='IPC' data='data/jwst_nirspec_ipc_with_asdf_extension.fits' ::  FITS files must not include an ASDF extension
+    CRDS - INFO -  FITS file 'jwst_nirspec_ipc_with_asdf_extension.fits' conforms to FITS standards.
+    CRDS - INFO -  Checking JWST datamodels.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  5 infos
+    1
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 class TestCertify(test_config.CRDSTestCase):
 

@@ -572,6 +572,9 @@ class FitsCertifier(ReferenceCertifier):
             return
         with data_file.fits_open_trapped(self.filename, checksum=bool(config.FITS_VERIFY_CHECKSUM)) as pfile:
             pfile.verify(option='exception') # validates all keywords
+            if "ASDF" in pfile:
+                self.log_and_track_error("FITS files must not include an ASDF extension")
+
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
 
