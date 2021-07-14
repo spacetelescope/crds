@@ -4,7 +4,7 @@
 %TAG ! tag:stsci.edu:asdf/
 --- !core/asdf-1.1.0
 asdf_library: !core/software-1.0.0 {author: Space Telescope Science Institute, homepage: 'http://github.com/spacetelescope/asdf',
-  name: asdf, version: 2.0.0.dev1293}
+  name: asdf, version: 2.0.0}
 history:
   entries:
   - !core/history_entry-1.0.0
@@ -15,7 +15,7 @@ history:
   extensions:
   - !core/extension_metadata-1.0.0
     extension_class: asdf.extension.BuiltinExtension
-    software: {name: asdf, version: 2.0.0.dev1293}
+    software: {name: asdf, version: 2.0.0}
   - !core/extension_metadata-1.0.0
     extension_class: astropy.io.misc.asdf.extension.AstropyAsdfExtension
     software: {name: astropy, version: 3.1.dev21594}
@@ -2071,7 +2071,7 @@ slice_9:
       shape: [6, 6]
     name: ifupost_y_forwdist
 ...
-ÓBLK 0               0       0       0µ°¥Û¶"cãvÛKX}šwaÇRI½ë¹?ÃããæG¿äÔßCÖG?Š»ÆµÙ¹?                ÓBLK 0                             £Şª0<Ÿ‰`9)eÅ†î€Æk¯œ1‡@äIÒµß³óÀ‘àü<ÔÀx¹ˆŠb:A¡Ö4·³XeÁ•Ô	gwA5pQ­™æÀï_¯íQYAâ¶”6í#Á{ƒ/«Ï‰ÁshÑb¨¦A        ŞãLÛ$AøSãD%Q¨ÁÛŠ}AÁğ„A
+                ÓBLK 0               0       0       0µ°¥Û¶"cãvÛKX}šwaÇRI½ë¹?ÃããæG¿äÔßCÖG?Š»ÆµÙ¹?                ÓBLK 0                             £Şª0<Ÿ‰`9)eÅ†î€Æk¯œ1‡@äIÒµß³óÀ‘àü<ÔÀx¹ˆŠb:A¡Ö4·³XeÁ•Ô	gwA5pQ­™æÀï_¯íQYAâ¶”6í#Á{ƒ/«Ï‰ÁshÑb¨¦A        ŞãLÛ$AøSãD%Q¨ÁÛŠ}AÁğ„A
 ×cä$º¸A                Y·¹Å§eAö(ÄÕ§³äA¸Å}.»Á                        –CÂÑ>¶Áš™‘R–a
 Â                                ®g‚95ãA                                        ÓBLK 0                             ş‰EoÃ šâ(ê4gkè5$0ÎúúÀ'/¦ë@^ƒ¾4Ò`ù@ÓÙÉÈõv9Áu“À•CeA‚sFçîõuÁê/åiÒó@ßøÚQdRÁ˜†áCÄEQÁCëƒ·ˆA¤p=JçY¦Á        Ã*Ş©ÚBÁ/İô¡AaÃĞ oAìQB†E·Á                Ş	=A
 ×³fõoŞÁ#ÛÙUâU±Á                        =
