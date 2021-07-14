@@ -1393,6 +1393,23 @@ def test_asdf_standard_requirement_succeed():
     >>> test_config.cleanup(old_state)
     """
 
+def test_asdf_library_version_fail():
+    """
+    >>> old_state = test_config.setup(url="https://jwst-crds-serverless.stsci.edu", observatory="jwst")
+    >>> TestCertifyScript("crds.certify data/jwst_fgs_distortion_bad_asdf_version.asdf --comparison-context jwst_0591.pmap")()  # doctest: +ELLIPSIS
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
+    CRDS - INFO -  Setting 'META.EXPOSURE.TYPE [EXP_TYPE]' = None to value of 'META.EXPOSURE.P_EXPTYPE [P_EXPTYP]' = 'FGS_IMAGE|FGS_FOCUS|FGS_INTFLAT|FGS_SKYFLAT|'
+    CRDS - ERROR -  instrument='FGS' type='DISTORTION' data='data/jwst_fgs_distortion_bad_asdf_version.asdf' ::  File written with dev version of asdf library: 2.0.0.dev1213
+    CRDS - INFO -  Checking JWST datamodels.
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  5 infos
+    1
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 class TestCertify(test_config.CRDSTestCase):
 
