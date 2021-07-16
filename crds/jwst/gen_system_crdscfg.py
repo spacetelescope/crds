@@ -99,7 +99,11 @@ class CrdsCfgGenerator:
                 else:
                     log.info("Considering", repr(name), "keep")
                     step = p.step_defs[name]  # class
-                    steps_to_reftypes[name] = step.reference_file_types
+                    if isinstance(step.reference_file_types, list):
+                        steps_to_reftypes[name] = step.reference_file_types
+                    else:
+                        log.warning(repr(name), " is not a Step. Setting reference list to empty.")
+                        steps_to_reftypes[name] = []
             self.pipeline_cfgs_to_steps[pipeline_cfg] = sorted(list(steps_to_reftypes.keys()))
             self.steps_to_reftypes.update(steps_to_reftypes)
 
