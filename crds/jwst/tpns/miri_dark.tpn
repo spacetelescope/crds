@@ -5,7 +5,7 @@ include includes/miri_err_array.tpn
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
 
-META.MODEL_TYPE  H  S  R  DarkModel
+META.MODEL_TYPE  H  S  R  DarkMIRIModel
 
 SCI   A   X   O   (ndim(SCI_ARRAY,4))
 ERR   A   X   O   (ndim(ERR_ARRAY,4))
