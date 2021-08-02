@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_niriss_pars-image2pipeline.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.VISIT.TSOVISIT',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '8db202526f87f7906d9608cff958a2817754e162',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.VISIT.TYPE', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'bcabe63aca73ba629e4b741a82df0ba78d0e8b0d',
     'suffix' : 'pars-image2pipeline',
     'text_descr' : 'Image2Pipeline runtime parameters',
 }
