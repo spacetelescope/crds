@@ -478,6 +478,8 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TYPE",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -485,7 +487,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"f710851af2c379507559b1ac230ffcf8d6290ea0",
+            "sha1sum":"3dcc2b3b50da237edb18bfe3e47ea08ddb733815",
             "suffix":"pars-image2pipeline",
             "text_descr":"Image2Pipeline runtime parameters",
             "tpn":"fgs_pars-image2pipeline.tpn",
@@ -1969,6 +1971,8 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TYPE",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -1976,7 +1980,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"38392e75a49dad4f1c0385d06914ec2b288e2b9f",
+            "sha1sum":"c3bc6091a9bf991a5a77b454f5d156b73dd82751",
             "suffix":"pars-image2pipeline",
             "text_descr":"Image2Pipeline runtime parameters",
             "tpn":"miri_pars-image2pipeline.tpn",
@@ -4908,6 +4912,7 @@
             "parkey":[
                 [
                     "META.EXPOSURE.TYPE",
+                    "META.VISIT.TYPE",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -4915,7 +4920,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"35f422f5eb66b3d9ebf6eae7b6c29b928102d51d",
+            "sha1sum":"542e67dd94650e96b7fec19723284c60b20d69ee",
             "suffix":"pars-image2pipeline",
             "text_descr":"Image2Pipeline runtime parameters",
             "tpn":"niriss_pars-image2pipeline.tpn",
@@ -6331,6 +6336,8 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TYPE",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -6338,7 +6345,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"8db202526f87f7906d9608cff958a2817754e162",
+            "sha1sum":"bcabe63aca73ba629e4b741a82df0ba78d0e8b0d",
             "suffix":"pars-image2pipeline",
             "text_descr":"Image2Pipeline runtime parameters",
             "tpn":"nirspec_pars-image2pipeline.tpn",
