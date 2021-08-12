@@ -17,6 +17,7 @@
            "telescope" : "jwst"
     },
     "reftype" : "distortion",
+    "datamodl": "DistortionModel",
     "pedigree" : "dummy",
     "useafter" : "2015-01-25T12:00:00",
     "author" : "Todd Miller",

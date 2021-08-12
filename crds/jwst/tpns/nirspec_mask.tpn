@@ -10,4 +10,6 @@ include includes/nirspec_sci_array_striped.tpn
 
 include includes/nir_dq_def_array.tpn
 
+META.MODEL_TYPE  H  S  R  MaskModel
+
 DQ       A           X        R       (ndim(DQ_ARRAY,2))

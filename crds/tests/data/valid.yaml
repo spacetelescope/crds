@@ -13,6 +13,7 @@ meta:
         xsize: 1
         fastaxis: 1
 reftype: distortion
+datamodl: DistortionModel
 useafter: 2001-03-21T12:00:00
 pedigree: dummy
 author: Todd Miller

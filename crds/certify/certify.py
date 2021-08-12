@@ -8,6 +8,7 @@ import os
 from collections import defaultdict
 import gc
 import uuid
+import re
 
 import asdf
 import numpy as np
@@ -571,6 +572,9 @@ class FitsCertifier(ReferenceCertifier):
             return
         with data_file.fits_open_trapped(self.filename, checksum=bool(config.FITS_VERIFY_CHECKSUM)) as pfile:
             pfile.verify(option='exception') # validates all keywords
+            if "ASDF" in pfile:
+                self.log_and_track_error("FITS files must not include an ASDF extension")
+
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
 
@@ -673,9 +677,15 @@ class UnknownCertifier(Certifier):
 class AsdfCertifier(ReferenceCertifier):
     """Certifier for ADSF type,  invoke data models checks."""
 
+    _VERSION_RE = re.compile(f"^[0-9]+\.[0-9]+\.[0-9]+$")
+
     def certify(self):
         """Certify an unknown format file."""
         super(AsdfCertifier, self).certify()
+
+        with asdf.open(self.filename) as af:
+            if not self._VERSION_RE.match(af["asdf_library"]["version"]):
+                self.log_and_track_error("File written with dev version of asdf library:", af["asdf_library"]["version"])
 
         self.check_schema()
 

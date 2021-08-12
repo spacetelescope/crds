@@ -1,3 +1,5 @@
+META.MODEL_TYPE  H  S  R  IRS2Model
+
 READPATT H   X     R    (('IRS2')in(READPATT))
 
 IRS2   A     X     R    (is_table(IRS2_ARRAY))

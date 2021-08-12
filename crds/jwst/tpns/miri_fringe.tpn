@@ -5,6 +5,8 @@ include includes/miri_err_array.tpn
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
 
+META.MODEL_TYPE  H  S  R  FringeModel
+
 SCI    A     X    O   (ndim(SCI_ARRAY,2))
 ERR    A     X    O   (ndim(ERR_ARRAY,2))
 DQ     A     X    O   (ndim(DQ_ARRAY,2))
