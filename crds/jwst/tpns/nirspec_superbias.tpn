@@ -10,5 +10,6 @@ include includes/nirspec_dq_array.tpn
 
 include includes/nir_dq_def_array.tpn
 
+META.MODEL_TYPE  H  S  R  SuperBiasModel
 
 META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0

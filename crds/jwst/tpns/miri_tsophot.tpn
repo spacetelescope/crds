@@ -7,6 +7,8 @@
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
+META.MODEL_TYPE  H  S  R  TsoPhotModel
+
 META.EXPOSURE.TYPE          H   C   R   MIR_IMAGE
 META.VISIT.TSOVISIT         H   C   R   TRUE,FALSE,ANY,N/A
 

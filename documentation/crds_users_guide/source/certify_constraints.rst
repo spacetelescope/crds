@@ -369,7 +369,8 @@ keyword.
 The datatype is written as a single character with these translations::
 
  datatypes = {
-    "C" : "CHARACTER",
+    "C" : "CHARACTER",      #  ignores case differences
+    "S" : "CASE_SENSITIVE_CHARACTER",
     "I" : "INTEGER",
     "L" : "LOGICAL",
     "R" : "REAL",           #  float32 value(s)

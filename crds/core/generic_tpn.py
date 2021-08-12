@@ -89,6 +89,7 @@ class TpnInfo(_TpnInfo):
 
     datatypes = {
         "C" : "CHARACTER",
+        "S" : "CASE_SENSITIVE_CHARACTER",
         "I" : "INTEGER",
         "L" : "LOGICAL",
         "R" : "REAL",
@@ -158,7 +159,7 @@ def load_tpn(fname):
         else:
             name, keytype, datatype, presence, values = items
             values = _remove_quotes(values.split(",") if datatype != "X" else [values])
-            values = [str(v) if is_expression(v) else str(v.upper()) for v in values]
+            values = [str(v) if is_expression(v) or datatype == "S" else str(v.upper()) for v in values]
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 

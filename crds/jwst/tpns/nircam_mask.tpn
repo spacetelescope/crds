@@ -1,2 +1,3 @@
 include includes/nir_mask.tpn
 
+META.MODEL_TYPE  H  S  R  MaskModel

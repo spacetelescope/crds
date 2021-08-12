@@ -1,4 +1,6 @@
 # MIRI RSCD
+META.MODEL_TYPE  H  S  R  RSCDModel
+
 REFTYPE    H      C      R      RSCD
 
 RSCD_GROUP_SKIP  A     X      R   (is_table(RSCD_GROUP_SKIP_ARRAY))

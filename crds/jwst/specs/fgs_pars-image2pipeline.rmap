@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_pars-image2pipeline.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.VISIT.TSOVISIT',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'f710851af2c379507559b1ac230ffcf8d6290ea0',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.VISIT.TYPE', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '3dcc2b3b50da237edb18bfe3e47ea08ddb733815',
     'suffix' : 'pars-image2pipeline',
     'text_descr' : 'Image2Pipeline runtime parameters',
 }

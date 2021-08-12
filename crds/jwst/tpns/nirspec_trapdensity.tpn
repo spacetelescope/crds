@@ -4,3 +4,4 @@ replace NIR_FILTER True
 
 include includes/nirspec_sci_array_refpix.tpn
 
+META.MODEL_TYPE  H  S  R  TrapDensityModel

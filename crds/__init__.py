@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.0.4"   # XXXX  see also ../setup.cfg
-__rationale__ = "Fix failing unit test"
+__version__ = "11.1.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "11.1.0"
 
 __all__ = [
     "getrecommendations",
