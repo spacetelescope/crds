@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.1.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "11.1.0"
+__version__ = "11.3.1"   # XXXX  see also ../setup.cfg
+__rationale__ = "roman 0.3"
 
 __all__ = [
     "getrecommendations",
