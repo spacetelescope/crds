@@ -812,7 +812,7 @@ def certify_AsdfCertify_opaque_name():
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - ERROR -  data/opaque_asd.tmp Validation error : JWST Data Models: Unrecognized file type for: data/opaque_asd.tmp
+    CRDS - ERROR -  data/opaque_asd.tmp Validation error : Unrecognized file type for: data/opaque_asd.tmp
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -849,7 +849,7 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - WARNING -  ValidationWarning : stdatamodels.validate ...
+    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : While validating meta.instrument.detector...
     >>> test_config.cleanup(old_state)
     """
 
