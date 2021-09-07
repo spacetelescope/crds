@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.3.1"   # XXXX  see also ../setup.cfg
-__rationale__ = "roman 0.3"
+__version__ = "11.3.2"   # XXXX  see also ../setup.cfg
+__rationale__ = "Update NIRISS distortion parkeys"
 
 __all__ = [
     "getrecommendations",
