@@ -80,19 +80,12 @@ def get_data_model_flat_dict(filepath):
     """Get the header from `filepath` using the jwst data model."""
     datamodels = get_datamodels()
     log.info("Checking JWST datamodels.")
-    # with log.error_on_exception("JWST Data Model (jwst.datamodels)"):
     try:
-        with datamodels.open(filepath) as d_model:
-            flat_dict = d_model.to_flat_dict(include_arrays=False)
-            # stdatamodels 0.1.0 has a bug that causes arrays to still
-            # be returned:
-            flat_dict = {
-                k: v for k, v in flat_dict.items()
-                if not isinstance(v, NDArrayType)
-            }
+        with datamodels.open(filepath, cast_fits_arrays=False, validate_arrays=True, strict_validation=True) as d_model:
+            d_model.validate()
+            return d_model.to_flat_dict(include_arrays=False)
     except Exception as exc:
-        raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'")) from exc
-    return flat_dict
+        raise exceptions.ValidationError(str(exc)) from exc
 
 # =======================================================================
 
