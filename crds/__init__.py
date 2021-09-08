@@ -10,8 +10,8 @@ warnings.filterwarnings(
 
 # ============================================================================
 
-__version__ = "11.3.2"   # XXXX  see also ../setup.cfg
-__rationale__ = "Update NIRISS distortion parkeys"
+__version__ = "11.4.0"   # XXXX  see also ../setup.cfg
+__rationale__ = "Enhanced validation for JWST references"
 
 __all__ = [
     "getrecommendations",
