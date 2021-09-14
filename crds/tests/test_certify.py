@@ -849,7 +849,7 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - ERROR -  data/niriss_ref_photom_bad.fits Validation error : While validating meta.instrument.detector...
+    CRDS - ERROR -  Validation failure: While validating meta.instrument.detector the following error occurred: ...
     >>> test_config.cleanup(old_state)
     """
 
