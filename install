@@ -40,6 +40,10 @@ rm -f install.log
 
 st=0
 
+echo "Initial install to create _version.py..."
+pip install -e .
+st=$st$?
+
 # CRDS type specifications are configured in code as individual files in the
 # project "specs" subdirectories.  This step creates combined versions of the
 # specs files for faster loading at runtime by first removing the existing
