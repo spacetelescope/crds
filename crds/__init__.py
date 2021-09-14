@@ -5,13 +5,12 @@ import importlib
 
 import warnings
 
+__rationale__ = "The __rationale__ variable is no longer maintained and will be removed in a future release."
+
 warnings.filterwarnings(
     "ignore", ".*found in sys.modules after import of package.*")
 
 # ============================================================================
-
-__version__ = "11.4.0"   # XXXX  see also ../setup.cfg
-__rationale__ = "Enhanced validation for JWST references"
 
 __all__ = [
     "getrecommendations",
@@ -46,6 +45,8 @@ from crds.client import api
 from crds.client import get_default_context
 
 from crds.bestrefs import assign_bestrefs
+
+from ._version import version as __version__
 
 # ============================================================================
 

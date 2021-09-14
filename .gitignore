@@ -11,3 +11,5 @@ documentation/crds_users_guide/*.tar.gz
 
 # Development
 crds-dev.code-workspace
+
+crds/_version.py

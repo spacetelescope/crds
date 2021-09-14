@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""
+Set the changelog release date of the specified version to today.
+"""
+import argparse
+from datetime import date
+from pathlib import Path
+import re
+
+
+UNRELEASED_VERSION_RE = re.compile(r"\A(?P<version>[0-9]+\.[0-9]+\.[0-9]+) \(unreleased\)$", re.MULTILINE)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser("set_release_date", "set changelog release date for the specified version")
+
+    parser.add_argument("version", help="version number")
+
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+
+    changelog_path = Path(__file__).absolute().parent / "CHANGES.rst"
+    content = changelog_path.read_text()
+
+    unreleased_version_re = re.compile(r"\A(?P<version>" + re.escape(args.version) + r") \(unreleased\)$", re.MULTILINE)
+
+    match = unreleased_version_re.match(content)
+    if not match:
+        raise RuntimeError("cannot find matching unreleased version in CHANGES.rst")
+
+    version = match.group("version")
+    new_heading = f"{version} ({date.today().isoformat()})"
+    new_content = unreleased_version_re.sub(new_heading, content)
+
+    with changelog_path.open("w") as f:
+        f.write(new_content)
+
+if __name__ == "__main__":
+    main()
