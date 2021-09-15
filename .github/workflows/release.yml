@@ -49,15 +49,3 @@ jobs:
           body: ${{ github.event.inputs.description }}
           draft: false
           prerelease: false
-
-      - name: Create next changelog release section
-        run: |
-          release_scripts/insert_next_release > version
-          echo "::set-output name=version::$(cat version)"
-        id: insert_next_release
-
-      - name: Commit changelog
-        run: |
-          git add CHANGES.rst
-          git commit -m "Create ${{ steps.insert_next_release.outputs.version }} changelog section"
-          git push origin HEAD
