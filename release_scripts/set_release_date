@@ -22,7 +22,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    changelog_path = Path(__file__).absolute().parent / "CHANGES.rst"
+    changelog_path = Path(__file__).absolute().parent.parent / "CHANGES.rst"
     content = changelog_path.read_text()
 
     unreleased_version_re = re.compile(r"\A(?P<version>" + re.escape(args.version) + r") \(unreleased\)$", re.MULTILINE)
