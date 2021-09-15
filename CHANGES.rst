@@ -1,4 +1,4 @@
-11.4.1 (unreleased)
+11.4.1 (2021-09-15)
 ===================
 
 - Update JWST certifier to show all datamodels validation failures
