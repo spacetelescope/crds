@@ -77,13 +77,14 @@ SUBMISSION_DEPS = ["requests", "lxml", "parsley"]
 
 setup(name="crds",
       provides=["crds"],
-      version = '11.4.0',
+      use_scm_version={"write_to": "crds/_version.py"},
       description="Calibration Reference Data System,  HST/JWST/Roman reference file management",
       long_description=open('README.rst').read(),
       author="STScI CRDS s/w developers",
       url="https://hst-crds.stsci.edu",
       license="BSD",
       python_requires=">=3.7",
+      setup_requires=["setuptools_scm"],
       install_requires=["astropy", "numpy", "filelock", "asdf"] + SUBMISSION_DEPS,
       extras_require={
           "jwst": ["jwst"],

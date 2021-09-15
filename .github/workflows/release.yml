@@ -1,0 +1,51 @@
+name: Tag and release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (must have matching CHANGES.rst entry)
+        required: true
+
+      description:
+        description: Release description (used as tag message and GitHub release body)
+        required: true
+
+jobs:
+  release:
+    name: Tag and release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "<>"
+
+      - name: Set changelog release date
+        run: |
+          release_scripts/set_release_date ${{ github.event.inputs.version }}
+
+      - name: Commit changelog and tag release
+        run: |
+          git add CHANGES.rst
+          git commit -m "Set ${{ github.event.inputs.version }} release date"
+          git push origin HEAD
+          git tag -a ${{ github.event.inputs.version }} -m "${{ github.event.inputs.description }}"
+          git push origin ${{ github.event.inputs.version }}
+
+      - name: Create GitHub release (triggers publish-to-pypi workflow)
+        uses: zendesk/action-create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: ${{ github.event.inputs.version }}
+          body: ${{ github.event.inputs.description }}
+          draft: false
+          prerelease: false
