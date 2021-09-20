@@ -1,4 +1,4 @@
-11.4.2 (unreleased)
+11.4.2 (2021-09-20)
 ===================
 
 - Update STIS and ACS IMPHTTAB validations to permit additional
