@@ -1,3 +1,9 @@
+11.4.2 (unreleased)
+===================
+
+- Update STIS and ACS IMPHTTAB validations to permit additional
+  values in the DATACOL column. [#844]
+
 11.4.1 (2021-09-15)
 ===================
 
