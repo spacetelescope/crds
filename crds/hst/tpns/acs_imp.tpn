@@ -23,7 +23,7 @@ USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R
 OBSMODE             C        C         R
-DATACOL             C        C         R
+DATACOL             C        C         R    PHOTBW,PHOTBW1,PHOTFLAM,PHOTFLAM1,PHOTPLAM,PHOTPLAM1,PHTFLAM1,PHTFLAM11,PHTFLAM2,PHTFLAM21
 PHOTFLAM            C        D         R
 PHOTPLAM            C        D         O
 PHOTBW              C        D         O
