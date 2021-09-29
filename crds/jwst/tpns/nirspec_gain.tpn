@@ -6,7 +6,8 @@ replace YDIM_MAX 3200
 
 include includes/nirspec_sci_array_striped.tpn
 
-META.MODEL_TYPE  H  S  R  GainModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  GainModel
 
 SCI    A    X    R   (ndim(SCI_ARRAY,2))
 

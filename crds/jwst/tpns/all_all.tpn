@@ -16,6 +16,8 @@ META.AUTHOR     H   C   R
 META.DESCRIPTION H   C  R
 META.HISTORY     H   C  R
 
+META.MODEL_TYPE  H   C  (warning(not(META_REFTYPE.startswith('pars-'))))
+
 # Make EXP_TYPE available in headers even if only UNDEFINED
 # Keyword cross-strapping doesn't work for UNDEFINED values...
 EXP_TYPE               H    C   O

@@ -3,4 +3,5 @@ include includes/miri_err_array.tpn
 include includes/miri_dq_array.tpn
 include includes/miri_dq_def_array.tpn
 
-META.MODEL_TYPE  H  S  R  LastFrameModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  LastFrameModel

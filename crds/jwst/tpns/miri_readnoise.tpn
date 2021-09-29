@@ -2,7 +2,8 @@ include includes/miri_subarray_refpix.tpn
 
 include includes/miri_sci_array_refpix.tpn
 
-META.MODEL_TYPE  H  S  R  ReadnoiseModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  ReadnoiseModel
 
 BUNIT    H   C    W   DN,ADU
 

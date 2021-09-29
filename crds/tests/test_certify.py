@@ -812,7 +812,7 @@ def certify_AsdfCertify_opaque_name():
     CRDS - INFO -  Certifying 'data/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
     CRDS - INFO -  Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - ERROR -  data/opaque_asd.tmp Validation error : Unrecognized file type for: data/opaque_asd.tmp
+    CRDS - ERROR -  data/opaque_asd.tmp Validation error : JWST Data Models: Unrecognized file type for: data/opaque_asd.tmp
     >>> test_config.cleanup(old_state)
     >>> doctest.ELLIPSIS_MARKER = '...'
     """
@@ -849,7 +849,7 @@ def certify_jwst_bad_fits():
     CRDS - INFO -  Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
     CRDS - WARNING -  No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
     CRDS - INFO -  Checking JWST datamodels.
-    CRDS - ERROR -  Validation failure: While validating meta.instrument.detector the following error occurred: ...
+    CRDS - WARNING -  ValidationWarning : stdatamodels.validate : While validating meta.instrument.detector...
     >>> test_config.cleanup(old_state)
     """
 
@@ -995,7 +995,6 @@ def load_nirspec_staturation_tpn_lines():
     DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))
     DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))
     DQ_DEF       A           X         O             (has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))
-    META.MODEL_TYPE  H  S  R  SaturationModel
     SCI   A   X    R  (ndim(SCI_ARRAY,2))
     DQ    A   X    O  (ndim(DQ_ARRAY,2))
     META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
@@ -1058,7 +1057,6 @@ def load_nirspec_staturation_tpn():
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'VALUE','INT'))"),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'NAME','STRING'))"),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_column_type(DQ_DEF_ARRAY,'DESCRIPTION','STRING'))"),
-     ('META.MODEL_TYPE', 'HEADER', 'CASE_SENSITIVE_CHARACTER', 'REQUIRED', values=('SaturationModel',)),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', 'REQUIRED', expression='(ndim(SCI_ARRAY,2))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
      ('META.EXPOSURE.GAIN_FACTOR', 'HEADER', 'REAL', 'WARN', values=('1.0:10.0',))]
@@ -1099,7 +1097,6 @@ def load_miri_mask_tpn_lines():
     DQ       A           X         S             (DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
     DQ       A           X         S             (1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)
     DQ       A           X         S             (1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)
-    META.MODEL_TYPE  H  S  R  MaskModel
     DQ       A           X         O   (ndim(DQ_ARRAY,2))
     DQ_DEF       A           X         O             (is_table(DQ_DEF_ARRAY))
     DQ_DEF       A           X         O             (has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))
@@ -1142,7 +1139,6 @@ def load_miri_mask_tpn():
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(DQ_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART+DQ_ARRAY.SHAPE[-2]-1<=1024)'),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_XSTART+DQ_ARRAY.SHAPE[-1]-1<=1032)'),
-     ('META.MODEL_TYPE', 'HEADER', 'CASE_SENSITIVE_CHARACTER', 'REQUIRED', values=('MaskModel',)),
      ('DQ', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(ndim(DQ_ARRAY,2))'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression='(is_table(DQ_DEF_ARRAY))'),
      ('DQ_DEF', 'ARRAY_FORMAT', 'EXPRESSION', 'OPTIONAL', expression="(has_columns(DQ_DEF_ARRAY,['BIT','VALUE','NAME','DESCRIPTION']))"),
@@ -1400,13 +1396,13 @@ def test_asdf_library_version_fail():
     CRDS - INFO -  ########################################
     CRDS - INFO -  Certifying 'data/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
     CRDS - INFO -  Setting 'META.EXPOSURE.TYPE [EXP_TYPE]' = None to value of 'META.EXPOSURE.P_EXPTYPE [P_EXPTYP]' = 'FGS_IMAGE|FGS_FOCUS|FGS_INTFLAT|FGS_SKYFLAT|'
-    CRDS - ERROR -  instrument='FGS' type='DISTORTION' data='data/jwst_fgs_distortion_bad_asdf_version.asdf' ::  File written with dev version of asdf library: 2.0.0.dev1213
+    CRDS - WARNING -  File written with dev version of asdf library: 2.0.0.dev1213
     CRDS - INFO -  Checking JWST datamodels.
     CRDS - INFO -  ########################################
-    CRDS - INFO -  1 errors
-    CRDS - INFO -  0 warnings
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  1 warnings
     CRDS - INFO -  5 infos
-    1
+    0
     >>> test_config.cleanup(old_state)
     """
 

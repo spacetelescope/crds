@@ -7,7 +7,8 @@ replace   NIR_FILTER   ((EXP_TYPE)in["NRS_MSASPEC"])
 # include includes/nir_dq_array.tpn
 # include includes/nir_dq_def_array.tpn
 
-META.MODEL_TYPE  H  S  R  NirspecFlatModel,NirspecQuadFlatModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NirspecFlatModel,NirspecQuadFlatModel
 
 #
 # Currently crds.certify doesn't have the capability of verifying something this complicated

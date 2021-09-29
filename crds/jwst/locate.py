@@ -81,28 +81,13 @@ def get_data_model_flat_dict(filepath):
     """Get the header from `filepath` using the jwst data model."""
     datamodels = get_datamodels()
     log.info("Checking JWST datamodels.")
+    # with log.error_on_exception("JWST Data Model (jwst.datamodels)"):
     try:
-        with warnings.catch_warnings(record=True) as captured_warnings:
-            with datamodels.open(filepath, cast_fits_arrays=False, validate_arrays=True) as d_model:
-                d_model.validate()
-
+        with datamodels.open(filepath) as d_model:
             flat_dict = d_model.to_flat_dict(include_arrays=False)
-
-        for captured_warning in captured_warnings:
-            if captured_warning.category == ValidationWarning:
-                log.error(f"Validation failure: {captured_warning.message}")
-            else:
-                log.warning(warnings.formatwarning(
-                    captured_warning.message,
-                    captured_warning.category,
-                    captured_warning.filename,
-                    captured_warning.lineno,
-                    captured_warning.line,
-                ))
-
-        return flat_dict
     except Exception as exc:
-        raise exceptions.ValidationError(str(exc)) from exc
+        raise exceptions.ValidationError("JWST Data Models:", str(exc).replace("u'","'")) from exc
+    return flat_dict
 
 # =======================================================================
 

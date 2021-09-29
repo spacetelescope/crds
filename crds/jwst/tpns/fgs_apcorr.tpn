@@ -8,7 +8,8 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 
-META.MODEL_TYPE  H  S  R  FgsImgApcorrModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  FgsImgApcorrModel
 
 # FILTER                     C   C   R
 # PUPIL                      C   C   R

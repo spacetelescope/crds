@@ -5,4 +5,5 @@ include includes/nir_err_array.tpn
 include includes/nir_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
-META.MODEL_TYPE  H  S  R  FlatModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  FlatModel

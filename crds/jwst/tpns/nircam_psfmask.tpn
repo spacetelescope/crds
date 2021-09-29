@@ -6,7 +6,8 @@ replace SCI_TYPE 'FLOAT'
 
 include includes/nir_sci_array_both.tpn
 
-META.MODEL_TYPE  H  S  R  PsfMaskModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  PsfMaskModel
 
 SCI       A           X         R            (ndim(SCI_ARRAY,2))
 

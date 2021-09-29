@@ -1,3 +1,4 @@
 include includes/nir_mask.tpn
 
-META.MODEL_TYPE  H  S  R  MaskModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  MaskModel

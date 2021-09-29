@@ -2,7 +2,8 @@ replace SCI COEFFS
 
 include includes/miri_subarray_refpix.tpn
 
-META.MODEL_TYPE  H  S  R  LinearityModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  LinearityModel
 
 COEFFS       A           X         R            (has_type(COEFFS_ARRAY,'FLOAT'))
 COEFFS       A           X         R            (is_image(COEFFS_ARRAY))
