@@ -1,1 +1,2 @@
-META.MODEL_TYPE  H  S  R  NrsFsPhotomModel,NrsMosPhotomModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NrsFsPhotomModel,NrsMosPhotomModel

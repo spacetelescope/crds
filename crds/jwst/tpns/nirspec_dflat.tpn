@@ -7,7 +7,8 @@ include includes/nirspec_err_array.tpn
 include includes/nirspec_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
-META.MODEL_TYPE  H  S  R  NirspecFlatModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NirspecFlatModel
 
 SCI          A           X         R             (ndim(SCI_ARRAY,3))
 # ERR          A           X         R             (ndim(ERR_ARRAY,3))

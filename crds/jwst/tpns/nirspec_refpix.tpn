@@ -1,4 +1,5 @@
-META.MODEL_TYPE  H  S  R  IRS2Model
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  IRS2Model
 
 READPATT H   X     R    (('IRS2')in(READPATT))
 

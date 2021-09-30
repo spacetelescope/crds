@@ -3,14 +3,14 @@
 export CRDS_TEST_ROOT=$1
 
 (cd $CRDS_TEST_ROOT; rm -rf crds-cache-test;  git clone https://github.com/spacetelescope/crds-cache-test.git;)
-(cd $CRDS_TEST_ROOT; rm -rf crds-cache-default-test; curl https://hst-crds.stsci.edu/static/crds-cache-default-test.tar.bz2 -o crds-cache-default-test.tar.bz2; tar jxf crds-cache-default-test.tar.bz2; rm crds-cache-default-test.tar.bz2)
+(cd $CRDS_TEST_ROOT; rm -rf crds-cache-default-test; mkdir crds-cache-default-test;)
 
 export CRDS_PATH=$CRDS_TEST_ROOT/crds-cache-default-test
 export CRDS_TESTING_CACHE=$CRDS_TEST_ROOT/crds-cache-test
 
 export CRDS_SERVER_URL=https://hst-crds.stsci.edu
 python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
-python -m crds.sync --files l2d0959cj_pfl.fits n7p1032ao_apt.fits q5417413o_pct.fits xaf1429el_wcp.fits y2r1559to_apt.fits y2r16006o_pct.fits y951738kl_hv.fits yas2005el_hv.fits p7d1548qj_idc.fits 3241637sm_tmt.fits --stats --log-time
+python -m crds.sync --files l2d0959cj_pfl.fits n7p1032ao_apt.fits q5417413o_pct.fits xaf1429el_wcp.fits y2r1559to_apt.fits y2r16006o_pct.fits y951738kl_hv.fits yas2005el_hv.fits p7d1548qj_idc.fits 3241637sm_tmt.fits 41g16069m_tmg.fits 43h1909cm_tmc.fits 43h1240om_tmc.fits --stats --log-time
 python -m crds.sync --contexts hst_cos.imap --fetch-references --log-time --stats
 
 export CRDS_SERVER_URL=https://jwst-crds.stsci.edu

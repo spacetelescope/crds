@@ -1,3 +1,4 @@
 # include includes/miri_subarray_refpix.tpn
 
-META.MODEL_TYPE  H  S  R  DistortionModel,DistortionMRSModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  DistortionModel,DistortionMRSModel

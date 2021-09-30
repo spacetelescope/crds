@@ -4,4 +4,5 @@ replace NIR_FILTER (True)
 
 include includes/nir_sci_array_refpix.tpn
 
-META.MODEL_TYPE  H  S  R  PersistenceSatModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  PersistenceSatModel

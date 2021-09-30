@@ -685,7 +685,7 @@ class AsdfCertifier(ReferenceCertifier):
 
         with asdf.open(self.filename) as af:
             if not self._VERSION_RE.match(af["asdf_library"]["version"]):
-                self.log_and_track_error("File written with dev version of asdf library:", af["asdf_library"]["version"])
+                log.warning("File written with dev version of asdf library:", af["asdf_library"]["version"])
 
         self.check_schema()
 

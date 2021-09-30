@@ -7,7 +7,8 @@ include includes/nirspec_err_array.tpn
 include includes/nirspec_dq_array.tpn
 include includes/nir_dq_def_array.tpn
 
-META.MODEL_TYPE  H  S  R  NirspecFlatModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NirspecFlatModel
 
 WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (is_table(WAVELENGTH_ARRAY))
 WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (has_columns(WAVELENGTH_ARRAY,['WAVELENGTH']))

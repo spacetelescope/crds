@@ -5,7 +5,8 @@ replace YDIM_MAX 3200
 
 include includes/nirspec_sci_array_striped.tpn
 
-META.MODEL_TYPE  H  S  R  ReadnoiseModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  ReadnoiseModel
 
 BUNIT    H   C    W   DN,ADU
 

@@ -1,4 +1,5 @@
-META.MODEL_TYPE  H  S  R  BarshadowModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  BarshadowModel
 
 EXP_TYPE   H      C      R     NRS_MSASPEC
 

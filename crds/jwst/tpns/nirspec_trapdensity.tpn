@@ -4,4 +4,5 @@ replace NIR_FILTER True
 
 include includes/nirspec_sci_array_refpix.tpn
 
-META.MODEL_TYPE  H  S  R  TrapDensityModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  TrapDensityModel

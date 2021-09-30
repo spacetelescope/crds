@@ -3,7 +3,8 @@
 #----------------------------------------------------------
 include includes/apcorr.tpn
 
-META.MODEL_TYPE  H  S  R  NisImgApcorrModel,NisWfssApcorrModel
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NisImgApcorrModel,NisWfssApcorrModel
 
 FILTER                     C   C   R   CLEAR,F090W,F115W,F140M,F150W,F200W,\
                                        F277W,F356W,F380M,F430M,F444W,F480M,\

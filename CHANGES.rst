@@ -1,3 +1,8 @@
+11.4.3 (unreleased)
+===================
+
+- Change JWST validation errors into warnings. [#845]
+
 11.4.2 (2021-09-20)
 ===================
 
