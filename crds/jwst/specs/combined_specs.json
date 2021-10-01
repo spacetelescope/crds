@@ -3227,6 +3227,32 @@
             "tpn":"miri_reset.tpn",
             "unique_rowkeys":null
         },
+        "residfringe":{
+            "derived_from":"Initial spec CRDS-496",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"residfringe",
+            "filetype":"RESIDFRINGE",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_residfringe_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"miri_residfringe.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"423896c0380fafa0075d8490ba0d26e542dc46f5",
+            "suffix":"residfringe",
+            "text_descr":"Residual Fringe",
+            "tpn":"miri_residfringe.tpn",
+            "unique_rowkeys":null
+        },
         "resol":{
             "classes":[
                 "Match",
