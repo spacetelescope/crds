@@ -1,15 +1,15 @@
 header = {
     'derived_from' : 'Initial spec CRDS-496',
     'file_ext' : '.fits',
-    'filekind' : 'residfringe',
-    'filetype' : 'RESIDFRINGE',
+    'filekind' : 'fringefreq',
+    'filetype' : 'FRINGEFREQ',
     'instrument' : 'MIRI',
     'mapping' : 'REFERENCE',
-    'name' : 'miri_residfringe.rmap',
+    'name' : 'miri_fringefreq.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '423896c0380fafa0075d8490ba0d26e542dc46f5',
-    'suffix' : 'residfringe',
+    'sha1sum' : 'db0a80ee8aba8cddd9dae9e7871073e2bb7ec354',
+    'suffix' : 'fringefreq',
     'text_descr' : 'Residual Fringe',
 }
 

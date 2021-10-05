@@ -1135,6 +1135,32 @@
             "tpn":"miri_fringe.tpn",
             "unique_rowkeys":null
         },
+        "fringefreq":{
+            "derived_from":"Initial spec CRDS-496",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"fringefreq",
+            "filetype":"FRINGEFREQ",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_fringefreq_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"miri_fringefreq.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"db0a80ee8aba8cddd9dae9e7871073e2bb7ec354",
+            "suffix":"fringefreq",
+            "text_descr":"Residual Fringe",
+            "tpn":"miri_fringefreq.tpn",
+            "unique_rowkeys":null
+        },
         "gain":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
             "extra_keys":null,
@@ -3225,32 +3251,6 @@
             "suffix":"reset",
             "text_descr":"Reset Correction",
             "tpn":"miri_reset.tpn",
-            "unique_rowkeys":null
-        },
-        "residfringe":{
-            "derived_from":"Initial spec CRDS-496",
-            "extra_keys":null,
-            "file_ext":".fits",
-            "filekind":"residfringe",
-            "filetype":"RESIDFRINGE",
-            "instrument":"MIRI",
-            "ld_tpn":"miri_residfringe_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"miri_residfringe.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.INSTRUMENT.DETECTOR"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
-                ]
-            ],
-            "sha1sum":"423896c0380fafa0075d8490ba0d26e542dc46f5",
-            "suffix":"residfringe",
-            "text_descr":"Residual Fringe",
-            "tpn":"miri_residfringe.tpn",
             "unique_rowkeys":null
         },
         "resol":{
