@@ -432,7 +432,7 @@ class TestBestrefs(test_config.CRDSTestCase):
         return now.isoformat().split("T")[0]
 
     def test_bestrefs_affected_datasets(self):
-        self.run_script(f"crds.bestrefs --affected-datasets --old-context hst_0543.pmap --new-context hst_0544.pmap "
+        self.run_script(f"crds.bestrefs --affected-datasets --old-context hst_0943.pmap --new-context hst_0947.pmap "
                         f"--datasets-since {self.get_10_days_ago()}",
                         expected_errs=0)
 
