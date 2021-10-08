@@ -1,0 +1,29 @@
+header = {
+    'derived_from' : 'Initial spec CRDS-496',
+    'file_ext' : '.fits',
+    'filekind' : 'fringefreq',
+    'filetype' : 'FRINGEFREQ',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'miri_fringefreq.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'db0a80ee8aba8cddd9dae9e7871073e2bb7ec354',
+    'suffix' : 'fringefreq',
+    'text_descr' : 'Residual Fringe',
+}
+
+comment = """
+The MRS residual fringe reference files contain tables of the
+wavelength-dependent allowable frequencies, amplitudes, SNR, and other
+parameters to use when applying the MRS residual fringe correction step. They
+are split into FITS format reference files for each of the two MIRI MRS
+detectors, each of which contains an extension pertaining to the SHORT, MEDIUM,
+and LONG grating settings (RFC_FREQ_SHORT, RFC_FREQ_MEDIUM, RFC_FREQ_LONG) and
+the maximum allowable amplitudes (MAX_AMP).
+
+Originally requested and discussed in JIRA CRDS-496
+"""
+
+selector = Match({
+})
