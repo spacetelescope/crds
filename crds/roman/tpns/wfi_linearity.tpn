@@ -1,0 +1,12 @@
+# Contraints defined in this file apply the WFI instrument's LINEARITY reference type.
+
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column|Expression)
+# datatype = (Integer|Real|Logical|Double|Character|Expression)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+ROMAN.META.INSTRUMENT.DETECTOR      H   C   R
