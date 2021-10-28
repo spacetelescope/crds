@@ -1,3 +1,5 @@
+- Update reftype definition for readnoise [#851]
+
 - Add new reftype fringefreq [#846]
 
 11.4.3 (2021-09-30)
