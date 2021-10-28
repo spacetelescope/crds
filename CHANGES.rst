@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 - Add new reftype saturation [#847]
+=======
+- Add new reftype saturation [#852]
+>>>>>>> e2b34418b0c7e6f8852cf2e04ab9946839db786f
 
 - Add new reftype fringefreq [#846]
 
