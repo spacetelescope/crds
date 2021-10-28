@@ -9,8 +9,8 @@
 #
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
-ROMAN.META.INSTRUMENT.NAME    H   C   R
-
 ROMAN.META.INSTRUMENT.DETECTOR      H   C   R
 
 ROMAN.META.EXPOSURE.TYPE  H   C   R
+
+ROMAN.META.OBSERVATION.MA_TABLE_NAME    H   C   R
