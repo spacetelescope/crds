@@ -1,3 +1,5 @@
+- Add new reftype saturation [#847]
+
 - Add new reftype fringefreq [#846]
 
 11.4.3 (2021-09-30)
