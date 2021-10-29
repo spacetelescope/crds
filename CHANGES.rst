@@ -1,4 +1,6 @@
-- Add new reftype saturation [#847]
+- Added new reftype saturation            [#847]
+- Changed dark reftype definition         [#852]
+- Changed readnoise reftype definition    [#851]
 
 - Add new reftype fringefreq [#846]
 

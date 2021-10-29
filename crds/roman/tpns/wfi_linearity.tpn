@@ -1,4 +1,4 @@
-# Contraints defined in this file apply the WFI instrument's READNOISE reference type.
+# Contraints defined in this file apply the WFI instrument's LINEARITY reference type.
 
 # Template file used by certify to check reference files
 # Some fields may be abbreviated to their first character:
@@ -10,5 +10,3 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 ROMAN.META.INSTRUMENT.DETECTOR      H   C   R
-
-ROMAN.META.EXPOSURE.TYPE            H   C   R
