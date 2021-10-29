@@ -1,3 +1,4 @@
+- Added new reftype saturation            [#847]
 - Changed dark reftype definition         [#852]
 - Changed readnoise reftype definition    [#851]
 
