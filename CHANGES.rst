@@ -1,4 +1,5 @@
-- Update reftype definition for readnoise [#851]
+- Changed dark reftype definition         [#852]
+- Changed readnoise reftype definition    [#851]
 
 - Add new reftype fringefreq [#846]
 
