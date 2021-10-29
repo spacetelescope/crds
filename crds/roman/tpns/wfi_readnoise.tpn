@@ -10,3 +10,5 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 ROMAN.META.INSTRUMENT.DETECTOR      H   C   R
+
+ROMAN.META.EXPOSURE.TYPE            H   C   R

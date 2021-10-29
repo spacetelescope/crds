@@ -196,14 +196,15 @@
             "observatory":"ROMAN",
             "parkey":[
                 [
-                    "ROMAN.META.INSTRUMENT.DETECTOR"
+                    "ROMAN.META.INSTRUMENT.DETECTOR",
+                    "ROMAN.META.EXPOSURE.TYPE"
                 ],
                 [
                     "ROMAN.META.OBSERVATION.DATE",
                     "ROMAN.META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"69a4f9968a36859403a2233936548306c9a8854f",
+            "sha1sum":"6a57a8c925d4bb57bf534fc9795f95d0a7ad6d47",
             "suffix":"readnoise",
             "text_descr":"Read Noise",
             "tpn":"wfi_readnoise.tpn",
