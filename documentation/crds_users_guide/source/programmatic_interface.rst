@@ -60,9 +60,20 @@ To use this functionality, import the Submission class from crds::
 The primary object that a user interacts with is a Submission
 object.  This can be instantiated using the following syntax::
 
-    s = Submission('jwst', 'ops')
+    s = Submission(observatory, server, context=None)
 
-The Submission object has several methods, not least a .help()
+where
+
+    - **observatory**: String of the observatory to modify. Examples: 'jwst', 'hst', or 'roman'
+    - **server**: The server string to be delivered to. Examples: 'ops', 'test', or 'dev'
+    - **context**: The derive-from context. If None, the current edit context is used. Examples: 'jwst_775.pmap'
+
+For example, to instantiate a JWST submission to be delivered to the OPS server deriving from the edit context, use::
+
+    s = Submission('jwst', 'ops')
+    
+
+The Submission object has several methods, not the least a ``.help()``
 method that gives the full information on all the fields to be filled::
 
     s.help()
