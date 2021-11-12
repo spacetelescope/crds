@@ -1,5 +1,15 @@
+11.5.1 (Unreleased)
+===================
+
+- Update documentation for the Submission API [#853]
+
+11.5.0 (2021-10-28)
+===================
+
 - Added new reftype saturation            [#847]
+
 - Changed dark reftype definition         [#852]
+
 - Changed readnoise reftype definition    [#851]
 
 - Add new reftype fringefreq [#846]
