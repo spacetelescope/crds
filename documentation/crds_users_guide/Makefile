@@ -176,7 +176,7 @@ tarhtml: html
 	rm -rf users_guide
 
 serverhtml: tarhtml
-	mv users_guide.tar.gz ../../../CRDS_server/crds_server/static
-	cd ../../../CRDS_server/crds_server/static; \
+	mv users_guide.tar.gz ../../../crds_server/static
+	cd ../../../crds_server/static; \
 	tar zxf users_guide.tar.gz; \
 	rm users_guide.tar.gz
