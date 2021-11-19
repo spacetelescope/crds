@@ -1,3 +1,8 @@
+11.5.2 (Unreleased)
+===================
+
+Trim translations to be specific to roman [#854]
+
 11.5.1 (Unreleased)
 ===================
 
