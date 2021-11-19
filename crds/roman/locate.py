@@ -484,28 +484,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
     # Basic common pattern translations
     translations = {
-            "ROMAN.META.EXPOSURE.P_EXPTYPE" : "ROMAN.META.EXPOSURE.TYPE",
-
-            "ROMAN.META.INSTRUMENT.P_BAND" : "ROMAN.META.INSTRUMENT.BAND",
-
-            "ROMAN.META.INSTRUMENT.P_DETECTOR"  : "ROMAN.META.INSTRUMENT.DETECTOR",
-
-            "ROMAN.META.INSTRUMENT.P_CHANNEL" : "ROMAN.META.INSTRUMENT.CHANNEL",
-
-            "ROMAN.META.INSTRUMENT.P_FILTER" : "ROMAN.META.INSTRUMENT.FILTER",
-
-            "ROMAN.META.INSTRUMENT.P_MODULE"  : "ROMAN.META.INSTRUMENT.MODULE",
-
-            "ROMAN.META.SUBARRAY.P_SUBARRAY" : "ROMAN.META.SUBARRAY.NAME",
-
-            "ROMAN.META.INSTRUMENT.P_GRATING" : "ROMAN.META.INSTRUMENT.GRATING",
-
-            "ROMAN.META.EXPOSURE.PREADPATT" : "ROMAN.META.EXPOSURE.READPATT",
-            "ROMAN.META.EXPOSURE.P_READPATT" : "ROMAN.META.EXPOSURE.READPATT",
-
-            # vvvv Speculative,  not currently defined or required by CAL vvvvv
-            "ROMAN.META.INSTRUMENT.PCORONAGRAPH" : "ROMAN.META.INSTRUMENT.CORONAGRAPH",
-        }
+        "ROMAN.META.EXPOSURE.P_EXPTYPE" : "ROMAN.META.EXPOSURE.TYPE",
+        "ROMAN.META.INSTRUMENT.P_DETECTOR"  : "ROMAN.META.INSTRUMENT.DETECTOR",
+    }
 
     # Rmap header reference_to_dataset field tranlations,  can override basic!
     try:
