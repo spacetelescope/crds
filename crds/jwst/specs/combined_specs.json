@@ -3061,7 +3061,7 @@
                 "Match",
                 "UseAfter"
             ],
-            "derived_from":"Hand made 2016-10-20",
+            "derived_from":"Hand made 2021-11-29",
             "extra_keys":null,
             "file_ext":".fits",
             "filekind":"PATHLOSS",
@@ -3080,9 +3080,9 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"237111ef3bdba8734aa03f7ebd6a6e04b8b04523",
+            "sha1sum":"8a22233afa16d2e8dcb428d94a4a48093e71a103",
             "suffix":"pathloss",
-            "text_descr":"Path loss correction",
+            "text_descr":"MIRI LRS Pathloss file to correct for slit loss for point source observations.",
             "tpn":"miri_pathloss.tpn",
             "unique_rowkeys":null
         },
