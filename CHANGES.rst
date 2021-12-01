@@ -3,6 +3,8 @@
 
 - Update documentation for the Submission API [#853]
 
+- Update miri pathloss spec [#855]
+
 11.5.0 (2021-10-28)
 ===================
 
