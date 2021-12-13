@@ -33,6 +33,10 @@ BASE_URLS = {
         'jwst': 'https://jwst-crds.stsci.edu/',
         'roman': 'https://roman-crds.stsci.edu/',
     },
+,
+    'pub': {
+        'jwst': 'https://jwst-crds-pub.stsci.edu/',
+    },
     'bit': {
         'hst':  'https://hst-crds-bit.stsci.edu/',
         'jwst': 'https://jwst-crds-bit.stsci.edu/',
