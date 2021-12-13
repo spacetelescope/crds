@@ -6,7 +6,14 @@
 11.5.2 (2021-12-10)
 ===================
 
+Trim translations to be specific to roman [#854]
+
+11.5.1 (Unreleased)
+===================
+
 - Update documentation for the Submission API [#853]
+
+- Update miri pathloss spec [#855]
 
 11.5.0 (2021-10-28)
 ===================
