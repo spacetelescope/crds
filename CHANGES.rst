@@ -1,4 +1,9 @@
-11.5.2 (Unreleased)
+11.5.3 (unreleased)
+===================
+
+-  Update submission urls to include jwst-crds-pub [#856]
+
+11.5.2 (2021-12-10)
 ===================
 
 Trim translations to be specific to roman [#854]
