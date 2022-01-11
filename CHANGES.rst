@@ -1,7 +1,9 @@
 11.5.3 (unreleased)
 ===================
 
--  Update submission urls to include jwst-crds-pub [#856]
+- Update submission urls to include jwst-crds-pub [#856]
+
+- Fix syntax in all_tpn affecting readpatt verification [#857]
 
 11.5.2 (2021-12-10)
 ===================
