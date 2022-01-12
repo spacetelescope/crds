@@ -1,9 +1,13 @@
-11.5.3 (unreleased)
+11.6.0 (2022-01-12)
 ===================
 
 - Update submission urls to include jwst-crds-pub [#856]
 
 - Fix syntax in all_tpn affecting readpatt verification [#857]
+
+-  Update minimum python to 3.8 [#858]
+
+   Also make this the 11.6.0 release
 
 11.5.2 (2021-12-10)
 ===================
