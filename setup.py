@@ -83,7 +83,7 @@ setup(name="crds",
       author="STScI CRDS s/w developers",
       url="https://hst-crds.stsci.edu",
       license="BSD",
-      python_requires=">=3.7",
+      python_requires=">=3.8",
       setup_requires=["setuptools_scm"],
       install_requires=["astropy", "numpy", "filelock", "asdf"] + SUBMISSION_DEPS,
       extras_require={
