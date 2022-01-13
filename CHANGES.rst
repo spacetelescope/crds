@@ -1,4 +1,4 @@
-11.6.0 (Unreleased)
+11.6.0 (unreleased)
 ===================
 
 - Update submission urls to include jwst-crds-pub [#856]
