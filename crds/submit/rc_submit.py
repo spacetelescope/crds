@@ -18,15 +18,21 @@ class NoFilesSelected(Exception):
     pass
 
 BASE_URLS = {
+    'bit': {
+        'hst':  'https://hst-crds-bit.stsci.edu/',
+        'jwst': 'https://jwst-crds-bit.stsci.edu/',
+    },
+    'cit': {
+        'hst':  'https://hst-crds-cit.stsci.edu/',
+        'jwst': 'https://jwst-crds-cit.stsci.edu/',
+    },
     'dev': {
         'hst':  'https://hst-crds-dev.stsci.edu/',
         'jwst': 'https://jwst-crds-dev.stsci.edu/',
         'roman': 'https://roman-crds-dev.stsci.edu/',
     },
-    'test': {
-        'hst':  'https://hst-crds-test.stsci.edu/',
-        'jwst': 'https://jwst-crds-test.stsci.edu/',
-        'roman': 'https://roman-crds-test.stsci.edu/',
+    'int': {
+        'roman': 'https://roman-crds-int.stsci.edu/',
     },
     'ops': {
         'hst':  'https://hst-crds.stsci.edu/',   # 'ops' not in URL
@@ -36,16 +42,10 @@ BASE_URLS = {
     'pub': {
         'jwst': 'https://jwst-crds-pub.stsci.edu/',
     },
-    'bit': {
-        'hst':  'https://hst-crds-bit.stsci.edu/',
-        'jwst': 'https://jwst-crds-bit.stsci.edu/',
-    },
-    'cit': {
-        'hst':  'https://hst-crds-cit.stsci.edu/',
-        'jwst': 'https://jwst-crds-cit.stsci.edu/',
-    },
-    'int': {
-        'roman': 'https://roman-crds-int.stsci.edu/',
+    'test': {
+        'hst':  'https://hst-crds-test.stsci.edu/',
+        'jwst': 'https://jwst-crds-test.stsci.edu/',
+        'roman': 'https://roman-crds-test.stsci.edu/',
     },
 }
 
@@ -123,8 +123,8 @@ class Submission(object):
         observatory, string = observatory.lower(), string.lower()
         if observatory not in ['hst', 'jwst', 'roman']:
             raise ValueError('Observatory "{}" must be one of "hst" or "jwst" or "roman".')
-        if string not in ['dev', 'test', 'ops', 'bit', 'cit', 'int']:
-            raise ValueError('String "{}" must be either "ops", "test", "dev", "bit", "cit", or "int".')
+        if string not in ['bit', 'cit', 'dev', 'int', 'ops', 'pub', 'test']:
+            raise ValueError('String "{}" must be either "ops", "test", "pub", "dev", "bit", "cit", or "int".')
         self._observatory = observatory
         self._string = string
         self._context = context
