@@ -1,4 +1,4 @@
-11.6.1 (unreleased)
+11.6.1 (2022-02-07)
 ===================
 
 - Add pub to the possible submission groups. [#859]
