@@ -1,4 +1,4 @@
-# Contraints defined in this file apply the WFI instrument's DARK reference type.
+# Contraints defined in this file apply the WFI instrument's PHOTOM reference type.
 
 # Template file used by certify to check reference files
 # Some fields may be abbreviated to their first character:
