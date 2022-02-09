@@ -179,6 +179,36 @@
             "tpn":"wfi_mask.tpn",
             "unique_rowkeys":null
         },
+        "photom":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2022-02-08",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"PHOTOM",
+            "filetype":"PHOTOM",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_photom_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"wfi_photom.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "ROMAN.META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"4a95a166f03d622c09eacb568019ad8ea26e384f",
+            "suffix":"photom",
+            "text_descr":"Photom",
+            "tpn":"wfi_photom.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "classes":[
                 "Match",
