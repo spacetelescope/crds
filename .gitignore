@@ -13,3 +13,4 @@ documentation/crds_users_guide/*.tar.gz
 crds-dev.code-workspace
 
 crds/_version.py
+.vscode/settings.json
