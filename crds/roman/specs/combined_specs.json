@@ -209,6 +209,37 @@
             "tpn":"wfi_photom.tpn",
             "unique_rowkeys":null
         },
+        "pixelarea":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2022-02-15",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"PIXELAREA",
+            "filetype":"PIXELAREA",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_pixelarea_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"wfi_pixelarea.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "ROMAN.META.INSTRUMENT.DETECTOR",
+                    "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
+                ],
+                [
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"6d600afa3482028ba926ef84fd80da8e806d121a",
+            "suffix":"pixelarea",
+            "text_descr":"pixelarea",
+            "tpn":"wfi_pixelarea.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "classes":[
                 "Match",
