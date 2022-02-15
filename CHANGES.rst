@@ -1,15 +1,32 @@
+11.9.0 (unreleased)
+===================
+
+HST
+---
+
+- Add LITREF check to tpns for synphot component files. [#862]
+
 11.8.0 (2022-02-15)
 ===================
+
+Roman
+-----
 
 - New PixelArea RefType + PyTests. [#861]
 
 11.7.0 (2022-02-09)
 ===================
 
+Roman
+-----
+
 - New Photom RefType + PyTests. [#860]
 
 11.6.1 (2022-02-07)
 ===================
+
+JWST
+----
 
 - Add pub to the possible submission groups. [#859]
 
