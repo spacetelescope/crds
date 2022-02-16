@@ -331,7 +331,7 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
-    CRDS - INFO -  1 warnings
+    CRDS - INFO -  2 warnings
     CRDS - INFO -  40 infos
     1
 
@@ -382,7 +382,7 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  >> **** Verification found 0 warning(s) and 0 error(s). ****
     CRDS - INFO -  ########################################
     CRDS - INFO -  1 errors
-    CRDS - INFO -  1 warnings
+    CRDS - INFO -  2 warnings
     CRDS - INFO -  40 infos
     1
 
