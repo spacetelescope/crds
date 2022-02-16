@@ -291,6 +291,7 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Certifying 'data/wfc3_ir_f098m_002_th.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
     CRDS - INFO -  FITS file 'wfc3_ir_f098m_002_th.fits' conforms to FITS standards.
     CRDS - ERROR -  New filename version (002) must exceed previous version (002)
+    CRDS - WARNING -  Missing suggested keyword 'LITREF'
     CRDS - INFO -  Mode columns defined by spec for new reference 'wfc3_ir_f098m_002_th.fits[1]' are: ['WAVELENGTH']
     CRDS - INFO -  All column names for this table new reference 'wfc3_ir_f098m_002_th.fits[1]' are: ['WAVELENGTH', 'EMISSIVITY']
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
@@ -341,6 +342,7 @@ def dt_synphot_certify_refs():
     CRDS - INFO -  Certifying 'data/wfc3_uvis_f469nf2_003_syn.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
     CRDS - INFO -  FITS file 'wfc3_uvis_f469nf2_003_syn.fits' conforms to FITS standards.
     CRDS - ERROR -  New filename version (003) must exceed previous version (003)
+    CRDS - WARNING -  Missing suggested keyword 'LITREF'
     CRDS - INFO -  Mode columns defined by spec for new reference 'wfc3_uvis_f469nf2_003_syn.fits[1]' are: ['WAVELENGTH']
     CRDS - INFO -  All column names for this table new reference 'wfc3_uvis_f469nf2_003_syn.fits[1]' are: ['WAVELENGTH', 'THROUGHPUT']
     CRDS - INFO -  Checking for duplicate modes using intersection ['WAVELENGTH']
