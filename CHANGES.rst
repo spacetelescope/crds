@@ -1,3 +1,11 @@
+11.10.0 (unreleased)
+====================
+
+HST
+---
+
+- Add V3 of ACS precondition header hook. [#863]
+
 11.9.0 (2022-02-23)
 ===================
 
@@ -10,7 +18,6 @@ HST
 ---
 
 - Add LITREF check to tpns for synphot component files. [#862]
-
 
 11.8.0 (2022-02-15)
 ===================
