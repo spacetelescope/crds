@@ -4,7 +4,7 @@
 Roman
 -----
 
-- corrected to area rmap to match updates to schema [#863] 
+- corrected area rmap to match updates to schema [#863] 
 
 11.9.0 (unreleased)
 ===================
