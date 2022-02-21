@@ -11,8 +11,8 @@ header = {
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT'), ('ROMAN.META.OBSERVATION.DATE', 'ROMAN.META.OBSERVATION.TIME')),
     'sha1sum' : 'b48381f4b3d3a66741eb58556ed2c136431bdb44',
-    'suffix' : 'AREA',
-    'text_descr' : 'AREA',
+    'suffix' : 'area',
+    'text_descr' : 'area',
     'tpn' : 'wfi_area.tpn',
 }
 
