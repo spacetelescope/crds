@@ -22,6 +22,8 @@ DESCRIP             H        C         R
 PEDIGREE            H        C         W    &PEDIGREE
 DATE                H        C         R
 
+LITREF              H        C         W
+
 WAVELENGTH      C        R             R
 THROUGHPUT      C        R             W
 
