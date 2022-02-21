@@ -2,8 +2,8 @@ header = {
     'classes' : ('Match', 'UseAfter'),
     'derived_from' : 'Hand made 2022-02-15',
     'file_ext' : '.asdf',
-    'filekind' : 'AREA',
-    'filetype' : 'AREA',
+    'filekind' : 'area',
+    'filetype' : 'area',
     'instrument' : 'WFI',
     'ld_tpn' : 'wfi_area_ld.tpn',
     'mapping' : 'REFERENCE',
@@ -13,7 +13,7 @@ header = {
     'sha1sum' : 'b48381f4b3d3a66741eb58556ed2c136431bdb44',
     'suffix' : 'AREA',
     'text_descr' : 'AREA',
-    'tpn' : 'wfi_AREA.tpn',
+    'tpn' : 'wfi_area.tpn',
 }
 
 selector = Match({
