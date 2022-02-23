@@ -1,10 +1,16 @@
-11.9.0 (unreleased)
+11.9.0 (2022-02-23)
 ===================
+
+Roman
+-----
+
+- corrected area rmap to match updates to schema [#863]
 
 HST
 ---
 
 - Add LITREF check to tpns for synphot component files. [#862]
+
 
 11.8.0 (2022-02-15)
 ===================
