@@ -34,8 +34,8 @@
             "derived_from":"Hand made 2022-02-15",
             "extra_keys":null,
             "file_ext":".asdf",
-            "filekind":"AREA",
-            "filetype":"AREA",
+            "filekind":"area",
+            "filetype":"area",
             "instrument":"WFI",
             "ld_tpn":"wfi_area_ld.tpn",
             "mapping":"REFERENCE",
@@ -51,9 +51,9 @@
                 ]
             ],
             "sha1sum":"a3da15f81e765317dd7de4679b4e842ebfc2e7ea",
-            "suffix":"AREA",
-            "text_descr":"AREA",
-            "tpn":"wfi_AREA.tpn",
+            "suffix":"area",
+            "text_descr":"Area",
+            "tpn":"wfi_area.tpn",
             "unique_rowkeys":null
         },
         "dark":{
