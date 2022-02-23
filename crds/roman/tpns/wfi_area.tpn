@@ -10,4 +10,3 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 ROMAN.META.INSTRUMENT.DETECTOR          H   C   R
-ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT   H   C   R
