@@ -1,13 +1,10 @@
-11.9.1 (2022-02-21)
+11.9.0 (2022-02-23)
 ===================
 
 Roman
 -----
 
-- corrected area rmap to match updates to schema [#863] 
-
-11.9.0 (unreleased)
-===================
+- corrected area rmap to match updates to schema [#863]
 
 HST
 ---
