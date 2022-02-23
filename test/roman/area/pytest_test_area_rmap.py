@@ -27,7 +27,6 @@ class AreaPyTests:
         """
         expected_headers = [
             'ROMAN.META.INSTRUMENT.DETECTOR',
-            'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT',
         ]
         with open(Path(__file__).parents[3] / "crds" / "roman" / "tpns" / "wfi_area.tpn", 'r') as area_tpn:
             lines = [line.replace('\n', '') for line in area_tpn.readlines()]
