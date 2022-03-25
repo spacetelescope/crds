@@ -4,7 +4,7 @@
 HST
 ---
 
-- Add V3 of ACS precondition header hook. [#863]
+- Add V3 of ACS precondition header hook. [#864]
 
 11.9.0 (2022-02-23)
 ===================
