@@ -1,4 +1,4 @@
-#! /bin/sh 
+#!/bin/bash
 
 # e.g.  cached_context hst
 
@@ -11,4 +11,3 @@ then
 fi
 
 crds list --operational-context  --readonly-cache --${observatory} 2>/dev/null
-

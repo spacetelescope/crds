@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 
 # setenv CRDS_PATH
 # setenv CRDS_SERVER_URL  hst-crds-.stsci.edu

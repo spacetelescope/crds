@@ -1,12 +1,12 @@
-#! /bin/sh
+#!/bin/bash
 #
 # usage:  safe_bestrefs  --files <dataset FITS...>
 #
-#   options:  
+#   options:
 #        --new-context [hst-operational | e.g. hst_0042.pmap] (optional, defaults hst-operational)
 #        --files <FITS files to update...>
 #
-#   requires:  
+#   requires:
 #        CRDS_PATH        (cache directory)
 #        *not* CRDS_SERVER_URL  (safe_bestrefs clears this to be disconnected from CRDS servers)
 #
@@ -44,4 +44,3 @@ export CRDS_CLIENT_RETRY_COUNT=1
 export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
 
 crds bestrefs --readonly-cache --update-bestrefs  $*
-

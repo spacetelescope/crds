@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 #
 # usage:
 #
@@ -10,7 +10,7 @@
 # pipeline CRDS cache) to make it consistent with the CRDS server cache and
 # CRDS server database.  It may be useful in a variety of situations but is
 # designed first-and-foremost for the following situation in the TEST pipeline:
-# 
+#
 # 1. TEST pipeline and TEST CRDS server are refreshed from the OPS server
 #    (possibly including use of this script) to baseline the TEST system for
 #    testing.
@@ -32,7 +32,7 @@
 # NOTE:  this script relies on cron_sync.  cron_sync in turn relies on UNIX umask
 #    to create appropriate default group permissions.  Users should nominally
 #    specify "umask 2" in their interactive shell to cause synced files to be
-#    created with user and group rwx permissions. 
+#    created with user and group rwx permissions.
 #
 # Without experimentation, the files/contexts should probably be selected using
 # --all which will guarantee considering all cached files.  Another untested
@@ -55,9 +55,9 @@ cron_sync --check-sha1sum --repair-files --purge-mappings $*
 # omitting --check-sha1sum because it is very time consuming. (Expect
 # 8 hours+ for the full HST cache.)  If desired anyway,  --check-sha1sum can
 # be added on the command line as an optional parameter.  This will remove
-# references not known to the specified set of CRDS rules,  and it will 
+# references not known to the specified set of CRDS rules,  and it will
 # correct like named references (between TEST and OPS) which have different
-# lengths.  It cannot detect differences in same-length files without 
+# lengths.  It cannot detect differences in same-length files without
 # --check-sha1sum so it is possible that residual files from the last
 # TEST cycle will go uncorrected.
 
@@ -71,8 +71,8 @@ cron_sync --check-sha1sum --repair-files --purge-mappings $*
 
 cron_sync --repair-files --fetch-references $*
 
-# 
-# Other notes:  An alternate approach for hacking caches is to manually remove 
+#
+# Other notes:  An alternate approach for hacking caches is to manually remove
 # suspect files,  perhaps all mappings and config,  and then to resynchronize
 # using cron_sync.   The downside of this approach is that it maskes assumptions
 # about cache design and behavior

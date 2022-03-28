@@ -1,3 +1,12 @@
+11.10.1 (2022-03-26)
+====================
+
+Infrastructure
+--------------
+
+- Fix bug in script where bash syntax was used with /bin/sh. [#865]
+
+
 11.10.0 (2022-03-25)
 ====================
 
