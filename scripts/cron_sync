@@ -1,4 +1,4 @@
-#! /bin/sh 
+#!/bin/bash
 
 # usage:  cron_sync
 #
@@ -12,7 +12,7 @@
 #
 #   nominal extra switches:    --all --fetch-references --verbose
 #
-#   requires:  
+#   requires:
 #        CRDS_PATH        (cache directory)
 #        CRDS_SERVER_URL  (server synced from)
 #        CRDS_LOCKS       (locks directory)
@@ -113,8 +113,8 @@ export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
      crds sync $* --check-files --stats # nominally --all --fetch-references --verbose
      exit $?
   fi
-    
-) 200> ${CRDS_LOCKS}/crds.sync.lock 
+
+) 200> ${CRDS_LOCKS}/crds.sync.lock
 status=$?
 # echo "existing with status $status"
 exit $status
@@ -134,4 +134,3 @@ exit $status
 #   should export CRDS_READONLY_CACHE=1 as a default setting to prevent
 #   cache updates by programs other than cron_sync.
 #
-
