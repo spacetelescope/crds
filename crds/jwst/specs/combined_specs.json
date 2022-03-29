@@ -5604,15 +5604,15 @@
             "parkey":[
                 [
                     "META.EXPOSURE.TYPE",
-                    "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.GRATING"
+                    "META.INSTRUMENT.LAMP_MODE",
+                    "META.INSTRUMENT.LAMP_STATE"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"5b521d6db6c0bd4d2122f6b3ba3856039e9f6c4b",
+            "sha1sum":"8acdf70fba4a9054f7e69dc09315bfc413b06b18",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"nirspec_apcorr.tpn",
@@ -5928,13 +5928,19 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.LAMP_MODE",
+                    "META.INSTRUMENT.LAMP_STATE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
             "reference_to_dataset":{
                 "EXP_TYPE":"META.EXPOSURE.TYPE"
             },
-            "sha1sum":"b33d4be491c3930ceb8867fa8ad9a8021492c975",
+            "sha1sum":"e004a9b429945e411eed23c21dd02a031f8a2bd5",
             "suffix":"extract1d",
             "text_descr":"1-D Spectral Extraction",
             "tpn":"nirspec_extract1d.tpn",

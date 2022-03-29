@@ -1,3 +1,11 @@
+11.11.0 (2022-03-29)
+====================
+
+JWST
+----
+
+- update parkeys for NIRSpec apcorr and extract1d references [#866]
+
 11.10.1 (2022-03-26)
 ====================
 

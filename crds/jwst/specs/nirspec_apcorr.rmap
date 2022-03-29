@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_apcorr.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.GRATING'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '5b521d6db6c0bd4d2122f6b3ba3856039e9f6c4b',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.LAMP_MODE', 'META.INSTRUMENT.LAMP_STATE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8acdf70fba4a9054f7e69dc09315bfc413b06b18',
     'suffix' : 'apcorr',
     'text_descr' : 'Aperture Correction',
 }
@@ -67,6 +67,7 @@ equal to 1.0.
 
 Originally requested and discussed on Jira CRDS-295.
 Updated through CRDS-395, CRDS-402, CCD-891
+Updated parkeys through CRDS-514, CCD-1099
 """
 
 selector = Match({
