@@ -7,7 +7,7 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_extract1d.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',),),
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.LAMP_MODE', 'META.INSTRUMENT.LAMP_STATE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
@@ -16,5 +16,8 @@ header = {
     'text_descr' : '1-D Spectral Extraction',
 }
 
+comment = """
+Updated parkeys through CRDS-525, CCD-1099
+"""
 selector = Match({
 })
