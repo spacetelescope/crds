@@ -11,7 +11,7 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : 'b33d4be491c3930ceb8867fa8ad9a8021492c975',
+    'sha1sum' : 'e004a9b429945e411eed23c21dd02a031f8a2bd5',
     'suffix' : 'extract1d',
     'text_descr' : '1-D Spectral Extraction',
 }
@@ -19,5 +19,6 @@ header = {
 comment = """
 Updated parkeys through CRDS-525, CCD-1099
 """
+
 selector = Match({
 })
