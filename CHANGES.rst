@@ -1,3 +1,12 @@
+11.12.0 (unreleased)
+====================
+
+Roman
+-----
+
+- added: distortion rmap + tpn [#867]
+
+
 11.11.0 (unreleased)
 ====================
 
