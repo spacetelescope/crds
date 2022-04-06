@@ -88,6 +88,37 @@
             "tpn":"wfi_dark.tpn",
             "unique_rowkeys":null
         },
+        "distortion":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2022-03-31",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"DISTORTION",
+            "filetype":"DISTORTION",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_distortion_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"wfi_distortion.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "ROMAN.META.INSTRUMENT.DETECTOR",
+                    "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
+                ],
+                [
+                    "ROMAN.META.OBSERVATION.DATE",
+                    "ROMAN.META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"660030dc01d01cf1d2683cb1027e1ac8688cd5af",
+            "suffix":"distortion",
+            "text_descr":"Distortion",
+            "tpn":"wfi_distortion.tpn",
+            "unique_rowkeys":null
+        },
         "flat":{
             "classes":[
                 "Match",
