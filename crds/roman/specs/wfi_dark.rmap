@@ -9,7 +9,7 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'wfi_dark.rmap',
     'observatory' : 'ROMAN',
-    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.EXPOSURE.TYPE', 'ROMAN.META.OBSERVATION.MA_TABLE_NAME'), ('ROMAN.META.OBSERVATION.DATE', 'ROMAN.META.OBSERVATION.TIME')),
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.EXPOSURE.TYPE', 'ROMAN.META.OBSERVATION.MA_TABLE_NUM'), ('ROMAN.META.OBSERVATION.DATE', 'ROMAN.META.OBSERVATION.TIME')),
     'sha1sum' : '51ec44ab96d4507cc91d9e2b744903cf152990c4',
     'suffix' : 'dark',
     'text_descr' : 'Dark',

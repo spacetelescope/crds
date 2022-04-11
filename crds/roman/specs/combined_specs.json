@@ -75,7 +75,7 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.EXPOSURE.TYPE",
-                    "ROMAN.META.OBSERVATION.MA_TABLE_NAME"
+                    "ROMAN.META.OBSERVATION.MA_TABLE_NUM"
                 ],
                 [
                     "ROMAN.META.OBSERVATION.DATE",
