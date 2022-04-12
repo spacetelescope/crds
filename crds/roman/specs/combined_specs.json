@@ -75,14 +75,14 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.EXPOSURE.TYPE",
-                    "ROMAN.META.OBSERVATION.MA_TABLE_NUM"
+                    "ROMAN.META.OBSERVATION.MA_TABLE_NUMBER"
                 ],
                 [
                     "ROMAN.META.OBSERVATION.DATE",
                     "ROMAN.META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"2e92aff02acd735b035e4bd75baee338650c9a13",
+            "sha1sum":"dbd2a6dbe2d9fd926c98c4eb181f19a249d00117",
             "suffix":"dark",
             "text_descr":"Dark",
             "tpn":"wfi_dark.tpn",
