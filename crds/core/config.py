@@ -781,6 +781,12 @@ def get_client_retry_delay_seconds():
     """Return the integer number of seconds CRDS should wait between retrying failed network transactions."""
     return CLIENT_RETRY_DELAY_SECONDS.get()
 
+CLIENT_TIMEOUT = IntConfigItem(
+    "CRDS_CLIENT_TIMEOUT_SECONDS", 60, "Seconds to wait for a CRDS network request to complete.")
+
+def get_client_timeout_seconds():
+    return CLIENT_TIMEOUT.get()
+
 def enable_retries(retry_count=20, delay_seconds=10):
     """Set reasonable defaults for CRDS retries"""
     CLIENT_RETRY_COUNT.set(retry_count)
@@ -790,6 +796,8 @@ def disable_retries():
     """Set the defaults for only one try for each network transaction."""
     CLIENT_RETRY_COUNT.set(1)
     CLIENT_RETRY_DELAY_SECONDS.set(0)
+
+# -------------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------------------
 
