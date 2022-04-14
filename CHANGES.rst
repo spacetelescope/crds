@@ -6,6 +6,11 @@ Roman
 
 - added: distortion rmap + tpn [#867]
 
+JWST
+----
+
+- Implement timeout on CRDS Server network requests [#869]
+
 
 11.11.0 (unreleased)
 ====================

@@ -144,10 +144,11 @@ class ServiceCallBinding:
 
     def _call_service(self, parameters, url):
         """Call the JSONRPC defined by `parameters` and raise a ServiceError on any exception."""
+        timeout = config.get_client_timeout_seconds()
         if not isinstance(parameters, bytes):
             parameters = parameters.encode("utf-8")
         try:
-            channel = request.urlopen(url, parameters)
+            channel = request.urlopen(url, parameters, timeout=timeout)
             return channel.read().decode("utf-8")
         except Exception as exc:
             raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc)) from exc
