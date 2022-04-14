@@ -1,15 +1,18 @@
-11.12.0 (unreleased)
+11.12.1 (2022-04-13)
+====================
+
+General
+-------
+
+- Implement timeout on CRDS Server network requests [#869]
+
+11.12.0 (2022-03-31)
 ====================
 
 Roman
 -----
 
 - added: distortion rmap + tpn [#867]
-
-JWST
-----
-
-- Implement timeout on CRDS Server network requests [#869]
 
 
 11.11.0 (unreleased)
