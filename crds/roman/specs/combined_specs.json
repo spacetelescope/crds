@@ -45,7 +45,7 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"31b866dabb4034db2db49c61cae08495cc60d82c",
             "suffix":"area",
@@ -74,7 +74,7 @@
                     "ROMAN.META.EXPOSURE.TYPE",
                     "ROMAN.META.OBSERVATION.MA_TABLE_NUMBER"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"c01ef436315f831cf970a7a8faa09016095edcd3",
             "suffix":"dark",
@@ -102,7 +102,7 @@
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"4d8d2e01237a553a7a9697fa37951c60173cab07",
             "suffix":"distortion",
@@ -130,7 +130,7 @@
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"237ee49bf8cbd39e33fdf8a952c59b35ae2d3b80",
             "suffix":"flat",
@@ -157,7 +157,7 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"8798ce2abacd0ffb84fbd6565d9735354ec23cd0",
             "suffix":"gain",
@@ -184,7 +184,7 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"420cf85da648841b4e165e9e8359d6132463388e",
             "suffix":"linearity",
@@ -211,7 +211,7 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"349d38011ca0fa700c860d8bd32be0cf605886dd",
             "suffix":"mask",
@@ -238,7 +238,7 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"7ebc978e4da20693976909693fdf7d87a49da5a0",
             "suffix":"photom",
@@ -266,7 +266,7 @@
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.EXPOSURE.TYPE"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"170e9523dde10902cfc995d01d3329428d327f5d",
             "suffix":"readnoise",
@@ -293,7 +293,7 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                    "ROMAN.META.EXPOSURE.START_TIME"
+                "ROMAN.META.EXPOSURE.START_TIME"
             ],
             "sha1sum":"3137a809353c832afd0bb5022c079e20907a068e",
             "suffix":"saturation",
