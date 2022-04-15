@@ -212,7 +212,7 @@ def get_refactoring_header(rmapping, refname, required_keywords):
     # A fallback source of information is the reference file headers
     header = rmapping.get_refactor_header(
         config.locate_file(refname, rmapping.observatory),
-        extra_keys=("META.OBSERVATION.DATE", "META.OBSERVATION.TIME", "DATE-OBS","TIME-OBS") + required_keywords)
+        extra_keys=("META.EXPOSURE.DATE", "META.EXPOSURE.TIME", "META.OBSERVATION.DATE", "META.OBSERVATION.TIME", "DATE-OBS","TIME-OBS") + required_keywords)
     # The primary source of information is the original rmap and the matching values defined there
     headers2 = matches.find_match_paths_as_dict(rmapping.filename, refname)
     # Combine the two,  using the rmap values to override anything duplicated in the reffile header
