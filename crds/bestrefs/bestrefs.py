@@ -31,7 +31,7 @@ UpdateTuple = namedtuple("UpdateTuple", ["instrument", "filekind", "old_referenc
 
 def reformat_date_or_auto(date):
     """Add 'auto' as an extra valid value for --datasets-since dates.  Auto means figure out dates-since
-    based on USEAFTER dates (recorded in rmaps as DATE-OBS TIME-OBS or META.OBSERVATION.DATE).
+    based on USEAFTER dates (recorded in rmaps as DATE-OBS TIME-OBS, META.OBSERVATION.DATE, or META.EXPOSURE.DATE).
     """
     if date is None:
         return date
