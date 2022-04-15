@@ -2,7 +2,7 @@ import os
 import subprocess
 import unittest
 import pathlib
-from astropy.io import Time
+from astropy.time import Time
 
 from crds.core import heavy_client
 from crds.core.exceptions import CrdsLookupError
