@@ -1,6 +1,11 @@
 11.13.0 (unreleased)
 ====================
 
+JWST
+----
+
+- Rename MasterBackgroundNrsSlitsStep pars files to MasterBackgroundMosStep [#870]
+
 Roman
 -----
 
