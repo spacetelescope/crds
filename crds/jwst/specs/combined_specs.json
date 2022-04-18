@@ -4106,6 +4106,8 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.CROWDED_FIELD",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -4113,7 +4115,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"8b249a1e4a3b7a93ed3d762c39f5d2657988eee4",
+            "sha1sum":"6c81b85fc635448800184fdecb4baeca42c8d45a",
             "suffix":"pars-spec2pipeline",
             "text_descr":"Spec2Pipeline runtime parameters",
             "tpn":"nircam_pars-spec2pipeline.tpn",
@@ -5028,6 +5030,8 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.CROWDED_FIELD",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -5035,7 +5039,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"e82bf898ad615ae49debee4bde82e6700bc4ae97",
+            "sha1sum":"d9f93829f308d91a12457f66cd20b72765b450a8",
             "suffix":"pars-spec2pipeline",
             "text_descr":"Spec2Pipeline runtime parameters",
             "tpn":"niriss_pars-spec2pipeline.tpn",
