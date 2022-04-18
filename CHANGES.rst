@@ -1,6 +1,11 @@
 11.13.0 (unreleased)
 ====================
 
+JWST
+----
+
+- Update parkyes for NIRSpec/NIRISS pars-spec2pipeline [#871]
+
 Roman
 -----
 
