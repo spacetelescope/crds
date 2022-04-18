@@ -1,6 +1,11 @@
 11.13.0 (unreleased)
 ====================
 
+JWST
+----
+
+- Add spec for new pars-wfsscontamstep [#872]
+
 Roman
 -----
 
