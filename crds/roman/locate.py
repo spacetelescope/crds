@@ -443,9 +443,8 @@ def reference_keys_to_dataset_keys(rmapping, header):
     >>> config.ALLOW_BAD_USEAFTER.reset()
     >>> reference_keys_to_dataset_keys( \
     namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
-    {'ROMAN.META.EXPOSURE.DATE' : '1879-03-14', \
-     'ROMAN.META.EXPOSURE.TIME' : '12:34:56'})
-    {'ROMAN.META.EXPOSURE.DATE': '1879-03-14', 'ROMAN.META.EXPOSURE.TIME': '12:34:56', 'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED'}
+    {'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'}) \
+    {'ROMAN.META.EXPOSURE.START_TIME': '1879-03-14T12:34:56', 'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED'}
 
     ==================================================
     Test setting DATE/TIME with no USEAFTER, but allowed "bad use after".
@@ -454,7 +453,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     >>> config.ALLOW_BAD_USEAFTER.set("1")
     False
     >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), {})
-    {'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED', 'ROMAN.META.EXPOSURE.DATE': '1900-01-01', 'ROMAN.META.EXPOSURE.TIME': '00:00:00'}
+    {'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED', 'ROMAN.META.EXPOSURE.START_TIME': '1900-01-01T00:00:00'}
 
     ==================================================
     Test setting DATE/TIME from USEAFTER.
@@ -464,9 +463,8 @@ def reference_keys_to_dataset_keys(rmapping, header):
     False
     >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
     {'ROMAN.META.USEAFTER' : '1770-12-01T01:23:45', \
-     'ROMAN.META.EXPOSURE.DATE' : '1879-03-14', \
-     'ROMAN.META.EXPOSURE.TIME' : '12:34:56'})
-    {'ROMAN.META.USEAFTER': '1770-12-01T01:23:45', 'ROMAN.META.EXPOSURE.DATE': '1770-12-01', 'ROMAN.META.EXPOSURE.TIME': '01:23:45', 'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED'}
+     'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'}) \
+    {'ROMAN.META.USEAFTER': '1770-12-01T01:23:45', 'ROMAN.META.EXPOSURE.START_TIME': '1770-12-01T01:23:45', 'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED'}
 
     ==================================================
     Test bad formatted USEAFTER.
@@ -474,8 +472,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     >>> config.ALLOW_BAD_USEAFTER.reset()
     >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
     {'ROMAN.META.USEAFTER' : 'bad user after', \
-     'ROMAN.META.EXPOSURE.DATE' : '1879-03-14', \
-     'ROMAN.META.EXPOSURE.TIME' : '12:34:56'})
+     'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'}) \
     Traceback (most recent call last):
     ...
     crds.core.exceptions.InvalidUseAfterFormat: Bad USEAFTER time format = 'bad user after'
