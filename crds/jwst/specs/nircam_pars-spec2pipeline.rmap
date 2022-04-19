@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_pars-spec2pipeline.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.VISIT.TSOVISIT',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '8b249a1e4a3b7a93ed3d762c39f5d2657988eee4',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.VISIT.CROWDED_FIELD', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '6c81b85fc635448800184fdecb4baeca42c8d45a',
     'suffix' : 'pars-spec2pipeline',
     'text_descr' : 'Spec2Pipeline runtime parameters',
 }
