@@ -2757,6 +2757,7 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.EXPOSURE.TYPE",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -2764,7 +2765,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"1163c70abcfc51bf924c9abc7e3f241d5235b4b0",
+            "sha1sum":"2f0d5b5d60d46e9d36c7132ec7e2238b2362884c",
             "suffix":"pars-spec2pipeline",
             "text_descr":"Spec2Pipeline runtime parameters",
             "tpn":"miri_pars-spec2pipeline.tpn",
