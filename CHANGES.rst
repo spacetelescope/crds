@@ -6,6 +6,8 @@ JWST
 
 - Update parkyes for NIRSpec/NIRISS pars-spec2pipeline [#871]
 
+- Rename MasterBackgroundNrsSlitsStep pars files to MasterBackgroundMosStep [#870]
+
 Roman
 -----
 
