@@ -6,6 +6,12 @@ JWST
 
 - Update miri pars-spec2pipeline for exp_type addition to parkeys [#873]
 
+- Add spec for new pars-wfsscontamstep [#872]
+
+- Update parkeys for NIRSpec/NIRISS pars-spec2pipeline [#871]
+
+- Rename MasterBackgroundNrsSlitsStep pars files to MasterBackgroundMosStep [#870]
+
 Roman
 -----
 

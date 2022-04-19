@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'By hand 2022-04-18',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-masterbackgroundmosstep',
+    'filetype' : 'pars-masterbackgroundmosstep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-masterbackgroundmosstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'f40d44e3a820b6e3a4966319a592535495d4ecbe',
+    'suffix' : 'pars-masterbackgroundmosstep',
+    'text_descr' : 'MasterBackgroundMosStep runtime parameters',
+}
+
+selector = Match({
+})
