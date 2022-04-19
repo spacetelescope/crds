@@ -1,6 +1,11 @@
 11.13.0 (unreleased)
 ====================
 
+JWST
+----
+
+- Update miri pars-spec2pipeline for exp_type addition to parkeys [#873]
+
 Roman
 -----
 
