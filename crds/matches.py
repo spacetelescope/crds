@@ -142,7 +142,7 @@ DATE_TIME_PAIRS = [
     ("DATE-OBS", "TIME-OBS"),
     ("META.OBSERVATION.DATE", "META.OBSERVATION.TIME"),
     ("META_OBSERVATION_DATE", "META_OBSERVATION_TIME"),
-    ("META.EXPOSURE.START_TIME"), 
+    ("META.EXPOSURE.START_TIME"),
     ("META_EXPOSURE_START_TIME")
     ]
 
@@ -152,7 +152,10 @@ def get_exptime(match_dict):
     """
     for dt_pair in DATE_TIME_PAIRS:
         try:
-            return match_dict[dt_pair[0]] + " " + match_dict[dt_pair[1]]
+            if len(dt_pair) > 1:
+                return match_dict[dt_pair[0]] + " " + match_dict[dt_pair[1]]
+            else:
+                return match_dict[dt_pair[0]]
         except KeyError:
             continue
     else:
