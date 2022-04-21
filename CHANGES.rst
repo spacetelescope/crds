@@ -20,7 +20,7 @@ Roman
 -----
 
 - update parkeys for WFI dark references [#868]
-
+- useafter based on exposure.start_time instead of observation.date, observation.time [#876]
 
 11.12.1 (2022-04-14)
 ====================
