@@ -443,7 +443,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     >>> config.ALLOW_BAD_USEAFTER.reset()
     >>> reference_keys_to_dataset_keys( \
     namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
-    {'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'}) \
+    {'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'})
     {'ROMAN.META.EXPOSURE.START_TIME': '1879-03-14T12:34:56', 'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED'}
 
     ==================================================
@@ -462,8 +462,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     >>> config.ALLOW_BAD_USEAFTER.set("1")
     False
     >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
-    {'ROMAN.META.USEAFTER' : '1770-12-01T01:23:45', \
-     'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'}) \
+    {'ROMAN.META.USEAFTER' : '1770-12-01T01:23:45', 'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'})
     {'ROMAN.META.USEAFTER': '1770-12-01T01:23:45', 'ROMAN.META.EXPOSURE.START_TIME': '1770-12-01T01:23:45', 'ROMAN.META.SUBARRAY.NAME': 'UNDEFINED', 'ROMAN.META.EXPOSURE.TYPE': 'UNDEFINED'}
 
     ==================================================
@@ -471,8 +470,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
     >>> config.ALLOW_BAD_USEAFTER.reset()
     >>> reference_keys_to_dataset_keys(namedtuple('x', ['reference_to_dataset', 'filename'])({}, 'secret_code_file.txt'), \
-    {'ROMAN.META.USEAFTER' : 'bad user after', \
-     'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'}) \
+    {'ROMAN.META.USEAFTER' : 'bad user after', 'ROMAN.META.EXPOSURE.START_TIME' : '1879-03-14T12:34:56'})
     Traceback (most recent call last):
     ...
     crds.core.exceptions.InvalidUseAfterFormat: Bad USEAFTER time format = 'bad user after'
@@ -533,10 +531,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
         # Identify this as best as possible,
         filename = header.get("ROMAN.META.FILENAME", None) or rmapping.filename
 
-        #reformatted = timestamp.reformat_useafter(filename, header) #.split()
-        # header["ROMAN.META.OBSERVATION.DATE"] = reformatted[0]
-        # header["ROMAN.META.OBSERVATION.TIME"] = reformatted[1]
-        header["ROMAN.META.EXPOSURE.START_TIME"] = header.get("ROMAN.META.USEAFTER")
+        reformatted = timestamp.reformat_useafter(filename, header).split()
+        dt_string = f"{reformatted[0]}T{reformatted[1]}"
+        header["ROMAN.META.EXPOSURE.START_TIME"] = dt_string
 
     log.verbose("reference_to_dataset output header:\n", log.PP(header), verbosity=80)
 

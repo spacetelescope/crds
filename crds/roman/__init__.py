@@ -21,6 +21,6 @@ TYPE_FIXERS = {
 # List of keywords whose values are logged in certifier output when "dump provenance" is enabled:
 PROVENANCE_KEYWORDS = ("ROMAN.META.DESCRIPTION", "ROMAN.META.PEDIGREE", "ROMAN.META.USEAFTER", "HISTORY", "ROMAN.META.AUTHOR")
 
-USEAFTER_KEYWORDS = ("ROMAN.META.EXPOSURE.START_TIME") # Dataset keywords matching in UseAfter selectors
+USEAFTER_KEYWORDS = ("ROMAN.META.EXPOSURE.START_TIME",) # Dataset keywords matching in UseAfter selectors
 
 DEFAULT_SELECTORS = ("Match", "UseAfter")   # Normal selector hierarchy in rmap

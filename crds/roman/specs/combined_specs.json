@@ -45,9 +45,11 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"31b866dabb4034db2db49c61cae08495cc60d82c",
+            "sha1sum":"7f94fdd0d406fe60af69a7a4120982a213237268",
             "suffix":"area",
             "text_descr":"Area",
             "tpn":"wfi_area.tpn",
@@ -74,9 +76,11 @@
                     "ROMAN.META.EXPOSURE.TYPE",
                     "ROMAN.META.OBSERVATION.MA_TABLE_NUMBER"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"c01ef436315f831cf970a7a8faa09016095edcd3",
+            "sha1sum":"e36af9927135da2d74fcb4385567546495cc10ce",
             "suffix":"dark",
             "text_descr":"Dark",
             "tpn":"wfi_dark.tpn",
@@ -102,9 +106,11 @@
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"4d8d2e01237a553a7a9697fa37951c60173cab07",
+            "sha1sum":"c8c43f459bbd17e8680b0983f4976b70c36279ff",
             "suffix":"distortion",
             "text_descr":"Distortion",
             "tpn":"wfi_distortion.tpn",
@@ -130,9 +136,11 @@
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"237ee49bf8cbd39e33fdf8a952c59b35ae2d3b80",
+            "sha1sum":"821b9316527a0c156577531f0a9b1ef98c5c0507",
             "suffix":"flat",
             "text_descr":"Flat Field",
             "tpn":"wfi_flat.tpn",
@@ -157,9 +165,11 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"8798ce2abacd0ffb84fbd6565d9735354ec23cd0",
+            "sha1sum":"1686a73fadd49b879cc75acd62f7c7a9e3d49e14",
             "suffix":"gain",
             "text_descr":"Gain image",
             "tpn":"wfi_gain.tpn",
@@ -184,9 +194,11 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"420cf85da648841b4e165e9e8359d6132463388e",
+            "sha1sum":"199fb74f08f398d2311f7d57e587179b2103a687",
             "suffix":"linearity",
             "text_descr":"Linearity coefficients",
             "tpn":"wfi_linearity.tpn",
@@ -211,9 +223,11 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"349d38011ca0fa700c860d8bd32be0cf605886dd",
+            "sha1sum":"6a2ff9384da7be169eeeda8f6fca7d490f63f233",
             "suffix":"mask",
             "text_descr":"Bad Pixel Mask",
             "tpn":"wfi_mask.tpn",
@@ -238,9 +252,11 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"7ebc978e4da20693976909693fdf7d87a49da5a0",
+            "sha1sum":"b28b98a89be7c83d1be8699ae86280816b9cc6fd",
             "suffix":"photom",
             "text_descr":"Photom",
             "tpn":"wfi_photom.tpn",
@@ -266,9 +282,11 @@
                     "ROMAN.META.INSTRUMENT.DETECTOR",
                     "ROMAN.META.EXPOSURE.TYPE"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"170e9523dde10902cfc995d01d3329428d327f5d",
+            "sha1sum":"423c5901578332162d6a182810e321da95c38932",
             "suffix":"readnoise",
             "text_descr":"Read Noise",
             "tpn":"wfi_readnoise.tpn",
@@ -293,9 +311,11 @@
                 [
                     "ROMAN.META.INSTRUMENT.DETECTOR"
                 ],
-                "ROMAN.META.EXPOSURE.START_TIME"
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
             ],
-            "sha1sum":"3137a809353c832afd0bb5022c079e20907a068e",
+            "sha1sum":"7510626a0a7b26131bac2a05568cd6af016045e1",
             "suffix":"saturation",
             "text_descr":"Saturation Threshhold",
             "tpn":"wfi_saturation.tpn",

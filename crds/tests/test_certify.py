@@ -914,7 +914,7 @@ def certify_roman_invalid_rmap_tpn():
     CRDS - ERROR -  Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT...') : ('WFI21', 'F158') :  parameter='ROMAN.META.INSTRUMENT.DETECTOR...' value='WFI21' is not in (...)
     CRDS - INFO -  Mapping 'roman_wfi_flat_0004_badtpn.rmap' corresponds to 'roman_wfi_flat_0001.rmap' from context 'roman_0003.pmap' for checking mapping differences.
     CRDS - INFO -  Checking diffs from 'roman_wfi_flat_0001.rmap' to 'roman_wfi_flat_0004_badtpn.rmap'
-    CRDS - WARNING -  Rule change at ('data/roman_wfi_flat_0004_badtpn.rmap', ('WFI21', 'F158'), ('2020-01-01', '00:00:00')) added Match rule for 'roman_wfi_flat_0003.asdf'
+    CRDS - WARNING -  Rule change at ('data/roman_wfi_flat_0004_badtpn.rmap', ('WFI21', 'F158'), ('2020-01-01 00:00:00',)) added Match rule for 'roman_wfi_flat_0003.asdf'
     >>> test_config.cleanup(old_state)
     """
 

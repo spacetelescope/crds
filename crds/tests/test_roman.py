@@ -2,7 +2,6 @@ import os
 import subprocess
 import unittest
 import pathlib
-from astropy.time import Time
 
 from crds.core import heavy_client
 from crds.core.exceptions import CrdsLookupError
@@ -32,7 +31,9 @@ class TestRoman(unittest.TestCase):
                 "ROMAN.META.INSTRUMENT.NAME": "WFI",
                 "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
                 "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
-                "ROMAN.META.EXPOSURE.START_TIME": Time("2020-02-01T00:00:00"),
+                "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00",
+                # "ROMAN.META.OBSERVATION.DATE": "2020-02-01",
+                # "ROMAN.META.OBSERVATION.TIME": "00:00:00"
             },
             observatory="roman",
             context="roman_0005.pmap",
@@ -47,7 +48,9 @@ class TestRoman(unittest.TestCase):
                 "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
                 "ROMAN.META.EXPOSURE.TYPE": "WFI_GRISM",
                 "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT": "GRISM",
-                "ROMAN.META.EXPOSURE.START_TIME": Time("2020-02-01T00:00:00"),
+                "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
+                # "ROMAN.META.OBSERVATION.DATE": "2020-02-01",
+                # "ROMAN.META.OBSERVATION.TIME": "00:00:00"
             },
             observatory="roman",
             context="roman_0005.pmap",
@@ -66,7 +69,9 @@ class TestRoman(unittest.TestCase):
                 "ROMAN.META.INSTRUMENT.NAME": "WFI",
                 "ROMAN.META.INSTRUMENT.DETECTOR": "WFI02",
                 "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
-                "ROMAN.META.EXPOSURE.START_TIME": Time("2020-02-01T00:00:00"),
+                "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
+                # "ROMAN.META.OBSERVATION.DATE": "2020-02-01",
+                # "ROMAN.META.OBSERVATION.TIME": "00:00:00"
             },
             observatory="roman",
             context="roman_0005.pmap",
