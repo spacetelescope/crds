@@ -4,6 +4,8 @@
 JWST
 ----
 
+- add new reftype mrsxartcorr [#874]
+
 - Update miri pars-spec2pipeline for exp_type addition to parkeys [#873]
 
 - Add spec for new pars-wfsscontamstep [#872]
