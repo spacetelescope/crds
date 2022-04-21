@@ -1,0 +1,41 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2022-04',
+    'file_ext' : '.fits',
+    'filekind' : 'MRSPTCORR',
+    'filetype' : 'MRSPTCORR',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_mrsptcorr.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '865be98c64c54f897ea601d60f57869b7ce620f6',
+    'suffix' : 'mrsptcorr',
+    'text_descr' : 'MIRI MRS Point Source Extraction Corrections',
+}
+
+comment = """
+Detector-based spectral extraction for point sources allows for
+significantly better control of systematics than extracting one-dimensional
+spectra from a resampled 3-dimensional data cube. In part, this is because it
+avoids unnecessary resampling of the data- constructing a cube for a single
+point source introduces unnecessary covariance and other artifacts. In addition,
+extraction from detector-level data allows for correction of multiple effects
+that cannot be treated at the cube level at all, such as throughput and
+wavelength calibration offsets that depend on the across-slice location of a
+source in a given slice. This extraction method also allows for correction of
+the spectral leak artifact, in which a fraction of the 6 micron light (Ch1B)
+leaks through in second order to 12.2 microns (Ch3A).
+
+A JDAT notebook implementing this extraction method has been developed that may
+later be folded into the JWST pipeline in some form. This notebook needs to read
+in a reference file describing the above corrections, which this delivery
+provides.
+
+There is a single reference file necessary for all MRS observations.
+
+Originally requested and discussed on Jira CRDS-541.
+"""
+
+selector = Match({
+})
