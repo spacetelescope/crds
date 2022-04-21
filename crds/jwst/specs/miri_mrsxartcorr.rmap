@@ -1,0 +1,44 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2022-04',
+    'file_ext' : '.fits',
+    'filekind' : 'MRSXARTCORR',
+    'filetype' : 'MRSXARTCORR',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_mrsxartcorr.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'ec3f28417e0b232c6d9519ba3c4680fc70053f43',
+    'suffix' : 'mrsxartcorr',
+    'text_descr' : 'MRS Cross Artifact Correction',
+}
+
+comment = """
+Continuing study of the MRS straylight feature in ground test data has indicated
+that the likely origin of the feature is the cross-artifact feature known to
+occur in the imaging detector. As a result of internal scattering within the
+detector substrate, sources within the MRS field of view produce a 'detector'
+PSF consisting of discrete gaussian spikes offset from the PSF centroid coupled
+with an extremely broad Lorentzian wing reaching hundreds of pixels across the
+detector. Due to the optical layout of the MRS, this detector-local PSF means
+that the effective on-sky PSF can have appreciable power in spatially non-local
+components.
+
+If on-sky commissioning data confirms this structure, the existing straylight
+algorithm (which relies only upon the distortion map) will be inadequate to
+model and remove the signal. As such, we have developed a new algorithm and
+reference file that tests suggest should be significantly better able to achieve
+the required calibration accuracy.
+
+The detailed structure of this file may evolve somewhat as on-sky data becomes
+available, but in the meantime we would like to define this file now so that
+only revisions are required later.
+
+There is a single reference file necessary for all MRS observations.
+
+Originally requested and discussed on Jira CRDS-545.
+"""
+
+selector = Match({
+})
