@@ -209,6 +209,10 @@ class ReferenceCertifier(Certifier):
         with self.error_on_exception(
                 "Checking ASDF Standard version for", repr(self.filename)):
                 self.check_asdf_standard_version()
+        
+        with self.error_on_exception(
+                "Checking ASDF tag validity for", repr(self.filename)):
+                self.check_asdf_tag()
 
     def load(self):
         """Load and parse header from self.filename."""
@@ -488,6 +492,20 @@ class ReferenceCertifier(Certifier):
                     "does not fulfill context requirement of",
                     str(asdf_standard_requirement)
                 )
+
+    def check_asdf_tag(self):
+        """ Check that the tag for an asdf is valid of for a given file.
+        """
+        if self.observatory.lower() == 'roman':
+            from asdf.util import uri_match 
+            with asdf.open(self.filename, _force_raw_types=True) as f:
+                # This commented solution requires adding a new field to the rmap
+                # rmap = self.get_corresponding_rmap()
+                # assert f['roman']._tag == rmap['asdf_tag'] 
+                assert uri_match('asdf://stsci.edu/datamodels/roman/tags/reference_files/{}-*'.format(f['roman']['meta']['reftype'].lower()), f['roman']._tag)
+        else:
+            log.info('Observatory {} is not roman skipping uri_match tag validation.'.format(self.observatory.lower()))
+            pass
 
 # ============================================================================
 
