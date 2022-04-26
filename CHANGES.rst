@@ -1,3 +1,11 @@
+11.14.0 (Unreleased)
+====================
+
+Roman
+-----
+- added top-level tag validation for roman asdf [#878]
+
+
 11.13.1 (Unreleased)
 ====================
 
