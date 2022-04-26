@@ -1,3 +1,11 @@
+11.13.1
+====================
+
+Roman
+-----
+- move MA_TABLE_NUMBER WFI dark rmap parkey from observation to exposure [#877]
+
+
 11.13.0 (2022-04-22)
 ====================
 
