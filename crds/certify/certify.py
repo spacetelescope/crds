@@ -505,7 +505,7 @@ class ReferenceCertifier(Certifier):
                 assert uri_match('asdf://stsci.edu/datamodels/roman/tags/reference_files/{}-*'.format(f['roman']['meta']['reftype'].lower()), f['roman']._tag)
                 return True
         else:
-            log.info('Observatory {} is not roman skipping uri_match tag validation.'.format(self.observatory.lower()))
+            log.debug('Observatory {} is not roman skipping uri_match tag validation.'.format(self.observatory.lower()))
             pass
 
 # ============================================================================
