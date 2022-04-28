@@ -6,7 +6,7 @@ Roman
 - added top-level tag validation for roman asdf [#878]
 
 
-11.13.1 (Unreleased)
+11.13.1 (2022-04-26)
 ====================
 
 Roman
