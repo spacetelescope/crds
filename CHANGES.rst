@@ -1,3 +1,11 @@
+11.13.2 (unreleased)
+====================
+
+JWST
+----
+
+- Add back pars-masterbackgroundnrsslitsstep in the jwst specs [#879]
+
 11.13.1 (2022-04-26)
 ====================
 
