@@ -1,3 +1,64 @@
+11.14.0 (unreleased)
+====================
+
+Roman
+-----
+- Added top-level tag validation for roman asdf [#878]
+
+JWST
+----
+
+- Add back pars-masterbackgroundnrsslitsstep in the jwst specs [#879]
+
+11.13.1 (2022-04-26)
+====================
+
+Roman
+-----
+- move MA_TABLE_NUMBER WFI dark rmap parkey from observation to exposure [#877]
+
+
+11.13.0 (2022-04-22)
+====================
+
+JWST
+----
+
+- Create new reftype mrsptcorr [#875]
+
+- add new reftype mrsxartcorr [#874]
+
+- Update miri pars-spec2pipeline for exp_type addition to parkeys [#873]
+
+- Add spec for new pars-wfsscontamstep [#872]
+
+- Update parkeys for NIRSpec/NIRISS pars-spec2pipeline [#871]
+
+- Rename MasterBackgroundNrsSlitsStep pars files to MasterBackgroundMosStep [#870]
+
+Roman
+-----
+
+- update parkeys for WFI dark references [#868]
+- useafter based on exposure.start_time instead of observation.date, observation.time [#876]
+
+11.12.1 (2022-04-14)
+====================
+
+General
+-------
+
+- Implement timeout on CRDS Server network requests [#869]
+
+11.12.0 (2022-03-31)
+====================
+
+Roman
+-----
+
+- added: distortion rmap + tpn [#867]
+
+
 11.11.0 (unreleased)
 ====================
 

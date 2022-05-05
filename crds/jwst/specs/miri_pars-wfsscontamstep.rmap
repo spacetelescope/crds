@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'By hand 2022-04',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-wfsscontamstep',
+    'filetype' : 'pars-wfsscontamstep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-wfsscontamstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '387a5966b3f403f5140c987620a149157d2b92ab',
+    'suffix' : 'pars-wfsscontamstep',
+    'text_descr' : 'WfssContamStep runtime parameters',
+}
+
+selector = Match({
+})

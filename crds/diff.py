@@ -537,6 +537,7 @@ def mapping_affected_modes(old_file, new_file, include_header_diffs=True):
 DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS",
                                "META.OBSERVATION.DATE", "META.OBSERVATION.TIME",
                                "META_OBSERVATION_DATE", "META_OBSERVATION_TIME",
+                               "META.EXPOSURE.START_TIME", "META_EXPOSURE_START_TIME",
                                "DIFFERENCE", "INSTRUME", "REFTYPE")
 
 BORING_VARS = ["NAME", "DERIVED_FROM", "SHA1SUM", "ROW_KEYS"]  # XXX ROW_KEYS obsolete

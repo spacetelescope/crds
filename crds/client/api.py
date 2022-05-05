@@ -232,7 +232,7 @@ def get_total_bytes(info_map):
 
 def get_sqlite_db(observatory):
     """Download the CRDS database as a SQLite database."""
-    assert not config.get_cache_readonly(), "Readonly cache, updating the SQLite database cannot be done."""
+    assert not config.get_cache_readonly(), "Readonly cache, updating the SQLite database cannot be done."
     encoded_compressed_data = S.get_sqlite_db(observatory)
     data = zlib.decompress(base64.b64decode(encoded_compressed_data))
     path = config.get_sqlite3_db_path(observatory)

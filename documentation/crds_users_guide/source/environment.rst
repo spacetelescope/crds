@@ -447,6 +447,9 @@ transaction with the CRDS server.  Defaults to 1 meaning 1 try with no retries.
 network transaction before trying again.  Defaults to 0 seconds,  meaning
 proceed immediately after fail.
 
+**CRDS_CLIENT_TIMEOUT_SECONDS** number of seconds CRDS will wait for a network
+transaction to complete.
+
 **CRDS_USE_LOCKING** boolean enabling/disabling CRDS cache locking,  currently
 only used for JWST and defaulting to enabled.   File locking is currently limited
 to JWST calibrations so HST sync and bestrefs tools must be run in single

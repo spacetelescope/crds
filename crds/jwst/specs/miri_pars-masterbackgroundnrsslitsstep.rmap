@@ -8,10 +8,19 @@ header = {
     'name' : 'jwst_miri_pars-masterbackgroundnrsslitsstep.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'ed87e043052ca9426fcc13986db72fd2e5b2051d',
+    'sha1sum' : '6fab46edf4515d3673e03af1dc471f3b261f8c96',
     'suffix' : 'pars-masterbackgroundnrsslitsstep',
     'text_descr' : 'MasterBackgroundNrsSlitsStep runtime parameters',
 }
+
+comment = """
+This reftype is defunct. This is being left here
+solely so that contexts that have this reftype in their
+imaps still display properly.
+
+See CRDS github repo PR#870 for details.
+https://github.com/spacetelescope/crds/pull/870
+"""
 
 selector = Match({
 })
