@@ -3,8 +3,12 @@
 
 Roman
 -----
-- added top-level tag validation for roman asdf [#878]
+- Added top-level tag validation for roman asdf [#878]
 
+JWST
+----
+
+- Add back pars-masterbackgroundnrsslitsstep in the jwst specs [#879]
 
 11.13.1 (2022-04-26)
 ====================
