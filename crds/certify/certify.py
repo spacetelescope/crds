@@ -502,11 +502,13 @@ class ReferenceCertifier(Certifier):
                 # This commented solution requires adding a new field to the rmap
                 # rmap = self.get_corresponding_rmap()
                 # assert f['roman']._tag == rmap['asdf_tag'] 
-                assert uri_match('asdf://stsci.edu/datamodels/roman/tags/reference_files/{}-*'.format(f['roman']['meta']['reftype'].lower()), f['roman']._tag)
-                return True
-        else:
-            log.debug('Observatory {} is not roman skipping uri_match tag validation.'.format(self.observatory.lower()))
-            pass
+                if not uri_match('asdf://stsci.edu/datamodels/roman/tags/reference_files/{}-*'.format(f['roman']['meta']['reftype'].lower()), f['roman']._tag):
+                    log.error(
+                        "ASDF Tag Validation",
+                        f['roman']._tag,
+                        "does not match",
+                        'asdf://stsci.edu/datamodels/roman/tags/reference_files/{}-*'.format(f['roman']['meta']['reftype'].lower())
+                    )
 
 # ============================================================================
 
