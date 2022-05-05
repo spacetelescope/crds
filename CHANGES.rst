@@ -1,5 +1,9 @@
-11.13.2 (unreleased)
+11.14.0 (unreleased)
 ====================
+
+Roman
+-----
+- Added top-level tag validation for roman asdf [#878]
 
 JWST
 ----

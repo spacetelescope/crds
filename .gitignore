@@ -10,7 +10,7 @@ documentation/crds_users_guide/build
 documentation/crds_users_guide/*.tar.gz
 
 # Development
-crds-dev.code-workspace
+*.code-workspace
 
 crds/_version.py
 .vscode/settings.json
