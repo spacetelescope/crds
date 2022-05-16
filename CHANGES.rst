@@ -10,6 +10,11 @@ JWST
 
 - Add back pars-masterbackgroundnrsslitsstep in the jwst specs [#879]
 
+HST
+---
+
+- Add substitutions for HST ACS to support biasfile selection [#880]
+
 11.13.1 (2022-04-26)
 ====================
 

@@ -41,6 +41,8 @@ def substitutions_validate_hst():
     CRDS - DEBUG -  For 'acs' parameter 'LTV2' with value 'ANY' is unchecked.
     CRDS - DEBUG -  For 'acs' parameter 'NAXIS1' with value 'ANY' is unchecked.
     CRDS - DEBUG -  For 'acs' parameter 'NAXIS2' with value 'ANY' is unchecked.
+    CRDS - DEBUG -  For 'acs' parameter 'RAW_LTV1' with value 'ANY' is unchecked.
+    CRDS - DEBUG -  For 'acs' parameter 'RAW_LTV2' with value 'ANY' is unchecked.
     CRDS - DEBUG -  Instrument 'nicmos' has no substitutions.
     CRDS - DEBUG -  Instrument 'synphot' has no substitutions.
     CRDS - DEBUG -  For 'wfc3' parameter 'FILTER' with value 'BLANK' is unchecked.
