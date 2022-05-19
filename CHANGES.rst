@@ -1,4 +1,13 @@
-11.14.0 (unreleased)
+11.15.0 (unreleased)
+====================
+
+HST
+---
+
+- Add substitutions for HST ACS to support biasfile selection [#880]
+
+
+11.14.0 (2022-05-05)
 ====================
 
 Roman
@@ -10,10 +19,6 @@ JWST
 
 - Add back pars-masterbackgroundnrsslitsstep in the jwst specs [#879]
 
-HST
----
-
-- Add substitutions for HST ACS to support biasfile selection [#880]
 
 11.13.1 (2022-04-26)
 ====================
