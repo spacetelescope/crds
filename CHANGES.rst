@@ -1,6 +1,11 @@
 11.15.0 (unreleased)
 ====================
 
+General
+-------
+
+- Manually added release date for previous release [#881]
+
 HST
 ---
 
