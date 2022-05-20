@@ -6,6 +6,11 @@ General
 
 - Manually added release date for previous release [#881]
 
+JWST
+----
+
+- Added new rmap for NIRISS filteroffset [#881]
+
 HST
 ---
 
