@@ -4873,6 +4873,35 @@
             "tpn":"niriss_extract1d.tpn",
             "unique_rowkeys":null
         },
+        "filteroffset":{
+            "derived_from":"Handmade 2022-05-20 15:00:00",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"filteroffset",
+            "filetype":"FILTEROFFSET",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_filteroffset_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_filteroffset.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "EXP_TYPE":"META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"7fde4d42ce1933445d397fd0df305d7a1dd02d53",
+            "suffix":"filteroffset",
+            "text_descr":"Filter Offset",
+            "tpn":"niriss_filteroffset.tpn",
+            "unique_rowkeys":null
+        },
         "flat":{
             "derived_from":"jwst_niriss_flat_0000.rmap",
             "extra_keys":null,
