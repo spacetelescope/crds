@@ -13,6 +13,7 @@ from .submit import ReferenceSubmissionScript
 import urllib
 from functools import wraps
 from textwrap import wrap
+import re
 
 class NoFilesSelected(Exception):
     pass
@@ -55,6 +56,14 @@ NULL_FIELDTYPES = {
     'BooleanField'     : bool,
     'CharField'        : str,
     'TypedChoiceField' : str, }
+
+DESCRIPTION_RE = re.compile('[^0-9a-zA-Z\-_.,]+')
+
+def validate_description_text(text):
+    if DESCRIPTION_RE.search(text):
+        return True
+    else:
+        return False
 
 # Preserve order of YAML dicts (from https://stackoverflow.com/a/52621703):
 yaml.add_representer(dict, lambda self, data: yaml.representer.SafeRepresenter.represent_dict(self, data.items()))
@@ -321,6 +330,12 @@ class Submission(object):
         if len(self.files) == 0:
             raise NoFilesSelected('No files have been added to submission.  '
                                   'Use the `submission_obj.add_file()` method.')
+        
+        # Check for invalid characters in description text
+        desc_text = self._fields['description']
+        desc_err = validate_description_text(desc_text)
+        if desc_err is True:
+            raise ValueError('Only alphanumeric, dashes, underscores, periods and commas allowed.')
 
     @wraps(yaml.safe_dump)
     def yaml(self, *args, **kargs):
