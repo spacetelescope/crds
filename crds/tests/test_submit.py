@@ -276,3 +276,16 @@ class TestSubmission(object):
         self.s['instrument']          = 'stis'  # Only works for HST
 
         self.s.validate()
+
+    @raises(ValueError)
+    def test_invalid_description(self):
+        # Do something here to pass field validation checks:
+        self.s['file_type']           = 'value'
+        self.s['correctness_testing'] = 'value'
+        self.s['deliverer']           = 'value'
+        self.s['description']         = 'Illegal character(s)!'
+        self.s['calpipe_version']     = 'value'
+        self.s['modes_affected']      = 'value'
+        self.s['instrument']          = 'stis'  # Only works for HST
+
+        self.s.validate()
