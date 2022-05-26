@@ -1,10 +1,11 @@
-11.15.1 (unreleased)
+11.16.0 (unreleased)
 ====================
 
 General
 -------
 
 - Minor bugfix checks for invalid (special) chars in "reason for delivery" text submitted via programmatic api [#882]
+
 
 11.15.0 (2022-05-23)
 ====================
