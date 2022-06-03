@@ -3,7 +3,7 @@
 General
 -------
 
-- Hotfix for API character validation with more thorough testing added
+- Hotfix for API character validation with more thorough testing added [#884]
 
 
 11.16.0 (2022-05-27)
