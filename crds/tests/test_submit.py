@@ -265,12 +265,11 @@ class TestSubmission(object):
 
     def test_validate(self):
         self.s.add_file(list(self.tempfiles)[0])
-
         # Do something here to pass field validation checks:
         self.s['file_type']           = 'value'
         self.s['correctness_testing'] = 'value'
         self.s['deliverer']           = 'value'
-        self.s['description']         = 'value'
+        self.s['description']         = 'Dashes 0-9, underscores_1, commas, whitespace and periods 1234567890.'
         self.s['calpipe_version']     = 'value'
         self.s['modes_affected']      = 'value'
         self.s['instrument']          = 'stis'  # Only works for HST
@@ -279,13 +278,30 @@ class TestSubmission(object):
 
     @raises(ValueError)
     def test_invalid_description(self):
+        some_invalid_chars = ['!', '@', '$', '%', '^', '*', '(', ')', '+', '=', '~', '`', '"', '?', '/', '|', '{', '}', '[', ']', ':', ';', '<', '>']
         # Do something here to pass field validation checks:
         self.s['file_type']           = 'value'
         self.s['correctness_testing'] = 'value'
         self.s['deliverer']           = 'value'
-        self.s['description']         = 'Illegal character(s)!'
         self.s['calpipe_version']     = 'value'
         self.s['modes_affected']      = 'value'
         self.s['instrument']          = 'stis'  # Only works for HST
-
-        self.s.validate()
+        for bad in some_invalid_chars:
+            self.s['description'] = f'This desc is invalid because it contains a {bad} char.'
+            self.s.validate()
+    
+    @raises(ValueError)
+    def test_multiple_invalid_chars(self):
+        self.s['file_type']           = 'value'
+        self.s['correctness_testing'] = 'value'
+        self.s['deliverer']           = 'value'
+        self.s['calpipe_version']     = 'value'
+        self.s['modes_affected']      = 'value'
+        self.s['instrument']          = 'stis'  # Only works for HST
+        extrabad = "This (RFD) is invalid"
+        stillbad = "This RFD) is still invalid?"
+        justbad = "This RFD is $invalid."
+        bad_desc = [extrabad, stillbad, justbad]
+        for bad in bad_desc:
+            self.s['description'] = bad
+            self.s.validate()
