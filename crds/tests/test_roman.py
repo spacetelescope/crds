@@ -93,7 +93,8 @@ class TestRoman(unittest.TestCase):
 
         expected_result = {
             "roman_wfi_flat_0004.asdf",
-            "roman_wfi_dark_0001.asdf",
+            "roman_wfi_distortion_0001.asdf",
+            "roman_wfi_dark_0001.asdf"
         }
 
         list_command = [
