@@ -481,6 +481,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     translations = {
         "ROMAN.META.EXPOSURE.P_EXPTYPE" : "ROMAN.META.EXPOSURE.TYPE",
         "ROMAN.META.INSTRUMENT.P_DETECTOR"  : "ROMAN.META.INSTRUMENT.DETECTOR",
+        "ROMAN.META.INSTRUMENT.P_OPTICAL_ELEMENT": "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT",
     }
 
     # Rmap header reference_to_dataset field tranlations,  can override basic!

@@ -55,6 +55,20 @@ class TestRoman(unittest.TestCase):
 
         assert pathlib.Path(result["flat"]).name == "roman_wfi_flat_0004.asdf"
 
+        result = heavy_client.getreferences(
+            {
+                "ROMAN.META.INSTRUMENT.NAME": "WFI",
+                "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
+                "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT": "F213",
+                "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
+            },
+            observatory="roman",
+            context="roman_0005.pmap",
+            reftypes=["distortion"]
+        )
+
+        assert pathlib.Path(result["distortion"]).name == "roman_wfi_distortion_0001.asdf"
+
 
     @raises(CrdsLookupError)
     def test_getreferences_with_invalid_header(self):
@@ -79,7 +93,8 @@ class TestRoman(unittest.TestCase):
 
         expected_result = {
             "roman_wfi_flat_0004.asdf",
-            "roman_wfi_dark_0001.asdf",
+            "roman_wfi_distortion_0001.asdf",
+            "roman_wfi_dark_0001.asdf"
         }
 
         list_command = [
