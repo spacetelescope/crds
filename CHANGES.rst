@@ -1,3 +1,11 @@
+11.16.3 (unreleased)
+
+General
+-------
+
+- Allow forward slash and equals signs in Reason for Delivery [#886]
+
+
 11.16.2 (2022-06-09)
 
 Roman

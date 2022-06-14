@@ -269,7 +269,7 @@ class TestSubmission(object):
         self.s['file_type']           = 'value'
         self.s['correctness_testing'] = 'value'
         self.s['deliverer']           = 'value'
-        self.s['description']         = 'Dashes 0-9, underscores_1, commas, whitespace and periods 1234567890.'
+        self.s['description']         = 'Dash-es under_scores, commas, periods. 1234567890 += fwd/slash.'
         self.s['calpipe_version']     = 'value'
         self.s['modes_affected']      = 'value'
         self.s['instrument']          = 'stis'  # Only works for HST
@@ -278,7 +278,7 @@ class TestSubmission(object):
 
     @raises(ValueError)
     def test_invalid_description(self):
-        some_invalid_chars = ['!', '@', '$', '%', '^', '*', '(', ')', '+', '=', '~', '`', '"', '?', '/', '|', '{', '}', '[', ']', ':', ';', '<', '>']
+        some_invalid_chars = ['!', '@', '$', '%', '^', '*', '(', ')', '~', '`', '"', '?', '|', '{', '}', '[', ']', ':', ';', '<', '>']
         # Do something here to pass field validation checks:
         self.s['file_type']           = 'value'
         self.s['correctness_testing'] = 'value'
@@ -298,10 +298,11 @@ class TestSubmission(object):
         self.s['calpipe_version']     = 'value'
         self.s['modes_affected']      = 'value'
         self.s['instrument']          = 'stis'  # Only works for HST
-        extrabad = "This (RFD) is invalid"
-        stillbad = "This RFD) is still invalid?"
-        justbad = "This RFD is $invalid."
-        bad_desc = [extrabad, stillbad, justbad]
-        for bad in bad_desc:
+        invalid_strings = [
+          "This %RFD is invalid",
+          "This <RFD> is still invalid",
+          "This {RFD is $invalid."
+        ]
+        for bad in invalid_strings:
             self.s['description'] = bad
             self.s.validate()
