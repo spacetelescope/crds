@@ -57,7 +57,7 @@ NULL_FIELDTYPES = {
     'CharField'        : str,
     'TypedChoiceField' : str, }
 
-DESCRIPTION_RE = re.compile('[^0-9a-zA-Z ,-._]+')
+DESCRIPTION_RE = re.compile('[^A-Za-z0-9._\s/,=\-\+]')
 
 def validate_description_text(text):
     err = DESCRIPTION_RE.search(text)
@@ -336,7 +336,7 @@ class Submission(object):
         desc_text = self._fields['description']
         invalid_char = validate_description_text(desc_text)
         if invalid_char is not None:
-            raise ValueError(f'Invalid character detected: "{invalid_char}" - only alphanumeric, dashes, underscores, periods and commas are allowed.')
+            raise ValueError(f'Invalid character detected: "{invalid_char}" - only alphanumeric, dashes, underscores, periods, commas, forward slashes and equals signs are allowed.')
 
     @wraps(yaml.safe_dump)
     def yaml(self, *args, **kargs):
