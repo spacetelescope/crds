@@ -782,7 +782,7 @@ def get_client_retry_delay_seconds():
     return CLIENT_RETRY_DELAY_SECONDS.get()
 
 CLIENT_TIMEOUT = IntConfigItem(
-    "CRDS_CLIENT_TIMEOUT_SECONDS", 60, "Seconds to wait for a CRDS network request to complete.")
+    "CRDS_CLIENT_TIMEOUT_SECONDS", 3600, "Seconds to wait for a CRDS network request to complete.")
 
 def get_client_timeout_seconds():
     return CLIENT_TIMEOUT.get()
