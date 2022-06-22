@@ -1,4 +1,4 @@
-11.16.4 (unreleased)
+11.16.4 (2022-06-22)
 ====================
 
 - Update the timeout for RPC calls [#887]
