@@ -23,7 +23,7 @@ class TestRoman(unittest.TestCase):
     def tearDown(self):
         test_config.cleanup(self.old_state)
 
-    def test_getreferences_with_valid_header(self):
+    def test_getreferences_with_valid_header_ISOT_fmt(self):
         """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
         """
         result = heavy_client.getreferences(
@@ -32,6 +32,23 @@ class TestRoman(unittest.TestCase):
                 "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
                 "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
                 "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
+            },
+            observatory="roman",
+            context="roman_0005.pmap",
+            reftypes=["dark"]
+        )
+
+        assert pathlib.Path(result["dark"]).name == "roman_wfi_dark_0001.asdf"
+    
+    def test_getreferences_with_valid_header_ISO_fmt(self):
+        """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
+        """
+        result = heavy_client.getreferences(
+            {
+                "ROMAN.META.INSTRUMENT.NAME": "WFI",
+                "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
+                "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
+                "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01 00:00:00"
             },
             observatory="roman",
             context="roman_0005.pmap",
