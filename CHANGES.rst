@@ -1,6 +1,11 @@
 11.16.5 (unreleased)
 ====================
 
+General
+-------
+
+- Updated GH action release token [#889]
+
 Roman
 -----
 
