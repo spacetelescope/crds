@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'Derived from miri_pars-jumpstep 2022-06',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-jumpstep',
+    'filetype' : 'pars-jumpstep',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pars-jumpstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '378857c7e5adfad77d4e0f814261e7f0c3f0ba59',
+    'suffix' : 'pars-jumpstep',
+    'text_descr' : 'JumpStep runtime parameters',
+}
+
+comment = """
+Updated parkeys to resolve CRDS-1196
+"""
+
+selector = Match({
+})
