@@ -1,3 +1,11 @@
+11.16.6 (unreleased)
+===================
+
+JWST
+----
+
+-  update niriss pars-jumpstep parkeys [#890]
+
 11.16.5 (2022-06-27)
 ====================
 
