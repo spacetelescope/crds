@@ -6,9 +6,6 @@ JWST
 
 -  update niriss pars-jumpstep parkeys [#890]
 
-11.16.6 (TBD)
-=============
-
 General
 -------
 
