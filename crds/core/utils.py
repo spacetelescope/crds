@@ -17,6 +17,7 @@ import ast
 import gc
 import json
 import warnings
+import platform
 
 # ===================================================================
 
@@ -619,9 +620,11 @@ def is_writable(filepath, no_exist=True):
         return no_exist and len(os.path.dirname(filepath)) and is_writable(os.path.dirname(filepath))
     stats = os.stat(filepath)
     user_writeable = bool(stats.st_mode & stat.S_IWUSR)
-    effective_user_matches =  bool(stats.st_uid == os.geteuid())
+    user_id = os.geteuid() if 'windows' not in platform.system().lower() else stats.st_uid
+    effective_user_matches =  bool(stats.st_uid == user_id)
     group_writeable = bool(stats.st_mode & stat.S_IWGRP)
-    group_matches = bool(stats.st_gid in os.getgroups())
+    group_id = os.getgroups() if 'windows' not in platform.system().lower() else [stats.st_gid]
+    group_matches = bool(stats.st_gid in group_id)
     other_writeable = bool(stats.st_mode & stat.S_IWOTH)
     return bool((user_writeable and effective_user_matches) or
                 (group_writeable and group_matches) or
