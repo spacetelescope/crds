@@ -1,3 +1,14 @@
+11.16.7 (unreleased)
+====================
+
+General
+-------
+
+- Changed "equal weight special case" warning to an error [#892]
+
+- Revised core.utils to allow I/O to work under Windows [#891]
+
+
 11.16.6 (2022-07-18)
 ====================
 
@@ -5,11 +16,6 @@ JWST
 ----
 
 -  update niriss pars-jumpstep parkeys [#890]
-
-General
--------
-
-- Revised core.utils to allow I/O to work under Windows [#891]
 
 
 11.16.5 (2022-06-27)
