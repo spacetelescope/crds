@@ -2045,7 +2045,7 @@ Restore original debug behavior:
                 #     https://jwst-crds.stsci.edu/static/users_guide/index.html
                 #     for more explanation.""",
                 #     "-"*40)
-                raise AmbiguousMatchError(f"\n----------------------------------------\nMatch case {self.match_item(key)} is an equal weight special case of {self.match_item(other)}. \nCancel the submission and regenerate the reference files \nwith different parameter values which coincide with an existing category. \nFor some parameter sets, CRDS interprets both matches as equally good. \nFor more explanation, see the file submission section of the CRDS server user's guide here: \nhttps://jwst-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------")
+                raise AmbiguousMatchError(f"\n----------------------------------------\nMatch case\n{self.match_item(key)}\nis an equal weight special case of\n{self.match_item(other)}\nCancel the submission and regenerate the reference files\nwith different parameter values which coincide with an existing category.\nFor some parameter sets, CRDS interprets both matches as equally good.\nFor more explanation, see the file submission section of the CRDS server user's guide here:\nhttps://jwst-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------")
 
 # ==============================================================================
 

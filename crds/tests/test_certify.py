@@ -449,7 +449,9 @@ def certify_recursive():
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G130M') : 
     ----------------------------------------
-    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M')) is an equal weight special case of (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
+    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M')) 
+    is an equal weight special case of 
+    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
     Cancel the submission and regenerate the reference files 
     with different parameter values which coincide with an existing category. 
     For some parameter sets, CRDS interprets both matches as equally good. 
@@ -458,7 +460,9 @@ def certify_recursive():
     ----------------------------------------
     CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G160M') : 
     ----------------------------------------
-    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G160M')) is an equal weight special case of (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
+    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G160M')) 
+    is an equal weight special case of 
+    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
     Cancel the submission and regenerate the reference files 
     with different parameter values which coincide with an existing category. 
     For some parameter sets, CRDS interprets both matches as equally good. 
@@ -1336,11 +1340,14 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
     CRDS - ERROR -  Match('DETECTOR',) : ('FUV',) : 
     ----------------------------------------
-    Match case (('DETECTOR', 'FUV'),) is an equal weight special case of (('DETECTOR', 'FUV|NUV'),). 
-    Cancel the submission and regenerate the reference files 
-    with different parameter values which coincide with an existing category. 
-    For some parameter sets, CRDS interprets both matches as equally good. 
-    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    Match case
+    (('DETECTOR', 'FUV'),)
+    is an equal weight special case of
+    (('DETECTOR', 'FUV|NUV'),)
+    Cancel the submission and regenerate the reference files
+    with different parameter values which coincide with an existing category.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    For more explanation, see the file submission section of the CRDS server user's guide here:
     https://jwst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
@@ -1352,11 +1359,14 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
     CRDS - ERROR -  Match('DETECTOR',) : ('NUV',) : 
     ----------------------------------------
-    Match case (('DETECTOR', 'NUV'),) is an equal weight special case of (('DETECTOR', 'FUV|NUV'),). 
-    Cancel the submission and regenerate the reference files 
-    with different parameter values which coincide with an existing category. 
-    For some parameter sets, CRDS interprets both matches as equally good. 
-    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    Match case
+    (('DETECTOR', 'NUV'),)
+    is an equal weight special case of
+    (('DETECTOR', 'FUV|NUV'),)
+    Cancel the submission and regenerate the reference files
+    with different parameter values which coincide with an existing category.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    For more explanation, see the file submission section of the CRDS server user's guide here:
     https://jwst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
@@ -2190,6 +2200,11 @@ class TestCertify(test_config.CRDSTestCase):
                               dum_provenance=True, provenance=["GAIN"])
 
 # ------------------------------------------------------------------------------
+
+    def test_check_ambiguous_match(self):
+        assert_raises(exceptions.AmbiguousMatchError, certify.certify_file,
+        self.data("hst_acs_darkfile.rmap"), "hst.pmap", observatory="hst")
+
     def test_check_dduplicates(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
         self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")

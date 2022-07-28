@@ -384,6 +384,18 @@ def dt_validate_mapping_valid():
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile.rmap")
     >>> r.validate_mapping()
+    CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : 
+    ----------------------------------------
+    Match case
+    (('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AD|B|BC|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    is an equal weight special case of
+    (('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    Cancel the submission and regenerate the reference files
+    with different parameter values which coincide with an existing category.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    For more explanation, see the file submission section of the CRDS server user's guide here:
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    ----------------------------------------
     >>> test_config.cleanup(old_state)
     """
 
