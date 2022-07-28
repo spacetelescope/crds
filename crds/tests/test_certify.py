@@ -447,6 +447,24 @@ def certify_recursive():
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context 'hst.pmap'
+    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G130M') : 
+    ----------------------------------------
+    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M')) is an equal weight special case of (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
+    Cancel the submission and regenerate the reference files 
+    with different parameter values which coincide with an existing category. 
+    For some parameter sets, CRDS interprets both matches as equally good. 
+    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    ----------------------------------------
+    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G160M') : 
+    ----------------------------------------
+    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G160M')) is an equal weight special case of (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
+    Cancel the submission and regenerate the reference files 
+    with different parameter values which coincide with an existing category. 
+    For some parameter sets, CRDS interprets both matches as equally good. 
+    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    ----------------------------------------
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_fluxtab.rmap' (9/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
