@@ -1316,16 +1316,15 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Validating 'hst_cos_deadtab_0250.rmap' with parameters (('DETECTOR',), ('DATE-OBS', 'TIME-OBS'))
     CRDS - DEBUG -  Validating key ('FUV',)
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
-    CRDS - WARNING -  ----------------------------------------
-    Match case
-     (('DETECTOR', 'FUV'),)
-    is an equal weight special case of
-     (('DETECTOR', 'FUV|NUV'),)
-    For some parameter sets, CRDS interprets both matches as equally good.
-    See the file submission section of the CRDS server user's guide here:
-        https://jwst-crds.stsci.edu/static/users_guide/index.html
-    for more explanation.
-     ----------------------------------------
+    CRDS - ERROR -  Match('DETECTOR',) : ('FUV',) : 
+    ----------------------------------------
+    Match case (('DETECTOR', 'FUV'),) is an equal weight special case of (('DETECTOR', 'FUV|NUV'),). 
+    Cancel the submission and regenerate the reference files 
+    with different parameter values which coincide with an existing category. 
+    For some parameter sets, CRDS interprets both matches as equally good. 
+    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Validating key ('FUV|NUV',)
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
@@ -1333,16 +1332,15 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Validating key ('NUV',)
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
-    CRDS - WARNING -  ----------------------------------------
-    Match case
-     (('DETECTOR', 'NUV'),)
-    is an equal weight special case of
-     (('DETECTOR', 'FUV|NUV'),)
-    For some parameter sets, CRDS interprets both matches as equally good.
-    See the file submission section of the CRDS server user's guide here:
-        https://jwst-crds.stsci.edu/static/users_guide/index.html
-    for more explanation.
-     ----------------------------------------
+    CRDS - ERROR -  Match('DETECTOR',) : ('NUV',) : 
+    ----------------------------------------
+    Match case (('DETECTOR', 'NUV'),) is an equal weight special case of (('DETECTOR', 'FUV|NUV'),). 
+    Cancel the submission and regenerate the reference files 
+    with different parameter values which coincide with an existing category. 
+    For some parameter sets, CRDS interprets both matches as equally good. 
+    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    ----------------------------------------
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst_0508.pmap'
     CRDS - INFO -  ########################################

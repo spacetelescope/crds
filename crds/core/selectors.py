@@ -2035,18 +2035,17 @@ Restore original debug behavior:
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
-                if self._merge_overlaps:
-                    log.verbose_warning("-"*40 + "\nMatch case\n",
-                    log.PP(self.match_item(key)),
-                    "\nis an equal weight special case of\n",
-                    log.PP(self.match_item(other)),
-                    """For some parameter sets, CRDS interprets both matches as equally good.
-                    See the file submission section of the CRDS server user's guide here:
-                    https://jwst-crds.stsci.edu/static/users_guide/index.html
-                    for more explanation.""",
-                    "-"*40)
-                else:
-                    raise AmbiguousMatchError(f"Match case {self.match_item(key)} is an equal weight special case of {self.match_item(other)}. Cancel the submission and regenerate the reference files with different parameter values which coincide with an existing category.") 
+                # if self._merge_overlaps:
+                #     log.verbose_warning("-"*40 + "\nMatch case\n",
+                #     log.PP(self.match_item(key)),
+                #     "\nis an equal weight special case of\n",
+                #     log.PP(self.match_item(other)),
+                #     """For some parameter sets, CRDS interprets both matches as equally good.
+                #     See the file submission section of the CRDS server user's guide here:
+                #     https://jwst-crds.stsci.edu/static/users_guide/index.html
+                #     for more explanation.""",
+                #     "-"*40)
+                raise AmbiguousMatchError(f"\n----------------------------------------\nMatch case {self.match_item(key)} is an equal weight special case of {self.match_item(other)}. \nCancel the submission and regenerate the reference files \nwith different parameter values which coincide with an existing category. \nFor some parameter sets, CRDS interprets both matches as equally good. \nFor more explanation, see the file submission section of the CRDS server user's guide here: \nhttps://jwst-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------")
 
 # ==============================================================================
 

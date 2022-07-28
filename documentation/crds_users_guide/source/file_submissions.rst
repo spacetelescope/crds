@@ -1044,15 +1044,15 @@ Match() solutions:
 Solution for Equal Weight Matches
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To avoid losing the work entailed by a file submission completely, equal
-weight match cases are reported as warnings to give latitude in how to
-address the problem.   There are generally two solutions:
+Equal weight match cases are reported as errors. Cancel the submission and 
+regenerate the reference files with different parameter values which coincide 
+with an existing category. 
 
-1. Cancel the submission and regenerate the reference files with different
-   parameter values which coincide with an existing category.
+Note: this used to be reported as a warning in order to give latitude in 
+addressing the problem (i.e. accept the submission but immediately edit the rmap 
+to combine overlapping Match() categories). Starting in CRDS 11.16.6 this is now 
+an error and the submission must be canceled.
 
-2. Accept the submission but immediately edit the rmap to combine overlapping
-   Match() categories.
 
 Why CRDS Categorizes Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
