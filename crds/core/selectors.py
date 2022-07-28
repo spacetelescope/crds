@@ -2045,7 +2045,8 @@ Restore original debug behavior:
                     https://jwst-crds.stsci.edu/static/users_guide/index.html
                     for more explanation.""",
                     "-"*40)
-                raise AmbiguousMatchError(f"Match case {self.match_item(key)} is an equal weight special case of {self.match_item(other)}. Cancel the submission and regenerate the reference files with different parameter values which coincide with an existing category.") 
+                else:
+                    raise AmbiguousMatchError(f"Match case {self.match_item(key)} is an equal weight special case of {self.match_item(other)}. Cancel the submission and regenerate the reference files with different parameter values which coincide with an existing category.") 
 
 # ==============================================================================
 
