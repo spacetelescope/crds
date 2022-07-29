@@ -1312,7 +1312,7 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Modify found '1996-10-01 00:00:00' as primitive 's7g1700gl_dead_dup1.fits' replacing with 's7g1700gl_dead_dup2.fits'
     CRDS - ERROR -  ----------------------------------------
     Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
-     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00')))
+     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00'))) 
     Each reference would replace the other in the rmap.
     Either reference file matching parameters need correction
     or additional matching parameters should be added to the rmap
@@ -1352,7 +1352,6 @@ def test_certify_check_rmap_updates():
     For more explanation, see the file submission section of the CRDS server user's guide here:
     https://jwst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
-    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Validating key ('FUV|NUV',)
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
@@ -1371,7 +1370,6 @@ def test_certify_check_rmap_updates():
     For more explanation, see the file submission section of the CRDS server user's guide here:
     https://jwst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
-    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst_0508.pmap'
     CRDS - INFO -  ########################################
     CRDS - INFO -  3 errors
@@ -2208,9 +2206,9 @@ class TestCertify(test_config.CRDSTestCase):
         self.data("hst_acs_darkfile.rmap"), "hst.pmap", observatory="hst")
 
     def test_check_dduplicates(self):
-        self.certify_files([self.data("hst_dup.pmap")], "hst.pmap", observatory="hst")
-        self.certify_files([self.data("hst_acs_dup.imap")], "hst.pmap", observatory="hst")
-        self.certify_files([self.data("hst_acs_darkfile_dups.rmap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_dup_entry.rmap")], "hst.pmap", observatory="hst")
 
     def test_check_comment(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
