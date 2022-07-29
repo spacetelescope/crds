@@ -447,26 +447,28 @@ def certify_recursive():
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context 'hst.pmap'
-    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G130M') : 
+    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G130M') :
     ----------------------------------------
-    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M')) 
-    is an equal weight special case of 
-    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
-    Cancel the submission and regenerate the reference files 
-    with different parameter values which coincide with an existing category. 
-    For some parameter sets, CRDS interprets both matches as equally good. 
-    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    Match case
+    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M'))
+    is an equal weight special case of
+    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M'))
+    Cancel the submission and regenerate the reference files
+    with different parameter values which coincide with an existing category.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    For more explanation, see the file submission section of the CRDS server user's guide here:
     https://jwst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
-    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G160M') : 
+    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G160M') :
     ----------------------------------------
-    Match case (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G160M')) 
-    is an equal weight special case of 
-    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M')). 
-    Cancel the submission and regenerate the reference files 
-    with different parameter values which coincide with an existing category. 
-    For some parameter sets, CRDS interprets both matches as equally good. 
-    For more explanation, see the file submission section of the CRDS server user's guide here: 
+    Match case
+    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G160M'))
+    is an equal weight special case of
+    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M'))
+    Cancel the submission and regenerate the reference files
+    with different parameter values which coincide with an existing category.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    For more explanation, see the file submission section of the CRDS server user's guide here:
     https://jwst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - INFO - ########################################
@@ -492,10 +494,10 @@ def certify_recursive():
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
+    CRDS - INFO - 2 errors
     CRDS - INFO - 0 warnings
     CRDS - INFO - 39 infos
-    0
+    2
     """
 
 def certify_table_comparison_context():
@@ -1372,10 +1374,10 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst_0508.pmap'
     CRDS - INFO -  ########################################
-    CRDS - INFO -  1 errors
-    CRDS - INFO -  2 warnings
+    CRDS - INFO -  3 errors
+    CRDS - INFO -  0 warnings
     CRDS - INFO -  17 infos
-    1
+    3
     >>> test_config.cleanup(old_state)
     """
 
@@ -2206,9 +2208,9 @@ class TestCertify(test_config.CRDSTestCase):
         self.data("hst_acs_darkfile.rmap"), "hst.pmap", observatory="hst")
 
     def test_check_dduplicates(self):
-        self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
-        self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")
-        self.certify_files([self.data("hst_acs_darkfile.rmap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_dup.pmap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs_dup.imap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs_darkfile_dups.rmap")], "hst.pmap", observatory="hst")
 
     def test_check_comment(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
