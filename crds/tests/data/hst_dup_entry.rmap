@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'DEADCORR',
     'rmap_relevance' : '(DEADCORR != "OMIT")',
     'row_keys' : ('SEGMENT',),
-    'sha1sum' : '38ce256d6d57978405e4f493efd536ce3729b100',
+    'sha1sum' : '562264d2f65c4aa9494654a41806ea4f05db1196',
 }
 
 selector = Match({
