@@ -2208,7 +2208,7 @@ class TestCertify(test_config.CRDSTestCase):
     def test_check_dduplicates(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
         self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")
-        self.certify_files([self.data("hst_dup_entry.rmap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_cos_deadtab_dup.rmap")], "hst.pmap", observatory="hst", check_sha1sums=False)
 
     def test_check_comment(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
