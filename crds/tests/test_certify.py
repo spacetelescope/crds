@@ -16,6 +16,7 @@ from crds import certify
 from crds.certify import CertifyScript
 from crds.certify import generic_tpn
 from crds.certify import validators
+from crds.certify import mapping_parser
 
 from crds.tests import test_config
 
@@ -2208,7 +2209,14 @@ class TestCertify(test_config.CRDSTestCase):
     def test_check_dduplicates(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
         self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")
-        self.certify_files([self.data("hst_cos_dup.rmap")], "hst.pmap", observatory="hst", check_sha1sums=False)
+    
+    def test_check_dup_selector_entry(self):
+        """Should return:
+        CRDS - ERROR -  Duplicate entry at selector Match(('FUV',)) '1996-10-01 00:00:00' = 's7g1700gl_dead_dup2.fits' vs. 's7g1700gl_dead_dup1.fits'
+        This is a step within certify that raises other errors, so this approach is to isolate the dup entry error.
+        """
+        parsing = mapping_parser.parse_mapping(self.data("hst_cos_dup.imap"))
+        mapping_parser.check_duplicates(parsing)
 
     def test_check_comment(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
