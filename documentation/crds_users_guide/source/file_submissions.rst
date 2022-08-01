@@ -1050,7 +1050,7 @@ with an existing category.
 
 Note: this used to be reported as a warning in order to give latitude in 
 addressing the problem (i.e. accept the submission but immediately edit the rmap 
-to combine overlapping Match() categories). Starting in CRDS 11.16.6 this is now 
+to combine overlapping Match() categories). Starting in CRDS 11.16.7 this is now 
 an error and the submission must be canceled.
 
 
