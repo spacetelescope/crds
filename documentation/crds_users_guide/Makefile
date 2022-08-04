@@ -16,6 +16,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
 APIDIR        = api
+LOCAL_SERVER_REPO = ../../../crds-server
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -29,6 +30,7 @@ I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS)
 #This is needed with git because git doesn't create a dir if it's empty
 $(shell [ -d "_static" ] || mkdir -p _static)
 
+$(shell [ ! -d $LOCAL_SERVER_REPO ] || LOCAL_SERVER_REPO=../../../crds_server)
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -176,7 +178,7 @@ tarhtml: html
 	rm -rf users_guide
 
 serverhtml: tarhtml
-	mv users_guide.tar.gz ../../../crds_server/static
-	cd ../../../crds_server/static; \
+	mv users_guide.tar.gz ${LOCAL_SERVER_REPO}/crds_server/static
+	cd ${LOCAL_SERVER_REPO}/crds_server/static; \
 	tar zxf users_guide.tar.gz; \
 	rm users_guide.tar.gz
