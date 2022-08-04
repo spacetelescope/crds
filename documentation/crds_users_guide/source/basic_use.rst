@@ -8,39 +8,35 @@ Operating on site using the CRDS cache at */grp/crds/cache* by default,  CRDS "j
 
 .. tabs::
 
-   .. tab:: HST
-    
-      CRDS provides the *crds bestrefs* program for updating dataset headers for HST with the current best references. Running bestrefs for HST is accomplished via::
+   .. group-tab:: HST
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+      CRDS provides the *crds bestrefs* program for updating dataset headers for HST with the current best references. Running bestrefs for HST is accomplished via:
 
-         $ crds bestrefs --files dataset*.fits --update-bestrefs
+        .. code-block:: bash
+
+            $ crds bestrefs --files dataset*.fits --update-bestrefs
 
       This command updates the FITS headers of the files specified by `dataset*.fits` with the names of the latest best reference files known to */grp/crds/cache*.
 
-   .. tab:: JWST
+   .. group-tab:: JWST
 
-      For JWST calibrations, CRDS is fully integrated with the CAL code and operates transparently as a consequence of running pipelines::
+      For JWST calibrations, CRDS is fully integrated with the CAL code and operates transparently as a consequence of running pipelines:
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+        .. code-block:: bash
 
-         $ strun calwebb_sloper.cfg dataset.fits
-        
+            $ strun calwebb_sloper.cfg dataset.fits
+
       The above command will transparently update the reference files specified in the metadata of `dataset.fits`.
 
-   .. tab:: ROMAN
+   .. group-tab:: ROMAN
 
-      For Roman calibrations, CRDS is fully integrated with the CAL code and operates transparently as a consequence of running pipelines::
+      For Roman calibrations, CRDS is fully integrated with the CAL code and operates transparently as a consequence of running pipelines:
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+        .. code-block:: bash
 
-         $ strun roman_elp dataset.asdf
-        
+            $ strun roman_elp dataset.asdf
+
       The above command will transparently update the reference files specified in the metadata of `dataset.asdf`.
-
 
 
 Default Onsite Use
@@ -76,42 +72,39 @@ you need to process your datasets to a personal CRDS cache.  You can create a
 small personal cache of rules and references supporting only the datasets you
 care about:
 
+
 .. tabs::
 
-   .. tab:: HST
-    
-      To fetch the references required to process some FITS datasets::
+   .. group-tab:: HST
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+      To fetch the references required to process some FITS datasets:
 
-         $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu   # or similar
-         $ export CRDS_PATH=${HOME}/crds_cache
-         $ crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
+        .. code-block:: bash
 
-   .. tab:: JWST
+            $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu   # or similar
+            $ export CRDS_PATH=${HOME}/crds_cache
+            $ crds bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
 
-      CRDS is directly integrated with the calibration step code and will automatically download rules and references.  The only extra setup needed is to define `CRDS_PATH` and `CRDS_SERVER_URL` appropriately prior to *strun*::
+   .. group-tab:: JWST
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+      CRDS is directly integrated with the calibration step code and will automatically download rules and references.  The only extra setup needed is to define `CRDS_PATH` and `CRDS_SERVER_URL` appropriately prior to *strun*:
 
-         $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu   # or similar
-         $ export CRDS_PATH=${HOME}/crds_cache
-         $ strun calwebb_sloper.cfg dataset.fits
+        .. code-block:: bash
 
-   .. tab:: ROMAN
+            $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu   # or similar
+            $ export CRDS_PATH=${HOME}/crds_cache
+            $ strun calwebb_sloper.cfg dataset.fits
 
-      CRDS is directly integrated with the calibration step code and will automatically download rules and references.  The only extra setup needed is to define `CRDS_PATH` and `CRDS_SERVER_URL` appropriately prior to *strun*::
+   .. group-tab:: ROMAN
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+      CRDS is directly integrated with the calibration step code and will automatically download rules and references.  The only extra setup needed is to define `CRDS_PATH` and `CRDS_SERVER_URL` appropriately prior to *strun*:
 
-         $ export CRDS_SERVER_URL=https://roman-crds.stsci.edu   # or similar
-         $ export CRDS_PATH=${HOME}/crds_cache
-         $ strun roman_elp dataset.asdf
-         # or
-         $ strun romancal.pipeline.ExposurePipeline dataset.asdf
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://roman-crds.stsci.edu   # or similar
+            $ export CRDS_PATH=${HOME}/crds_cache
+            $ strun roman_elp dataset.asdf
+
 
 Overriding the Default Context
 ------------------------------
@@ -120,31 +113,28 @@ It's possible to use past or future/experimental CRDS contexts rather than the p
 
 .. tabs::
 
-   .. tab:: HST
-    
-      To fetch the references required to process some FITS datasets::
+   .. group-tab:: HST
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+      To fetch the references required to process some FITS datasets:
 
-         $ crds bestrefs --files dataset*.fits --update-bestrefs --new-context hst_0001.pmap
+        .. code-block:: bash
 
-   .. tab:: JWST
+            $ crds bestrefs --files dataset*.fits --update-bestrefs --new-context hst_0001.pmap
 
-      By setting an environment variable::
+   .. group-tab:: JWST
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+      By setting an environment variable:
 
-         $ export CRDS_CONTEXT=jwst_0001.pmap
-         $ strun calwebb_sloper.cfg dataset.fits
+        .. code-block:: bash
 
-   .. tab:: ROMAN
+            $ export CRDS_CONTEXT=jwst_0001.pmap
+            $ strun calwebb_sloper.cfg dataset.fits
 
-      By setting an environment variable::
+   .. group-tab:: ROMAN
 
-      .. code-block:: bash
-         :emphasize-lines: 3
+      By setting an environment variable:
 
-         $ export CRDS_CONTEXT=roman_0001.pmap
-         $ strun roman_elp dataset.asdf
+        .. code-block:: bash
+
+            $ export CRDS_CONTEXT=roman_0001.pmap
+            $ strun roman_elp dataset.asdf
