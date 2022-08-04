@@ -14,3 +14,4 @@ documentation/crds_users_guide/*.tar.gz
 
 crds/_version.py
 .vscode/settings.json
+tabs.rst
