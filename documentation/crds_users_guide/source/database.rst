@@ -56,7 +56,7 @@ or mapping file from the specified observatory:
         .. code-block:: python
 
             >>> from crds.client import api
-            >>> api.get_file_info("hst", "jwst_miri_dark_0072.fits")
+            >>> api.get_file_info("jwst", "jwst_miri_dark_0072.fits")
             {'activation_date': '2022-03-21 10:23:31',
              'aperture': 'none',
              'blacklisted': 'false',
@@ -87,7 +87,7 @@ or mapping file from the specified observatory:
         .. code-block:: python
 
             >>> from crds.client import api
-            >>> api.get_file_info("roman", file="roman_wfi_dark_0227.asdf")
+            >>> api.get_file_info("roman", "roman_wfi_dark_0227.asdf")
             {'activation_date': '2022-05-10 12:00:28.216225',
              'aperture': 'none',
              'blacklisted': 'false',
@@ -204,17 +204,32 @@ The CRDS catalog stores metadata about references not captured in the .rmap file
 the history of CRDS context use, the effective dates at which particular contexts where operational in
 the pipeline.
 
-You can download a SQLite-3 snapshot of the CRDS catalog like this::
-    
-    % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
-    % setenv CRDS_PATH /home/homer/crds_cache
-    % crds sync --fetch-sqlite-db 
-    CRDS - INFO - SQLite database file downloaded to: /home/homer/crds_cache/config/hst/crds_db.sqlite3
+You can download a SQLite-3 snapshot of the CRDS catalog like this:
+
+.. tabs::
+
+    .. tab:: bash
+
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
+            $ export CRDS_PATH=/home/homer/crds_cache
+            $ export crds sync --fetch-sqlite-db
+            CRDS - INFO - SQLite database file downloaded to: /home/homer/crds_cache/config/hst/crds_db.sqlite3
+
+    .. tab:: csh
+
+        .. code-block:: csh
+
+            % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+            % setenv CRDS_PATH /home/homer/crds_cache
+            % crds sync --fetch-sqlite-db 
+            CRDS - INFO - SQLite database file downloaded to: /home/homer/crds_cache/config/hst/crds_db.sqlite3
     
 will snapshot the current CRDS catalog on the CRDS server and download it to your local CRDS cache as a 
 SQLite3 database file.  The SQLite database can typically be accessed like this::
     
-    % sqlite3 /home/homer/crds_cache_dev/config/hst/crds_db.sqlite3
+    $ sqlite3 /home/homer/crds_cache_dev/config/hst/crds_db.sqlite3
     
     sqlite> .tables
     crds_hst_catalog       crds_hst_context_history
