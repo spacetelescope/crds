@@ -2,19 +2,20 @@
 Using the CRDS Web Site
 =======================
 
-CRDS has websites at hst-crds.stsci.edu_ and jwst-crds.stsci.edu_ which support
+CRDS has websites at hst-crds.stsci.edu_, jwst-crds.stsci.edu_ and roman-crds.stsci.edu_ which support
 the submission, use, and distribution of CRDS reference and mappings files.
-Functions on the CRDS website are either public functions which do not require
-authentication or private functions which require a CRDS login account.
+Functions on the CRDS website are either *public* functions which do not require
+authentication or *private* functions which require a CRDS login account.
 
 .. _hst-crds.stsci.edu: http://hst-crds.stsci.edu/
 .. _jwst-crds.stsci.edu: http://jwst-crds.stsci.edu/
+.. _roman-crds.stsci.edu: http://roman-crds.stsci.edu/
 
 .. figure:: images/web_index.png
    :scale: 50 %
    :alt: home page of CRDS website
 
-Functions annotated with the word (alpha) are partially completed components of
+Functions annotated with the word `alpha` are partially completed components of
 a future build which may prove useful now.
 
 Operational References
@@ -34,14 +35,14 @@ Context History (more)
 ----------------------
 
 The *Context History* displays the last 4 CRDS contexts which were in
-operational use by the pipeline. Clicking on the *(more)* link will bring up
+operational use by the pipeline. Clicking on the `more history` link will bring up
 the entire context history as a separate page as shown below:
 
 .. figure:: images/web_context_history.png
    :scale: 50 %
    :alt: History of CRDS operational contexts
    
-Click the *diff* check box for any two contexts in the history and then click
+Click the `diff` check box for any two contexts in the history and then click
 the diff button at the top of the diff column:
 
 .. figure:: images/web_context_diff_1.png
@@ -62,7 +63,7 @@ The logical differences display a table of matching parameters and files which
 were added, deleted, or replaced.  The textual differences show raw UNIX diffs
 of the two rules files.
 
-Clicking on any *context* link (the .pmap name) in the history table opens a
+Clicking on any `context` link (the .pmap name) in the history table opens a
 page containing the Historical References for some point in the past, similar
 to the Operational References display:
 
@@ -76,13 +77,13 @@ Open Services
 
 The following functions are available for anyone with access to the CRDS web
 server and basically serve to distribute information about CRDS files and
-recommendations.   Initially,  the CRDS sites are only visible within the Institute.
+recommendations. Initially, the CRDS sites are only visible within the Institute.
 
-Dataset Best References
-.......................
+Dataset Best References from Dataset ID or FITS Header Upload
+.............................................................
 
 The *Dataset Best References* page supports determining the best references for
-a single dataset with respect to one CRDS context.   Best references are based 
+a single dataset with respect to one CRDS context. Best references are based 
 upon a CRDS context and the parameters of the dataset as determined by the 
 dataset file itself or a database catalog entry.
 
@@ -130,8 +131,8 @@ were extracted from the dataset header on the right side of the page.
 Best reference recommendations are displayed on the left side of the page.
 
 
-Explore Best References
-.......................
+Explore Best References with Instrument Parameters
+..................................................
 
 Explore best references is a sand box that enables evaluating what CRDS will do
 given hand picked parameter values.  Explore Best References supports entering
@@ -210,13 +211,13 @@ The *Recent Activity* view shows a table of the tracked actions on CRDS files:
    
 The first page lists a number of constraints which can be used to choose
 activities of interest.   To ignore any constraint,  leave it set at the default
-value of \*.   The result of the activity search is a table of matching actions:
+value of `*`.   The result of the activity search is a table of matching actions:
 
 .. figure:: images/web_recent_activity_results.png
    :scale: 50 %
    :alt: database browse details page
    
-The default filter of \*.pmap previews contexts that have been submitted but
+The default filter of `*.pmap` previews contexts that have been submitted but
 not yet selected for operational use in the pipeline.
 
 Authenticated Services
