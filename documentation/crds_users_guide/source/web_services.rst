@@ -485,7 +485,7 @@ Matching Parameters By ID
 **get_dataset_headers_by_id(context_specifier, ids, datasets_since)**
 
 CRDS fetches best reference matching parameters indirectly from the archive database.
-The *get_dataset_headers_by_id()* function can be used to return the parameters required
+The `get_dataset_headers_by_id()` function can be used to return the parameters required
 to compute best references associated with the specified dataset ids:
 
 *context_specifier* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-operational
@@ -494,17 +494,44 @@ to compute best references associated with the specified dataset ids:
 
 *datasets_since* is an optional cut-off date for datasets.  If specified, only datasets acquired after that date are returned.
 
-An example call using the CRDS Python client is::
+An example call using the CRDS Python client is:
 
-    >>> get_dataset_headers_by_id("2016-01-01", ['JW96090001004_03101_00001.NRCB2'], None)
-    {'JW96090001004_03101_00001.NRCB2': {'META.EXPOSURE.READPATT': 'BRIGHT1',
-     'META.EXPOSURE.TYPE': 'NRC_IMAGE',
-     'META.INSTRUMENT.CHANNEL': 'SHORT',
-     'META.INSTRUMENT.DETECTOR': 'NRCB2',
-     'META.INSTRUMENT.FILTER': 'F150W2',
-     'META.INSTRUMENT.NAME': 'NIRCAM',
-     'META.INSTRUMENT.PUPIL': 'CLEAR',
-     'META.SUBARRAY.NAME': 'FULL'}}
+.. tabs::
+
+
+   .. group-tab:: JWST
+    
+       .. code-block:: python
+          
+           >>> get_dataset_headers_by_id("2016-01-01", ['JW96090001004_03101_00001.NRCB2'], None)
+           {'JW96090001004_03101_00001.NRCB2': {
+               'META.EXPOSURE.READPATT': 'BRIGHT1',
+               'META.EXPOSURE.TYPE': 'NRC_IMAGE',
+               'META.INSTRUMENT.CHANNEL': 'SHORT',
+               'META.INSTRUMENT.DETECTOR': 'NRCB2',
+               'META.INSTRUMENT.FILTER': 'F150W2',
+               'META.INSTRUMENT.NAME': 'NIRCAM',
+               'META.INSTRUMENT.PUPIL': 'CLEAR',
+               'META.SUBARRAY.NAME': 'FULL'
+               }
+           }
+
+   .. group-tab:: ROMAN
+
+       .. code-block:: python
+
+           >>> get_dataset_headers_by_id("2021-09-01", ['r0000201001001001002_01101_0001_WFI01'], None)
+           {'R0000201001001001002_01101_0001_WFI01': {
+               "ROMAN.META.INSTRUMENT.NAME": "WFI", 
+               "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01", 
+               "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT": "GRISM", 
+               "ROMAN.META.EXPOSURE.MA_TABLE_NUMBER": 1, 
+               "ROMAN.META.EXPOSURE.TYPE": "WFI_GRISM", 
+               "ROMAN.META.EXPOSURE.START_TIME": "2021-09-01T00:02:28"
+               }
+           }
+
+
 
 AUI Interface for Best References
 +++++++++++++++++++++++++++++++++
