@@ -502,7 +502,7 @@ class ReferenceCertifier(Certifier):
                 # This commented solution requires adding a new field to the rmap
                 # rmap = self.get_corresponding_rmap()
                 # assert f['roman']._tag == rmap['asdf_tag'] 
-                if not uri_match('asdf://stsci.edu/datamodels/roman/tags/reference_files/{}-*'.format(f['roman']['meta']['reftype'].lower()), f['roman']._tag):
+                if not uri_match('asdf://stsci.edu/datamodels/roman/tags/reference_files/*{}-*'.format(f['roman']['meta']['reftype'].lower()), f['roman']._tag):
                     log.error(
                         "ASDF Tag Validation",
                         f['roman']._tag,
