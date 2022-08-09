@@ -80,6 +80,7 @@ mode.
 The actual default context for a pipeline can be obtained as follows:
 
   .. code-block:: python
+
       >>> from crds import client
       >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
       'jwst_0101.pmap'
@@ -92,6 +93,7 @@ CRDS makes the history of contexts which have been activated in the pipeline as
 the operational context via the `get_context_history()` web service:
 
   .. code-block:: python
+
       >>> client.get_context_history("jwst")
       [('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings'),
       ('2012-09-27 00:00:00',
@@ -106,8 +108,8 @@ the operational context via the `get_context_history()` web service:
       ('2014-03-19 10:51:19',
       'jwst_0012.pmap',
       'Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME\r\nNew linearity files for all instruments\r\nNew saturation files and rmaps for all instruments'),
-    
-        ...
+      
+      ...
 
       ('2015-11-18 12:58:13',
       'jwst_0105.pmap',
@@ -142,29 +144,29 @@ Return a dictionary of CRDS catalog information about `filename`.  For instance:
       >>> from crds import client
       >>> client.get_file_info("jwst", "jwst_miri_flat_0023.fits")
       {'activation_date': '2014-09-25 18:30:27',
-      'aperture': 'none',
-      'blacklisted': 'false',
-      'change_level': 'severe',
-      'comment': 'cdp-2 from fm testing',
-      'creator_name': 'jwst build 3 team',
-      'deliverer_user': 'homer',
-      'delivery_date': '2014-09-20 07:55:56',
-      'derived_from': 'none',
-      'description': 'all references from jwst build 3 delivery 2. update miri flats, fringes, straymasks, resets, lastframes,     nirspec flat.',
-      'filekind': 'flat',
-      'instrument': 'miri',
-      'name': 'jwst_miri_flat_0023.fits',
-      'observatory': 'jwst',
-      'pedigree': 'ground',
-      'reference_file_type': 'flat',
-      'rejected': 'false',
-      'replaced_by_filename': '',
-      'sha1sum': '3f0c92aae539cb67f8e8823cc6815130018948f7',
-      'size': '10592640',
-      'state': 'operational',
-      'type': 'reference',
-      'uploaded_as': 'jwst_miri_flat_0016.fits',
-      'useafter_date': '2050-01-01 00:00:00'}
+       'aperture': 'none',
+       'blacklisted': 'false',
+       'change_level': 'severe',
+       'comment': 'cdp-2 from fm testing',
+       'creator_name': 'jwst build 3 team',
+       'deliverer_user': 'homer',
+       'delivery_date': '2014-09-20 07:55:56',
+       'derived_from': 'none',
+       'description': 'all references from jwst build 3 delivery 2. update miri flats, fringes, straymasks, resets,  lastframes,     nirspec flat.',
+       'filekind': 'flat',
+       'instrument': 'miri',
+       'name': 'jwst_miri_flat_0023.fits',
+       'observatory': 'jwst',
+       'pedigree': 'ground',
+       'reference_file_type': 'flat',
+       'rejected': 'false',
+       'replaced_by_filename': '',
+       'sha1sum': '3f0c92aae539cb67f8e8823cc6815130018948f7',
+       'size': '10592640',
+       'state': 'operational',
+       'type': 'reference',
+       'uploaded_as': 'jwst_miri_flat_0016.fits',
+       'useafter_date': '2050-01-01 00:00:00'}
 
 Multiple File Metadata
 ++++++++++++++++++++++
