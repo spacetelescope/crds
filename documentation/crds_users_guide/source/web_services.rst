@@ -299,9 +299,9 @@ Multiple Headers
 
 This service is an adaptation of get_best_references() to support returning
 best references for multiple datasets with a single service call.  All
-parameters are as for get_best_references() with the modification that *header*
+parameters are as for get_best_references() with the modification that `header`
 above is replaced with a mapping from multiple dataset ids to their
-corresponding headers, i.e. *header_map*::
+corresponding headers, i.e. `header_map`::
     
     { dataset_id : header, ... }
 
@@ -310,8 +310,8 @@ datasets::
 
     { dataset_id : best_references, ... }
 
-Where *dataset_id* is nominally an HST IPPPSSOOT id (e.g. 'I9ZF01010') or JWST
-dataset identifier (TBD).  Since *dataset_id* is only a keyword not used in best
+Where `dataset_id` is nominally an HST IPPPSSOOT id (e.g. 'I9ZF01010'), JWST or Roman
+dataset identifier (TBD).  Since `dataset_id` is only a keyword not used in best
 references computations, it can be any unique abstract identifier consisting of
 alphanumeric characters, period, colon, hyphen, or plus sign of 128 characters
 or less.
@@ -327,29 +327,31 @@ compute bestrefs under `context`,  i.e. matching header keys::
     { instrument : [ matching_parkey_name, ... ], ... }
 
 In CRDS the matching parameters are defined by each set of rules, e.g. for 
-one HST context (hst_0366.pmap) the reference file selection parameters 
-for all instruments are as follows::
+one HST context `hst_0366.pmap` the reference file selection parameters 
+for all instruments are as follows:
 
-    {'acs': ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'CCDAMP', 'CCDCHIP',
-         'CCDGAIN', 'CRCORR', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR',
-         'DRIZCORR', 'FILTER1', 'FILTER2', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 
-         'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'GLINCORR', 'LTV1', 'LTV2', 'NAXIS1', 
-         'NAXIS2', 'OBSTYPE', 'PCTECORR', 'PHOTCORR', 'REFTYPE', 'RPTCORR', 
-         'SHADCORR', 'SHUTRPOS', 'TIME-OBS', 'XCORNER', 'YCORNER'], 
-    'cos': ['INSTRUME', 'ALGNCORR', 'BADTCORR', 'BRSTCORR', 'DATE-OBS', 'DEADCORR',
-        'DETECTOR', 'EXPTYPE', 'FLATCORR', 'FLUXCORR', 'LIFE_ADJ', 'OBSMODE', 'OBSTYPE', 
-        'OPT_ELEM', 'REFTYPE', 'TDSCORR', 'TIME-OBS', 'TRCECORR', 'WALKCORR'], 
-    'nicmos': ['INSTRUME', 'CAMERA', 'DATE-OBS', 'FILTER', 'NREAD', 'OBSMODE', 'READOUT', 
-            'REFTYPE', 'SAMP_SEQ', 'TIME-OBS'], 
-     'stis': ['INSTRUME', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CCDOFFST', 
-          'CENWAVE', 'DATE-OBS', 'DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'REFTYPE', 'TIME-OBS'], 
-     'wfc3': ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 
-          'CCDGAIN', 'CHINJECT', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 
-          'FILTER', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'PHOTCORR', 'REFTYPE', 'SAMP_SEQ', 
-          'SHUTRPOS', 'SUBARRAY', 'SUBTYPE', 'TIME-OBS'], 
-     'wfpc2': ['INSTRUME', 'ATODGAIN', 'DATE-OBS', 'FILTER1', 'FILTER2', 'FILTNAM1', 'FILTNAM2', 
-            'IMAGETYP', 'LRFWAVE', 'MODE', 'REFTYPE', 'SERIALS', 'SHUTTER', 'TIME-OBS']
-    }
+  .. code-block:: python
+
+      {'acs': ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'CCDAMP', 'CCDCHIP',
+           'CCDGAIN', 'CRCORR', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR',
+           'DRIZCORR', 'FILTER1', 'FILTER2', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 
+           'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'GLINCORR', 'LTV1', 'LTV2', 'NAXIS1', 
+           'NAXIS2', 'OBSTYPE', 'PCTECORR', 'PHOTCORR', 'REFTYPE', 'RPTCORR', 
+           'SHADCORR', 'SHUTRPOS', 'TIME-OBS', 'XCORNER', 'YCORNER'], 
+      'cos': ['INSTRUME', 'ALGNCORR', 'BADTCORR', 'BRSTCORR', 'DATE-OBS', 'DEADCORR',
+          'DETECTOR', 'EXPTYPE', 'FLATCORR', 'FLUXCORR', 'LIFE_ADJ', 'OBSMODE', 'OBSTYPE', 
+          'OPT_ELEM', 'REFTYPE', 'TDSCORR', 'TIME-OBS', 'TRCECORR', 'WALKCORR'], 
+      'nicmos': ['INSTRUME', 'CAMERA', 'DATE-OBS', 'FILTER', 'NREAD', 'OBSMODE', 'READOUT', 
+              'REFTYPE', 'SAMP_SEQ', 'TIME-OBS'], 
+       'stis': ['INSTRUME', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CCDOFFST', 
+            'CENWAVE', 'DATE-OBS', 'DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'REFTYPE', 'TIME-OBS'], 
+       'wfc3': ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 
+            'CCDGAIN', 'CHINJECT', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 
+            'FILTER', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'PHOTCORR', 'REFTYPE', 'SAMP_SEQ', 
+            'SHUTRPOS', 'SUBARRAY', 'SUBTYPE', 'TIME-OBS'], 
+       'wfpc2': ['INSTRUME', 'ATODGAIN', 'DATE-OBS', 'FILTER1', 'FILTER2', 'FILTNAM1', 'FILTNAM2', 
+              'IMAGETYP', 'LRFWAVE', 'MODE', 'REFTYPE', 'SERIALS', 'SHUTTER', 'TIME-OBS']
+      }
 
 The required parkeys can be used to reduce a complete file header to only those keywords
 necessary to select references under the given context.
@@ -359,69 +361,111 @@ Valid Dataset IDs
 
 **get_dataset_ids(context, instrument)**
 
-CRDS interacts with the archive to obtain matching parameters for to compute
+CRDS interacts with the archive to obtain matching parameters to compute
 best references for particular datasets.  Each parameter set corresponds to a
-data set ID.  A list of the valid dataset IDs with respect to a particular CRDS
+dataset ID.  A list of the valid dataset IDs with respect to a particular CRDS
 context (or date) can be obtained as follows.
 
-To obtain current best references specify the context using a date::
+To obtain current best references, specify the context using a date:
 
-    >>> get_dataset_ids("2016-01-01T00:00:00", "miri") 
-    ['JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT',
-     'J80500020001_02101_00001.MIRIFUSHORT:JW80500020001_02101_00001.MIRIFUSHORT',
-     'JW80500018001_02101_00001.MIRIFUSHORT:JW80500018001_02101_00001.MIRIFUSHORT',
-     'JW80500020001_02101_00001.MIRIFULONG:JW80500020001_02101_00001.MIRIFULONG',
-     'JW80500018001_02101_00002.MIRIFULONG:JW80500018001_02101_00002.MIRIFULONG',
-     'JW80500009001_02101_00001.MIRIMAGE:JW80500009001_02101_00001.MIRIMAGE',
-     'JW80500018001_02101_00001.MIRIFULONG:JW80500018001_02101_00001.MIRIFULONG',
-     'JW80500018001_02101_00002.MIRIFUSHORT:JW80500018001_02101_00002.MIRIFUSHORT',
-     'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
-     'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
+.. tabs::
 
-Alternately the abstract default context can be specified as "<project>-operational", as in::
+   .. group-tab:: JWST
 
-    >>> get_dataset_ids("jwst-operational", "miri") 
-    ['JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT',
-     'J80500020001_02101_00001.MIRIFUSHORT:JW80500020001_02101_00001.MIRIFUSHORT',
-     'JW80500018001_02101_00001.MIRIFUSHORT:JW80500018001_02101_00001.MIRIFUSHORT',
-     'JW80500020001_02101_00001.MIRIFULONG:JW80500020001_02101_00001.MIRIFULONG',
-     'JW80500018001_02101_00002.MIRIFULONG:JW80500018001_02101_00002.MIRIFULONG',
-     'JW80500009001_02101_00001.MIRIMAGE:JW80500009001_02101_00001.MIRIMAGE',
-     'JW80500018001_02101_00001.MIRIFULONG:JW80500018001_02101_00001.MIRIFULONG',
-     'JW80500018001_02101_00002.MIRIFUSHORT:JW80500018001_02101_00002.MIRIFUSHORT',
-     'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
-     'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
+       .. code-block:: python
 
-Dataset IDs have a grammar like this for HST::
+           >>> get_dataset_ids("2016-01-01T00:00:00", "miri")
+           ['JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT',
+           'J80500020001_02101_00001.MIRIFUSHORT:JW80500020001_02101_00001.MIRIFUSHORT',
+           'JW80500018001_02101_00001.MIRIFUSHORT:JW80500018001_02101_00001.MIRIFUSHORT',
+           'JW80500020001_02101_00001.MIRIFULONG:JW80500020001_02101_00001.MIRIFULONG',
+           'JW80500018001_02101_00002.MIRIFULONG:JW80500018001_02101_00002.MIRIFULONG',
+           'JW80500009001_02101_00001.MIRIMAGE:JW80500009001_02101_00001.MIRIMAGE',
+           'JW80500018001_02101_00001.MIRIFULONG:JW80500018001_02101_00001.MIRIFULONG',
+           'JW80500018001_02101_00002.MIRIFUSHORT:JW80500018001_02101_00002.MIRIFUSHORT',
+           'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
+           'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
 
-    <product_id> : <exposure_id>
+   .. group-tab:: ROMAN
 
-Dataset IDs currently have a grammar like this for JWST::
+       .. code-block:: python
 
-    <id>     :=  <whole>:<part>
-    <whole>  :=  <filesetname>:<detector>
-    <part>   :=  <filesetname>:<detector>
+           >>> get_dataset_ids("2022-01-01T00:00:00", "wfi")
+           ['R0000201001001001002_01101_0001_WFI01:R0000201001001001002_01101_0001_WFI01',
+           'R0000101001001001001_01101_0001_WFI01:R0000101001001001001_01101_0001_WFI01',
+           'R0000101001001001001_01101_0001_WFI16:R0000101001001001001_01101_0001_WFI16',
+           'R0000201001001001003_01101_0001_WFI01':'R0000201001001001003_01101_0001_WFI01']
 
-As can be seen above, currently JWST IDs are redundant and <whole> and <part>
-are identical.  However, conceptually the IDs have that relationship and may be
-further elaborated and differentiated in later builds (post-jwst-build-7).  In 
-such a case,  several exposure level IDs (<parts>'s) might have an identical
-common root (<whole>).
 
-In both cases it's possible to specify either half of an ID returned by
-get_dataset_ids() to request matching parameters or best references using the
-services below.
+Alternately, the abstract default context can be specified as "<project>-operational", as in:
 
-For HST requesting parameters using only the <product_id> returns the
-parameters associated with the full two part ID for every exposure of the
-product.  Requesting the parameters using only the <exposure_id> returns the
-references associated with processing that exposure.
+.. tabs::
 
-For JWST, conceptually the same behavior will be preserved, so while either
-half of an ID will currently return the same parameters, at a future date the
-<whole> part may return all references associated with all exposures of a
-single high level product, and the <part> component will only return the
-references associated with processing that particular exposure.
+   .. group-tab:: JWST
+
+       .. code-block:: python
+
+           >>> get_dataset_ids("jwst-operational", "miri")
+           ['JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT',
+           'J80500020001_02101_00001.MIRIFUSHORT:JW80500020001_02101_00001.MIRIFUSHORT',
+           'JW80500018001_02101_00001.MIRIFUSHORT:JW80500018001_02101_00001.MIRIFUSHORT',
+           'JW80500020001_02101_00001.MIRIFULONG:JW80500020001_02101_00001.MIRIFULONG',
+           'JW80500018001_02101_00002.MIRIFULONG:JW80500018001_02101_00002.MIRIFULONG',
+           'JW80500009001_02101_00001.MIRIMAGE:JW80500009001_02101_00001.MIRIMAGE',
+           'JW80500018001_02101_00001.MIRIFULONG:JW80500018001_02101_00001.MIRIFULONG',
+           'JW80500018001_02101_00002.MIRIFUSHORT:JW80500018001_02101_00002.MIRIFUSHORT',
+           'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
+           'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
+
+   .. group-tab:: ROMAN
+
+       .. code-block:: python
+
+           >>> get_dataset_ids("2022-01-01T00:00:00", "wfi")
+           ['R0000201001001001002_01101_0001_WFI01:R0000201001001001002_01101_0001_WFI01',
+           'R0000101001001001001_01101_0001_WFI01:R0000101001001001001_01101_0001_WFI01',
+           'R0000101001001001001_01101_0001_WFI16:R0000101001001001001_01101_0001_WFI16',
+           'R0000201001001001003_01101_0001_WFI01':'R0000201001001001003_01101_0001_WFI01']
+
+
+Dataset IDs use a specific grammar depending on the mission:
+
+.. tabs::
+
+   .. group-tab:: HST
+
+      For HST requesting parameters using only the <product_id> returns the parameters associated with the full two part ID for every exposure of the product.  Requesting the parameters using only the <exposure_id> returns the references associated with processing that exposure.
+
+        .. code-block:: python
+
+            <product_id> : <exposure_id>
+
+      It's possible to specify either half of an ID returned by `get_dataset_ids()` to request matching parameters or best references using the services below.
+
+   .. group-tab:: JWST
+
+      As can be seen below, currently JWST IDs are redundant and <whole> and <part> are identical.  However, conceptually the IDs have that relationship and may be further elaborated and differentiated in later builds (post-jwst-build-7).  In such a case, several exposure level IDs (<parts>'s) might have an identical common root (<whole>).
+
+        .. code-block:: python
+
+            <id>     :=  <whole>:<part>
+            <whole>  :=  <filesetname>:<detector>
+            <part>   :=  <filesetname>:<detector>
+
+      It's possible to specify either half of an ID returned by `get_dataset_ids()` to request matching parameters or best references using the services below. For JWST, conceptually the same behavior as HST will be preserved, so while either half of an ID will currently return the same parameters, at a future date the <whole> part may return all references associated with all exposures of a single high level product, and the <part> component will only return the references associated with processing that particular exposure.
+
+   .. group-tab:: ROMAN
+
+      As can be seen below, currently Roman IDs are redundant and <whole> and <part> are identical.  However, conceptually the IDs have that relationship and may be further elaborated and differentiated in later builds.  In such a case, several exposure level IDs (<parts>'s) might have an identical common root (<whole>).
+
+        .. code-block:: python
+
+            <id>     :=  <whole>:<part>
+            <whole>  :=  <filesetname>:<detector>
+            <part>   :=  <filesetname>:<detector>
+
+      It's possible to specify either half of an ID returned by `get_dataset_ids()` to request matching parameters or best references using the services below. For Roman, conceptually the same behavior as HST will be preserved, so while either half of an ID will currently return the same parameters, at a future date the <whole> part may return all references associated with all exposures of a single high level product, and the <part> component will only return the references associated with processing that particular exposure.
+
 
 Matching Parameters By ID
 +++++++++++++++++++++++++
