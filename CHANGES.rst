@@ -1,3 +1,12 @@
+11.16.8 (unreleased)
+====================
+
+Roman
+-----
+
+- Allow variation in reftype naming convention for ASDF validation checks in crds.certify [#893]
+
+
 11.16.7 (2022-08-02)
 ====================
 
