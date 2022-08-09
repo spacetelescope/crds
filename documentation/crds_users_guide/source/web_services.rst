@@ -4,41 +4,61 @@ Web Services
 
 The CRDS servers support a JSONRPC based service mechanism which enables 
 remote users to make calls to the CRDS server without installing the CRDS
-Python based client library.   See http://json-rpc.org/wiki/specification
+Python based client library. See http://json-rpc.org/wiki/specification
 for more details on the JSONRPC protocol.
 
 Users of the CRDS client library can access these JSONRPC functions using 
-the crds.client module::
+the crds.client module. Examples follow below.
 
-  >>> from crds import client
-  >>> client.get_default_context('jwst')
-  'jwst_0101.pmap'
 
 Context Information
 -------------------
 
 The CRDS context is the version of CRDS rules used to select reference files.
 The default CRDS context is maintained on the CRDS server and reported by
-the function *get_default_context()*.   Institutional pipelines which are operating
+the function `get_default_context()`. Institutional pipelines which are operating
 decoupled from the CRDS server can post their actual cached context to the CRDS
-server for retrieval by *get_remote_context()*.
+server for retrieval by `get_remote_context()`.
 
 Centralized Default
 +++++++++++++++++++
 
 **get_default_context(observatory)**
 
-get_default_context() returns the name of the context which is
+`get_default_context()` returns the name of the context which is
 currently in use by default in the archive pipeline, e.g. 'jwst_0001.pmap'.
-This value is set and maintained on the CRDS Server.   The actual pipeline context 
+This value is set and maintained on the CRDS Server. The actual pipeline context 
 differs from this commanded valuer until the pipeline is synchronized with the CRDS
 server using cron_sync.   
 
-The commanded default can be obtained using the CRDS client library as follows::
+The commanded default can be obtained using the CRDS client library as follows:
 
-   >>> from crds import client
-   >>> client.get_default_context('jwst')
-  'jwst_0101.pmap'
+.. tabs::
+
+   .. group-tab:: HST
+
+       .. code-block:: python
+
+           >>> from crds import client
+           >>> client.get_default_context('hst')
+           'hst_1006.pmap'
+
+   .. group-tab:: JWST
+
+       .. code-block:: python
+
+           >>> from crds import client
+           >>> client.get_default_context('jwst')
+           'jwst_0101.pmap'
+
+   .. group-tab:: ROMAN
+
+       .. code-block:: python
+
+           >>> from crds import client
+           >>> client.get_default_context('roman')
+           'roman_0037.pmap'
+
 
 See the explanation of JSONRPC requests and responses below for a language and library 
 neutral example of calling the same CRDS web service using the command line program "curl".
@@ -48,57 +68,59 @@ Pipeline Echo
 
 **get_remote_context(observatory, pipeline_name)**
 
-get_remote_context() returns the name of the context last reported as
+`get_remote_context()` returns the name of the context last reported as
 synced by the specified *pipeline_name* (e.g. 'jwst-ops-pipeline').  This is
 the value stored in a pipeline's CRDS cache and echoed back to the CRDS server
 when the cache is synchronized.  Since this value is inapplicable if a pipeline
 is run in "remote" mode computing best references on the CRDS Server, the
-generally preferred value is from get_default_context() since it always
+generally preferred value is from `get_default_context()` since it always
 reflects the intended operational context regardless of the pipeline's CRDS
 mode.   
 
-The actual default context for a pipeline can be obtained as follows::
+The actual default context for a pipeline can be obtained as follows:
 
-   >>> from crds import client
-   >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
-  'jwst_0101.pmap'
+  .. code-block:: python
+      >>> from crds import client
+      >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
+      'jwst_0101.pmap'
   
   
 Context History
 +++++++++++++++
 
 CRDS makes the history of contexts which have been activated in the pipeline as
-the operational context via the get_context_history() web service::
+the operational context via the `get_context_history()` web service:
 
-    >>> client.get_context_history("jwst")
-    [('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings'),
-     ('2012-09-27 00:00:00',
+  .. code-block:: python
+      >>> client.get_context_history("jwst")
+      [('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings'),
+      ('2012-09-27 00:00:00',
       'jwst_0000.pmap',
       'First rules and references from jwst_gentools stub development cloning.'),
-     ('2013-04-13 00:00:00', 'jwst_0001.pmap', 'Linearity and dark files.'),
-     ('2013-07-31 00:00:00', 'jwst_0002.pmap', 'Dark and Mask files.'),
-     ('2013-09-04 00:00:00',
+      ('2013-04-13 00:00:00', 'jwst_0001.pmap', 'Linearity and dark files.'),
+      ('2013-07-31 00:00:00', 'jwst_0002.pmap', 'Dark and Mask files.'),
+      ('2013-09-04 00:00:00',
       'jwst_0003.pmap',
       'Absolute Calibration (photom) additions and replacements.'),
-     ('2013-11-25 09:00:03', 'jwst_0005.pmap', 'set by system'),
-     ('2014-03-19 10:51:19',
+      ('2013-11-25 09:00:03', 'jwst_0005.pmap', 'set by system'),
+      ('2014-03-19 10:51:19',
       'jwst_0012.pmap',
       'Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME\r\nNew linearity files for all instruments\r\nNew saturation files and rmaps for all instruments'),
     
         ...
 
-     ('2015-11-18 12:58:13',
+      ('2015-11-18 12:58:13',
       'jwst_0105.pmap',
       'Declared various EXP_TYPE as N/A for 15 WCS types for MIRI, NIRCAM, NIRSPEC. Replacement MIRI distortion references for ticket #238.')
       ]
     
-Each entry in the context history is a list/tuple of form:  (start_date, context, description).
+Each entry in the context history is a list/tuple of form:  `(start_date, context, description)`.
 
-Adjacent entries are consecutive,  the start date of the one context is the end date of the previous context.
+Adjacent entries are consecutive, the start date of the one context is the end date of the previous context.
 
 The context history is in first-to-last order and it is possible that the context will be regressed to a prior
 version;  consequently,  there is no guarantee that context names will monotonically increase.  At times several
-file submissions and created contexts are activated en masse via the last created context;  consequently,  there
+file submissions and created contexts are activated en masse via the last created context; consequently, there
 is no guarantee that pmap serial numbers will increase or decrease by one.
 
 
@@ -106,41 +128,43 @@ File Information
 ----------------
 
 The CRDS server maintains a catalog of basic metadata for the rules and reference
-files managed by CRDS.   Catalog information cab be 
+files managed by CRDS. Catalog information cab be 
 
 Single File Metadata
 ++++++++++++++++++++
 
 **get_file_info(pipeline_context, filename)**
 
-Return a dictionary of CRDS catalog information about `filename`.  For instance::
+Return a dictionary of CRDS catalog information about `filename`.  For instance:
 
- >>> from crds import client
- >>> client.get_file_info("jwst", "jwst_miri_flat_0023.fits")
- {'activation_date': '2014-09-25 18:30:27',
-  'aperture': 'none',
-  'blacklisted': 'false',
-  'change_level': 'severe',
-  'comment': 'cdp-2 from fm testing',
-  'creator_name': 'jwst build 3 team',
-  'deliverer_user': 'homer',
-  'delivery_date': '2014-09-20 07:55:56',
-  'derived_from': 'none',
-  'description': 'all references from jwst build 3 delivery 2. update miri flats, fringes, straymasks, resets, lastframes, nirspec flat.',
-  'filekind': 'flat',
-  'instrument': 'miri',
-  'name': 'jwst_miri_flat_0023.fits',
-  'observatory': 'jwst',
-  'pedigree': 'ground',
-  'reference_file_type': 'flat',
-  'rejected': 'false',
-  'replaced_by_filename': '',
-  'sha1sum': '3f0c92aae539cb67f8e8823cc6815130018948f7',
-  'size': '10592640',
-  'state': 'operational',
-  'type': 'reference',
-  'uploaded_as': 'jwst_miri_flat_0016.fits',
-  'useafter_date': '2050-01-01 00:00:00'}
+  .. code-block:: python
+    
+      >>> from crds import client
+      >>> client.get_file_info("jwst", "jwst_miri_flat_0023.fits")
+      {'activation_date': '2014-09-25 18:30:27',
+      'aperture': 'none',
+      'blacklisted': 'false',
+      'change_level': 'severe',
+      'comment': 'cdp-2 from fm testing',
+      'creator_name': 'jwst build 3 team',
+      'deliverer_user': 'homer',
+      'delivery_date': '2014-09-20 07:55:56',
+      'derived_from': 'none',
+      'description': 'all references from jwst build 3 delivery 2. update miri flats, fringes, straymasks, resets, lastframes,     nirspec flat.',
+      'filekind': 'flat',
+      'instrument': 'miri',
+      'name': 'jwst_miri_flat_0023.fits',
+      'observatory': 'jwst',
+      'pedigree': 'ground',
+      'reference_file_type': 'flat',
+      'rejected': 'false',
+      'replaced_by_filename': '',
+      'sha1sum': '3f0c92aae539cb67f8e8823cc6815130018948f7',
+      'size': '10592640',
+      'state': 'operational',
+      'type': 'reference',
+      'uploaded_as': 'jwst_miri_flat_0016.fits',
+      'useafter_date': '2050-01-01 00:00:00'}
 
 Multiple File Metadata
 ++++++++++++++++++++++
