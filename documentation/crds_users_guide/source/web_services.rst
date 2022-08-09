@@ -175,53 +175,59 @@ Multiple File Metadata
 
 get_file_info_map() is a multi-file version of get_info_map() which returns
 the information for several files with one call.  If `files` is not specified
-then get_file_info_map() returns info for all files::
+then get_file_info_map() returns info for all files:
 
- >>> from crds import client
- >>> client.get_file_info_map("jwst")
- {'jwst.pmap': {'activation_date': '2012-07-31 00:00:00',
-  'aperture': 'none',
-  'blacklisted': 'false',
-  'change_level': 'severe',
-  'comment': 'none',
-  'creator_name': 'todd miller',
-  'deliverer_user': 'crds',
-  'delivery_date': '2014-03-26 08:49:23',
-  'derived_from': 'created by hand 07-31-2012',
-  'description': 'initial mass file import',
-  'filekind': '',
-  'history': 'none',
-  'instrument': '',
-  'name': 'jwst.pmap',
-  'observatory': 'jwst',
-  'pedigree': '',
-  'reference_file_type': '',
-  'rejected': 'false',
-  'replaced_by_filename': '',
-  'sha1sum': 'caf080abe09236165885f383045c59e8957a80ce',
-  'size': '392',
-  'state': 'archived',
-  'type': 'mapping',
-  'uploaded_as': 'jwst.pmap',
-  'useafter_date': '2012-07-31 00:00:00'},
-  ...
- }
+  .. code-block:: python
 
-Returns the info::
-    
-    { filename : { info, ... }, ... } 
+      >>> from crds import client
+      >>> client.get_file_info_map("jwst")
+      {'jwst.pmap': {'activation_date': '2012-07-31 00:00:00',
+       'aperture': 'none',
+       'blacklisted': 'false',
+       'change_level': 'severe',
+       'comment': 'none',
+       'creator_name': 'todd miller',
+       'deliverer_user': 'crds',
+       'delivery_date': '2014-03-26 08:49:23',
+       'derived_from': 'created by hand 07-31-2012',
+       'description': 'initial mass file import',
+       'filekind': '',
+       'history': 'none',
+       'instrument': '',
+       'name': 'jwst.pmap',
+       'observatory': 'jwst',
+       'pedigree': '',
+       'reference_file_type': '',
+       'rejected': 'false',
+       'replaced_by_filename': '',
+       'sha1sum': 'caf080abe09236165885f383045c59e8957a80ce',
+       'size': '392',
+       'state': 'archived',
+       'type': 'mapping',
+       'uploaded_as': 'jwst.pmap',
+       'useafter_date': '2012-07-31 00:00:00'},
+       ...
+       }
+
+Returns the info:
+
+  .. code-block:: python
+
+      { filename : { info, ... }, ... } 
 
 on `files` of `observatory`.
 
-`fields` can be used to limit info returned to specified keys::
+`fields` can be used to limit info returned to specified keys:
 
-    ['activation_date', 'aperture', 'blacklisted', 'change_level', 'comment', 
-     'creator_name', 'deliverer_user', 'delivery_date', 'derived_from', 'description', 
-     'filekind', 'instrument', 'name', 'observatory', 'pedigree', 'reference_file_type', 
-     'rejected', 'replaced_by_filename', 'sha1sum', 'size', 'state', 'type', 
-     'uploaded_as', 'useafter_date']
+  .. code-block:: python
+    
+      ['activation_date', 'aperture', 'blacklisted', 'change_level', 'comment', 
+      'creator_name', 'deliverer_user', 'delivery_date', 'derived_from', 'description', 
+      'filekind', 'instrument', 'name', 'observatory', 'pedigree', 'reference_file_type', 
+      'rejected', 'replaced_by_filename', 'sha1sum', 'size', 'state', 'type', 
+      'uploaded_as', 'useafter_date']
 
-If `fields` is not specified then get_file_info_map() returns all fields.
+If `fields` is not specified then `get_file_info_map()` returns all fields.
 
 Best References
 ---------------
@@ -231,50 +237,60 @@ Single Header
 
 **get_best_references(context, header, reftypes)**
 
-get_best_references() matches a set of parameters *header* against the lookup 
-rules specified by the pipeline mapping *context* to return a mapping of 
+`get_best_references()` matches a set of parameters `header`` against the lookup 
+rules specified by the pipeline mapping `context`` to return a mapping of 
 type names onto recommended reference file names.
 
-A suitable *context* string can be obtained from get_default_context() above, 
+A suitable `context`` string can be obtained from `get_default_context()` above, 
 although any archived CRDS context file can be specified.   
 
-The *header* parameter of get_best_references is nominally a JSON object which 
+The `header`` parameter of get_best_references is nominally a JSON object which 
 maps CRDS parkey names onto dataset file header values.   CRDS parkey names can
-be located by browsing reference mappings (.rmap's) and looking at the *parkey* 
+be located by browsing reference mappings (.rmap's) and looking at the `parkey` 
 header parameter of the rmap.
 
-For JWST,  the rmap parkeys (matching parameter names) are currently specified 
-as JWST stpipe data model dotted identifiers.  Example JSON for the get_best_references 
-*header* parameter for JWST is::
+.. tabs::
 
-    { "meta.instrument.type":"fgs", 
-      "meta.instrument.detector":"fgs1", 
-      "meta.instrument.filter":"any" }
-    
-For JWST,  it is also possible to use the equivalent FITS header keyword,  as
-defined by the data model schema, to determine best references::
+   .. group-tab:: HST
 
-    { "instrume":"fgs", 
-      "detector":"fgs1", 
-      "filter":"any" }
-    
-For HST,  GEIS or FITS header keyword names are supported.  
+      For HST,  GEIS or FITS header keyword names are supported. *reftypes* should be a json array of strings,  each naming a single desired reference type.  If reftypes is passed as null,  recommended references for all reference types are returned.   Reference types which are defined for an instrument but which are not applicable to the mode defined by *header* are returned with the value *NOT FOUND n/a*.
 
-*reftypes* should be a json array of strings,  each naming a single desired 
-reference type.  If reftypes is passed as null,  recommended references for 
-all reference types are returned.   Reference types which are defined for an
-instrument but which are not applicable to the mode defined by *header* are
-returned with the value *NOT FOUND n/a*.
+      Example JSON for *reftypes* might be:
 
-Example JSON for *reftypes* might be::
+        .. code-block:: python
 
-    ["amplifier","mask"]
+            ["amplifier","mask"]
 
-Because **get_best_references** determines references for a list of types,  lookup
-errors are reported by setting the value of a reference type to 
-"NOT FOUND " + error_message.   A value of "NOT FOUND n/a" indicates that CRDS
-determined that a particular reference type does not apply to the given
-parameter set.
+      Because **get_best_references** determines references for a list of types,  lookup errors are reported by setting the value of a reference type to "NOT FOUND " + error_message.   A value of "NOT FOUND n/a" indicates that CRDS determined that a particular reference type does not apply to the given parameter set.
+
+   .. group-tab:: JWST
+
+      For JWST,  the rmap parkeys (matching parameter names) are currently specified as JWST stpipe data model dotted identifiers.  Example JSON for the get_best_references `header` parameter for JWST is:
+
+        .. code-block:: python
+
+            {"meta.instrument.type":"fgs", 
+             "meta.instrument.detector":"fgs1", 
+             "meta.instrument.filter":"any"}
+
+      It is also possible to use the equivalent FITS header keyword, as defined by the data model schema, to determine best references:
+
+        .. code-block:: python
+
+            {"instrume":"fgs", 
+             "detector":"fgs1", 
+             "filter":"any"}
+
+   .. group-tab:: ROMAN
+
+      For Roman, the rmap parkeys (matching parameter names) are currently specified as Roman Datamodels dotted identifiers.  Example JSON for the get_best_references `header` parameter for Roman is:
+
+        .. code-block:: python
+
+            {"roman.meta.exposure.type":"grism", 
+             "roman.meta.instrument.detector":"wfi01", 
+             "roman.meta.exposure.ma_table_number":"any"}
+
 
 Multiple Headers
 ++++++++++++++++
