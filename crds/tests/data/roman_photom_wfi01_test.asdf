@@ -1,0 +1,67 @@
+#ASDF 1.0.0
+#ASDF_STANDARD 1.5.0
+%YAML 1.1
+%TAG ! tag:stsci.edu:asdf/
+--- !core/asdf-1.1.0
+asdf_library: !core/software-1.0.0 {author: The ASDF Developers, homepage: 'http://github.com/asdf-format/asdf',
+  name: asdf, version: 2.12.0}
+history:
+  extensions:
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension.BuiltinExtension
+    software: !core/software-1.0.0 {name: asdf, version: 2.12.0}
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://asdf-format.org/core/extensions/core-1.5.0
+    software: !core/software-1.0.0 {name: asdf-astropy, version: 0.2.1}
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0
+    software: !core/software-1.0.0 {name: roman-datamodels, version: 0.12.3}
+roman: !<asdf://stsci.edu/datamodels/roman/tags/reference_files/wfi_img_photom-1.0.0>
+  meta:
+    author: T. Desjardins
+    description: Roman WFI absolute photometric calibration information.
+    instrument: {detector: WFI01, name: WFI}
+    origin: !<asdf://stsci.edu/datamodels/roman/tags/origin-1.0.0> STSCI
+    pedigree: GROUND
+    reftype: PHOTOM
+    telescope: !<asdf://stsci.edu/datamodels/roman/tags/telescope-1.0.0> ROMAN
+    useafter: !time/time-1.1.0 2020-01-01T00:00:00.000
+  phot_table:
+    DARK: {photmjsr: null, pixelareasr: null, uncertainty: null}
+    F062:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.27078710570631664}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    F087:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.3677835598430678}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    F106:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.34826779381595135}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    F129:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.34315359457903793}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    F146:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.11048765296401175}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    F158:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.3324139679425871}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    F184:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.5041054071828406}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    F213:
+      photmjsr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.5243320478640886}
+      pixelareasr: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 sr, value: 2.80833899537275e-13}
+      uncertainty: !unit/quantity-1.1.0 {unit: !unit/unit-1.0.0 MJy.sr**-1, value: 0.0}
+    GRISM: {photmjsr: null, pixelareasr: null, uncertainty: null}
+    PRISM: {photmjsr: null, pixelareasr: null, uncertainty: null}
+...
