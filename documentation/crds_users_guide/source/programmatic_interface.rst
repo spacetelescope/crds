@@ -3,8 +3,7 @@ Using the Programmatic Python Interface to submit reference files
 
 As an alternative to command-line and web submissions of reference files,
 there is a programmatic interface that allows users to perform the tasks
-of reference file submission using Python.  It requires crds version of at
-least 7.3.1.
+of reference file submission using Python.  It requires crds version 7.3.1 or higher.
 
 Required CRDS Account
 .....................
@@ -34,10 +33,12 @@ creation and revocation of secret token_ values.
 .. _token: https://auth.mast.stsci.edu/tokens
 
 The string value of this token must be inserted into the environment
-variable MAST_API_TOKEN::
+variable MAST_API_TOKEN:
 
-    import os
-    os.environ['MAST_API_TOKEN'] = 'LongStringObtainedFromAuth.mast.stsciPage'
+  .. code-block:: python
+
+      import os
+      os.environ['MAST_API_TOKEN'] = 'LongStringObtainedFromAuth.mast.stsciPage'
 
 A typical auth.mast token looks something like::
 
@@ -53,14 +54,18 @@ obsolete and no longer work.
 API Description
 ...............
 
-To use this functionality, import the Submission class from crds::
+To use this functionality, import the Submission class from crds:
 
-    from crds.submit import Submission
+  .. code-block:: python
+
+      from crds.submit import Submission
 
 The primary object that a user interacts with is a Submission
-object.  This can be instantiated using the following syntax::
+object.  This can be instantiated using the following syntax:
 
-    s = Submission(observatory, server, context=None)
+  .. code-block:: python
+
+      s = Submission(observatory, server, context=None)
 
 where
 
@@ -73,7 +78,7 @@ For example, to instantiate a JWST submission to be delivered to the OPS server 
     s = Submission('jwst', 'ops')
     
 
-The Submission object has several methods, not the least a ``.help()``
+The Submission object has several methods, not the least a `.help()`
 method that gives the full information on all the fields to be filled::
 
     s.help()
