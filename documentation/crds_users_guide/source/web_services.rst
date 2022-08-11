@@ -78,15 +78,9 @@ reflects the intended operational context regardless of the pipeline's CRDS
 mode.   
 
 The actual default context for a pipeline can be obtained as follows:
-<<<<<<< HEAD
 
   .. code-block:: python
 
-=======
-
-  .. code-block:: python
-
->>>>>>> 630809de75ee61f8155563f62cb3deec4c03abb7
       >>> from crds import client
       >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
       'jwst_0101.pmap'
@@ -97,15 +91,9 @@ Context History
 
 CRDS makes the history of contexts which have been activated in the pipeline as
 the operational context via the `get_context_history()` web service:
-<<<<<<< HEAD
 
   .. code-block:: python
 
-=======
-
-  .. code-block:: python
-
->>>>>>> 630809de75ee61f8155563f62cb3deec4c03abb7
       >>> client.get_context_history("jwst")
       [('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings'),
       ('2012-09-27 00:00:00',
