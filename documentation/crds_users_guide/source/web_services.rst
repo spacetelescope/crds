@@ -539,10 +539,10 @@ AUI Interface for Best References
 **get_aui_best_references(date, ids)**
 
 The CRDS server can compute the best references for a list of data set ids
-using the *get_aui_best_references()* function.  The dataset ids must be
-compatible with those returned by *get_dataset_ids()* above.  Examples below
+using the `get_aui_best_references()` function.  The dataset ids must be
+compatible with those returned by `get_dataset_ids()` above.  Examples below
 are fully functional at this time but actual IDs and parameter sets may change
-during the course of development; use get_dataset_ids() documented above to
+during the course of development; use `get_dataset_ids()` documented above to
 obtain up-to-date example IDs.
 
 *date* is a date-based CRDS context specifier, e.g.: jwst_0192.pmap,
@@ -555,38 +555,65 @@ Ultimately the first half will identify a group of exposures and the second
 half will identify a single exposure in the group.  A maximum of 200 ids should
 be requested per call.
 
-An examople call using the CRDS Python client is::
+An example call using the CRDS Python client is:
 
-    >>> get_aui_best_references("2016-01-01", ['JW82500001003_02102_00001.NRCA1','JW82500001003_02102_00001.NRCA3'])
-    {'JW82500001003_02102_00001.NRCA1': [True,
-      ['jwst_nircam_ipc_0001.fits',
-       'jwst_nircam_linearity_0020.fits',
-       'jwst_nircam_distortion_0001.asdf',
-       'jwst_nircam_drizpars_0001.fits',
-       'jwst_nircam_area_0001.fits',
-       'jwst_nircam_flat_0000.fits',
-       'jwst_nircam_saturation_0030.fits',
-       'jwst_nircam_photom_0031.fits',
-       'jwst_nircam_dark_0030.fits',
-       'jwst_nircam_gain_0000.fits',
-       'jwst_nircam_mask_0010.fits',
-       'jwst_nircam_readnoise_0000.fits',
-       'jwst_nircam_superbias_0001.fits']],
-     'JW82500001003_02102_00001.NRCA3': [True,
-      ['jwst_nircam_ipc_0003.fits',
-       'jwst_nircam_linearity_0022.fits',
-       'jwst_nircam_distortion_0003.asdf',
-       'jwst_nircam_drizpars_0001.fits',
-       'jwst_nircam_area_0001.fits',
-       'jwst_nircam_flat_0003.fits',
-       'jwst_nircam_saturation_0032.fits',
-       'jwst_nircam_photom_0033.fits',
-       'jwst_nircam_dark_0032.fits',
-       'jwst_nircam_gain_0002.fits',
-       'jwst_nircam_mask_0012.fits',
-       'jwst_nircam_readnoise_0002.fits',
-       'jwst_nircam_superbias_0003.fits']],
-    ...
+.. tabs::
+
+   .. group-tab:: JWST
+
+       .. code-block:: python
+
+           >>> get_aui_best_references("2016-01-01", ['JW82500001003_02102_00001.NRCA1','JW82500001003_02102_00001.NRCA3'])
+           {'JW82500001003_02102_00001.NRCA1': [True,
+           ['jwst_nircam_ipc_0001.fits',
+            'jwst_nircam_linearity_0020.fits',
+            'jwst_nircam_distortion_0001.asdf',
+            'jwst_nircam_drizpars_0001.fits',
+            'jwst_nircam_area_0001.fits',
+            'jwst_nircam_flat_0000.fits',
+            'jwst_nircam_saturation_0030.fits',
+            'jwst_nircam_photom_0031.fits',
+            'jwst_nircam_dark_0030.fits',
+            'jwst_nircam_gain_0000.fits',
+            'jwst_nircam_mask_0010.fits',
+            'jwst_nircam_readnoise_0000.fits',
+            'jwst_nircam_superbias_0001.fits']],
+            'JW82500001003_02102_00001.NRCA3': [True,
+            ['jwst_nircam_ipc_0003.fits',
+             'jwst_nircam_linearity_0022.fits',
+             'jwst_nircam_distortion_0003.asdf',
+             'jwst_nircam_drizpars_0001.fits',
+             'jwst_nircam_area_0001.fits',
+             'jwst_nircam_flat_0003.fits',
+             'jwst_nircam_saturation_0032.fits',
+             'jwst_nircam_photom_0033.fits',
+             'jwst_nircam_dark_0032.fits',
+             'jwst_nircam_gain_0002.fits',
+             'jwst_nircam_mask_0012.fits',
+             'jwst_nircam_readnoise_0002.fits',
+             'jwst_nircam_superbias_0003.fits']],
+             ...
+           }
+
+
+   .. group-tab:: ROMAN
+
+       .. code-block:: python
+
+           >>> get_aui_best_references("2019-01-01", ['R0000201001001001002_01101_0001_WFI01'])
+           {'R0000201001001001002_01101_0001_WFI01': [True,
+            ['roman_wfi_area_0002.asdf',
+             'roman_wfi_dark_0014.asdf',
+             'roman_wfi_distortion_0012.asdf',
+             'roman_wfi_flat_0011.asdf',
+             'roman_wfi_gain_0004.asdf',
+             'roman_wfi_linearity_0016.asdf',
+             'roman_wfi_mask_0014.asdf',
+             'roman_wfi_photom_0010.asdf',
+             'roman_wfi_readnoise_0005.asdf',
+             'roman_wfi_saturation_0014.asdf']],
+           }
+
 
 The value returned is a mapping from dataset ids to a pair of values.  The
 first value of the id result pair is a boolean with the sense "completed
@@ -595,32 +622,36 @@ successfully".
 The second value has a variable type depending on the boolean value.  If the ID
 was successful, the second value of the pair is a list of file names.  If the
 ID was unsuccessful, the second value of the pair is a string describing the
-error::
-    
-    >>> get_aui_best_references("2016-01-01", ['JW96090001004_03101_00001.NRCB5'])
-    {'JW96090001004_03101_00001.NRCB5': [False,
+error:
+
+  .. code-block:: python
+      
+      >>> get_aui_best_references("2016-01-01", ['JW96090001004_03101_00001.NRCB5'])
+      {'JW96090001004_03101_00001.NRCB5': [False,
       "NOT FOUND dataset ID does not exist 'JW96090001004_03101_00001.NRCB5'"]}
 
 Although it is possible for errors to occur on a per-type basis, for this
 interface specific types which result in lookup errors (e.g. flat) are dropped
 from the results.  The net effect is that the list of files returned includes
 only those types that could be successfully assigned with the given context
-(date) and parameter set. Types which are assigned the value N/A are also
+(date) and parameter set. Types which are assigned the value `N/A` are also
 silently dropped.
 
-Under the hood the *get_aui_best_references()* function is a language agnostic JSONRPC call
-which can be called from the UNIX command line by e.g. "curl" as follows::
+Under the hood the `get_aui_best_references()` function is a language agnostic JSONRPC call
+which can be called from the UNIX command line, e.g. by `curl` as follows:
 
-    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_aui_best_references", "params": ["2016-01-01", ["JW80500017001_02101_00001.MIRIFUSHORT"]], "id": 1}' https://jwst-crds.stsci.edu/json/
-    HTTP/1.1 200 OK
-    Date: Mon, 25 Jul 2016 20:03:13 GMT
-    Vary: Cookie
-    X-Frame-Options: SAMEORIGIN
-    Content-Type: application/json-rpc
-    Via: 1.1 jwst-crds.stsci.edu
-    Transfer-Encoding: chunked
+  .. code-block:: bash
 
-    {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"JW80500017001_02101_00001.MIRIFUSHORT": [true, ["jwst_miri_ipc_0005.fits", "jwst_miri_fringe_0018.fits", "jwst_miri_linearity_0010.fits", "jwst_miri_distortion_0010.asdf", "jwst_miri_specwcs_0003.asdf", "jwst_miri_drizpars_0001.fits", "jwst_miri_v2v3_0003.asdf", "jwst_miri_wavelengthrange_0001.asdf", "jwst_miri_regions_0003.asdf", "jwst_miri_wcsregions_0001.json", "jwst_miri_flat_0036.fits", "jwst_miri_saturation_0013.fits", "jwst_miri_photom_0011.fits", "jwst_miri_dark_0031.fits", "jwst_miri_gain_0004.fits", "jwst_miri_straymask_0006.fits", "jwst_miri_reset_0018.fits", "jwst_miri_lastframe_0018.fits", "jwst_miri_mask_0013.fits", "jwst_miri_readnoise_0005.fits"]]}}
+      $ curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_aui_best_references", "params": ["2016-01-01", ["JW80500017001_02101_00001.MIRIFUSHORT"]], "id": 1}' https://jwst-crds.stsci.edu/json/
+      HTTP/1.1 200 OK
+      Date: Mon, 25 Jul 2016 20:03:13 GMT
+      Vary: Cookie
+      X-Frame-Options: SAMEORIGIN
+      Content-Type: application/json-rpc
+      Via: 1.1 jwst-crds.stsci.edu
+      Transfer-Encoding: chunked
+
+      {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"JW80500017001_02101_00001.MIRIFUSHORT": [true,   ["jwst_miri_ipc_0005.fits", "jwst_miri_fringe_0018.fits", "jwst_miri_linearity_0010.fits", "jwst_miri_distortion_0010.  asdf", "jwst_miri_specwcs_0003.asdf", "jwst_miri_drizpars_0001.fits", "jwst_miri_v2v3_0003.asdf",   "jwst_miri_wavelengthrange_0001.asdf", "jwst_miri_regions_0003.asdf", "jwst_miri_wcsregions_0001.json",   "jwst_miri_flat_0036.fits", "jwst_miri_saturation_0013.fits", "jwst_miri_photom_0011.fits", "jwst_miri_dark_0031.fits",   "jwst_miri_gain_0004.fits", "jwst_miri_straymask_0006.fits", "jwst_miri_reset_0018.fits", "jwst_miri_lastframe_0018.  fits", "jwst_miri_mask_0013.fits", "jwst_miri_readnoise_0005.fits"]]}}
 
 Interface for Calibration S/W Versions
 ++++++++++++++++++++++++++++++++++++++
@@ -644,42 +675,46 @@ file within a CRDS context.
 *context* is a CRDS context name which is used to interpret *master_version* to
 define the versions reference file corresponding to an overall s/w
 release. Typically the string "null" should be used to select the current CRDS
-versions translation context in use in the JWST pipeline.  It is anticipated
+versions translation context in use in the JWST or Roman pipeline.  It is anticipated
 that the definitions of software versions should be relatively stable and
 additive as new contexts are generated.
 
 An example call using the CRDS Python client shows the conceptual
-nature of the interface,  the functional inputs and outputs::
+nature of the interface, the functional inputs and outputs:
 
-   >>> versions_obj = get_system_versions("0.6.0noop.dev307", "null")
+  .. code-block:: python
+    
+      >>> versions_obj = get_system_versions("0.6.0noop.dev307", "null")
 
 Printing the Python client return object in JSON format gives a more
-language agnostic view of the conceptual return value::
+language agnostic view of the conceptual return value:
 
-   >>> print(json.dumps(versions_obj, indent=4, sort_keys=True))
-   {
-   "CAL_VER": "0.6.0noop.dev307", 
-   "author": "Warren J. Hack", 
-   "descrip": "JWST calibration processing step version reference file", 
-   "history": "Created by cal_ver_steps version 0.7.0.dev", 
-   "instrument": "SYSTEM", 
-   "reftype": "CALVER", 
-   "versions": {
-        "AlignRefsStep": null, 
-        "AmiAnalyzeStep": "0.7.0.dev", 
-        "AmiAverageStep": "0.7.0.dev", 
-        "AmiNormalizeStep": "0.7.0.dev", 
-        "AssignWcsStep": null, 
-         ... 
-        },
-    ...
-   }
+  .. code-block:: python
+    
+      >>> print(json.dumps(versions_obj, indent=4, sort_keys=True))
+      {
+      "CAL_VER": "0.6.0noop.dev307", 
+      "author": "Warren J. Hack", 
+      "descrip": "JWST calibration processing step version reference file", 
+      "history": "Created by cal_ver_steps version 0.7.0.dev", 
+      "instrument": "SYSTEM", 
+      "reftype": "CALVER", 
+      "versions": {
+          "AlignRefsStep": null, 
+          "AmiAnalyzeStep": "0.7.0.dev", 
+          "AmiAverageStep": "0.7.0.dev", 
+          "AmiNormalizeStep": "0.7.0.dev", 
+          "AssignWcsStep": null, 
+           ... 
+          },
+      ...
+      }
 
-where ... indicates that the full contents of the object are not being
+where `...` indicates that the full contents of the object are not being
 displayed.
 
-The alternative abstract context identifier "jwst-versions" may be used en lieu
-of "null".  The translation of the "jwst-versions" identifier is maintained on
+The alternative abstract context identifier "jwst-versions" or "roman-versions" may be used in lieu
+of "null".  The translation of the "jwst-versions" or "roman-versions" identifier is maintained on
 the CRDS server as a more literal context name such as "jwst_0059.pmap".  The
 value associated with "jwst-versions" or "null" will nominally be updated on
 the CRDS server whenever a new master version is defined.
@@ -699,33 +734,37 @@ translate master version names.  Alternately, the value associated with
 "jwst-versions" (or "null") can be redefined on the CRDS server.
 
 The following curl command line shows the full expansion of the same service
-example wrapped in the JSONRPC protocol in a language agnostic way::
+example wrapped in the JSONRPC protocol in a language agnostic way:
 
-    curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_system_versions", "params": ["0.6.0noop.dev307","null"], "id": 1}' https://jwst-crds-dit.stsci.edu/json/
-    HTTP/1.1 200 OK
-    Date: Wed, 24 Aug 2016 22:33:04 GMT
-    Vary: Cookie
-    X-Frame-Options: SAMEORIGIN
-    Content-Type: application/json-rpc
-    Via: 1.1 jwst-crds-dit.stsci.edu
-    Transfer-Encoding: chunked
+  .. code-block:: bash
 
-    {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"reftype": "CALVER", "author": "Warren J. Hack", "versions": {"TweakRegStep": "0.1.0", "SubtractImagesStep": null, "RSCD_Step": null, "CubeBuildStep": null, "Extract1dStep": null, "AmiAnalyzeStep": "0.7.0.dev", "Extract2dStep": null, "BackgroundStep": null, "SuperBiasStep": null, "DarkCurrentStep": null, "Combine1dStep": null, "SaturationStep": null, "LinearityStep": null, "DQInitStep": null, "ImprintStep": null, "OutlierDetectionStep": null, "AssignWcsStep": null, "KlipStep": null, "StackRefsStep": null, "TweakregCatalogStep": null, "SourceCatalogStep": null, "PersistenceStep": null, "StraylightStep": null, "IPCStep": null, "FlatFieldStep": null, "ResetStep": null, "RefPixStep": null, "ResampleStep": null, "AmiAverageStep": "0.7.0.dev", "FringeStep": null, "AlignRefsStep": null, "LastFrameStep": null, "JumpStep": null, "EmissionStep": null, "WfsCombineStep": null, "AmiNormalizeStep": "0.7.0.dev", "SkyMatchStep": "0.1.0", "PhotomStep": null, "RampFitStep": null, "HlspStep": null}, "instrument": "SYSTEM", "descrip": "JWST calibration processing step version reference file", "CAL_VER": "0.6.0noop.dev307", "history": "Created by cal_ver_steps version 0.7.0.dev"}}
+      $ curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_system_versions", "params": ["0.6.0noop.dev307","null"], "id": 1}  ' https://jwst-crds-dit.stsci.edu/json/
+      HTTP/1.1 200 OK
+      Date: Wed, 24 Aug 2016 22:33:04 GMT
+      Vary: Cookie
+      X-Frame-Options: SAMEORIGIN
+      Content-Type: application/json-rpc
+      Via: 1.1 jwst-crds-dit.stsci.edu
+      Transfer-Encoding: chunked
+  
+      {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"reftype": "CALVER", "author": "Warren J. Hack", "versions":   {"TweakRegStep": "0.1.0", "SubtractImagesStep": null, "RSCD_Step": null, "CubeBuildStep": null, "Extract1dStep": null,   "AmiAnalyzeStep": "0.7.0.dev", "Extract2dStep": null, "BackgroundStep": null, "SuperBiasStep": null, "DarkCurrentStep":   null, "Combine1dStep": null, "SaturationStep": null, "LinearityStep": null, "DQInitStep": null, "ImprintStep": null,   "OutlierDetectionStep": null, "AssignWcsStep": null, "KlipStep": null, "StackRefsStep": null, "TweakregCatalogStep":   null, "SourceCatalogStep": null, "PersistenceStep": null, "StraylightStep": null, "IPCStep": null, "FlatFieldStep":   null, "ResetStep": null, "RefPixStep": null, "ResampleStep": null, "AmiAverageStep": "0.7.0.dev", "FringeStep": null,   "AlignRefsStep": null, "LastFrameStep": null, "JumpStep": null, "EmissionStep": null, "WfsCombineStep": null,   "AmiNormalizeStep": "0.7.0.dev", "SkyMatchStep": "0.1.0", "PhotomStep": null, "RampFitStep": null, "HlspStep": null},   "instrument": "SYSTEM", "descrip": "JWST calibration processing step version reference file", "CAL_VER": "0.6.0noop.  dev307", "history": "Created by cal_ver_steps version 0.7.0.dev"}}
   
 This example shows the structure of a response string for a query with an error,
 "result" is set to null and "error" describes the problem in more detail,  most
-notably with the response.error.message string::
+notably with the response.error.message string:
+
+  .. code-block:: bash
   
-    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_system_versions", "params": ["an,invalid(version)","null"], "id": 1}' https://jwst-crds-dit.stsci.edu/json/
-    HTTP/1.1 200 OK
-    Date: Wed, 24 Aug 2016 22:23:11 GMT
-    Vary: Cookie
-    X-Frame-Options: SAMEORIGIN
-    Content-Type: application/json-rpc
-    Via: 1.1 jwst-crds-dit.stsci.edu
-    Transfer-Encoding: chunked
+      $ curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_system_versions", "params": ["an,invalid(version)","null"],   "id": 1}' https://jwst-crds-dit.stsci.edu/json/
+      HTTP/1.1 200 OK
+      Date: Wed, 24 Aug 2016 22:23:11 GMT
+      Vary: Cookie
+      X-Frame-Options: SAMEORIGIN
+      Content-Type: application/json-rpc
+      Via: 1.1 jwst-crds-dit.stsci.edu
+      Transfer-Encoding: chunked
     
-    {"error": {"message": "OtherError: Invalid version string,  must be 1-128 chars of A-Z, a-z, 0-9, ., -, _", "code": 500, "data": null, "name": "OtherError"}, "jsonrpc": "1.0", "id": 1, "result": null}
+      {"error": {"message": "OtherError: Invalid version string,  must be 1-128 chars of A-Z, a-z, 0-9, ., -, _", "code":   500, "data": null, "name": "OtherError"}, "jsonrpc": "1.0", "id": 1, "result": null}
 
 
 JSONRPC Protocol
@@ -735,17 +774,28 @@ Sample URL's
 ++++++++++++
 The base URL used for making CRDS JSONRPC method calls is essentially */json/*.
 All further information,  including the method name and the parameters,  are 
-POSTed using a JSON serialization scheme.   Example absolute server URLs are:
+POSTed using a JSON serialization scheme. Example absolute server URLs are:
 
-JWST URL
-........
+.. tabs::
 
-  http://jwst-crds.stsci.edu/json/
-  
-HST URL
-.......
+   .. group-tab:: HST
 
-  http://hst-crds.stsci.edu/json/
+       .. code-block:: bash
+
+           $ http://hst-crds.stsci.edu/json/
+
+   .. group-tab:: JWST
+
+       .. code-block:: bash
+
+           $ http://jwst-crds.stsci.edu/json/
+
+   .. group-tab:: ROMAN
+
+       .. code-block:: bash
+
+           $ http://roman-crds.stsci.edu/json/
+
 
 Generic Request
 +++++++++++++++
@@ -753,9 +803,11 @@ Generic Request
 JSONRPC requests are made by POST'ing a set of variables to the appropriate URL.
 
 An example CRDS service request can be demonstrated in a language agnostic way
-using the UNIX command line utility curl::
+using the UNIX command line utility curl:
 
-    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' https://jwst-crds.stsci.edu/json/
+  .. code-block:: bash
+
+      $ curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' https://jwst-crds.stsci.edu/json/
     
 The *jsonrpc* attribute is used to specify the version of the JSONRPC standard
 being used,  currently 1.0 for CRDS.
