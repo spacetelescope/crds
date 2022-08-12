@@ -8,11 +8,13 @@ files or rules.
 
 This section describes the processes of submitting files to CRDS.  It does not
 detail the formats and requirements of *creating* files which are described
-better elsewhere,  such as `HST ICD-47`_ or `JWST CAL Documentation`_.
+better elsewhere,  such as `HST ICD-47`_, `JWST CAL Documentation`_, or `Roman Cal Documentation`.
 
 .. _`HST ICD-47`: http://newcdbs.stsci.edu/doc/ICD47/index.html
 
 .. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
+
+.. _`Roman Cal Documentation`: https://roman-pipeline.readthedocs.io/en/latest/roman/package_index.html
 
 
 Required CRDS Account
@@ -277,7 +279,7 @@ Auto Rename
 +++++++++++
 
 Normally files uploaded to CRDS will be assigned new unique names. Unchecking
-Auto Rename will request that CRDS use the uploaded file name as the official
+`Auto Rename` will request that CRDS use the uploaded file name as the official
 name.  The CRDS database remembers both the name of the file the submitter
 uploaded as well as the new unique name.
 
@@ -285,7 +287,7 @@ Turning off Auto Rename should be done judiciously if at all.   It's
 appropriate in situations where uploaded files already have known unique names
 which it is desirable to keep.
 
-  * For JWST calibration references, in general Auto Rename should not be
+  * For JWST and Roman calibration references, in general Auto Rename should not be
     turned off.
 
   * For HST calibration references which are assigned unique names prior to
@@ -304,7 +306,7 @@ which it is desirable to keep.
 Compare Old Reference
 +++++++++++++++++++++
 
-When checked CRDS will certify incoming tabular references against the files
+When `Compare Old Reference` is checked, CRDS will certify incoming tabular references against the files
 they replace with respect to the derivation context.   For other references this
 input is irrelevant and ignored.
 
@@ -342,7 +344,7 @@ The results page lists the following items:
 CRDS if the submission is *confirmed*.   Prior to confirmation of the submission,
 neither the submitted references nor the generated mappings are officially in CRDS.
 
-If you loose track of the submission log or confirmation pages,  you can find
+If you lose track of the submission log or confirmation pages,  you can find
 links to them in the *STARTED* and *READY* e-mails that CRDS sends out
 when a submission is initiated or CRDS has completed submission checkout
 and is ready for confirmation or cancellation.
@@ -445,7 +447,8 @@ Mapping Change Procedure
 The manual rmap update process is to:
 
 1.  Download the starting rmap from the web site or copy it out of
-    /grp/crds/cache/mappings/hst or /grp/crds/cache/mappings/jwst.
+    `/grp/crds/cache/mappings/hst`, `/grp/crds/cache/mappings/jwst`
+    or `/grp/crds/cache/mappings/roman`.
 
 2.  **DO NOT** change the name of the mapping
     **DO NOT** alter the internal name links like *derived_from* in the mapping
@@ -455,21 +458,25 @@ The manual rmap update process is to:
     can.  Use great care, CRDS certify cannot check many of the mapping properties.
 
 4. Run crds.certify on the resulting mapping, using the current edit context as
-   the point of comparison::
+   the point of comparison:
 
-     % crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-edit
+     .. code-block:: bash
+
+         $ crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-edit
 
    You may see an rmap checksum warning since you modified the contents of
    the rmap.
 
-   Note: the ./ seen in the example command is important,  it tells CRDS to
+   Note: the `./` seen in the example command is important,  it tells CRDS to
    use the file in the current directory instead of attempting to find it in
    the CRDS cache.
 
    Run crds.checksum on the mapping to update the internal sha1sum if you wish
-   to load the context into Python to do other tests with the .rmap::
+   to load the context into Python to do other tests with the .rmap:
 
-     % crds checksum ./jwst_miri_dark_0004.rmap
+     .. code-block:: bash
+
+         $ crds checksum ./jwst_miri_dark_0004.rmap
 
    The internal checksum is also used to verify the upload integrity when you
    finally submit the file to CRDS.  An out-of-date checksum or corrupted file
@@ -514,7 +521,7 @@ Manual .imap update
 3. Download or copy the identified .imap.
 
 4. Manually edit the .imap to make your required changes, e.g. removing a
-type or setting a type to N/A.   Note that adding types can generally be
+type or setting a type to `N/A`.   Note that adding types can generally be
 done just by submitting the new .rmap normally.
 
 5. Submit the .imap using Submit Mappings with:
@@ -551,7 +558,7 @@ as the default starting point for subsequent file submissions.
 Manually update the EDIT context
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-The default starting point for new rules (Derive From Context) is defined by
+The default starting point for new rules `Derive From Context` is defined by
 the Editing Context.
 
 When Generate Contexts is ON,  CRDS automatically sets the Editing
@@ -744,45 +751,66 @@ details of any particular reference file of the same instrument and type:
 
 These checks are independent of the JWST datamodels discussed below.
 
-JWST Data Model Constraints
-!!!!!!!!!!!!!!!!!!!!!!!!!!!
+JWST and Roman Data Model Constraints
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-The JWST calibration software (CAL) models the structure and valild keyword
-values for reference files in its jwst.datamodels package.  See `JWST CAL
-Documentation`_ for more information.
+.. tabs::
 
-Effectively, the CAL datamodels define a formatting contract your references
-need to fulfill.  Files which don't fulfill this contract will generally either
-result in perpetual warnings or outright pipeline failures.
+   .. group-tab:: JWST
 
-*Crds certify* invokes datamodels.open() to verify datamodels compliance for
-your reference files.
+       The JWST calibration software (CAL) models the structure and valid keyword 
+       values for reference files in its jwst.datamodels package.  See `JWST CAL Documentation`_ 
+       for more information.
+       
+       Effectively, the CAL datamodels define a formatting contract your references 
+       need to fulfill.  Files which don't fulfill this contract will generally either
+       result in perpetual warnings or outright pipeline failures.
+       
+       *Crds certify* invokes datamodels.open() to verify datamodels compliance for
+       your reference files.
 
-This message::
+       This message:
 
-  CRDS - WARNING - Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
+         .. code-block:: bash
 
-indicates that the JWST CAL Data Models were not used to create your reference
-files.  Datamodels.open() needs the DATAMODL keyword to define the correct
-model to validate your file.
+             CRDS - WARNING - Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
 
-This message::
+       indicates that the JWST CAL Data Models were not used to create your reference files.  
+       `Datamodels.open()` needs the DATAMODL keyword to define the correct model to validate your file.
 
-  CRDS - WARNING - NoTypeWarning : jwst.datamodels.util : model_type not found. Opening .../jwst_miri_specwcs_lrscdp7.fits as a ReferenceFileModel
+       This message:
 
-resulted from a reference file that used an invalid value for DATAMODL.
+         .. code-block:: bash
 
-You have the option of ignoring these warnings, but CRDS is probably not using
-the most appropriate model to validate your file, only a more generic model.
-When your file is later processed by the CAL software, CAL will use the correct
-model and may reject your file.
+             CRDS - WARNING - NoTypeWarning : jwst.datamodels.util : model_type not found. 
+             Opening .../jwst_miri_specwcs_lrscdp7.fits as a ReferenceFileModel
+      
+       resulted from a reference file that used an invalid value for `DATAMODL`.
+       You have the option of ignoring these warnings, but CRDS is probably not using 
+       the most appropriate model to validate your file, only a more generic model.
+       When your file is later processed by the CAL software, CAL will use the correct
+       model and may reject your file.
 
-**SOLUTION:** The best solution is to use the CAL datamodels and methods
-recommended by the CAL s/w team to create your reference files.  This will
-automatically set DATAMODL and can pre-validate your reference files at the
-same time you create them.  While this won't catch everything,  its superior
-to CRDS catching errors later.   Better yet,  running your files through actual
-test calibrations may reveal problems no constraints catch.
+       **SOLUTION:** The best solution is to use the CAL datamodels and methods
+       recommended by the CAL s/w team to create your reference files.  This will
+       automatically set DATAMODL and can pre-validate your reference files at the
+       same time you create them.  While this won't catch everything,  its superior
+       to CRDS catching errors later.   Better yet,  running your files through actual
+       test calibrations may reveal problems no constraints catch.
+
+   .. group-tab:: ROMAN
+
+       The Roman pipeline software `romancal` models the structure and valid keyword 
+       values for reference files.  See `Roman Cal Documentation`_ 
+       for more information.
+       
+       Effectively, the Roman datamodels package defines a formatting contract your references 
+       need to fulfill.  Files which don't fulfill this contract will generally either
+       result in perpetual warnings or outright pipeline failures.
+       
+       *Crds certify* invokes `roman_datamodels.datamodels.open()` to verify datamodels compliance for
+       your reference files.
+
 
 Fitsverify Failures
 !!!!!!!!!!!!!!!!!!!
@@ -872,7 +900,7 @@ Idenifying a comparison reference file by consulting the comparison context is
 just the first step.  To perform table checks, crds certify needs direct
 access to the comparison reference as a readable file.
 
-The CRDS servers and users using /grp/crds/cache should never see this problem
+The CRDS servers and users using `/grp/crds/cache` should never see this problem
 because all reference files should be available for comparison.  Users
 utilizing a personal CRDS cache e.g. defined by CRDS_PATH may see this problem
 and can download missing comparison references by specifying --sync-files to
