@@ -139,7 +139,7 @@ crds.bestrefs use cases
   --update-headers to fill in dataset FITS headers with recommended best
   references::
 
-    % crds bestrefs  --update-headers  --files j8bt05njq_raw.fits ...
+    $ crds bestrefs  --update-headers  --files j8bt05njq_raw.fits ...
 
   The outcome of this command is updating the best references in the FITS
   headers of the specified .fits files.
@@ -147,12 +147,12 @@ crds.bestrefs use cases
   Omitting --update-headers can be used to evaluate bestrefs without altering
   the input FITS files::
 
-    % crds bestrefs --print-new-references --files  j8bt05njq_raw.fits ...
+    $ crds bestrefs --print-new-references --files  j8bt05njq_raw.fits ...
 
   The --new-context switch can be used to choose a context which is not the
   current default::
 
-    % crds bestrefs --new-context hst_0457.pmap --files ...
+    $ crds bestrefs --new-context hst_0457.pmap --files ...
 
   2. Reprocessing Mode
 
@@ -168,7 +168,7 @@ crds.bestrefs use cases
   new reference files are delivered, after the new CRDS context is selected for
   use by the archive pipeline.  It is run e.g. like this::
 
-    % crds bestrefs --affected-datasets --old-context  hst_0001.pmap --new-context hst_0002.pmap  
+    $ crds bestrefs --affected-datasets --old-context  hst_0001.pmap --new-context hst_0002.pmap  
   
   --affected-datasets is a "bundle switch" that captures standard options for
   reprocessing.  See *crds bestrefs --help* for more information on individual
@@ -185,7 +185,7 @@ crds.bestrefs use cases
 
   Context testing mode can be run like this::
 
-    % crds bestrefs --check-context --new-context jwst-edit
+    $ crds bestrefs --check-context --new-context jwst-edit
 
   Context testing also requires setting *CRDS_SERVER_URL* to obtain archived
   dataset parameters.  Note that during JWST pre-I&T the archive database often
@@ -193,7 +193,7 @@ crds.bestrefs use cases
 
   Undesired test cases can be weeded out like this::
 
-    % crds bestrefs --check-context --new-context jwst-edit --drop-ids JW93135336001_02102_00001.MIRIFUSHORT:JW93135336001_02102_00001.MIRIFUSHORT
+    $ crds bestrefs --check-context --new-context jwst-edit --drop-ids JW93135336001_02102_00001.MIRIFUSHORT:JW93135336001_02102_00001.MIRIFUSHORT
 
 ...........
 New Context
