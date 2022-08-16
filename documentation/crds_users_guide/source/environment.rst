@@ -34,7 +34,7 @@ By default, CRDS behaves as if you set your environment like this:
 
 */grp/crds/cache* is on the Central Store and should be accessible to all users.  It
 is a readonly cache containing all rule and reference files associated with
-all CRDS projects,  now HST + JWST.
+all CRDS projects: HST, JWST and Roman.
 
 While it is configuration free and self-maintaining, limitations of the default cache
 include:
@@ -45,9 +45,14 @@ include:
 
 User Local CRDS_PATH
 ....................
-To avoid Internet inefficiencies, individual user's can construct demand-based CRDS caches
+To avoid Internet inefficiencies, individual users can construct demand-based CRDS caches
 appropriate to their particular datasets. Personal CRDS caches also enable processing and
 many basic functions with no network access to the CRDS server.
+
+.. tip::
+    
+    If using different servers, a different local cache should be used for each one. 
+    Using the same cache for different servers will lead to corrupted local cache.
 
 A remote or pipeline user defines a non-default CRDS cache by setting, e.g.:
 
@@ -77,7 +82,6 @@ By **default** CRDS behaves as if you set:
 
 Serverless mode limits CRDS to basic functions (`bestrefs`) but requires no server connection
 once the supporting CRDS cache has been synced.
-
 
 
 HST Ops Server

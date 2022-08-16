@@ -17,13 +17,11 @@ CRDS sub-commands like `list`, `certify`, `checksum`, `uniqname`, etc.:
    
       usage: crds <command> <parameters...>
 
-`crds` is a wrapper used to invoke various CRDS sub-programs.
+      'crds' is a wrapper used to invoke various CRDS sub-programs.
 
-For example,  to assign HST best reference files,  do:
+      For example, to assign HST best reference files, do:
 
-  .. code-block:: bash
-
-      $ crds bestrefs --files *.fits  --update-bestrefs
+          $ crds bestrefs --files *.fits  --update-bestrefs
 
       Available commands:
    
@@ -46,9 +44,28 @@ For example,  to assign HST best reference files,  do:
       e.g. crds list --help
 
 
-The original DEPRECATED command line syntax, e.g. for the list command was::
+.................
+CRDS list command
+.................
 
-  $ python -m crds.list --status
+To print your CRDS configuration settings, use the `list` command:
+
+.. code-block:: bash
+
+    $ crds list --status
+
+    CRDS Summary = 'The __rationale__ variable is no longer maintained and will be removed in a future release.'
+    CRDS Version = '11.16.9, b11.4.0'
+    CRDS_MODE = 'auto'
+    CRDS_PATH = '/home/developer/crds_cache'
+    CRDS_SERVER_URL = 'https://hst-crds.stsci.edu'
+    Cache Locking = 'enabled, multiprocessing'
+    Effective Context = 'hst_1006.pmap'
+    Last Synced = '2022-08-16 11:32:12.247687'
+    Python Executable = '/home/developer/venv/bin/python3'
+    Python Version = '3.9.2.final.0'
+    Readonly Cache = False
+
 
 
 Specifying File Paths
@@ -57,18 +74,11 @@ Specifying File Paths
 The command line tools operate on CRDS reference and mapping files both inside
 and outside the CRDS cache.
 
-In all releases CRDS has interpreted an absolute or relative path normally.
+In all releases CRDS has interpreted an absolute or relative path normally. For example, CRDS interprets `"./"` to mean "in the current working directory".
 
-Until CRDS 7.3.1, CRDS interpreted filenames with no path as meaning "located
-inside the CRDS cache" with a path implied based on CRDS_PATH and/or other
-environment variables.
+As of v7.3.1 and higher, CRDS assumes filenames without a path are in the current working directory. (Prior to v7.3.1 CRDS interpreted filenames with no path as meaning "located inside the CRDS cache" with a path based on CRDS_PATH and/or other environment variables.) For example, if the current working directory contains some .fits files, you can simply pass in `*.fits` to the `--files` arg and CRDS will now interpret this as `./*.fits` automatically (see examples below).
 
-After CRDS 7.3.1,  CRDS interprets filenames with no path normally and assumes
-they are in the current working directory.
-
-In all releases CRDS interprets ./ normally meaning "in the current directory".
-
-In all releases CRDS interprets a prefix of crds:// as meaning "located inside
+In all releases CRDS interprets a prefix of `crds://` as meaning "located inside
 the CRDS cache" with a path defined based on `CRDS_PATH` and/or other environment
 variables.  This same prefix is recorded in JWST and Roman data products and then
 interpreted on the fly by calibration s/w as needed.
@@ -134,9 +144,9 @@ crds.bestrefs use cases
 
   1. File (HST Pipeline) Mode
 
-  The --files switch can be used to specify a list of FITS dataset files to
+  The `--files` switch can be used to specify a list of FITS dataset files to
   process.  This is used in the HST pipeline in conjunction with
-  --update-headers to fill in dataset FITS headers with recommended best
+  `--update-headers` to fill in dataset FITS headers with recommended best
   references::
 
     $ crds bestrefs  --update-headers  --files j8bt05njq_raw.fits ...
@@ -144,12 +154,12 @@ crds.bestrefs use cases
   The outcome of this command is updating the best references in the FITS
   headers of the specified .fits files.
 
-  Omitting --update-headers can be used to evaluate bestrefs without altering
+  Omitting `--update-headers` can be used to evaluate bestrefs without altering
   the input FITS files::
 
     $ crds bestrefs --print-new-references --files  j8bt05njq_raw.fits ...
 
-  The --new-context switch can be used to choose a context which is not the
+  The `--new-context` switch can be used to choose a context which is not the
   current default::
 
     $ crds bestrefs --new-context hst_0457.pmap --files ...
@@ -174,7 +184,7 @@ crds.bestrefs use cases
   reprocessing.  See *crds bestrefs --help* for more information on individual
   switches.
 
-  Running reprocessing mode requires setting *CRDS_SERVER_URL*.
+  Running reprocessing mode requires setting `CRDS_SERVER_URL`.
 
   3. Context Testing Mode
 
@@ -188,7 +198,7 @@ crds.bestrefs use cases
     $ crds bestrefs --check-context --new-context jwst-edit
 
   Context testing also requires setting *CRDS_SERVER_URL* to obtain archived
-  dataset parameters.  Note that during JWST pre-I&T the archive database often
+  dataset parameters.  Note that during JWST and Roman pre-I&T the archive database often
   contains parameter sets related to obsolete test cases.
 
   Undesired test cases can be weeded out like this::
@@ -200,7 +210,7 @@ New Context
 ...........
 
 crds.bestrefs always computes best references with respect to a context which
-can be explicitly specified with the --new-context parameter.  If --new-context
+can be explicitly specified with the `--new-context` parameter.  If `--new-context`
 is not specified, the default operational context is determined by consulting
 the CRDS server or looking in the local cache.
 
@@ -209,9 +219,9 @@ Old Context
 ...........
 
 `--old-context` can be used to specify a second context for which bestrefs
-are dynamically computed; --old-context implies that a bestrefs comparison
-will be made with `--new-context`.  If --old-context is not specified, it
-defaults to None.  --old-context is only used for context-to-context
+are dynamically computed; `--old-context` implies that a bestrefs comparison
+will be made with `--new-context`.  If `--old-context` is not specified, it
+defaults to None.  `--old-context` is only used for context-to-context
 comparisons,  nominally for CRDS repro.
 
 ........................
@@ -259,11 +269,11 @@ Pickle and .json saves
 ......................
 
 crds.bestrefs can load parameters and past results from a sequence of .pkl or
-.json files using --load-pickles.  These are combined into a single parameter
+.json files using `--load-pickles`.  These are combined into a single parameter
 source in command line order.
 
 crds.bestrefs can save the parameters obtained from various sources into .pkl
-or .json formatted save files using --save-pickle.  The single combined result
+or .json formatted save files using `--save-pickle`.  The single combined result
 of multiple pickle or instrument parameter sources is saved.  The file
 extension (.json or .pkl) defines the format used.
 
@@ -278,10 +288,10 @@ across different versions of Python.
 Verbosity
 .........
 
-crds.bestrefs has --verbose and --verbosity=N parameters which can increase the
+crds.bestrefs has `--verbose` and `--verbosity=N` parameters which can increase the
 amount of informational and debug output.  Verbosity ranges from 0..100 where 0
 means "no debug output" and 100 means "all debug output".  50 is the default
-for --verbose.
+for `--verbose`.
 
 .........
 Bad Files
@@ -338,7 +348,7 @@ cache which organizes and can locate files in a standard way.
     this will also recursively download all the mappings referred to by .pmaps
     0001, 002, 0003.
     
-    Synced contexts can be specified as --all contexts:
+    Synced contexts can be specified as `--all` contexts:
 
       .. code-block:: bash
     
@@ -595,7 +605,7 @@ file against the file it replaces looking for new or missing table rows.
 
         $ crds certify ./some_reference.fits --comparison-reference=old_reference_version.fits --run-fitsverify --dump-provenance
 
-* For more information on the checks being performed,  use --verbose or --verbosity=N where N > 50.
+* For more information on the checks being performed, use `--verbose` or -`-verbosity=N` where N > 50.
 
   .. code-block:: bash
     
@@ -717,7 +727,7 @@ Contexts to list can be specified in a variety of ways:
       hst_acs_atodtab.rmap 
       ...
 
---references, --mappings, or both can be listed.
+`--references`, `--mappings`, or both can be listed.
 
 2. Locally cached files (files already synced to your computer) can be listed:
 
@@ -729,7 +739,7 @@ Contexts to list can be specified in a variety of ways:
       $ crds list --cached-references --full-path
       ...
 
-In both cases adding --full-path prints the path of the file within the CRDS cache.
+In both cases adding `--full-path` prints the path of the file within the CRDS cache.
 
 These are merely simple directory listings which ignore the context specifiers
 and can be grep'ed for finer grained answers.
@@ -815,7 +825,7 @@ and regressions can be printed or stored.
        ... downloads IDs and headers for WFC3, ACS to dated directory ...
 
  The default multi-line format for dataset parameters is more readable than the 
- --json form:
+ `--json` form:
 
    .. code-block:: bash
 
@@ -1227,42 +1237,45 @@ CRDS uniqname is used to rename references with unique official CRDS names for H
 It supports renaming both calibration and synphot reference files with modernized
 HST CDBS-style names.
 
-usage::
-     crds uniqname
-     [-h] [--files FILES [FILES ...]] [--dry-run] [-a] [-f] [-e] [-s] [-r]
-     [-o OUTPUT_PATH] [-b] [--fits-errors] [-v] [--verbosity VERBOSITY]
-     [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE]
-     [--log-time] [--pdb] [--debug-traps]
+  .. code-block:: bash
 
-optional arguments::
-  --help                Show this help message and exit
+      usage:
+          crds uniqname
+          [-h] [--files FILES [FILES ...]] [--dry-run] [-a] [-f] [-e] [-s] [-r]
+          [-o OUTPUT_PATH] [-b] [--fits-errors] [-v] [--verbosity VERBOSITY] 
+          [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--roman] [--stats] 
+          [--profile PROFILE] [--log-time] [--pdb] [--debug-traps]
 
---files FILES [FILES ...] Files to rename.
-  --dry-run             Print how a file would be renamed without modifying it.
-  -a, --add-checksum    Add FITS checksum.  Without, checksums *removed* if header modified.
-  -f, --add-keywords    When renaming, add FILENAME, ROOTNAME, HISTORY keywords for the generated name.
-  -e, --verify-file     Verify FITS compliance and any checksums before changing each file.
-  -s, --standard        Same as --add-keywords --verify-file,  does not add checksums (add -a).
-  -r, --remove-original
-                        After renaming,  remove the orginal file.
-  -o OUTPUT_PATH, --output-path OUTPUT_PATH
-                        Output renamed files to this directory path.
-  -b, --brief           Produce less output.
-  --fits-errors         When set, treat FITS compliance and checksum errors as fatal exceptions.
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
-                        Set log verbosity to a specific level: 0..100.
-  --dump-cmdline        Dump the command line parameters used to start the script to the log.
-  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  -I, --ignore-cache    Download required files even if they're already in the cache.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
-  --stats               Track and print timing statistics.
-  --profile PROFILE     Output profile stats to the specified file.
-  --log-time            Add date/time to log messages.
-  --pdb                 Run under pdb.
-  --debug-traps         Bypass exception error message traps and re-raise exception.
+      optional arguments:
+          -h, --help            show this help message and exit
+          --files FILES [FILES ...]
+                                Files to rename.
+          --dry-run             Print how a file would be renamed without modifying it.
+          -a, --add-checksum    Add FITS checksum.  Without, checksums *removed* if header modified.
+          -f, --add-keywords    When renaming, add FILENAME, ROOTNAME, HISTORY keywords for the generated name.
+          -e, --verify-file     Verify FITS compliance and any checksums before changing each file.
+          -s, --standard        Same as --add-keywords --verify-file,  does not add checksums (add -a).
+          -r, --remove-original
+                                After renaming,  remove the orginal file.
+          -o OUTPUT_PATH, --output-path OUTPUT_PATH
+                                Output renamed files to this directory path.
+          -b, --brief           Produce less output.
+          --fits-errors         When set, treat FITS compliance and checksum errors as fatal exceptions.
+          -v, --verbose         Set log verbosity to True,  nominal debug level.
+          --verbosity VERBOSITY
+                                Set log verbosity to a specific level: 0..100.
+          --dump-cmdline        Dump the command line parameters used to start the script to the log.
+          -R, --readonly-cache  Do not modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+          -I, --ignore-cache    Download required files even if they are already in the cache.
+          -V, --version         Print the software version and exit.
+          -J, --jwst            Force observatory to JWST for determining header conventions.
+          -H, --hst             Force observatory to HST for determining header conventions.
+          --roman               Force observatory to Roman for determining header conventions.
+          --stats               Track and print timing statistics.
+          --profile PROFILE     Output profile stats to the specified file.
+          --log-time            Add date/time to log messages.
+          --pdb                 Run under pdb.
+          --debug-traps         Bypass exception error message traps and re-raise exception.
 
 This program is based loosely on the CDBS program uniqname modified to support
 enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
@@ -1296,69 +1309,67 @@ and HISTORY to document the renaming.
 If `--remove-original` is specified then the original file is deleted after the renamed
 file has been created and modified as specified (checksums, keywords, etc.)
 
-Renamed files can be output to a different directory using --output-path.
+Renamed files can be output to a different directory using `--output-path`.
 
 `--dry-run` can be used to demo renaming by printing what the new name would be.
 
 crds checksum
 -------------
 
-usage: crds checksum
-       [-h] [--remove] [--verify] [-v] [--verbosity VERBOSITY]
-       [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE]
-       [--log-time] [--pdb] [--debug-traps]
-       files [files ...]
-
-Add, remove, or verify checksums in CRDS rules or reference files.
-    
-1. Default operation is to ADD checksums:
-
   .. code-block:: bash
-    
-      $ crds checksum  *.rmap  
-    
-      $ crds checksum  *.fits
-    
-2. Reference files may support REMOVING checksums:
 
-  .. code-block:: bash
-    
-      $ crds checksum --remove *.fits
-    
-NOTE: CRDS mapping / rules files do not support removing checksums.
-    
-3. Checksums can be VERIFIED without attempting to update or remove:
+      usage: crds checksum
+      [-h] [--remove] [--verify] [-v] [--verbosity VERBOSITY] 
+      [--dump-cmdline] [-R] [-I] [-V] [-J] [-H] [--roman] 
+      [--stats] [--profile PROFILE] [--log-time] [--pdb] 
+      [--debug-traps] files [files ...]
 
-  .. code-block:: bash
-    
-      $ crds checksum --verify  *.rmap
-    
-      $ crds checksum --verify *.fits
-    
-Currently only FITS references support checksum operations.
-Checksums can be added or verified on all CRDS mapping types.
-    
-positional arguments:
-  files                 Files to operate on, CRDS rule or reference files.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --remove              Remove checksums when specified.  Invalid for CRDS mappings.
-  --verify              Verify checksums when specified.
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
-                        Set log verbosity to a specific level: 0..100.
-  --dump-cmdline        Dump the command line parameters used to start the script to the log.
-  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  -I, --ignore-cache    Download required files even if they're already in the cache.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
-  --stats               Track and print timing statistics.
-  --profile PROFILE     Output profile stats to the specified file.
-  --log-time            Add date/time to log messages.
-  --pdb                 Run under pdb.
-  --debug-traps         Bypass exception error message traps and re-raise exception.
+      Add, remove, or verify checksums in CRDS rules or reference files.
+      
+      1. Default operation is to ADD checksums::
+  
+      % crds checksum  *.rmap
+  
+      % crds checksum  *.fits
+  
+      2. Reference files may support REMOVING checksums::
+  
+      % crds checksum --remove *.fits
+  
+      NOTE: CRDS mapping / rules files do not support removing checksums.
+  
+      3. Checksums can be VERIFIED without attempting to update or remove::
+  
+      % crds checksum --verify  *.rmap
+  
+      % crds checksum --verify *.fits
+  
+      Currently only FITS references support checksum operations.
+      Checksums can be added or verified on all CRDS mapping types.
+      
+      
+      positional arguments:
+        files                 Files to operate on, CRDS rule or reference files.
+      
+      optional arguments:
+        -h, --help            show this help message and exit
+        --remove              Remove checksums when specified.  Invalid for CRDS mappings.
+        --verify              Verify checksums when specified.
+        -v, --verbose         Set log verbosity to True,  nominal debug level.
+        --verbosity VERBOSITY
+                              Set log verbosity to a specific level: 0..100.
+        --dump-cmdline        Dump the command line parameters used to start the script to the log.
+        -R, --readonly-cache  Do not modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+        -I, --ignore-cache    Download required files even if they are already in the cache.
+        -V, --version         Print the software version and exit.
+        -J, --jwst            Force observatory to JWST for determining header conventions.
+        -H, --hst             Force observatory to HST for determining header conventions.
+        --roman               Force observatory to Roman for determining header conventions.
+        --stats               Track and print timing statistics.
+        --profile PROFILE     Output profile stats to the specified file.
+        --log-time            Add date/time to log messages.
+        --pdb                 Run under pdb.
+        --debug-traps         Bypass exception error message traps and re-raise exception.
 
 
 safe_bestrefs
