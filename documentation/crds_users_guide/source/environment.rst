@@ -143,17 +143,11 @@ to this:
            $ export CRDS_SERVER_URL=https://hst-crds-test.stsci.edu
 
    .. group-tab:: JWST
-    
-       Alternative servers for JWST I&T testing are:
 
          .. code-block:: bash
 
              $ export CRDS_PATH=${HOME}/crds_cache_test
-             $ export CRDS_SERVER_URL=https://jwst-crds-b5it.stcsi.edu     # build-5
-             $ export CRDS_SERVER_URL=https://jwst-crds-b6it.stcsi.edu     # build-6
-             $ export CRDS_SERVER_URL=https://jwst-crds-dit.stcsi.edu      # build-7
-             $ export CRDS_SERVER_URL=https://jwst-crds-bit.stcsi.edu      # build-7
-             $ export CRDS_SERVER_URL=https://jwst-crds-cit.stcsi.edu      # build-7.2
+             $ export CRDS_SERVER_URL=https://jwst-crds-cit.stcsi.edu
 
    .. group-tab:: ROMAN
 
