@@ -18,14 +18,14 @@ case you'd like to script, don't hesitate to ask for it.
 Implicit Installation
 ---------------------
 
-CRDS is often installed implicitly as a dependency of the HST or JWST
+CRDS is often installed implicitly as a dependency of the HST, JWST and Roman
 calibration software.   These basic installations only include sufficient
 dependencies to assign best references and fetch them if needed.
 
 To check for CRDS try::
 
    $ crds list --version
-   7.0.5, master, c95d1cc
+   11.16.7, master, c95d1cc
 
 File Submission Installation
 ----------------------------

@@ -1,3 +1,11 @@
+11.16.9 (unreleased)
+====================
+
+General
+-------
+
+- User Guide updates: mission-based tabs for code examples, Roman content added [#894]
+
 11.16.8 (2022-08-09)
 ====================
 

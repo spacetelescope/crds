@@ -57,6 +57,7 @@ extensions = [
     'sphinx_automodapi.autodoc_enhancements',
     'sphinx_automodapi.smart_resolver',
     'sphinx_rtd_theme',
+    'sphinx_tabs.tabs'
     ]
 
 
@@ -101,7 +102,7 @@ release = crds.__version__
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -125,7 +126,7 @@ html_theme_options = {
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',
-    'style_nav_header_background': 'white',
+    #'style_nav_header_background': 'white',
     # Toc options
     'collapse_navigation': True,
     'sticky_navigation': True,

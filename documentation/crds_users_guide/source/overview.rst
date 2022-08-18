@@ -54,7 +54,7 @@ References are assigned by descending the CRDS rules hierarchy.
 	References                 .fits, .asdf, etc. 1000's       lcb12060j_drk.fits           Individual reference files
 	======================     ================== ========     ==========================   =======================================
 
-Each calibration requires many types of references that vary by instrument and mode.   Each pipeline context
+Each calibration requires many types of references that vary by instrument and mode. Each pipeline context
 defines a specific CRDS configuration (rules version) for the archive pipeline at one point in time.
 
 References are defined by descending the hierarchy based on exposure configuration parameters 
@@ -75,7 +75,7 @@ CRDS Tools
 
 In addition to assigning best reference files based on a hierarchy of rules,  CRDS
 provides tools to check, difference, and generally manage a cache of rules and reference
-files.   Individual programs are managed under the "crds" master script:
+files. Individual programs are managed under the "crds" master script:
 
     * crds bestrefs
         - Best references utility for HST FITS files and context-to-context affected datasets computations.
@@ -87,10 +87,10 @@ files.   Individual programs are managed under the "crds" master script:
         - Checks constraints and format for CRDS rules and references.
 
     * crds diff, crds rowdiff
-        - Difference utility for rules and references,  also FITS table differences.
+        - Difference utility for rules and references, also FITS table differences.
 
     * crds list
-        - Lists cache files and configuration,  prints rules files,  dumps database dataset parameter dictionaries.
+        - Lists cache files and configuration, prints rules files, dumps database dataset parameter dictionaries.
 
     * crds matches
         - Prints out parameter matches for particular references.
@@ -116,9 +116,11 @@ The CRDS web sites manage CRDS rules and reference files and metadata:
 	HST            Pipeline Test    https://hst-crds-test.stsci.edu
 	JWST           Operations       https://jwst-crds.stsci.edu
 	JWST           Pipeline Test    https://jwst-crds-test.stsci.edu
+	ROMAN          Operations       https://roman-crds.stsci.edu
+	ROMAN          Pipeline Test    https://roman-crds-test.stsci.edu
 	=======        =============    ================================
 
-A number of additional servers exist to support development and JWST I&T.
+A number of additional servers exist to support development and I&T for JWST and Roman.
  
 The CRDS web servers provide these functions:
 
@@ -173,15 +175,15 @@ management of rules and reference files in two ways:
 	a selection of CRDS contexts,  e.g. all contexts,  the last 5 contexts,
 	etc. The complete caches consume terabytes of space.
 	
-	2. The crds bestrefs tool and/or JWST CAL code direct integration can
+	2. The crds bestrefs tool and/or JWST and Roman CAL code direct integration can
 	dynamically download references applicable to a group of particular 
 	datasets.  Dynamic downloads and private caches can improve upon VPN
 	for remote users since cached CRDS references are only downloaded
 	once.
 
-In both cases the quanity of files downloaded has no arbitrary bound,
+In both cases the quanity of files downloaded has no arbitrary bound;
 if files are listed in the CRDS rules or assigned by the bestrefs
-program or JWST CAL code CRDS can download all of them.
+program or JWST/Roman CAL code, CRDS can download all of them.
 
 Reprocessing Support
 ++++++++++++++++++++
@@ -195,7 +197,7 @@ old and new contexts based on archived dataset parameters for applicable
 datasets.
 
 The CRDS reprocessing system is fully autonomous and triggered by the selection
-of a new default contextr by a pipeline operator.   After running to completion,
+of a new default contextr by a pipeline operator. After running to completion,
 the reprocessing system stores logs and recommended datasets personally and 
 makes them available via e-mail and a web interface and client program.
 
@@ -203,8 +205,8 @@ Web Services
 ++++++++++++
 
 The CRDS servers provide a variety of web services via JSONRPC interfaces, including
-a JSON rendering of the current JWST CAL s/w component versions and a best references
-web service for the archive.   Additional web services support file distribution and
+a JSON rendering of the current JWST or Roman CAL s/w component versions and a best references
+web service for the archive. Additional web services support file distribution and
 reprocessing functions.
 
 Web Displays

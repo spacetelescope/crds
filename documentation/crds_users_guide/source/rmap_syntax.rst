@@ -41,7 +41,7 @@ header
 ......
 
 The header provides meta data describing the mapping.  A critical field in the mapping header is the "parkey"
-field which names the dataset parameters (nominally FITS keywords or JWST data model names) which are used by
+field which names the dataset parameters (nominally FITS keywords, JWST or Roman data model names) which are used by
 the selector to do a best references lookup.
 
 comment
@@ -58,127 +58,307 @@ structure consisting of top-level selectors and sub-selectors.
 Pipeline Mappings (.pmap)
 -------------------------
 
-A sample pipeline mapping for HST looks like::
+A sample pipeline mapping looks like:
 
-    header = {
-        'name' : 'hst.pmap',
-        'derived_from' : 'created by hand 12-23-2011',
-        'mapping' : 'PIPELINE',
-        'observatory' : 'HST',
-        'parkey' : ('INSTRUME',),
-        'description' : 'Initially generated on 12-23-2011',
-        'sha1sum' : 'e2c6392fd2731df1e8d933bd990f3fd313a813db',
-    }
+.. tabs::
 
-    comment = """This is an optional mapping section used to add multiline commentary,
-    perhaps to describe mapping evolution or unusual behaviors.
-    """
+   .. group-tab:: HST
 
-    selector = {
-        'ACS' : 'hst_acs.imap',
-        'COS' : 'hst_cos.imap',
-        'NICMOS' : 'hst_nicmos.imap',
-        'STIS' : 'hst_stis.imap',
-        'WFC3' : 'hst_wfc3.imap',
-        'WFPC2' : 'hst_wfpc2.imap',
-    }
+       .. code-block:: python
 
-A pipeline mapping matches the dataset "INSTRUME" header keyword against its selector to look up an instrument
-mapping file.
+           header = {
+               'name' : 'hst.pmap',
+               'derived_from' : 'created by hand 12-23-2011',
+               'mapping' : 'PIPELINE',
+               'observatory' : 'HST',
+               'parkey' : ('INSTRUME',),
+               'description' : 'Initially generated on 12-23-2011',
+               'sha1sum' : 'e2c6392fd2731df1e8d933bd990f3fd313a813db',
+           }
+
+           comment = """This is an optional mapping section used to add multiline commentary,
+           perhaps to describe mapping evolution or unusual behaviors.
+           """
+
+           selector = {
+              'ACS' : 'hst_acs.imap',
+              'COS' : 'hst_cos.imap',
+              'NICMOS' : 'hst_nicmos.imap',
+              'STIS' : 'hst_stis.imap',
+              'WFC3' : 'hst_wfc3.imap',
+              'WFPC2' : 'hst_wfpc2.imap',
+           }
+
+      A pipeline mapping matches the dataset `INSTRUME` header keyword against its selector to look up an instrument mapping file.
+
+   .. group-tab:: JWST
+
+       .. code-block:: python
+
+           header = {
+               'derived_from' : 'jwst_0865.pmap',
+               'description' : 'Hand-edit to define all step parameter reftypes for all instruments',
+               'mapping' : 'PIPELINE',
+               'name' : 'jwst_0866.pmap',
+               'observatory' : 'JWST',
+               'parkey' : ('META.INSTRUMENT.NAME',),
+               'sha1sum' : '4d92bebc8cc9819019c7f603c58985bf53b37d9f',
+           }
+
+           selector = {
+               'FGS' : 'jwst_fgs_0101.imap',
+               'MIRI' : 'jwst_miri_0279.imap',
+               'NIRCAM' : 'jwst_nircam_0198.imap',
+               'NIRISS' : 'jwst_niriss_0175.imap',
+               'NIRSPEC' : 'jwst_nirspec_0252.imap',
+               'SYSTEM' : 'jwst_system_0026.imap',
+           }
+
+      A pipeline mapping matches the dataset `META.INSTRUMENT.NAME` header keyword against its selector to look up an instrument mapping file.
+
+   .. group-tab:: ROMAN
+
+       .. code-block:: python
+
+           header = {
+               'derived_from' : 'roman_0036.pmap',
+               'description' : 'Updated parkey to include roman prefix.',
+               'mapping' : 'PIPELINE',
+               'name' : 'roman_0037.pmap',
+               'observatory' : 'ROMAN',
+               'parkey' : ('ROMAN.META.INSTRUMENT.NAME',),
+               'sha1sum' : '7765a10e18b1607ba268c62033f38130bb995690',
+           }
+           
+           selector = {
+               'WFI' : 'roman_wfi_0035.imap',
+           }
+
+      A pipeline mapping matches the dataset `ROMAN.META.INSTRUMENT.NAME` header keyword against its selector to look up an instrument mapping file.
+
 
 Restricting the ASDF Standard version
 .....................................
 
-The pipeline mapping supports an optional ``asdf_standard_requirement`` header field
+The pipeline mapping supports an optional `asdf_standard_requirement` header field
 that restricts the ASDF Standard version of all .asdf files and .fits files that contain
 an embedded ASDF file.  The value should be a pip-style version specification,
-e.g., ``==1.4.0``, ``~=1.4.0``, ``>=1.4.0, <1.4.5``.  When a file containing ASDF data is
-certified against a context that includes an ``asdf_standard_requirement``, it will
+e.g., `==1.4.0`, `~=1.4.0`, `>=1.4.0, <1.4.5`.  When a file containing ASDF data is
+certified against a context that includes an `asdf_standard_requirement`, it will
 fail unless the ASDF Standard version obeys the requirement.
 
 Instrument Mappings (.imap)
 ---------------------------
 
-A sample instrument mapping for HST's COS instrument looks like::
-
-    header = {
-        'derived_from' : 'hst_cos_0290.imap',
-        'instrument' : 'COS',
-        'mapping' : 'INSTRUMENT',
-        'name' : 'hst_cos_0291.imap',
-        'observatory' : 'HST',
-        'parkey' : ('REFTYPE',),
-        'sha1sum' : '85184c1656b487e7af686a7ab75262dcefc882e8',
-    }
-
-    selector = {
-        'badttab' : 'hst_cos_badttab_0250.rmap',
-        'bpixtab' : 'hst_cos_bpixtab_0254.rmap',
-        'brftab' : 'hst_cos_brftab_0250.rmap',
-        'brsttab' : 'hst_cos_brsttab_0250.rmap',
-        'deadtab' : 'hst_cos_deadtab_0250.rmap',
-        'dgeofile' : 'hst_cos_dgeofile_0002.rmap',
-        'disptab' : 'hst_cos_disptab_0259.rmap',
-        'flatfile' : 'hst_cos_flatfile_0254.rmap',
-        'fluxtab' : 'hst_cos_fluxtab_0261.rmap',
-        'geofile' : 'hst_cos_geofile_0250.rmap',
-        'gsagtab' : 'hst_cos_gsagtab_0253.rmap',
-        'hvtab' : 'hst_cos_hvtab_0259.rmap',
-        'lamptab' : 'hst_cos_lamptab_0251.rmap',
-        'phatab' : 'hst_cos_phatab_0250.rmap',
-        'proftab' : 'hst_cos_proftab_0265.rmap',
-        'spottab' : 'hst_cos_spottab_0004.rmap',
-        'spwcstab' : 'hst_cos_spwcstab_0251.rmap',
-        'tdstab' : 'hst_cos_tdstab_0254.rmap',
-        'tracetab' : 'hst_cos_tracetab_0265.rmap',
-        'twozxtab' : 'hst_cos_twozxtab_0266.rmap',
-        'wcptab' : 'hst_cos_wcptab_0255.rmap',
-        'xtractab' : 'hst_cos_xtractab_0257.rmap',
-        'xwlkfile' : 'hst_cos_xwlkfile_0002.rmap',
-        'ywlkfile' : 'hst_cos_ywlkfile_0002.rmap',
-    }
-
 Instrument mappings match the desired reference file type against the reference mapping used to determine a
 best reference recommendation for a particular dataset.  An instrument mapping lists all possible reference types for
 all modes of the instrument,  some of which may not be appropriate for a particular mode.
 
-For HST, the header keywords FILETYPE or CDBSFILE are used to define a reference\'s type and corresponding rmap.
-FILETYPE is in turn translated to the keyword names used to record reference files in datasets
-(CRDS names these "filekind"),  and these appear directly in rmap names, e.g. FILETYPE=BIAS translates to BIASFILE which
-appears in the rmap hst_acs_biasfile_0250.rmap.  NOTE: the HST .imap\'s incorrectly specify REFTYPE in the .imap\'s
-but the value is unused.
+.. tabs::
 
-For JWST, the header keyword REFTYPE (META.REFTYPE) is used to select the rmap.   For JWST, the REFTYPE
-appears directly in file names, e.g. REFTYPE=SUPERBIAS is part of the rmap name jwst_nirspec_superbias_0001.rmap.
+   .. group-tab:: HST
+
+      A sample instrument mapping for HST's COS instrument looks like:
+
+        .. code-block:: python
+
+            header = {
+                'derived_from' : 'hst_cos_0290.imap',
+                'instrument' : 'COS',
+                'mapping' : 'INSTRUMENT',
+                'name' : 'hst_cos_0291.imap',
+                'observatory' : 'HST',
+                'parkey' : ('REFTYPE',),
+                'sha1sum' : '85184c1656b487e7af686a7ab75262dcefc882e8',
+            }
+
+            selector = {
+                'badttab' : 'hst_cos_badttab_0250.rmap',
+                'bpixtab' : 'hst_cos_bpixtab_0254.rmap',
+                'brftab' : 'hst_cos_brftab_0250.rmap',
+                'brsttab' : 'hst_cos_brsttab_0250.rmap',
+                'deadtab' : 'hst_cos_deadtab_0250.rmap',
+                'dgeofile' : 'hst_cos_dgeofile_0002.rmap',
+                'disptab' : 'hst_cos_disptab_0259.rmap',
+                'flatfile' : 'hst_cos_flatfile_0254.rmap',
+                'fluxtab' : 'hst_cos_fluxtab_0261.rmap',
+                'geofile' : 'hst_cos_geofile_0250.rmap',
+                'gsagtab' : 'hst_cos_gsagtab_0253.rmap',
+                'hvtab' : 'hst_cos_hvtab_0259.rmap',
+                'lamptab' : 'hst_cos_lamptab_0251.rmap',
+                'phatab' : 'hst_cos_phatab_0250.rmap',
+                'proftab' : 'hst_cos_proftab_0265.rmap',
+                'spottab' : 'hst_cos_spottab_0004.rmap',
+                'spwcstab' : 'hst_cos_spwcstab_0251.rmap',
+                'tdstab' : 'hst_cos_tdstab_0254.rmap',
+                'tracetab' : 'hst_cos_tracetab_0265.rmap',
+                'twozxtab' : 'hst_cos_twozxtab_0266.rmap',
+                'wcptab' : 'hst_cos_wcptab_0255.rmap',
+                'xtractab' : 'hst_cos_xtractab_0257.rmap',
+                'xwlkfile' : 'hst_cos_xwlkfile_0002.rmap',
+                'ywlkfile' : 'hst_cos_ywlkfile_0002.rmap',
+            }
+
+      For HST, the header keywords `FILETYPE` or `CDBSFILE` are used to define a reference\'s type and corresponding rmap. 
+      FILETYPE is in turn translated to the keyword names used to record reference files in datasets (CRDS names these "filekind"), 
+      and these appear directly in rmap names, e.g. FILETYPE=BIAS translates to BIASFILE which appears in the rmap hst_acs_biasfile_0250.rmap.  NOTE: the HST .imap\'s incorrectly specify REFTYPE in the .imap\'s but the value is unused.
+
+   .. group-tab:: JWST
+
+      A sample instrument mapping for JWST's MIRI instrument looks like:
+
+        .. code-block:: python
+
+            header = {
+                'derived_from' : 'cloning tool 0.03b (2012-09-11)',
+                'instrument' : 'MIRI',
+                'mapping' : 'INSTRUMENT',
+                'name' : 'jwst_miri_0000.imap',
+                'observatory' : 'JWST',
+                'parkey' : ('REFTYPE',),
+                'sha1sum' : '08e984a020ad8b617904b6bf18c6a1864f365270',
+            }
+
+            selector = {
+                'AMPLIFIER' : 'jwst_miri_amplifier_0000.rmap',
+                'DARK' : 'jwst_miri_dark_0000.rmap',
+                'FLAT' : 'jwst_miri_flat_0000.rmap',
+                'LINEARITY' : 'jwst_miri_linearity_0000.rmap',
+                'MASK' : 'jwst_miri_mask_0000.rmap',
+                'PHOTOM' : 'jwst_miri_photom_0000.rmap',
+            }
+
+      For JWST, the header keyword `REFTYPE` (`META.REFTYPE`) is used to select the rmap. The REFTYPE appears directly in file names, e.g. REFTYPE=SUPERBIAS is part of the rmap name jwst_nirspec_superbias_0001.rmap.
+
+   .. group-tab:: ROMAN
+
+      A sample instrument mapping for Roman's WFI instrument looks like:
+
+        .. code-block:: python
+
+            header = {
+                'derived_from' : 'roman_wfi_0034.imap',
+                'instrument' : 'WFI',
+                'mapping' : 'INSTRUMENT',
+                'name' : 'roman_wfi_0035.imap',
+                'observatory' : 'ROMAN',
+                'parkey' : ('REFTYPE',),
+                'sha1sum' : 'd5a58741d5f8a4c2b9cedb89a34a1495dc00ada8',
+            }
+            
+            selector = {
+                'AREA' : 'roman_wfi_area_0002.rmap',
+                'DARK' : 'roman_wfi_dark_0014.rmap',
+                'DISTORTION' : 'roman_wfi_distortion_0003.rmap',
+                'FLAT' : 'roman_wfi_flat_0015.rmap',
+                'GAIN' : 'roman_wfi_gain_0006.rmap',
+                'LINEARITY' : 'roman_wfi_linearity_0006.rmap',
+                'MASK' : 'roman_wfi_mask_0006.rmap',
+                'PHOTOM' : 'roman_wfi_photom_0004.rmap',
+                'READNOISE' : 'roman_wfi_readnoise_0012.rmap',
+                'SATURATION' : 'roman_wfi_saturation_0006.rmap',
+            }
+
+      For Roman, the header keyword `REFTYPE` (`ROMAN.META.REFTYPE`) is used to select the rmap. The REFTYPE appears directly in file names, e.g. REFTYPE=DARK is part of the rmap name roman_wfi_dark_0001.rmap.
+
 
 Reference Mappings (.rmap)
 --------------------------
 
-A sample reference mapping for HST COS DEADTAB looks like::
+.. tabs::
 
-    header = {
-        'derived_from' : 'generated from CDBS database 2014-05-09 23:24:57.840119',
-        'filekind' : 'DEADTAB',
-        'instrument' : 'COS',
-        'mapping' : 'REFERENCE',
-        'name' : 'hst_cos_deadtab_0250.rmap',
-        'observatory' : 'HST',
-        'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-        'reffile_format' : 'TABLE',
-        'reffile_required' : 'NONE',
-        'reffile_switch' : 'DEADCORR',
-        'rmap_relevance' : '(DEADCORR != "OMIT")',
-        'sha1sum' : 'bde314f1848b67891d6309b30eaa5c95611f86e2',
-    }
+   .. group-tab:: HST
 
-    selector = Match({
-        ('FUV',) : UseAfter({
-            '1996-10-01 00:00:00' : 's7g1700gl_dead.fits',
-        }),
-        ('NUV',) : UseAfter({
-            '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
-        }),
-    })
+      A sample reference mapping for HST COS DEADTAB looks like:
+
+        .. code-block:: bash
+
+            header = {
+                'derived_from' : 'generated from CDBS database 2014-05-09 23:24:57.840119',
+                'filekind' : 'DEADTAB',
+                'instrument' : 'COS',
+                'mapping' : 'REFERENCE',
+                'name' : 'hst_cos_deadtab_0250.rmap',
+                'observatory' : 'HST',
+                'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+                'reffile_format' : 'TABLE',
+                'reffile_required' : 'NONE',
+                'reffile_switch' : 'DEADCORR',
+                'rmap_relevance' : '(DEADCORR != "OMIT")',
+                'sha1sum' : 'bde314f1848b67891d6309b30eaa5c95611f86e2',
+            }
+
+            selector = Match({
+                ('FUV',) : UseAfter({
+                    '1996-10-01 00:00:00' : 's7g1700gl_dead.fits',
+                }),
+                ('NUV',) : UseAfter({
+                    '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
+                }),
+            })
+
+      Reference mapping selectors are constructed as a nested hierarchy of selection operators which match against various dataset header keywords.
+
+   .. group-tab:: JWST
+
+      A sample reference mapping for JWST MIRI DARK looks like
+
+        .. code-block:: bash
+
+            header = {
+                'derived_from' : 'cloning tool 0.03b (2012-09-11)',
+                'filekind' : 'DARK',
+                'instrument' : 'MIRI',
+                'mapping' : 'REFERENCE',
+                'name' : 'jwst_miri_dark_0000.rmap',
+                'observatory' : 'JWST',
+                'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.READPATT'),),
+                'sha1sum' : '2535d3be806c6e7f5f0da1f2dce64034f9028ddc',
+            }
+            
+            selector = Match({
+                ('MIRIFULONG', 'ANY', 'FAST') : 'jwst_miri_dark_0000.fits',
+                ('MIRIFULONG', 'ANY', 'SLOW') : 'jwst_miri_dark_0001.fits',
+                ('MIRIFUSHORT', 'ANY', 'FAST') : 'jwst_miri_dark_0002.fits',
+                ('MIRIFUSHORT', 'ANY', 'SLOW') : 'jwst_miri_dark_0003.fits',
+                ('MIRIMAGE', 'ANY', 'FAST') : 'jwst_miri_dark_0004.fits',
+                ('MIRIMAGE', 'ANY', 'SLOW') : 'jwst_miri_dark_0005.fits',
+            })
+
+      Reference mapping selectors are constructed as a nested hierarchy of selection operators which match against various dataset header keywords.
+
+   .. group-tab:: ROMAN
+
+      A sample reference mapping for Roman WFI FLAT looks like:
+
+        .. code-block:: bash
+
+            header = {
+                'classes' : ('Match', 'UseAfter'),
+                'derived_from' : 'roman_wfi_flat_0002.rmap',
+                'file_ext' : '.asdf',
+                'filekind' : 'FLAT',
+                'filetype' : 'FLAT',
+                'instrument' : 'WFI',
+                'ld_tpn' : 'wfi_flat_ld.tpn',
+                'mapping' : 'REFERENCE',
+                'name' : 'roman_wfi_flat_0002.rmap',
+                'observatory' : 'ROMAN',
+                'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.OPTICAL_ELEMENT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+                'sha1sum' : 'bf0119bfbe1d8e5010eb3bec87bc45d575ae8313',
+                'suffix' : 'flat',
+                'text_descr' : 'Flat Field',
+                'tpn' : 'wfi_flat.tpn',
+            }
+            
+            selector = Match({
+                ('WFI01', 'F158') : UseAfter({
+                    '2020-01-01 00:00:00' : 'roman_wfi_flat_0001.asdf',
+                }),
+            })
+
+      Reference mapping selectors are constructed as a nested hierarchy of selection operators which match against various dataset header keywords.
+
 
 Reference mapping selectors are constructed as a nested hierarchy of selection operators which match against
 various dataset header keywords.
@@ -186,55 +366,57 @@ various dataset header keywords.
 Active Header Fields
 --------------------
 
-Many rmap header fields are passive metadata.   A number of optional rmap header fields,  however,  actively affect
-best reference lookups and results::
+Many rmap header fields are passive metadata.  A number of optional rmap header fields,  however,  actively affect
+best reference lookups and results:
 
-    header = {
-              ...,
+  .. code-block:: python
 
-        'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+      header = {
+                ...,
 
-        'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
+          'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
 
-        'reffile_switch' : 'BIASCORR',
+          'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
 
-        'reffile_required' : 'YES',
+          'reffile_switch' : 'BIASCORR',
 
-        'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
-        'rmap_omit' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
+          'reffile_required' : 'YES',
 
-        'parkey_relevance' : {
-            'binaxis1' : '(DETECTOR == "UVIS")',
-            'binaxis2' : '(DETECTOR == "UVIS")',
-            'ccdgain' : '(DETECTOR == "IR")',
-            'samp_seq' : '(DETECTOR == "IR")',
-            'subtype' : '(DETECTOR == "IR")',
-        },
+          'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
+          'rmap_omit' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
 
-        'hooks' : {
-            'fallback_header' : 'fallback_header_acs_biasfile_v2',
-            'precondition_header' : 'precondition_header_acs_biasfile_v2',
-        },
+          'parkey_relevance' : {
+              'binaxis1' : '(DETECTOR == "UVIS")',
+              'binaxis2' : '(DETECTOR == "UVIS")',
+              'ccdgain' : '(DETECTOR == "IR")',
+              'samp_seq' : '(DETECTOR == "IR")',
+              'subtype' : '(DETECTOR == "IR")',
+          },
 
-              ...,
-    }
+          'hooks' : {
+              'fallback_header' : 'fallback_header_acs_biasfile_v2',
+              'precondition_header' : 'precondition_header_acs_biasfile_v2',
+          },
+
+                ...,
+      }
 
 Required Parameters
 ...................
 
-Required matching parameters for computing best references are defined by the union of 3 header fields:  *parkey*,
-*extra_keys*, and  *reffile_switch*.   There is no requirement to use all 3 forms,  the latter two forms were added
+Required matching parameters for computing best references are defined by the union of 3 header fields:  `parkey`,
+`extra_keys`, and  `reffile_switch`.   There is no requirement to use all 3 forms, the latter two forms were added
 to model and emulate aspects of HST's CDBS system,  the precursor to CRDS.
 
 parkey
 ,,,,,,
 
-The primary location for defining best references matching parameters is the *parkey* field.
+The primary location for defining best references matching parameters is the `parkey` field.
 
-The simplest form of *parkey* is a tuple of parameter names used in a lookup by a non-nested selector,  as is
+The simplest form of `parkey` is a tuple of parameter names used in a lookup by a non-nested selector,  as is
 seen in pipeline and instrument mappings above.
 
-In reference mappings,  the header *parkey* field is a tuple of tuples.  Each stage of the nested selector
+In reference mappings,  the header `parkey` field is a tuple of tuples.  Each stage of the nested selector
 consumes the next tuple of header keys.  The same parameter set and matching structure is shared by all sections
 of a single rmap.   For mode-specific parameters,  two approaches are availble:  use a separate .rmap for each
 parameter combination, or fill in unused parameters for a particular mode with the value 'N/A'.
@@ -248,26 +430,26 @@ There is no default for parkey.
 extra_keys
 ,,,,,,,,,,
 
-*extra_keys* specifies a tuple of parameter names which will not be used in the matches directly,  but may be used by
+`extra_keys` specifies a tuple of parameter names which will not be used in the matches directly,  but may be used by
 rmap header expressions and hook functions to influence matching.  Listing parameters in extra_keys ensures that the
 CRDS infrastructure will request the parameters from the server or dataset files and make them available during best
 references computations and logical expression evaluation.   All parameters used in logical expressions must be
 explicitly defined and listed.   Undefined parameters are evaluated with the value 'UNDEFINED'.
 
-If omitted, *extra_keys* defaults to (),  no extra keys.
+If omitted, `extra_keys` defaults to (),  no extra keys.
 
 reffile_switch
 ,,,,,,,,,,,,,,
 
 Nominally names a dataset keyword generally of the form <type>CORR with keyword values 'PERFORM' and 'OMIT'.
 
-If *reffile_switch* is not 'NONE',  it specifies an extra keyword value is to fetch from the dataset.
+If `reffile_switch` is not 'NONE',  it specifies an extra keyword value is to fetch from the dataset.
 
-If *reffile_switch* is omitted or 'NONE',  no keyword value is fetched from the dataset.
+If `reffile_switch` is omitted or 'NONE',  no keyword value is fetched from the dataset.
 
-The runtime checking *reffile_switch* is used for must be explicitly implemented as part of an *rmap_relevance* or
-*rmap_omit* expression as seen in the example header; *reffile_switch* only specifies an extra parameter to fetch
-for use in logical expressions and matching.  It is logically equivalent to adding the parameter to *extra_keys*.
+The runtime checking `reffile_switch` is used for must be explicitly implemented as part of an `rmap_relevance` or
+`rmap_omit` expression as seen in the example header; `reffile_switch` only specifies an extra parameter to fetch
+for use in logical expressions and matching.  It is logically equivalent to adding the parameter to `extra_keys`.
 
 Logical Header Expressions
 ..........................
@@ -385,9 +567,9 @@ reference.
 Not Applicable
 ,,,,,,,,,,,,,,
 
-A value of N/A can be assigned in place of a filename.  This applies the full
+A value of `N/A` can be assigned in place of a filename.  This applies the full
 power of the matching system to the specification of instrument modes for which
-a reference type does not apply.  For JWST this feature is used to perform data
+a reference type does not apply.  For JWST and Roman, this feature is used to perform data
 driven WCS processing based on CRDS reference file assignments.  Ultimately the
 best reference assigned is N/A, nominally explicitly recorded for the type
 keyword.  No file is distributed or prefetched.  N/A may be specified in place
@@ -398,7 +580,7 @@ that instrument.
 Omit
 ,,,,
 
-Similar to N/A, a value of OMIT can be specified in place of a filename.  OMIT
+Similar to N/A, a value of `OMIT` can be specified in place of a filename.  OMIT
 can be used to completely remove a type from the best references response.  No
 file is synchronized or processed, and no best reference should be recorded in
 the dataset header for that type.  This feature is currently unused.
@@ -548,7 +730,7 @@ expression: -1 -> 1, 1 -> -1, 0 -> 0.
 Substitution Parameters
 ,,,,,,,,,,,,,,,,,,,,,,,
 
-Substituion parameters are short hand notation which eliminate the need to
+Substitution parameters are short hand notation which eliminate the need to
 duplicate rmap rules.  In order to support WFC3 biasfile conventions,  CRDS
 rmaps permit the definition of meta-match-values which correspond to a set of
 actual dataset header values. For instance,  when an rmap header contains a
@@ -628,7 +810,7 @@ file is 'kcb1734ij_a2d.fits'
 SelectVersion
 .............
 
-The SelectVersion() rmap operator uses a software version and various relations
+The `SelectVersion()` rmap operator uses a software version and various relations
 to make a selection::
 
    selector = SelectVersion({
@@ -637,14 +819,14 @@ to make a selection::
       'default': 'cref_flatfield_123.fits',
    })
 
-While similar to relational expressions in Match(),   SelectVersion() is
+While similar to relational expressions in `Match()`,   `SelectVersion()` is
 dedicated, simpler,  and more self-documenting.  With the exception of default,
 versions are examined in sorted order.
 
 ClosestTime
 ...........
 
-The ClosestTime() rmap operator does a lookup on a series of times and selects
+The `ClosestTime()` rmap operator does a lookup on a series of times and selects
 the closest time which either precedes or follows the given parameter value::
 
     selector = ClosestTime({
@@ -658,11 +840,11 @@ So a parameter of '2017-04-25 00:00:00' would select 'cref_flatfield_123.fits'.
 GeometricallyNearest
 ....................
 
-The GeometricallyNearest() selector applies a distance relation between a
+The `GeometricallyNearest()` selector applies a distance relation between a
 numerical parameter and the match values.   The match value which is closest to
 the supplied parameter is chosen::
 
-    selector = GeomtricallyNearest({
+    selector = GeometricallyNearest({
         1.2 : "cref_flatfield_120.fits",
         1.5 : "cref_flatfield_124.fits",
         5.0 : "cref_flatfield_137.fits",
@@ -674,7 +856,7 @@ In this case,  a value of 1.3 would match 'cref_flatfield_120.fits'.
 Bracket
 .......
 
-The Bracket() selector is unusual because it returns the pair of selections which
+The `Bracket()` selector is unusual because it returns the pair of selections which
 enclose the supplied parameter value::
 
     selector = Bracket({

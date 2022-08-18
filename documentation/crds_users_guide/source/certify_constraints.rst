@@ -7,60 +7,114 @@ Certify Overview
 ----------------
 
 This section documents the design and syntax of CRDS certify .tpn constraint
-definition files.  The .tpn constraints define many of the checks CRDS applies
-to rule or reference files.  CRDS certify performs these forms of checks::
+definition files. The .tpn constraints define many of the checks CRDS applies
+to rule or reference files.  CRDS certify performs these forms of checks:
 
- 1. .tpn defined constraint checks unique to CRDS
- 2. CRDS type spec defined unique table row checks, missing mode checks
- 3. fitsverify checks, recategorized as needed
- 4. FITS, ASDF, JSON, YAML format checks
- 5. JWST data models open() checks
- 6. JWST data models scraped value checks
- 7. .rmap update checks
- 8. sha1sum checks (bit-for-bit identical file rejection)
+.. tabs::
 
-This section discusses syntax for (1),  file constraints CRDS defines
-itself internally.
+   .. group-tab:: HST
+
+       1. .tpn defined constraint checks unique to CRDS
+       2. CRDS type spec defined unique table row checks, missing mode checks
+       3. fitsverify checks, recategorized as needed
+       4. FITS format checks
+       5. .rmap update checks
+       6. sha1sum checks (bit-for-bit identical file rejection)
+      
+   .. group-tab:: JWST
+
+       1. .tpn defined constraint checks unique to CRDS
+       2. CRDS type spec defined unique table row checks, missing mode checks
+       3. fitsverify checks, recategorized as needed
+       4. FITS, ASDF, JSON, YAML format checks
+       5. JWST data models open() checks
+       6. JWST data models scraped value checks
+       7. .rmap update checks
+       8. sha1sum checks (bit-for-bit identical file rejection)
+
+   .. group-tab:: ROMAN
+
+       1. .tpn defined constraint checks unique to CRDS
+       2. CRDS type spec defined unique table row checks, missing mode checks
+       3. ASDF format checks, recategorized as needed
+       4. JSON, YAML format checks
+       5. Roman data models open() checks
+       6. Roman data models scraped value checks
+       7. .rmap update checks
+       8. sha1sum checks (bit-for-bit identical file rejection)
+
+
+This section discusses syntax for (1), file constraints CRDS defines itself internally.
 
 Overview of .tpn Files
 ----------------------
 
-.tpn files are used by CRDS certify to define checks on reference files and
-.rmaps.  Value checks are applied to CRDS .rmap files which are not modeled in
-JWST CAL code.
+.. tabs::
 
-For HST .tpn files define almost all CRDS checks (some table checks also exist)
-and were incorporated verbatim from CDBS certify.   This is the origin of
-CRDS .tpn syntax.
+   .. group-tab:: HST
 
-For JWST, .tpn checks are used to extend and augment the checks performed by
-the data models, e.g. adding the notion of "required", checking array
-dimensions, checking keyword interrelationships, differentiating acceptable
-values by instrument, etc.  CRDS .tpn syntax was significantly extended from
-HST to support additional forms and organizations of checks which have been
-utilized for JWST.
+       `.tpn` files are used by CRDS certify to define checks on reference files and `.rmaps`. For HST .tpn files define almost all CRDS checks (some table checks also exist) and were incorporated verbatim from CDBS certify. This is the origin of CRDS .tpn syntax.
+
+   .. group-tab:: JWST
+
+       `.tpn` files are used by CRDS certify to define checks on reference files and `.rmaps`. 
+       
+       Value checks are applied to CRDS `.rmap` files which are not modeled in JWST CAL code. 
+       
+       For JWST, .tpn checks are used to extend and augment the checks performed by the data models, e.g. adding the notion of "required", checking array dimensions, checking keyword interrelationships, differentiating acceptable values by instrument, etc.  
+       
+       CRDS .tpn syntax was significantly extended from HST to support additional forms and organizations of checks which have been utilized for JWST.
+
+   .. group-tab:: ROMAN
+
+       `.tpn` files are used by CRDS certify to define checks on reference files and `.rmaps`. 
+       
+       Value checks are applied to CRDS `.rmap` files which are not modeled in RomanCal code. 
+       
+       For Roman, .tpn checks are used to extend and augment the checks performed by the data models, e.g. adding the notion of "required", checking array dimensions, checking keyword interrelationships, differentiating acceptable values by instrument, etc.  
+       
+       CRDS .tpn syntax was significantly extended from HST to support additional forms and organizations of checks which have been utilized for Roman.
+
 
 .tpn File Organizations
 -----------------------
 
-For HST, .tpn files were written for every combination of <instrument>_<type>.
+.. tabs::
 
-For JWST, additional broader classes of .tpn are also defined and all
-applicable forms are loaded for any given reference file::
+   .. group-tab:: HST
 
-    all _ all .tpn                 (constraints on all instruments and types)
-    <instrument> _ all .tpn        (constraints on all types of one instrument)
-    all _ <type> .tpn              (constraints on one type of all instruments)
-    <instrument> _ <type> .tpn     (constraint on one instrument and type)
+       For HST, .tpn files were written for every combination of <instrument>_<type>.
 
-For JWST,  the additional file classes permit generalization of constraints
-without added redundancy.   PEDIGREE can defined once in all_all,  etc.
+   .. group-tab:: JWST
+
+       For JWST, additional broader classes of .tpn are also defined and all applicable forms are loaded for any given reference file::
+
+        all _ all .tpn                 (constraints on all instruments and types)
+        <instrument> _ all .tpn        (constraints on all types of one instrument)
+        all _ <type> .tpn              (constraints on one type of all instruments)
+        <instrument> _ <type> .tpn     (constraint on one instrument and type)
+
+       For JWST, the additional file classes permit generalization of constraints without added redundancy.   
+       For example, `PEDIGREE` can be defined once in `all_all`.
+
+   .. group-tab:: ROMAN
+
+       For Roman, additional broader classes of .tpn are also defined and all applicable forms are loaded for any given reference file::
+
+        all _ all .tpn                 (constraints on all instruments and types)
+        <instrument> _ all .tpn        (constraints on all types of one instrument)
+        all _ <type> .tpn              (constraints on one type of all instruments)
+        <instrument> _ <type> .tpn     (constraint on one instrument and type)
+
+       For Roman, the additional file classes permit generalization of constraints without added redundancy.   
+       For example, `PEDIGREE` can be defined once in `all_all`.
+
 
 There are two forms of .tpn, one which constrains reference file properties
 (.tpn) and one which constrains rmap properties (_ld.tpn).  The _ld.tpn files
 originally constrained CDBS database field values for matching parameters;
 because of translations between FITS headers and database values,  reference
-file and database values were not necessarily identical.   For JWST .tpn
+file and database values were not necessarily identical.   For JWST and Roman, .tpn
 and _ld.tpn files are almost universally identical.
 
 While HST's design of limiting the file structure to <instrument>_<type>
@@ -83,9 +137,9 @@ properties, interpreted via appropriate Validator() subclassses.
 Synthetic Directives
 ....................
 
-The CRDS certifier uses the JWST data models in two ways:
+The CRDS certifier uses the JWST/Roman data models in two ways:
 
-1. CRDS certify calls datamodels.open() on each reference to directly apply
+1. CRDS certify calls `datamodels.open()` on each reference to directly apply
 data models checks.  This is very simple and fairly robust, but suffers from
 the dependency of open() on the DATAMODL keyword which is used to specify the
 model class of the reference file.  The model class implies the exact schema to
@@ -102,7 +156,7 @@ from the core schema for use in CRDS.
 Include Directive
 .................
 
-The semantics of 'include' are roughly model'ed after the C pre-processor's
+The semantics of 'include' are roughly modeled after the C pre-processor's
 #include directives.
 
 The include directive permits one .tpn file to include the text of another as
@@ -283,7 +337,7 @@ headers.
 Almost all of the HST constraints taken from CDBS are enumerations applying to
 a single FITS or GEIS keyword, e.g.  READPATT.
 
-Many JWST constraints are written using the format independent (FITS, ASDF,
+Many JWST and Roman constraints are written using the format independent (FITS, ASDF,
 JSON...)  data model hiearchical path names munged for CRDS purposes into all
 capital letters with periods replaced by underscores so that they can be
 evaluated as a single keyword name rather than as nested objects.
@@ -361,9 +415,9 @@ Not implemented but parsed for the sake of HST CDBS backward compatibility.
 <Datatype> Field
 ++++++++++++++++
 
-The datatype field conceptually corresponds to the type of a FITS keyword
+The datatype field conceptually corresponds to the type of a FITS/ASDF keyword
 defined in the reference file header or table.  Similar properties are imposed
-on data models paths/keywords which may or may not correspond to a FITS
+on data models paths/keywords which may or may not correspond to a FITS/ASDF
 keyword.
 
 The datatype is written as a single character with these translations::
@@ -433,7 +487,7 @@ For HST, every instrument and type specified the presence requirement for every
 keyword.  This resulted in value enumerations repeated over and over throughout
 the .tpn files.
 
-For JWST, CRDS support specifying keywords as optional...  with one twist: if
+For JWST and Roman, CRDS support specifying keywords as optional...  with one twist: if
 an optional keyword is used by an rmap to perform matching (appears in the
 'parkey' header field), then every optional constraint on that keyword for that
 particular reftype becomes required.
@@ -557,7 +611,10 @@ where validator values have meanings like::
 
  &PEDIGREE  -- implements algorithm to check various PEDIGREE value forms
  &USEAFTER  -- implements HST USEAFTER date/time format checking
- &JWSTDATE  -- implements JWST date/time format checking,  e.g. JWST USEAFTER
+ &JWSTDATE  -- implements JWST/Roman datetime format checking,  e.g. JWST USEAFTER
+
+
+*NOTE:* Roman also uses the `&JWSTDATE` format validator.
 
 Custom constraint validators can perform arbitrary processing to validate a
 single keyword value, i.e. specify precise date formats, etc.  Custom
@@ -708,24 +765,88 @@ certify each reference file and/or sub-mapping.  Further, turning on the debug
 messages with --verbose or --verbosity=60 or 70 or.. will generate output on
 what CRDS is checking, how, and why / why not.
 
-An example of running CRDS this way would be::
+An example of running CRDS this way would be:
 
-  $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
-  $ export CRDS_PATH=/grp/crds/cache
-  $ crds certify jwst-nirspec-superbias-edit --deep --dump-unique-errors --verbose --dump-provenance
+.. tabs::
+
+   .. group-tab:: HST
+
+       .. code-block:: bash
+
+           $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
+           $ export CRDS_PATH=/grp/crds/cache
+           $ crds certify hst-acs-biasfile-edit --deep --dump-unique-errors --verbose --dump-provenance
+
+   .. group-tab:: JWST
+
+       .. code-block:: bash
+
+           $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+           $ export CRDS_PATH=/grp/crds/cache
+           $ crds certify jwst-nirspec-superbias-edit --deep --dump-unique-errors --verbose --dump-provenance
+
+   .. group-tab:: ROMAN
+
+       .. code-block:: bash
+
+           $ export CRDS_SERVER_URL=https://roman-crds.stsci.edu
+           $ export CRDS_PATH=/grp/crds/cache
+           $ crds certify roman-wfi-dark-edit --deep --dump-unique-errors --verbose --dump-provenance
+
 
 The output, which is copious, is relatively self-explanatory.  Typically one
 greps through it for output from the constraint being added or modified.
 
 For extensive changes to certify,  it can be useful to run it on all the
-active reference files like this::
+active reference files like this:
 
-  $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
-  $ export CRDS_PATH=/grp/crds/cache
-  $ crds certify  jwst-edit --deep --dump-unique-errors --verbose --dump-provenance
 
-where the symbolic context name 'jwst-edit' is interpreted to something more
-literal like 'jwst_0442.pmap'.  Likewise, exhaustive testing may require
-running certify on 'hst-edit' as well after setting::
+.. tabs::
 
-  $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
+   .. group-tab:: HST
+
+       Where the symbolic context name 'hst-edit' is interpreted to something more literal like 'hst_0442.pmap':
+
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
+            $ export CRDS_PATH=/grp/crds/cache
+            $ crds certify hst-edit --deep --dump-unique-errors --verbose --dump-provenance
+
+       Likewise, exhaustive testing may require running certify on 'hst-edit' as well after setting:
+
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://hst-crds.stsci.edu
+
+   .. group-tab:: JWST
+
+       Where the symbolic context name 'jwst-edit' is interpreted to something more literal like 'jwst_0442.pmap':
+
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+            $ export CRDS_PATH=/grp/crds/cache
+            $ crds certify  jwst-edit --deep --dump-unique-errors --verbose --dump-provenance
+
+       Likewise, exhaustive testing may require running certify on 'jwst-edit' as well after setting:
+
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+
+   .. group-tab:: ROMAN
+
+       Where the symbolic context name 'roman-edit' is interpreted to something more literal like 'roman_0442.pmap':
+
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://roman-crds.stsci.edu
+            $ export CRDS_PATH=/grp/crds/cache
+            $ crds certify roman-edit --deep --dump-unique-errors --verbose --dump-provenance
+
+       Likewise, exhaustive testing may require running certify on 'roman-edit' as well after setting:
+
+        .. code-block:: bash
+
+            $ export CRDS_SERVER_URL=https://roman-crds.stsci.edu
