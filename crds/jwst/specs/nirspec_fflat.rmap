@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'nirspec_fflat.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.FILTER', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'ab1aab68d2e3daa34b9e0d3a092cc0a7b22ed2e6',
+    'parkey' : (('META.INSTRUMENT.GRATING', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'ab4b338821608947bcdfdbb77027b5f0ca656527',
     'suffix' : 'fflat',
     'text_descr' : 'Fore-optics Flat Field',
 }
