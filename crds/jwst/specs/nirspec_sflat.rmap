@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'nirspec_sflat.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.GRATING', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '9b7063c1ecfed8fcbbca507a1b24ab63067e2eaa',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.GRATING', 'META.EXPOSURE.TYPE', 'META.INSTRUMENT.LAMP_MODE', 'META.INSTRUMENT.LAMP_STATE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '7b4819a8935d62db2bf3eba6b8c16aced8cd5dc8',
     'suffix' : 'sflat',
     'text_descr' : 'Spectrograph Flat Field',
 }
