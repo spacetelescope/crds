@@ -1,3 +1,11 @@
+11.16.11 (unreleased)
+=====================
+
+JWST
+----
+
+- Add LAMP_MODE and LAMP_STATE to NIRSpec SFLAT spec [#896]
+
 11.16.10 (2022-09-02)
 =====================
 
