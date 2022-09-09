@@ -1,3 +1,11 @@
+11.16.12 (unreleased)
+=====================
+
+General
+-------
+
+- File submission object includes 'file_map' dictionary attribute of uploaded and renamed filenames [#897]
+
 11.16.11 (2022-09-08)
 =====================
 
