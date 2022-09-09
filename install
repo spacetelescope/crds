@@ -23,7 +23,7 @@ if [ "$1" = "--skip-types" ]; then
 fi
 
 dev_install=0
-if [ "$1" == "--dev" ]; then
+if [ "$1" = "--dev" ]; then
     shift;
     dev_install=1
 fi

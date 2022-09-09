@@ -51,7 +51,7 @@ this command line interface must be members of the CRDS operators group
         self._ready_url = None
         self._error_count = None
         self._warning_count = None
-        self._file_map = None
+        self._file_map = dict()
 
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
@@ -320,9 +320,10 @@ this command line interface must be members of the CRDS operators group
         any updated rmaps. Note: this is run prior to confirming a submission so 
         imap and pmap updates are only added once final confirmation is complete. 
         Data is stored in an attribute `_file_map` which gets passed along to the 
-        submission object created by the originating rc_submit.py script.
+        submission object created by the originating submission script.
         """
-        self._file_map = {}
+        if not self._ready_url:
+            return
         rel_uri = '/'+'/'.join(self._ready_url.split('/')[-2:])
         r = self.connection.get(rel_uri)
         if r.status_code == 200:
@@ -333,11 +334,8 @@ this command line interface must be members of the CRDS operators group
                 soup = BeautifulSoup(r.text, 'html.parser')
                 fbases = [os.path.basename(f) for f in self.files]
                 strings = [soup.find(id=f).string for f in fbases]
+                # rmaps
                 self._file_map = dict(zip(fbases, strings))
-                ## mappings
-                # maplist = soup.find_all(string=re.compile('rmap'))[0].split(' --> ')
-                # if len(maplist) > 1:
-                #     self._file_map[maplist[0]] = maplist[1]
                 diffs = soup.find_all(string=re.compile("Logical Diff"))
                 if len(diffs) > 0:
                     for diff in diffs:
@@ -345,8 +343,7 @@ this command line interface must be members of the CRDS operators group
                         r1, r2 = d.split(',')
                         self._file_map[r1.strip("''")] = r2.strip(" ''")
             except Exception as e:
-                print(e)
-                pass
+                log.verbose(e, verbosity=75)
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
@@ -390,14 +387,12 @@ this command line interface must be members of the CRDS operators group
             if monitor.exit_status == 0:
                 self._ready_url = monitor.result
 
-        self.get_file_map()
-
         log.standard_status()
 
         self._error_count = log.errors()
         self._warning_count = log.warnings()
 
-
+        self.get_file_map()
 
         return log.errors()
 

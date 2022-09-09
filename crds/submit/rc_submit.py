@@ -144,7 +144,7 @@ def renamed_mappings(old_ctx=None, new_ctx=None, observatory=None):
         if new == old:
             new = api.get_mapping_names(context_iterator())
     except ServiceError as err:
-        log.warning("Oops...", err)
+        log.warning("Oops...you may need to confirm the submission first\n", err)
         return
     rnew = find_new_rmaps(old, new)
     for i, n in enumerate(new):
@@ -440,17 +440,16 @@ class Submission(object):
         '''YAML representation of this submission object.'''
         return yaml.safe_dump(dict(self), *args, **kargs)
     
-    def update_file_map(self, initial_map=None):
+    def update_file_map(self):
         '''Add renamed pmap and imap filenames to file_map post-submission'''
-        if initial_map is not None:
-            self._file_map = initial_map
+        if self._file_map is None:
+            self._file_map = {}
         try:
             mapping_dict = renamed_mappings()
             if mapping_dict:
                 self._file_map.update(mapping_dict)
         except Exception as e:
             log.verbose(e, verbosity=75)
-
 
     def submit(self):
         '''Validate submission form, upload to CRDS staging, handle server-side
@@ -477,14 +476,13 @@ class Submission(object):
 
         log.verbose(argv)
         script = RedCatApiScript(argv)
-        # script: subclass of submit.ReferenceSubmissionScript
-        # script.connection = web.CrdsDjangoConnection()
-        # script.connection.get('/some/uri/path')
 
         script._extra_redcat_parameters = dict(self)
         script()
 
-        self._file_map = self.update_file_map(initial_map=script._file_map)
+        if script._file_map in [{}, None]:
+            script.get_file_map()
+        self._file_map = script._file_map
 
         return SubmissionResult(
             error_count=script._error_count,
