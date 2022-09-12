@@ -3,6 +3,8 @@ import sys
 import os
 import os.path
 import time
+import re
+from bs4 import BeautifulSoup
 
 from crds.core import log, config, utils, cmdline, exceptions
 from crds.core.log import srepr
@@ -49,6 +51,7 @@ this command line interface must be members of the CRDS operators group
         self._ready_url = None
         self._error_count = None
         self._warning_count = None
+        self._file_map = dict()
 
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
@@ -311,6 +314,37 @@ this command line interface must be members of the CRDS operators group
         if log.errors():
             raise CrdsError("Certify errors found.  Aborting submission.")
 
+    def get_file_map(self):
+        """Parses submission results html to create a dictionary mapping between 
+        uploaded reference filenames and their new 'official' names. Also includes 
+        any updated rmaps. Note: this is run prior to confirming a submission so 
+        imap and pmap updates are only added once final confirmation is complete. 
+        Data is stored in an attribute `_file_map` which gets passed along to the 
+        submission object created by the originating submission script.
+        """
+        if not self._ready_url:
+            return
+        rel_uri = '/'+'/'.join(self._ready_url.split('/')[-2:])
+        r = self.connection.get(rel_uri)
+        if r.status_code == 200:
+            text = r.text
+        if text:
+            try:
+                # references
+                soup = BeautifulSoup(r.text, 'html.parser')
+                fbases = [os.path.basename(f) for f in self.files]
+                strings = [soup.find(id=f).string for f in fbases]
+                # rmaps
+                self._file_map = dict(zip(fbases, strings))
+                diffs = soup.find_all(string=re.compile("Logical Diff"))
+                if len(diffs) > 0:
+                    for diff in diffs:
+                        d = diff.split('(')[-1].split(')')[0]
+                        r1, r2 = d.split(',')
+                        self._file_map[r1.strip("''")] = r2.strip(" ''")
+            except Exception as e:
+                log.verbose(e, verbosity=75)
+
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
 
@@ -357,6 +391,8 @@ this command line interface must be members of the CRDS operators group
 
         self._error_count = log.errors()
         self._warning_count = log.warnings()
+
+        self.get_file_map()
 
         return log.errors()
 
