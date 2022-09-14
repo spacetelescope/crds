@@ -1,3 +1,11 @@
+11.16.13 (unreleased)
+=====================
+
+HST
+---
+
+- Reversion: "equal weight special case" generates a warning instead of error for HST
+
 11.16.12 (2022-09-12)
 =====================
 
