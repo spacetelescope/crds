@@ -4,7 +4,7 @@
 HST
 ---
 
-- Reversion: "equal weight special case" generates a warning instead of error for HST
+- Reversion: "equal weight special case" generates a warning instead of error for HST [#898]
 
 11.16.12 (2022-09-12)
 =====================
