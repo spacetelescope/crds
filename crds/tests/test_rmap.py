@@ -379,10 +379,18 @@ def dt_rmap_get_best_references_fail():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_validate_mapping_ambiguous():
+def dt_validate_mapping_valid():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile.rmap")
+    >>> r.validate_mapping()
+    >>> test_config.cleanup(old_state)
+    """
+
+def dt_validate_mapping_ambiguous():
+    """
+    >>> old_state = test_config.setup()
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_ewsc.rmap")
     >>> r.validate_mapping()
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'C', '1.0|2.0|4.0|8.0') : 
     ----------------------------------------
