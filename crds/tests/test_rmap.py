@@ -402,7 +402,7 @@ def dt_validate_mapping_ambiguous():
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
     For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    https://hst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'C', '2.0') : 
     ----------------------------------------
@@ -414,7 +414,7 @@ def dt_validate_mapping_ambiguous():
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
     For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    https://hst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'D', '1.0|2.0|4.0|8.0') : 
     ----------------------------------------
@@ -426,7 +426,7 @@ def dt_validate_mapping_ambiguous():
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
     For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    https://hst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'ABCD', '1.0') : 
     ----------------------------------------
@@ -438,7 +438,7 @@ def dt_validate_mapping_ambiguous():
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
     For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    https://hst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : 
     ----------------------------------------
@@ -450,7 +450,7 @@ def dt_validate_mapping_ambiguous():
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
     For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    https://hst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : 
     ----------------------------------------
@@ -462,7 +462,7 @@ def dt_validate_mapping_ambiguous():
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
     For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    https://hst-crds.stsci.edu/static/users_guide/index.html
     ----------------------------------------
     >>> test_config.cleanup(old_state)
     """

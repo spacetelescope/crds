@@ -1287,8 +1287,7 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Modify found ('FUV',) augmenting UseAfterSelector(('DATE-OBS', 'TIME-OBS'), nselections=1) with 's7g1700gl_dead_dup2.fits'
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Modify found '1996-10-01 00:00:00' as primitive 's7g1700gl_dead_dup1.fits' replacing with 's7g1700gl_dead_dup2.fits'
-    CRDS - WARNING -  ----------------------------------------
-
+    CRDS - ERROR -  ----------------------------------------
     Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
      ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00')))
     Each reference would replace the other in the rmap.
