@@ -85,6 +85,7 @@ with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 """
 # ==============================================================================
 
+import os
 import re
 import fnmatch
 import sys
@@ -258,8 +259,15 @@ class Selector:
     def __init__(self, parameters, selections=None, rmap_header=None, merge_selections=None):
         assert isinstance(parameters, (list, tuple)), \
             "parameters should be a list or tuple of header keys"
-        self._observatory = get_default_observatory()
         self._rmap_header = rmap_header or {}
+        self._observatory = config.OBSERVATORY.get()
+        if self._observatory == "none":
+            if 'observatory' in self._rmap_header:
+                self._observatory = self._rmap_header['observatory']
+            else:
+                url = os.environ.get("CRDS_SERVER_URL", "none")
+                u = url.split('-')[0].split('/')[-1]
+                self._observatory = u if u in ['hst', 'jwst', 'roman'] else "hst"
         self._parameters = tuple(parameters)
         if "merge_overlaps" in self._rmap_header:
             self._merge_overlaps = str(self._rmap_header["merge_overlaps"]).upper() in ["TRUE", "1"]
