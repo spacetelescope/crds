@@ -16,8 +16,8 @@ and provide related services.
 CRDS development is occuring at:
      `Project's github page <https://github.com/spacetelescope/crds>`_.
 
-CRDS is also available for installation as part of AstroConda Contrib:
-     `AstroConda Contrib <https://github.com/astroconda/astroconda-contrib>`_.
+CRDS is also available for installation as part of ``stenv``:
+     `stenv <https://github.com/spacetelescope/stenv>`_.
 
 Basic CRDS Installation
 -----------------------
