@@ -2045,10 +2045,11 @@ Restore original debug behavior:
                      log.PP(self.match_item(key)),
                      "\nis an equal weight special case of\n",
                      log.PP(self.match_item(other)), """
-                     For some parameter sets, CRDS interprets both matches as equally good.
-                     See the file submission section of the CRDS server user's guide here:
-                     https://hst-crds.stsci.edu/static/users_guide/index.html
-                     for more explanation.""", "-"*40)
+For some parameter sets, CRDS interprets both matches as equally good.
+See the file submission section of the CRDS server user's guide here:
+    https://hst-crds.stsci.edu/static/users_guide/index.html
+for more explanation.
+""", "-"*40)
 
 
 # ==============================================================================
