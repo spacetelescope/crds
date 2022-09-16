@@ -968,7 +968,7 @@ def check_rmap_updates(observatory, context, filepaths):
         old_rmap = pmap.get_imap(instrument).get_rmap(filekind)
         new_rmap = "/tmp/" + old_rmap.basename
         log.info("Checking rmap update for", (instrument, filekind), "inserting files", references2)
-        refactor.rmap_insert_references(old_rmap.filename, new_rmap, references2)
+        refactor.rmap_insert_references(old_rmap.filename, new_rmap, references2, observatory=observatory)
 
         banner()
         certify_file(new_rmap, context)    # check for partial overlaps

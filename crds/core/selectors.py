@@ -100,7 +100,6 @@ from pprint import pprint as pp
 # ==============================================================================
 
 from . import log, utils, timestamp, config
-from ..client.api import get_default_observatory
 from .exceptions import (ValidationError, CrdsLookupError,
                          AmbiguousMatchError,
                          MatchingError, UseAfterError,
@@ -260,14 +259,9 @@ class Selector:
         assert isinstance(parameters, (list, tuple)), \
             "parameters should be a list or tuple of header keys"
         self._rmap_header = rmap_header or {}
-        self._observatory = config.OBSERVATORY.get()
-        if self._observatory == "none":
-            if 'observatory' in self._rmap_header:
-                self._observatory = self._rmap_header['observatory']
-            else:
-                url = os.environ.get("CRDS_SERVER_URL", "none")
-                u = url.split('-')[0].split('/')[-1]
-                self._observatory = u if u in ['hst', 'jwst', 'roman'] else "hst"
+        self._observatory = os.environ.get("CRDS_SERVER_URL", "none").split('-')[0].split('/')[-1]
+        if self._observatory not in ['hst', 'jwst', 'roman']:
+            self._observatory = self._rmap_header['observatory'].lower() if 'observatory' in self._rmap_header else "hst"
         self._parameters = tuple(parameters)
         if "merge_overlaps" in self._rmap_header:
             self._merge_overlaps = str(self._rmap_header["merge_overlaps"]).upper() in ["TRUE", "1"]
