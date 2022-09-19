@@ -85,6 +85,7 @@ with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 """
 # ==============================================================================
 
+import os
 import re
 import fnmatch
 import sys
@@ -99,7 +100,6 @@ from pprint import pprint as pp
 # ==============================================================================
 
 from . import log, utils, timestamp, config
-
 from .exceptions import (ValidationError, CrdsLookupError,
                          AmbiguousMatchError,
                          MatchingError, UseAfterError,
@@ -259,6 +259,9 @@ class Selector:
         assert isinstance(parameters, (list, tuple)), \
             "parameters should be a list or tuple of header keys"
         self._rmap_header = rmap_header or {}
+        self._observatory = os.environ.get("CRDS_SERVER_URL", "none").split('-')[0].split('/')[-1]
+        if self._observatory not in ['hst', 'jwst', 'roman']:
+            self._observatory = self._rmap_header['observatory'].lower() if 'observatory' in self._rmap_header else "hst"
         self._parameters = tuple(parameters)
         if "merge_overlaps" in self._rmap_header:
             self._merge_overlaps = str(self._rmap_header["merge_overlaps"]).upper() in ["TRUE", "1"]
@@ -2035,9 +2038,21 @@ Restore original debug behavior:
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
-                raise AmbiguousMatchError(
-                    f"\n----------------------------------------\nMatch case\n{self.match_item(key)}\nis an equal weight special case of\n{self.match_item(other)}\nCancel the submission and regenerate the reference files\nwith different parameter values which coincide with an existing category.\nFor some parameter sets, CRDS interprets both matches as equally good.\nFor more explanation, see the file submission section of the CRDS server user's guide here:\nhttps://jwst-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------"
-                    )
+                if self._observatory != "hst" or self._merge_overlaps is False:
+                    raise AmbiguousMatchError(
+                        f"\n----------------------------------------\nMatch case\n{self.match_item(key)}\nis an equal weight special case of\n{self.match_item(other)}\nCancel the submission and regenerate the reference files\nwith different parameter values which coincide with an existing category.\nFor some parameter sets, CRDS interprets both matches as equally good.\nFor more explanation, see the file submission section of the CRDS server user's guide here:\nhttps://{self._observatory.lower()}-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------"
+                        )
+                else:
+                    log.verbose_warning("-"*40 + "\nMatch case\n",
+                     log.PP(self.match_item(key)),
+                     "\nis an equal weight special case of\n",
+                     log.PP(self.match_item(other)), """
+For some parameter sets, CRDS interprets both matches as equally good.
+See the file submission section of the CRDS server user's guide here:
+    https://hst-crds.stsci.edu/static/users_guide/index.html
+for more explanation.
+""", "-"*40)
+
 
 # ==============================================================================
 

@@ -6,7 +6,7 @@ import os.path
 
 # ============================================================================
 
-from crds.core import exceptions, rmap, log, cmdline
+from crds.core import exceptions, rmap, log, cmdline, utils
 from crds.core.log import srepr
 from crds import diff
 
@@ -54,7 +54,7 @@ def update_derivation(new_path, old_basename=None):
 
 # ============================================================================
 
-def rmap_insert_references(old_rmap, new_rmap, inserted_references):
+def rmap_insert_references(old_rmap, new_rmap, inserted_references, observatory=None):
     """Given the full path of starting rmap `old_rmap`,  modify it by inserting
     or replacing all files in `inserted_references` and write out the result to
     `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
@@ -96,6 +96,7 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
 
     Return None,  `new_rmap` is already the implicit result
     """
+    observatory = utils.file_to_observatory(inserted_references[0]) if observatory is None else observatory
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     inserted_cases = {}
     for reference in inserted_references:
@@ -111,13 +112,13 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
                 else:
                     log.error("-"*40 + "\nBoth", srepr(baseref),
                               "and", srepr(inserted_cases[case]),
-                              "identically match case:\n", log.PP(case), """
+                              "identically match case:\n", log.PP(case), f"""
 Each reference would replace the other in the rmap.
 Either reference file matching parameters need correction
 or additional matching parameters should be added to the rmap
 to enable CRDS to differentiate between the two files.
 See the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
+    https://{observatory.lower()}-crds.stsci.edu/static/users_guide/index.html
 for more explanation.""")
 
     new.header["derived_from"] = old.basename

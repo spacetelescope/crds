@@ -448,30 +448,6 @@ def certify_recursive():
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context 'hst.pmap'
-    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G130M') :
-    ----------------------------------------
-    Match case
-    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M'))
-    is an equal weight special case of
-    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M'))
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
-    CRDS - ERROR -  Match('DETECTOR', 'OPT_ELEM') : ('FUV', 'G160M') :
-    ----------------------------------------
-    Match case
-    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G160M'))
-    is an equal weight special case of
-    (('DETECTOR', 'FUV'), ('OPT_ELEM', 'G130M|G140L|G160M'))
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_fluxtab.rmap' (9/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
@@ -495,10 +471,10 @@ def certify_recursive():
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context 'hst.pmap'
     CRDS - INFO - ########################################
-    CRDS - INFO - 2 errors
+    CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
     CRDS - INFO - 39 infos
-    2
+    0
     """
 
 def certify_table_comparison_context():
@@ -1313,13 +1289,13 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Modify found '1996-10-01 00:00:00' as primitive 's7g1700gl_dead_dup1.fits' replacing with 's7g1700gl_dead_dup2.fits'
     CRDS - ERROR -  ----------------------------------------
     Both 's7g1700gl_dead_dup2.fits' and 's7g1700gl_dead_dup1.fits' identically match case:
-     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00'))) 
+     ((('DETECTOR', 'FUV'),), (('DATE-OBS', '1996-10-01'), ('TIME-OBS', '00:00:00')))
     Each reference would replace the other in the rmap.
     Either reference file matching parameters need correction
     or additional matching parameters should be added to the rmap
     to enable CRDS to differentiate between the two files.
     See the file submission section of the CRDS server user's guide here:
-        https://jwst-crds.stsci.edu/static/users_guide/index.html
+        https://hst-crds.stsci.edu/static/users_guide/index.html
     for more explanation.
     CRDS - INFO -  Inserting s7g1700gl_dead_overlap.fits into 'hst_cos_deadtab_0250.rmap'
     CRDS - DEBUG -  Unexpanded header [('DETECTOR', 'FUV|NUV'), ('LIFE_ADJ', 'UNDEFINED'), ('OPT_ELEM', 'UNDEFINED')]
@@ -1341,42 +1317,40 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Validating 'hst_cos_deadtab_0250.rmap' with parameters (('DETECTOR',), ('DATE-OBS', 'TIME-OBS'))
     CRDS - DEBUG -  Validating key ('FUV',)
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
-    CRDS - ERROR -  Match('DETECTOR',) : ('FUV',) : 
-    ----------------------------------------
+    CRDS - WARNING -  ----------------------------------------
     Match case
-    (('DETECTOR', 'FUV'),)
+     (('DETECTOR', 'FUV'),)
     is an equal weight special case of
-    (('DETECTOR', 'FUV|NUV'),)
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
+     (('DETECTOR', 'FUV|NUV'),)
     For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
+    See the file submission section of the CRDS server user's guide here:
+        https://hst-crds.stsci.edu/static/users_guide/index.html
+    for more explanation.
+     ----------------------------------------
+    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Validating key ('FUV|NUV',)
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
     CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Validating key ('NUV',)
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
-    CRDS - ERROR -  Match('DETECTOR',) : ('NUV',) : 
-    ----------------------------------------
+    CRDS - WARNING -  ----------------------------------------
     Match case
-    (('DETECTOR', 'NUV'),)
+     (('DETECTOR', 'NUV'),)
     is an equal weight special case of
-    (('DETECTOR', 'FUV|NUV'),)
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
+     (('DETECTOR', 'FUV|NUV'),)
     For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://jwst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
+    See the file submission section of the CRDS server user's guide here:
+        https://hst-crds.stsci.edu/static/users_guide/index.html
+    for more explanation.
+     ----------------------------------------
+    CRDS - DEBUG -  Validating key '1996-10-01 00:00:00'
     CRDS - DEBUG -  Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst_0508.pmap'
     CRDS - INFO -  ########################################
-    CRDS - INFO -  3 errors
-    CRDS - INFO -  0 warnings
+    CRDS - INFO -  1 errors
+    CRDS - INFO -  2 warnings
     CRDS - INFO -  17 infos
-    3
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -2204,11 +2178,12 @@ class TestCertify(test_config.CRDSTestCase):
 
     def test_check_ambiguous_match(self):
         assert_raises(exceptions.AmbiguousMatchError, certify.certify_file,
-        self.data("hst_acs_darkfile.rmap"), "hst.pmap", observatory="hst")
+        self.data("hst_acs_darkfile_ewsc.rmap"), "hst.pmap", observatory="hst")
 
     def test_check_dduplicates(self):
         self.certify_files([self.data("hst.pmap")], "hst.pmap", observatory="hst")
         self.certify_files([self.data("hst_acs.imap")], "hst.pmap", observatory="hst")
+        self.certify_files([self.data("hst_acs_darkfile.rmap")], "hst.pmap", observatory="hst")
     
     def test_check_dup_selector_entry(self):
         """Should return:
