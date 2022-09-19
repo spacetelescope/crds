@@ -1,6 +1,11 @@
 11.16.13 (unreleased)
 =====================
 
+General
+-------
+
+- Updated README to reference ``stenv`` [#899]
+
 HST
 ---
 
