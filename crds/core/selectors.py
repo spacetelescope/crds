@@ -2038,15 +2038,25 @@ Restore original debug behavior:
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
+                # get associated filenames for log message
+                fnames = {'key': '', 'other': ''}
+                with log.warn_on_exception("Unable to retrieve filenames - skipping"):
+                    key_fname = [v.choices()[0] for k,v in self._selections if k == key and isinstance(v, Selector)]
+                    other_fname = [v.choices()[0] for k,v in self._selections if k == other and isinstance(v, Selector)]
+                    if key_fname and other_fname:
+                        fnames['key'], fnames['other'] = ' : ' + key_fname[0], ' : ' + other_fname[0]
+
                 if self._observatory != "hst" or self._merge_overlaps is False:
                     raise AmbiguousMatchError(
-                        f"\n----------------------------------------\nMatch case\n{self.match_item(key)}\nis an equal weight special case of\n{self.match_item(other)}\nCancel the submission and regenerate the reference files\nwith different parameter values which coincide with an existing category.\nFor some parameter sets, CRDS interprets both matches as equally good.\nFor more explanation, see the file submission section of the CRDS server user's guide here:\nhttps://{self._observatory.lower()}-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------"
+                        f"\n----------------------------------------\nMatch case\n{self.match_item(key)}{fnames['key']}\nis an equal weight special case of\n{self.match_item(other)}{fnames['other']}\nCancel the submission and regenerate the reference files\nwith different parameter values which coincide with an existing category.\nFor some parameter sets, CRDS interprets both matches as equally good.\nFor more explanation, see the file submission section of the CRDS server user's guide here:\nhttps://{self._observatory.lower()}-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------"
                         )
                 else:
                     log.verbose_warning("-"*40 + "\nMatch case\n",
                      log.PP(self.match_item(key)),
+                     f"{fnames['key']}",
                      "\nis an equal weight special case of\n",
-                     log.PP(self.match_item(other)), """
+                     log.PP(self.match_item(other)),
+                     f"{fnames['other']}", """
 For some parameter sets, CRDS interprets both matches as equally good.
 See the file submission section of the CRDS server user's guide here:
     https://hst-crds.stsci.edu/static/users_guide/index.html
