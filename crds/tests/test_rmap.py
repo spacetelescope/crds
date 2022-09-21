@@ -438,7 +438,6 @@ def dt_validate_mapping_ambiguous():
     Match case
     ('WFC', 'ABCD', '1.0') : UseAfter({
         '2003-10-25 01:18:03' : nba1143tj_drk.fits
-    (('DETECTOR', 'WFC'), ('CCDAMP', 'ABCD'), ('CCDGAIN', '1.0'))
     is an equal weight special case of
     ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : UseAfter({
         '2003-09-13 00:48:08' : na11410lj_drk.fits
