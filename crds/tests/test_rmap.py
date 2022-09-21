@@ -6,9 +6,8 @@ import json
 from pprint import pprint as pp
 import pickle
 
-from crds import rmap, log, config, tests, utils
-from crds.client import api
-from crds.exceptions import *
+from crds import rmap, log, config, utils
+from crds.core.exceptions import *
 from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
@@ -395,9 +394,11 @@ def dt_validate_mapping_ambiguous():
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'C', '1.0|2.0|4.0|8.0') : 
     ----------------------------------------
     Match case
-    (('DETECTOR', 'HRC'), ('CCDAMP', 'C'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('HRC', 'C', '1.0|2.0|4.0|8.0') : UseAfter({
+        '2003-11-06 15:11:06' : nc113178j_drk.fits
     is an equal weight special case of
-    (('DETECTOR', 'HRC'), ('CCDAMP', 'A|ABCD|AD|B|BC|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1992-01-01 00:00:00' : lcb12060j_drk.fits
     Cancel the submission and regenerate the reference files
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
@@ -407,9 +408,11 @@ def dt_validate_mapping_ambiguous():
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'C', '2.0') : 
     ----------------------------------------
     Match case
-    (('DETECTOR', 'HRC'), ('CCDAMP', 'C'), ('CCDGAIN', '2.0'))
+    ('HRC', 'C', '2.0') : UseAfter({
+        '2002-03-26 00:00:00' : m3t1633tj_drk.fits
     is an equal weight special case of
-    (('DETECTOR', 'HRC'), ('CCDAMP', 'A|ABCD|AD|B|BC|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1992-01-01 00:00:00' : lcb12060j_drk.fits
     Cancel the submission and regenerate the reference files
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
@@ -419,9 +422,11 @@ def dt_validate_mapping_ambiguous():
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'D', '1.0|2.0|4.0|8.0') : 
     ----------------------------------------
     Match case
-    (('DETECTOR', 'HRC'), ('CCDAMP', 'D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('HRC', 'D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1991-01-01 00:00:00' : j4d1435nj_drk.fits
     is an equal weight special case of
-    (('DETECTOR', 'HRC'), ('CCDAMP', 'A|ABCD|AD|B|BC|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1992-01-01 00:00:00' : lcb12060j_drk.fits
     Cancel the submission and regenerate the reference files
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
@@ -431,9 +436,11 @@ def dt_validate_mapping_ambiguous():
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'ABCD', '1.0') : 
     ----------------------------------------
     Match case
-    (('DETECTOR', 'WFC'), ('CCDAMP', 'ABCD'), ('CCDGAIN', '1.0'))
+    ('WFC', 'ABCD', '1.0') : UseAfter({
+        '2003-10-25 01:18:03' : nba1143tj_drk.fits
     is an equal weight special case of
-    (('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('CCDGAIN', '1.0'))
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : UseAfter({
+        '2003-09-13 00:48:08' : na11410lj_drk.fits
     Cancel the submission and regenerate the reference files
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
@@ -443,9 +450,11 @@ def dt_validate_mapping_ambiguous():
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : 
     ----------------------------------------
     Match case
-    (('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('CCDGAIN', '1.0'))
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : UseAfter({
+        '2003-09-13 00:48:08' : na11410lj_drk.fits
     is an equal weight special case of
-    (('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1991-01-01 00:00:00' : lcb1202gj_drk.fits
     Cancel the submission and regenerate the reference files
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
@@ -455,9 +464,11 @@ def dt_validate_mapping_ambiguous():
     CRDS - ERROR -  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : 
     ----------------------------------------
     Match case
-    (('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AD|B|BC|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '2006-07-30 02:04:10' : q9520146j_drk.fits
     is an equal weight special case of
-    (('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('CCDGAIN', '1.0|2.0|4.0|8.0'))
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1991-01-01 00:00:00' : lcb1202gj_drk.fits
     Cancel the submission and regenerate the reference files
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
@@ -466,6 +477,29 @@ def dt_validate_mapping_ambiguous():
     ----------------------------------------
     >>> test_config.cleanup(old_state)
     """
+
+def dt_validate_mapping_ambiguous_roman():
+    """
+    >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
+    >>> r = rmap.get_cached_mapping("data/roman_wfi_flat_ewsc.rmap")
+    >>> r.validate_mapping()
+    CRDS - ERROR -  Match('ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]') : ('WFI01', 'F158') : 
+    ----------------------------------------
+    Match case
+    ('WFI01', 'F158') : UseAfter({
+        '2020-01-01 00:00:00' : roman_wfi_flat_0002.asdf
+    is an equal weight special case of
+    ('WFI01', 'F158|F184|F213') : UseAfter({
+        '2021-08-01 11:11:11' : roman_wfi_flat_0004.asdf
+    Cancel the submission and regenerate the reference files
+    with different parameter values which coincide with an existing category.
+    For some parameter sets, CRDS interprets both matches as equally good.
+    For more explanation, see the file submission section of the CRDS server user's guide here:
+    https://roman-crds.stsci.edu/static/users_guide/index.html
+    ----------------------------------------
+    >>> test_config.cleanup(old_state)
+    """
+
 
 def dt_validate_mapping_invalid1():
     """
@@ -610,7 +644,6 @@ class TestRmap(test_config.CRDSTestCase):
         self.assertEqual(rmap.list_references("*.r1h", "hst"), ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h', 'valid.r1h'])
 
     def test_rmap_get_derived_from(self):
-        # api.dump_mappings("hst.pmap", mappings=["hst_acs_flshfile_0251.rmap"])
         os.environ["CRDS_MAPPATH_SINGLE"] = self.data_dir
         r = rmap.get_cached_mapping("data/hst_acs_flshfile_0252.rmap")
         self.assertEqual(r.get_derived_from().name, 'hst_acs_flshfile_0251.rmap')

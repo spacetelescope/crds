@@ -10,7 +10,6 @@ from nose.tools import assert_raises, assert_true, assert_false
 # ==================================================================================
 
 from crds.core import utils, log, exceptions
-from crds import client
 from crds import data_file
 from crds import certify
 from crds.certify import CertifyScript
@@ -1319,9 +1318,11 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'FUV' against ('FUV', 'NUV')
     CRDS - WARNING -  ----------------------------------------
     Match case
-     (('DETECTOR', 'FUV'),)
+    ('FUV',) : UseAfter({
+        '1996-10-01 00:00:00' : s7g1700gl_dead_dup2.fits
     is an equal weight special case of
-     (('DETECTOR', 'FUV|NUV'),)
+    ('FUV|NUV',) : UseAfter({
+        '1996-10-01 00:00:00' : s7g1700gl_dead_overlap.fits 
     For some parameter sets, CRDS interprets both matches as equally good.
     See the file submission section of the CRDS server user's guide here:
         https://hst-crds.stsci.edu/static/users_guide/index.html
@@ -1336,9 +1337,11 @@ def test_certify_check_rmap_updates():
     CRDS - DEBUG -  Checking 'DETECTOR' = 'NUV' against ('FUV', 'NUV')
     CRDS - WARNING -  ----------------------------------------
     Match case
-     (('DETECTOR', 'NUV'),)
+    ('NUV',) : UseAfter({
+        '1996-10-01 00:00:00' : s7g1700ql_dead.fits
     is an equal weight special case of
-     (('DETECTOR', 'FUV|NUV'),)
+    ('FUV|NUV',) : UseAfter({
+        '1996-10-01 00:00:00' : s7g1700gl_dead_overlap.fits 
     For some parameter sets, CRDS interprets both matches as equally good.
     See the file submission section of the CRDS server user's guide here:
         https://hst-crds.stsci.edu/static/users_guide/index.html

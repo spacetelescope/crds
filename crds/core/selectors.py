@@ -2013,6 +2013,43 @@ Restore original debug behavior:
             if name not in valid_values_map:
                 log.verbose_warning(self.short_name, "Parameter ",
                                     repr(name), " is unchecked.")
+    
+    def _ambiguous_match_data(self, key, other):
+        """Retrieve filenames and useafter data for the given match case to be included
+        in error/warning log message.
+
+        Parameters
+        ----------
+        key : tuple or tuple of tuples
+            match key parameters (selector parkey values), usually the subset
+        other : tuple or tuple of tuples
+            match key parameters (selector parkey values), usually the superset
+
+        Returns
+        -------
+        strings
+            two pre-formatted strings (subset and superset), each composed of the match key 
+            and first selection's useafter and reference filename. If there is an exception while getting
+            data from the mapping, a warning is raised but the match key tuples are still returned as strings.
+        """
+        kstr, ostr = f"{key}", f"{other}"
+        with log.warn_on_exception("Unable to retrieve filenames - skipping"):
+            k_name = [v.choices()[0] for k,v in self._selections if k == key and isinstance(v, Selector)]
+            o_name = [v.choices()[0] for k,v in self._selections if k == other and isinstance(v, Selector)]
+            if k_name and o_name:
+                uas = [self.file_matches(k_name[0]), self.file_matches(o_name[0])]
+                useafters = []
+                for ua in uas:
+                    if ua and len(ua[0][-1]) == 2:
+                        useafters.append(ua[0][-1][0][1] + ' ' + ua[0][-1][1][1])
+                    elif ua and len(ua[0][-1]) == 1:
+                        useafters.append(ua[0][-1][0][1])
+                if useafters:
+                    kstr += f" : UseAfter({str('{')}\n    '{useafters[0]}'"
+                    ostr += f" : UseAfter({str('{')}\n    '{useafters[1]}'"
+                kstr += ' : ' + k_name[0]
+                ostr += ' : ' + o_name[0]
+        return kstr, ostr
 
     def _validate_raw_key(self, key, valid_values_map):
         """Validate each field of a single Match `key` against the possible
@@ -2038,15 +2075,14 @@ Restore original debug behavior:
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
+                # include match case filename and useafter data in log message
+                key_data, other_data = self._ambiguous_match_data(key, other)
                 if self._observatory != "hst" or self._merge_overlaps is False:
                     raise AmbiguousMatchError(
-                        f"\n----------------------------------------\nMatch case\n{self.match_item(key)}\nis an equal weight special case of\n{self.match_item(other)}\nCancel the submission and regenerate the reference files\nwith different parameter values which coincide with an existing category.\nFor some parameter sets, CRDS interprets both matches as equally good.\nFor more explanation, see the file submission section of the CRDS server user's guide here:\nhttps://{self._observatory.lower()}-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------"
+                        f"\n----------------------------------------\nMatch case\n{key_data}\nis an equal weight special case of\n{other_data}\nCancel the submission and regenerate the reference files\nwith different parameter values which coincide with an existing category.\nFor some parameter sets, CRDS interprets both matches as equally good.\nFor more explanation, see the file submission section of the CRDS server user's guide here:\nhttps://{self._observatory.lower()}-crds.stsci.edu/static/users_guide/index.html\n----------------------------------------"
                         )
                 else:
-                    log.verbose_warning("-"*40 + "\nMatch case\n",
-                     log.PP(self.match_item(key)),
-                     "\nis an equal weight special case of\n",
-                     log.PP(self.match_item(other)), """
+                    log.verbose_warning("-"*40 + f"\nMatch case\n{key_data}\nis an equal weight special case of\n{other_data}","""
 For some parameter sets, CRDS interprets both matches as equally good.
 See the file submission section of the CRDS server user's guide here:
     https://hst-crds.stsci.edu/static/users_guide/index.html
