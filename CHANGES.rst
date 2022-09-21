@@ -1,3 +1,10 @@
+11.16.14 (unreleased)
+=====================
+
+General
+-------
+- Equal Weight Special Case log messages include filenames and useafter dates [#901]
+
 11.16.13 (2022-09-20)
 =====================
 
