@@ -1,3 +1,8 @@
+import os
+import doctest
+from pprint import pprint as pp
+
+# ==================================================================================
 import numpy as np
 
 from nose.tools import assert_raises, assert_true, assert_false

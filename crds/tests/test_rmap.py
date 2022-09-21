@@ -3,6 +3,8 @@ complex features of the basic rmap infrastructure.
 """
 import os
 import json
+from pprint import pprint as pp
+import pickle
 
 from crds import rmap, log, config, utils
 from crds.core.exceptions import *
@@ -410,7 +412,7 @@ def dt_validate_mapping_ambiguous():
         '2002-03-26 00:00:00' : m3t1633tj_drk.fits
     is an equal weight special case of
     ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '1992-01-01 00:00:00' : lcb12060j_drk.fits   
+        '1992-01-01 00:00:00' : lcb12060j_drk.fits
     Cancel the submission and regenerate the reference files
     with different parameter values which coincide with an existing category.
     For some parameter sets, CRDS interprets both matches as equally good.
@@ -482,7 +484,7 @@ def dt_validate_mapping_ambiguous_roman():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
     >>> r = rmap.get_cached_mapping("data/roman_wfi_flat_ewsc.rmap")
     >>> r.validate_mapping()
-    CRDS - ERROR -  Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT') : ('WFI01', 'F158') : 
+    CRDS - ERROR -  Match('ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown') : ('WFI01', 'F158') : 
     ----------------------------------------
     Match case
     ('WFI01', 'F158') : UseAfter({
