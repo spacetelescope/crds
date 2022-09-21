@@ -484,7 +484,7 @@ def dt_validate_mapping_ambiguous_roman():
     >>> old_state = test_config.setup(url="https://roman-crds-serverless.stsci.edu", observatory="roman")
     >>> r = rmap.get_cached_mapping("data/roman_wfi_flat_ewsc.rmap")
     >>> r.validate_mapping()
-    CRDS - ERROR -  Match('ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown') : ('WFI01', 'F158') : 
+    CRDS - ERROR -  Match('ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]') : ('WFI01', 'F158') : 
     ----------------------------------------
     Match case
     ('WFI01', 'F158') : UseAfter({
