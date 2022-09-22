@@ -52,6 +52,7 @@ this command line interface must be members of the CRDS operators group
         self._error_count = None
         self._warning_count = None
         self._file_map = dict()
+        self._results_id = None
 
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
@@ -345,6 +346,37 @@ this command line interface must be members of the CRDS operators group
             except Exception as e:
                 log.verbose(e, verbosity=75)
 
+    def confirm(self, args):
+        if self._results_id and self.connection:
+            self.connection.repost_start(args)
+            try:
+                response = self.connection.session.post(
+                    '/submit_confirm/',
+                    {
+                        "button": "confirm",
+                        "results_id": self._results_id,
+
+                    },
+                    follow=True
+                )
+            except Exception as e:
+                log.verbose(e)
+
+    def cancel(self):
+        if self._results_id and self.connection:
+            try:
+                response = self.connection.session.post(
+                    '/submit_confirm/',
+                    {
+                        "button": "cancel",
+                        "results_id": self._results_id,
+
+                    },
+                    follow=True
+                )
+            except Exception as e:
+                log.verbose(e)
+
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
 
@@ -380,17 +412,21 @@ this command line interface must be members of the CRDS operators group
             monitor_future = self.monitor()
 
         if self.args.wait_for_completion:
-            self.submission_complete(submit_future)
+            submit_complete = self.submission_complete(submit_future)
 
         if self.args.monitor_processing:
             monitor = self.monitor_complete(monitor_future)
             if monitor.exit_status == 0:
                 self._ready_url = monitor.result
+                self._results_id = self._ready_url.split('/')[-1]
 
         log.standard_status()
 
         self._error_count = log.errors()
         self._warning_count = log.warnings()
+
+        if self._error_count == 0:
+            self.confirm(submit_complete)
 
         self.get_file_map()
 

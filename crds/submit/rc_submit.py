@@ -229,6 +229,9 @@ class Submission(object):
         self._observatory = observatory
         self._string = string
         self._context = context
+        self._ready_url = None
+        self._connection = None
+        self._results_id = None
 
         config.base_url = BASE_URLS[self.string][self.observatory]
         if not os.environ.get('CRDS_SERVER_URL'):
@@ -397,6 +400,21 @@ class Submission(object):
     def file_map(self):
         return self._file_map
 
+    @property
+    def ready_url(self):
+        return self._ready_url
+
+    @property
+    def connection(self):
+        return self._connection
+    
+    @property
+    def results_id(self):
+        if self._ready_url is None:
+            raise Exception("ready url not present")
+        self._results_id = self._ready_url.split('/')[-1]
+        return self._results_id
+
     # ------------------------------------------------------------------------------------
     # Custom methods:
 
@@ -484,11 +502,45 @@ class Submission(object):
             script.get_file_map()
         self._file_map = script._file_map
 
+        self._connection = script.connection
+        self._ready_url = script._ready_url
+        self._results_id = self.results_id()
+
         return SubmissionResult(
             error_count=script._error_count,
             warning_count=script._warning_count,
             ready_url=script._ready_url
         )
+
+    def confirm(self):
+        if self._results_id and self._connection:
+            try:
+                response = self._connection.post(
+                    '/submit_confirm/',
+                    {
+                        "button": "confirm",
+                        "results_id": self._results_id,
+
+                    },
+                    follow=True
+                )
+            except Exception as e:
+                log.verbose(e)
+
+    def cancel(self):
+        if self._results_id and self._connection:
+            try:
+                response = self._connection.post(
+                    '/submit_confirm/',
+                    {
+                        "button": "cancel",
+                        "results_id": self._results_id,
+
+                    },
+                    follow=True
+                )
+            except Exception as e:
+                log.verbose(e)
 
 def main():
     '''Run the command line program version of the extended batch submit which
