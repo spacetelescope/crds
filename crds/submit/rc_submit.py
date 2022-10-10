@@ -232,6 +232,8 @@ class Submission(object):
         self._ready_url = None
         self._connection = None
         self._results_id = None
+        self._auto_confirm = False
+        self._confirmation = None
 
         config.base_url = BASE_URLS[self.string][self.observatory]
         if not os.environ.get('CRDS_SERVER_URL'):
@@ -415,6 +417,14 @@ class Submission(object):
         self._results_id = self._ready_url.split('/')[-1]
         return self._results_id
 
+    @property
+    def auto_confirm(self):
+        return self._auto_confirm
+
+    @property
+    def confirmation(self):
+        return self._confirmation
+
     # ------------------------------------------------------------------------------------
     # Custom methods:
 
@@ -491,6 +501,9 @@ class Submission(object):
 
         if self.context is not None:
             argv.extend(["--derive-from-context", self.context])
+        
+        if self.auto_confirm is True:
+            argv.extend(["--autoconfirm"])
 
         log.verbose(argv)
         script = RedCatApiScript(argv)
@@ -504,7 +517,11 @@ class Submission(object):
 
         self._connection = script.connection
         self._ready_url = script._ready_url
-        self._results_id = self.results_id()
+        self._results_id = script._results_id
+        self._confirmation = script._confirmation
+
+        if self._confirmation and self._confirmation.status_code == 200:
+            self.update_file_map()
 
         return SubmissionResult(
             error_count=script._error_count,
@@ -512,35 +529,6 @@ class Submission(object):
             ready_url=script._ready_url
         )
 
-    def confirm(self):
-        if self._results_id and self._connection:
-            try:
-                response = self._connection.post(
-                    '/submit_confirm/',
-                    {
-                        "button": "confirm",
-                        "results_id": self._results_id,
-
-                    },
-                    follow=True
-                )
-            except Exception as e:
-                log.verbose(e)
-
-    def cancel(self):
-        if self._results_id and self._connection:
-            try:
-                response = self._connection.post(
-                    '/submit_confirm/',
-                    {
-                        "button": "cancel",
-                        "results_id": self._results_id,
-
-                    },
-                    follow=True
-                )
-            except Exception as e:
-                log.verbose(e)
 
 def main():
     '''Run the command line program version of the extended batch submit which

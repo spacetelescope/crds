@@ -1,4 +1,5 @@
 """This module provides a command line interface for doing CRDS file submissions."""
+
 import sys
 import os
 import os.path
@@ -47,12 +48,14 @@ this command line interface must be members of the CRDS operators group
         self.instrument = None
         self.base_url = None
         self.jpoll_key = None
+        self.auto_confirm = False
 
         self._ready_url = None
         self._error_count = None
         self._warning_count = None
         self._file_map = dict()
         self._results_id = None
+        self._confirmation = None
 
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
@@ -83,6 +86,7 @@ this command line interface must be members of the CRDS operators group
                           help="Don't recopy files already in the server ingest directory that have the correct length.")
         self.add_argument("--certify-files", action="store_true",
                           help="Run CRDS certify and fail if errors are found.")
+        self.add_argument("--autoconfirm", action="store_true", help="Auto-confirmation for pipeline file submissions")
 
         self.add_argument("--logout", action="store_true",
                           help="Log out of the server,  dropping any lock.")
@@ -109,6 +113,8 @@ this command line interface must be members of the CRDS operators group
         assert config.is_context(self.pmap_name), "Invalid pmap_name " + repr(self.pmap_name)
         assert not (self.args.keep_existing_files and self.args.wipe_existing_files), \
             "--keep-existing-files and --wipe-existing-files are mutually exclusive."
+        if self.args.autoconfirm:
+            self.auto_confirm = True
 
     # -------------------------------------------------------------------------------------------------
 
@@ -346,36 +352,23 @@ this command line interface must be members of the CRDS operators group
             except Exception as e:
                 log.verbose(e, verbosity=75)
 
-    def confirm(self, args):
-        if self._results_id and self.connection:
-            self.connection.repost_start(args)
-            try:
-                response = self.connection.session.post(
-                    '/submit_confirm/',
-                    {
-                        "button": "confirm",
-                        "results_id": self._results_id,
-
-                    },
-                    follow=True
-                )
-            except Exception as e:
-                log.verbose(e)
+    def confirm(self):
+        if not self._ready_url:
+            raise Exception("ready url not present")
+        try:
+            response = self.connection.repost_confirm_or_cancel(self._ready_url, action="confirm")
+            return response
+        except Exception as e:
+            log.verbose(e)
 
     def cancel(self):
-        if self._results_id and self.connection:
-            try:
-                response = self.connection.session.post(
-                    '/submit_confirm/',
-                    {
-                        "button": "cancel",
-                        "results_id": self._results_id,
-
-                    },
-                    follow=True
-                )
-            except Exception as e:
-                log.verbose(e)
+        if not self._ready_url:
+            raise Exception("ready url not present")
+        try:
+            response = self.connection.repost_confirm_or_cancel(self._ready_url, action="cancel")
+            return response
+        except Exception as e:
+            log.verbose(e)
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
@@ -412,7 +405,7 @@ this command line interface must be members of the CRDS operators group
             monitor_future = self.monitor()
 
         if self.args.wait_for_completion:
-            submit_complete = self.submission_complete(submit_future)
+            self.submission_complete(submit_future)
 
         if self.args.monitor_processing:
             monitor = self.monitor_complete(monitor_future)
@@ -425,8 +418,8 @@ this command line interface must be members of the CRDS operators group
         self._error_count = log.errors()
         self._warning_count = log.warnings()
 
-        if self._error_count == 0:
-            self.confirm(submit_complete)
+        if self._error_count == 0 and self.auto_confirm is True:
+            self._confirmation = self.confirm()
 
         self.get_file_map()
 

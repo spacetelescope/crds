@@ -90,7 +90,6 @@ class CrdsDjangoConnection:
     def post(self, relative_url, *post_dicts, **post_vars):
         """HTTP(S) POST `relative_url` and return the requests response object."""
         args = self.post_start(relative_url, *post_dicts, **post_vars)
-        
         return self.post_complete(args)
 
     @background.background
@@ -122,6 +121,22 @@ class CrdsDjangoConnection:
         if csrf_values:
             post_vars['csrfmiddlewaretoken'] = csrf_values[0]
         return self.post_start(relative_url, *post_dicts, **post_vars)
+    
+    def repost_confirm_or_cancel(self, ready_url, action="confirm"):
+        relative_url = '/' + '/'.join(ready_url.split('/')[-2:])
+        results_id = relative_url.split('/')[-1]
+        resp = self.get(relative_url)
+        csrf = resp.cookies['csrftoken']
+        url = self.abs_url('/submit_confirm/')
+        response = self.session.post(url, {
+            'results_id': results_id,
+            'csrfmiddlewaretoken': csrf,
+            'button': action,
+            })
+        self.dump_response("Response: ", response)
+        self.check_error(response)
+        return response
+
 
     """
     {'time_remaining': '3:57:58', 'user': 'jmiller_unpriv', 'created_on': '2017-02-23 16:12:55', 'type': 'instrument', 'is_expired': False, 'status': 'ok', 'name': 'miri'}
