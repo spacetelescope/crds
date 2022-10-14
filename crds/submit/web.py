@@ -127,7 +127,7 @@ class CrdsDjangoConnection:
         results_id = relative_url.split('/')[-1]
         resp = self.get(relative_url)
         csrf = resp.cookies['csrftoken']
-        url = self.abs_url('/submit_confirm/')
+        url = self.abs_url('/submit_confirm_pipeline/')
         response = self.session.post(url, {
             'results_id': results_id,
             'csrfmiddlewaretoken': csrf,

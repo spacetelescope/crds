@@ -298,7 +298,7 @@ this command line interface must be members of the CRDS operators group
 
     def login(self):
         """Log in to the CRDS server using server user credentials."""
-        log.info("Logging in aquiring lock.")
+        log.info("Logging in acquiring lock.")
         self.connection.fail_if_existing_lock()
         self.connection.login()
 
