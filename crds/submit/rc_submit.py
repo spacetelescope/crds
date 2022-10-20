@@ -9,14 +9,12 @@ import collections
 import webbrowser
 
 from crds.core import log, config
-from crds.client import api
 from .submit import ReferenceSubmissionScript
 import urllib
 from functools import wraps
 from textwrap import wrap
 import re
 
-from crds.core.exceptions import ServiceError
 
 class NoFilesSelected(Exception):
     pass
@@ -69,93 +67,6 @@ def validate_description_text(text):
     else:
         return None
 
-def context_iterator(default_ctx=None, observatory=None):
-    old_ctx = api.get_default_context() if default_ctx is None else default_ctx
-    obs = api.get_default_observatory() if observatory is None else observatory
-    new_ctx_num = int(old_ctx.split('.')[0].split('_')[-1]) + 1
-    ndigits = 4 if new_ctx_num < 1000 else 0
-    zeros = (ndigits - len(str(new_ctx_num))) * '0'
-    new_ctx = obs + '_' + zeros + str(new_ctx_num) + '.pmap'
-    return new_ctx
-
-def find_new_rmaps(old_maps, new_maps):
-    """Identify any new rmap types i.e. no previous version exists in the older context. 
-    Used by renamed_mappings() to isolate any rmaps that were not renamed but should still
-    be added to the mapping dictionary.
-
-    Parameters
-    ----------
-    old_maps : list
-        all mappings associated with the 'old' (default) context
-    new_maps : list
-        all mappings associated with the 'new' (edit) context
-
-    Returns
-    -------
-    list
-        rmap filenames that are of a new type with no previous version existing.
-        If none are found, returns an empty list.
-    """
-    old = [c.split('_')[2] for c in old_maps if c.split('.')[-1] == 'rmap']
-    new = [c.split('_')[2] for c in new_maps if c.split('.')[-1] == 'rmap']
-    rtypes = [n for n in new if n not in old]
-    rnew = []
-    for r in rtypes:
-        rnew.extend([f for f in new_maps if r in f])
-    return rnew
-
-def renamed_mappings(old_ctx=None, new_ctx=None, observatory=None):
-    """Creates a dictionary of original:renamed mapping file pairs
-    following successful completion/confirmation of a submission.
-    Any new rmap types added that didn't exist in the old context
-    are returned as a list under the key 'new' inside the dictionary.
-
-    Kwargs can be used to override the observatory and contexts being
-    compared, regardless of your current CRDS configuration. For example,
-    if your environment is set to Roman Dev, you could still get the renamed 
-    mappings for an HST or JWST submission:
-    
-        map_dict = renamed_mappings(old_ctx='jwst_0034.pmap', observatory='jwst')
-    
-    would return a dictionary of mappings that were renamed between 'jwst_0034.pmap'
-    and the current 'jwst-edit' context (since the new_ctx was not set explicitly,
-    it defaults to the edit context of a given observatory.
-
-    Parameters
-    ----------
-    old_ctx : str, optional
-        name of the originating default context, by default None
-    new_ctx : str, optional
-        name of the new editing context, by default None
-    observatory : str, optional
-        name of the observatory, by default None
-
-    Returns
-    -------
-    dict
-        original:renamed mapping file pairs (pmap,imap and rmaps)
-    """
-    old_ctx = api.get_default_context() if old_ctx is None else old_ctx
-    observatory = api.get_default_observatory() if observatory is None else observatory
-    new_ctx = observatory + '-edit' if new_ctx is None else new_ctx
-    try:
-        old, new = api.get_mapping_names(old_ctx), api.get_mapping_names(new_ctx)
-        # if edit context isn't updated yet
-        if new == old:
-            new = api.get_mapping_names(context_iterator())
-    except ServiceError as err:
-        log.warning("Oops...you may need to confirm the submission first\n", err)
-        return
-    rnew = find_new_rmaps(old, new)
-    for i, n in enumerate(new):
-        new.pop(i) if n in rnew else None
-    map_dict = {}
-    for k, v in dict(zip(old, new)).items():
-        if k != v:
-            map_dict[k] = v
-    if rnew:
-        map_dict['new'] = rnew
-    return map_dict
 
 # Preserve order of YAML dicts (from https://stackoverflow.com/a/52621703):
 yaml.add_representer(dict, lambda self, data: yaml.representer.SafeRepresenter.represent_dict(self, data.items()))
@@ -229,6 +140,9 @@ class Submission(object):
         self._observatory = observatory
         self._string = string
         self._context = context
+        self._ready_url = None
+        self._results_id = None
+        self._auto_confirm = False
 
         config.base_url = BASE_URLS[self.string][self.observatory]
         if not os.environ.get('CRDS_SERVER_URL'):
@@ -397,6 +311,21 @@ class Submission(object):
     def file_map(self):
         return self._file_map
 
+    @property
+    def ready_url(self):
+        return self._ready_url
+    
+    @property
+    def results_id(self):
+        if self._ready_url is None:
+            raise Exception("ready url not present")
+        self._results_id = self._ready_url.split('/')[-1]
+        return self._results_id
+
+    @property
+    def auto_confirm(self):
+        return self._auto_confirm
+
     # ------------------------------------------------------------------------------------
     # Custom methods:
 
@@ -439,17 +368,6 @@ class Submission(object):
     def yaml(self, *args, **kargs):
         '''YAML representation of this submission object.'''
         return yaml.safe_dump(dict(self), *args, **kargs)
-    
-    def update_file_map(self):
-        '''Add renamed pmap and imap filenames to file_map post-submission'''
-        if self._file_map is None:
-            self._file_map = {}
-        try:
-            mapping_dict = renamed_mappings()
-            if mapping_dict:
-                self._file_map.update(mapping_dict)
-        except Exception as e:
-            log.verbose(e, verbosity=75)
 
     def submit(self):
         '''Validate submission form, upload to CRDS staging, handle server-side
@@ -473,6 +391,9 @@ class Submission(object):
 
         if self.context is not None:
             argv.extend(["--derive-from-context", self.context])
+        
+        if self.auto_confirm is True:
+            argv.extend(["--autoconfirm"])
 
         log.verbose(argv)
         script = RedCatApiScript(argv)
@@ -483,12 +404,15 @@ class Submission(object):
         if script._file_map in [{}, None]:
             script.get_file_map()
         self._file_map = script._file_map
+        self._ready_url = script._ready_url
+        self._results_id = script._results_id
 
         return SubmissionResult(
             error_count=script._error_count,
             warning_count=script._warning_count,
             ready_url=script._ready_url
         )
+
 
 def main():
     '''Run the command line program version of the extended batch submit which

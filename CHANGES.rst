@@ -1,3 +1,10 @@
+11.16.15 (unreleased)
+=====================
+
+Roman
+-----
+- Automatic confirmation for roman pipeline reference file submissions [#904]
+
 11.16.14 (2022-09-22)
 =====================
 

@@ -1,4 +1,5 @@
 """This module provides a command line interface for doing CRDS file submissions."""
+
 import sys
 import os
 import os.path
@@ -12,6 +13,8 @@ from crds.core.exceptions import CrdsError
 from . import web, background, monitor
 from crds.client import api
 from crds.certify import certify
+
+from crds.core.exceptions import ServiceError
 
 # ===================================================================
 
@@ -47,11 +50,14 @@ this command line interface must be members of the CRDS operators group
         self.instrument = None
         self.base_url = None
         self.jpoll_key = None
+        self.auto_confirm = False
 
         self._ready_url = None
         self._error_count = None
         self._warning_count = None
         self._file_map = dict()
+        self._results_id = None
+        self._confirmation = None
 
     def add_args(self):
         """Add additional command-line parameters for file submissions not found in baseclass Script."""
@@ -82,6 +88,7 @@ this command line interface must be members of the CRDS operators group
                           help="Don't recopy files already in the server ingest directory that have the correct length.")
         self.add_argument("--certify-files", action="store_true",
                           help="Run CRDS certify and fail if errors are found.")
+        self.add_argument("--autoconfirm", action="store_true", help="Auto-confirmation for pipeline file submissions")
 
         self.add_argument("--logout", action="store_true",
                           help="Log out of the server,  dropping any lock.")
@@ -108,6 +115,8 @@ this command line interface must be members of the CRDS operators group
         assert config.is_context(self.pmap_name), "Invalid pmap_name " + repr(self.pmap_name)
         assert not (self.args.keep_existing_files and self.args.wipe_existing_files), \
             "--keep-existing-files and --wipe-existing-files are mutually exclusive."
+        if self.args.autoconfirm:
+            self.auto_confirm = True
 
     # -------------------------------------------------------------------------------------------------
 
@@ -291,7 +300,7 @@ this command line interface must be members of the CRDS operators group
 
     def login(self):
         """Log in to the CRDS server using server user credentials."""
-        log.info("Logging in aquiring lock.")
+        log.info("Logging in acquiring lock.")
         self.connection.fail_if_existing_lock()
         self.connection.login()
 
@@ -314,6 +323,101 @@ this command line interface must be members of the CRDS operators group
         if log.errors():
             raise CrdsError("Certify errors found.  Aborting submission.")
 
+    def context_iterator(self, context=None):
+        name = self.pmap_name if context is None else context
+        n_ctx = int(name.split('.')[0].split('_')[-1])
+        new_ctx_num = n_ctx + 1
+        ndigits = 4 if new_ctx_num < 1000 else 0
+        zeros = (ndigits - len(str(new_ctx_num))) * '0'
+        new_ctx = self.observatory + '_' + zeros + str(new_ctx_num) + '.pmap'
+        return new_ctx
+
+    def find_new_rmaps(self, old_maps, new_maps):
+        """Identify any new rmap types i.e. no previous version exists in the older context. 
+        Used by renamed_mappings() to isolate any rmaps that were not renamed but should still
+        be added to the mapping dictionary.
+
+        Parameters
+        ----------
+        old_maps : list
+            all mappings associated with the 'old' (default) context
+        new_maps : list
+            all mappings associated with the 'new' (edit) context
+
+        Returns
+        -------
+        list
+            rmap filenames that are of a new type with no previous version existing.
+            If none are found, returns an empty list.
+        """
+        old = [c.split('_')[2] for c in old_maps if c.split('.')[-1] == 'rmap']
+        new = [c.split('_')[2] for c in new_maps if c.split('.')[-1] == 'rmap']
+        rtypes = [n for n in new if n not in old]
+        rnew = []
+        for r in rtypes:
+            rnew.extend([f for f in new_maps if r in f])
+        return rnew
+    
+    def get_renamed_rmaps(self, soup, fmap):
+        diffs = soup.find_all(string=re.compile("Logical Diff"))
+        if len(diffs) > 0:
+            for diff in diffs:
+                d = diff.split('(')[-1].split(')')[0]
+                r1, r2 = d.split(',')
+                fmap[r1.strip("''")] = r2.strip(" ''")
+        return fmap
+
+    def get_renamed_mappings(self, soup=None, fmap=None):
+        old_maps = api.get_mapping_names(self.pmap_name)
+        if self._confirmation:
+            new_maps = api.get_mapping_names(soup.find(id=self.pmap_name).a.string)
+        else:
+            try:
+                new_maps = api.get_mapping_names(self.context_iterator())
+            except ServiceError:
+                # not confirmed
+                old_pmap, new_pmap = old_maps[0], self.context_iterator(context=old_maps[0])
+                old_imap, new_imap = old_maps[1], self.context_iterator(context=old_maps[1])
+                fmap.update(dict(zip([old_pmap, old_imap],[new_pmap, new_imap])))
+                return self.get_renamed_rmaps(soup, fmap)
+
+        if len(old_maps) != len(new_maps):
+            rnew = self.find_new_rmaps(old_maps, new_maps)
+            if rnew:
+                old_maps.append("new")
+                new_maps.append(rnew)
+        mappings = dict(zip(old_maps, new_maps))
+        [fmap.update({f"{k}":f"{v}"}) for k,v in mappings.items() if k!=v]
+        return fmap
+    
+    def get_renamed_references(self, soup):
+        uploaded = [os.path.basename(f) for f in self.files]
+        if self._confirmation:
+            new = [soup.find(id=f).a.text for f in uploaded]
+        else:
+            new = [soup.find(id=f).string for f in uploaded]
+        return dict(zip(uploaded, new))
+
+    def parse_confirmation_page(self):
+        if not self._confirmation:
+            return
+        soup = BeautifulSoup(self._confirmation.text, 'html.parser')
+        ref_map = self.get_renamed_references(soup)
+        # generated mappings
+        fmap = self.get_renamed_mappings(soup=soup, fmap=ref_map)
+        self._file_map.update(fmap)
+
+    def parse_submission_page(self):
+        if not self._ready_url:
+            return
+        rel_uri = '/'+'/'.join(self._ready_url.split('/')[-2:])
+        r = self.connection.get(rel_uri)
+        if r.status_code == 200:
+            soup = BeautifulSoup(r.text, 'html.parser')
+            ref_map = self.get_renamed_references(soup)
+            fmap = self.get_renamed_mappings(soup=soup, fmap=ref_map)
+            self._file_map.update(fmap)
+
     def get_file_map(self):
         """Parses submission results html to create a dictionary mapping between 
         uploaded reference filenames and their new 'official' names. Also includes 
@@ -322,28 +426,31 @@ this command line interface must be members of the CRDS operators group
         Data is stored in an attribute `_file_map` which gets passed along to the 
         submission object created by the originating submission script.
         """
+        try:
+            if self._confirmation:
+                self.parse_confirmation_page()
+            else:
+                self.parse_submission_page()
+        except Exception as e:
+            log.verbose(e, verbosity=75)
+
+    def confirm(self):
         if not self._ready_url:
-            return
-        rel_uri = '/'+'/'.join(self._ready_url.split('/')[-2:])
-        r = self.connection.get(rel_uri)
-        if r.status_code == 200:
-            text = r.text
-        if text:
-            try:
-                # references
-                soup = BeautifulSoup(r.text, 'html.parser')
-                fbases = [os.path.basename(f) for f in self.files]
-                strings = [soup.find(id=f).string for f in fbases]
-                # rmaps
-                self._file_map = dict(zip(fbases, strings))
-                diffs = soup.find_all(string=re.compile("Logical Diff"))
-                if len(diffs) > 0:
-                    for diff in diffs:
-                        d = diff.split('(')[-1].split(')')[0]
-                        r1, r2 = d.split(',')
-                        self._file_map[r1.strip("''")] = r2.strip(" ''")
-            except Exception as e:
-                log.verbose(e, verbosity=75)
+            raise Exception("ready url not present")
+        try:
+            response = self.connection.repost_confirm_or_cancel(self._ready_url, action="confirm")
+            return response
+        except Exception as e:
+            log.verbose(e)
+
+    def cancel(self):
+        if not self._ready_url:
+            raise Exception("ready url not present")
+        try:
+            response = self.connection.repost_confirm_or_cancel(self._ready_url, action="cancel")
+            return response
+        except Exception as e:
+            log.verbose(e)
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
@@ -386,11 +493,18 @@ this command line interface must be members of the CRDS operators group
             monitor = self.monitor_complete(monitor_future)
             if monitor.exit_status == 0:
                 self._ready_url = monitor.result
+                self._results_id = self._ready_url.split('/')[-1]
 
         log.standard_status()
 
         self._error_count = log.errors()
         self._warning_count = log.warnings()
+
+        if self.auto_confirm is True:
+            if self._error_count == 0:
+                self._confirmation = self.confirm()
+            else:
+                self.cancel()
 
         self.get_file_map()
 
