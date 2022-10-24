@@ -615,7 +615,7 @@ class SyncScript(cmdline.ContextsScript):
                 self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]),
                                       "LOCAL=" + repr(sha1sum))
 
-        if info["state"] not in ["archived", "operational"]:
+        if info["state"] not in ["archived", "operational", "delivered"]:
             log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
 
         if info["rejected"] != "false":

@@ -1,3 +1,10 @@
+Unreleased
+==========
+
+General
+-------
+- Don't issue warning in ``crds sync`` for files with status "delivered" [#903]
+
 11.16.15 (2022-10-20)
 =====================
 
