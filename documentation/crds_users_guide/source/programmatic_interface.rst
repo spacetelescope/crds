@@ -439,3 +439,20 @@ your system's default browser::
 Note that the page's *confirm*, *cancel*, and *force* buttons will not be available
 unless authenticated.  If they seem to be missing, try logging in with the *Login*
 button at the upper right-hand corner of the page.
+
+* Submission `file_map` Attribute
+
+   As of `v11.16.12`, the submission object includes a `file_map` property which returns a dictionary of uploaded reference filenames, "old" mappings (keys) paired with automatically renamed references, newly generated mappings (values).
+
+   .. code-block:: python
+
+       s.file_map
+
+       {'miri_dark_test.fits': 'jwst_miri_dark_0075.fits',
+       'jwst_miri_dark_0033.rmap': 'jwst_miri_dark_0034.rmap',
+       'jwst_0511.pmap': 'jwst_0512.pmap',
+       'jwst_miri_0513.imap': 'jwst_miri_0514.imap'}
+  
+   Note that before a new context has been set, the new mapping names are hypothetical.
+   If the submission has not yet been confirmed, the same is true of the new reference filenames. 
+
