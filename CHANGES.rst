@@ -1,9 +1,11 @@
-Unreleased
-==========
+11.16.16 (Unreleased)
+=====================
 
 General
 -------
 - Don't issue warning in ``crds sync`` for files with status "delivered" [#903]
+
+- Documentation minor updates: command_line_tools, programmatic_interface [#905]
 
 11.16.15 (2022-10-20)
 =====================

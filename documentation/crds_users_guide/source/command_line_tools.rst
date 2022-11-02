@@ -318,6 +318,36 @@ versions of CRDS rules.   While the download directory of files can be
 explicitly specified,  sync is primarily used to download files to a CRDS
 cache which organizes and can locate files in a standard way.
 
+.. tip::
+
+  `crds.sync` detects the observatory based on whichever environment variables have
+  been set, or a flag for the desired observatory included in the command (`--hst`, 
+  `--jwst`, `--roman`). If no flag is included and the environment variables were 
+  not set, `crds.sync` will default to JWST.
+
+  To sync with HST without any environment variables set, you would need to include 
+  the `--hst` flag:
+
+  .. code-block:: bash
+    
+      crds.sync --hst --files 2cd1621ei_dkc.fits --output-dir
+
+  Or set the correct server url environment variable first:
+
+  .. code-block:: bash
+
+      export CRDS_SERVER_URL=https://hst-crds.stsci.edu
+      crds sync --files 2cd1621ei_dkc.fits --output-dir
+
+  The below command produces an error because no environment variables were set 
+  and the --hst flag is not included in the command, so crds.sync defaults 
+  to JWST even though the user is trying to sync an HST file:
+
+  .. code-block:: bash
+    
+      crds sync --files 2cd1621ei_dkc.fits --output-dir
+
+
 * Dry-Running Cache Changes
    
    Since CRDS cache operations can involve significant network downloads, as a
