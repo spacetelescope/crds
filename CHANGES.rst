@@ -1,11 +1,17 @@
 11.16.16 (Unreleased)
 =====================
 
+HST
+---
+
+- Affected datasets script sets BIASFILE bestref to N/A when specific conditions are met for ACS WFC datasets (CCDGAIN=0.5 or 1.4) [#906]
+
 General
 -------
 - Don't issue warning in ``crds sync`` for files with status "delivered" [#903]
 
 - Documentation minor updates: command_line_tools, programmatic_interface [#905]
+
 
 11.16.15 (2022-10-20)
 =====================
