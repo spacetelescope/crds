@@ -623,6 +623,13 @@ def locate_dir(instrument, mode=None):
         raise ValueError("Unhandled reference file location mode " + repr(mode))
     return rootdir
 
+
+def dnr_check(header):
+    if header["DETECTOR"] == "WFC" and float(header["CCDGAIN"]) in (0.5, 1.4):
+        return True
+    else:
+        return False
+
 # ============================================================================
 
 def fits_to_parkeys(header):
