@@ -330,6 +330,21 @@ def dt_bestrefs_compare_source_canary():
     """
 
 
+def dt_bestrefs_donotreprocess_datasets():
+    """
+    >>> old_state = test_config.setup()
+    >>> BestrefsScript("crds.bestrefs --old-context hst_0628.pmap --new-context hst_0633.pmap --datasets JA9553LVQ JBBGRCGFQ")() # doctest: +ELLIPSIS
+    CRDS - INFO -  Dumping dataset parameters from CRDS server at 'https://hst-crds-dev.stsci.edu' for ['JA9553LVQ', 'JBBGRCGFQ']
+    CRDS - INFO -  Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds-dev.stsci.edu'
+    CRDS - INFO -  Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  3 infos
+    0
+    >>> test_config.cleanup(old_state)
+    """
+
+
 def dt_bestrefs_donotreprocess_fix():
     """
     >>> old_state = test_config.setup()
