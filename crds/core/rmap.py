@@ -1232,6 +1232,12 @@ class ReferenceMapping(Mapping):
         try:
             bestref = self.selector.choose(header)
         except Exception as exc:
+            # Check conditions for Do Not Reprocess dataset parameters, set to NA if True
+            dnr = self.dnr_check(header)
+            if dnr is True:
+                log.verbose("DNR dataset identified - setting reference to NA", str(exc), verbosity=55)
+                raise crexc.IrrelevantReferenceTypeError("Reference type not required for DNR dataset.") from exc
+
             log.verbose("First selection failed:", str(exc), verbosity=55)
             header = self._fallback_header(self, header_in) # Execute type-specific plugin if applicable
             try:
@@ -1256,6 +1262,19 @@ class ReferenceMapping(Mapping):
         if MappingSelectionsDict.is_omit_value(bestref):
             raise crexc.OmitReferenceTypeError("Rules define this type to be Omitted for these observation parameters.")
         return bestref
+    
+    def dnr_check(self, header):
+        """Calls dnr_check function from an observatory locate.py module. 
+        Returns True if conditions are met for a Do Not Reprocess dataset,
+        which allows _get_best_ref to consider the reftype as irrelevant,
+        and effectively sets the best reference as "NOT FOUND N/A" instead 
+        of throwing an error. Returns False if the dnr_check function is 
+        missing from an observatory locate.py module.
+        """
+        try:
+            return self.locate.dnr_check(header)
+        except Exception:
+            return False
 
     def reference_names(self):
         """Return the list of reference file basenames associated with this
