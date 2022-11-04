@@ -25,7 +25,7 @@ def main():
     changelog_path = Path(__file__).absolute().parent.parent / "CHANGES.rst"
     content = changelog_path.read_text()
 
-    unreleased_version_re = re.compile(r"\A(?P<version>" + re.escape(args.version) + r") \(unreleased\)$", re.MULTILINE)
+    unreleased_version_re = re.compile(r"\A(?P<version>" + re.escape(args.version) + r") \([uU]nreleased\)$", re.MULTILINE)
 
     match = unreleased_version_re.match(content)
     if not match:
