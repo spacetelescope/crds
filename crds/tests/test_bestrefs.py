@@ -334,8 +334,8 @@ def dt_bestrefs_donotreprocess_datasets():
     """
     >>> old_state = test_config.setup()
     >>> BestrefsScript("crds.bestrefs --old-context hst_0628.pmap --new-context hst_0633.pmap --datasets JA9553LVQ JBBGRCGFQ")() # doctest: +ELLIPSIS
-    CRDS - INFO -  Dumping dataset parameters from CRDS server at 'https://hst-crds-dev.stsci.edu' for ['JA9553LVQ', 'JBBGRCGFQ']
-    CRDS - INFO -  Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds-dev.stsci.edu'
+    CRDS - INFO -  Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['JA9553LVQ', 'JBBGRCGFQ']
+    CRDS - INFO -  Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds.stsci.edu'
     CRDS - INFO -  Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
     CRDS - INFO -  0 errors
     CRDS - INFO -  0 warnings
@@ -349,11 +349,11 @@ def dt_bestrefs_donotreprocess_fix():
     """
     >>> old_state = test_config.setup()
     >>> BestrefsScript("crds.bestrefs --old-context hst_0628.pmap --new-context hst_0633.pmap --print-affected --load-pickle data/bestrefs_dnr_fix.json --verbosity=30")() # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Command: ['crds.bestrefs', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', 'data/bestrefs_new_error.json', '--verbosity=30']
+    CRDS - DEBUG -  Command: ['crds.bestrefs', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', 'data/bestrefs_dnr_fix.json', '--verbosity=30']
     CRDS - DEBUG -  Using explicit new context 'hst_0633.pmap' for computing updated best references.
     CRDS - DEBUG -  Using explicit old context 'hst_0628.pmap'
-    CRDS - INFO -  Loading file 'data/bestrefs_new_error.json'
-    CRDS - INFO -  Loaded 1 datasets from file 'data/bestrefs_new_error.json' completely replacing existing headers.
+    CRDS - INFO -  Loading file 'data/bestrefs_dnr_fix.json'
+    CRDS - INFO -  Loaded 1 datasets from file 'data/bestrefs_dnr_fix.json' completely replacing existing headers.
     CRDS - DEBUG -  ===> Processing JA9553M3Q:JA9553M3Q
     CRDS - DEBUG -  instrument='ACS' type='ATODTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='BIASFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
@@ -399,15 +399,16 @@ def dt_bestrefs_multiple_updates_with_error():
     CRDS - INFO -  Loaded 1 datasets from file 'data/bestrefs_new_error.json' completely replacing existing headers.
     CRDS - DEBUG -  ===> Processing JA9553M3Q:JA9553M3Q
     CRDS - DEBUG -  instrument='ACS' type='ATODTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-    CRDS - ERROR -  instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  New: Bestref FAILED:   parameter='CCDGAIN' value='1.4' is not in ['1.0', '2.0', '4.0', '8.0']
+    CRDS - ERROR -  instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  Old: Bestref FAILED:   parameter='CCDGAIN' value='2.4' is not in ['0.5', '1.0', '1.4', '2.0', '4.0', '8.0']
+    CRDS - ERROR -  instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  New: Bestref FAILED:   parameter='CCDGAIN' value='2.4' is not in ['1.0', '2.0', '4.0', '8.0']
     CRDS - DEBUG -  instrument='ACS' type='BPIXTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 't3n1116nj_bpx.fits' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='CCDTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'uc82140bj_ccd.fits' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='CFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='CRREJTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='D2IMFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-    CRDS - INFO -  instrument='ACS' type='DARKFILE' data='JA9553M3Q:JA9553M3Q' ::  New best reference: '1ag2019jj_drk.fits' --> '25815071j_drk.fits' :: Would update.
+    CRDS - DEBUG -  instrument='ACS' type='DARKFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='DGEOFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'qbu16423j_dxy.fits' :: No update.
-    CRDS - INFO -  instrument='ACS' type='DRKCFILE' data='JA9553M3Q:JA9553M3Q' ::  New best reference: '1ag20119j_dkc.fits' --> '2581508ij_dkc.fits' :: Would update.
+    CRDS - DEBUG -  instrument='ACS' type='DRKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='FLSHFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='IDCTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '0461802dj_idc.fits' :: No update.
     CRDS - DEBUG -  instrument='ACS' type='IMPHTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
@@ -423,10 +424,10 @@ def dt_bestrefs_multiple_updates_with_error():
     CRDS - INFO -  Affected products = 0
     CRDS - DEBUG -  1 sources processed
     CRDS - DEBUG -  0 source updates
-    CRDS - INFO -  1 errors
+    CRDS - INFO -  2 errors
     CRDS - INFO -  0 warnings
-    CRDS - INFO -  5 infos
-    1
+    CRDS - INFO -  3 infos
+    2
     >>> test_config.cleanup(old_state)
     """
 
