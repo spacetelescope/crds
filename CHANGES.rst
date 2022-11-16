@@ -1,3 +1,11 @@
+11.16.17 (unreleased)
+=====================
+
+General
+-------
+- exclude build/ and install.log from source control [#907]
+
+
 11.16.16 (2022-11-04)
 =====================
 
