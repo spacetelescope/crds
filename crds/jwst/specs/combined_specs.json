@@ -1101,14 +1101,20 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.EXP_TYPE"
+                    "META.INSTRUMENT.EXP_TYPE",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
             "reference_to_dataset":{
                 "DETECTOR":"META.INSTRUMENT.DETECTOR",
-                "EXP_TYPE":"META.INSTRUMENT.EXP_TYPE"
+                "EXP_TYPE":"META.INSTRUMENT.EXP_TYPE",
+                "SUBARRAY":"META.SUBARRAY.NAME"
             },
-            "sha1sum":"5c41a10fc0373a18e2511d1bc110793fe38ac0f5",
+            "sha1sum":"784542e5f025ea0053c2927322e23969e5ef46a6",
             "suffix":"filteroffset",
             "text_descr":"Imager Filter Offset",
             "tpn":"miri_filteroffset.tpn",
