@@ -5,6 +5,11 @@ General
 -------
 - exclude build/ and install.log from source control [#907]
 
+JWST
+----
+
+- Add subarray to the miri filteroffset spec [#908]
+
 
 11.16.16 (2022-11-04)
 =====================
