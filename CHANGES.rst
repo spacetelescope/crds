@@ -10,6 +10,8 @@ JWST
 
 - Add subarray to the miri filteroffset spec [#908]
 
+- Initial spec implementations for pars-jumpstep for miri, nircam, and nirspec [#909]
+
 
 11.16.16 (2022-11-04)
 =====================

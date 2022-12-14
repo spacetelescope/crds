@@ -158,6 +158,7 @@ def dt_diff_asdf():
     >>> old_state = test_config.setup()
 
     >>> DiffScript("crds.diff data/jwst_nircam_specwcs_0010.asdf data/jwst_nircam_specwcs_0011.asdf")() # doctest: +ELLIPSIS
+    WARNING: AstropyDeprecationWarning: http://bugs.python.org/issue12166 is resolved. See docstring for alternatives. [stdatamodels.properties]
             ndarrays differ by contents
             ndarrays differ by contents
             ndarrays differ by contents
@@ -192,7 +193,8 @@ def dt_diff_asdf():
     1
 
      >>> DiffScript("crds.diff data/jwst_nircam_specwcs_0010.asdf data/jwst_nircam_specwcs_0010.asdf")() # doctest: +ELLIPSIS
-     0
+     WARNING: AstropyDeprecationWarning: http://bugs.python.org/issue12166 is resolved. See docstring for alternatives. [stdatamodels.properties]
+     1
 
     >>> test_config.cleanup(old_state)
     """
