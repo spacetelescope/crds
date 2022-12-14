@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'placeholder 2022-12',
+    'derived_from' : 'Placeholder 2022-12',
     'file_ext' : '.asdf',
     'filekind' : 'pars-jumpstep',
     'filetype' : 'pars-jumpstep',
-    'instrument' : 'MIRI',
+    'instrument' : 'NIRCAM',
     'mapping' : 'REFERENCE',
-    'name' : 'jwst_miri_pars-jumpstep.rmap',
+    'name' : 'jwst_nircam_pars-jumpstep.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'c40e013e5b045a6853a110522364ba4fee267908',
+    'sha1sum' : 'a52938e7a1e71d9386265c14d6cfd1313eed2be2',
     'suffix' : 'pars-jumpstep',
     'text_descr' : 'JumpStep runtime parameters',
 }
