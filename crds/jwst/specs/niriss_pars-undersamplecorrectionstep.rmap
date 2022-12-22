@@ -1,0 +1,24 @@
+header = {
+    'derived_from' : 'Manually created by J.Eisenhamer 2022-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-undersamplecorrectionstep',
+    'filetype' : 'pars-undersamplecorrectionstep',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pars-undersamplecorrectionstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'a37b525033e0ba08e4a6c8ce097495ef24ba1abd',
+    'suffix' : 'pars-undersamplecorrectionstep',
+    'text_descr' : 'UndersampleCorrectionStep runtime parameters',
+}
+
+comment = """
+Parameters for correcting the interaction between charge migration and the jump detection step for undersampled imaging observations.
+
+History:
+- CCD-1233: Initial creation.
+"""
+
+selector = Match({
+})

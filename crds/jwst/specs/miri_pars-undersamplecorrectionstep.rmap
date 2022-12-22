@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Manually created by J.Eisenhamer 2022-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-undersamplecorrectionstep',
+    'filetype' : 'pars-undersamplecorrectionstep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-undersamplecorrectionstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '003235e8a514e770ea0c377616ccf4399f51ef80',
+    'suffix' : 'pars-undersamplecorrectionstep',
+    'text_descr' : 'UndersampleCorrectionStep runtime parameters',
+}
+
+selector = Match({
+})
