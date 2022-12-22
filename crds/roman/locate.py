@@ -684,6 +684,19 @@ def get_cross_strapped_pairs(header):
     """
     return []
 
+
+def dataset_to_ref_header(parameters):
+    """Temporary workaround (hopefully) for prepending archive dataset header keys that start with 'META' to start with 'ROMAN.META' instead."""
+    ref_headers = dict()
+    for key, val in parameters.items():
+        parts = key.split('.')
+        if parts[0].upper() == 'META':
+            param = "ROMAN." + '.'.join(parts[:])
+        else:
+            param = key
+        ref_headers[param] = val
+    return ref_headers
+
 # ============================================================================
 
 def test():
