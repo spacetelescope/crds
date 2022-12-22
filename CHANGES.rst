@@ -12,6 +12,8 @@ JWST
 
 - Initial spec implementations for pars-jumpstep for miri, nircam, and nirspec [#909]
 
+- Add new reftypes pars-residualfringestep and pars-undersamplecorrectionstep [#911]
+
 
 11.16.16 (2022-11-04)
 =====================
