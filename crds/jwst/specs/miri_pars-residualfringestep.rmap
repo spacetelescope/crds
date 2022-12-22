@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Manually created by J.Eisenhamer 2022-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-residualfringestep',
+    'filetype' : 'pars-residualfringestep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-residualfringestep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '363582cfd749a3eaa50274e0658790e105c0c3ec',
+    'suffix' : 'pars-residualfringestep',
+    'text_descr' : 'ResidualFringeStep runtime parameters',
+}
+
+selector = Match({
+})
