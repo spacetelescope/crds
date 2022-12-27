@@ -19,6 +19,8 @@ JWST
 
 - Add new reftypes pars-residualfringestep and pars-undersamplecorrectionstep [#911]
 
+- Add (260, 2048) as a valid size for nirspec saturation [#912]
+
 
 11.16.16 (2022-11-04)
 =====================
