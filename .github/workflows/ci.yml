@@ -9,7 +9,6 @@ on:
   pull_request:
 
 env:
-  CRDS_SERVER_URL: https://hst-crds.stsci.edu
   CRDS_TEST_ROOT: /tmp
   CRDS_PATH: /tmp/crds-cache-default-test
   LD_LIBRARY_PATH: /usr/local/lib
@@ -96,20 +95,28 @@ jobs:
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-hst-context
+        env:
+          CRDS_SERVER_URL: https://hst-crds.stsci.edu
       - uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/hst
           key: crds-${{ steps.crds-hst-context.outputs.pmap }}
+        env:
+          CRDS_SERVER_URL: https://hst-crds.stsci.edu
       - run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-jwst-context
+        env:
+          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
       - uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/jwst
           key: crds-${{ steps.crds-jwst-context.outputs.pmap }}
+        env:
+          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
       - run: tox -e ${{ matrix.toxenv }}
       - if: ${{ contains(matrix.toxenv,'-cov') }}
         uses: codecov/codecov-action@v3
