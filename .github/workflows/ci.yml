@@ -10,7 +10,6 @@ on:
 
 env:
   CRDS_TEST_ROOT: /tmp
-  CRDS_PATH: /tmp/crds-cache-default-test
   LD_LIBRARY_PATH: /usr/local/lib
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
@@ -67,7 +66,7 @@ jobs:
         id: crds-context
       - uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}/mappings/${{ matrix.observatory }}
+          path: ${{ env.CRDS_TEST_ROOT }}/crds-cache-default-test/mappings/${{ matrix.observatory }}
           key: crds-${{ steps.crds-context.outputs.pmap }}
       - run: crds sync --contexts ${{ steps.crds-context.outputs.pmap }} --stats --log-time --check-sha1sum --repair-files --organize=flat
   test:
@@ -104,7 +103,7 @@ jobs:
           CRDS_SERVER_URL: https://hst-crds.stsci.edu
       - uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}/mappings/hst
+          path: ${{ env.CRDS_TEST_ROOT }}/crds-cache-default-test/mappings/hst
           key: crds-${{ steps.crds-hst-context.outputs.pmap }}
         env:
           CRDS_SERVER_URL: https://hst-crds.stsci.edu
@@ -118,7 +117,7 @@ jobs:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
       - uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}/mappings/jwst
+          path: ${{ env.CRDS_TEST_ROOT }}/crds-cache-default-test/mappings/jwst
           key: crds-${{ steps.crds-jwst-context.outputs.pmap }}
         env:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
