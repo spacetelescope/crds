@@ -40,7 +40,7 @@ jobs:
       - run: pip install "tox>=4.0"
       - run: tox -e ${{ matrix.toxenv }}
   crds:
-    name: sync CRDS files
+    name: sync CRDS files for ${{ matrix.observatory }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
