@@ -49,6 +49,8 @@ jobs:
             dependencies: [ ]
           - observatory: jwst
             dependencies: [ jwst ]
+    #      - observatory: roman
+    #        dependencies: [ romancal ]
     env:
       CRDS_SERVER_URL: https://${{ matrix.observatory }}-crds.stsci.edu
     steps:
