@@ -12,20 +12,45 @@ env:
   CRDS_SERVER_URL: https://hst-crds.stsci.edu
   CRDS_TEST_ROOT: /tmp
   LD_LIBRARY_PATH: /usr/local/lib
+  CRDS_CLIENT_RETRY_COUNT: 3
+  CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
 
 defaults:
   run:
     shell: bash -l {0}
 
 jobs:
-  test:
-    name: run tests (Python ${{ matrix.python }}, ${{ matrix.os }})
+  check:
+    name: ${{ matrix.toxenv }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        toxenv: [ check-style, check-build ]
+        python: [ '3.11' ]
+        os: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+          cache-dependency-path: setup.py
+      - run: pip install "tox>=4.0"
+      - run: tox -e ${{ matrix.toxenv }}
+  test:
+    name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        toxenv: [ test-xdist ]
         python: [ '3.8', '3.9', '3.10', '3.11' ]
+        os: [ ubuntu-latest, macos-latest ]
+        include:
+          - toxenv: test-cov-xdist
+            os: ubuntu-latest
+            python: '3.11'
     steps:
       - uses: actions/checkout@v3
       - uses: mamba-org/provision-with-micromamba@v14
@@ -35,7 +60,7 @@ jobs:
             python=${{ matrix.python }}
           cache-env: true
           cache-downloads: true
-      - run: pip install tox
+      - run: pip install "tox>=4.0"
       - run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
@@ -48,4 +73,11 @@ jobs:
         with:
           path: ${{ env.CRDS_TEST_ROOT }}
           key: crds-${{ steps.crds-context.outputs.pmap }}
-      - run: tox -e test-xdist
+      - run: tox -e ${{ matrix.toxenv }}
+      - if: ${{ contains(matrix.toxenv,'-cov') }}
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unit
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
