@@ -44,11 +44,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        observatory: [ hst, jwst, roman ]
+        include:
+          - observatory: hst
+            dependencies: [ ]
+          - observatory: jwst
+            dependencies: [ jwst ]
+          - observatory: roman
+            dependencies: [ romancal ]
     env:
       CRDS_SERVER_URL: https://${{ matrix.observatory }}-crds.stsci.edu
     steps:
-      - run: pip install crds
+      - run: pip install crds ${{ join(matrix.dependencies, ' ') }}
       - run: pip freeze
       - run: >
           echo "pmap=$(
