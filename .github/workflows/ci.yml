@@ -45,7 +45,6 @@ jobs:
     steps:
       - run: pip install crds
       - run: pip freeze
-      - run: python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
       - run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
@@ -54,22 +53,31 @@ jobs:
         # Get default CRDS_CONTEXT without installing crds client
         # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
         id: crds-hst-context
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/hst
+          key: crds-${{ steps.crds-hst-context.outputs.pmap }}
       - run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-jwst-context
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/jwst
+          key: crds-${{ steps.crds-jwst-context.outputs.pmap }}
       - run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["roman"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-roman-context
+      - run: python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
       - uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}
-          key: crds-${{ steps.crds-hst-context.outputs.pmap }}-${{ steps.crds-jwst-context.outputs.pmap }}-${{ steps.crds-roman-context.outputs.pmap }}
+          path: ${{ env.CRDS_PATH }}/mappings/roman
+          key: crds-${{ steps.crds-roman-context.outputs.pmap }}
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
     needs: [ crds ]
@@ -102,12 +110,20 @@ jobs:
         # Get default CRDS_CONTEXT without installing crds client
         # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
         id: crds-hst-context
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/hst
+          key: crds-${{ steps.crds-hst-context.outputs.pmap }}
       - run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-jwst-context
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/jwst
+          key: crds-${{ steps.crds-jwst-context.outputs.pmap }}
       - run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["roman"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
@@ -116,8 +132,8 @@ jobs:
         id: crds-roman-context
       - uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}
-          key: crds-${{ steps.crds-hst-context.outputs.pmap }}-${{ steps.crds-jwst-context.outputs.pmap }}-${{ steps.crds-roman-context.outputs.pmap }}
+          path: ${{ env.CRDS_PATH }}/mappings/roman
+          key: crds-${{ steps.crds-roman-context.outputs.pmap }}
       - run: tox -e ${{ matrix.toxenv }}
       - if: ${{ contains(matrix.toxenv,'-cov') }}
         uses: codecov/codecov-action@v3
