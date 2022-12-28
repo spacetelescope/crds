@@ -50,8 +50,6 @@ jobs:
             dependencies: [ ]
           - observatory: jwst
             dependencies: [ jwst ]
-          - observatory: roman
-            dependencies: [ romancal ]
     env:
       CRDS_SERVER_URL: https://${{ matrix.observatory }}-crds.stsci.edu
     steps:
@@ -113,16 +111,6 @@ jobs:
         with:
           path: ${{ env.CRDS_PATH }}/mappings/jwst
           key: crds-${{ steps.crds-jwst-context.outputs.pmap }}
-      - run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["roman"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-        id: crds-roman-context
-      - uses: actions/cache@v3
-        with:
-          path: ${{ env.CRDS_PATH }}/mappings/roman
-          key: crds-${{ steps.crds-roman-context.outputs.pmap }}
       - run: tox -e ${{ matrix.toxenv }}
       - if: ${{ contains(matrix.toxenv,'-cov') }}
         uses: codecov/codecov-action@v3
