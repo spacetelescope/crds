@@ -8,14 +8,15 @@ on:
       - '*'
   pull_request:
 
+env:
+  CRDS_SERVER_URL: https://hst-crds.stsci.edu
+  CRDS_TEST_ROOT: /tmp
+  LD_LIBRARY_PATH: /usr/local/lib
+
 jobs:
-  pytest:
+  test:
     name: ${{ matrix.runs-on }} Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.runs-on }}
-    env:
-      CRDS_SERVER_URL: https://hst-crds.stsci.edu
-      CRDS_TEST_ROOT: /tmp
-      LD_LIBRARY_PATH: /usr/local/lib
     strategy:
       fail-fast: false
       matrix:
@@ -29,28 +30,18 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - uses: mamba-org/provision-with-micromamba@v14
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install fitsverify
-        run: |
-          wget --quiet --output-document - http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz | tar -xz -C $HOME
-          cd $HOME/cfitsio-3.49
-          ./configure --prefix=/usr/local --enable-reentrant --disable-curl
-          make shared
-          sudo make install
-          wget --quiet --output-document - https://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.20.tar.gz | tar -xz -C $HOME
-          cd $HOME/fitsverify-4.20
-          gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -lcfitsio
-          sudo cp fitsverify /usr/local/bin
-      - name: Install Python dependencies
-        run: |
+          channels: conda-forge
+          extra-specs: |
+            python=${{ matrix.python-version }}
+            fitsverify
+            pytest-cov
+      - run: |
           pip install roman-datamodels
           pip install git+https://github.com/spacetelescope/jwst
           pip uninstall --yes crds
           ./install
-          pip install .[submission,test,docs,synphot]
+          pip install ".[submission,test,docs,synphot]"
           ./setup_test_cache $CRDS_TEST_ROOT
-      - name: Run tests
-        run: ./runtests --cover
+      - run: pytest --cov=crds
