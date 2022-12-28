@@ -43,6 +43,7 @@ Roman
 General
 -------
 - exclude build/ and install.log from source control [#907]
+- refactor CI to use mamba [#913]
 
 - update versions in github actions workflows [#914]
 
