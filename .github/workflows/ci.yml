@@ -35,9 +35,11 @@ jobs:
             python=${{ matrix.python }}
           cache-env: true
           cache-downloads: true
+      - run: pip install pytest-cov
       - run: |
           pip install roman-datamodels git+https://github.com/spacetelescope/jwst
           pip uninstall --yes crds
+      - run: |
           ./install
           pip install ".[submission,test,docs,synphot]"
           ./setup_test_cache $CRDS_TEST_ROOT

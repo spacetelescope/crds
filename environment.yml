@@ -6,7 +6,6 @@ channels:
 dependencies:
   - fitsverify
   - pip
-  - pytest-cov
   - python
   - pip:
       - jwst
