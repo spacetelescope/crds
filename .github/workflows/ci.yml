@@ -40,7 +40,7 @@ jobs:
       - run: pip install "tox>=4.0"
       - run: tox -e ${{ matrix.toxenv }}
   crds:
-    name: sync CRDS files for ${{ matrix.observatory }}
+    name: sync ${{ matrix.observatory }} CRDS
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -63,6 +63,7 @@ jobs:
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-context
+      - run: echo ${{ steps.crds-context.outputs.pmap }}
       - uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/${{ matrix.observatory }}
@@ -97,8 +98,6 @@ jobs:
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
-        # Get default CRDS_CONTEXT without installing crds client
-        # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
         id: crds-hst-context
       - uses: actions/cache@v3
         with:
