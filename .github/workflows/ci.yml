@@ -61,12 +61,11 @@ jobs:
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-context
-      - run: echo ${{ steps.crds-context.outputs.pmap }}
       - uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/${{ matrix.observatory }}
           key: crds-${{ steps.crds-context.outputs.pmap }}
-      - run: crds sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
+      - run: crds sync --contexts ${{ steps.crds-context.outputs.pmap }} --stats --log-time --check-sha1sum --repair-files --organize=flat
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
     needs: [ crds ]
