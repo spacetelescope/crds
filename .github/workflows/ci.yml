@@ -13,6 +13,10 @@ env:
   CRDS_TEST_ROOT: /tmp
   LD_LIBRARY_PATH: /usr/local/lib
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   test:
     name: ${{ matrix.os }} Python ${{ matrix.python-version }}
