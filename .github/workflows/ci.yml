@@ -37,6 +37,8 @@ jobs:
             python=${{ matrix.python-version }}
             fitsverify
             pytest-cov
+          cache-env: true
+          cache-downloads: true
       - run: |
           pip install roman-datamodels
           pip install git+https://github.com/spacetelescope/jwst
