@@ -80,7 +80,7 @@ jobs:
         include:
           - toxenv: test-cov-xdist
             os: ubuntu-latest
-            python: '3.11'
+            python: '3.9'
     steps:
       - uses: actions/checkout@v3
       - uses: mamba-org/provision-with-micromamba@v14
