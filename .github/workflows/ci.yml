@@ -50,9 +50,9 @@ jobs:
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
-        # Get default CRDS_CONTEXT without installing crds client
-        # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
         id: crds-hst-context
+        env:
+          CRDS_SERVER_URL: https://hst-crds.stsci.edu
       - uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/hst
@@ -63,6 +63,8 @@ jobs:
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-jwst-context
+        env:
+          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
       - uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/jwst
@@ -73,6 +75,8 @@ jobs:
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
         id: crds-roman-context
+        env:
+          CRDS_SERVER_URL: https://roman-crds.stsci.edu
       - run: python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
       - uses: actions/cache@v3
         with:
