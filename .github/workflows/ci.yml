@@ -39,8 +39,28 @@ jobs:
           cache-dependency-path: setup.py
       - run: pip install "tox>=4.0"
       - run: tox -e ${{ matrix.toxenv }}
+  crds:
+    name: sync CRDS files
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip install crds
+      - run: pip freeze
+      - run: python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
+      - run: >
+          echo "pmap=$(
+          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
+          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
+          )" >> $GITHUB_OUTPUT
+        # Get default CRDS_CONTEXT without installing crds client
+        # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
+        id: crds-context
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}
+          key: crds-${{ steps.crds-context.outputs.pmap }}
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
+    needs: [ crds ]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -72,7 +92,7 @@ jobs:
         id: crds-context
       - uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_TEST_ROOT }}
+          path: ${{ env.CRDS_PATH }}
           key: crds-${{ steps.crds-context.outputs.pmap }}
       - run: tox -e ${{ matrix.toxenv }}
       - if: ${{ contains(matrix.toxenv,'-cov') }}
