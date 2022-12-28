@@ -33,11 +33,10 @@ jobs:
           environment-file: environment.yml
           extra-specs: |
             python=${{ matrix.python-version }}
-            roman-datamodels
-            git+https://github.com/spacetelescope/jwst
           cache-env: true
           cache-downloads: true
       - run: |
+          pip install roman-datamodels git+https://github.com/spacetelescope/jwst
           pip uninstall --yes crds
           ./install
           pip install ".[submission,test,docs,synphot]"
