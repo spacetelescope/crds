@@ -1,10 +1,11 @@
-name: crds
+name: crds-env
 
 channels:
   - conda-forge
 
 dependencies:
   - fitsverify
+  - numpy
   - pip
   - python
   - pip:

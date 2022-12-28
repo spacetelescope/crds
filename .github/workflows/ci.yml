@@ -43,4 +43,17 @@ jobs:
           pip install ".[submission,test,docs,synphot]"
           ./setup_test_cache $CRDS_TEST_ROOT
       - run: pip install pytest-cov
+      - run: pip freeze
+      - run: >
+          echo "pmap=$(
+          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
+          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
+          )" >> $GITHUB_OUTPUT
+        # Get default CRDS_CONTEXT without installing crds client
+        # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
+        id: crds-context
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_TEST_ROOT }}
+          key: crds-${{ steps.crds-context.outputs.pmap }}
       - run: pytest --cov=crds
