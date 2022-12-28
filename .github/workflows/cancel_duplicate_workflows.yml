@@ -2,7 +2,7 @@ name: Cancel duplicate workflows
 
 on:
   workflow_run:
-    workflows: ['CI']
+    workflows: [ "CI" ]
     types:
       - requested
 
@@ -13,6 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.event == 'pull_request' }}
     steps:
-      - uses: styfle/cancel-workflow-action@0.10.0
+      - uses: styfle/cancel-workflow-action@0.11.0
         with:
           workflow_id: ${{ github.event.workflow.id }}
