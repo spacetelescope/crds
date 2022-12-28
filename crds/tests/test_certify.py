@@ -981,7 +981,7 @@ def load_nirspec_staturation_tpn_lines():
     SUBARRAY_INBOUNDS_X         X   X   ((True))                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
     SUBARRAY_INBOUNDS_Y         X   X   ((True))                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
     SCI       A           X             ((True))                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
-    SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)]))
+    SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048),(260,2048)]))
     SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (warn_only(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)]))
     SCI       A           X         (is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
     SCI       A           X         (is_subarray(SUBARRAY)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)
@@ -1001,7 +1001,7 @@ def load_nirspec_staturation_tpn_lines():
     >>> test_config.cleanup(old_state)
     """
 
-def load_nirspec_staturation_tpn():
+def load_nirspec_saturation_tpn():
     """Print out the outcome of various .tpn directives like "replace" and
     "include" and reuse of generic files as actual .tpn objects.
 
@@ -1043,7 +1043,7 @@ def load_nirspec_staturation_tpn():
      ('SUBARRAY_INBOUNDS_X', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)'),
      ('SUBARRAY_INBOUNDS_Y', 'EXPRESSION', 'EXPRESSION', condition='((True))', expression='(1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='((True))', expression='(SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))'),
-     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048)]))'),
+     ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048),(260,2048)]))'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_full_frame(SUBARRAY)and(is_irs2(READPATT)))', expression='(warn_only(SCI_ARRAY.SHAPE[-2:]in[(3200,2048),(32,2048),(64,2048),(256,2048)]))'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)'),
      ('SCI', 'ARRAY_FORMAT', 'EXPRESSION', condition='(is_subarray(SUBARRAY)and(is_irs2(READPATT)))', expression='(1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=3200)'),
