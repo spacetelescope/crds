@@ -1,0 +1,10 @@
+channels:
+  - conda-forge
+
+dependencies:
+  - fitsverify
+  - pip
+  - pytest-cov
+  - python
+  - pip:
+      - jwst
