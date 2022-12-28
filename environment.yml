@@ -1,3 +1,5 @@
+name: crds
+
 channels:
   - conda-forge
 
