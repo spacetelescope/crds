@@ -1,18 +1,16 @@
-name: Changelog
+name: Ensure changelog
 
 on:
   pull_request:
-    types: [labeled, unlabeled, opened, synchronize, reopened]
+    types: [ labeled, unlabeled, opened, synchronize, reopened ]
 
 jobs:
-  changelog:
-    name: Confirm changelog entry
+  ensure_changelog:
+    name: Verify that a changelog entry exists for this pull request
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           submodules: true
       - name: Grep for PR number in CHANGES.rst
         run: grep -P '\[[^\]]*#${{github.event.number}}[,\]]' CHANGES.rst
