@@ -12,7 +12,7 @@ documentation/crds_users_guide/*.tar.gz
 
 # Development
 *.code-workspace
-
+.pytest_cache
+__pycache__/
 crds/_version.py
-.vscode/settings.json
-tabs.rst
+.vscode/
