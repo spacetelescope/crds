@@ -10,6 +10,8 @@ General
 -------
 - exclude build/ and install.log from source control [#907]
 
+- update versions in github actions workflows [#914]
+
 JWST
 ----
 
