@@ -2,6 +2,10 @@ import os.path
 
 from crds.core import reftypes
 
+__all__ = [
+    "locate",
+]
+
 HERE  = os.path.abspath(os.path.dirname(__file__) or ".")
 
 TYPES = reftypes.from_package_file("roman", __file__)
