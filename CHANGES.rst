@@ -6,6 +6,12 @@ JWST
 
 - add SUB400X256ALWB to the NIRCam subarray list [#915]
 
+Roman
+-----
+
+- bugfix: getreferences uses get_locator_module to call dataset_to_ref_header [#916]
+
+
 11.16.17 (2022-12-30)
 =====================
 
