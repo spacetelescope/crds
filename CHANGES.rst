@@ -1,3 +1,11 @@
+11.16.18 (unreleased)
+=====================
+
+JWST
+----
+
+- add SUB400X256ALWB to the NIRCam subarray list [#915]
+
 11.16.17 (2022-12-30)
 =====================
 
