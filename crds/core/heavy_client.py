@@ -197,14 +197,14 @@ def _initial_recommendations(
 
         check_observatory(observatory)
         parameters = check_parameters(parameters)
-        # temp workaround for roman archive db header format
-        if observatory == "roman":
-            obs_pkg = utils.get_locator_module(observatory)
-            parameters = obs_pkg.dataset_to_ref_header(parameters)
-            log.verbose(name + "() revised parameters:\n", log.PP(parameters), verbosity=65)
-
         check_reftypes(reftypes)
         check_context(context)
+    
+    # fix for roman archive db header format
+    if observatory == "roman":
+        obs_pkg = utils.get_locator_module(observatory)
+        parameters = obs_pkg.dataset_to_ref_header(parameters)
+        log.verbose(name + "() revised parameters:\n", log.PP(parameters), verbosity=65)
 
     mode, final_context = get_processing_mode(observatory, context)
 
