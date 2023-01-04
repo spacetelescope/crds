@@ -11,7 +11,7 @@ Roman
 
 - bugfix: getreferences uses get_locator_module to call dataset_to_ref_header [#916]
 
-- bestrefs calls `dataset_to_ref_header`` outside of the "fast" condition. Header translation for Roman will occur regardless of the "fast" arg (which can sometimes be determined by the logging verbosity level).
+- bestrefs calls `dataset_to_ref_header`` outside of the "fast" condition. Header translation for Roman will occur regardless of the "fast" arg (which can sometimes be determined by the logging verbosity level). [#917]
 
 
 11.16.17 (2022-12-30)
