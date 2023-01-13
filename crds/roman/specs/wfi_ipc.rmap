@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2023-01-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'ipc',
+    'filetype' : 'ipc',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_ipc_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_ipc.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '063b599e0417132dea53a554420c8d8b5d4771d2',
+    'suffix' : 'ipc',
+    'text_descr' : 'IPC',
+    'tpn' : 'wfi_ipc.tpn',
+}
+
+selector = Match({
+})
