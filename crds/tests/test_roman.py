@@ -191,32 +191,17 @@ class TestRoman(unittest.TestCase):
             assert h["productLevel"] == "2"
         # get bestrefs for datasets
         refs = api.get_aui_best_references(context, dataset_ids)
-        expected_result = {
-            'R0000201001001001002_01101_0001.WFI01:R0000201001001001002_01101_0001.WFI01': [
-                True,
-                [
-                    'roman_wfi_dark_0218.asdf',
-                    'roman_wfi_distortion_0008.asdf',
-                    'roman_wfi_gain_0086.asdf',
-                    'roman_wfi_linearity_0078.asdf',
-                    'roman_wfi_mask_0078.asdf',
-                    'roman_wfi_photom_0056.asdf',
-                    'roman_wfi_readnoise_0174.asdf',
-                    'roman_wfi_saturation_0106.asdf'
-                    ]
-            ],
-            'R0000201001001001003_01101_0001.WFI01:R0000201001001001003_01101_0001.WFI01': [
-                True,
-                [
-                    'roman_wfi_dark_0218.asdf',
-                    'roman_wfi_distortion_0008.asdf',
-                    'roman_wfi_gain_0086.asdf',
-                    'roman_wfi_linearity_0078.asdf',
-                    'roman_wfi_mask_0078.asdf',
-                    'roman_wfi_photom_0056.asdf',
-                    'roman_wfi_readnoise_0174.asdf',
-                    'roman_wfi_saturation_0106.asdf'
-                ]
+        expected_result = [
+            True, [
+            'roman_wfi_dark_0218.asdf',
+            'roman_wfi_distortion_0008.asdf',
+            'roman_wfi_gain_0086.asdf',
+            'roman_wfi_linearity_0078.asdf',
+            'roman_wfi_mask_0078.asdf',
+            'roman_wfi_photom_0056.asdf',
+            'roman_wfi_readnoise_0174.asdf',
+            'roman_wfi_saturation_0106.asdf'
             ]
-        }
-        assert refs == expected_result
+        ]
+        for d in dataset_ids:
+            assert refs[d] == expected_result
