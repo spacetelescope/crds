@@ -138,7 +138,7 @@ class TestRoman(unittest.TestCase):
         """ test_get_aui_bestrefs_wfi_imaging_level2: test satisfies Roman SOC 670
 
         The test retrieves headers from the archive for datasets with criteria matching 
-        exposure_type=WFI_IMAGE and productLevel=2, then calls crds.bestrefs to produce 
+        exposure_type=WFI_IMAGE and productLevel=2, then calls the archive API to produce 
         a list of best references for regenerating the dataset(s).
         """
         context = "roman_0039.pmap"
@@ -175,7 +175,7 @@ class TestRoman(unittest.TestCase):
         """test_get_aui_bestrefs_wfi_spectroscopy_level2: test satisfies Roman SOC 673
 
         The test retrieves headers from the archive for datasets with criteria matching 
-        exposure_type=WFI_PRISM or WFI_GRISM and productLevel=2, then calls crds.bestrefs 
+        exposure_type=WFI_PRISM or WFI_GRISM and productLevel=2, then calls the archive API 
         to produce a list of best references for regenerating the dataset(s).
         """
         context = "roman_0039.pmap"
