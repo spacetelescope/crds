@@ -1,3 +1,12 @@
+11.16.20 (unreleased)
+=====================
+
+Roman
+-----
+
+- Adds tests to Roman for regenerating WFI Level 2 science data products in Wide Field Imaging Mode and Wide Field Spectroscopy Mode from the archived data (SOC-670, SOC-673) [#919]
+
+
 11.16.19 (2023-01-17)
 =====================
 
