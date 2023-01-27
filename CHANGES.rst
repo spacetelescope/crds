@@ -1,3 +1,12 @@
+11.16.20 (unreleased)
+=====================
+
+Roman
+-----
+
+- Added new reference file type: Inverse Linearity [#920]
+
+
 11.16.19 (2023-01-17)
 =====================
 
