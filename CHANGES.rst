@@ -4,7 +4,7 @@
 Roman
 -----
 
-- Added new reference file type: Inverse Linearity [#920]
+- Added new rmap WFI Inverse Linearity [#920]
 
 
 11.16.19 (2023-01-17)
