@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2023-01-26',
+    'file_ext' : '.asdf',
+    'filekind' : 'inverselinearity',
+    'filetype' : 'inverselinearity',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_inverselinearity_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_inverselinearity.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '46e6facdadd102d09aa274d8a0ef77fe6b990982',
+    'suffix' : 'inverselinearity',
+    'text_descr' : 'Inverse Linearity',
+    'tpn' : 'wfi_inverselinearity.tpn',
+}
+
+selector = Match({
+})
