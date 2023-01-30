@@ -20,59 +20,8 @@ defaults:
     shell: bash -l {0}
 
 jobs:
-  check:
-    name: ${{ matrix.toxenv }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        toxenv: [ check-style, check-build ]
-        python: [ '3.11' ]
-        os: [ ubuntu-latest ]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python }}
-          cache: 'pip'
-          cache-dependency-path: 'tox.ini'
-      - run: pip install "tox>=4.0"
-      - run: tox -e ${{ matrix.toxenv }}
-  crds:
-    name: sync ${{ matrix.observatory }} CRDS
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - observatory: hst
-            dependencies: [ ]
-          - observatory: jwst
-            dependencies: [ jwst ]
-    #      - observatory: roman
-    #        dependencies: [ romancal ]
-    env:
-      CRDS_SERVER_URL: https://${{ matrix.observatory }}-crds.stsci.edu
-    steps:
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      - run: pip install crds ${{ join(matrix.dependencies, ' ') }}
-      - run: pip freeze
-      - run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ matrix.observatory }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-        id: crds-context
-      - uses: actions/cache@v3
-        with:
-          path: ${{ env.CRDS_PATH }}/mappings/${{ matrix.observatory }}
-          key: crds-${{ steps.crds-context.outputs.pmap }}
-      - run: crds sync --contexts ${{ steps.crds-context.outputs.pmap }} --stats --log-time --check-sha1sum --repair-files --organize=flat
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
-    needs: [ crds ]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -81,20 +30,33 @@ jobs:
         python: [ '3.8', '3.9', '3.10', '3.11' ]
         os: [ ubuntu-latest, macos-latest ]
         include:
+          - toxenv: check-style
+            os: ubuntu-latest
+            python: '3.x'
+          - toxenv: build-dist
+            os: ubuntu-latest
+            python: '3.x'
           - toxenv: test-cov-xdist
             os: ubuntu-latest
             python: '3.9'
     steps:
       - uses: actions/checkout@v3
-      - uses: mamba-org/provision-with-micromamba@v14
+      - if: ${{ !contains(matrix.toxenv, 'test') }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+          cache-dependency-path: 'tox.ini'
+      - if: ${{ contains(matrix.toxenv, 'test') }}
+        uses: mamba-org/provision-with-micromamba@v15
         with:
           environment-file: environment.yml
           extra-specs: |
             python=${{ matrix.python }}
           cache-env: true
           cache-downloads: true
-      - run: pip install "tox>=4.0"
-      - run: >
+      - if: ${{ contains(matrix.toxenv, 'test') }}
+        run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
@@ -102,13 +64,15 @@ jobs:
         id: crds-hst-context
         env:
           CRDS_SERVER_URL: https://hst-crds.stsci.edu
-      - uses: actions/cache@v3
+      - if: ${{ contains(matrix.toxenv, 'test') }}
+        uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/hst
           key: crds-${{ steps.crds-hst-context.outputs.pmap }}
         env:
           CRDS_SERVER_URL: https://hst-crds.stsci.edu
-      - run: >
+      - if: ${{ contains(matrix.toxenv, 'test') }}
+        run: >
           echo "pmap=$(
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
@@ -116,17 +80,19 @@ jobs:
         id: crds-jwst-context
         env:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
-      - uses: actions/cache@v3
+      - if: ${{ contains(matrix.toxenv, 'test') }}
+        uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/jwst
           key: crds-${{ steps.crds-jwst-context.outputs.pmap }}
         env:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
+      - run: pip install tox
       - run: tox -e ${{ matrix.toxenv }}
-      - if: ${{ contains(matrix.toxenv,'-cov') }}
+      - if: ${{ contains(matrix.toxenv, 'cov') }}
         uses: codecov/codecov-action@v3
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           flags: unit
           fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
