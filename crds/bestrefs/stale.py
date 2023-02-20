@@ -11,14 +11,17 @@ from numpy.ma.core import MaskedConstant
 from astropy.table import vstack
 from astropy.time import Time, TimeDelta
 from astroquery.mast import Mast
+import crds.client.api as crds_api
+from crds.core.exceptions import ServiceError
 from crds.list import ListScript
 from jwst.lib.file_utils import pushdir
 from jwst.lib.suffix import remove_suffix
 
 # Configure logging
 logger = logging.getLogger(__name__)
-# logging.basicConfig(level=logging.DEBUG)
-logger.addHandler(logging.NullHandler())
+# logger.addHandler(logging.NullHandler())
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
 
 # Default start search time is essentially start-of-mission
 DEFAULT_START_TIME = '2022-01-01'
@@ -31,21 +34,9 @@ class AffectedDatasets(dict):
     "from" context and the value is a set of all the affected datasets
     when starting from the `key` context.
 
-    The reprocessing folder has the following structure. It contains folders with
-    the naming convention
-
-    yyyy-mm-dd:hh:mm:ss_fromctx_toctx
-
-    where `fromctx` and `toctx` are the from and to contexts used to created the
-    affected dataset list. Within each folder are four files
-
-    - affected_ids.txt.gz
-    - bestrefs.status
-    - bestrefs_err.txt.gz
-    - bestrefs_err_truncated.txt.gz
-
-    The 'bestrefs*' files contain the status and logs of the `crds bestrefs` execution.
-    The 'afffected_ids.txt.gz' contains the list of affected dataset ids.
+    The affected datasets are retrieved from the CRDS server using
+    `crds.client.api.get_affected_datasets`. The data is then simply
+    re-arranged to make the dataset search easier.
 
     Attributes
     ----------
@@ -58,7 +49,12 @@ class AffectedDatasets(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.contexts = None
+    @property
+    def contexts(self):
+        """Retrieve the ordered set of context that have been ingested"""
+        contexts = list(self.keys())
+        contexts.sort()
+        return contexts
 
     def is_affected(self, datasets, start_context, end_context):
         """Determine if any datasets are in an affected dataset list starting from context
@@ -96,41 +92,40 @@ class AffectedDatasets(dict):
 
         return affected
 
-    def read(self, reprocessing_path=None):
-        """Read in all the affected dataset info from a CRDS reprocessing folder
+    def retrieve(self, from_context, end_context):
+        """Read in all the affected dataset info from the CRDS service.
 
-        Parameters
-        ----------
-        reprocessing_path : str, pathlib.Path, None
-            The path to the folder where the affected datasets reprocessing reports
-            are located. If None, the environment variable CRDS_REPROCESSING
-            is used.
+        start_context : str or None
+            CRDS context to start with of the form "jwst_XXXX.pmap".
+            If None, the last context before the current operation context is used.
+
+        end_context : str or None
+            CRDS final context of the form "jwst_XXXX.pmap".
+            If None, the CRDS operational context is used.
+
+        Examples
+        --------
+        >>> ad = AffectedDatasets()
+        >>> ad.retrieve('jwst_1039.pmap', 'jwst_1041.pmap')
+        >>> ad.contexts
+        ['jwst_1039.pmap', 'jwst_1040.pmap']
+        >>> len(ad['jwst_1039.pmap'])
+        41456
+        >>> len(ad['jwst_1040.pmap'])
+        1735
         """
-        reprocessing_path = env_override('CRDS_REPROCESSING', reprocessing_path)
-        with pushdir(reprocessing_path) as rp_path:
-            for path in rp_path.iterdir():
-                logger.debug('Path: %s', path)
-                if not path.is_dir():
-                    logger.debug('Path is not a dir')
-                    continue
-                try:
-                    _, from_ctx, to_ctx  = path.stem.split('_')
-                except ValueError:
-                    logger.debug('Cannot get contexts')
-                    continue
-                try:
-                    with gzip.open(path / 'affected_ids.txt.gz', 'rb') as ids_file:
-                        try:
-                            ids = ids_file.read().decode('utf-8').replace('\n', ' ')
-                        except TypeError:
-                            logger.debug('Cannot read "affected_ids.txt.gz')
-                            continue
-                except FileNotFoundError:
-                    logger.debug('No "affected_ids.txt.gz" found')
-                    continue
-                self[f'{int(from_ctx):0>4}'] = set(ids.split(' '))
-        self.contexts = list(self.keys())
-        self.contexts.sort()
+
+        while from_context < end_context and from_context not in self.contexts:
+            try:
+                data = crds_api.get_affected_datasets('jwst', from_context)
+            except ServiceError as exception:
+                logger.warning('No affected dataset information for context %s', from_context)
+                logger.warning('Affected dataset information will be incomplete.')
+                logger.debug('Reason: ', exc_info=exception)
+                break
+            logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
+            self[from_context] = data['affected_ids']
+            from_context = data['new_context']
 
 
 class MastCrdsCtx:
