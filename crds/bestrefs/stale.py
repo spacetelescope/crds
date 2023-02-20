@@ -56,7 +56,7 @@ class AffectedDatasets(dict):
         contexts.sort()
         return contexts
 
-    def is_affected(self, datasets, start_context, end_context):
+    def is_affected(self, datasets, start_context, end_context=None):
         """Determine if any datasets are in an affected dataset list starting from context
 
         Parameters
@@ -64,40 +64,45 @@ class AffectedDatasets(dict):
         datasets : [str[,...]]
             List of dataset ids to check for.
 
-        start_context : str
-            CRDS context to start with. Can have the full string such as 'jwst_0123.pmap'
-            or just the number, '0123'.
+        start_context : str or None
+            CRDS context to start with of the form "jwst_XXXX.pmap".
 
-        end_context : str
-            CRDS final context. Can have the full string such as 'jwst_0123.pmap'
-            or just the number, '0123'.
+        end_context : str or None
+            CRDS final context of the form "jwst_XXXX.pmap".
+            If None, the CRDS operational context is used.
 
         Returns
         -------
         is_affected : [str[,...]]
             Dataset ids that were actually affected
+
+        Examples
+        --------
+        >>> ad = AffectedDatasets()
+        >>> ad.is_affected(['junk', 'jw01243006004_02103_00008.nrcblong'], 'jwst_1039.pmap', 'jwst_1041.pmap')
+        {'jw01243006004_02103_00008.nrcblong'}
         """
-        regex = re.compile(r'(jwst_)*(\d+)(\..+)*')
-        start_context = regex.fullmatch(start_context).group(2)
-        end_context = regex.fullmatch(end_context).group(2)
+        if end_context is None:
+            end_context = crds_api.get_default_context()
+        self.retrieve(start_context, end_context=end_context)
         start_idx = self.contexts.index(start_context)
         try:
             end_idx = self.contexts.index(end_context)
         except ValueError:
             end_idx = len(self)
 
+        logger.debug('Searching contexts %s[%d]:%s[%d]', start_context, start_idx, end_context, end_idx)
         affected = set()
         for context in self.contexts[start_idx:end_idx]:
-            affected.update(self[context] & datasets)
+            affected.update(self[context] & set(datasets))
 
         return affected
 
-    def retrieve(self, from_context, end_context):
+    def retrieve(self, from_context, end_context=None):
         """Read in all the affected dataset info from the CRDS service.
 
         start_context : str or None
             CRDS context to start with of the form "jwst_XXXX.pmap".
-            If None, the last context before the current operation context is used.
 
         end_context : str or None
             CRDS final context of the form "jwst_XXXX.pmap".
@@ -114,7 +119,8 @@ class AffectedDatasets(dict):
         >>> len(ad['jwst_1040.pmap'])
         1735
         """
-
+        if end_context is None:
+            end_context = crds_api.get_default_context()
         while from_context < end_context and from_context not in self.contexts:
             try:
                 data = crds_api.get_affected_datasets('jwst', from_context)
@@ -124,7 +130,7 @@ class AffectedDatasets(dict):
                 logger.debug('Reason: ', exc_info=exception)
                 break
             logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
-            self[from_context] = data['affected_ids']
+            self[from_context] = set(data['affected_ids'])
             from_context = data['new_context']
 
 
