@@ -301,7 +301,6 @@ class StaleByContext:
     def affected_datasets(self):
         if self._ad is None:
             self._ad = AffectedDatasets()
-            self._ad.read()
         return self._ad
 
     @affected_datasets.setter
@@ -311,10 +310,7 @@ class StaleByContext:
     @property
     def end_context(self):
         if self._endctx is None:
-            cmd = ['crds.list', '--status']
-            script = ListScript(cmd)
-            script()
-            self._endctx = script.default_context
+            self._endctx = crds_api.get_default_context()
         return self._endctx
 
     @end_context.setter
@@ -363,9 +359,9 @@ class StaleByContext:
             instruments = ['fgs', 'miri', 'nircam', 'niriss', 'nirspec']
 
         for instrument in instruments:
-            self.archive_state_instrument(instrument, start_time, end_time)
+            self.archive_state_instrument(instrument, start_time, end_time, reset=False)
 
-    def archive_state_instrument(self, instrument, start_time, end_time, reset=False):
+    def archive_state_instrument(self, instrument, start_time, end_time, reset=True):
         """Determine staleness by instrument
 
         Parameters
