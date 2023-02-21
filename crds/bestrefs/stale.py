@@ -19,9 +19,7 @@ from jwst.lib.suffix import remove_suffix
 
 # Configure logging
 logger = logging.getLogger(__name__)
-# logger.addHandler(logging.NullHandler())
-logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.NullHandler())
 
 # Default start search time is essentially start-of-mission
 DEFAULT_START_TIME = '2022-01-01'
@@ -218,8 +216,11 @@ class MastCrdsCtx:
         >>> len(nircam_ctxs)
         13215
         """
+        logger.info('Retrieving keywords from MAST for instrument %s over period %s -> %s',
+                    instrument, start_time, end_time)
         mcc = MastCrdsCtx(instrument, start_time=start_time, end_time=end_time)
         mcc.retrieve_by_chunk()
+        logger.info('\t# exposures retrieved: %d', len(mcc.contexts))
         return mcc.contexts
 
     def retrieve_by_chunk(self):
@@ -361,6 +362,14 @@ class StaleByContext:
         for instrument in instruments:
             self.archive_state_instrument(instrument, start_time, end_time, reset=False)
 
+        logger.info('Final results:'
+                    '\n\tTotal exposures examined: %d'
+                    '\n\tTotal uncalibrated datasets: %d'
+                    '\n\tStale contexts: %s'
+                    '\n\tTotal state datasets: %d',
+                    self.total_exposures, len(self.uncalibrated_datasets), self.stale_contexts, len(self.is_affected)
+                    )
+
     def archive_state_instrument(self, instrument, start_time, end_time, reset=True):
         """Determine staleness by instrument
 
@@ -392,7 +401,7 @@ class StaleByContext:
         uncalibrated_datasets : set(str(,...))
             List of datasets that have no CRDS context.
         """
-        logger.info('Working instrument %s over period of %s-%s', instrument, start_time, end_time)
+        logger.info('Working instrument %s over period of %s -> %s', instrument, start_time, end_time)
         if reset:
             self.reset()
 
@@ -403,11 +412,13 @@ class StaleByContext:
         uncalibrated_datasets = {filename_to_datasetid(exposure)
                                  for exposure, context in exposures['filename', 'crds_ctx']
                                  if isinstance(context, MaskedConstant)}
+        logger.info('\t# uncalibrated datasets: %d', len(uncalibrated_datasets))
 
         # Start filtering down to find the stale exposures.
         old_exposures_mask = exposures['crds_ctx'] < self.end_context
         old_exposures = exposures[old_exposures_mask]
         stale_contexts = {context for context in old_exposures['crds_ctx'] if not isinstance(context, MaskedConstant)}
+        logger.info('\tStale contexts: %s', stale_contexts)
 
         # Determine whether any stale exposures are in an affected dataset report. If so,
         # mark as truly stale.
@@ -426,6 +437,7 @@ class StaleByContext:
                 logger.warning('Context range %s-%s is not available in the affected datasets archive', context, self.end_context)
                 logger.debug('Reason: ', exc_info=exception)
                 continue
+        logger.info('\t# of stale datasets: %d', len(is_affected))
 
         # Update results
         self.uncalibrated_datasets.update(uncalibrated_datasets)
