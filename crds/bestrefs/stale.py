@@ -402,10 +402,35 @@ class StaleByContext:
             List of datasets that have no CRDS context.
         """
         logger.info('Working instrument %s over period of %s -> %s', instrument, start_time, end_time)
+        exposures = MastCrdsCtx.retrieve(instrument, start_time, end_time)
+        self.archive_state_exposures(exposures, reset=reset)
+
+    def archive_state_exposures(self, reset=True):
+        """Determine staleness by instrument
+
+        Parameters
+        ----------
+        exposures : astropy.table.Table
+            Table of exposures to examine.
+
+        reset : bool
+            Reset the result attributes.
+
+        Attributes Modified
+        -------------------
+        is_affected : set(str(,...))
+            Set of datasets that are in the affected dataset lists.
+
+        stale_contexts : set(str(,...))
+            Set of stale contexts found.
+
+        uncalibrated_datasets : set(str(,...))
+            List of datasets that have no CRDS context.
+        """
+        logger.info('# exposures to be examined: %d', len(exposures))
         if reset:
             self.reset()
 
-        exposures = MastCrdsCtx.retrieve(instrument, start_time, end_time)
         self.total_exposures += len(exposures)
 
         # First result: List of uncalibrated exposures.
