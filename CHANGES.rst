@@ -6,6 +6,11 @@ Roman
 
 - Added new rmap WFI Reference Pixels [#924]
 
+General
+-------
+
+- Replace deprecated import ``pkg_resources`` with ``packaging.requirements``. [#923]
+
 
 11.16.20 (2023-01-31)
 =====================
@@ -38,7 +43,7 @@ Roman
 
 - bugfix: getreferences uses get_locator_module to call dataset_to_ref_header [#916]
 
-- bestrefs calls `dataset_to_ref_header`` outside of the "fast" condition. Header translation for Roman will occur regardless of the "fast" arg (which can sometimes be determined by the logging verbosity level). [#917]
+- bestrefs calls ``dataset_to_ref_header`` outside of the "fast" condition. Header translation for Roman will occur regardless of the "fast" arg (which can sometimes be determined by the logging verbosity level). [#917]
 
 
 11.16.17 (2022-12-30)

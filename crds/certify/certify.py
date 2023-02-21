@@ -485,7 +485,7 @@ class ReferenceCertifier(Certifier):
         if asdf_standard_version:
             pmap = crds.get_pickled_mapping(self.context, ignore_checksum="warn")
             asdf_standard_requirement = pmap.get_asdf_standard_requirement()
-            if not asdf_standard_version in asdf_standard_requirement:
+            if not asdf_standard_version in asdf_standard_requirement.specifier:
                 log.error(
                     "ASDF Standard version",
                     asdf_standard_version,
