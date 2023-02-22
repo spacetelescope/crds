@@ -43,9 +43,14 @@ class AffectedDatasets(dict):
 
     contexts : [str[,...]]
         Ordered lists of starting contexts
+
+    context_history : [str[,...]]
+        Ordered list of the server's context history with contexts
+        that have been rolled back removed.
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._context_history = None
 
     @property
     def contexts(self):
@@ -53,6 +58,38 @@ class AffectedDatasets(dict):
         contexts = list(self.keys())
         contexts.sort()
         return contexts
+
+    @property
+    def context_history(self):
+        """The context history from the CRDS server
+
+        This is not simply the whole history. When operational contexts
+        are rolled-back, the context order is interrupted. For affected
+        dataset checking, the contexts that have been rolled back
+        should not be included.
+
+        Examples
+        --------
+        >>> ad = AffectedDatasets()
+        >>> ad.context_history[90:100]
+        ['jwst_0348.pmap', 'jwst_0352.pmap', 'jwst_0361.pmap', 'jwst_0391.pmap', 'jwst_0401.pmap', 'jwst_0406.pmap', 'jwst_0410.pmap', 'jwst_0414.pmap', 'jwst_0419.pmap', 'jwst_0422.pmap']
+        """
+        if self._context_history is None:
+            history = crds_api.get_context_history('jwst')
+            rolled_back = []
+            for entry in history:
+                context = entry[1]
+                try:
+                    last_entry = rolled_back.pop()
+                except IndexError:
+                    rolled_back.append(context)
+                    continue
+                while last_entry > context:
+                    last_entry = rolled_back.pop()
+                rolled_back.append(last_entry)  # Re-add the last good context
+                rolled_back.append(context)
+            self._context_history = rolled_back
+        return self._context_history
 
     def is_affected(self, datasets, start_context, end_context=None):
         """Determine if any datasets are in an affected dataset list starting from context
@@ -119,6 +156,7 @@ class AffectedDatasets(dict):
         """
         if end_context is None:
             end_context = crds_api.get_default_context()
+        current_idx = self.context_history.index(from_context)
         while from_context < end_context and from_context not in self.contexts:
             try:
                 data = crds_api.get_affected_datasets('jwst', from_context)
@@ -129,7 +167,8 @@ class AffectedDatasets(dict):
                 break
             logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
             self[from_context] = set(data['affected_ids'])
-            from_context = data['new_context']
+            current_idx += 1
+            from_context = self.context_history[current_idx]
 
 
 class MastCrdsCtx:
