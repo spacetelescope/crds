@@ -314,16 +314,15 @@ class StaleByContext:
         The defined final context to be compared to. If None, this will
         get the current operational context.
 
+    exposures : astropy.table.Table
+        All exposures retrieved.
+
     is_affected : set(str(,...))
         Set of datasets that are in the affected dataset lists.
         Populated by methods `archive_state` and `archive_state_instrument`.
 
     stale_contexts : set(str(,...))
         Set of stale contexts found.
-        Populated by methods `archive_state` and `archive_state_instrument`.
-
-    total_exposures : int
-        Total exposures examined.
         Populated by methods `archive_state` and `archive_state_instrument`.
 
     uncalibrated_datasets : set(str(,...))
@@ -406,7 +405,7 @@ class StaleByContext:
                     '\n\tTotal uncalibrated datasets: %d'
                     '\n\tStale contexts: %s'
                     '\n\tTotal state datasets: %d',
-                    self.total_exposures, len(self.uncalibrated_datasets), self.stale_contexts, len(self.is_affected)
+                    len(self.exposures), len(self.uncalibrated_datasets), self.stale_contexts, len(self.is_affected)
                     )
 
     def archive_state_instrument(self, instrument, start_time, end_time, reset=True):
@@ -470,7 +469,10 @@ class StaleByContext:
         if reset:
             self.reset()
 
-        self.total_exposures += len(exposures)
+        if self.exposures is None:
+            self.exposures = exposures
+        else:
+            self.exposures = vstack([self.exposures, exposures])
 
         # First result: List of uncalibrated exposures.
         uncalibrated_datasets = {filename_to_datasetid(exposure)
@@ -526,9 +528,9 @@ class StaleByContext:
             List of datasets that have no CRDS context.
             Populated by methods `archive_state` and `archive_state_instrument`.
         """
+        self.exposures = None
         self.is_affected = set()
         self.stale_contexts = set()
-        self.total_exposures = 0
         self.uncalibrated_datasets = set()
 
 
