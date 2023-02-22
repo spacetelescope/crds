@@ -498,7 +498,8 @@ class StaleByContext:
 
             # Check against affected datasets
             try:
-                is_affected.update(self.affected_datasets.is_affected(datasets, context, self.end_context))
+                affected = self.affected_datasets.is_affected(datasets, context, self.end_context)
+                is_affected.update((dataset, context) for dataset in affected)
             except ValueError as exception:
                 logger.warning('Context range %s-%s is not available in the affected datasets archive', context, self.end_context)
                 logger.debug('Reason: ', exc_info=exception)
