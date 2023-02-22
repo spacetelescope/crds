@@ -405,7 +405,7 @@ class StaleByContext:
         exposures = MastCrdsCtx.retrieve(instrument, start_time, end_time)
         self.archive_state_exposures(exposures, reset=reset)
 
-    def archive_state_exposures(self, reset=True):
+    def archive_state_exposures(self, exposures, reset=True):
         """Determine staleness by instrument
 
         Parameters
