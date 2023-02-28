@@ -477,9 +477,9 @@ class StaleByContext:
             self.exposures = vstack([self.exposures, exposures])
 
         # First result: List of uncalibrated exposures.
-        uncalibrated_datasets = clean_datasets({filename_to_datasetid(exposure)
+        uncalibrated_datasets = {filename_to_datasetid(exposure)
                                  for exposure, context in exposures['filename', 'crds_ctx']
-                                 if isinstance(context, MaskedConstant)})
+                                 if isinstance(context, MaskedConstant)}
         logger.info('\t# uncalibrated datasets: %d', len(uncalibrated_datasets))
 
         # Start filtering down to find the stale exposures.
@@ -496,7 +496,7 @@ class StaleByContext:
             current_exposures = old_exposures[context_mask]
 
             # Create list of formal dataset ids.
-            datasets = clean_datasets({filename_to_datasetid(filename) for filename in current_exposures['filename']})
+            datasets = {filename_to_datasetid(filename) for filename in current_exposures['filename']}
             self.datasets.update(datasets)
 
             # Check against affected datasets
@@ -547,57 +547,6 @@ class StaleByContext:
 # #########
 # Utilities
 # #########
-def clean_datasets(datasets):
-    """Clean dataset list
-
-    Cleaning does the following:
-
-    - Remove the '_trapsfilled' portion of the name
-    - Remove the '_sXXXXX' portion of the name
-    - Remove the 'segXXX' portion of the name
-    - Remove all non-string values
-
-    Parameters
-    ----------
-    datasets : [str(,...)] or {str(,...)}
-        List/set of dataset names to clean
-
-    Returns
-    -------
-    cleaned : {str(,...)}
-        Cleaned names
-
-    Examples
-    --------
-    >>> clean_datasets({'jw01210001003_03201_00003.nrca2'})
-    {'jw01210001003_03201_00003.nrca2'}
-    >>> clean_datasets({'jw02609011002_02101_00004.nrca2_trapsfilled'})
-    {'jw02609011002_02101_00004.nrca2'}
-    >>> clean_datasets({'jw01185017001_04103_00001-seg006.nrca3'})
-    {'jw01185017001_04103_00001.nrca3'}
-    >>> clean_datasets({'jw01345-o015_s00802_nircam'})
-    {'jw01345-o015_nircam'}
-    """
-    segms = re.compile(r'(.+)-seg\d+(\..+)')
-    sources = re.compile(r'(.+)_s\d{5}(.+)')
-    trapsfilled = re.compile(r'(.+)_trapsfilled$')
-
-    str_only = {dataset for dataset in datasets if isinstance(dataset, str)}
-    cleaned = set()
-    for dataset in str_only:
-        match = trapsfilled.search(dataset)
-        if match:
-            dataset = match.group(1)
-        match = sources.search(dataset)
-        if match:
-            dataset = match.group(1) + match.group(2)
-        match = segms.search(dataset)
-        if match:
-            dataset = match.group(1) + match.group(2)
-        cleaned.add(dataset)
-    return cleaned
-
-
 def env_override(envvar, override=None):
     """Use environment variable unless override is specified
 
