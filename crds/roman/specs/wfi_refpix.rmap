@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2023-03-06',
+    'file_ext' : '.asdf',
+    'filekind' : 'REFPIX',
+    'filetype' : 'REFPIX',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_refpix_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_refpix.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '62a0e171e0cf1b3e775f1e3ded2cc2aee3d5801f',
+    'suffix' : 'refpix',
+    'text_descr' : 'Reference Pixels',
+    'tpn' : 'wfi_refpix.tpn',
+}
+
+selector = Match({
+})
