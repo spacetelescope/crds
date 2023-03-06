@@ -1,6 +1,167 @@
+[project]
+name = "crds"
+description = "Calibration Reference Data System,  HST/JWST/Roman reference file management"
+authors = [{ name = "STScI CRDS s/w developers" }]
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS :: MacOS X",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Astronomy",
+]
+dependencies = [
+  "astropy",
+  "numpy",
+  "filelock",
+  "asdf",
+  "requests",
+  "lxml",
+  "parsley",
+]
+dynamic = ["version"]
+
+[project.readme]
+file = "README.rst"
+content-type = "text/x-rst"
+
+[project.license]
+file = "LICENSE"
+content-type = "text/plain"
+
+[project.urls]
+homepage = "https://github.com/spacetelescope/crds"
+
+[project.optional-dependencies]
+jwst = ["jwst"]
+roman = ["roman_datamodels"]
+submission = ["requests", "lxml", "parsley"]
+dev = ["ipython", "jupyterlab", "ansible", "helm", "nose-cprof", "coverage"]
+test = [
+  "lockfile",
+  "mock",
+  "nose",
+  "pytest",
+  "pylint",
+  "flake8",
+  "bandit",
+  "coverage",
+]
+docs = [
+  "sphinx",
+  "sphinx_rtd_theme",
+  "docutils",
+  "sphinx_automodapi",
+  "sphinx-tabs",
+]
+aws = ["boto3", "awscli"]
+synphot = ["stsynphot", "pysynphot"]
+
 [build-system]
-requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4", "wheel"]
+requires = ["setuptools>=61.2", "setuptools_scm[toml]>=3.4", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+platforms = ["Linux", "OS-X"]
+zip-safe = false
+packages = [
+  "crds",
+  "crds.bestrefs",
+  "crds.certify",
+  "crds.certify.validators",
+  "crds.client",
+  "crds.core",
+  "crds.io",
+  "crds.submit",
+  "crds.misc",
+  "crds.misc.synphot",
+  "crds.refactoring",
+  "crds.hst",
+  "crds.jwst",
+  "crds.tobs",
+  "crds.roman",
+  "crds.tests",
+]
+include-package-data = false
+
+[tool.setuptools.package-dir]
+crds = "crds"
+"crds.bestrefs" = "crds/bestrefs"
+"crds.certify" = "crds/certify"
+"crds.certify.validators" = "crds/certify/validators"
+"crds.client" = "crds/client"
+"crds.core" = "crds/core"
+"crds.io" = "crds/io"
+"crds.submit" = "crds/submit"
+"crds.misc" = "crds/misc"
+"crds.misc.synphot" = "crds/misc/synphot"
+"crds.refactoring" = "crds/refactoring"
+"crds.hst" = "crds/hst"
+"crds.jwst" = "crds/jwst"
+"crds.roman" = "crds/roman"
+"crds.tobs" = "crds/tobs"
+"crds.tests" = "crds/tests"
+
+[tool.setuptools.package-data]
+"crds.hst" = [
+  "*.dat",
+  "*.yaml",
+  "*.json",
+  "tpns/*.tpn",
+  "tpns/includes/*.tpn",
+  "specs/*.spec",
+  "specs/*.rmap",
+  "specs/*.json",
+]
+"crds.jwst" = [
+  "*.dat",
+  "*.yaml",
+  "*.json",
+  "tpns/*.tpn",
+  "tpns/includes/*.tpn",
+  "specs/*.spec",
+  "specs/*.rmap",
+  "specs/*.json",
+]
+"crds.roman" = [
+  "*.dat",
+  "*.yaml",
+  "*.json",
+  "tpns/*.tpn",
+  "tpns/includes/*.tpn",
+  "specs/*.spec",
+  "specs/*.rmap",
+  "specs/*.json",
+]
+"crds.tobs" = [
+  "*.dat",
+  "*.yaml",
+  "*.json",
+  "tpns/*.tpn",
+  "tpns/includes/*.tpn",
+  "specs/*.spec",
+  "specs/*.rmap",
+  "specs/*.json",
+]
+
+[tool.distutils.nosetests]
+verbosity = 2
+detailed-errors = 1
+where = "crds"
+with-doctest = 1
+doctest-tests = 1
+doctest-options = "+ELLIPSIS,+NORMALIZE_WHITESPACE,+IGNORE_EXCEPTION_DETAIL"
+logging-clear-handlers = 1
+
+[tool.pytest.ini_options]
+python_files = ["pytest_test_*"]
+python_classes = ["*PyTests"]
+python_functions = ["pytest_test_*"]
+markers = [
+  "smoke: critical tests required to pass for the system to work.",
+  "roman: all tests specific to the ROMAN Space Telescope mission.",
+  "distortion: all tests related to distortion filetype",
+]
 
 [tool.setuptools_scm]
 write_to = "crds/_version.py"
