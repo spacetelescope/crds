@@ -1,2 +1,1 @@
-include README.rst TESTING install clean setup.py setup_data.py setup.cfg
-recursive-include envs *
+include README.rst TESTING install clean setup.py setup_data.py pyproject.toml recursive-include envs *
