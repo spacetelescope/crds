@@ -15,6 +15,10 @@ env:
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
 
+defaults:
+   run:
+     shell: bash -l {0}
+
 jobs:
   crds:
     name: cache CRDS test data
@@ -57,9 +61,9 @@ jobs:
           key: crds-${{ steps.crds-context-jwst.outputs.pmap }}
         env:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
-      - run: |
-          ./install
-          ./setup_test_cache ${{ env.CRDS_TEST_ROOT }}
+      - run: ./install
+      - run: pip install roman-datamodels jwst
+      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }}
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
     needs: [ crds ]
@@ -82,11 +86,20 @@ jobs:
             python: '3.9'
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - if: ${{ !contains(matrix.toxenv, 'test') }}
+        uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python }}
-          cache: 'pip'
-          cache-dependency-path: 'tox.ini'
+           python-version: ${{ matrix.python }}
+           cache: 'pip'
+           cache-dependency-path: 'tox.ini'
+      - if: ${{ contains(matrix.toxenv, 'test') }}
+        uses: mamba-org/provision-with-micromamba@v15
+        with:
+          environment-file: environment.yml
+          extra-specs: |
+            python=${{ matrix.python }}
+          cache-env: true
+          cache-downloads: true
       - if: ${{ contains(matrix.toxenv, 'test') }}
         uses: actions/cache@v3
         with:
