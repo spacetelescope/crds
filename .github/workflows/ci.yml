@@ -45,9 +45,6 @@ jobs:
           python-version: '3.x'
           cache: 'pip'
           cache-dependency-path: 'tox.ini'
-      - run: |
-          pip install .
-          ./install
       - uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/hst
@@ -60,7 +57,9 @@ jobs:
           key: crds-${{ steps.crds-context-jwst.outputs.pmap }}
         env:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
-      - run: ./setup_test_data ${{ env.CRDS_TEST_ROOT }}
+      - run: |
+          ./install
+          ./setup_test_cache ${{ env.CRDS_TEST_ROOT }}
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
     needs: [ crds ]
