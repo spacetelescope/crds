@@ -59,7 +59,7 @@ from collections import namedtuple
 
 # ===================================================================
 
-from pkg_resources import Requirement
+from packaging.requirements import Requirement
 
 from . import log, utils, config, selectors, substitutions
 
@@ -843,7 +843,7 @@ class PipelineContext(ContextMapping):
         else:
             raw_requirement = "asdf_standard"
 
-        return Requirement.parse(raw_requirement)
+        return Requirement(raw_requirement)
 
 # ===================================================================
 
