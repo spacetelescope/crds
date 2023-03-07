@@ -16,8 +16,53 @@ env:
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
 
 jobs:
+  crds:
+    name: cache CRDS test data
+    runs-on: ubuntu-latest
+    outputs:
+      hst: ${{ steps.crds-context-hst.outputs.pmap }}
+      jwst: ${{ steps.crds-context-jwst.outputs.pmap }}
+    steps:
+      - run: >
+          echo "pmap=$(
+          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
+          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
+          )" >> $GITHUB_OUTPUT
+        id: crds-context-hst
+        env:
+          CRDS_SERVER_URL: https://hst-crds.stsci.edu
+      - run: >
+          echo "pmap=$(
+          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
+          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
+          )" >> $GITHUB_OUTPUT
+        id: crds-context-jwst
+        env:
+          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+          cache-dependency-path: 'tox.ini'
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/hst
+          key: crds-${{ steps.crds-context-hst.outputs.pmap }}
+        env:
+          CRDS_SERVER_URL: https://hst-crds.stsci.edu
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/jwst
+          key: crds-${{ steps.crds-context-jwst.outputs.pmap }}
+        env:
+          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
+      - run: |
+          ./install
+          ./setup_test_data ${{ env.CRDS_TEST_ROOT }}
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
+    needs: [ crds ]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -43,35 +88,17 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'tox.ini'
       - if: ${{ contains(matrix.toxenv, 'test') }}
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["hst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-        id: crds-hst-context
-        env:
-          CRDS_SERVER_URL: https://hst-crds.stsci.edu
-      - if: ${{ contains(matrix.toxenv, 'test') }}
         uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/hst
-          key: crds-${{ steps.crds-hst-context.outputs.pmap }}
+          key: crds-${{ needs.crds.outputs.hst }}
         env:
           CRDS_SERVER_URL: https://hst-crds.stsci.edu
-      - if: ${{ contains(matrix.toxenv, 'test') }}
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-        id: crds-jwst-context
-        env:
-          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
       - if: ${{ contains(matrix.toxenv, 'test') }}
         uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/mappings/jwst
-          key: crds-${{ steps.crds-jwst-context.outputs.pmap }}
+          key: crds-${{ needs.crds.outputs.jwst }}
         env:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
       - run: pip install tox
