@@ -58,9 +58,7 @@ jobs:
           key: crds-${{ steps.crds-context-jwst.outputs.pmap }}
         env:
           CRDS_SERVER_URL: https://jwst-crds.stsci.edu
-      - run: |
-          ./install
-          ./setup_test_data ${{ env.CRDS_TEST_ROOT }}
+      - run: ./setup_test_data ${{ env.CRDS_TEST_ROOT }}
   test:
     name: ${{ matrix.toxenv }} (Python ${{ matrix.python }}, ${{ matrix.os }})
     needs: [ crds ]
