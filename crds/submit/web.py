@@ -111,9 +111,6 @@ class CrdsDjangoConnection:
         """
         response = self.get(relative_url)
         csrf = response.cookies['csrftoken']
-        # csrf_values= html.fromstring(response.text).xpath(
-        #     '//input[@name="csrfmiddlewaretoken"]/@value'
-        #     )
         if csrf:
             post_vars['csrfmiddlewaretoken'] = csrf
         return self.post_start(relative_url, *post_dicts, **post_vars)
