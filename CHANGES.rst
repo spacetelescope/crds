@@ -4,7 +4,7 @@
 General
 -------
 
-- Replace ``lxml`` dependency with ``BeautifulSoup`` for submission/login html error parsing
+- Replace ``lxml`` dependency with ``BeautifulSoup`` for submission/login html error parsing [#926]
 
 
 11.16.21 (2023-03-09)
