@@ -180,24 +180,24 @@ class CrdsDjangoConnection:
         log ERROR with `error_prefix` and the response text, then raise an exception.  
         This may result in multiple ERROR messages.
 
-        Issue a log ERROR for each form error,  then raise an exception
-        if any errors found.
-
-        returns None
+        Issue a log ERROR for each form error, then raise an exception if any errors found.
         """
         errors = 0
         if response.ok:
             soup = BeautifulSoup(response.text, 'html.parser')
             for element, attrs in parse.items():
-                # soup.find("title", attrs={"title":""}).string
                 k, v = attrs.split(".")
                 try:
-                    error_message = soup.find(element, attrs={k:v}).string
+                    msg = soup.find(element, attrs={k:v})
+                    err_msg = msg.string if msg.string is not None else msg.findChild().string
                 except AttributeError:
-                    error_message = None
-                if error_message is not None:
-                    errors += 1
-                    log.error(error_prefix, error_message)
+                    err_msg = None
+                if err_msg is not None:
+                    if k == "title" and err_msg != "MyST SSO Portal":
+                        continue
+                    else:
+                        errors += 1
+                        log.error(error_prefix, err_msg)
         else:
             log.error("CRDS server responded with HTTP error status", response.status_code)
             errors += 1
