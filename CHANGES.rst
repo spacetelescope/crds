@@ -1,3 +1,12 @@
+11.16.22 (unreleased)
+=====================
+
+General
+-------
+
+- Replace ``lxml`` dependency with ``BeautifulSoup`` for submission/login html error parsing
+
+
 11.16.21 (2023-03-09)
 =====================
 
