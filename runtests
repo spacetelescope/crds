@@ -8,6 +8,15 @@ from crds import config, log
 os.chdir(os.path.dirname(sys.argv[0]) or ".")
 topdir = os.getcwd()
 
+# temp hack for nosetests in python 3.10 
+import collections
+collections.Callable = collections.abc.Callable
+
+# temp hack for nosetests in python 3.11
+import inspect
+if not hasattr(inspect, 'getargspec'):
+    inspect.getargspec = inspect.getfullargspec
+
 CRDS_TEST_ROOT = os.environ.get("CRDS_TEST_ROOT", os.environ["HOME"])
 
 # Unlike historical CRDS with builtin cache,  test cache is now a separate dedicated entity
