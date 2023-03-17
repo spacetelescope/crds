@@ -154,16 +154,17 @@ class AffectedDatasets(dict):
         if end_context is None:
             end_context = crds_api.get_default_context()
         current_idx = self.context_history.index(from_context)
-        while from_context < end_context and from_context not in self.contexts:
-            try:
-                data = crds_api.get_affected_datasets('jwst', from_context)
-            except ServiceError as exception:
-                logger.warning('No affected dataset information for context %s', from_context)
-                logger.warning('Affected dataset information will be incomplete.')
-                logger.debug('Reason: ', exc_info=exception)
-                break
-            logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
-            self[from_context] = set(data['affected_ids'])
+        while from_context < end_context:
+            if from_context not in self.contexts:
+                try:
+                    data = crds_api.get_affected_datasets('jwst', from_context)
+                except ServiceError as exception:
+                    logger.warning('No affected dataset information for context %s', from_context)
+                    logger.warning('Affected dataset information will be incomplete.')
+                    logger.debug('Reason: ', exc_info=exception)
+                else:
+                    logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
+                    self[from_context] = set(data['affected_ids'])
             current_idx += 1
             from_context = self.context_history[current_idx]
 
@@ -204,7 +205,7 @@ class MastCrdsCtx:
     <Time object: scale='utc' format='iso' value=2023-01-15 00:00:00.000>
     >>> mast_nircam.retrieve_by_chunk()
     >>> len(mast_nircam.contexts)
-    13215
+    13212
     """
 
     # Columns from MAST to retrieve
@@ -250,7 +251,7 @@ class MastCrdsCtx:
         -------
         >>> nircam_ctxs = MastCrdsCtx.retrieve('nircam', start_time='2023-01-01', end_time='2023-01-15')
         >>> len(nircam_ctxs)
-        13215
+        13212
         """
         logger.info('Retrieving keywords from MAST for instrument %s over period %s -> %s',
                     instrument, start_time, end_time)
