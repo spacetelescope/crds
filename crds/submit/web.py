@@ -3,7 +3,7 @@ web server file submission system.
 """
 import os
 import io
-
+from bs4 import BeautifulSoup
 from crds.core import log, utils
 from crds.core.exceptions import CrdsError, CrdsWebError
 from . import background
@@ -15,11 +15,6 @@ try:
 except (ImportError, RuntimeError):
     log.verbose_warning("Import of 'requests' failed.  submit disabled.")
     DISABLED.append("requests")
-try:
-    from lxml import html
-except (ImportError, RuntimeError):
-    log.verbose_warning("Import of 'lxml' failed.  submit disabled.")
-    DISABLED.append("lxml")
 
 # ==================================================================================================
 
@@ -115,11 +110,9 @@ class CrdsDjangoConnection:
         the resulting thread and queue.
         """
         response = self.get(relative_url)
-        csrf_values= html.fromstring(response.text).xpath(
-            '//input[@name="csrfmiddlewaretoken"]/@value'
-            )
-        if csrf_values:
-            post_vars['csrfmiddlewaretoken'] = csrf_values[0]
+        csrf = response.cookies['csrftoken']
+        if csrf:
+            post_vars['csrfmiddlewaretoken'] = csrf
         return self.post_start(relative_url, *post_dicts, **post_vars)
     
     def repost_confirm_or_cancel(self, ready_url, action="confirm"):
@@ -164,45 +157,47 @@ class CrdsDjangoConnection:
 
     def check_error(self, response):
         """Note an error + exception if response contains an error_message <div>."""
-        self._check_error(response, '//div[@id="error_message"]', "CRDS server error:")
-        self._check_error(response, '//div[@class="error_message"]', "CRDS server new form error:")
+        self._check_error(response, parse={"div":"id.error_message"}, error_prefix="CRDS server error: ")
+        self._check_error(response, parse={"div":"class.error_message"}, error_prefix="CRDS server new form error: ")
 
     def check_login(self, response):
         """Note an error + exception if response contains content indicating login error."""
         self._check_error(
-            response, '//div[@id="error_login"]',
-            "Error logging into CRDS server:")
-        self._check_error(
-            response, '//div[@id="error_message"]',
-            "Error logging into CRDS server:")
-        self._check_error(
-            response, '//title[contains(text(), "MyST SSO Portal")]',
-            "Error logging into CRDS server:")
+            response, 
+            parse={
+                "title":"title.",
+                "div":"id.error_login",
+                "div":"id.error_message",
+            },
+            error_prefix="Error logging into the CRDS Server: "
+        )
 
-    def _check_error(self, response, xpath_spec, error_prefix):
-        """Extract the `xpath_spec` text from `response`,  if present issue a
-        log ERROR with  `error_prefix` and the response `xpath_spec` text
-        then raise an exception.  This may result in multiple ERROR messages.
+    def _check_error(self, response, parse={"div":"id.error_message"}, error_prefix=""):
+        """Parse error-related html text from `response`.  If present issue a
+        log ERROR with `error_prefix` and the response text, then raise an exception.  
+        This may result in multiple ERROR messages.
 
-        Issue a log ERROR for each form error,  then raise an exception
-        if any errors found.
-
-        returns None
+        Issue a log ERROR for each form error, then raise an exception if any errors found.
         """
         errors = 0
         if response.ok:
-            error_msg_parse = html.fromstring(response.text).xpath(xpath_spec)
-            for parse in error_msg_parse:
-                error_message = parse.text.strip().replace("\n","")
-                if error_message:
-                    if error_message.startswith("ERROR: "):
-                        error_message = error_message[len("ERROR: ")]
-                    errors += 1
-                    log.error(error_prefix, error_message)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            for element, attrs in parse.items():
+                k, v = attrs.split(".")
+                try:
+                    msg = soup.find(element, attrs={k:v})
+                    err_msg = msg.string if msg.string is not None else msg.findChild().string
+                except AttributeError:
+                    err_msg = None
+                if err_msg is not None:
+                    if k == "title" and err_msg != "MyST SSO Portal":
+                        continue
+                    else:
+                        errors += 1
+                        log.error(error_prefix, err_msg)
         else:
             log.error("CRDS server responded with HTTP error status", response.status_code)
             errors += 1
-
         if errors:
             raise CrdsWebError("A web transaction with the CRDS server had errors.")
 

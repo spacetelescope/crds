@@ -16,7 +16,6 @@ dependencies = [
   "filelock",
   "asdf",
   "requests",
-  "lxml",
   "parsley",
 ]
 dynamic = ["version"]
