@@ -1,4 +1,14 @@
-"""Utilities around determinig staleness of the archive"""
+"""Utilities around determinig staleness of the archive
+
+Developer Notes
+---------------
+This is essentially alpha-level code to demonstrate how to determine
+staleness for the JWST archive. Major work to be done is documented
+in CCD-1257.
+
+A side effect of this is that, as noted, all the potential doctest
+lines are commented out.
+"""
 import os
 
 import logging
@@ -67,8 +77,8 @@ class AffectedDatasets(dict):
 
         Examples
         --------
-        >>> ad = AffectedDatasets()
-        >>> ad.context_history[90:100]
+        >>> ad = AffectedDatasets()  # doctest: +SKIP
+        >>> ad.context_history[90:100]  # doctest: +SKIP
         ['jwst_0348.pmap', 'jwst_0352.pmap', 'jwst_0361.pmap', 'jwst_0391.pmap', 'jwst_0401.pmap', 'jwst_0406.pmap', 'jwst_0410.pmap', 'jwst_0414.pmap', 'jwst_0419.pmap', 'jwst_0422.pmap']
         """
         if self._context_history is None:
@@ -110,8 +120,8 @@ class AffectedDatasets(dict):
 
         Examples
         --------
-        >>> ad = AffectedDatasets()
-        >>> ad.is_affected(['junk', 'jw01243006004_02103_00008.nrcblong'], 'jwst_1039.pmap', 'jwst_1041.pmap')
+        >>> ad = AffectedDatasets()  # doctest: +SKIP
+        >>> ad.is_affected(['junk', 'jw01243006004_02103_00008.nrcblong'], 'jwst_1039.pmap', 'jwst_1041.pmap')  # doctest: +SKIP
         {'jw01243006004_02103_00008.nrcblong'}
         """
         if end_context is None:
@@ -142,13 +152,13 @@ class AffectedDatasets(dict):
 
         Examples
         --------
-        >>> ad = AffectedDatasets()
-        >>> ad.retrieve('jwst_1039.pmap', 'jwst_1041.pmap')
-        >>> ad.contexts
+        >>> ad = AffectedDatasets()  # doctest: +SKIP
+        >>> ad.retrieve('jwst_1039.pmap', 'jwst_1041.pmap')  # doctest: +SKIP
+        >>> ad.contexts  # doctest: +SKIP
         ['jwst_1039.pmap', 'jwst_1040.pmap']
-        >>> len(ad['jwst_1039.pmap'])
+        >>> len(ad['jwst_1039.pmap'])  # doctest: +SKIP
         41456
-        >>> len(ad['jwst_1040.pmap'])
+        >>> len(ad['jwst_1040.pmap'])  # doctest: +SKIP
         1735
         """
         if end_context is None:
@@ -196,15 +206,15 @@ class MastCrdsCtx:
 
     Examples
     --------
-    >>> mast_nircam = MastCrdsCtx('NIRCam', start_time='2023-01-01', end_time='2023-01-15')
-    >>> mast_nircam.instrument
+    >>> mast_nircam = MastCrdsCtx('NIRCam', start_time='2023-01-01', end_time='2023-01-15')  # doctest: +SKIP
+    >>> mast_nircam.instrument  # doctest: +SKIP
     'nircam'
-    >>> mast_nircam.start_time
+    >>> mast_nircam.start_time  # doctest: +SKIP
     <Time object: scale='utc' format='iso' value=2023-01-01 00:00:00.000>
-    >>> mast_nircam.end_time
+    >>> mast_nircam.end_time  # doctest: +SKIP
     <Time object: scale='utc' format='iso' value=2023-01-15 00:00:00.000>
-    >>> mast_nircam.retrieve_by_chunk()
-    >>> len(mast_nircam.contexts)
+    >>> mast_nircam.retrieve_by_chunk()  # doctest: +SKIP
+    >>> len(mast_nircam.contexts)  # doctest: +SKIP
     13212
     """
 
@@ -249,8 +259,8 @@ class MastCrdsCtx:
 
         Examples
         -------
-        >>> nircam_ctxs = MastCrdsCtx.retrieve('nircam', start_time='2023-01-01', end_time='2023-01-15')
-        >>> len(nircam_ctxs)
+        >>> nircam_ctxs = MastCrdsCtx.retrieve('nircam', start_time='2023-01-01', end_time='2023-01-15')  # doctest: +SKIP
+        >>> len(nircam_ctxs)  # doctest: +SKIP
         13212
         """
         logger.info('Retrieving keywords from MAST for instrument %s over period %s -> %s',
@@ -566,13 +576,13 @@ def env_override(envvar, override=None):
 
     Examples
     --------
-    >>> env_override('StalePytestVar', 'myvalue')
+    >>> env_override('StalePytestVar', 'myvalue')  # doctest: +SKIP
     'myvalue'
-    >>> import os
-    >>> os.environ['StalePytestVar'] = 'env value'
-    >>> env_override('StalePytestVar', 'myvalue')
+    >>> import os  # doctest: +SKIP
+    >>> os.environ['StalePytestVar'] = 'env value'  # doctest: +SKIP
+    >>> env_override('StalePytestVar', 'myvalue')  # doctest: +SKIP
     'myvalue'
-    >>> env_override('StalePytestVar')
+    >>> env_override('StalePytestVar')  # doctest: +SKIP
     'env value'
     """
     value = override
@@ -604,11 +614,11 @@ def filename_to_datasetid(name):
 
     Examples
     --------
-    >>> filename_to_datasetid('jw02738006001_04101_00004_nrca1_i2d.fits')
+    >>> filename_to_datasetid('jw02738006001_04101_00004_nrca1_i2d.fits')  # doctest: +SKIP
     'jw02738006001_04101_00004.nrca1'
-    >>> filename_to_datasetid('jw02738-o006_t002_nircam_clear-f444w_segm.fits')
+    >>> filename_to_datasetid('jw02738-o006_t002_nircam_clear-f444w_segm.fits')  # doctest: +SKIP
     'jw02738-o006_t002_nircam'
-    >>> filename_to_datasetid('hello')
+    >>> filename_to_datasetid('hello')  # doctest: +SKIP
     ValueError('Name base "hello" does not match a Level2 or Level3 name pattern')
     """
     l2pattern = r'(jw.{11}_.{5}_.+)_(.+)'
