@@ -19,10 +19,14 @@ from numpy.ma.core import MaskedConstant
 
 from astropy.table import vstack
 from astropy.time import Time, TimeDelta
-from astroquery.mast import Mast
 import crds.client.api as crds_api
 from crds.core.exceptions import ServiceError
 from jwst.lib.suffix import remove_suffix
+
+try:
+    from astroquery.mast import Mast
+except ModuleNotFoundError:
+    logging.error('Module `astroquery` does not exist. This module will not function without it.')
 
 # Configure logging
 logger = logging.getLogger(__name__)
