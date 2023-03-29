@@ -6,6 +6,10 @@ General
 
 - Replace ``lxml`` dependency with ``BeautifulSoup`` for submission/login html error parsing [#926]
 
+JWST
+----
+
+- Added stale archive report core code [#928]
 
 11.16.21 (2023-03-09)
 =====================
@@ -19,7 +23,6 @@ General
 -------
 
 - Replace deprecated import ``pkg_resources`` with ``packaging.requirements``. [#923]
-
 
 11.16.20 (2023-01-31)
 =====================
