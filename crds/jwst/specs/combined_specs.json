@@ -2196,13 +2196,16 @@
             "name":"jwst_miri_pars-jumpstep.rmap",
             "observatory":"JWST",
             "parkey":[
-                [],
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.VISIT.TSOVISIT"
+                ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"c40e013e5b045a6853a110522364ba4fee267908",
+            "sha1sum":"ffbec8ff079750c9bb3ea68bfa92e623379571c9",
             "suffix":"pars-jumpstep",
             "text_descr":"JumpStep runtime parameters",
             "tpn":"miri_pars-jumpstep.tpn",
