@@ -11,6 +11,8 @@ JWST
 
 - Added stale archive report core code [#928]
 
+- Update miri pars-jumpstep parkeys [#931]
+
 11.16.21 (2023-03-09)
 =====================
 
