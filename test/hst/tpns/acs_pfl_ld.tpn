@@ -1,0 +1,48 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 09/27/05  54465  MSwam   remove ANY from FILTER1,add SPECTROSCOPIC
+# 05/15/08 60017  MSwam   remove ANY from FILTER2 check to enforce
+#                         use of expload
+# 09/01/08 60425  MSwam   replace FWOFFSET with FW[12S]OFFST
+# 09/15/08 60769 MSwam    new CCDGAIN values
+#
+#
+# NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE	H	C	R	&SYBDATE
+OPUS_FLAG	H	C	R	Y,N
+COMPARISON_FILE	H	C	R    
+COMMENT		H	C	R
+INSTRUMENT	H	C	R	ACS
+REFERENCE_FILE_TYPE H	C	R    	PFL
+DETECTOR	C	C	R	WFC,HRC,SBC
+OBSTYPE 	C	C	R	IMAGING,INTERNAL,CORONAGRAPHIC,\
+					SPECTROSCOPIC
+CCDAMP		C	C	R	A,B,C,D,AC,AD,BC,BD,ABCD,N/A
+CCDGAIN         C       R       R       0.5,1.0,1.4,2.0,4.0,8.0,-999.0
+FILTER1		C	C	R	CLEAR1L,F555W,F775W,F625W,F550M,F850LP,\
+					CLEAR1S,POL0UV,POL60UV,POL120UV,\
+					F892N,F606W,F502N,G800L,F658N,F475W,\
+					F122M,F115LP,F125LP,F140LP,F150LP,\
+					F165LP,PR110L,PR130L,BLOCK1,BLOCK2,\
+					BLOCK3,BLOCK4,N/A
+FILTER2		C	C	R	CLEAR2L,F660N,F814W,FR388N,FR423N,\
+					FR462N,F435W,FR656N,FR716N,FR782N,\
+					CLEAR2S,POL0V,F330W,POL60V,F250W,\
+                    F410W,F220M,FR555N,G800L,\
+					POL120V,PR200L,F344N,F220W,FR914M,\
+					FR853N,FR931N,FR459M,FR647M,FR1016N,\
+					FR505N,FR551N,FR601N,N/A
+FW1OFFST        C       I       R       0,1,2,-1
+FW2OFFST        C       I       R       0,1,2,-1
+FWSOFFST        C       I       R       0,1,2,-1
+CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE
+PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C	C	O	&SYBDATE
+OBSERVATION_END_DATE    C	C	O	&SYBDATE

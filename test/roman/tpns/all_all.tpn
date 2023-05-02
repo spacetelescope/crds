@@ -1,0 +1,20 @@
+#
+# Constraints defined in this file apply to every reference file
+#
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+ROMAN.META.TELESCOPE          H   C   R       ROMAN
+ROMAN.META.INSTRUMENT.NAME    H   C   R
+ROMAN.META.REFTYPE            H   C   R
+ROMAN.META.USEAFTER           H   C   R       &JWSTDATE
+ROMAN.META.PEDIGREE           H   C   R       &JWSTPEDIGREE
+ROMAN.META.AUTHOR             H   C   R
+ROMAN.META.DESCRIPTION        H   C   R
+ROMAN.META.ORIGIN             H   C   R

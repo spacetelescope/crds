@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'analog-to-digital',
+    'ld_tpn': 'wfc3_a2d_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'atodcorr',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (ATODCORR != "OMIT"))',
+    'suffix': 'a2d',
+    'text_descr': 'Analog To Digital Lookup Table',
+    'tpn': 'wfc3_a2d.tpn',
+    'unique_rowkeys': ('CCDCHIP', 'CCDAMP', 'CCDGAIN', 'REF_KEY', 'REF_KEY_VALUE'),
+}

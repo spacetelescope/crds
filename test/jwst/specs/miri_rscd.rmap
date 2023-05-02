@@ -1,0 +1,19 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2016-08-22',
+    'file_ext' : '.fits',
+    'filekind' : 'RSCD',
+    'filetype' : 'RSCD',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_rscd.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '6f7393efd0ed9c420e0beb38d92a84e4efaeb9d3',
+    'suffix' : 'rscd',
+    'text_descr' : 'Reset Switch Charge Decay correction',
+    'unique_rowkeys' : ('READPATT', 'SUBARRAY', 'ROWS'),
+}
+
+selector = Match({
+})

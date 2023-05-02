@@ -1,0 +1,27 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DATATYPE            H        C         R    REAL*4
+NAXIS               H        I         R    2
+NAXIS1              H        I         R    400:800
+NAXIS2              H        I         R    400:800
+GCOUNT              H        I         R    4
+PCOUNT              H        I         R    38
+INSTRUME            H        C         R    WFPC2
+FILETYPE            H        C         R    DRK
+USEAFTER       H        C         R    &SYBDATE
+MODE                H        C         R    FULL,AREA
+SERIALS             H        C         R    ON,OFF
+IMAGETYP            H        C         R    SPECIAL,CDBS
+CDBSFILE            H        C         R    DARK
+ATODGAIN            H        R         R    7.00000:15.0000
+EXPTIME             H        R         R    0.:5000.00
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R    
+DETECTOR            G        I         R    1:4

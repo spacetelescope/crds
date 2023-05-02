@@ -1,0 +1,78 @@
+#----------------------------------------------------------------------
+# Each line in the thruput catalog contains a filename pattern
+# and a corresponding iraf directory name. Mkcomptab uses this 
+# file to figure out what directory a thruput file belongs in.
+# If mkcomptab returns the error 'match not found in thruput 
+# catalog', this file will need to be updated to include a pattern
+# for the new thruput file.
+#
+# This catalog was created by mkthrucat.pl in the util directory.
+#
+# History:
+# 01/20/05  xxxxx  MSwam   add sdss mask
+# 04/01/08  59710  MSwam   add galex
+# 04/03/08  xxxxx  MSwam   tweak COS mask to support missing underscore
+#
+# FILENAME_PATTERN      DIRECTORY
+#--------------------------------
+acs_*.fits		cracscomp$
+acs_*.tab		cracscomp$
+ans_*.fits		crnonhstcomp$
+ans_*.tab		crnonhstcomp$
+baum_*.fits		crnonhstcomp$
+baum_*.tab		crnonhstcomp$
+bessell_*.fits		crnonhstcomp$
+bessell_*.tab		crnonhstcomp$
+clear_*.fits		crotacomp$
+clear_*.tab		crotacomp$
+cos*.fits		crcoscomp$
+cousins_*.fits		crnonhstcomp$
+cousins_*.tab		crnonhstcomp$
+dark_*.fits		crotacomp$
+dark_*.tab		crotacomp$
+eso_*.fits		crnonhstcomp$
+eso_*.tab		crnonhstcomp$
+fgs_*.fits		crfgscomp$
+fgs_*.tab		crfgscomp$
+foc_*.fits		crfoccomp$
+foc_*.tab		crfoccomp$
+fos_*.fits		crfoscomp$
+fos_*.tab		crfoscomp$
+galex_*.fits		crnonhstcomp$
+hrs_*.fits		crhrscomp$
+hrs_*.tab		crhrscomp$
+hsp_*.fits		crhspcomp$
+hsp_*.tab		crhspcomp$
+hst_*.fits		crotacomp$
+hst_*.tab		crotacomp$
+johnson_*.fits		crnonhstcomp$
+johnson_*.tab		crnonhstcomp$
+kpno_*.fits		crnonhstcomp$
+kpno_*.tab		crnonhstcomp$
+landolt_*.fits		crnonhstcomp$
+landolt_*.tab		crnonhstcomp$
+nic1_*.fits		crnicmoscomp$
+nic1_*.tab		crnicmoscomp$
+nic2_*.fits		crnicmoscomp$
+nic2_*.tab		crnicmoscomp$
+nic3_*.fits		crnicmoscomp$
+nic3_*.tab		crnicmoscomp$
+nic_*.fits		crnicmoscomp$
+nic_*.tab		crnicmoscomp$
+sdss_*.fits             crnonhstcomp$
+steward_*.fits		crnonhstcomp$
+steward_*.tab		crnonhstcomp$
+stis_*.fits		crstiscomp$
+stis_*.tab		crstiscomp$
+stromgren_*.fits        crnonhstcomp$
+stromgren_*.tab		crnonhstcomp$
+walraven_*.fits		crnonhstcomp$
+walraven_*.tab		crnonhstcomp$
+wfc3_*.tab		crwfc3comp$
+wfc3_*.fits	        crwfc3comp$
+wfpc2_*.fits		crwfpc2comp$
+wfpc2_*.tab		crwfpc2comp$
+wfpc_*.fits		crwfpccomp$
+wfpc_*.tab		crwfpccomp$
+
+

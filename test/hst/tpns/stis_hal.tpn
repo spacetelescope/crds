@@ -1,0 +1,16 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    STIS
+FILETYPE            H        C         R    "DETECTOR HALO TABLE"
+DETECTOR            H        C         R    NUV-MAMA,FUV-MAMA
+OPT_ELEM            C        C         R    E140M,E140H,E230M,E230H
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            C        C         R    &PEDIGREE
+DESCRIP             C        C         R    

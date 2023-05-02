@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2020-02-10',
+    'file_ext' : '.asdf',
+    'filekind' : 'DARK',
+    'filetype' : 'DARK',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_dark_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_dark.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.EXPOSURE.TYPE', 'ROMAN.META.EXPOSURE.MA_TABLE_NUMBER'), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '97bfabdecb39821ee460117818c9f9adbd0e0402',
+    'suffix' : 'dark',
+    'text_descr' : 'Dark',
+    'tpn' : 'wfi_dark.tpn',
+}
+
+selector = Match({
+})

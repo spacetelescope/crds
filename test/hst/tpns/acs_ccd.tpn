@@ -1,0 +1,22 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 09/15/08 60769 MSwam    new CCDGAIN values
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	ACS
+FILETYPE	H	C	R    	"CCD PARAMETERS"
+DETECTOR	H	C	R	WFC,HRC
+CCDCHIP		C	I	R	1,2,-999
+CCDAMP		C	C	R	A,B,C,D,AC,AD,BC,BD,ABCD
+CCDGAIN         C       R       R       0.5,1.0,1.4,2.0,4.0,8.0,-1
+USEAFTER  	H	C	R	&SYBDATE
+PEDIGREE  	H	C	R	&PEDIGREE
+OVRHFLS         C       D       R       0:inf
+OVRHUFLS        C       D       R       0:inf
+ATODSAT         C       I       R       60000:70000

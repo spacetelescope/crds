@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'Hand made based on WFC3 SNKCFILE spec, 02-03-2017',
+    'filekind' : 'SNKCFILE',
+    'filetype' : 'SINK PIXELS',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_snkcfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'SINKCORR',
+    'rmap_relevance' : '((SINKCORR != "OMIT") and (DETECTOR == "WFC"))',
+    'sha1sum' : '30295160c5ca40bbbd7253ec16fa18d7f5486e08',
+    'suffix' : 'snk',
+    'text_descr' : 'Sink Pixel Flagging Image',
+}
+
+selector = Match({
+})

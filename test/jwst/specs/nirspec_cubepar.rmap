@@ -1,0 +1,26 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Updated 2021-01-20',
+    'file_ext' : '.fits',
+    'filekind' : 'CUBEPAR',
+    'filetype' : 'CUBEPAR',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_cubepar.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.LAMP_MODE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '5cf226a54521d12a82acd33ab4934064a3d3f04a',
+    'suffix' : 'cubepar',
+    'text_descr' : 'IFU Cube defaults',
+    'unique_rowkeys' : ('DISPERSER', 'FILTER', 'WAVELENGTH'),
+}
+
+comment = """
+
+For table row checking,  unique_rowkeys is intersected with actual table
+column names to produce the final definition of modes.
+
+"""
+
+selector = Match({
+})

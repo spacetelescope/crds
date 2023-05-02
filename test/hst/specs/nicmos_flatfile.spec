@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'flt',
+    'ld_tpn': 'nic_flt_ld.tpn',
+    'parkey': ('CAMERA', 'FILTER'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(FILTER != "BLANK")',
+    'suffix': 'flt',
+    'text_descr': 'Flat Field',
+    'tpn': 'nic_flt.tpn',
+    'unique_rowkeys': None,
+}

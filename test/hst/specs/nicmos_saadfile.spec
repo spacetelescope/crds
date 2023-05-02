@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'sdk',
+    'ld_tpn': 'nic_sdk_ld.tpn',
+    'parkey': ('CAMERA',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'sdk',
+    'text_descr': 'Post Saa Dark Assoc.',
+    'tpn': 'nic_sdk.tpn',
+    'unique_rowkeys': None,
+}

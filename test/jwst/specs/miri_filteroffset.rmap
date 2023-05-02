@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'Hand made 2015-10-09 09:12:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'filteroffset',
+    'filetype' : 'FILTEROFFSET',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_filteroffset_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.EXP_TYPE', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+        'SUBARRAY' : 'META.SUBARRAY.NAME',
+    },
+    'sha1sum' : '784542e5f025ea0053c2927322e23969e5ef46a6',
+    'suffix' : 'filteroffset',
+    'text_descr' : 'Imager Filter Offset',
+}
+
+selector = Match({
+})

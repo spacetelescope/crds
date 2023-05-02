@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'Hand made 2015-10-09 13:27:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'msa',
+    'filetype' : 'MSA',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_msa_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.EXP_TYPE',),),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+    },
+    'sha1sum' : 'ecb67d915b325671fac3a2d5d490e7255e230500',
+    'suffix' : 'msa',
+    'text_descr' : 'Transform on the Multi Shutter Array',
+}
+
+selector = Match({
+})

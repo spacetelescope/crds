@@ -1,0 +1,29 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 02/02/2009 58375 MSwam     first version
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE       H        C         R    &SYBDATE
+OPUS_FLAG           H        C         R    Y,N
+COMPARISON_FILE     H        C         R
+COMMENT             H        C         R
+INSTRUMENT      H        C         R    COS
+REFERENCE_FILE_TYPE H        C         R    TDS
+DETECTOR            C        C         R    FUV,NUV
+OBSTYPE             C        C         R    SPECTROSCOPIC
+PEDIGREE           C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
+SEGMENT             C        C         R    FUVA,FUVB,NUVA,NUVB,NUVC
+OPT_ELEM            C        C         R    G130M,G160M,G140L,\
+                                            G185M,G225M,G285M,G230L
+APERTURE            C        C         R    PSA,BOA,ANY
+CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
+OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
+OBSERVATION_END_DATE    C    C         O    &SYBDATE
+COMMENT             C        C         P

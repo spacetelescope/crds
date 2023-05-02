@@ -1,0 +1,23 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand-made, SCSB, CRDS-416, 2020-10',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-darkpipeline',
+    'filetype' : 'pars-darkpipeline',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : '',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'b7eb8084cff9a6bb0e4fb32668b8895090547293',
+    'suffix' : 'pars-darkpipeline',
+    'text_descr' : 'DarkPipeline runtime parameters',
+}
+
+comment = """
+Step parameter references are JWST step and pipeline configurations.
+This reftype provides the configuration for jwst.pipeline.DarkPipeline
+"""
+
+selector = Match({
+})

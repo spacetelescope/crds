@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'Hand made 2015-09-02 16:35:00',
+    'file_ext' : '.fits',
+    'filekind' : 'AREA',
+    'filetype' : 'AREA',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_area.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '4d52def8b583e477d4b23624bad2acdac5d4a29c',
+    'suffix' : 'area',
+    'text_descr' : 'Pixel-Area Map',
+    'unique_rowkeys' : ('SLIT_ID', 'SLICE_ID', 'SHUTTER_X', 'SHUTTER_Y', 'QUADRANT'),
+}
+
+selector = Match({
+})

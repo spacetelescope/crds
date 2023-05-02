@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'pmk',
+    'ld_tpn': 'nic_pmk_ld.tpn',
+    'parkey': ('CAMERA',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'pmk',
+    'text_descr': 'Persistence Mask Files',
+    'tpn': 'nic_pmk.tpn',
+    'unique_rowkeys': None,
+}

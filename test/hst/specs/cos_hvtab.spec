@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'fuv high voltage history',
+    'ld_tpn': 'cos_hv_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "FUV")',
+    'suffix': 'hv',
+    'text_descr': 'High Voltage Reference Table',
+    'tpn': 'cos_hv.tpn',
+    'unique_rowkeys': ('DATE',),
+}

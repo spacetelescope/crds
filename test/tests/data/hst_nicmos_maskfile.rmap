@@ -1,0 +1,33 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.556654',
+    'filekind' : 'MASKFILE',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_maskfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : 'f41b1c1145e6e75ce8dd30d7199176529028fa74',
+}
+
+selector = Match({
+    (1,) : UseAfter({
+        '1997-01-01 00:00:00' : 't511816an_msk.fits',
+        '1997-06-01 00:00:00' : 't511816bn_msk.fits',
+        '1997-12-01 00:00:00' : 't511816cn_msk.fits',
+        '2002-01-01 00:00:00' : 't461845on_msk.fits',
+    }),
+    (2,) : UseAfter({
+        '1997-01-01 00:00:00' : 't511816dn_msk.fits',
+        '1997-01-03 00:00:00' : 't511816en_msk.fits',
+        '1998-01-01 00:00:00' : 't511816fn_msk.fits',
+        '2002-01-01 00:00:00' : 't461847bn_msk.fits',
+    }),
+    (3,) : UseAfter({
+        '1997-01-01 00:00:00' : 't511816gn_msk.fits',
+        '2002-01-01 00:00:00' : 't4618489n_msk.fits',
+    }),
+})

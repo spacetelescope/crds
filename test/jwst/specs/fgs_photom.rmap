@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Hand derived 2016-02-19',
+    'file_ext' : '.fits',
+    'filekind' : 'PHOTOM',
+    'filetype' : 'PHOTOMETRIC CALIBRATION',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'fgs_photom.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '0dab19ffd1c54ff5c9f7eb82dbcc61efecb0deda',
+    'suffix' : 'photom',
+    'text_descr' : 'Absolute Calibration',
+}
+
+selector = Match({
+})

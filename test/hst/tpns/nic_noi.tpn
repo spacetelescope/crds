@@ -1,0 +1,17 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+INSTRUME            H        C         R    NICMOS
+FILETYPE            H        C         R    NOI
+CAMERA              H        I         R    1:3
+READOUT	            H        C         R    FAST,SLOW
+NREAD		    H        I         R    1:25
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+USEAFTER            H        C         R    &SYBDATE

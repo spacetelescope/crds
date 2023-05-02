@@ -1,0 +1,22 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DATATYPE            H        C         R    REAL*4
+NAXIS               H        I         R    1
+NAXIS1              H        I         R    64:1265
+GCOUNT              H        I         R    1
+PCOUNT              H        I         R    0
+CRVAL1              H        R         R    0.0:1265.0
+CRPIX1              H        R         R    0.0:1265.0
+CDELT1              H        R         R    0.0:1.0
+INSTRUME            H        C         R    FOS
+FILETYPE            H        C         R    LSF
+DETECTOR            H        C         R    AMBER,BLUE
+APER_ID             H        C         R    A-1,A-2,A-3,A-4,B-1,B-2,B-3,B-4,C-1,C-2,C-3,C-4,ANY
+WAVELENG            H        R         R    0.:10000.00

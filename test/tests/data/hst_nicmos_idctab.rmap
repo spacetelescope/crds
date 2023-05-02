@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.345963',
+    'filekind' : 'IDCTAB',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_idctab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : 'b204a7792881bf1422a0aaa44bef738d420b7687',
+}
+
+selector = Match({
+    (1,) : UseAfter({
+        '2000-01-01 00:00:00' : 's8d1954tn_idc.fits',
+    }),
+    (2,) : UseAfter({
+        '2000-01-01 00:00:00' : 's8d19550n_idc.fits',
+    }),
+    (3,) : UseAfter({
+        '2000-01-01 00:00:00' : 's8d19551n_idc.fits',
+    }),
+})

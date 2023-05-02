@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'jwst_niriss_0016.imap',
+    'instrument' : 'NIRISS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_niriss_na_omit.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '2c3aa080cd7dab387a3620d7122061ac945b6802',
+}
+
+selector = {
+    'FLAT' : 'jwst_niriss_flat_na_omit.rmap',
+}

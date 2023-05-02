@@ -1,0 +1,9 @@
+# This .tpn defines constraints related to array objects vs. header keywords.
+# Required relationships between subarray keywords are defined in a subarray .tpn
+# This file pertains to array properties and their relationships to header keywords.
+
+ERR      A     X  (array_exists(ERR_ARRAY))      (is_image(ERR_ARRAY))
+ERR      A     X  (array_exists(ERR_ARRAY))      (warn_only(has_type(ERR_ARRAY,'FLOAT')))
+ERR      A     X  (array_exists(ERR_ARRAY))      (warn_only(ndim(ERR_ARRAY,3)))
+ERR      A     X  (array_exists(ERR_ARRAY))      (ERR_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+

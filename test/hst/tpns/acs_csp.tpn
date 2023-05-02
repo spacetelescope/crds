@@ -1,0 +1,19 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 10/12/04  51981  MSwam   first version
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	ACS
+FILETYPE	H	C	R    	"SPOT POSITION TABLE"
+DETECTOR	H	C	R	HRC
+OBSTYPE		H	C	R	CORONAGRAPHIC
+USEAFTER  	H	C	R	&SYBDATE
+PEDIGREE  	H	C	R	&PEDIGREE
+

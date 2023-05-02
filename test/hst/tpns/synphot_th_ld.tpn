@@ -1,0 +1,30 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 05/17/2007 58081  MSwam  change PEDIGREE validation by request
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DBTABLE             H        C         R    CRTHERMAL
+USEAFTER            H        C         R    &SYBDATE
+INSTRUME            H        C         R
+COMMENT             H        C         R
+HISTORY             H        C         R
+
+COMPNAME            H        C         R
+COMPNAME            H        X         R    ((len(COMPNAME)>0)and(len(COMPNAME)<=18)and(COMPNAME==COMPNAME.lower()))
+
+DESCRIP             H        C         R
+DATE                H        C         R
+PEDIGREE            H        C         W    &PEDIGREE
+
+LITREF              H        C         W
+
+WAVELENGTH          C        R         R
+EMISSIVITY          C        R         W
+
+EXT1                D        X         R    &SYNPHOT_THERMAL

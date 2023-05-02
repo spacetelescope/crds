@@ -1,0 +1,292 @@
+SIMPLE  =                    F /                                                
+BITPIX  =                   32 /                                                
+DATATYPE= 'REAL*4  '           /                                                
+NAXIS   =                    2 /                                                
+NAXIS1  =                 4096 /                                                
+NAXIS2  =                    2 /                                                
+GROUPS  =                    T /                                                
+GCOUNT  =                    4 /                                                
+PCOUNT  =                   38 /                                                
+PSIZE   =                 1760 /                                                
+PTYPE1  = 'CRVAL1  '           /right ascension of reference pixel              
+PDTYPE1 = 'REAL*8  '           /                                                
+PSIZE1  =                   64 /                                                
+PTYPE2  = 'CRVAL2  '           /declination of reference pixel                  
+PDTYPE2 = 'REAL*8  '           /                                                
+PSIZE2  =                   64 /                                                
+PTYPE3  = 'CRPIX1  '           /x-coordinate of reference pixel                 
+PDTYPE3 = 'REAL*4  '           /                                                
+PSIZE3  =                   32 /                                                
+PTYPE4  = 'CRPIX2  '           /y-coordinate of reference pixel                 
+PDTYPE4 = 'REAL*4  '           /                                                
+PSIZE4  =                   32 /                                                
+PTYPE5  = 'CD1_1   '           /partial of the right ascension w.r.t. x         
+PDTYPE5 = 'REAL*4  '           /                                                
+PSIZE5  =                   32 /                                                
+PTYPE6  = 'CD1_2   '           /partial of the right ascension w.r.t. y         
+PDTYPE6 = 'REAL*4  '           /                                                
+PSIZE6  =                   32 /                                                
+PTYPE7  = 'CD2_1   '           /partial of the declination w.r.t. x             
+PDTYPE7 = 'REAL*4  '           /                                                
+PSIZE7  =                   32 /                                                
+PTYPE8  = 'CD2_2   '           /partial of the declination w.r.t. y             
+PDTYPE8 = 'REAL*4  '           /                                                
+PSIZE8  =                   32 /                                                
+PTYPE9  = 'DATAMIN '           /minimum value of the data                       
+PDTYPE9 = 'REAL*4  '           /                                                
+PSIZE9  =                   32 /                                                
+PTYPE10 = 'DATAMAX '           /maximum value of the data                       
+PDTYPE10= 'REAL*4  '           /                                                
+PSIZE10 =                   32 /                                                
+PTYPE11 = 'MIR_REVR'           /is the image mirror reversed?                   
+PDTYPE11= 'LOGICAL*4'          /                                                
+PSIZE11 =                   32 /                                                
+PTYPE12 = 'ORIENTAT'           /orientation of the image in degrees             
+PDTYPE12= 'REAL*4  '           /                                                
+PSIZE12 =                   32 /                                                
+PTYPE13 = 'FILLCNT '           /number of segments containing fill              
+PDTYPE13= 'INTEGER*4'          /                                                
+PSIZE13 =                   32 /                                                
+PTYPE14 = 'ERRCNT  '           /number of segments containing errors            
+PDTYPE14= 'INTEGER*4'          /                                                
+PSIZE14 =                   32 /                                                
+PTYPE15 = 'FPKTTIME'           /time of the first packet                        
+PDTYPE15= 'REAL*8  '           /                                                
+PSIZE15 =                   64 /                                                
+PTYPE16 = 'LPKTTIME'           /time of the last packet                         
+PDTYPE16= 'REAL*8  '           /                                                
+PSIZE16 =                   64 /                                                
+PTYPE17 = 'CTYPE1  '           /first coordinate type                           
+PDTYPE17= 'CHARACTER*8'        /                                                
+PSIZE17 =                   64 /                                                
+PTYPE18 = 'CTYPE2  '           /second coordinate type                          
+PDTYPE18= 'CHARACTER*8'        /                                                
+PSIZE18 =                   64 /                                                
+PTYPE19 = 'DETECTOR'           /CCD detector: PC 1, WFC 2-4                     
+PDTYPE19= 'INTEGER*4'          /                                                
+PSIZE19 =                   32 /                                                
+PTYPE20 = 'DEZERO  '           /Mean bias level from EED extended register      
+PDTYPE20= 'REAL*4  '           /                                                
+PSIZE20 =                   32 /                                                
+PTYPE21 = 'BIASEVEN'           /Bias level for even-numbered columns            
+PDTYPE21= 'REAL*4  '           /                                                
+PSIZE21 =                   32 /                                                
+PTYPE22 = 'BIASODD '           /Bias level for odd-numbered columns             
+PDTYPE22= 'REAL*4  '           /                                                
+PSIZE22 =                   32 /                                                
+PTYPE23 = 'GOODMIN '           /minumum value of the "good" pixels              
+PDTYPE23= 'REAL*4  '           /                                                
+PSIZE23 =                   32 /                                                
+PTYPE24 = 'GOODMAX '           /maximum value of the "good" pixels              
+PDTYPE24= 'REAL*4  '           /                                                
+PSIZE24 =                   32 /                                                
+PTYPE25 = 'DATAMEAN'           /mean value of the "good" pixels                 
+PDTYPE25= 'REAL*4  '           /                                                
+PSIZE25 =                   32 /                                                
+PTYPE26 = 'GPIXELS '           /number of "good" pixels               (DQF=0)   
+PDTYPE26= 'INTEGER*4'          /                                                
+PSIZE26 =                   32 /                                                
+PTYPE27 = 'SOFTERRS'           /number of "soft error" pixels         (DQF=1)   
+PDTYPE27= 'INTEGER*4'          /                                                
+PSIZE27 =                   32 /                                                
+PTYPE28 = 'CALIBDEF'           /number of "calibration defect" pixels (DQF=2)   
+PDTYPE28= 'INTEGER*4'          /                                                
+PSIZE28 =                   32 /                                                
+PTYPE29 = 'STATICD '           /number of "static defect" pixels      (DQF=4)   
+PDTYPE29= 'INTEGER*4'          /                                                
+PSIZE29 =                   32 /                                                
+PTYPE30 = 'ATODSAT '           /number of "AtoD saturated" pixels     (DQF=8)   
+PDTYPE30= 'INTEGER*4'          /                                                
+PSIZE30 =                   32 /                                                
+PTYPE31 = 'DATALOST'           /number of "data lost" pixels          (DQF=16)  
+PDTYPE31= 'INTEGER*4'          /                                                
+PSIZE31 =                   32 /                                                
+PTYPE32 = 'BADPIXEL'           /number of "generic bad" pixels        (DQF=32)  
+PDTYPE32= 'INTEGER*4'          /                                                
+PSIZE32 =                   32 /                                                
+PTYPE33 = 'OVERLAP '           /number of "image overlap" pixels      (DQF=64)  
+PDTYPE33= 'INTEGER*4'          /                                                
+PSIZE33 =                   32 /                                                
+PTYPE34 = 'PHOTMODE'           /Photometry mode                                 
+PDTYPE34= 'CHARACTER*48'       /                                                
+PSIZE34 =                  384 /                                                
+PTYPE35 = 'PHOTFLAM'           /Inverse Sensitivity                             
+PDTYPE35= 'REAL*4  '           /                                                
+PSIZE35 =                   32 /                                                
+PTYPE36 = 'PHOTZPT '           /Zero point                                      
+PDTYPE36= 'REAL*4  '           /                                                
+PSIZE36 =                   32 /                                                
+PTYPE37 = 'PHOTPLAM'           /Pivot wavelength                                
+PDTYPE37= 'REAL*4  '           /                                                
+PSIZE37 =                   32 /                                                
+PTYPE38 = 'PHOTBW  '           /RMS bandwidth of the filter                     
+PDTYPE38= 'REAL*4  '           /                                                
+PSIZE38 =                   32 /                                                
+DADSFILE= 'DBU1405FU.R1F'      /                                                
+DADSCLAS= 'CDB     '           /                                                
+DADSDATE= '17-AUG-1994 05:18:39' /                                              
+                                                                                
+                               / GROUP PARAMETERS: OSS                          
+                                                                                
+                                                                                
+                               / GROUP PARAMETERS: PODPS                        
+                                                                                
+                                                                                
+                               / GROUP PARAMETERS: DATA QUALITY FILE SUMMARY    
+                                                                                
+                                                                                
+                               / GROUP PARAMETERS: PHOTOMETRY                   
+                                                                                
+                                                                                
+                               / WFPC2 DATA DESCRIPTOR KEYWORDS                 
+                                                                                
+INSTRUME= 'WFPC2   '           / instrument in use                              
+ROOTNAME= 'DBU1405FU'          / rootname of the observation set                
+DESCRIP=  'Fake description."                                                   
+USEAFTER= 'Jul 30 2017'        / Fake USEAFTER for certify                      
+PEDIGREE= 'DUMMY'              / Fake PEDIGREE for certify                      
+FILETYPE= 'A2D     '           / shp, ext, edq, sdq, sci                        
+                                                                                
+                               / SCIENCE INSTRUMENT CONFIGURATION               
+                                                                                
+MODE    = 'FULL    '           / instr. mode: FULL (full res.), AREA (area int.)
+SERIALS = 'OFF     '           / serial clocks: ON, OFF                         
+                                                                                
+                               / IMAGE TYPE CHARACTERISTICS                     
+                                                                                
+IMAGETYP= 'CDBS    '           / DARK/BIAS/IFLAT/UFLAT/VFLAT/KSPOT/EXT/ECAL     
+CDBSFILE= 'ATOD    '           / GENERIC/BIAS/DARK/FLAT/MASK/NO                 
+PKTFMT  = '        '           / packet format code                             
+DATE    = '29/11/93'           / date file written (dd/mm/yy)                   
+                                                                                
+                               / FILTER CONFIGURATION                           
+                                                                                
+FILTNAM1= '        '           / first filter name                              
+FILTNAM2= '        '           / second filter name                             
+FILTER1 =                    0 / first filter number (0-48)                     
+FILTER2 =                    0 / second filter number (0-48)                    
+FILTROT =                   0. / "ramp" filter rotation angle (deg)             
+LRFWAVE =                   0. / linear ramp filter wavelength                  
+                               / INSTRUMENT STATUS USED IN DATA PROCESSING      
+                                                                                
+UCH1CJTM=                -1.00 / TEC cold junction #1 temperature (Celcius)     
+UCH2CJTM=                -1.00 / TEC cold junction #2 temperature (Celcius)     
+UCH3CJTM=                -1.00 / TEC cold junction #3 temperature (Celcius)     
+UCH4CJTM=                -1.00 / TEC cold junction #4 temperature (Celcius)     
+UBAY3TMP=                -1.00 / Bay 3 A1 temperature (Celcius)                 
+KSPOTS  = 'OFF     '           / Status of Kelsall spot lamps: ON, OFF          
+SHUTTER = '        '           / Shutter in place during preflash or IFLAT (A,B)
+ATODGAIN=                  15. /                                                
+                                                                                
+                               / RSDP CONTROL KEYWORDS                          
+                                                                                
+MASKCORR= '        '           / Do mask correction: PERFORM, OMIT, COMPLETED   
+ATODCORR= '        '           / Do A-to-D correction: PERFORM, OMIT, COMPLETED 
+BLEVCORR= '        '           / Do bias level correction: PERFORM, OMIT, COMPLE
+BIASCORR= '        '           / Do bias correction: PERFORM, OMIT, COMPLETED   
+DARKCORR= '        '           / Do dark correction: PERFORM, OMIT, COMPLETED   
+FLATCORR= '        '           / Do flat field correction: PERFORM, OMIT, COMPLE
+SHADCORR= '        '           / Do shaded shutter correction: PERFORM, OMIT, CO
+DOSATMAP= '        '           / Output saturated pixel map: PERFORM, OMIT, COMP
+DOPHOTOM= '        '           / Fill photometry keywords: PERFORM, OMIT, COMPLE
+OUTDTYPE= 'SHORT   '           / Output image datatype: REAL, LONG, SHORT       
+                                                                                
+                               / CALIBRATION REFERENCE FILES                    
+                                                                                
+MASKFILE= '        '           / name of the input DQF of known bad pixels      
+ATODFILE= '        '           / name of A-to-D conversion file                 
+BLEVFILE= '        '           / Engineering file with extended register data   
+BLEVDFIL= '        '           / Engineering file DQF                           
+BIASFILE= '        '           / name of the bias frame reference file          
+BIASDFIL= '        '           / name of the bias frame reference DQF           
+DARKFILE= '        '           / name of the dark reference file                
+DARKDFIL= '        '           / name of the dark reference DQF                 
+FLATFILE= '        '           / name of the flat field reference file          
+FLATDFIL= '        '           / name of the flat field reference DQF           
+SHADFILE= '        '           / name of the reference file for shutter shading 
+PHOTTAB = '        '           / name of the photometry calibration table       
+GRAPHTAB= '        '           / the HST graph table                            
+COMPTAB = '        '           / the HST components table                       
+                                                                                
+                               / DEFAULT KEYWORDS SET BY STSCI                  
+                                                                                
+SATURATE=                 4095 / Data value at which saturation occurs          
+USCALE  =                   1. / Scale factor for output image                  
+UZERO   =                   0. / Zero point for output image                    
+                                                                                
+                               / READOUT DURATION INFORMATION                   
+                                                                                
+READTIME=                    0 / Length of time for CCD readout in clock ticks  
+                                                                                
+                               / PLANETARY SCIENCE KEYWORDS                     
+                                                                                
+PA_V3   =                   0. / position angle of v3 axis of HST               
+RA_SUN  =                   0. / right ascension of the sun                     
+DEC_SUN =                   0. / declination of the sun                         
+EQNX_SUN=                2000. / epoch of the sun                               
+MTFLAG  =                    F / moving target flag                             
+EQRADTRG=                  0.0 / equatorial radius of target                    
+FLATNTRG=                  0.0 / flattening of target                           
+NPDECTRG=                  0.0 / north pole declination of target               
+NPRATRG =                   0. / north pole right ascension of target           
+ROTRTTRG=                  0.0 / rotation rate of target                        
+LONGPMER=                  0.0 / longitude of prime meridian                    
+EPLONGPM=                  0.0 / epoch of longitude of prime meridian           
+SURFLATD=                  0.0 / surface feature latitude                       
+SURFLONG=                  0.0 / surface feature longitude                      
+SURFALTD=                  0.0 / surface feature altitude                       
+                                                                                
+                               / PODPS FILL VALUES                              
+                                                                                
+PODPSFF =                    0 / 0=(no podps fill), 1=(podps fill present)      
+STDCFFF =                    0 / 0=(no st dcf fill), 1=(st dcf fill present)    
+STDCFFP = '        '           / st dcf fill pattern (hex)                      
+RSDPFILL=                 -100 / bad data fill value for calibrated images      
+                                                                                
+                               / EXPOSURE TIME AND RELATED INFORMATION          
+                                                                                
+UEXPODUR=                    0 / Commanded duration of exposure (seconds)       
+NSHUTA17=                    0 / Number of AP17 shutter B closes                
+DARKTIME=                  0.0 / Dark time (seconds)                            
+UEXPOTIM=                    0 / Major frame pulse preceding exposure start     
+PSTRTIME= '        '           / Predicted observation start time  (yydddhhmmss)
+PSTPTIME= '        '           / Predicted observation stop  time  (yydddhhmmss)
+                                                                                
+                               / EXPOSURE INFORMATION                           
+                                                                                
+EQUINOX = ' J2000  '           / equinox of the celestial coordinate system     
+SUNANGLE=                   0. / angle between the sun and V1 axis (deg)        
+MOONANGL=                   0. / angle between the moon and V1 axis (deg)       
+SUN_ALT =                   0. / altitude of the sun above the Earth's limb(deg)
+FGSLOCK =                   '' / commanded FGS lock (FINE,COARSE,GYROS,UNKNOWN) 
+                                                                                
+                                                                                
+DATE-OBS=                    / / UT date of start of observation (dd/mm/yy)     
+TIME-OBS=                   '' / UT time of start of observation (hh:mm:ss)     
+EXPSTART=                   0. / exposure start time (Modified Julian Date)     
+EXPEND  =                   0. / exposure end time (Modified Julian Date)       
+EXPTIME =                   0. / exposure duration (seconds) -- calculated      
+EXPFLAG =                    / / Exposure interruption indicator                
+                                                                                
+                               / TARGET & PROPOSAL ID                           
+                                                                                
+TARGNAME= '        '           / proposer's target name                         
+RA_TARG =                   0. / right ascension of target                      
+DEC_TARG=                   0. / declination of target                          
+                                                                                
+PROPOSID= '        '           / PEP proposal identifier                        
+PEP_EXPO= '        '           / PEP exposure identifier including sequence     
+LINENUM =                    / / PEP proposal line number                       
+SEQLINE =                    / / PEP line number of defined sequence            
+SEQNAME =                    / / PEP define/use sequence name                   
+HISTORY                                                                         
+HISTORY                                                                         
+HISTORY  This is the final A2D lookup table, created by Jeff Hester, August 93. 
+HISTORY  This file was initially formatted by John Krist, September 93.         
+HISTORY                                                                         
+HISTORY                                                                         
+HISTORY   File checked and minor keyword value changes made                     
+HISTORY   by Christine Ritchie, SIB.  November 29, 1993                         
+HISTORY                                                                         
+HISTORY   trueadc15.r1h renamed to  dbu1405fu.r1h on Tue 14:05:30 30-Nov-93     
+END                                                                             

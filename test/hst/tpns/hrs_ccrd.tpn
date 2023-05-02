@@ -1,0 +1,17 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CZCCRDR
+DETECTOR            C        I         R    1,2
+LINE1               C        R         R    
+LINE2               C        R         R    
+SAMPLE1             C        R         R    
+SAMPLE2             C        R         R    
+EPSILON             C        I         R    
+DEPTH               C        R         R    

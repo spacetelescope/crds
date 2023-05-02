@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'data quality initialization table',
+    'ld_tpn': 'cos_bpix_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'bpix',
+    'text_descr': 'Data Quality (Bad Pixel) Initialization Table',
+    'tpn': 'cos_bpix.tpn',
+    'unique_rowkeys': (),
+}

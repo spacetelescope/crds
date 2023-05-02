@@ -1,0 +1,18 @@
+
+# refpix have not been removed, so 1032 not 1024
+
+replace XDIM_MAX 1032
+
+include includes/miri_subarray_both.tpn
+
+include includes/miri_sci_array_refpix.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  O  PixelAreaModel
+
+# PIXAR_SR = FLOAT / (sr) Nominal pixel area for this detector
+# PIXAR_A2 = FLOAT / (arcsec2) Nominal pixel area for this detector
+
+PIXAR_SR     H      R        R
+PIXAR_A2     H      R        R
+

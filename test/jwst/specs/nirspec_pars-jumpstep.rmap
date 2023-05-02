@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'Placeholder 2022-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-jumpstep',
+    'filetype' : 'pars-jumpstep',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pars-jumpstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '1364e67be561382faa51824b3af9de522c770628',
+    'suffix' : 'pars-jumpstep',
+    'text_descr' : 'JumpStep runtime parameters',
+}
+
+comment = """
+CCD-1231: Actual implementation. No selection criteria specified.
+
+Original implementation: Placeholder spec to simply define the reference type
+"""
+
+selector = Match({
+})

@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'burst parameters table',
+    'ld_tpn': 'cos_burst_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSMODE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'brstcorr',
+    'rmap_relevance': '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (BRSTCORR != "OMIT"))',
+    'suffix': 'burst',
+    'text_descr': 'Burst Parameters Table',
+    'tpn': 'cos_burst.tpn',
+    'unique_rowkeys': ('SEGMENT',),
+}

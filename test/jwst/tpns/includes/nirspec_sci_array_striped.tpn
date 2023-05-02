@@ -1,0 +1,16 @@
+SCI       A           X         (NIR_FILTER)                              (array_exists(SCI_ARRAY))
+SCI       A           X         (NIR_FILTER)                              (is_image(SCI_ARRAY))
+SCI       A           X         (NIR_FILTER)                              (has_type(SCI_ARRAY,['FLOAT']))
+
+SUBARRAY_INBOUNDS_X         X   X   (NIR_FILTER)                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+SUBARRAY_INBOUNDS_Y         X   X   (NIR_FILTER)                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+SCI       A           X             (NIR_FILTER)                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+# Full width striping is an issue,  array may not match subarray size
+SCI       A           X         (is_full_frame(SUBARRAY)and(not(is_irs2(READPATT))))   (warn_only(SCI_ARRAY.SHAPE[-2:]in[(2048,2048),(32,2048),(64,2048),(256,2048),(260,2048)]))
+SCI       A           X         (is_full_frame(SUBARRAY)and(is_irs2(READPATT)))        (warn_only(SCI_ARRAY.SHAPE[-2:]in[(YDIM_MAX,2048),(32,2048),(64,2048),(256,2048)]))
+
+SCI       A           X         (is_subarray(SUBARRAY)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         (is_subarray(SUBARRAY)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=YDIM_MAX)
+SCI       A           X         (is_subarray(SUBARRAY))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
+

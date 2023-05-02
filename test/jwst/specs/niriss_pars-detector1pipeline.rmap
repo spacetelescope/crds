@@ -1,0 +1,23 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand-made, SCSB, 202102',
+    'file_ext' : '.asdf',
+    'filekind' : 'PARS-DETECTOR1PIPELINE',
+    'filetype' : 'PARS-DETECTOR1PIPELINE',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : '',
+    'observatory' : 'JWST',
+    'parkey' : (('META.VISIT.TSOVISIT',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'c516fa10ba430ddd970ff699c1844c6c30adb011',
+    'suffix' : 'pars-detector1pipeline',
+    'text_descr' : 'Step parameters for Detector1Pipeline',
+}
+
+comment = """
+Step parameter references are JWST step and pipeline configurations.
+This reftype provides the configuration for jwst.pipeline.Detector1Pipeline
+"""
+
+selector = Match({
+})

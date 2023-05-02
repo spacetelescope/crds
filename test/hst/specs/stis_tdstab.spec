@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'time dependent sensitivity table',
+    'ld_tpn': 'stis_tds_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'tds',
+    'text_descr': 'Time Dependent Sensitivity Table',
+    'tpn': 'stis_tds.tpn',
+    'unique_rowkeys': ('OPT_ELEM', 'REF_TEMP'),
+}

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Hand made 2016-02-18',
+    'file_ext' : '.fits',
+    'filekind' : 'AREA',
+    'filetype' : 'AREA',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_area_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '5d120d9441bd9f90bc16dacd462fad664a0158bc',
+    'suffix' : 'area',
+    'text_descr' : 'Pixel-Area Map',
+}
+
+selector = Match({
+})

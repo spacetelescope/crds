@@ -1,0 +1,24 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 10/21/09 63765 MSwam    add OPT_ELEM
+# 05/24/13 74168 MSwam    make OPT_ELEM optional (does not apply for FUV)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    COS
+FILETYPE            H        C         R    "FLAT FIELD REFERENCE IMAGE"
+DETECTOR            H        C         R    FUV,NUV
+VCALCOS             H        C         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+OPT_ELEM            H        C         O    G130M,G160M,G140L,\
+                                            G185M,G225M,G285M,G230L, \
+                                            MIRRORA,MIRRORB,ANY
+LIFE_ADJ            H        I         R    -1,0,1,2,3,4,5,6,-11

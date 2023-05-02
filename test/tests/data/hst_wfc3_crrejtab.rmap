@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:43.936604',
+    'filekind' : 'CRREJTAB',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_crrejtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'row_keys' : ('CRSPLIT', 'MEANEXP'),
+    'sha1sum' : '520b6ba4e0f07541619bd83c7effd63d477a00c9',
+}
+
+selector = Match({
+    ('IR',) : UseAfter({
+        '2001-01-01 00:00:00' : 'n9i1435ji_crr.fits',
+        '2001-01-02 00:00:00' : 'tag1826ki_crr.fits',
+        '2009-05-14 00:00:00' : 'u6a1748ri_crr.fits',
+    }),
+    ('UVIS',) : UseAfter({
+        '2001-01-01 00:00:00' : 'n9i1435li_crr.fits',
+    }),
+})

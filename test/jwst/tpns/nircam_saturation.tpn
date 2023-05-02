@@ -1,0 +1,15 @@
+include includes/nir_subarray.tpn
+
+replace SCI_TYPE  ['FLOAT','INT']
+replace XDIM_MAX  2304
+
+include includes/nir_sci_array_both.tpn
+
+include includes/nir_dq_array.tpn
+include includes/nir_dq_def_array.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  SaturationModel
+
+SCI   A   X    R  (ndim(SCI_ARRAY,2))
+DQ    A   X    O  (ndim(DQ_ARRAY,2))

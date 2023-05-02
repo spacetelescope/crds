@@ -1,0 +1,24 @@
+# This file applies to only NIRSPEC SCI arrays.
+#
+# This .tpn defines constraints related to array objects vs. header keywords.
+# Required relationships between subarray keywords are defined in a subarray .tpn
+# This file pertains to array properties and their relationships to header keywords.
+
+# These are X instead of H because they're fundamentally not keyword/header checks,  
+# they're condition checks where the name of the condition is given in place of the keyword.
+#
+SCI       A           X         (NIR_FILTER)                              (array_exists(SCI_ARRAY))
+SCI       A           X         (NIR_FILTER)                              (is_image(SCI_ARRAY))
+SCI       A           X         (NIR_FILTER)                              (has_type(SCI_ARRAY,SCI_TYPE))
+
+SUBARRAY_INBOUNDS_X         X   X   (NIR_FILTER)                           (1<=META_SUBARRAY_XSTART+META_SUBARRAY_XSIZE-1<=2048)
+SUBARRAY_INBOUNDS_Y         X   X   (NIR_FILTER)                           (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2048)
+SCI       A           X             (NIR_FILTER)                           (SCI_ARRAY.SHAPE[-2:]>=(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+# Full width striping is an issue,  array may not match subarray size
+SCI       A           X         (full_frame(NIR_FILTER)and(not(is_irs2(READPATT))))   (SCI_ARRAY.SHAPE[-2:]==(2048,2048))
+SCI       A           X         (full_frame(NIR_FILTER)and(is_irs2(READPATT)))        (SCI_ARRAY.SHAPE[-2:]==(YDIM_MAX,2048))
+
+SCI       A           X         (subarray(NIR_FILTER)and(not(is_irs2(READPATT))))     (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
+SCI       A           X         (subarray(NIR_FILTER)and(is_irs2(READPATT)))          (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=YDIM_MAX)
+SCI       A           X         (subarray(NIR_FILTER))                                (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Hand created 2016-02-19',
+    'file_ext' : '.fits',
+    'filekind' : 'FLAT',
+    'filetype' : 'PIXEL-TO-PIXEL FLAT',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'fgs_flat.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '384b9ebba29831f7b84a21dd492e495657e04afe',
+    'suffix' : 'flat',
+    'text_descr' : 'Flat Field',
+}
+
+selector = Match({
+})

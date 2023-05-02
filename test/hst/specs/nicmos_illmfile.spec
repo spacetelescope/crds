@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'ilm',
+    'ld_tpn': 'nic_ilm_ld.tpn',
+    'parkey': ('CAMERA', 'FILTER'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(FILTER != "BLANK")',
+    'suffix': 'ilm',
+    'text_descr': 'Illumination Pattern File',
+    'tpn': 'nic_ilm.tpn',
+    'unique_rowkeys': None,
+}

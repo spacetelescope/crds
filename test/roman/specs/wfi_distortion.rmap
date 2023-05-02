@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2022-03-31',
+    'file_ext' : '.asdf',
+    'filekind' : 'DISTORTION',
+    'filetype' : 'DISTORTION',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_distortion_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_distortion.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'c8c43f459bbd17e8680b0983f4976b70c36279ff',
+    'suffix' : 'distortion',
+    'text_descr' : 'Distortion',
+    'tpn' : 'wfi_distortion.tpn',
+}
+
+selector = Match({
+})

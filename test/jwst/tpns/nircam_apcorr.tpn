@@ -1,0 +1,15 @@
+# NIRCam APCORR specs
+#----------------------------------------------------------
+include includes/apcorr.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NrcImgApcorrModel,NrcWfssApcorrModel
+
+FILTER                     C   C   R   CLEAR,F070W,F090W,F115W,F140M,F150W,F150W2,\
+                                       F182M,F187N,F200W,F210M,F212N,WLP4,F277W,F356W,\
+                                       F444W,F300M,F335M,F360M,F410M,F430M,F460M,F480M,\
+                                       F250M,F322W2,MULTIPLE,N/A,ANY
+
+PUPIL                      C   C   R    CLEAR,FLAT,F162M,F164N,GDHS0,GDHS60,MASKBAR,MASKIPR,\
+                                        MASKRND,PINHOLES,WLM8,WLP8,F323N,F405N,F466N,F470N,\
+                                        GRISMC,GRISMR,GRISMV2,GRISMV3,N/A,ANY

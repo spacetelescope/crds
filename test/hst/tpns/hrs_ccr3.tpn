@@ -1,0 +1,35 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CZCCR3R
+DETECTOR            C        I         R    1,2
+DXNULL              C        I         R    
+DYNULL              C        I         R    
+S0                  C        I         R    
+C                   C        R         R    
+NXSCALE             C        I         R    
+PXSCALE             C        I         R    
+C1                  C        I         R    
+C2                  C        I         R    
+SKY_MNFWIDTH        C        I         R    
+SKY_MDFWIDTH        C        I         R    
+INT_MNFWIDTH        C        I         R    
+INT_MDFWIDTH        C        I         R    
+YTOL1               C        R         R    
+YTOL2               C        R         R    
+YTOL3               C        R         R    
+MIN_DIO             C        R         R    
+MIN_PHC             C        R         R    
+MIN_ECH             C        R         R    
+MIN_ABS             C        R         R    
+DELTA_T             C        R         R    
+PERIOD              C        R         R    
+AP_RATIO            C        R         R    
+SKY_ORDER           C        I         R    
+INT_ORDER           C        I         R    

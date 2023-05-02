@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'low-order flatfield image',
+    'ld_tpn': 'stis_lfl_ld.tpn',
+    'parkey': ('DETECTOR', 'OPT_ELEM', 'OBSTYPE', 'CENWAVE', 'APERTURE'),
+    'parkey_relevance': {'aperture': '(OBSTYPE == "IMAGING")', 'cenwave': '(OBSTYPE == "SPECTROSCOPIC")'},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'lfl',
+    'text_descr': 'Low-order Flat Field Image',
+    'tpn': 'stis_lfl.tpn',
+    'unique_rowkeys': None,
+}

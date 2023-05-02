@@ -1,0 +1,62 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column|Expression)
+# datatype = (Integer|Real|Logical|Double|Character|Expression)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+META.INSTRUMENT.NAME        H   C   R                   NIRCAM
+
+# META.INSTRUMENT.PUPIL       H   C   O   CLEAR,F162M,F164N,F323N,F405N,F466N,F470N,GRISMV2,GRISMV3,FLAT,MASKBAR,MASKRND,ANY,N/A
+
+META.INSTRUMENT.PUPIL       H   C   O
+
+META.INSTRUMENT.DETECTOR    H   C   O   NRCA1,NRCA2,NRCA3,NRCA4,\
+                                        NRCB1,NRCB2,NRCB3,NRCB4,\
+                                        NRCALONG,NRCBLONG,ANY,N/A
+META.INSTRUMENT.FILTER      H   C   O
+
+# META.EXPOSURE.READPATT      H   C   O   DEEP8,DEEP2,MEDIUM8,MEDIUM2,\
+#                                         SHALLOW4,SHALLOW2,\
+#                                         BRIGHT2,BRIGHT1,RAPID,ANY,N/A
+
+META.EXPOSURE.TYPE          H   C   O   NRC_CORON,NRC_DARK,NRC_FLAT,NRC_FOCUS,NRC_IMAGE,NRC_GRISM,\
+                                        NRC_LED,NRC_TACONFIRM,NRC_TACQ,NRC_TSGRISM,NRC_TSIMAGE,ANY,N/A,\
+                                        NRC_WFSC,NRC_WFSS
+
+META.INSTRUMENT.CHANNEL     H   C   O   SHORT,LONG,ANY,N/A
+
+
+# Obsolete:  MASKA210R,MASKA430R,MASKBLWB,MASKBSWB
+
+META.SUBARRAY.NAME          H   C   O   SUB128,\
+                                        SUB160,SUB160P,\
+                                        SUB320,SUB320A335R,SUB320A430R,SUB320ALWB,SUB320B335R,SUB320B430R,SUB320BLWB,\
+                                        SUB32TATS,SUB32TATSGRISM,\
+                                        SUB400P,SUB400X256ALWB,\
+                                        SUB640,SUB640A210R,SUB640ASWB,SUB640B210R,SUB640BSWB,\
+                                        SUB64FP1A,SUB64FP1B,SUB64P,\
+                                        SUB8FP1A,SUB8FP1B,\
+                                        SUB96DHSPILA,SUB96DHSPILB,\
+                                        SUBFSA210R,SUBFSA335R,SUBFSA430R,SUBFSALWB,SUBFSASWB,\
+                                        SUBGRISM128,SUBGRISM256,SUBGRISM64,\
+                                        \
+                                        SUBNDA210R,SUBNDA335R,SUBNDA430R,\
+                                        SUBNDALWBL,SUBNDALWBS,SUBNDASWBL,SUBNDASWBS,\
+                                        \
+                                        SUBNDB210R,SUBNDB335R,SUBNDB430R,\
+                                        SUBNDBLWBL,SUBNDBLWBS,SUBNDBSWBL,SUBNDBSWBS,\
+                                        \
+                                        SUBSTRIPE256,\
+                                        \
+                                        MASK210R,MASK335R,MASK430R,MASKLWB,MASKSWB,\
+                                        \
+                                        MASKA210R,MASKA430R,MASKBLWB,MASKBSWB,\
+                                        \
+                                        FULL,FULLP,ANY,GENERIC,N/A
+
+
+
+include includes/nir_subarray_baseline.tpn

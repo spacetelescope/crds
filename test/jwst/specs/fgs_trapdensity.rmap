@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 06-22-2017',
+    'file_ext' : '.fits',
+    'filekind' : 'trapdensity',
+    'filetype' : 'TRAPDENSITY',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'fgs_trapdensity.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '4f64aa67e19c0ac3583b4336a566173808e8004c',
+    'suffix' : 'trapdensity',
+    'text_descr' : 'Trap Density For Persistence Step',
+}
+
+selector = Match({
+})

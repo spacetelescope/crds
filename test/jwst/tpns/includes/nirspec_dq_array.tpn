@@ -1,0 +1,18 @@
+# This .tpn defines constraints related to array objects vs. header keywords.
+# Required relationships between subarray keywords are defined in a subarray .tpn
+# This file pertains to array properties and their relationships to header keywords.
+
+# replace YDIM_MAX 3200
+# replace SCI DQ
+# replace DQ_TYPE 'INT'
+# include nirspec_sci_array_both.tpn
+
+# This .tpn defines constraints related to array objects vs. header keywords.
+# Required relationships between subarray keywords are defined in a subarray .tpn
+# This file pertains to array properties and their relationships to header keywords.
+
+DQ   A    X         (optional(NIR_FILTER))                                    (is_image(DQ_ARRAY))
+DQ   A    X         (optional(NIR_FILTER))                                    (warn_only(has_type(DQ_ARRAY,'INT')))
+DQ   A    X         ((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))    (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+
+

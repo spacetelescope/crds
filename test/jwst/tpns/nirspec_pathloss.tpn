@@ -1,0 +1,23 @@
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  PathlossModel
+
+# Technically part of PS HDU and required for all ver with different values
+# this latter aspect is not checked.
+APERTURE  H    C   R
+
+PS      A   X   R (ndim(PS_ARRAY,3))
+PS      A   X   R (has_type(PS_ARRAY,'FLOAT'))
+PS      A   X   R  &IsomorphicFitsVer
+
+PSVAR   A   X   R (ndim(PS_ARRAY,3))
+PSVAR   A   X   R (has_type(PS_ARRAY,'FLOAT'))
+PSVAR   A   X   R  &IsomorphicFitsVer
+
+UNI     A   X   R (ndim(UNI_ARRAY,1))
+UNI     A   X   R (has_type(UNI_ARRAY,'FLOAT'))
+UNI     A   X   R  &IsomorphicFitsVer
+
+UNIVAR  A   X   R (ndim(UNIVAR_ARRAY,1))
+UNIVAR  A   X   R (has_type(UNIVAR_ARRAY,'FLOAT'))
+UNIVAR  A   X   R  &IsomorphicFitsVer
+

@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2023-01-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'ipc',
+    'filetype' : 'INTERPIXEL CAPACITANCE',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_ipc_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_ipc.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '6280bdde814cf652cc21cf0fb0406e459246bb3c',
+    'suffix' : 'ipc',
+    'text_descr' : 'Interpixel Capacitance',
+    'tpn' : 'wfi_ipc.tpn',
+}
+
+selector = Match({
+})

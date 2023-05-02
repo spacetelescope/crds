@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'gain sag reference table',
+    'ld_tpn': 'cos_gsag_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "FUV")',
+    'suffix': 'gsag',
+    'text_descr': 'Gain Sag Reference Table',
+    'tpn': 'cos_gsag.tpn',
+    'unique_rowkeys': (),
+}

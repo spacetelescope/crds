@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2022-02-08',
+    'file_ext' : '.asdf',
+    'filekind' : 'PHOTOM',
+    'filetype' : 'PHOTOM',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_photom_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_photom.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'b28b98a89be7c83d1be8699ae86280816b9cc6fd',
+    'suffix' : 'photom',
+    'text_descr' : 'Photom',
+    'tpn' : 'wfi_photom.tpn',
+}
+
+selector = Match({
+})

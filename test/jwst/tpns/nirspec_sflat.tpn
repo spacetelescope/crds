@@ -1,0 +1,26 @@
+include includes/nir_subarray.tpn
+
+replace NIR_FILTER ((EXP_TYPE)in["NRS_MSASPEC","NRS_IFU"])
+
+include includes/nirspec_sci_array_refpix.tpn
+include includes/nirspec_err_array.tpn
+include includes/nirspec_dq_array.tpn
+include includes/nir_dq_def_array.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NirspecFlatModel
+
+WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (is_table(WAVELENGTH_ARRAY))
+WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (has_columns(WAVELENGTH_ARRAY,['WAVELENGTH']))
+WAVELENGTH   A           X         ((EXP_TYPE)in(['NRS_MSASPEC']))        (has_column_type(WAVELENGTH_ARRAY,'WAVELENGTH','FLOAT'))
+
+FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (is_table(FAST_VARIATION_ARRAY))
+FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_columns(FAST_VARIATION_ARRAY,['SLIT_NAME','NELEM','WAVELENGTH','DATA']))
+FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_column_type(FAST_VARIATION_ARRAY,'SLIT_NAME','STRING'))
+FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_column_type(FAST_VARIATION_ARRAY,'NELEM','INT'))
+
+# Too restrictive
+# FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_column_type(FAST_VARIATION_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))
+# FAST_VARIATION    A           X         ((EXP_TYPE)in(['NRS_MSASPEC','NRS_FIXEDSLIT','NRS_BRIGHTOBJ','NRS_IFU']))        (has_column_type(FAST_VARIATION_ARRAY,'DATA','FLOAT_ARRAY'))
+
+

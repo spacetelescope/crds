@@ -1,0 +1,15 @@
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  IRS2Model
+
+READPATT H   X     R    (('IRS2')in(READPATT))
+
+IRS2   A     X     R    (is_table(IRS2_ARRAY))
+IRS2   A     X     R    (has_columns(IRS2_ARRAY,['ALPHA_0','ALPHA_1','ALPHA_2','ALPHA_3','BETA_0','BETA_1','BETA_2','BETA_3']))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"ALPHA_0","FLOAT"))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"ALPHA_1","FLOAT"))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"ALPHA_2","FLOAT"))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"ALPHA_3","FLOAT"))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"BETA_0","FLOAT"))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"BETA_1","FLOAT"))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"BETA_2","FLOAT"))
+IRS2   A     X     R    (has_column_type(IRS2_ARRAY,"BETA_3","FLOAT"))

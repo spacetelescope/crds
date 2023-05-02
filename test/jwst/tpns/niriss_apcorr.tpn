@@ -1,0 +1,13 @@
+# Template file used by certify to check reference files
+# NIRISS APCORR specs
+#----------------------------------------------------------
+include includes/apcorr.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NisImgApcorrModel,NisWfssApcorrModel
+
+FILTER                     C   C   R   CLEAR,F090W,F115W,F140M,F150W,F200W,\
+                                       F277W,F356W,F380M,F430M,F444W,F480M,\
+                                       GR150C,GR150R,MULTIPLE,N/A,ANY
+PUPIL                      C   C   R   CLEARP,F090W,F115W,F140M,F150W,F158M,\
+                                       F200W,GR700XD,NRM,N/A,ANY

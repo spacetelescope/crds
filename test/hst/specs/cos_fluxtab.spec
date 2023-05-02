@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'photometric sensitivity reference table',
+    'ld_tpn': 'cos_phot_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'fluxcorr',
+    'rmap_relevance': '((OBSTYPE == "SPECTROSCOPIC") and (FLUXCORR != "OMIT"))',
+    'suffix': 'phot',
+    'text_descr': 'Sensitivity Reference Files',
+    'tpn': 'cos_phot.tpn',
+    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
+}

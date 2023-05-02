@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'bad pixel table',
+    'ld_tpn': 'stis_bpx_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'bpx',
+    'text_descr': 'Data Quality (Bad Pixel) Initialization Table',
+    'tpn': 'stis_bpx.tpn',
+    'unique_rowkeys': ('PIX1', 'PIX2', 'LENGTH', 'AXIS', 'OPT_ELEM', 'VALUE'),
+}

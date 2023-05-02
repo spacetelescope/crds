@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'placeholder 2022-12',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-jumpstep',
+    'filetype' : 'pars-jumpstep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-jumpstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'ffbec8ff079750c9bb3ea68bfa92e623379571c9',
+    'suffix' : 'pars-jumpstep',
+    'text_descr' : 'JumpStep runtime parameters',
+}
+
+comment = """
+CCD-1231: Actual implementation. No selection criteria specified.
+
+Original implementation: Placeholder spec to simply define the reference type
+"""
+
+selector = Match({
+})

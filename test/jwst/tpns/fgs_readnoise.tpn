@@ -1,0 +1,11 @@
+include includes/nir_subarray.tpn
+
+include includes/nir_sci_array_refpix.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  ReadnoiseModel
+
+BUNIT    H   C    W   DN,ADU
+
+SCI    A    X    R   (ndim(SCI_ARRAY,2))
+

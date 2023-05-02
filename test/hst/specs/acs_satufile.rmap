@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'Hand-crafted 2021-02-18',
+    'file_ext' : '.fits',
+    'filekind' : 'SATUFILE',
+    'filetype' : 'FULL-WELL SATURATION LEVEL MAP',
+    'instrument' : 'ACS',
+    'ld_tpn' : 'acs_sat_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'acs_satufile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'CCDAMP'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'BIASCORR',
+    'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
+    'sha1sum' : '5950c4b74e301da1dd75ac93663e30c74e4f8d62',
+    'suffix' : 'sat',
+    'text_descr' : 'Full-Well Saturation Level Map',
+    'tpn' : 'acs_sat.tpn',
+}
+
+selector = Match({
+})

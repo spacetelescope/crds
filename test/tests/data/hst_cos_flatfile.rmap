@@ -1,0 +1,30 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:31.010738',
+    'filekind' : 'FLATFILE',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_flatfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'FLATCORR',
+    'rmap_relevance' : '(FLATCORR != "OMIT")',
+    'sha1sum' : '16ed59ba259771ac03af06fcaa1f8df693792c50',
+}
+
+selector = Match({
+    ('FUV', 'G130M') : UseAfter({
+        '1996-10-01 00:00:00' : 'v3n1816ml_flat.fits',
+    }),
+    ('FUV', 'G130M|G140L|G160M') : UseAfter({
+        '1996-10-01 00:00:00' : 'OMIT',
+    }),
+    ('NUV', 'G160M') : UseAfter({
+        '1996-10-01 00:00:00' : 'v4s17227l_flat.fits',
+    }),
+    ('NUV', 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB') : UseAfter({
+        '1996-10-01 00:00:00' : 'N/A',
+        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
+    }),
+})

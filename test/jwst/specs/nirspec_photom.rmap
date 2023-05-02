@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'handmade spec 07-18-2016',
+    'file_ext' : '.fits',
+    'filekind' : 'photom',
+    'filetype' : 'PHOTOM',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'nirspec_photom.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',),),
+    'sha1sum' : '7de3339c05deafd41e227aff105fbf8d97033fcc',
+    'suffix' : 'photom',
+    'text_descr' : 'Absolute Calibration',
+    'unique_rowkeys' : ('FILTER', 'GRATING', 'SLIT'),
+}
+
+selector = Match({
+})

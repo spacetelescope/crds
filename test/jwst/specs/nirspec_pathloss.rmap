@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2016-10-20',
+    'file_ext' : '.fits',
+    'filekind' : 'PATHLOSS',
+    'filetype' : 'PATHLOSS',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pathloss.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '903d4d5fc543ff1bc9166b816e78684b5f4d32ce',
+    'suffix' : 'pathloss',
+    'text_descr' : 'Path loss correction',
+}
+
+selector = Match({
+})

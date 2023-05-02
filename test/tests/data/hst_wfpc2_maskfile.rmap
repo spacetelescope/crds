@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:48.272363',
+    'filekind' : 'MASKFILE',
+    'instrument' : 'WFPC2',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfpc2_maskfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '43ef307e5b930533cd0656b65a7052468117c5ac',
+}
+
+selector = Match({
+    ('AREA',) : UseAfter({
+        '1993-12-01 00:00:00' : 'fan15478u.r0h',
+    }),
+    ('FULL',) : UseAfter({
+        '1993-12-01 00:00:00' : 'f8213081u.r0h',
+    }),
+})

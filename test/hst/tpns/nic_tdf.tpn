@@ -1,0 +1,26 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+INSTRUME            H        C         R    NICMOS
+FILETYPE            H        C         R    TDF
+CAMERA              H        I         R    1:3
+TFBLOW              H        R         R
+TFBHIGH             H        R         R
+FILTER              H        C         R    F090M,F095N,F097N,F108N,F110M,\
+                                            F110W,F113N,F140W,F145M,F150W,F160W,\   
+                                            F164N,F165M,F166N,F170M,F171M,F175W,\
+                                            F180M,F187N,F187W,F190N,F196N,F200N,\
+                                            F204M,F205W,F207M,F212N,F215N,F216N,\ 
+                                            F222M,F237M,F240M,\
+                                            G096,G141,G206,\
+                                            POL0L,POL0S,POL120L,POL120S,\
+                                            POL240L,POL240S    
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+USEAFTER            H        C         R    &SYBDATE

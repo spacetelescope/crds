@@ -1,0 +1,34 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DATATYPE            H        C         R    REAL*4
+NAXIS               H        I         R    1
+NAXIS1              H        I         R    1:4000
+GCOUNT              H        I         R    1
+PCOUNT              H        I         R    0
+INSTRUME            H        C         R    FOS
+FILETYPE            H        C         R    "INV SENSITIVITY"
+HEADNAME            H        C         R    
+DATANAME            H        C         R    
+DATE                H        C         R    
+DETECTOR            H        C         R    AMBER,BLUE
+FCHNL               H        I         R    0:510
+NCHNLS              H        I         R    2:512
+NXSTEPS             H        I         R    1,2,4,8,16
+OVERSCAN            H        I         R    1:256
+APER_ID             H        C         R    A-1,A-2,A-3,A-4,B-1,B-2,B-3,B-4,C-1,C-2,C-3,C-4,ANY
+POLAR_ID            H        C         R    
+FGWA_ID             H        C         R    CAM,H13,H19,H27,H40,H57,H78,L15,L65,PRI,ANY
+PASS_DIR            H        I         R    0:2
+APER_POS            H        C         R    UPPER,LOWER,SINGLE
+WO_OFFAV            H        R         R    0.:0.
+NUM_OBS             H        I         R    1:500
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         P

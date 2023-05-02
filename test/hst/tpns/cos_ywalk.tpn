@@ -1,0 +1,14 @@
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+# NAME KEYTYPE DATATYPE PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME H C R COS
+FILETYPE H C R "Y WALK CORRECTION LOOKUP REFERENCE IMAGE"
+DETECTOR H C R FUV
+OBSMODE  H C R TIME-TAG
+VCALCOS  H C R
+USEAFTER H C R &SYBDATE
+PEDIGREE H C R &PEDIGREE
+DESCRIP  H C R

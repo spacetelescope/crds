@@ -1,0 +1,18 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+FILE_NAME	    H        C         R
+OPUS_FLAG           H        C         R    Y,N
+COMPARISON_FILE     H        C         R    
+COMMENT             H        C         R
+INSTRUMENT	    H	     C	       R    FOS
+REFERENCE_FILE_TYPE H        C         R    LSF
+DETECTOR	    C	     C	       R    AMBER,BLUE
+APER_ID		    C	     C	       R     A-1,A-2,A-3,A-4,B-1,B-2,B-3,B-4,C-1,C-2,C-3,C-4
+WAVELENGTH	    C        I         R

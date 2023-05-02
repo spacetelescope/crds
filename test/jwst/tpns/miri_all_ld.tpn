@@ -1,0 +1,38 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+META.INSTRUMENT.NAME        H   C   R   MIRI
+
+META.INSTRUMENT.DETECTOR    H   C   O   MIRIFULONG,MIRIFUSHORT,MIRIMAGE,ANY,N/A
+
+META.EXPOSURE.TYPE          H   C   O   MIR_4QPM,MIR_CORONCAL,MIR_DARK,MIR_DARKALL,MIR_DARKIMG,MIR_DARKMRS,\
+                                        MIR_FLATALL,MIR_FLATIMAGE,MIR_FLAT-IMAGE,MIR_FLATIMAGE-EXT,\
+                                        MIR_FLATMRS,MIR_FLAT-MRS,MIR_FLATMRS-EXT,\
+                                        MIR_IMAGE,MIR_LRS-FIXEDSLIT,MIR_LRS-SLITLESS,MIR_LYOT,MIR_MRS,\
+                                        MIR_TACONFIRM,MIR_TACQ,ANY,N/A
+
+META.INSTRUMENT.CHANNEL     H   C   O   1,2,3,4,12,34,1234,123,234,ANY,N/A
+
+META.INSTRUMENT.BAND        H   C   O   SHORT,MEDIUM,LONG,SHORT-MEDIUM,SHORT-LONG,MEDIUM-SHORT,MEDIUM-LONG,\
+                                        LONG-SHORT,LONG-MEDIUM,MULTIPLE,ANY,N/A
+
+META.SUBARRAY.XSTART        H   I   O  1:1032
+META.SUBARRAY.YSTART        H   I   O  1:1024
+META.SUBARRAY.XSIZE         H   I   O  1:1032
+META.SUBARRAY.YSIZE         H   I   O  1:1024
+META.SUBARRAY.FASTAXIS      H   I   O  1,-1,2,-2
+META.SUBARRAY.SLOWAXIS      H   I   O  1,-1,2,-2
+
+# META.EXPOSURE.READPATT      H   C   O   SLOW,FAST,FASTGRPAVG,ANY,N/A
+
+META.SUBARRAY.NAME          H   C   O   BRIGHTSKY,MASK1065,MASK1140,MASK1550,MASKLYOT,\
+                                        SLITLESSPRISM,SUB128,SUB256,SUB64,\
+                                        FULL,GENERIC,ANY,N/A
+
+# META.INSTRUMENT.FILTER      H   C   O

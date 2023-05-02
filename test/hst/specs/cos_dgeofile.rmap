@@ -1,0 +1,25 @@
+header = {
+    'derived_from' : 'Initial hand made version 2017-02-02. Jira CRDS-97.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'DGEOFILE',
+    'filetype' : 'DELTA GEOMETRIC CORRECTION REFERENCE IMAGE',
+    'instrument' : 'COS',
+    'ld_tpn' : 'cos_dgeo_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_dgeofile_0000.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'DGEOCORR',
+    'rmap_relevance' : '((DETECTOR == "FUV") and (DGEOCORR != "OMIT"))',
+    'sha1sum' : '2923dd240fb0c691179539dfd1201d0add12eee8',
+    'suffix' : 'dgeo',
+    'text_descr' : 'Delta Geometric Distortion Correction Image',
+    'tpn' : 'cos_dgeo.tpn',
+    'unique_rowkeys' : None,
+}
+
+selector = Match({
+})

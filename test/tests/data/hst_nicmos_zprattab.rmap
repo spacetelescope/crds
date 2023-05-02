@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.650418',
+    'filekind' : 'ZPRATTAB',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_zprattab.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '451da92e2f61142cd55f4d508daee280d9b11043',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1997-01-01 00:00:00' : 'r5o0317en_zpr.fits',
+        '2002-01-01 00:00:00' : 'r5o0317fn_zpr.fits',
+    }),
+})

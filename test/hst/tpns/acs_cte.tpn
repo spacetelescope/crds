@@ -1,0 +1,56 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NOTE:  There was a file here that was totally different.
+#        I deleted that file and started new per PR 68331
+#
+# HISTORY:
+# 02/06/12    68331        mary   initial file 
+# 08/15/14    78534        MSwam  changes requested by ACS team
+# 2017-04-17  crds-103     Miller Added table properties
+#
+# NAME       KEYTYPE  DATATYPE   PRESENCE      VALUES
+#----------------------------------------------------------
+INSTRUME    H   C   R   ACS
+FILETYPE    H   C   R   PIXCTE
+DETECTOR    H   C   R   WFC
+# BINAXIS1    H   I   R   1,2,3
+# BINAXIS2    H   I   R   1,2,3
+USEAFTER    H   C   R   &SYBDATE
+PEDIGREE    H   C   R   &PEDIGREE
+
+# QPROF       A   X   R   (array_exists(QPROF_ARRAY))
+# QPROF       A   X   R   (is_table(QPROF_ARRAY))
+# QPROF       A   X   R   (has_columns(QPROF_ARRAY,['W','QLEV_Q','DPDE_W','DESCRIP']))
+# QPROF       D   X   R   (has_column_type(QPROF_ARRAY,'W','INT'))
+# QPROF       D   X   R   (has_column_type(QPROF_ARRAY,'QLEV_Q','INT'))
+# QPROF       D   X   R   (has_column_type(QPROF_ARRAY,'DPDE_W','FLOAT'))
+# QPROF       D   X   R   (has_column_type(QPROF_ARRAY,'DESCRIP','STRING'))
+
+# SCLBYCOL       A   X   R   (array_exists(SCLBYCOL_ARRAY))
+# SCLBYCOL       A   X   R   (is_table(SCLBYCOL_ARRAY))
+# SCLBYCOL       A   X   R   (has_columns(SCLBYCOL_ARRAY,['IZ','SENS_0512','SENS_1024','SENS_1536','SENS_2048','DESCRIP']))
+# SCLBYCOL       D   X   R   (has_column_type(SCLBYCOL_ARRAY,'IZ','INT'))
+# SCLBYCOL       D   X   R   (has_column_type(SCLBYCOL_ARRAY,'SENS_0512','FLOAT'))
+# SCLBYCOL       D   X   R   (has_column_type(SCLBYCOL_ARRAY,'SENS_1024','FLOAT'))
+# SCLBYCOL       D   X   R   (has_column_type(SCLBYCOL_ARRAY,'SENS_1536','FLOAT'))
+# SCLBYCOL       D   X   R   (has_column_type(SCLBYCOL_ARRAY,'SENS_2048','FLOAT'))
+# SCLBYCOL       D   X   R   (has_column_type(SCLBYCOL_ARRAY,'DESCRIP','STRING'))
+# # SCLBYCOL       D   X   R   (SCLBYCOL_ARRAY.SHAPE[0]==8192)
+
+# RPROF          A   X   R   (array_exists(RPROF_ARRAY))
+# RPROF          A   X   R   (is_image(RPROF_ARRAY))
+# RPROF          D   X   R   (len(RPROF_ARRAY.SHAPE)==2)
+# RPROF          D   X   R   (has_type(RPROF_ARRAY,'FLOAT'))
+# RPROF          D   X   R   (RPROF_ARRAY.SHAPE[-1]==QPROF_ARRAY.SHAPE[-1])
+
+# CPROF          A   X   R   (array_exists(CPROF_ARRAY))
+# CPROF          A   X   R   (is_image(CPROF_ARRAY))
+# CPROF          D   X   R   (len(CPROF_ARRAY.SHAPE)==2)
+# CPROF          D   X   R   (has_type(CPROF_ARRAY,'FLOAT'))
+# CPROF          D   X   R   (CPROF_ARRAY.SHAPE[-1]==QPROF_ARRAY.SHAPE[-1])
+

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 06-22-2017',
+    'file_ext' : '.fits',
+    'filekind' : 'trappars',
+    'filetype' : 'TRAPPARS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'miri_trappars.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '53b24cb8e79526efd12402f6e7c7fc902740d0e7',
+    'suffix' : 'trappars',
+    'text_descr' : 'Trap Capture and Decay Parameters',
+}
+
+selector = Match({
+})

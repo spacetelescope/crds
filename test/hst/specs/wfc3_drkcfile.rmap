@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'Derived from TEST hst_wfc3_drkcfile_0005.rmap on 2016-01-22',
+    'filekind' : 'DRKCFILE',
+    'filetype' : 'CTEDARK',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_drkcfile_0005.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'PCTECORR',
+    'rmap_relevance' : '(DETECTOR == "UVIS" and PCTECORR == "PERFORM")',
+    'sha1sum' : '0eb49a689cbe7d31d82fba3bc47bc07d340fb144',
+    'suffix' : 'dkc',
+    'text_descr' : 'Cte Corrected Dark',
+}
+
+selector = Match({
+    () : UseAfter({
+    }),
+})

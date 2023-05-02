@@ -1,0 +1,13 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CZCCR4R
+GRATING             C        C         R    G140M,G160M,G200M,G270M,G140L,ECH-A,ECH-B
+LOWER               C        R         R    
+UPPER               C        R         R    

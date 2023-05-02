@@ -1,0 +1,27 @@
+header = {
+    'derived_from' : 'Initial hand made version 2015-01-16.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'DFLTFILE',
+    'filetype' : 'DELTA FLAT',
+    'instrument' : 'ACS',
+    'ld_tpn' : 'acs_dfl_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'acs_dfltfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'LRFWAVE', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'FLATCORR',
+    'rmap_relevance' : '(DETECTOR == "WFC")',
+    'sha1sum' : '5238170ec90c9117f90879c62788964949b654bf',
+    'suffix' : 'dfl',
+    'text_descr' : 'Delta Flat Field Image',
+    'tpn' : 'acs_dfl.tpn',
+    'unique_rowkeys' : None,
+}
+
+selector = Match({
+    ('WFC', 'N/A', 'CLEAR1L', 'FR782N') : UseAfter({
+    }),
+})

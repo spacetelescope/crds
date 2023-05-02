@@ -1,0 +1,24 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 07/23/09  63148  MSwam  add OBSMODE
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+INSTRUME            H        C         R    NICMOS
+FILETYPE            H        C         R    DRK
+CAMERA              H        I         R    1:3
+READOUT             H        C         R    FAST,SLOW
+NREAD               H        I         R    1:25
+SAMP_SEQ            H        C         R    SCAMRR,MCAMRR,STEP1,STEP2,\
+                    STEP8,STEP16,STEP32,STEP64,STEP128,STEP256,\
+                    MIF512,MIF1024,MIF2048,MIF3072,SPARS64,SPARS256,NONE
+OBSMODE             H        C         R    ACCUM,ACQ,BRIGHTOBJ,MULTIACCUM,ACCUM_ACQ
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+USEAFTER            H        C         R    &SYBDATE

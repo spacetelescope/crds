@@ -1,0 +1,25 @@
+header = {
+    'derived_from' : 'Initial hand made version 2017-02-02. Jira CRDS-98.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'YWLKFILE',
+    'filetype' : 'Y WALK CORRECTION LOOKUP REFERENCE IMAGE',
+    'instrument' : 'COS',
+    'ld_tpn' : 'cos_ywalk_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_ywlkfile_0000.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'YWLKCORR',
+    'rmap_relevance' : '((DETECTOR == "FUV") and (OBSMODE=="TIME-TAG") and (YWLKCORR != "OMIT"))',
+    'sha1sum' : 'e081c18097da34acef53d7f3f34bcdabe96a553a',
+    'suffix' : 'ywalk',
+    'text_descr' : 'Y Walk Correction Lookup Reference Image',
+    'tpn' : 'cos_ywalk.tpn',
+    'unique_rowkeys' : None,
+}
+
+selector = Match({
+})

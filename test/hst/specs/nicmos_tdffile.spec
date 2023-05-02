@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'tdf',
+    'ld_tpn': 'nic_tdf_ld.tpn',
+    'parkey': ('CAMERA', 'FILTER'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(FILTER != "BLANK")',
+    'suffix': 'tdf',
+    'text_descr': 'Temperature Dependent Flat Fields',
+    'tpn': 'nic_tdf.tpn',
+    'unique_rowkeys': None,
+}

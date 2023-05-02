@@ -1,0 +1,29 @@
+# Instrument: COS
+# Reference file name: TRACETAB
+# Keyword switch: TRCECORR
+# Reference file extension: _trace
+#
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    COS
+FILETYPE            H        C         R    "1D SPECTRAL TRACE TABLE"
+DETECTOR            H        C         R    FUV
+OBSTYPE             H        C         R    SPECTROSCOPIC
+LIFE_ADJ            H        I         R    -1,0,1,-11,2,3,4,5,6
+VCALCOS             H        C         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+SEGMENT             C        C         R    FUVA,FUVB
+OPT_ELEM            C        C         R    G130M,G160M,G140L
+CENWAVE             C        I         R    800,1222,1223,1291,1300,1309,1318,1327,\
+                                            1533,1577,1589,1600,1611,1623,\
+                                            1105,1230,1280,1055,1096
+APERTURE            C        C         R    PSA,BOA

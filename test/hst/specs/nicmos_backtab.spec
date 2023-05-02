@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'bkg',
+    'ld_tpn': 'nic_bkg_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'bkg',
+    'text_descr': 'Background Model Table',
+    'tpn': 'nic_bkg.tpn',
+    'unique_rowkeys': None,
+}

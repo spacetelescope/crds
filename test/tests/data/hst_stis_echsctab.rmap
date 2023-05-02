@@ -1,0 +1,24 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:36.694020',
+    'filekind' : 'ECHSCTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_echsctab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
+    'row_keys' : ('OPT_ELEM', 'SPORDER'),
+    'sha1sum' : 'c371c120a6362eae17bbdd7779e5dc32d4daae88',
+}
+
+selector = Match({
+    ('FUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m09585o_ech.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m0958co_ech.fits',
+    }),
+})

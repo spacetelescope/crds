@@ -1,0 +1,19 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  FgsImgApcorrModel
+
+# FILTER                     C   C   R
+# PUPIL                      C   C   R
+
+EEFRACTION                 C   R   (is_imaging_mode(EXP_TYPE))   0.0:1.0
+
+APCORR                     C   R   R   1.0:1.8e308

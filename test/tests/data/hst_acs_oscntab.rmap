@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:14.754142',
+    'filekind' : 'OSCNTAB',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_oscntab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(DETECTOR != "SBC")',
+    'row_keys' : ('CCDCHIP', 'CCDAMP'),
+    'sha1sum' : 'e98a60a7f2e0f3985bb17236bfe1ff38cbb31075',
+}
+
+selector = Match({
+    ('HRC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'j4d1435pj_osc.fits',
+        '1992-01-01 00:00:00' : 'lch1459aj_osc.fits',
+        '2001-03-01 00:00:00' : 'm2j1057pj_osc.fits',
+    }),
+    ('WFC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'lch1459bj_osc.fits',
+    }),
+})

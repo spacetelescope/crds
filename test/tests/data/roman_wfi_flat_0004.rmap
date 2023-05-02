@@ -1,0 +1,23 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'roman_wfi_flat_0001.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'FLAT',
+    'filetype' : 'FLAT',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_flat_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_flat_0004.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '5a27566b26d07745430b6f80137a9a02bc2c5b08',
+    'suffix' : 'flat',
+    'text_descr' : 'Flat Field',
+    'tpn' : 'wfi_flat.tpn',
+}
+
+selector = Match({
+    ('WFI01', 'F158') : UseAfter({
+        '2020-01-01 00:00:00' : 'roman_wfi_flat_0003.asdf',
+    }),
+})

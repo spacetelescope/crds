@@ -1,0 +1,17 @@
+{
+    'derived_from' : 'jwst_miri_specwcs_0002.rmap',
+    'extra_keys' : ('META.EXPOSURE.TYPE',),
+    'file_ext' : '.json',
+    'filekind' : 'SPECWCS',
+    'filetype' : 'SPECWCS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_specwcs_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.SUBARRAY.NAME'),),
+    'reference_to_dataset' : {'BAND': 'META.INSTRUMENT.BAND', 'DETECTOR': 'META.INSTRUMENT.DETECTOR', 'CHANNEL': 'META.INSTRUMENT.CHANNEL', 'SUBARRAY': 'META.SUBARRAY.NAME'},
+    'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE"))',
+    'sha1sum' : '01196db33f55fd33bc7a6b43be17f8e99423a5ce',
+    'suffix' : 'specwcs',
+    'text_descr' : 'Spectroscopic World Coordinate System',
+}

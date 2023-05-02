@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 05-01-2015',
+    'file_ext' : '.fits',
+    'filekind' : 'superbias',
+    'filetype' : 'SUPERBIAS',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'nirspec_superbias.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : '4fffd429805063af03840bc13a3ae18ee9a6fc9c',
+    'suffix' : 'superbias',
+    'text_descr' : 'Super Bias',
+}
+
+selector = Match({
+})

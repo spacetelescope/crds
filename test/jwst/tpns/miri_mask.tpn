@@ -1,0 +1,16 @@
+include includes/miri_subarray_refpix.tpn
+
+replace SCI DQ
+replace XDIM_MAX 1032
+replace YDIM_MAX 1024
+replace DQ_TYPE 'INT'
+include includes/miri_sci_array_both.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  MaskModel
+
+DQ       A           X         O   (ndim(DQ_ARRAY,2))
+
+include includes/miri_dq_def_array.tpn
+
+

@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.620114',
+    'filekind' : 'PMODFILE',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_pmodfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '14441fafbac437e882e859091b1e686ddfe55e16',
+}
+
+selector = Match({
+    (2,) : UseAfter({
+        '2002-03-01 00:00:00' : 'sct17335n_pmd.fits',
+    }),
+})

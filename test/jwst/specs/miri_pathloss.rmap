@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-11-29',
+    'file_ext' : '.fits',
+    'filekind' : 'PATHLOSS',
+    'filetype' : 'PATHLOSS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pathloss.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8a22233afa16d2e8dcb428d94a4a48093e71a103',
+    'suffix' : 'pathloss',
+    'text_descr' : 'MIRI LRS Pathloss file to correct for slit loss for point source observations.',
+}
+
+selector = Match({
+})

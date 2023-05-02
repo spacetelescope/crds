@@ -1,0 +1,27 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NOTE: There was a placeholder file here.  I have removed that file
+#    and completely replaced it as defined in PR 68331
+#
+# HISTORY:
+# 02/06/12  68331  mary  initial file
+# 02/09/12  68331  mary  change REFERENCE_FILE_TYPE from PIXCTE to CTE
+#
+# NAME          KEYTYPE DATATYPE        PRESENCE        VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE   H       C       R       &SYBDATE
+OPUS_FLAG       H       C       R       Y,N
+COMPARISON_FILE H       C       R
+COMMENT         H       C       R
+INSTRUMENT      H       C       R       ACS
+REFERENCE_FILE_TYPE H   C       R       CTE
+DETECTOR        C       C       R       WFC
+CHANGE_LEVEL    C       C       R       TRIVIAL,MODERATE,SEVERE
+PEDIGREE        C       C       R       INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C   C   O       &SYBDATE
+OBSERVATION_END_DATE    C   C   O       &SYBDATE

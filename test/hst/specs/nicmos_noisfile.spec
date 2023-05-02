@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'noi',
+    'ld_tpn': 'nic_noi_ld.tpn',
+    'parkey': ('CAMERA', 'READOUT', 'NREAD'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'noi',
+    'text_descr': 'Detector Read-noise File',
+    'tpn': 'nic_noi.tpn',
+    'unique_rowkeys': None,
+}

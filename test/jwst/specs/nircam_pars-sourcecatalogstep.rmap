@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Copied from miri_pars-sourcecatalogstep.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-sourcecatalogstep',
+    'filetype' : 'pars-sourcecatalogstep',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_pars-sourcecatalogstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '74f8b2958f5b623f5be6f1fd1860ad6149c55108',
+    'suffix' : 'pars-sourcecatalogstep',
+    'text_descr' : 'SourceCatalogStep runtime parameters',
+}
+
+selector = Match({
+})

@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'scattering reference wavelengths table',
+    'ld_tpn': 'stis_srw_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'srw',
+    'text_descr': 'Scattering Reference Wavelength Table',
+    'tpn': 'stis_srw.tpn',
+    'unique_rowkeys': ('OPT_ELEM', 'CENWAVE'),
+}

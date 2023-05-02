@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'wavecal parameters table',
+    'ld_tpn': 'stis_wcp_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'wcp',
+    'text_descr': 'Wavecal Parameters Reference Table',
+    'tpn': 'stis_wcp.tpn',
+    'unique_rowkeys': ('DETECTOR', 'OPT_ELEM'),
+}

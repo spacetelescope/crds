@@ -1,0 +1,42 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 09/15/08 60769 MSwam    new CCDGAIN values
+# 09/06/12 72157 MSwam    add APERTURE
+# 02/20/14 77246 MSwam    add APERTURE = NONE
+#
+# NAME      KEYTYPE DATATYPE    PRESENCE    VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE   H   C   R   &SYBDATE
+OPUS_FLAG   H   C   R   Y,N
+COMPARISON_FILE H   C   R    
+COMMENT     H   C   R
+INSTRUMENT  H   C   R   ACS
+REFERENCE_FILE_TYPE H   C   R       BIA
+DETECTOR    C   C   R   WFC,HRC
+CCDAMP      C   C   R   A,B,C,D,AC,AD,BC,BD,ABCD
+CCDGAIN         C       R       R       0.5,1.0,1.4,2.0,4.0,8.0
+APERTURE        C       C       R       NONE,SBC,SBC-FIX,WFC,WFC-FIX,WFC1,\
+                                        WFC1-1K,WFC1-2K,WFC1-512,WFC1-CTE,\
+                                        WFC1-FIX,WFC1-IRAMP,WFC1-IRAMPQ,\
+                                        WFC1-MRAMP,WFC1-MRAMPQ,WFC2,WFC2-2K,\
+                                        WFC2-1K,WFC2-512,\
+                                        WFC2-FIX,WFC2-MRAMP,WFC2-ORAMP,\
+                                        WFC2-MRAMPQ,WFC2-ORAMPQ,WFCENTER,\
+                    WFC1-POL0UV,WFC1-POL0V,\
+                    WFC1-POL60V,WFC1-POL60UV,\
+                    WFC1-POL120V,WFC1-POL120UV,WFC1-SMFL,\
+                    WFC2-POL0UV,WFC2-POL0V,\
+                    WFC2-POL60V,WFC2-POL60UV,\
+                    WFC2-POL120V,WFC2-POL120UV,WFC2-SMFL,\
+                    WFC1A-512,WFC1B-512,WFC2C-512,WFC2D-512,\
+                    WFC1A-1K,WFC1B-1K,WFC2C-1K,WFC2D-1K,\
+                    WFC1A-2K,WFC1B-2K,WFC2C-2K,WFC2D-2K
+CHANGE_LEVEL    C   C   R   TRIVIAL,MODERATE,SEVERE
+PEDIGREE    C   C   R   INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C   C   O   &SYBDATE
+OBSERVATION_END_DATE    C   C   O   &SYBDATE

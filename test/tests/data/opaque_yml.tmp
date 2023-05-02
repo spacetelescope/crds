@@ -1,0 +1,23 @@
+meta:
+    exposure:
+        readpatt: any
+    instrument:
+        name: miri
+        detector : mirifulong
+        channel: 34
+        band: medium
+    telescope: jwst
+    subarray:
+        name: MASK1550
+        ystart: 1020
+        xsize: 1
+        fastaxis: 1
+reftype: distortion
+useafter: 2001-03-21T12:00:00
+pedigree: dummy
+author: Todd Miller
+descrip: Brief notes on this reference.
+history: How this reference came to be and changed over time.
+substrt1: 1031
+subsize2: 4
+slowaxis: 2

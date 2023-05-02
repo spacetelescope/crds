@@ -1,0 +1,7 @@
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  StrayLightModel
+
+MASK       A           X         R             (MASK_ARRAY.SHAPE==(1024,1032))
+MASK       A           X         R             (has_type(MASK_ARRAY,'INT'))
+MASK       D           X         R             (np.all(0<=MASK_ARRAY.DATA))
+MASK       D           X         R             (np.all(MASK_ARRAY.DATA<=1))

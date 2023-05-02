@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': '1d spectral trace table',
+    'ld_tpn': 'cos_trace_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'yes',
+    'reffile_switch': 'trcecorr',
+    'rmap_relevance': '(LIFE_ADJ == "3.0")',
+    'suffix': 'trace',
+    'text_descr': '1D Spectral Trace Table',
+    'tpn': 'cos_trace.tpn',
+    'unique_rowkeys': ('SEGMENT', 'OPT_ELEM', 'CENWAVE', 'APERTURE'),
+}

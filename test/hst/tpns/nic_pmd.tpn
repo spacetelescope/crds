@@ -1,0 +1,21 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 09/18/08 xxxxx  MSwam   first version
+# 12/15/08 60597  MSwam   add BEPVALLO,BEPUSELO
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+INSTRUME            H        C         R    NICMOS
+FILETYPE            H        C         R    PMD
+CAMERA              H        I         R    1:3
+BEPVALLO            H        R         R
+BEPUSELO            H        R         R
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+USEAFTER            H        C         R    &SYBDATE

@@ -1,0 +1,110 @@
+Overview
+--------
+
+These are some quick notes about configuring the CRDS certifier to support new
+reference types or parameter constraints.  Probably the best way to do this is
+by using example files from closely related reference types but this explains
+the overall design, history, and capabilities.
+
+See also:  crds/documentation/certify_design.rst or .html
+
+History
+-------
+
+The CRDS certifier has it's roots in the specification files, .tpn's, that
+accompanied the CDBS certifier and defined constraints on reference file
+parameters incoming references were required to satisfy.  At least
+superficially, the scope of the CDBS constraints was limited to single header
+keywords and defining their types and valid values.
+
+The bulk of CDBS .tpn files were defined on and instrument+type basis, with one
+exception made for the STIS PFLTFILE and IFLTFILE types.  The HST CDBS .tpn
+files were ported from C to CRDS Python largely unmodified, in the same format.
+This supported ongoing ongoing changes to CDBS types during CRDS development,
+enabling CDBS .tpn files to be added to CRDS unchanged.  The CDBS design was
+simple and highly regular, but contained large amounts of redundant
+specification (e.g. PEDIGREE is defined in 100-200+ places.)
+
+Originally .tpn files came in two forms: the .tpn file, and the _ld.tpn file.
+The .tpn files defined the valid *unexpanded* keyword values for reference
+files.  The _ld.tpn files defined the expanded/exploded discrete parameter
+values and other value constraints applicable to the CDBS database records that
+supported every mode of every reference file.  In CRDS, use of .tpn files is
+similar, but the _ld.tpn files define the values valid in CRDS .rmap files that
+take the place of the CDBS database.
+
+During early JWST development the distinction between .tpn and _ld.tpn files
+was very minor so the two files were often identical copies and the _ld.tpn
+file was defaulted to the .tpn file if the _ld.tpn was not defined.  Initially
+JWST references did not define unexpanded pattern values and used only a
+handful of wildcard values like ANY, N/A, and GENERIC in addition the physical
+configuration values corresponding to discrete instrument configurations.
+
+Basic Type Definition
+---------------------
+
+Every instrument and type combination for a reference file requires a "type
+spec" that defines the basic naming properties of the type.  Creating a new
+type generally involves adding a type spec to describe each applicable
+instrument+type case.  Since CRDS evolved from CDBS, the first incarnation of
+type specifications was a combined specification files describing all types.
+Since failures to parse the combined specification could be difficult to debug,
+the combined specification was partitioned into individual .spec files that
+contained the same information.
+
+Later, to simplify bootstrapping new reference types, empty .rmap's were added
+as an alternative format to combine the type specification and the initial
+.rmap submitted to CRDS in one file.  Type specifications are contained in the
+crds/<project>/specs directory of each project, e.g. crds/hst/specs.  Name
+properties of types are permanent and should not be changed.  Other properties
+defined in the initial empty .rmap file are subject to evolution as the .rmap
+is changed on the CRDS server as part of CRDS content.  In general type specs
+don't change once a type is bootstrapped, only the dynamic server controlled
+and archived content.
+
+HST defined a number of variations of type names: the keyword name used to
+record the type in datasets, the value string used to identify the type in file
+headers, and the file suffix used to name reference files.  JWST tends to have
+fewer variations, the keyword used to record a type is generally derived from
+the type name using a simple rule, JWST file names include a long form type
+name, and the suffix name is largely vestigal/unused and tends to be identical
+to the full length type name.
+
+
+Constraint File Classes and Structure
+-------------------------------------
+
+For HST every instrument + type combination nominally has one .tpn file and one
+_ld.tpn file.
+
+Within each .tpn file constraints are defined for individual FITS keywords and
+table columns.
+
+To avoid redundant specification, JWST added the convention that it's possible
+to define more generic constraint files:
+
+all_all.tpn   constraints for all instruments + types
+fgs_all.tpn   e.g. constraints for all types of FGS
+all_dark.tpn  e.g. constraints for DARK references of every instrument
+fgs_dark.tpn  e.g. classic constraints only for FGS DARK files
+
+JWST also added the concept of "speculative loading" where any or all forms of
+.tpn could be defined and none had to be defined.
+
+The current approach to constraints is that they are "narrowing/additive" and
+more generic constraints continue to apply even after specialized constraints
+for the same parameter are added.
+
+An additional feature to support the organization of constraints added for JWST
+is the "include" directive that behaves very much like include files in C.
+This enables common constraints to be defined in a single file and included
+where needed on a granularity finer than the "all" types.
+
+Adding .tpn's including "all" also requires adding a pseudo-spec for the same
+combination, e.g. fgs_dark.spec or fgs_dark.rmap.
+
+The .tpn syntax was originally created for HST and parsed in C-code.   It's a
+primitive format
+
+
+

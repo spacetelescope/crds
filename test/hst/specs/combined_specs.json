@@ -1,0 +1,3125 @@
+{
+    "acs":{
+        "atodtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"analog-to-digital",
+            "ld_tpn":"acs_a2d_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"atodcorr",
+            "rmap_relevance":"((DETECTOR != \"SBC\") and (ATODCORR != \"OMIT\"))",
+            "suffix":"a2d",
+            "text_descr":"Analog To Digital Lookup Table",
+            "tpn":"acs_a2d.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "CCDAMP",
+                "CCDGAIN",
+                "REF_KEY",
+                "REF_KEY_VALUE"
+            ]
+        },
+        "biasfile":{
+            "extra_keys":[
+                "xcorner",
+                "ycorner",
+                "ccdchip"
+            ],
+            "file_ext":".fits",
+            "filetype":"bias",
+            "ld_tpn":"acs_bia_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "CCDGAIN",
+                "APERTURE",
+                "NAXIS1",
+                "NAXIS2",
+                "LTV1",
+                "LTV2"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"yes",
+            "reffile_switch":"biascorr",
+            "rmap_relevance":"((DETECTOR != \"SBC\") and (BIASCORR != \"OMIT\"))",
+            "suffix":"bia",
+            "text_descr":"Bias Frame",
+            "tpn":"acs_bia.tpn",
+            "unique_rowkeys":null
+        },
+        "bpixtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"bad pixels",
+            "ld_tpn":"acs_bpx_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"dqicorr",
+            "rmap_relevance":"(DQICORR != \"OMIT\")",
+            "suffix":"bpx",
+            "text_descr":"Data Quality (Bad Pixel) Initialization Table",
+            "tpn":"acs_bpx.tpn",
+            "unique_rowkeys":[]
+        },
+        "ccdtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"ccd parameters",
+            "ld_tpn":"acs_ccd_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"SBC\")",
+            "suffix":"ccd",
+            "text_descr":"Ccd Parameters Table",
+            "tpn":"acs_ccd.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "CCDAMP",
+                "CCDGAIN",
+                "BINAXIS1",
+                "BINAXIS2",
+                "CCDOFSTA",
+                "CCDOFSTB",
+                "CCDOFSTC",
+                "CCDOFSTD"
+            ]
+        },
+        "cfltfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"spot flat",
+            "ld_tpn":"acs_cfl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "FILTER1",
+                "FILTER2",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"HRC\" and OBSTYPE == \"CORONAGRAPHIC\")",
+            "suffix":"cfl",
+            "text_descr":"Coronagraphic Spot Flat Image",
+            "tpn":"acs_cfl.tpn",
+            "unique_rowkeys":null
+        },
+        "crrejtab":{
+            "extra_keys":[
+                "RPTCORR"
+            ],
+            "file_ext":".fits",
+            "filetype":"cosmic ray rejection",
+            "ld_tpn":"acs_crr_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "RPTCORR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"crcorr",
+            "rmap_relevance":"((DETECTOR != \"SBC\") and ((CRCORR != \"OMIT\") or (RPTCORR != \"OMIT\")))",
+            "suffix":"crr",
+            "text_descr":"Cosmic Ray Rejection Parameter Table",
+            "tpn":"acs_crr.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "CRSPLIT",
+                "MEANEXP"
+            ]
+        },
+        "d2imfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"wfc d2i file",
+            "ld_tpn":"acs_d2i_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"drizcorr",
+            "rmap_relevance":"((DETECTOR == \"WFC\") and (DRIZCORR != \"OMIT\"))",
+            "suffix":"d2i",
+            "text_descr":"Column Correction File",
+            "tpn":"acs_d2i.tpn",
+            "unique_rowkeys":null
+        },
+        "darkfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dark",
+            "ld_tpn":"acs_drk_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "CCDGAIN"
+            ],
+            "parkey_relevance":{
+                "ccdamp":"(DETECTOR != \"SBC\")",
+                "ccdgain":"(DETECTOR != \"SBC\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"yes",
+            "reffile_switch":"darkcorr",
+            "rmap_relevance":"(DARKCORR != \"OMIT\")",
+            "suffix":"drk",
+            "text_descr":"Dark Frame",
+            "tpn":"acs_drk.tpn",
+            "unique_rowkeys":null
+        },
+        "dfltfile":{
+            "derived_from":"Initial hand made version 2015-01-16.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"DFLTFILE",
+            "filetype":"DELTA FLAT",
+            "instrument":"ACS",
+            "ld_tpn":"acs_dfl_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"acs_dfltfile.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "LRFWAVE",
+                    "FILTER1",
+                    "FILTER2"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"NO",
+            "reffile_switch":"FLATCORR",
+            "rmap_relevance":"(DETECTOR == \"WFC\")",
+            "sha1sum":"5238170ec90c9117f90879c62788964949b654bf",
+            "suffix":"dfl",
+            "text_descr":"Delta Flat Field Image",
+            "tpn":"acs_dfl.tpn",
+            "unique_rowkeys":null
+        },
+        "dgeofile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"distortion correction",
+            "ld_tpn":"acs_dxy_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "FILTER1",
+                "FILTER2"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"dxy",
+            "text_descr":"Geometric Distortion Correction File",
+            "tpn":"acs_dxy.tpn",
+            "unique_rowkeys":null
+        },
+        "drkcfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"ctedark",
+            "ld_tpn":"acs_dkc_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "CCDGAIN"
+            ],
+            "parkey_relevance":{
+                "ccdamp":"(DETECTOR != \"SBC\")",
+                "ccdgain":"(DETECTOR != \"SBC\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"pctecorr",
+            "rmap_relevance":"((DETECTOR == \"WFC\") and (PCTECORR != \"OMIT\"))",
+            "suffix":"dkc",
+            "text_descr":"Cte Corrected Dark",
+            "tpn":"acs_dkc.tpn",
+            "unique_rowkeys":null
+        },
+        "flshfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"post flash",
+            "ld_tpn":"acs_fls_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "CCDGAIN",
+                "FLASHCUR",
+                "SHUTRPOS"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"yes",
+            "reffile_switch":"flshcorr",
+            "rmap_relevance":"((DETECTOR != \"SBC\" and FLASHCUR != \"OFF\") and (FLSHCORR != \"OMIT\"))",
+            "suffix":"fls",
+            "text_descr":"Post-flash Image",
+            "tpn":"acs_fls.tpn",
+            "unique_rowkeys":null
+        },
+        "idctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"distortion coefficients",
+            "ld_tpn":"acs_idc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"idc",
+            "text_descr":"Image Distortion Correction File",
+            "tpn":"acs_idc.tpn",
+            "unique_rowkeys":[
+                "DETCHIP",
+                "WAVELENGTH",
+                "DIRECTION",
+                "FILTER1",
+                "FILTER2",
+                "V2REF",
+                "V3REF"
+            ]
+        },
+        "imphttab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"image photometry table",
+            "ld_tpn":"acs_imp_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"photcorr",
+            "rmap_relevance":"(PHOTCORR != \"OMIT\")",
+            "suffix":"imp",
+            "text_descr":"Photometry Keyword Table",
+            "tpn":"acs_imp.tpn",
+            "unique_rowkeys":[
+                "OBSMODE"
+            ]
+        },
+        "lfltfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"large scale flat",
+            "ld_tpn":"acs_lfl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "CCDGAIN",
+                "FILTER1",
+                "FILTER2"
+            ],
+            "parkey_relevance":{
+                "ccdamp":"(DETECTOR != \"SBC\")",
+                "ccdgain":"(DETECTOR != \"SBC\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"lfl",
+            "text_descr":"Low-order Flat Field Image",
+            "tpn":"acs_lfl.tpn",
+            "unique_rowkeys":null
+        },
+        "mdriztab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"multidrizzle parameters",
+            "ld_tpn":"acs_mdz_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"drizcorr",
+            "rmap_relevance":"(DRIZCORR != \"OMIT\")",
+            "suffix":"mdz",
+            "text_descr":"Multidrizzle Parameter Table",
+            "tpn":"acs_mdz.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "NUMIMAGES"
+            ]
+        },
+        "mlintab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"linearity",
+            "ld_tpn":"acs_lin_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"glincorr",
+            "rmap_relevance":"((DETECTOR == \"SBC\") and (GLINCORR != \"OMIT\"))",
+            "suffix":"lin",
+            "text_descr":"Mama Linearity Table",
+            "tpn":"acs_lin.tpn",
+            "unique_rowkeys":[
+                "DETECTOR"
+            ]
+        },
+        "npolfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dxy grid",
+            "ld_tpn":"acs_npl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "FILTER1",
+                "FILTER2"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"drizcorr",
+            "rmap_relevance":"(DRIZCORR != \"OMIT\")",
+            "suffix":"npl",
+            "text_descr":"Non-polynomial Offset",
+            "tpn":"acs_npl.tpn",
+            "unique_rowkeys":null
+        },
+        "oscntab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"overscan",
+            "ld_tpn":"acs_osc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"SBC\")",
+            "suffix":"osc",
+            "text_descr":"Overscan Region Table",
+            "tpn":"acs_osc.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "CCDAMP"
+            ]
+        },
+        "pctetab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pixcte",
+            "ld_tpn":"acs_cte_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"pctecorr",
+            "rmap_relevance":"((DETECTOR == \"WFC\") and (PCTECORR != \"OMIT\"))",
+            "suffix":"cte",
+            "text_descr":"Pixel CTE Correction Table",
+            "tpn":"acs_cte.tpn",
+            "unique_rowkeys":null
+        },
+        "pfltfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pixel-to-pixel flat",
+            "ld_tpn":"acs_pfl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "FILTER1",
+                "FILTER2",
+                "OBSTYPE",
+                "FW1OFFST",
+                "FW2OFFST",
+                "FWSOFFST"
+            ],
+            "parkey_relevance":{
+                "ccdamp":"(DETECTOR != \"SBC\")",
+                "fw1offst":"(FW1OFFST == \"-1.0\" or FW1OFFST == \"1.0\")",
+                "fw2offst":"(FW2OFFST == \"-1.0\" or FW2OFFST == \"1.0\")",
+                "fwsoffst":"(FWSOFFST == \"-1.0\" or FWSOFFST == \"1.0\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"yes",
+            "reffile_switch":"flatcorr",
+            "rmap_relevance":"((OBSTYPE != \"INTERNAL\") and (FLATCORR != \"OMIT\"))",
+            "suffix":"pfl",
+            "text_descr":"Pixel To Pixel Flat Field Image",
+            "tpn":"acs_pfl.tpn",
+            "unique_rowkeys":null
+        },
+        "satufile":{
+            "derived_from":"Hand-crafted 2021-02-18",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"SATUFILE",
+            "filetype":"FULL-WELL SATURATION LEVEL MAP",
+            "instrument":"ACS",
+            "ld_tpn":"acs_sat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"acs_satufile.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "CCDAMP"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"BIASCORR",
+            "rmap_relevance":"((DETECTOR != \"SBC\") and (BIASCORR != \"OMIT\"))",
+            "sha1sum":"5950c4b74e301da1dd75ac93663e30c74e4f8d62",
+            "suffix":"sat",
+            "text_descr":"Full-Well Saturation Level Map",
+            "tpn":"acs_sat.tpn",
+            "unique_rowkeys":null
+        },
+        "shadfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"shutter shading",
+            "ld_tpn":"acs_shd_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"yes",
+            "reffile_switch":"shadcorr",
+            "rmap_relevance":"((DETECTOR != \"SBC\") and (SHADCORR != \"OMIT\"))",
+            "suffix":"shd",
+            "text_descr":"Shutter Shading Correction Image",
+            "tpn":"acs_shd.tpn",
+            "unique_rowkeys":null
+        },
+        "snkcfile":{
+            "derived_from":"Hand made based on WFC3 SNKCFILE spec, 02-03-2017",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"SNKCFILE",
+            "filetype":"SINK PIXELS",
+            "instrument":"ACS",
+            "ld_tpn":"acs_snk_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_acs_snkcfile.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"SINKCORR",
+            "rmap_relevance":"((SINKCORR != \"OMIT\") and (DETECTOR == \"WFC\"))",
+            "sha1sum":"30295160c5ca40bbbd7253ec16fa18d7f5486e08",
+            "suffix":"snk",
+            "text_descr":"Sink Pixel Flagging Image",
+            "tpn":"acs_snk.tpn",
+            "unique_rowkeys":null
+        },
+        "spottab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"spot position table",
+            "ld_tpn":"acs_csp_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"HRC\" and OBSTYPE == \"CORONAGRAPHIC\")",
+            "suffix":"csp",
+            "text_descr":"Spot Position Table",
+            "tpn":"acs_csp.tpn",
+            "unique_rowkeys":[
+                "DATE"
+            ]
+        }
+    },
+    "cos":{
+        "badttab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"bad time intervals table",
+            "ld_tpn":"cos_badt_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSMODE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"badtcorr",
+            "rmap_relevance":"((DETECTOR == \"FUV\" and OBSMODE == \"TIME-TAG\") and (BADTCORR != \"OMIT\"))",
+            "suffix":"badt",
+            "text_descr":"Bad Time Interval Table",
+            "tpn":"cos_badt.tpn",
+            "unique_rowkeys":[]
+        },
+        "bpixtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"data quality initialization table",
+            "ld_tpn":"cos_bpix_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"bpix",
+            "text_descr":"Data Quality (Bad Pixel) Initialization Table",
+            "tpn":"cos_bpix.tpn",
+            "unique_rowkeys":[]
+        },
+        "brftab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"baseline reference frame table",
+            "ld_tpn":"cos_brf_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"FUV\")",
+            "suffix":"brf",
+            "text_descr":"Baseline Reference Frame Table",
+            "tpn":"cos_brf.tpn",
+            "unique_rowkeys":[
+                "SEGMENT"
+            ]
+        },
+        "brsttab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"burst parameters table",
+            "ld_tpn":"cos_burst_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSMODE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"brstcorr",
+            "rmap_relevance":"((DETECTOR == \"FUV\" and OBSMODE == \"TIME-TAG\") and (BRSTCORR != \"OMIT\"))",
+            "suffix":"burst",
+            "text_descr":"Burst Parameters Table",
+            "tpn":"cos_burst.tpn",
+            "unique_rowkeys":[
+                "SEGMENT"
+            ]
+        },
+        "deadtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"deadtime reference table",
+            "ld_tpn":"cos_dead_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"deadcorr",
+            "rmap_relevance":"(DEADCORR != \"OMIT\")",
+            "suffix":"dead",
+            "text_descr":"Deadtime Reference Table",
+            "tpn":"cos_dead.tpn",
+            "unique_rowkeys":[]
+        },
+        "dgeofile":{
+            "derived_from":"Initial hand made version 2017-02-02. Jira CRDS-97.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"DGEOFILE",
+            "filetype":"DELTA GEOMETRIC CORRECTION REFERENCE IMAGE",
+            "instrument":"COS",
+            "ld_tpn":"cos_dgeo_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_cos_dgeofile_0000.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"DGEOCORR",
+            "rmap_relevance":"((DETECTOR == \"FUV\") and (DGEOCORR != \"OMIT\"))",
+            "sha1sum":"2923dd240fb0c691179539dfd1201d0add12eee8",
+            "suffix":"dgeo",
+            "text_descr":"Delta Geometric Distortion Correction Image",
+            "tpn":"cos_dgeo.tpn",
+            "unique_rowkeys":null
+        },
+        "disptab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dispersion relation reference table",
+            "ld_tpn":"cos_disp_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"disp",
+            "text_descr":"Dispersion Relation Table",
+            "tpn":"cos_disp.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "CENWAVE",
+                "SEGMENT"
+            ]
+        },
+        "flatfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"flat field reference image",
+            "ld_tpn":"cos_flat_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"flatcorr",
+            "rmap_relevance":"(FLATCORR != \"OMIT\")",
+            "suffix":"flat",
+            "text_descr":"Flat Field",
+            "tpn":"cos_flat.tpn",
+            "unique_rowkeys":null
+        },
+        "fluxtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"photometric sensitivity reference table",
+            "ld_tpn":"cos_phot_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE",
+                "LIFE_ADJ"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"fluxcorr",
+            "rmap_relevance":"((OBSTYPE == \"SPECTROSCOPIC\") and (FLUXCORR != \"OMIT\"))",
+            "suffix":"phot",
+            "text_descr":"Sensitivity Reference Files",
+            "tpn":"cos_phot.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "CENWAVE",
+                "SEGMENT"
+            ]
+        },
+        "geofile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"geometric distortion reference image",
+            "ld_tpn":"cos_geo_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"FUV\")",
+            "suffix":"geo",
+            "text_descr":"Geometric Distortion Correction",
+            "tpn":"cos_geo.tpn",
+            "unique_rowkeys":null
+        },
+        "gsagtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"gain sag reference table",
+            "ld_tpn":"cos_gsag_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"FUV\")",
+            "suffix":"gsag",
+            "text_descr":"Gain Sag Reference Table",
+            "tpn":"cos_gsag.tpn",
+            "unique_rowkeys":[]
+        },
+        "hvtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"fuv high voltage history",
+            "ld_tpn":"cos_hv_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"FUV\")",
+            "suffix":"hv",
+            "text_descr":"High Voltage Reference Table",
+            "tpn":"cos_hv.tpn",
+            "unique_rowkeys":[
+                "DATE"
+            ]
+        },
+        "lamptab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"template cal lamp spectra table",
+            "ld_tpn":"cos_lamp_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"lamp",
+            "text_descr":"Template Calibration Lamp Spectra Table",
+            "tpn":"cos_lamp.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "CENWAVE",
+                "SEGMENT",
+                "FPOFFSET"
+            ]
+        },
+        "phatab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pulse height parameters reference table",
+            "ld_tpn":"cos_pha_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"FUV\")",
+            "suffix":"pha",
+            "text_descr":"Pulse Height Parameters Table",
+            "tpn":"cos_pha.tpn",
+            "unique_rowkeys":[
+                "SEGMENT",
+                "OPT_ELEM"
+            ]
+        },
+        "proftab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"2d spectrum profile table",
+            "ld_tpn":"cos_profile_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE",
+                "LIFE_ADJ"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"algncorr",
+            "rmap_relevance":"(LIFE_ADJ == \"3.0\")",
+            "suffix":"profile",
+            "text_descr":"2D Spectrum Profile Table",
+            "tpn":"cos_profile.tpn",
+            "unique_rowkeys":[
+                "SEGMENT",
+                "OPT_ELEM",
+                "CENWAVE",
+                "APERTURE"
+            ]
+        },
+        "spottab":{
+            "derived_from":"Initial hand made version 2015-10-19.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"SPOTTAB",
+            "filetype":"TRANSIENT BAD PIXEL REFERENCE TABLE",
+            "instrument":"COS",
+            "ld_tpn":"cos_spot_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_cos_spottab_0000.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"NO",
+            "sha1sum":"f9da0314e944b4e2afa1ececb8b2c24f8459a4ab",
+            "suffix":"spot",
+            "text_descr":"Spot Position Table",
+            "tpn":"cos_spot.tpn",
+            "unique_rowkeys":null
+        },
+        "spwcstab":{
+            "extra_keys":[
+                "exptype"
+            ],
+            "file_ext":".fits",
+            "filetype":"spectroscopic wcs parameters table",
+            "ld_tpn":"cos_spwcs_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\") and (EXPTYPE == \"EXTERNAL/SCI\")",
+            "suffix":"spwcs",
+            "text_descr":"Spectroscopic WCS Parameters Table",
+            "tpn":"cos_spwcs.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "CENWAVE",
+                "SEGMENT"
+            ]
+        },
+        "tdstab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"time dependent sensitivity table",
+            "ld_tpn":"cos_tds_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"tdscorr",
+            "rmap_relevance":"((OBSTYPE == \"SPECTROSCOPIC\") and (TDSCORR != \"OMIT\"))",
+            "suffix":"tds",
+            "text_descr":"Time Dependent Sensitivity Table",
+            "tpn":"cos_tds.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "SEGMENT",
+                "CENWAVE"
+            ]
+        },
+        "tracetab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"1d spectral trace table",
+            "ld_tpn":"cos_trace_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE",
+                "LIFE_ADJ"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"trcecorr",
+            "rmap_relevance":"(LIFE_ADJ == \"3.0\")",
+            "suffix":"trace",
+            "text_descr":"1D Spectral Trace Table",
+            "tpn":"cos_trace.tpn",
+            "unique_rowkeys":[
+                "SEGMENT",
+                "OPT_ELEM",
+                "CENWAVE",
+                "APERTURE"
+            ]
+        },
+        "twozxtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"two-zone spectral extraction parameters table",
+            "ld_tpn":"cos_2zx_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE",
+                "LIFE_ADJ"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"algncorr",
+            "rmap_relevance":"(LIFE_ADJ == \"3.0\")",
+            "suffix":"2zx",
+            "text_descr":"Two-Zone Spectral Extraction Parameters Table",
+            "tpn":"cos_2zx.tpn",
+            "unique_rowkeys":[
+                "SEGMENT",
+                "OPT_ELEM",
+                "CENWAVE",
+                "APERTURE"
+            ]
+        },
+        "walktab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"walk correction table",
+            "ld_tpn":"cos_walk_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSMODE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"walkcorr",
+            "rmap_relevance":"((DETECTOR == \"FUV\" and OBSMODE == \"TIME-TAG\") and (WALKCORR != \"OMIT\"))",
+            "suffix":"walk",
+            "text_descr":"Walk Correction Reference Table",
+            "tpn":"cos_walk.tpn",
+            "unique_rowkeys":[
+                "SEGMENT"
+            ]
+        },
+        "wcptab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"wavecal parameters reference table",
+            "ld_tpn":"cos_wcp_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"wcp",
+            "text_descr":"Wavecal Parameters Reference Table",
+            "tpn":"cos_wcp.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM"
+            ]
+        },
+        "xtractab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"1-d extraction parameters table",
+            "ld_tpn":"cos_1dx_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE",
+                "LIFE_ADJ"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"1dx",
+            "text_descr":"1-d Extraction Parameters Table",
+            "tpn":"cos_1dx.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "CENWAVE",
+                "SEGMENT"
+            ]
+        },
+        "xwlkfile":{
+            "derived_from":"Initial hand made version 2017-02-02. Jira CRDS-98.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"XWLKFILE",
+            "filetype":"X WALK CORRECTION LOOKUP REFERENCE IMAGE",
+            "instrument":"COS",
+            "ld_tpn":"cos_xwalk_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_cos_xwlkfile_0000.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "OBSMODE"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"XWLKCORR",
+            "rmap_relevance":"((DETECTOR == \"FUV\") and (OBSMODE==\"TIME-TAG\") and (XWLKCORR != \"OMIT\"))",
+            "sha1sum":"1abaa26bb5daff9963e3c57b6404ac35b28b4aad",
+            "suffix":"xwalk",
+            "text_descr":"X Walk Correction Lookup Reference Image",
+            "tpn":"cos_xwalk.tpn",
+            "unique_rowkeys":null
+        },
+        "ywlkfile":{
+            "derived_from":"Initial hand made version 2017-02-02. Jira CRDS-98.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"YWLKFILE",
+            "filetype":"Y WALK CORRECTION LOOKUP REFERENCE IMAGE",
+            "instrument":"COS",
+            "ld_tpn":"cos_ywalk_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_cos_ywlkfile_0000.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "OBSMODE"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"YWLKCORR",
+            "rmap_relevance":"((DETECTOR == \"FUV\") and (OBSMODE==\"TIME-TAG\") and (YWLKCORR != \"OMIT\"))",
+            "sha1sum":"e081c18097da34acef53d7f3f34bcdabe96a553a",
+            "suffix":"ywalk",
+            "text_descr":"Y Walk Correction Lookup Reference Image",
+            "tpn":"cos_ywalk.tpn",
+            "unique_rowkeys":null
+        }
+    },
+    "nicmos":{
+        "backtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"bkg",
+            "ld_tpn":"nic_bkg_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"bkg",
+            "text_descr":"Background Model Table",
+            "tpn":"nic_bkg.tpn",
+            "unique_rowkeys":null
+        },
+        "darkfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"drk",
+            "ld_tpn":"nic_drk_ld.tpn",
+            "parkey":[
+                "CAMERA",
+                "READOUT",
+                "NREAD",
+                "SAMP_SEQ",
+                "OBSMODE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(SAMP_SEQ not in [\"SPARS4\",\"SPARS16\",\"SPARS32\",\"SPARS128\"])",
+            "suffix":"drk",
+            "text_descr":"Dark Frame",
+            "tpn":"nic_drk.tpn",
+            "unique_rowkeys":null
+        },
+        "flatfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"flt",
+            "ld_tpn":"nic_flt_ld.tpn",
+            "parkey":[
+                "CAMERA",
+                "FILTER"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(FILTER != \"BLANK\")",
+            "suffix":"flt",
+            "text_descr":"Flat Field",
+            "tpn":"nic_flt.tpn",
+            "unique_rowkeys":null
+        },
+        "idctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"idc",
+            "ld_tpn":"nic_idc_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"idc",
+            "text_descr":"Image Distortion Correction File",
+            "tpn":"nic_idc.tpn",
+            "unique_rowkeys":[
+                "DETCHIP",
+                "FILTER"
+            ]
+        },
+        "illmfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"ilm",
+            "ld_tpn":"nic_ilm_ld.tpn",
+            "parkey":[
+                "CAMERA",
+                "FILTER"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(FILTER != \"BLANK\")",
+            "suffix":"ilm",
+            "text_descr":"Illumination Pattern File",
+            "tpn":"nic_ilm.tpn",
+            "unique_rowkeys":null
+        },
+        "maskfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"msk",
+            "ld_tpn":"nic_msk_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"msk",
+            "text_descr":"Static Mask File",
+            "tpn":"nic_msk.tpn",
+            "unique_rowkeys":null
+        },
+        "nlinfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"lin",
+            "ld_tpn":"nic_lin_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"lin",
+            "text_descr":"Detector Linearity Correction File",
+            "tpn":"nic_lin.tpn",
+            "unique_rowkeys":null
+        },
+        "noisfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"noi",
+            "ld_tpn":"nic_noi_ld.tpn",
+            "parkey":[
+                "CAMERA",
+                "READOUT",
+                "NREAD"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"noi",
+            "text_descr":"Detector Read-noise File",
+            "tpn":"nic_noi.tpn",
+            "unique_rowkeys":null
+        },
+        "pedsbtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"psb",
+            "ld_tpn":"nic_psb_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"psb",
+            "text_descr":"pedsbtab",
+            "tpn":"nic_psb.tpn",
+            "unique_rowkeys":[
+                "CAMERA"
+            ]
+        },
+        "phottab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pht",
+            "ld_tpn":"nic_pht_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"pht",
+            "text_descr":"Phototmetric Calibration Table",
+            "tpn":"nic_pht.tpn",
+            "unique_rowkeys":[
+                "PHOTMODE"
+            ]
+        },
+        "pmodfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pmd",
+            "ld_tpn":"nic_pmd_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"pmd",
+            "text_descr":"Persistence Model Files",
+            "tpn":"nic_pmd.tpn",
+            "unique_rowkeys":null
+        },
+        "pmskfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pmk",
+            "ld_tpn":"nic_pmk_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"pmk",
+            "text_descr":"Persistence Mask Files",
+            "tpn":"nic_pmk.tpn",
+            "unique_rowkeys":null
+        },
+        "rnlcortb":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"nlc",
+            "ld_tpn":"nic_nlc_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"nlc",
+            "text_descr":"Nonlinearity Power Law Table",
+            "tpn":"nic_nlc.tpn",
+            "unique_rowkeys":[
+                "WAVELENGTH"
+            ]
+        },
+        "saacntab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"scn",
+            "ld_tpn":"nic_scn_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"scn",
+            "text_descr":"SAACLEAN Task Parameters",
+            "tpn":"nic_scn.tpn",
+            "unique_rowkeys":[
+                "CAMERA"
+            ]
+        },
+        "saadfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"sdk",
+            "ld_tpn":"nic_sdk_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"sdk",
+            "text_descr":"Post Saa Dark Assoc.",
+            "tpn":"nic_sdk.tpn",
+            "unique_rowkeys":null
+        },
+        "tdffile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"tdf",
+            "ld_tpn":"nic_tdf_ld.tpn",
+            "parkey":[
+                "CAMERA",
+                "FILTER"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(FILTER != \"BLANK\")",
+            "suffix":"tdf",
+            "text_descr":"Temperature Dependent Flat Fields",
+            "tpn":"nic_tdf.tpn",
+            "unique_rowkeys":null
+        },
+        "tempfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"tdd",
+            "ld_tpn":"nic_tdd_ld.tpn",
+            "parkey":[
+                "CAMERA"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"tdd",
+            "text_descr":"Temperature-dependent Dark Reference File",
+            "tpn":"nic_tdd.tpn",
+            "unique_rowkeys":null
+        },
+        "zprattab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"zpr",
+            "ld_tpn":"nic_zpr_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"zpr",
+            "text_descr":"Nonlincor Zeropoint Scaling Table",
+            "tpn":"nic_zpr.tpn",
+            "unique_rowkeys":[
+                "PHOTMODE"
+            ]
+        }
+    },
+    "stis":{
+        "apdestab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"aperture description table",
+            "ld_tpn":"stis_apd_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"apd",
+            "text_descr":"Aperture Description Table",
+            "tpn":"stis_apd.tpn",
+            "unique_rowkeys":[
+                "APERTURE"
+            ]
+        },
+        "apertab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"aperture throughput table",
+            "ld_tpn":"stis_apt_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"apt",
+            "text_descr":"Aperture Throughput Table",
+            "tpn":"stis_apt.tpn",
+            "unique_rowkeys":[
+                "APERTURE"
+            ]
+        },
+        "biasfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"ccd bias image",
+            "ld_tpn":"stis_bia_ld.tpn",
+            "parkey":[
+                "CCDAMP",
+                "CCDGAIN",
+                "CCDOFFST",
+                "BINAXIS1",
+                "BINAXIS2"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"CCD\")",
+            "suffix":"bia",
+            "text_descr":"Bias Frame",
+            "tpn":"stis_bia.tpn",
+            "unique_rowkeys":null
+        },
+        "bpixtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"bad pixel table",
+            "ld_tpn":"stis_bpx_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"bpx",
+            "text_descr":"Data Quality (Bad Pixel) Initialization Table",
+            "tpn":"stis_bpx.tpn",
+            "unique_rowkeys":[
+                "PIX1",
+                "PIX2",
+                "LENGTH",
+                "AXIS",
+                "OPT_ELEM",
+                "VALUE"
+            ]
+        },
+        "ccdtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"ccd parameters table",
+            "ld_tpn":"stis_ccd_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"CCD\")",
+            "suffix":"ccd",
+            "text_descr":"Ccd Parameters Table",
+            "tpn":"stis_ccd.tpn",
+            "unique_rowkeys":[
+                "CCDAMP",
+                "CCDGAIN",
+                "CCDOFFST",
+                "BINAXIS1",
+                "BINAXIS2"
+            ]
+        },
+        "cdstab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"cross-disperser scattering table",
+            "ld_tpn":"stis_cds_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"cds",
+            "text_descr":"Cross-disperser Scattering Table",
+            "tpn":"stis_cds.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM"
+            ]
+        },
+        "crrejtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"cosmic ray rejection table",
+            "ld_tpn":"stis_crr_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"CCD\")",
+            "suffix":"crr",
+            "text_descr":"Cosmic Ray Rejection Parameter Table",
+            "tpn":"stis_crr.tpn",
+            "unique_rowkeys":[
+                "CRSPLIT",
+                "MEANEXP"
+            ]
+        },
+        "darkfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dark image",
+            "ld_tpn":"stis_drk_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "CCDGAIN"
+            ],
+            "parkey_relevance":{
+                "ccdamp":"(DETECTOR == \"CCD\")",
+                "ccdgain":"(DETECTOR == \"CCD\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"drk",
+            "text_descr":"Dark Frame",
+            "tpn":"stis_drk.tpn",
+            "unique_rowkeys":null
+        },
+        "disptab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dispersion coefficients table",
+            "ld_tpn":"stis_dsp_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"dsp",
+            "text_descr":"Dispersion Relation Table",
+            "tpn":"stis_dsp.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "CENWAVE",
+                "A2CENTER"
+            ]
+        },
+        "echsctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"echelle grating scattering table",
+            "ld_tpn":"stis_ech_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"ech",
+            "text_descr":"Echelle Scattering Table",
+            "tpn":"stis_ech.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "SPORDER"
+            ]
+        },
+        "exstab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"echelle cross-dispersion scattering table",
+            "ld_tpn":"stis_exs_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"exs",
+            "text_descr":"Echelle Cross-Dispersion Scattering Table",
+            "tpn":"stis_exs.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM"
+            ]
+        },
+        "gactab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"grating-aperture correction table",
+            "ld_tpn":"stis_gac_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"((OBSTYPE == \"SPECTROSCOPIC\") and (DETECTOR == \"CCD\"))",
+            "suffix":"gac",
+            "text_descr":"Grating-Aperture Correction Table",
+            "tpn":"stis_gac.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "CENWAVE"
+            ]
+        },
+        "halotab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"detector halo table",
+            "ld_tpn":"stis_hal_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"hal",
+            "text_descr":"Detectore Halo Table",
+            "tpn":"stis_hal.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "HALOWAVE"
+            ]
+        },
+        "idctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"image distortion correction table",
+            "ld_tpn":"stis_idc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"IMAGING\")",
+            "suffix":"idc",
+            "text_descr":"Image Distortion Correction File",
+            "tpn":"stis_idc.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "DIRECTION"
+            ]
+        },
+        "imphttab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"image photometry table",
+            "ld_tpn":"stis_imp_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"yes",
+            "reffile_switch":"photcorr",
+            "rmap_relevance":"(PHOTCORR != \"OMIT\")",
+            "suffix":"imp",
+            "text_descr":"Photometry Keyword Table",
+            "tpn":"stis_imp.tpn",
+            "unique_rowkeys":[
+                "OBSMODE"
+            ]
+        },
+        "inangtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"incidence angle correction table",
+            "ld_tpn":"stis_iac_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"iac",
+            "text_descr":"Incidence Angle Correction Table",
+            "tpn":"stis_iac.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "SPORDER",
+                "CENWAVE"
+            ]
+        },
+        "lamptab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"template cal lamp spectra table",
+            "ld_tpn":"stis_lmp_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"lmp",
+            "text_descr":"Template Calibration Lamp Spectra Table",
+            "tpn":"stis_lmp.tpn",
+            "unique_rowkeys":[
+                "LAMPSET",
+                "OPT_ELEM",
+                "SCLAMP"
+            ]
+        },
+        "lfltfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"low-order flatfield image",
+            "ld_tpn":"stis_lfl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OPT_ELEM",
+                "OBSTYPE",
+                "CENWAVE",
+                "APERTURE"
+            ],
+            "parkey_relevance":{
+                "aperture":"(OBSTYPE == \"IMAGING\")",
+                "cenwave":"(OBSTYPE == \"SPECTROSCOPIC\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"lfl",
+            "text_descr":"Low-order Flat Field Image",
+            "tpn":"stis_lfl.tpn",
+            "unique_rowkeys":null
+        },
+        "mlintab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"mama linearity table",
+            "ld_tpn":"stis_lin_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\")",
+            "suffix":"lin",
+            "text_descr":"Mama Linearity Table",
+            "tpn":"stis_lin.tpn",
+            "unique_rowkeys":[
+                "DETECTOR"
+            ]
+        },
+        "mofftab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"mama offset correction table",
+            "ld_tpn":"stis_moc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"moc",
+            "text_descr":"Mama Offset Correction Table",
+            "tpn":"stis_moc.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "CENWAVE",
+                "SPORDER"
+            ]
+        },
+        "pctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"photometric correction table",
+            "ld_tpn":"stis_pct_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE",
+                "OPT_ELEM"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"pct",
+            "text_descr":"Photometric Correction Table",
+            "tpn":"stis_pct.tpn",
+            "unique_rowkeys":[
+                "CENWAVE",
+                "APERTURE",
+                "EXTRHEIGHT"
+            ]
+        },
+        "pfltfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pixel-to-pixel flatfield image",
+            "ld_tpn":"stis_pfl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OPT_ELEM",
+                "OBSTYPE",
+                "CENWAVE",
+                "APERTURE"
+            ],
+            "parkey_relevance":{
+                "aperture":"(OBSTYPE == \"IMAGING\")",
+                "cenwave":"(OBSTYPE == \"SPECTROSCOPIC\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"pfl",
+            "text_descr":"Pixel To Pixel Flat Field Image",
+            "tpn":"stis_pfl.tpn",
+            "unique_rowkeys":null
+        },
+        "phottab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"photometric conversion table",
+            "ld_tpn":"stis_pht_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "OBSTYPE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"pht",
+            "text_descr":"Phototmetric Calibration Table",
+            "tpn":"stis_pht.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "CENWAVE",
+                "SPORDER"
+            ]
+        },
+        "riptab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"echelle ripple table",
+            "ld_tpn":"stis_rip_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"rip",
+            "text_descr":"Echelle Ripple Table",
+            "tpn":"stis_rip.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "SPORDER",
+                "CENWAVE"
+            ]
+        },
+        "sdctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"2-d spectrum distortion correction table",
+            "ld_tpn":"stis_sdc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"sdc",
+            "text_descr":"2-d Spectrum Distortion Corrections",
+            "tpn":"stis_sdc.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "CENWAVE",
+                "SPORDER"
+            ]
+        },
+        "sptrctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"1-d spectrum trace table",
+            "ld_tpn":"stis_1dt_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"1dt",
+            "text_descr":"1-d Spectrum Trace Table",
+            "tpn":"stis_1dt.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "CENWAVE",
+                "A2CENTER"
+            ]
+        },
+        "srwtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"scattering reference wavelengths table",
+            "ld_tpn":"stis_srw_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"srw",
+            "text_descr":"Scattering Reference Wavelength Table",
+            "tpn":"stis_srw.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "CENWAVE"
+            ]
+        },
+        "tdctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dark correction table",
+            "ld_tpn":"stis_tdc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"NUV-MAMA\")",
+            "suffix":"tdc",
+            "text_descr":"Nuv Dark Correction Table",
+            "tpn":"stis_tdc.tpn",
+            "unique_rowkeys":[]
+        },
+        "tdstab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"time dependent sensitivity table",
+            "ld_tpn":"stis_tds_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"tds",
+            "text_descr":"Time Dependent Sensitivity Table",
+            "tpn":"stis_tds.tpn",
+            "unique_rowkeys":[
+                "OPT_ELEM",
+                "REF_TEMP"
+            ]
+        },
+        "teltab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"telescope psf table",
+            "ld_tpn":"stis_tel_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"tel",
+            "text_descr":"Telescope Point Spread Function Table",
+            "tpn":"stis_tel.tpn",
+            "unique_rowkeys":[
+                "PSFWAVE"
+            ]
+        },
+        "wcptab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"wavecal parameters table",
+            "ld_tpn":"stis_wcp_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"wcp",
+            "text_descr":"Wavecal Parameters Reference Table",
+            "tpn":"stis_wcp.tpn",
+            "unique_rowkeys":[
+                "DETECTOR",
+                "OPT_ELEM"
+            ]
+        },
+        "xtractab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"1-d extraction parameter table",
+            "ld_tpn":"stis_1dx_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(OBSTYPE == \"SPECTROSCOPIC\")",
+            "suffix":"1dx",
+            "text_descr":"1-d Extraction Parameters Table",
+            "tpn":"stis_1dx.tpn",
+            "unique_rowkeys":[
+                "APERTURE",
+                "OPT_ELEM",
+                "CENWAVE",
+                "SPORDER"
+            ]
+        }
+    },
+    "synphot":{
+        "obsmodes":{
+            "classes":[
+                "Match"
+            ],
+            "derived_from":"Initial hand made version 2020-03-25.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"OBSMODES",
+            "filetype":"CROBSMODELIST",
+            "instrument":"SYNPHOT",
+            "ld_tpn":"synphot_obs_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"synphot_obsmodes.rmap",
+            "observatory":"HST",
+            "parkey":[
+                []
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"NONE",
+            "rmap_omit":"True",
+            "sha1sum":"2ccb22fa1a9794eabf46e02ed05e0a6eee16fe78",
+            "suffix":"obs",
+            "text_descr":"Observing Modes Table",
+            "tpn":"synphot_obs.tpn",
+            "unique_rowkeys":[
+                "OBSMODE"
+            ]
+        },
+        "thermal":{
+            "classes":[
+                "Match"
+            ],
+            "comment_parkeys":[
+                "DATE",
+                "DESCRIP"
+            ],
+            "derived_from":"Initial hand made version 2018-11-19. Jira CCD-148.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"THERMAL",
+            "filetype":"CRTHERMAL",
+            "instrument":"SYNPHOT",
+            "ld_tpn":"synphot_th_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_synphot_thermal.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "COMPNAME",
+                    "DATE",
+                    "DESCRIP"
+                ]
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"NONE",
+            "rmap_omit":"True",
+            "sha1sum":"5d113df63ade771906c4ed15b6b6028e23e4e81e",
+            "suffix":"th",
+            "text_descr":"Component Thermal Tables",
+            "tpn":"synphot_th.tpn",
+            "unique_rowkeys":[
+                "WAVELENGTH"
+            ]
+        },
+        "thruput":{
+            "classes":[
+                "Match"
+            ],
+            "comment_parkeys":[
+                "DATE",
+                "DESCRIP"
+            ],
+            "derived_from":"Initial hand made version 2018-11-24. Jira CCD-148.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"THRUPUT",
+            "filetype":"CRTHROUGHPUT",
+            "instrument":"SYNPHOT",
+            "ld_tpn":"synphot_syn_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_synphot_thruput.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "COMPNAME",
+                    "DATE",
+                    "DESCRIP"
+                ]
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"NONE",
+            "rmap_omit":"True",
+            "sha1sum":"43a2e7e5a7a473f9bac642272521d48234019527",
+            "suffix":"syn",
+            "text_descr":"Component Throughput Tables",
+            "tpn":"synphot_syn.tpn",
+            "unique_rowkeys":[
+                "WAVELENGTH"
+            ]
+        },
+        "tmctab":{
+            "classes":[
+                "Match"
+            ],
+            "derived_from":"Initial hand made version 2018-09-13.  Jira CCD-148.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"TMCTAB",
+            "filetype":"CRCOMPLIST",
+            "instrument":"SYNPHOT",
+            "ld_tpn":"synphot_tmc_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"synphot_tmctab.rmap",
+            "observatory":"HST",
+            "parkey":[
+                []
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"NONE",
+            "rmap_omit":"True",
+            "sha1sum":"513aa126c3526679b27c0c0d09349d09d94dafe1",
+            "suffix":"tmc",
+            "text_descr":"Master Component Lookup Table",
+            "tpn":"synphot_tmc.tpn",
+            "unique_rowkeys":[
+                "COMPNAME"
+            ]
+        },
+        "tmgtab":{
+            "classes":[
+                "Match"
+            ],
+            "derived_from":"Initial hand made version 2018-09-13. Jira CRDS-148.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"TMGTAB",
+            "filetype":"CRGRAPH",
+            "instrument":"SYNPHOT",
+            "ld_tpn":"symphot_tmg_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_synphot_tmg.rmap",
+            "observatory":"HST",
+            "parkey":[
+                []
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"NONE",
+            "rmap_omit":"True",
+            "sha1sum":"d95217abbd7a11d0740add23b96fb96090c9fa1e",
+            "suffix":"tmg",
+            "text_descr":"Graph Table",
+            "tpn":"synphot_tmg.tpn",
+            "unique_rowkeys":[
+                "COMPNAME",
+                "KEYWORD",
+                "INNODE",
+                "OUTNODE",
+                "THCOMPNAME"
+            ]
+        },
+        "tmttab":{
+            "classes":[
+                "Match"
+            ],
+            "derived_from":"Initial hand made version 2018-09-13. Jira CCD-148.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"TMTTAB",
+            "filetype":"CRTHERMLIST",
+            "instrument":"SYNPHOT",
+            "ld_tpn":"synphot_tmt_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"synphot_tmt.rmap",
+            "observatory":"HST",
+            "parkey":[
+                []
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"NONE",
+            "rmap_omit":"True",
+            "sha1sum":"c00169e8b5e96f6c1491d7d06ff542e70077ac69",
+            "suffix":"tmt",
+            "text_descr":"Thermal Component Lookup Table",
+            "tpn":"synphot_tmt.tpn",
+            "unique_rowkeys":[
+                "COMPNAME"
+            ]
+        }
+    },
+    "wfc3":{
+        "atodtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"analog-to-digital",
+            "ld_tpn":"wfc3_a2d_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"atodcorr",
+            "rmap_relevance":"((DETECTOR == \"UVIS\") and (ATODCORR != \"OMIT\"))",
+            "suffix":"a2d",
+            "text_descr":"Analog To Digital Lookup Table",
+            "tpn":"wfc3_a2d.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "CCDAMP",
+                "CCDGAIN",
+                "REF_KEY",
+                "REF_KEY_VALUE"
+            ]
+        },
+        "biacfile":{
+            "derived_from":"Derived from TEST hst_wfc3_biacfile_0004.rmap on 2016-01-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"BIACFILE",
+            "filetype":"CTEBIAS",
+            "instrument":"WFC3",
+            "ld_tpn":"wfc3_bic_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_wfc3_biacfile_0004.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"PCTECORR",
+            "rmap_relevance":"(DETECTOR == \"UVIS\" and PCTECORR == \"PERFORM\")",
+            "sha1sum":"74052c1bda830cc94c8940c0215a0f8497838a39",
+            "suffix":"bic",
+            "text_descr":"CTE Bias Frame",
+            "tpn":"wfc3_bic.tpn",
+            "unique_rowkeys":null
+        },
+        "biasfile":{
+            "extra_keys":[
+                "subarray"
+            ],
+            "file_ext":".fits",
+            "filetype":"bias",
+            "ld_tpn":"wfc3_bia_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "CCDGAIN",
+                "BINAXIS1",
+                "BINAXIS2",
+                "APERTURE",
+                "CHINJECT"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"yes",
+            "reffile_switch":"biascorr",
+            "rmap_relevance":"((DETECTOR == \"UVIS\") and (BIASCORR != \"OMIT\"))",
+            "suffix":"bia",
+            "text_descr":"Bias Frame",
+            "tpn":"wfc3_bia.tpn",
+            "unique_rowkeys":null
+        },
+        "bpixtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"bad pixels",
+            "ld_tpn":"wfc3_bpx_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"dqicorr",
+            "rmap_relevance":"(DQICORR != \"OMIT\")",
+            "suffix":"bpx",
+            "text_descr":"Data Quality (Bad Pixel) Initialization Table",
+            "tpn":"wfc3_bpx.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "PIX1",
+                "PIX2"
+            ]
+        },
+        "ccdtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"ccd parameters",
+            "ld_tpn":"wfc3_ccd_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"ccd",
+            "text_descr":"Ccd Parameters Table",
+            "tpn":"wfc3_ccd.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "CCDAMP",
+                "CCDGAIN",
+                "CCDOFSTA",
+                "CCDOFSTB",
+                "CCDOFSTC",
+                "CCDOFSTD",
+                "BINAXIS1",
+                "BINAXIS2"
+            ]
+        },
+        "crrejtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"cosmic ray rejection",
+            "ld_tpn":"wfc3_crr_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"crr",
+            "text_descr":"Cosmic Ray Rejection Parameter Table",
+            "tpn":"wfc3_crr.tpn",
+            "unique_rowkeys":[
+                "CRSPLIT",
+                "MEANEXP",
+                "CCDCHIP",
+                "SCALENSE",
+                "INITGUES",
+                "SKYSUB",
+                "CRSIGMAS",
+                "CRRADIUS",
+                "CRTHRESH",
+                "BADINPDQ",
+                "CRMASK"
+            ]
+        },
+        "d2imfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"uvis d2i file",
+            "ld_tpn":"wfc3_d2i_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"drizcorr",
+            "rmap_relevance":"((DETECTOR == \"UVIS\") and (DRIZCORR != \"OMIT\"))",
+            "suffix":"d2i",
+            "text_descr":"Column Correction File",
+            "tpn":"wfc3_d2i.tpn",
+            "unique_rowkeys":null
+        },
+        "darkfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dark",
+            "ld_tpn":"wfc3_drk_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "BINAXIS1",
+                "BINAXIS2",
+                "CCDGAIN",
+                "SAMP_SEQ",
+                "SUBTYPE"
+            ],
+            "parkey_relevance":{
+                "binaxis1":"(DETECTOR == \"UVIS\")",
+                "binaxis2":"(DETECTOR == \"UVIS\")",
+                "ccdgain":"(DETECTOR == \"IR\")",
+                "samp_seq":"(DETECTOR == \"IR\")",
+                "subtype":"(DETECTOR == \"IR\")"
+            },
+            "reffile_format":"IMAGE",
+            "reffile_required":"none",
+            "reffile_switch":"darkcorr",
+            "rmap_relevance":"(DARKCORR != \"OMIT\")",
+            "suffix":"drk",
+            "text_descr":"Dark Frame",
+            "tpn":"wfc3_drk.tpn",
+            "unique_rowkeys":null
+        },
+        "dfltfile":{
+            "derived_from":"Hand-crafted on 2020-10-09",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DFLTFILE",
+            "filetype":"DELTA FLAT",
+            "instrument":"WFC3",
+            "ld_tpn":"wfc3_dfl_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"wfc3_dfltfile.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "CCDAMP",
+                    "FILTER",
+                    "BINAXIS1",
+                    "BINAXIS2"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "parkey_relevance":{
+                "BINAXIS1":"(DETECTOR == \"UVIS\")",
+                "BINAXIS2":"(DETECTOR == \"UVIS\")"
+            },
+            "reffile_format":"IMAGE",
+            "reffile_required":"NO",
+            "reffile_switch":"FLATCORR",
+            "rmap_relevance":"(FLATCORR != \"OMIT\")",
+            "sha1sum":"dfee183bcab450b867c506d653863b08fb39acf3",
+            "suffix":"dfl",
+            "text_descr":"Delta Flat Field Image",
+            "tpn":"wfc3_dfl.tpn",
+            "unique_rowkeys":null
+        },
+        "drkcfile":{
+            "derived_from":"Derived from TEST hst_wfc3_drkcfile_0005.rmap on 2016-01-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DRKCFILE",
+            "filetype":"CTEDARK",
+            "instrument":"WFC3",
+            "ld_tpn":"wfc3_dkc_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_wfc3_drkcfile_0005.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"PCTECORR",
+            "rmap_relevance":"(DETECTOR == \"UVIS\" and PCTECORR == \"PERFORM\")",
+            "sha1sum":"0eb49a689cbe7d31d82fba3bc47bc07d340fb144",
+            "suffix":"dkc",
+            "text_descr":"Cte Corrected Dark",
+            "tpn":"wfc3_dkc.tpn",
+            "unique_rowkeys":null
+        },
+        "flshfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"post flash",
+            "ld_tpn":"wfc3_fls_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "BINAXIS1",
+                "BINAXIS2",
+                "FLASHCUR",
+                "SHUTRPOS"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"flshcorr",
+            "rmap_relevance":"((DETECTOR == \"UVIS\" and FLASHCUR != \"ZERO\") and (FLSHCORR != \"OMIT\"))",
+            "suffix":"fls",
+            "text_descr":"Post-flash Image",
+            "tpn":"wfc3_fls.tpn",
+            "unique_rowkeys":null
+        },
+        "idctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"distortion coefficients",
+            "ld_tpn":"wfc3_idc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"idc",
+            "text_descr":"Image Distortion Correction File",
+            "tpn":"wfc3_idc.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "FILTER",
+                "V2REF",
+                "V3REF",
+                "XSIZE",
+                "YSIZE"
+            ]
+        },
+        "imphttab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"image photometry table",
+            "ld_tpn":"wfc3_imp_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"photcorr",
+            "rmap_relevance":"(PHOTCORR != \"OMIT\")",
+            "suffix":"imp",
+            "text_descr":"Photometry Keyword Table",
+            "tpn":"wfc3_imp.tpn",
+            "unique_rowkeys":[
+                "OBSMODE"
+            ]
+        },
+        "lfltfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"large scale flat",
+            "ld_tpn":"wfc3_lfl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "FILTER"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"flatcorr",
+            "rmap_relevance":"(FLATCORR != \"OMIT\")",
+            "suffix":"lfl",
+            "text_descr":"Low-order Flat Field Image",
+            "tpn":"wfc3_lfl.tpn",
+            "unique_rowkeys":null
+        },
+        "mdriztab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"multidrizzle parameters",
+            "ld_tpn":"wfc3_mdz_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"no",
+            "reffile_switch":"drizcorr",
+            "rmap_relevance":"(DRIZCORR != \"OMIT\")",
+            "suffix":"mdz",
+            "text_descr":"Multidrizzle Parameter Table",
+            "tpn":"wfc3_mdz.tpn",
+            "unique_rowkeys":[
+                "FILTER",
+                "NUMIMAGES",
+                "XSIZE",
+                "YSIZE"
+            ]
+        },
+        "nlinfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"linearity coefficients",
+            "ld_tpn":"wfc3_lin_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"(DETECTOR == \"IR\")",
+            "suffix":"lin",
+            "text_descr":"Detector Linearity Correction File",
+            "tpn":"wfc3_lin.tpn",
+            "unique_rowkeys":null
+        },
+        "npolfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"dxy grid",
+            "ld_tpn":"wfc3_npl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "FILTER"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"drizcorr",
+            "rmap_relevance":"((DETECTOR == \"UVIS\") and (DRIZCORR != \"OMIT\"))",
+            "suffix":"npl",
+            "text_descr":"Non-polynomial Offset",
+            "tpn":"wfc3_npl.tpn",
+            "unique_rowkeys":null
+        },
+        "oscntab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"overscan",
+            "ld_tpn":"wfc3_osc_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"osc",
+            "text_descr":"Overscan Region Table",
+            "tpn":"wfc3_osc.tpn",
+            "unique_rowkeys":[
+                "CCDCHIP",
+                "CCDAMP",
+                "BINX",
+                "BINY",
+                "NX",
+                "NY"
+            ]
+        },
+        "pctetab":{
+            "derived_from":"Derived from TEST hst_wfc3_pctetab_0004.rmap 2016-01-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PCTETAB",
+            "filetype":"PIXCTE",
+            "instrument":"WFC3",
+            "ld_tpn":"wfc3_cte_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_wfc3_pctetab_0004.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"YES",
+            "reffile_switch":"PCTECORR",
+            "rmap_relevance":"(DETECTOR==\"UVIS\" and PCTECORR == \"PERFORM\")",
+            "sha1sum":"4943b4caf3ac974f30bd3c4b6a28fce168edd919",
+            "suffix":"cte",
+            "text_descr":"Pixel CTE Correction Table",
+            "tpn":"wfc3_cte.tpn",
+            "unique_rowkeys":null
+        },
+        "pfltfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"pixel-to-pixel flat",
+            "ld_tpn":"wfc3_pfl_ld.tpn",
+            "parkey":[
+                "DETECTOR",
+                "CCDAMP",
+                "FILTER",
+                "BINAXIS1",
+                "BINAXIS2"
+            ],
+            "parkey_relevance":{
+                "binaxis1":"(DETECTOR == \"UVIS\")",
+                "binaxis2":"(DETECTOR == \"UVIS\")"
+            },
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"flatcorr",
+            "rmap_relevance":"((FILTER != \"BLANK\") and (FLATCORR != \"OMIT\"))",
+            "suffix":"pfl",
+            "text_descr":"Pixel To Pixel Flat Field Image",
+            "tpn":"wfc3_pfl.tpn",
+            "unique_rowkeys":null
+        },
+        "shadfile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"shutter shading",
+            "ld_tpn":"wfc3_shd_ld.tpn",
+            "parkey":[
+                "DETECTOR"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"shadcorr",
+            "rmap_relevance":"((DETECTOR == \"UVIS\") and (SHADCORR != \"OMIT\"))",
+            "suffix":"shd",
+            "text_descr":"Shutter Shading Correction Image",
+            "tpn":"wfc3_shd.tpn",
+            "unique_rowkeys":null
+        },
+        "snkcfile":{
+            "derived_from":"Derived from TEST hst_wfc3_snkcfile_0005.rmap on 2016-01-22",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"SNKCFILE",
+            "filetype":"SINK PIXELS",
+            "instrument":"WFC3",
+            "ld_tpn":"wfc3_snk_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_wfc3_snkcfile_0005.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"IMAGE",
+            "reffile_required":"YES",
+            "reffile_switch":"PCTECORR",
+            "rmap_relevance":"(DETECTOR==\"UVIS\")",
+            "sha1sum":"2abeb2c8d7a85d514cdeefd22bd5d48693b8c3ce",
+            "suffix":"snk",
+            "text_descr":"Sink Pixel Correction Image",
+            "tpn":"wfc3_snk.tpn",
+            "unique_rowkeys":null
+        }
+    },
+    "wfpc2":{
+        "atodfile":{
+            "extra_keys":[],
+            "file_ext":".r1h",
+            "filetype":"a2d",
+            "ld_tpn":"wp2_a2d_ld.tpn",
+            "parkey":[
+                "MODE",
+                "ATODGAIN"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"a2d",
+            "text_descr":"Analog To Digital Converter Lookup Table",
+            "tpn":"wp2_a2d.tpn",
+            "unique_rowkeys":null
+        },
+        "biasfile":{
+            "extra_keys":[],
+            "file_ext":".r2h",
+            "filetype":"bas",
+            "ld_tpn":"wp2_bas_ld.tpn",
+            "parkey":[
+                "MODE",
+                "ATODGAIN"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"bas",
+            "text_descr":"Bias Frame",
+            "tpn":"wp2_bas.tpn",
+            "unique_rowkeys":null
+        },
+        "darkfile":{
+            "extra_keys":[],
+            "file_ext":".r3h",
+            "filetype":"drk",
+            "ld_tpn":"wp2_drk_ld.tpn",
+            "parkey":[
+                "MODE",
+                "ATODGAIN",
+                "SERIALS"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"drk",
+            "text_descr":"Dark Frame",
+            "tpn":"wp2_drk.tpn",
+            "unique_rowkeys":null
+        },
+        "dgeofile":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"distortion correction",
+            "ld_tpn":"wp2_dxy_ld.tpn",
+            "parkey":[
+                "MODE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"dxy",
+            "text_descr":"Geometric Distortion Correction File",
+            "tpn":"wp2_dxy.tpn",
+            "unique_rowkeys":null
+        },
+        "flatfile":{
+            "extra_keys":[
+                "imagetyp",
+                "filtnam1",
+                "filtnam2",
+                "lrfwave"
+            ],
+            "file_ext":".r4h",
+            "filetype":"flt",
+            "ld_tpn":"wp2_flt_ld.tpn",
+            "parkey":[
+                "MODE",
+                "FILTER1",
+                "FILTER2"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"flt",
+            "text_descr":"Flat Field",
+            "tpn":"wp2_flt.tpn",
+            "unique_rowkeys":null
+        },
+        "idctab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"distortion coefficients",
+            "ld_tpn":"wp2_idc_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"idc",
+            "text_descr":"Image Distortion Correction File",
+            "tpn":"wp2_idc.tpn",
+            "unique_rowkeys":[
+                "DETCHIP",
+                "DIRECTION",
+                "FILTER",
+                "FILTER1",
+                "FILTER2"
+            ]
+        },
+        "maskfile":{
+            "extra_keys":[],
+            "file_ext":".r0h",
+            "filetype":"msk",
+            "ld_tpn":"wp2_msk_ld.tpn",
+            "parkey":[
+                "MODE"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"msk",
+            "text_descr":"Static Mask File",
+            "tpn":"wp2_msk.tpn",
+            "unique_rowkeys":null
+        },
+        "offtab":{
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filetype":"chip offset",
+            "ld_tpn":"wp2_off_ld.tpn",
+            "parkey":[],
+            "parkey_relevance":{},
+            "reffile_format":"table",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"off",
+            "text_descr":"Inter-chip Offsets Table",
+            "tpn":"wp2_off.tpn",
+            "unique_rowkeys":[
+                "DETECTOR",
+                "OBSDATE",
+                "THETA"
+            ]
+        },
+        "shadfile":{
+            "extra_keys":[],
+            "file_ext":".r5h",
+            "filetype":"shd",
+            "ld_tpn":"wp2_shd_ld.tpn",
+            "parkey":[
+                "MODE",
+                "SHUTTER"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"none",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"shd",
+            "text_descr":"Shutter Shading Correction Image",
+            "tpn":"wp2_shd.tpn",
+            "unique_rowkeys":null
+        },
+        "wf4tfile":{
+            "extra_keys":[],
+            "file_ext":".r7h",
+            "filetype":"w4t",
+            "ld_tpn":"wp2_w4t_ld.tpn",
+            "parkey":[
+                "ATODGAIN"
+            ],
+            "parkey_relevance":{},
+            "reffile_format":"image",
+            "reffile_required":"no",
+            "reffile_switch":"none",
+            "rmap_relevance":"ALWAYS",
+            "suffix":"w4t",
+            "text_descr":"WF4 Correction Table",
+            "tpn":"wp2_w4t.tpn",
+            "unique_rowkeys":null
+        }
+    }
+}

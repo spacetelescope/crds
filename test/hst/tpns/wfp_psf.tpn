@@ -1,0 +1,44 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DATATYPE            H        C         R    REAL*4
+NAXIS               H        I         R    2
+NAXIS1              H        I         R    64:800
+NAXIS2              H        I         R    64:800
+GCOUNT              H        I         R    1
+PCOUNT              H        I         R    12
+ROOTNAME            H        C         R    
+CAMERA              H        C         R    WF,PC
+MODE                H        C         R    FULL,AREA
+DETECTOR            H        I         R    1:8
+FILTNAM1            H        C         R    
+FILTNAM2            H        C         R    
+DATA_FIL            H        C         R    
+TARGNAME            H        C         R    
+EXPTIME             H        C         R    0.:10000.0
+DATE_OBS            H        C         R    
+MJD                 H        C         R    48000.0:100000.
+SPECTRAL            H        C         R    
+XCORNER             H        I         R    0:800
+YCORNER             H        I         R    0:800
+XCENTER             H        C         R    0.:800.000
+YCENTER             H        C         R    0.:800.000
+CALIBRAT            H        C         R    
+ORIGIN              H        C         R    
+FLATFILE            H        C         R    
+PSFSCALE            H        C         R    0.:0.100000E+07
+OBSMODE             H        C         R    
+REFSPEC             H        C         R    
+ACTUAT25            H        I         R    -10000:10000
+ACTUAT26            H        I         R    -10000:10000
+ACTUAT27            H        I         R    -10000:10000
+ACTUAT28            H        I         R    -10000:10000
+ACTUAT29            H        I         R    -10000:10000
+ACTUAT30            H        I         R    -10000:10000
+DETECTOR            G        I         R    1:4

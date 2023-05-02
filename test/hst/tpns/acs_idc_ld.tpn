@@ -1,0 +1,37 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NOTE: FILTER1 and FILTER2 are ALLOWED to have COLUMN values of ANY
+#       because they are NOT FILE SELECTION FIELDS.
+#
+# NAME	   KEYTYPE  DATATYPE  PRESENCE	VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE	H	C	R	&SYBDATE
+OPUS_FLAG	H	C	R	Y,N
+COMPARISON_FILE	H	C	R    
+COMMENT		H	C	R
+INSTRUMENT	H	C	R	ACS
+REFERENCE_FILE_TYPE H	C	R    	IDC
+DETECTOR	C	C	R	WFC,HRC,SBC
+DETCHIP		C	I	R	1,2,-999 
+DIRECTION       C       C       R	FORWARD,INVERSE
+FILTER1         C       C       R	CLEAR1L,F555W,F775W,F625W,F550M,F850LP,\
+					CLEAR1S,POL0UV,POL60UV,POL120UV,\
+					F892N,F606W,F502N,G800L,F658N,F475W,\
+					F122M,F115LP,F125LP,F140LP,F150LP,\
+					F165LP,PR110L,PR130L,BLOCK1,BLOCK2,\
+					BLOCK3,BLOCK4,N/A,ANY
+FILTER2         C       C       R	CLEAR2L,F660N,F814W,FR388N,FR423N,\
+					FR462N,F435W,FR656N,FR716N,FR782N,\
+					CLEAR2S,POL0V,F330W,POL60V,F250W,\
+					POL120V,PR200L,F344N,F220W,FR914M,\
+					FR853N,FR931N,FR459M,FR647M,FR1016N,\
+                                        FR505N,FR551N,FR601N,N/A,ANY
+CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE
+PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C	C	O	&SYBDATE
+OBSERVATION_END_DATE    C	C	O	&SYBDATE

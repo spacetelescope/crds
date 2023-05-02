@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'pixel-to-pixel flat',
+    'ld_tpn': 'acs_pfl_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST'),
+    'parkey_relevance': {'fw1offst': '(FW1OFFST == "-1.0" or FW1OFFST == "1.0")', 'fw2offst': '(FW2OFFST == "-1.0" or FW2OFFST == "1.0")', 'fwsoffst': '(FWSOFFST == "-1.0" or FWSOFFST == "1.0")', 'ccdamp': '(DETECTOR != "SBC")'},
+    'reffile_format': 'image',
+    'reffile_required': 'yes',
+    'reffile_switch': 'flatcorr',
+    'rmap_relevance': '((OBSTYPE != "INTERNAL") and (FLATCORR != "OMIT"))',
+    'suffix': 'pfl',
+    'text_descr': 'Pixel To Pixel Flat Field Image',
+    'tpn': 'acs_pfl.tpn',
+    'unique_rowkeys': None,
+}

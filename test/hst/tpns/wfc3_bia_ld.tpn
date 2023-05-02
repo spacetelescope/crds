@@ -1,0 +1,35 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 03/05/09  MSwam  62082  Add APERTURE
+# 04/17/09  MSwam  62478  Replace SINGLE_OR_ALL with SINGLE_AMP, and add
+#                           QUAD_CORNER_SUBARRAYS
+# 04/22/09  MSwam  62478  Take OUT values that should NOT pass certify
+#                           (i.e. we want expload run on these values, so
+#                                 they do NOT belong here)
+# 06/28/10  RDiaz  65281  Add more WFC3 apertures
+# 10/14/11  MSwam  69530  Add CHINJECT file selection field
+#
+# NAME      KEYTYPE DATATYPE    PRESENCE    VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE   H   C   R   &SYBDATE
+OPUS_FLAG   H   C   R   Y,N
+COMPARISON_FILE H   C   R    
+COMMENT     H   C   R
+INSTRUMENT  H   C   R   WFC3
+REFERENCE_FILE_TYPE H   C   R       BIA
+BINAXIS1        C       I       R       1,2,3
+BINAXIS2        C       I       R       1,2,3
+APERTURE    C   C   R       G280-REF,UVIS,UVIS-CENTER,UVIS-FIX,UVIS-QUAD,UVIS-QUAD-FIX,UVIS-QUAD-SUB,UVIS1,UVIS1-2K4-SUB,UVIS1-C512A-SUB,UVIS1-C512B-SUB,UVIS1-FIX,UVIS1-M512-SUB,UVIS2,UVIS2-2K4-SUB,UVIS2-C512C-SUB,UVIS2-C512D-SUB,UVIS2-FIX,UVIS2-M512-SUB,UVIS2-M1K1C-SUB,UVIS2-C1K1C-SUB,UVIS2-M512C-SUB,UVIS2-2K2C-SUB,UVIS1-2K2A-SUB,UVIS1-2K2B-SUB,UVIS2-2K2D-SUB,UVIS-IR-FIX,UVIS2-C512C-CTE,UVIS2-C1K1C-CTE,UVIS1-C512C-CTE,UVIS1-C1K1C-CTE
+DETECTOR    C   C   R   UVIS
+CCDAMP      C   C   R   A,B,C,D,AB,AC,AD,BC,BD,CD,ABC,ABD,ACD,BCD,ABCD
+CCDGAIN     C   R   R   1.0,1.5,2.0,4.0
+CHINJECT        C       C       O       CONT,NONE,LINE10,LINE17,LINE25
+CHANGE_LEVEL    C   C   R   TRIVIAL,MODERATE,SEVERE
+PEDIGREE    C   C   R   INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C   C   O   &SYBDATE
+OBSERVATION_END_DATE    C   C   O   &SYBDATE

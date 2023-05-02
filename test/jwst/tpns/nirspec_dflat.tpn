@@ -1,0 +1,26 @@
+include includes/nir_subarray.tpn
+
+replace NIR_FILTER (True)
+
+include includes/nirspec_sci_array_refpix.tpn
+include includes/nirspec_err_array.tpn
+include includes/nirspec_dq_array.tpn
+include includes/nir_dq_def_array.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NirspecFlatModel
+
+SCI          A           X         R             (ndim(SCI_ARRAY,3))
+# ERR          A           X         R             (ndim(ERR_ARRAY,3))
+# DQ           A           X         R             (ndim(DQ_ARRAY,3))
+
+WAVELENGTH   A           X         R             (is_table(WAVELENGTH_ARRAY))
+WAVELENGTH   A           X         R             (has_columns(WAVELENGTH_ARRAY,['WAVELENGTH']))
+WAVELENGTH   A           X         R             (has_column_type(WAVELENGTH_ARRAY,'WAVELENGTH','FLOAT'))
+
+FAST_VARIATION    A           X         R        (is_table(FAST_VARIATION_ARRAY))
+FAST_VARIATION    A           X         R        (has_columns(FAST_VARIATION_ARRAY,['SLIT_NAME','NELEM','WAVELENGTH','DATA']))
+FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'SLIT_NAME','STRING'))
+FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'NELEM','INT'))
+FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'WAVELENGTH','FLOAT_ARRAY'))
+FAST_VARIATION    A           X         R        (has_column_type(FAST_VARIATION_ARRAY,'DATA','FLOAT_ARRAY'))

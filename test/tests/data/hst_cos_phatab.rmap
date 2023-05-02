@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:31.238263',
+    'filekind' : 'PHATAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_phatab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(DETECTOR == "FUV")',
+    'row_keys' : ('SEGMENT',),
+    'sha1sum' : '7ec34bbd50359e926042ac68bec7506d57c47622',
+}
+
+selector = Match({
+    ('FUV',) : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700jl_pha.fits',
+        '2009-05-11 00:00:00' : 'wc318317l_pha.fits',
+    }),
+})

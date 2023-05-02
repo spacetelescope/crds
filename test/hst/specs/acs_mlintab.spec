@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'linearity',
+    'ld_tpn': 'acs_lin_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'yes',
+    'reffile_switch': 'glincorr',
+    'rmap_relevance': '((DETECTOR == "SBC") and (GLINCORR != "OMIT"))',
+    'suffix': 'lin',
+    'text_descr': 'Mama Linearity Table',
+    'tpn': 'acs_lin.tpn',
+    'unique_rowkeys': ('DETECTOR',),
+}

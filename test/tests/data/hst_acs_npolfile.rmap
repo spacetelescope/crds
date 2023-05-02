@@ -1,0 +1,86 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:14.746695',
+    'filekind' : 'NPOLFILE',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_npolfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'DRIZCORR',
+    'rmap_relevance' : '(DRIZCORR != "OMIT")',
+    'sha1sum' : '8aa339e8fcd80a08b7fa144a61d46df6f5472797',
+}
+
+selector = Match({
+    ('HRC', 'CLEAR1S', 'F220W') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971825tj_npl.fits',
+    }),
+    ('HRC', 'CLEAR1S', 'F330W') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718260j_npl.fits',
+    }),
+    ('HRC', 'CLEAR1S', 'F435W') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718261j_npl.fits',
+    }),
+    ('HRC', 'CLEAR1S', 'F814W') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718267j_npl.fits',
+    }),
+    ('HRC', 'F475W', 'CLEAR2S') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718262j_npl.fits',
+    }),
+    ('HRC', 'F555W', 'CLEAR2S') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718263j_npl.fits',
+    }),
+    ('HRC', 'F606W', 'CLEAR2S') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718264j_npl.fits',
+    }),
+    ('HRC', 'F625W', 'CLEAR2S') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718265j_npl.fits',
+    }),
+    ('HRC', 'F775W', 'CLEAR2S') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718266j_npl.fits',
+    }),
+    ('HRC', 'F850LP', 'CLEAR2S') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718268j_npl.fits',
+    }),
+    ('SBC', 'BLOCK1|BLOCK2|BLOCK3|BLOCK4|F115LP|F122M|F125LP|F140LP|F150LP|F165LP', 'CLEAR2S') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826lj_npl.fits',
+    }),
+    ('WFC', 'CLEAR1L', 'F435W') : UseAfter({
+        '2002-03-01 00:00:00' : 'v9718269j_npl.fits',
+    }),
+    ('WFC', 'CLEAR1L', 'F660N') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826hj_npl.fits',
+    }),
+    ('WFC', 'CLEAR1L', 'F814W') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826jj_npl.fits',
+    }),
+    ('WFC', 'F475W', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826aj_npl.fits',
+    }),
+    ('WFC', 'F502N', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826bj_npl.fits',
+    }),
+    ('WFC', 'F550M', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826cj_npl.fits',
+    }),
+    ('WFC', 'F555W', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826dj_npl.fits',
+    }),
+    ('WFC', 'F606W', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826ej_npl.fits',
+    }),
+    ('WFC', 'F625W', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826fj_npl.fits',
+    }),
+    ('WFC', 'F658N', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826gj_npl.fits',
+    }),
+    ('WFC', 'F775W', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826ij_npl.fits',
+    }),
+    ('WFC', 'F850LP', 'CLEAR2L') : UseAfter({
+        '2002-03-01 00:00:00' : 'v971826kj_npl.fits',
+    }),
+})

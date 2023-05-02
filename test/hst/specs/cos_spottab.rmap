@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'Initial hand made version 2015-10-19.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'SPOTTAB',
+    'filetype' : 'TRANSIENT BAD PIXEL REFERENCE TABLE',
+    'instrument' : 'COS',
+    'ld_tpn' : 'cos_spot_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_spottab_0000.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NO',
+    'sha1sum' : 'f9da0314e944b4e2afa1ececb8b2c24f8459a4ab',
+    'suffix' : 'spot',
+    'text_descr' : 'Spot Position Table',
+    'tpn' : 'cos_spot.tpn',
+    'unique_rowkeys' : None,
+}
+
+selector = Match({
+})

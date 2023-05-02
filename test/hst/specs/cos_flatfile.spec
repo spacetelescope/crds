@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'flat field reference image',
+    'ld_tpn': 'cos_flat_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'flatcorr',
+    'rmap_relevance': '(FLATCORR != "OMIT")',
+    'suffix': 'flat',
+    'text_descr': 'Flat Field',
+    'tpn': 'cos_flat.tpn',
+    'unique_rowkeys': None,
+}

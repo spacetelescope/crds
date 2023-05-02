@@ -1,0 +1,55 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+META.TELESCOPE          H   C   R               JWST
+# META.INSTRUMENT.NAME    H   C   R               FGS,NIRCAM,NIRISS,NIRSPEC,MIRI,SYSTEM
+META.REFTYPE       H   C   R
+META.USEAFTER   H   C   R               &JWSTDATE
+META.PEDIGREE   H   C   R               &JWSTPEDIGREE
+META.AUTHOR     H   C   R
+META.DESCRIPTION H   C  R
+META.HISTORY     H   C  R
+
+META.MODEL_TYPE  H   C  (warning(not(META_REFTYPE.startswith('pars-'))))
+
+# Make EXP_TYPE available in headers even if only UNDEFINED
+# Keyword cross-strapping doesn't work for UNDEFINED values...
+EXP_TYPE               H    C   O
+
+META.EXPOSURE.READPATT      H    C    O   ACQ1,ACQ2,BRIGHT1,BRIGHT2,\
+              DEEP2,DEEP8,FAST,\
+              FASTGRPAVG,FASTGRPAVG8,FASTGRPAVG16,FASTGRPAVG32,FASTGRPAVG64,\
+              FASTR1,FASTR100,\
+              FGS,FGS60,FGS8370,FGS840,FGSRAPID,FINEGUIDE,\
+              ID,MEDIUM2,MEDIUM8,NIS,NISRAPID,\
+              NRS,NRSIRS2,NRSN16R4,NRSN32R8,NRSN8R2,\
+              NRSRAPID,NRSIRS2RAPID,NRSRAPIDD1,NRSRAPIDD2,NRSRAPIDD6,\
+              NRSSLOW,RAPID,SHALLOW2,SHALLOW4,\
+              SLOW,SLOWR1,\
+              TRACK,ANY,N/A
+
+
+META.INSTRUMENT.FILTER      H     C   O  CLEAR,F070LP,F070W,F090W,F1000W,F100LP,F1065C,\
+                                        F110W,F1130W,F1140C,F115W,F1280W,F140M,F140X,F1500W,F150W,\
+                                        F150W2,F1550C,F170LP,F1800W,F182M,F187N,F200W,F2100W,F210M,\
+                                        F212N,F2300C,F250M,F2550W,F2550WR,F277W,F290LP,F300M,\
+                                        F322W2,F335M,F356W,F360M,F380M,F410M,F430M,F444W,\
+                                        F460M,F480M,F560W,F770W,FLENS,FND,GR150C,\
+                                        GR150R,OPAQUE,P750L,WLP4,MULTIPLE,ANY,N/A
+META.INSTRUMENT.GRATING     H     C    O   G140M,G235M,G395M,G140H,G235H,G395H,PRISM,MIRROR,UNKNOWN,MULTIPLE,N/A,ANY
+
+META.INSTRUMENT.PUPIL      H       C   O  CLEAR,CLEARP,F090W,F115W,F140M,F150W,F158M,F162M,F164N,\
+              F200W,F323N,F405N,F466N,F470N,FLAT,GDHS0,GDHS60,GR700XD,\
+              GRISMC,GRISMR,GRISMV2,GRISMV3,MASKBAR,MASKIPR,MASKRND,NRM,PINHOLES,\
+              WLM8,WLP8,ANY,N/A
+
+# CORONMSK
+META.INSTRUMENT.CORONAGRAPH    H    C   O  4QPM,4QPM_1065,4QPM_1140,4QPM_1550,LYOT,LYOT_2300,\
+                                           MASKA210R,MASKASWB,MASKA335R,MASKA430R,MASKALWB,\
+                                           NONE,ANY,N/A

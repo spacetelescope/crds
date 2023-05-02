@@ -1,0 +1,79 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:37.086711',
+    'filekind' : 'PCTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_pctab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
+    'row_keys' : ('CENWAVE', 'APERTURE', 'EXTRHEIGHT'),
+    'sha1sum' : 'a13cfefa95997d44b2c9478e4f28549134df8e8c',
+}
+
+selector = Match({
+    ('CCD', 'SPECTROSCOPIC', 'G230LB') : UseAfter({
+        '1997-01-01 00:00:00' : 'q541740lo_pct.fits',
+    }),
+    ('CCD', 'SPECTROSCOPIC', 'G230MB') : UseAfter({
+        '1996-10-01 00:00:00' : 'j1p13244o_pct.fits',
+        '1997-01-01 00:00:00' : 'q541740mo_pct.fits',
+    }),
+    ('CCD', 'SPECTROSCOPIC', 'G430L') : UseAfter({
+        '1997-01-01 00:00:00' : 'q541740no_pct.fits',
+    }),
+    ('CCD', 'SPECTROSCOPIC', 'G430M') : UseAfter({
+        '1996-10-01 00:00:00' : 'j1p13246o_pct.fits',
+        '1997-01-01 00:00:00' : 'q541740oo_pct.fits',
+    }),
+    ('CCD', 'SPECTROSCOPIC', 'G750L') : UseAfter({
+        '1997-01-01 00:00:00' : 'q541740po_pct.fits',
+    }),
+    ('CCD', 'SPECTROSCOPIC', 'G750M') : UseAfter({
+        '1996-10-01 00:00:00' : 'j1p13248o_pct.fits',
+        '1997-01-01 00:00:00' : 'q541740qo_pct.fits',
+    }),
+    ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H') : UseAfter({
+        '1996-10-01 00:00:00' : 'ica12517o_pct.fits',
+        '1997-01-01 00:00:00' : 'q541740ro_pct.fits',
+    }),
+    ('FUV-MAMA', 'SPECTROSCOPIC', 'E140M') : UseAfter({
+        '1996-10-01 00:00:00' : 'i561639lo_pct.fits',
+        '1996-10-10 00:00:00' : 'ica12518o_pct.fits',
+        '1997-01-01 00:00:00' : 'q541740so_pct.fits',
+    }),
+    ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H') : UseAfter({
+        '1996-10-10 00:00:00' : 'ica12519o_pct.fits',
+    }),
+    ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M') : UseAfter({
+        '1996-10-10 00:00:00' : 'ica1251ao_pct.fits',
+    }),
+    ('FUV-MAMA', 'SPECTROSCOPIC', 'G140L') : UseAfter({
+        '1997-01-01 00:00:00' : 'q541740to_pct.fits',
+    }),
+    ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M') : UseAfter({
+        '1996-10-01 00:00:00' : 'i561639po_pct.fits',
+        '1997-01-01 00:00:00' : 'q5417410o_pct.fits',
+    }),
+    ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H') : UseAfter({
+        '1996-10-01 00:00:00' : 'i561639mo_pct.fits',
+        '1997-01-01 00:00:00' : 'q5417411o_pct.fits',
+    }),
+    ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M') : UseAfter({
+        '1996-10-01 00:00:00' : 'i561639no_pct.fits',
+        '1997-01-01 00:00:00' : 'q5417412o_pct.fits',
+    }),
+    ('NUV-MAMA', 'SPECTROSCOPIC', 'G230L') : UseAfter({
+        '1997-01-01 00:00:00' : 'q5417413o_pct.fits',
+    }),
+    ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M') : UseAfter({
+        '1996-10-01 00:00:00' : 'i561639qo_pct.fits',
+        '1997-01-01 00:00:00' : 'n2o1817fo_pct.fits',
+    }),
+    ('NUV-MAMA', 'SPECTROSCOPIC', 'PRISM') : UseAfter({
+        '1997-01-01 00:00:00' : 'p441909so_pct.fits',
+    }),
+})

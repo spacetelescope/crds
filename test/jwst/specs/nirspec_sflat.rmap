@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand created 2016-10-06',
+    'file_ext' : '.fits',
+    'filekind' : 'SFLAT',
+    'filetype' : 'SPECTROGRAPH FLATFIELD',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'nirspec_sflat.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.GRATING', 'META.EXPOSURE.TYPE', 'META.INSTRUMENT.LAMP_MODE', 'META.INSTRUMENT.LAMP_STATE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '7b4819a8935d62db2bf3eba6b8c16aced8cd5dc8',
+    'suffix' : 'sflat',
+    'text_descr' : 'Spectrograph Flat Field',
+}
+
+selector = Match({
+})

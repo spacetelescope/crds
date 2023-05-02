@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'dark',
+    'ld_tpn': 'acs_drk_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'CCDGAIN'),
+    'parkey_relevance': {'ccdgain': '(DETECTOR != "SBC")', 'ccdamp': '(DETECTOR != "SBC")'},
+    'reffile_format': 'image',
+    'reffile_required': 'yes',
+    'reffile_switch': 'darkcorr',
+    'rmap_relevance': '(DARKCORR != "OMIT")',
+    'suffix': 'drk',
+    'text_descr': 'Dark Frame',
+    'tpn': 'acs_drk.tpn',
+    'unique_rowkeys': None,
+}

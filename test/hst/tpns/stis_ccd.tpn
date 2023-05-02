@@ -1,0 +1,20 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    STIS
+FILETYPE            H        C         R    "CCD PARAMETERS TABLE"
+DETECTOR            H        C         R    CCD
+CCDAMP              C        C         R    A,B,C,D
+CCDGAIN             C        I         R    1,2,4,8
+BINAXIS1            C        I         R    1,2,4
+BINAXIS2            C        I         R    1,2,4
+CCDOFFST            C        I         R    1,2,3,4
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            C        C         R    &PEDIGREE
+DESCRIP             C        C         R    

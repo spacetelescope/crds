@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.618543',
+    'filekind' : 'PHOTTAB',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_phottab.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'row_keys' : ('PHOTMODE',),
+    'sha1sum' : 'fe5855ccff577b6a1df5bd36cf668dbc01e85693',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1997-01-01 00:00:00' : 't6423130n_pht.fits',
+        '1997-01-04 00:00:00' : 't6423131n_pht.fits',
+        '1997-01-06 00:00:00' : 't6423132n_pht.fits',
+        '1997-01-07 00:00:00' : 't6423133n_pht.fits',
+        '1997-07-01 00:00:00' : 't6423134n_pht.fits',
+        '2002-01-01 00:00:00' : 't621822qn_pht.fits',
+    }),
+})

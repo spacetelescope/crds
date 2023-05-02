@@ -1,0 +1,10 @@
+
+# replace XDIM_MAX 2304
+# replace SCI DQ
+# replace DQ_TYPE 'INT'
+# include nir_sci_array_both.tpn
+
+DQ       A           X         W                            (is_image(DQ_ARRAY))
+DQ       A           X         O                            (warn_only(has_type(DQ_ARRAY,'INT')))
+DQ       A           X         ((array_exists(SCI_ARRAY))and(array_exists(DQ_ARRAY)))   (DQ_ARRAY.SHAPE[-2:]==SCI_ARRAY.SHAPE[-2:])
+

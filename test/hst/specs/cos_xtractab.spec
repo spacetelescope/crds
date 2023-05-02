@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': '1-d extraction parameters table',
+    'ld_tpn': 'cos_1dx_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': '1dx',
+    'text_descr': '1-d Extraction Parameters Table',
+    'tpn': 'cos_1dx.tpn',
+    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
+}

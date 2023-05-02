@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'lin',
+    'ld_tpn': 'nic_lin_ld.tpn',
+    'parkey': ('CAMERA',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'lin',
+    'text_descr': 'Detector Linearity Correction File',
+    'tpn': 'nic_lin.tpn',
+    'unique_rowkeys': None,
+}

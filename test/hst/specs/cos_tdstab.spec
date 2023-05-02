@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'time dependent sensitivity table',
+    'ld_tpn': 'cos_tds_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'no',
+    'reffile_switch': 'tdscorr',
+    'rmap_relevance': '((OBSTYPE == "SPECTROSCOPIC") and (TDSCORR != "OMIT"))',
+    'suffix': 'tds',
+    'text_descr': 'Time Dependent Sensitivity Table',
+    'tpn': 'cos_tds.tpn',
+    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'SEGMENT', 'CENWAVE'),
+}

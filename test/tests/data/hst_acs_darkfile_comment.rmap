@@ -1,0 +1,36 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-01-11 13:58:14.664182',
+    'filekind' : 'DARKFILE',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_darkfile_comment.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey_relevance' : {
+        'ccdamp' : '(DETECTOR != "SBC")',
+        'ccdgain' : '(DETECTOR != "SBC")',
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '0b3af86642812a1af65b77d429886e186acef915',
+}
+
+comment = """
+This is a block comment which can be used to store additional metadata
+about the state and evolution of this type and files.
+"""
+
+selector = Match({
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1992-01-01 00:00:00' : 'lcb12060j_drk.fits',
+        '2002-03-01 00:00:00' : 'n3o1022cj_drk.fits',
+        '2002-03-18 00:00:00' : 'n3o1022ej_drk.fits',
+        '2002-03-19 00:34:31' : 'n3o1022fj_drk.fits',
+        '2002-03-20 00:34:32' : 'n3o1022hj_drk.fits',
+        '2002-03-21 00:34:31' : 'n3o1022ij_drk.fits',
+        '2002-03-22 00:34:30' : 'n3o1022kj_drk.fits',
+        '2002-03-23 00:34:28' : 'n3o1022lj_drk.fits',
+        '2007-01-21 02:09:05' : 'r1u1415ij_drk.fits',
+        '2007-01-22 00:40:13' : 'r1u1415kj_drk.fits',
+        '2007-01-26 00:07:33' : 'r1u1415mj_drk.fits',
+    }),
+})

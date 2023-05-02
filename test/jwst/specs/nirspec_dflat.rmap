@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand created 2016-10-06',
+    'file_ext' : '.fits',
+    'filekind' : 'DFLAT',
+    'filetype' : 'DETECTOR FLATFIELD',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'nirspec_dflat.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'abce8ac7b143ba3cb95593f8df2c2dabf892c29b',
+    'suffix' : 'dflat',
+    'text_descr' : 'Detector Flat Field',
+}
+
+selector = Match({
+})

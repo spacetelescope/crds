@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'photometric correction table',
+    'ld_tpn': 'stis_pct_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE', 'OPT_ELEM'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'pct',
+    'text_descr': 'Photometric Correction Table',
+    'tpn': 'stis_pct.tpn',
+    'unique_rowkeys': ('CENWAVE', 'APERTURE', 'EXTRHEIGHT'),
+}

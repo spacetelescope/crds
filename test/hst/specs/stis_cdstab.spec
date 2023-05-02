@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'cross-disperser scattering table',
+    'ld_tpn': 'stis_cds_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'cds',
+    'text_descr': 'Cross-disperser Scattering Table',
+    'tpn': 'stis_cds.tpn',
+    'unique_rowkeys': ('OPT_ELEM',),
+}

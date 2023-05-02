@@ -1,0 +1,29 @@
+header = {
+    'derived_from' : 'generated 2013-07-20 13:50:50.356771',
+    'instrument' : 'NICMOS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'hst_nicmos.imap',
+    'observatory' : 'HST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '01f5bf020a6dabe0532fa14c2b37f6d3635d5979',
+}
+
+selector = {
+    'darkfile' : 'hst_nicmos_darkfile.rmap',
+    'flatfile' : 'hst_nicmos_flatfile.rmap',
+    'idctab' : 'hst_nicmos_idctab.rmap',
+    'illmfile' : 'hst_nicmos_illmfile.rmap',
+    'maskfile' : 'hst_nicmos_maskfile.rmap',
+    'nlinfile' : 'hst_nicmos_nlinfile.rmap',
+    'noisfile' : 'hst_nicmos_noisfile.rmap',
+    'pedsbtab' : 'hst_nicmos_pedsbtab.rmap',
+    'phottab' : 'hst_nicmos_phottab.rmap',
+    'pmodfile' : 'hst_nicmos_pmodfile.rmap',
+    'pmskfile' : 'hst_nicmos_pmskfile.rmap',
+    'rnlcortb' : 'hst_nicmos_rnlcortb.rmap',
+    'saacntab' : 'hst_nicmos_saacntab.rmap',
+    'saadfile' : 'hst_nicmos_saadfile.rmap',
+    'tdffile' : 'hst_nicmos_tdffile.rmap',
+    'tempfile' : 'hst_nicmos_tempfile.rmap',
+    'zprattab' : 'hst_nicmos_zprattab.rmap',
+}

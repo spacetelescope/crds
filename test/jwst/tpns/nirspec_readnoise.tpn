@@ -1,0 +1,16 @@
+include includes/nir_subarray.tpn
+
+replace NIR_FILTER (True)
+replace YDIM_MAX 3200
+
+include includes/nirspec_sci_array_striped.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  ReadnoiseModel
+
+BUNIT    H   C    W   DN,ADU
+
+SCI    A    X    R   (ndim(SCI_ARRAY,2))
+
+META.EXPOSURE.GAIN_FACTOR     H   R   W  1.0:10.0
+

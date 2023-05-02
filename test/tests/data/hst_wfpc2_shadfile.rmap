@@ -1,0 +1,31 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:48.276941',
+    'filekind' : 'SHADFILE',
+    'instrument' : 'WFPC2',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfpc2_shadfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('MODE', 'SHUTTER'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '1bfc9fcfa87edcc424f5ca5fff0343d38e281385',
+}
+
+selector = Match({
+    ('AREA', 'A') : UseAfter({
+        '1993-12-01 00:00:00' : 'e1b10013u.r5h',
+        '1994-04-23 00:00:00' : 'e6o09402u.r5h',
+    }),
+    ('AREA', 'B') : UseAfter({
+        '1993-12-01 00:00:00' : 'e1b10014u.r5h',
+        '1994-04-23 00:00:00' : 'e6o09405u.r5h',
+    }),
+    ('FULL', 'A') : UseAfter({
+        '1993-12-01 00:00:00' : 'e371355eu.r5h',
+    }),
+    ('FULL', 'B') : UseAfter({
+        '1993-12-01 00:00:00' : 'e371355iu.r5h',
+    }),
+})

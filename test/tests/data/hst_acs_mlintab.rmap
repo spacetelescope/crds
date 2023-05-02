@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:14.741672',
+    'filekind' : 'MLINTAB',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_mlintab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'GLINCORR',
+    'rmap_relevance' : '((DETECTOR == "SBC") and (GLINCORR != "OMIT"))',
+    'sha1sum' : '394664f1fdee5bda80cd589c1a0089ebe467d57a',
+}
+
+selector = Match({
+    ('SBC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'k9c13374j_lin.fits',
+    }),
+})

@@ -1,0 +1,24 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:37.966106',
+    'filekind' : 'SRWTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_srwtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
+    'row_keys' : ('OPT_ELEM', 'CENWAVE'),
+    'sha1sum' : 'd9cc0ef7fe39e6734fe649b1c01e6f7dcd128f52',
+}
+
+selector = Match({
+    ('FUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m09589o_srw.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m0958go_srw.fits',
+    }),
+})

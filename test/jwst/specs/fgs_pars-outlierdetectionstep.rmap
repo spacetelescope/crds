@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Copied from niriss_pars-outlierdetectionstep 20210208',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-outlierdetectionstep',
+    'filetype' : 'pars-outlierdetectionstep',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_pars-outlierdetectionstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.DETECTOR'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '74c64daf6ac43e46a331d403d831c1ba3b00ab43',
+    'suffix' : 'pars-outlierdetectionstep',
+    'text_descr' : 'OutlierDetectionStep runtime parameters',
+}
+
+selector = Match({
+})

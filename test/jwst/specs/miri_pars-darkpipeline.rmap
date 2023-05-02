@@ -1,0 +1,23 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand-made, SCSB, CRDS-416, 2020-10',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-darkpipeline',
+    'filetype' : 'pars-darkpipeline',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : '',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '4c1c61034a2c5f3726a01c53b026804ee6532ae8',
+    'suffix' : 'pars-darkpipeline',
+    'text_descr' : 'DarkPipeline runtime parameters',
+}
+
+comment = """
+Step parameter references are JWST step and pipeline configurations.
+This reftype provides the configuration for jwst.pipeline.DarkPipeline
+"""
+
+selector = Match({
+})

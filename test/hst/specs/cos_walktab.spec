@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'walk correction table',
+    'ld_tpn': 'cos_walk_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSMODE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'walkcorr',
+    'rmap_relevance': '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (WALKCORR != "OMIT"))',
+    'suffix': 'walk',
+    'text_descr': 'Walk Correction Reference Table',
+    'tpn': 'cos_walk.tpn',
+    'unique_rowkeys': ('SEGMENT',),
+}

@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'large scale flat',
+    'ld_tpn': 'wfc3_lfl_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'FILTER'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'flatcorr',
+    'rmap_relevance': '(FLATCORR != "OMIT")',
+    'suffix': 'lfl',
+    'text_descr': 'Low-order Flat Field Image',
+    'tpn': 'wfc3_lfl.tpn',
+    'unique_rowkeys': None,
+}

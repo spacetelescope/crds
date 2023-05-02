@@ -1,0 +1,13 @@
+include includes/nir_subarray.tpn
+
+include includes/nir_sci_array_refpix.tpn
+include includes/nir_err_array.tpn
+include includes/nir_dq_array.tpn
+include includes/nir_dq_def_array.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  DarkModel
+
+SCI   A   X   R   (ndim(SCI_ARRAY,3))
+ERR   A   X   O   (ndim(ERR_ARRAY,3))
+DQ    A   X   O   (ndim(DQ_ARRAY,2))

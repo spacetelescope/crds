@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'two-zone spectral extraction parameters table',
+    'ld_tpn': 'cos_2zx_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'yes',
+    'reffile_switch': 'algncorr',
+    'rmap_relevance': '(LIFE_ADJ == "3.0")',
+    'suffix': '2zx',
+    'text_descr': 'Two-Zone Spectral Extraction Parameters Table',
+    'tpn': 'cos_2zx.tpn',
+    'unique_rowkeys': ('SEGMENT', 'OPT_ELEM', 'CENWAVE', 'APERTURE'),
+}

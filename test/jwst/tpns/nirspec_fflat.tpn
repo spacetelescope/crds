@@ -1,0 +1,67 @@
+include includes/nir_subarray.tpn
+
+replace   NIR_FILTER   ((EXP_TYPE)in["NRS_MSASPEC"])
+
+# include includes/nir_sci_array_refpix.tpn
+# include includes/nir_err_array.tpn
+# include includes/nir_dq_array.tpn
+# include includes/nir_dq_def_array.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  NirspecFlatModel,NirspecQuadFlatModel
+
+#
+# Currently crds.certify doesn't have the capability of verifying something this complicated
+#
+# From astropy.io.fits.info()
+#
+# No.    Name         Type      Cards   Dimensions   Format
+# 0    PRIMARY     PrimaryHDU      30   ()
+# 1    SCI         ImageHDU        60   (365, 171, 50)   float32
+# 2    DQ          ImageHDU        12   (365, 171, 50)   int32 (rescales to uint32)
+# 3    ERR         ImageHDU        10   (365, 171, 50)   float32
+# 4    WAVELENGTH  BinTableHDU     13   50R x 1C     [E]
+# 5    FAST_VARIATION  BinTableHDU     19   1R x 4C      [15A, 1J, 10000E, 10000E]
+# 6    SCI         ImageHDU        60   (365, 171, 50)   float32
+# 7    DQ          ImageHDU        12   (365, 171, 50)   int32 (rescales to uint32)
+# 8    ERR         ImageHDU        10   (365, 171, 50)   float32
+# 9    WAVELENGTH  BinTableHDU     13   50R x 1C     [E]
+# 10   FAST_VARIATION  BinTableHDU     19   1R x 4C      [15A, 1J, 10000E, 10000E]
+# 11   SCI         ImageHDU        60   (365, 171, 50)   float32
+# 12   DQ          ImageHDU        12   (365, 171, 50)   int32 (rescales to uint32)
+# 13   ERR         ImageHDU        10   (365, 171, 50)   float32
+# 14   WAVELENGTH  BinTableHDU     13   50R x 1C     [E]
+# 15   FAST_VARIATION  BinTableHDU     19   1R x 4C      [15A, 1J, 10000E, 10000E]
+# 16   SCI         ImageHDU        60   (365, 171, 50)   float32
+# 17   DQ          ImageHDU        12   (365, 171, 50)   int32 (rescales to uint32)
+# 18   ERR         ImageHDU        10   (365, 171, 50)   float32
+# 19   WAVELENGTH  BinTableHDU     13   50R x 1C     [E]
+# 20   FAST_VARIATION  BinTableHDU     19   1R x 4C      [15A, 1J, 10000E, 10000E]
+# 21   DQ_DEF      BinTableHDU     18   3R x 4C      [J, J, 30A, 60A]
+
+# From catfits:   selected by EXT# or (EXTVER,EXTNAME)
+#
+# EXT#  FITSNAME      FILENAME     EXTVER DIMENS BITPIX OBJECT
+#
+# 1       IMAGE       SCI          1      365x171x50 -32
+# 2       IMAGE       DQ           1      365x171x50 32
+# 3       IMAGE       ERR          1      365x171x50 -32
+# 4       BINTABLE    WAVELENGTH   1 1Fx50R
+# 5       BINTABLE    FAST_VARIATI 1 4Fx1R
+# 6       IMAGE       SCI          2      365x171x50 -32
+# 7       IMAGE       DQ           2      365x171x50 32
+# 8       IMAGE       ERR          2      365x171x50 -32
+# 9       BINTABLE    WAVELENGTH   2 1Fx50R
+# 10      BINTABLE    FAST_VARIATI 2 4Fx1R
+# 11      IMAGE       SCI          3      365x171x50 -32
+# 12      IMAGE       DQ           3      365x171x50 32
+# 13      IMAGE       ERR          3      365x171x50 -32
+# 14      BINTABLE    WAVELENGTH   3 1Fx50R
+# 15      BINTABLE    FAST_VARIATI 3 4Fx1R
+# 16      IMAGE       SCI          4      365x171x50 -32
+# 17      IMAGE       DQ           4      365x171x50 32
+# 18      IMAGE       ERR          4      365x171x50 -32
+# 19      BINTABLE    WAVELENGTH   4 1Fx50R
+# 20      BINTABLE    FAST_VARIATI 4 4Fx1R
+# 21      BINTABLE    DQ_DEF       1      4Fx3R
+

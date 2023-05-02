@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'chip offset',
+    'ld_tpn': 'wp2_off_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'off',
+    'text_descr': 'Inter-chip Offsets Table',
+    'tpn': 'wp2_off.tpn',
+    'unique_rowkeys': ('DETECTOR', 'OBSDATE', 'THETA'),
+}

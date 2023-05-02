@@ -1,0 +1,35 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2020-01-13',
+    'file_ext' : '.fits',
+    'filekind' : 'APCORR',
+    'filetype' : 'APCORR',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_apcorr.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'e2255db2e45b01b85aa4686d6e1811ad77ff33b8',
+    'suffix' : 'apcorr',
+    'text_descr' : 'Aperture Correction',
+}
+
+comment = """
+This file contains the aperture correction values for correcting observed
+signal values within a finite aperture to an estimated total signal for the
+source.  The correction is filter dependent and aperture dependent for imaging,
+and for spectroscopy is also wavelength and possibly order dependent.
+
+For the case of MIRI/MRS the aperture correction values will be given as a
+two-dimensional floating point image of dimensions 1032x1024 pixels, analogous
+to the photometric calibration reference file.  As with the other modes the
+aperture correction values will be multiplicative corrections greater than or
+equal to 1.0.
+
+Originally requested and discussed on Jira CRDS-295.
+Worked on under CCD-605/CRDS-317
+Removed table row checking for ASDF format under CRDS-394
+"""
+
+selector = Match({
+})

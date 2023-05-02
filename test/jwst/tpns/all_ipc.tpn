@@ -1,0 +1,6 @@
+SCI    A       X      R                             (array_exists(SCI_ARRAY))
+SCI    A       X      R                             (is_image(SCI_ARRAY))
+SCI    A       X      (array_exists(SCI_ARRAY))     (len(SCI_ARRAY.SHAPE)in[2,4])
+SCI    A       X      (array_exists(SCI_ARRAY))     ((SCI_ARRAY.SHAPE[0]%2)==1)
+SCI    A       X      (array_exists(SCI_ARRAY))     ((SCI_ARRAY.SHAPE[1]%2)==1)
+SCI    D       X      (array_exists(SCI_ARRAY))     &KernelUnity

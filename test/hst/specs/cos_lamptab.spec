@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'template cal lamp spectra table',
+    'ld_tpn': 'cos_lamp_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'lamp',
+    'text_descr': 'Template Calibration Lamp Spectra Table',
+    'tpn': 'cos_lamp.tpn',
+    'unique_rowkeys': ('OPT_ELEM', 'CENWAVE', 'SEGMENT', 'FPOFFSET'),
+}

@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'Handmade 2022-05-20 15:00:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'filteroffset',
+    'filetype' : 'FILTEROFFSET',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_filteroffset.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '7fde4d42ce1933445d397fd0df305d7a1dd02d53',
+    'suffix' : 'filteroffset',
+    'text_descr' : 'Filter Offset',
+}
+
+selector = Match({
+})

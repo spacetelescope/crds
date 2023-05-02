@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:38.835380',
+    'filekind' : 'ATODTAB',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_atodtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'ATODCORR',
+    'rmap_relevance' : '((DETECTOR == "UVIS") and (ATODCORR != "OMIT"))',
+    'row_keys' : ('CCDCHIP', 'CCDAMP', 'CCDGAIN'),
+    'sha1sum' : '888682ed9aafab2f7eb49da9b4312b5ae0f06aa9',
+}
+
+selector = Match({
+    ('UVIS',) : UseAfter({
+        '2001-01-01 00:00:00' : 'n9n16196i_a2d.fits',
+    }),
+})

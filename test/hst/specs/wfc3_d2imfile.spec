@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'uvis d2i file',
+    'ld_tpn': 'wfc3_d2i_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'drizcorr',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (DRIZCORR != "OMIT"))',
+    'suffix': 'd2i',
+    'text_descr': 'Column Correction File',
+    'tpn': 'wfc3_d2i.tpn',
+    'unique_rowkeys': None,
+}

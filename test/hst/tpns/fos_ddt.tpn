@@ -1,0 +1,22 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DATATYPE            H        C         R    INTEGER*2
+NAXIS               H        I         R    1
+NAXIS1              H        I         R    512
+GCOUNT              H        I         R    1
+PCOUNT              H        I         R    0
+INSTRUME            H        C         R    FOS
+FILETYPE            H        C         R    "DISABLED DIODE"
+HEADNAME            H        C         R    
+DATANAME            H        C         R    
+DATE                H        C         R    
+DETECTOR            H        C         R    AMBER,BLUE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         P

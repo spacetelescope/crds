@@ -1,0 +1,40 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+META.INSTRUMENT.NAME        H   C   R    FGS
+
+META.INSTRUMENT.DETECTOR    H   C   O    GUIDER1,GUIDER2,ANY,N/A
+
+# META.EXPOSURE.READPATT      H   C   O    ID,ACQ1,ACQ2,TRACK,FINEGUIDE,\
+#                                          FGS,FGS60,FGS8370,FGS840,FGSRAPID,\
+#                                          FINEGUIDE,ANY,N/A
+
+META.EXPOSURE.TYPE          H   C   O   FGS_DARK,FGS_FOCUS,FGS_IMAGE,FGS_INTFLAT,FGS_SKYFLAT,\
+                                        FGS_ACQ1,FGS_ACQ2,FGS_FINEGUIDE,\
+                                        FGS_ID-IMAGE,FGS_ID-STACK,FGS_TRACK,ANY,N/A
+
+
+# vvvvvvv CENTER,CORNER,DIAGNONAL versions of SUBARRAY values are obsolete  vvvvvvv
+# remove from .tpn when no longer present in active context.
+META.SUBARRAY.NAME         H    C   O    8X8,32X32,128X128,2048X64,\
+                                         \
+                                         SUBIDSTRIPCENTER,SUBIDSTRIPLL,\
+                                         SUBTUNE32CENTERG1,SUBTUNE32CENTERG2,SUBTUNE32LLG1,SUBTUNE32LLG2,\
+                                         \
+                                         SUB128CENTER,SUB128DIAGONAL,SUB128LLCORNER,\
+                                         SUB32CENTER,SUB32DIAGONAL,SUB32LLCORNER,\
+                                         SUB8CENTER,SUB8DIAGONAL,SUB8LLCORNER,\
+                                         \
+                                         SUB128CNTR,SUB128DIAG,SUB128LL,\
+                                         SUB32CNTR,SUB32DIAG,SUB32LL,\
+                                         SUB8CNTR,SUB8DIAG,SUB8LL,\
+                                         \
+                                         FULL,GENERIC,ANY,N/A
+
+include includes/nir_subarray_baseline.tpn

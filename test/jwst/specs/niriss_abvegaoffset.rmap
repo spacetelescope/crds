@@ -1,0 +1,33 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2020-04-29',
+    'file_ext' : '.asdf',
+    'filekind' : 'ABVEGAOFFSET',
+    'filetype' : 'ABVEGAOFFSET',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_abvega-offset.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'ca95226ed5c98a3a7beeef2804d7340cb2c9a3e6',
+    'suffix' : 'abvegaoffset',
+    'text_descr' : 'AB to Vega magnitude offset',
+}
+
+comment = """
+This file contains the magnitude offsets to convert from AB to Vega
+magnitudes.  The offsets are filter dependent.
+
+The AB to Vega magnitude offset reference file is an ASDF file
+containing an Astropy table.  For FGS, the table columns are DETECTOR
+and ABVEGA_OFFSET.  For MIRI, the table columns are FILTER and
+ABVEGA_OFFSET.  For NIRCAM and NIRISS, the table column are FILTER,
+PUPIL, and ABVEGA_OFFSET.  In all cases, ABVEGA_OFFSET is a
+floating-point number that represents AB magnitude minus Vega
+magnitude (i.e., m_AB - m_Vega).
+
+Originally requested and discussed on Jira CRDS-349.
+"""
+
+selector = Match({
+})

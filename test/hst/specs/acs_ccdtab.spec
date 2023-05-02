@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'ccd parameters',
+    'ld_tpn': 'acs_ccd_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'yes',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR != "SBC")',
+    'suffix': 'ccd',
+    'text_descr': 'Ccd Parameters Table',
+    'tpn': 'acs_ccd.tpn',
+    'unique_rowkeys': ('CCDCHIP', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'CCDOFSTA', 'CCDOFSTB', 'CCDOFSTC', 'CCDOFSTD'),
+}

@@ -1,0 +1,12 @@
+include includes/miri_sci_array_refpix.tpn
+include includes/miri_err_array.tpn
+include includes/miri_dq_array.tpn
+include includes/miri_dq_def_array.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  ResetModel
+
+NGROUPS H       I      R
+NINTS   H       I      R
+SCI     A       X      R   (SCI_ARRAY.SHAPE==(NINTS,NGROUPS,SUBSIZE2,SUBSIZE1))
+ERR     A       X      R   (ERR_ARRAY.SHAPE==(NINTS,NGROUPS,SUBSIZE2,SUBSIZE1))

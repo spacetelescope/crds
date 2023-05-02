@@ -1,0 +1,16 @@
+{
+    'derived_from' : 'jwst_miri_regions_0002.rmap',
+    'extra_keys' : ('META.EXPOSURE.TYPE',),
+    'file_ext' : '.fits',
+    'filekind' : 'REGIONS',
+    'filetype' : 'REGIONS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_regions_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND'),),
+    'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE", "MIR_LRS-FIXEDSLIT", "MIR_LRS-SLITLESS", "NRS_FIXEDSLIT"))',
+    'sha1sum' : 'abb8d82b034284be2d5ba6a7c657382b187efad4',
+    'suffix' : 'regions',
+    'text_descr' : 'Regions',
+}

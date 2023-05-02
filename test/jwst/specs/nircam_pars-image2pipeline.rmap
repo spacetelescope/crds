@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade SCSB 2021-02',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-image2pipeline',
+    'filetype' : 'pars-image2pipeline',
+    'instrument' : 'nircam',
+    'mapping' : 'REFERENCE',
+    'name' : '',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.VISIT.TYPE', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '865763be5ac4f157e212b8dded1a4cbf8970171b',
+    'suffix' : 'pars-image2pipeline',
+    'text_descr' : 'Image2Pipeline runtime parameters',
+}
+
+selector = Match({
+})

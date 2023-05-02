@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Initial hand made version.  2014-10-09',
+    'filekind' : 'TRACETAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_tracetab_0260.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'TRCECORR',
+    'rmap_relevance' : '(LIFE_ADJ == "3.0")',
+    'sha1sum' : 'd834554402df5c79e0cf8aa1c35e6d11fd234338',
+}
+
+selector = Match({
+})

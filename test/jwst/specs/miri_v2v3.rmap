@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'Hand made 2015-10-09 10:00:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'v2v3',
+    'filetype' : 'V2V3',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_v2v3_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.EXP_TYPE', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND'),),
+    'reference_to_dataset' : {
+        'BAND' : 'META.INSTRUMENT.BAND',
+        'CHANNEL' : 'META.INSTRUMENT.CHANNEL',
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+    },
+    'sha1sum' : '14f285c12c0c69e9232663b18c6e42847ef63714',
+    'suffix' : 'v2v3',
+    'text_descr' : 'v2-v3 map',
+}
+
+selector = Match({
+})

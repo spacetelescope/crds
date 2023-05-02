@@ -1,0 +1,29 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+META.INSTRUMENT.NAME        H   C   R   NIRISS
+
+META.INSTRUMENT.DETECTOR    H   C   O   NIS,ANY,N/A
+
+# META.EXPOSURE.READPATT      H   C   O   NIS,NISRAPID,ANY,N/A
+
+META.EXPOSURE.TYPE          H   C   O   NIS_AMI,NIS_DARK,NIS_EXTCAL,NIS_FOCUS,NIS_IMAGE,NIS_LAMP,\
+                                        NIS_SOSS,NIS_TACQ,NIS_TACONFIRM,NIS_WFSS,ANY,N/A
+
+include includes/nir_subarray_baseline.tpn
+
+# META.INSTRUMENT.FILTER      H   C   O
+
+# META.INSTRUMENT.PUPIL       H   C   O   CLEARP,F090W,F115W,F140M,F150W,F158M,\
+#                                         F200W,GR700XD,NRM,ANY,N/A
+
+META.SUBARRAY.NAME          H   C   O     SUB128,SUB256,SUB64,SUB80,SUBAMPCAL,\
+                                          SUBSTRIP256,SUBSTRIP96,SUBTAAMI,SUBTASOSS,\
+                                          WFSS128C,WFSS128R,WFSS64C,WFSS64R,\
+                                          FULL,GENERIC,ANY,N/A

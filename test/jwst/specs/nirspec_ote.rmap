@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'Hand made 2015-10-09 14:27:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'ote',
+    'filetype' : 'OTE',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_ote_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.EXP_TYPE',),),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+    },
+    'sha1sum' : 'ed707f0f08e062c6e93838af65f9c7f79b600b18',
+    'suffix' : 'ote',
+    'text_descr' : 'Transform through the Optical Telescope Element',
+}
+
+selector = Match({
+})

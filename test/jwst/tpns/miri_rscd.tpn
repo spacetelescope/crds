@@ -1,0 +1,48 @@
+# MIRI RSCD
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  RSCDModel
+
+REFTYPE    H      C      R      RSCD
+
+RSCD_GROUP_SKIP  A     X      R   (is_table(RSCD_GROUP_SKIP_ARRAY))
+RSCD_GROUP_SKIP  A     X      R   (has_columns(RSCD_GROUP_SKIP_ARRAY,['SUBARRAY','READPATT','GROUP_SKIP']))
+RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'SUBARRAY','STRING'))
+RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'READPATT','STRING'))
+RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'GROUP_SKIP','INT'))
+
+RSCD_GEN   A      X      R     (is_table(RSCD_GEN_ARRAY))
+RSCD_GEN   A      X      R     (has_columns(RSCD_GEN_ARRAY,['SUBARRAY','READPATT','LOWER_CUTOFF','ALPHA_EVEN','ALPHA_ODD']))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'SUBARRAY','STRING'))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'READPATT','STRING'))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'ALPHA_EVEN','FLOAT'))
+RSCD_GEN   A      X      R     (has_column_type(RSCD_GEN_ARRAY,'ALPHA_ODD','FLOAT'))
+
+RSCD_INT1  A      X      R     (is_table(RSCD_INT1_ARRAY))
+RSCD_INT1  A      X      R     (has_columns(RSCD_INT1_ARRAY,['SUBARRAY','READPATT','ROWS','A0','A1','A2','A3']))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'SUBARRAY','STRING'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'READPATT','STRING'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'ROWS','STRING'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A0','FLOAT'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A1','FLOAT'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A2','FLOAT'))
+RSCD_INT1  A      X      R     (has_column_type(RSCD_INT1_ARRAY,'A3','FLOAT'))
+
+RSCD_INT2  A      X      R     (is_table(RSCD_INT2_ARRAY))
+RSCD_INT2  A      X      R     (has_columns(RSCD_INT2_ARRAY,['SUBARRAY','READPATT','ROWS','B0','B1','B2','B3']))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'SUBARRAY','STRING'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'READPATT','STRING'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'ROWS','STRING'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B0','FLOAT'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B1','FLOAT'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B2','FLOAT'))
+RSCD_INT2  A      X      R     (has_column_type(RSCD_INT2_ARRAY,'B3','FLOAT'))
+
+RSCD_INT3  A      X      R     (is_table(RSCD_INT3_ARRAY))
+RSCD_INT3  A      X      R     (has_columns(RSCD_INT3_ARRAY,['SUBARRAY','READPATT','ROWS','C0','C1','C2','C3']))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'SUBARRAY','STRING'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'READPATT','STRING'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'ROWS','STRING'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C0','FLOAT'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C1','FLOAT'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C2','FLOAT'))
+RSCD_INT3  A      X      R     (has_column_type(RSCD_INT3_ARRAY,'C3','FLOAT'))

@@ -1,0 +1,21 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 2015-01-05  jmiller   Initial type definition
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	ACS
+FILETYPE	H	C	R    	"DELTA FLAT"
+DETECTOR	H	C	R	    WFC
+LRFWAVE     H   R   R       3774,3880,3992,4105,4230,4362,4488,4620,4752,5038,\
+                            5491,5998,6505,7205,7836
+FILTER1         H   C   R	CLEAR1L,G800L,F606W,F775W,F850LP
+FILTER2         H   C   R	FR388N,FR423N,FR459M,FR462N,FR505N,FR551N,FR601N,\
+                            FR647M,FR656N,FR716N,FR782N,FR914M
+USEAFTER  	H	C	R	    &SYBDATE
+PEDIGREE  	H	C	R	    &PEDIGREE

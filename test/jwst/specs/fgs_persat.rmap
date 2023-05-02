@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 06-22-2017',
+    'file_ext' : '.fits',
+    'filekind' : 'persat',
+    'filetype' : 'PERSAT',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'fgs_persat.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '03cc51797eeeda380e0b1ad1b5a206877d7f7670',
+    'suffix' : 'persat',
+    'text_descr' : 'Persistence Saturation Threshold',
+}
+
+selector = Match({
+})

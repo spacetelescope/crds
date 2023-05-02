@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-10-15',
+    'file_ext' : '.asdf',
+    'filekind' : 'SATURATION',
+    'filetype' : 'SATURATION',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_saturation_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_saturation.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '7510626a0a7b26131bac2a05568cd6af016045e1',
+    'suffix' : 'saturation',
+    'text_descr' : 'Saturation Threshhold',
+    'tpn' : 'wfi_saturation.tpn',
+}
+
+selector = Match({
+})

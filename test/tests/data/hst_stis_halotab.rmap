@@ -1,0 +1,24 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:36.702762',
+    'filekind' : 'HALOTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_halotab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
+    'row_keys' : ('OPT_ELEM', 'REFWAVE'),
+    'sha1sum' : '0be0b31823746b6996ef3e4f24f8b0daf9f82759',
+}
+
+selector = Match({
+    ('FUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m09587o_hal.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m0958eo_hal.fits',
+    }),
+})

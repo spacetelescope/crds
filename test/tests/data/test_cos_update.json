@@ -1,0 +1,18 @@
+{"LCE31SW6Q:LCE31SW6Q" :
+  {
+    "XTRACTAB": "N/A",
+    "EXPTYPE": "DARK",
+    "DATE-OBS": "2014-01-24",
+    "BRSTCORR": "UNDEFINED",
+    "DEADCORR": "UNDEFINED",
+    "OBSTYPE": "IMAGING",
+    "TDSCORR": "UNDEFINED",
+    "WALKTAB": "W161831HL_WALK.FITS",
+    "LIFE_ADJ": "-999.0",
+    "WALKCORR": "UNDEFINED",
+    "BADTTAB": "FOO_BADT.FITS",
+    "GSAGTAB": "BAR_GSAG.FITS",
+    "FLUXTAB": "N/A",
+    "LAMPTAB": "N/A"
+  }
+}

@@ -1,0 +1,32 @@
+# include includes/nir_subarray.tpn
+
+replace NIR_FILTER (is_imaging_mode(EXP_TYPE))
+
+include includes/nirspec_sci_array_norefpix.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  PixelAreaModel,NirspecSlitAreaModel,NirspecMosAreaModel,NirspecIfuAreaModel
+
+# PIXAR_SR = FLOAT / (sr) Nominal pixel area for this detector
+# PIXAR_A2 = FLOAT / (arcsec2) Nominal pixel area for this detector
+
+PIXAR_SR     H      R        (is_imaging_mode(EXP_TYPE))
+PIXAR_A2     H      R        (is_imaging_mode(EXP_TYPE))
+
+AREA    A      X    (EXP_TYPE=='NRS_FIXEDSLIT|NRS_BRIGHTOBJ|')     (is_table(AREA_ARRAY))
+AREA    A      X    (EXP_TYPE=='NRS_FIXEDSLIT|NRS_BRIGHTOBJ|')     (has_columns(AREA_ARRAY,['SLIT_ID','PIXAREA']))
+AREA    A      X    (EXP_TYPE=='NRS_FIXEDSLIT|NRS_BRIGHTOBJ|')     (has_column_type(AREA_ARRAY,'SLIT_ID','STRING'))
+AREA    A      X    (EXP_TYPE=='NRS_FIXEDSLIT|NRS_BRIGHTOBJ|')     (has_column_type(AREA_ARRAY,'PIXAREA','FLOAT'))
+
+AREA    A      X    (EXP_TYPE=='NRS_IFU')     (is_table(AREA_ARRAY))
+AREA    A      X    (EXP_TYPE=='NRS_IFU')     (has_columns(AREA_ARRAY,['SLICE_ID','PIXAREA']))
+AREA    A      X    (EXP_TYPE=='NRS_IFU')     (has_column_type(AREA_ARRAY,'SLICE_ID','INT'))
+AREA    A      X    (EXP_TYPE=='NRS_IFU')     (has_column_type(AREA_ARRAY,'PIXAREA','FLOAT'))
+
+AREA    A      X    (EXP_TYPE=='NRS_MSASPEC')     (is_table(AREA_ARRAY))
+AREA    A      X    (EXP_TYPE=='NRS_MSASPEC')     (has_columns(AREA_ARRAY,['QUADRANT','SHUTTER_X','SHUTTER_Y','PIXAREA']))
+AREA    A      X    (EXP_TYPE=='NRS_MSASPEC')     (has_column_type(AREA_ARRAY,'QUADRANT','INTEGER'))
+AREA    A      X    (EXP_TYPE=='NRS_MSASPEC')     (has_column_type(AREA_ARRAY,'SHUTTER_X','INTEGER'))
+AREA    A      X    (EXP_TYPE=='NRS_MSASPEC')     (has_column_type(AREA_ARRAY,'SHUTTER_Y','INTEGER'))
+AREA    A      X    (EXP_TYPE=='NRS_MSASPEC')     (has_column_type(AREA_ARRAY,'PIXAREA','FLOAT'))
+

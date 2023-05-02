@@ -1,0 +1,28 @@
+replace SCI COEFFS
+
+include includes/miri_subarray_refpix.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  LinearityModel
+
+COEFFS       A           X         R            (has_type(COEFFS_ARRAY,'FLOAT'))
+COEFFS       A           X         R            (is_image(COEFFS_ARRAY))
+
+COEFFS       A           X         F             (COEFFS_ARRAY.SHAPE[-2:]==(1024,1032))
+COEFFS       A           X         S             (COEFFS_ARRAY.SHAPE[-2:]==(META_SUBARRAY_YSIZE,META_SUBARRAY_XSIZE))
+
+COEFFS       A           X         R             (1<=META_SUBARRAY_YSTART+COEFFS_ARRAY.SHAPE[-2]-1<=1024)
+COEFFS       A           X         R             (1<=META_SUBARRAY_XSTART+COEFFS_ARRAY.SHAPE[-1]-1<=1032)
+
+# Optional ERR
+ERR       A           X         O                                         (has_type(ERR_ARRAY,'FLOAT'))
+ERR       A           X         O                                         (is_image(ERR_ARRAY))
+ERR       A           X         (optional(is_full_frame(SUBARRAY)))       (ERR_ARRAY.SHAPE[-2:]==COEFFS_ARRAY.SHAPE[-2:])
+
+
+include includes/miri_dq_array.tpn
+include includes/miri_dq_def_array.tpn
+
+COEFFS       A           X         R            (ndim(COEFFS_ARRAY,3))
+DQ           A           X         O            (ndim(DQ_ARRAY,2))
+

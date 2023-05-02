@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'cosmic ray rejection table',
+    'ld_tpn': 'stis_crr_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "CCD")',
+    'suffix': 'crr',
+    'text_descr': 'Cosmic Ray Rejection Parameter Table',
+    'tpn': 'stis_crr.tpn',
+    'unique_rowkeys': ('CRSPLIT', 'MEANEXP'),
+}

@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand-made 2022-05',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-rampfitstep',
+    'filetype' : 'pars-rampfitstep',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_pars-rampfitstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '878c289cdee98b55bcb6091c6b159f31a7a0f865',
+    'suffix' : 'pars-rampfitstep',
+    'text_descr' : 'RampFitStep runtime parameters',
+}
+
+selector = Match({
+})

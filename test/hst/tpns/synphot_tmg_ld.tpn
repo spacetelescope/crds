@@ -1,0 +1,39 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+USEAFTER            H        C         R    &SYBDATE
+INSTRUME            H        C         R    HST,SYNPHOT
+DBTABLE             H        C         R    CRGRAPH
+DESCRIP             H        C         R
+GENERATI            H        I         R
+COMMENT             H        C         R
+HISTORY             H        C         R
+
+COMPNAME            C        C         R
+COMPNAME            C        X         R    ((len(VALUE)>0)and(VALUE==VALUE.lower()))
+
+INNODE              C        I         R
+INNODE              C        X         R    (VALUE>0)
+
+OUTNODE             C        I         R
+OUTNODE             C        X         R    (VALUE>0)
+
+# KEYWORD values in the graph are not consistently lowercase.  We can
+# strengthen this check once https://jira.stsci.edu/browse/REDCAT-106
+# is resolved.
+KEYWORD             C        C         R
+KEYWORD             C        X         R     (len(VALUE)>0)
+# KEYWORD             C        X         R    ((len(VALUE)>0)and(VALUE==VALUE.lower()))
+
+THCOMPNAME          C        C         R
+THCOMPNAME          C        X         R    ((len(VALUE)>0)and(VALUE==VALUE.lower()))
+
+COMMENT             C        C         R
+
+EXT1                D        X         R    &SYNPHOT_GRAPH

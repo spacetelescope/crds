@@ -1,0 +1,29 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 06/27/11  68306  MSwam   first version
+# 08/15/14  78534  MSwam   updates requested by ACS team
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    ACS
+FILETYPE            H        C         R    "IMAGE PHOTOMETRY TABLE"
+DETECTOR            H        C         R    WFC,SBC,HRC
+SYNSWVER            H        C         R
+GRAPHTAB            H        C         R
+COMPTAB             H        C         R
+ORIGIN              H        C         R
+PARNUM              H        I         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+OBSMODE             C        C         R
+DATACOL             C        C         R    PHOTBW,PHOTBW1,PHOTFLAM,PHOTFLAM1,PHOTPLAM,PHOTPLAM1,PHTFLAM1,PHTFLAM11,PHTFLAM2,PHTFLAM21
+PHOTFLAM            C        D         R
+PHOTPLAM            C        D         O
+PHOTBW              C        D         O

@@ -1,0 +1,27 @@
+header = {
+    'classes' : ('Match',),
+    'comment_parkeys' : ('DATE', 'DESCRIP'),
+    'derived_from' : 'Initial hand made version 2018-11-19. Jira CCD-148.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'THERMAL',
+    'filetype' : 'CRTHERMAL',
+    'instrument' : 'SYNPHOT',
+    'ld_tpn' : 'synphot_th_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_synphot_thermal.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('COMPNAME', 'DATE', 'DESCRIP'),),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_omit' : 'True',
+    'sha1sum' : '5d113df63ade771906c4ed15b6b6028e23e4e81e',
+    'suffix' : 'th',
+    'text_descr' : 'Component Thermal Tables',
+    'tpn' : 'synphot_th.tpn',
+    'unique_rowkeys' : ('WAVELENGTH',),
+}
+
+selector = Match({
+})

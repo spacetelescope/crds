@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'ctedark',
+    'ld_tpn': 'acs_dkc_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'CCDGAIN'),
+    'parkey_relevance': {'ccdgain': '(DETECTOR != "SBC")', 'ccdamp': '(DETECTOR != "SBC")'},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'pctecorr',
+    'rmap_relevance': '((DETECTOR == "WFC") and (PCTECORR != "OMIT"))',
+    'suffix': 'dkc',
+    'text_descr': 'Cte Corrected Dark',
+    'tpn': 'acs_dkc.tpn',
+    'unique_rowkeys': None,
+}

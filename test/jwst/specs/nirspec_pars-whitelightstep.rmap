@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'Made by hand 2021-05',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-whitelightstep',
+    'filetype' : 'pars-whitelightstep',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pars-whitelightstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'fdb492f7e2c8a7647199b654d2138ecf1a592504',
+    'suffix' : 'pars-whitelightstep',
+    'text_descr' : 'WhiteLightStep runtime parameters',
+}
+
+comment = """
+This file sets the instrument specific parameters for the white_light JWST pipeline step.
+
+Initial specifications requested and discussed on JIRA CRDS-389
+"""
+
+selector = Match({
+})

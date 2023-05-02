@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'phony.rmap',
+    'filekind' : 'DARKFILE',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_darkfile_comment.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '2d9b0362d942d2b846b4582623928476120de4a8',
+}
+
+selector = Match({
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1992-01-01 00:00:00' : 'lcb12060j_drk.fits',
+        '2007-01-26 00:07:33' : 'r1u1415mj_drk.fits',
+    }),
+})

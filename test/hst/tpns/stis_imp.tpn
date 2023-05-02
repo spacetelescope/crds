@@ -1,0 +1,37 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 09/19/13  75694  MSwam   first version
+#   NOTE: DETECTOR should ALWAYS be wild-carded to ANY
+
+# 08/18/14  78534  MSwam   changes for multi-extension columns
+#   NOTE: Originally the STIS Team listed the L3_PHOTFLAM1 and L5_PAR1VALUES as
+#         datatype = LONG INT, but since CDBS certify has no selection for
+#         that type, we are using D instead.
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    STIS
+FILETYPE            H        C         R    "IMAGE PHOTOMETRY TABLE"
+DETECTOR            H        C         R    ANY,CCD,FUV-MAMA,NUV-MAMA
+ORIGIN              H        C         R
+PARNUM              H        I         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+OBSMODE             C        C         R
+DATACOL             C        C         R    PHOTBW,PHOTBW1,PHOTFLAM,PHOTFLAM1,PHOTPLAM,PHOTPLAM1,PHTFLAM1,PHTFLAM11,PHTFLAM2,PHTFLAM21
+PHOTFLAM            C        D         R
+PHOTPLAM            C        D         O
+PHOTBW              C        D         O
+L3_PHOTFLAM1        C        D         O
+PAR1NAMES           C        C         O
+L5_PAR1VALUES       C        D         O
+NELEM1              C        I         O
+PEDIGREE            C        C         O
+DESCRIP             C        C         O

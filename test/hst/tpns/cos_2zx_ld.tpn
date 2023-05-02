@@ -1,0 +1,34 @@
+# Reference file name: TWOZXTAB
+# Keyword switch: ALGNCORR
+# Reference file extension: _2zx
+#
+# _ld.tpn file
+#
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE       H        C         R    &SYBDATE
+OPUS_FLAG           H        C         R    Y,N
+COMPARISON_FILE     H        C         R
+COMMENT             H        C         R
+INSTRUMENT          H        C         R    COS
+REFERENCE_FILE_TYPE H        C         R    2ZX
+DETECTOR            C        C         R    FUV
+OBSTYPE             C        C         R    SPECTROSCOPIC
+PEDIGREE            C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
+SEGMENT             C        C         R    FUVA,FUVB
+OPT_ELEM            C        C         R    G130M,G160M,G140L
+CENWAVE             C        I         R    800,1222,1223,1291,1300,1309,1318,1327,\
+                                            1533,1577,1589,1600,1611,1623,\
+                                            1105,1230,1280,1055,1096
+LIFE_ADJ            H        I         R    -1,0,1,-11,2,3,4,5,6
+APERTURE            C        C         R    PSA,BOA
+OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
+OBSERVATION_END_DATE    C    C         O    &SYBDATE
+COMMENT             C        C         P

@@ -1,0 +1,25 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE       H        C         R    &SYBDATE
+OPUS_FLAG           H        C         R    Y,N
+COMPARISON_FILE     H        C         R    
+COMMENT             H        C         R
+INSTRUMENT	    H	     C	       R    STIS
+REFERENCE_FILE_TYPE H        C         R    RIP
+CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
+DETECTOR            C        C         R    NUV-MAMA,FUV-MAMA
+OPT_ELEM            C        C         R    E140M,E140H,E230M,E230H
+CENWAVE             C        I         R    1234,1271,1307,1343,1380,1416,\
+          1425,1453,1489,1526,1562,1598,1763,1813,1863,1913,1963,1978,2013,\
+          2063,2113,2124,2163,2213,2263,2269,2313,2363,2413,2415,2463,2513,\
+          2561,2563,2613,2663,2707,2713,2762,2812,2862,2912,2962,3012
+PEDIGREE	    C        C	       R    INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
+OBSERVATION_END_DATE    C    C         O    &SYBDATE

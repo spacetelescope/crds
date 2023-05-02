@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'handmade spec 03-01-2016',
+    'file_ext' : '.fits',
+    'filekind' : 'refpix',
+    'filetype' : 'REFPIX',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'nirspec_refpix.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.READPATT'),),
+    'sha1sum' : '2fb54a5895bf0f8348c70d0f1f9710f66e4f07a0',
+    'substitutions' : {
+        'META.EXPOSURE.READPATT' : {
+            'ALLIRS2' : 'NRSIRS2|NRSIRS2RAPID',
+        },
+    },
+    'suffix' : 'refpix',
+    'text_descr' : 'Reference Pixels',
+}
+
+selector = Match({
+})

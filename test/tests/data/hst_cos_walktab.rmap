@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:31.544476',
+    'filekind' : 'WALKTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_walktab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'WALKCORR',
+    'rmap_relevance' : '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (WALKCORR != "OMIT"))',
+    'row_keys' : ('SEGMENT',),
+    'sha1sum' : 'be6463b3c81908636f8443c9d6baf6b206ac3516',
+}
+
+selector = Match({
+    ('FUV', 'TIME-TAG') : UseAfter({
+        '2009-05-11 00:00:00' : 'w161831hl_walk.fits',
+    }),
+})

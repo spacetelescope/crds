@@ -1,0 +1,27 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    COS
+FILETYPE            H        C         R    "TRANSIENT BAD PIXEL REFERENCE TABLE" 
+DETECTOR            H        C         R    FUV
+VCALCOS             H        C         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+PHAMIN             H        I           R
+PHAMAX             H        I           R
+START                C        D         R
+STOP                C        D         R
+SEGMENT         C        C         R
+LX                  C        I         R
+LY                  C        I         R
+DX                  C        I         R
+DY                  C        I         R
+DQ                  C        I         R
+COMMENT             C        C          R

@@ -1,0 +1,73 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2020-05-06',
+    'file_ext' : '.fits',
+    'filekind' : 'APCORR',
+    'filetype' : 'APCORR',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_apcorr.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '7e922270697b909ae131a3e482176ee5e443a9d0',
+    'suffix' : 'apcorr',
+    'text_descr' : 'Aperture Correction',
+    'unique_rowkeys' : ('FILTER', 'PUPIL', 'EEFRACTION'),
+}
+
+comment = """
+This file contains the aperture correction values for correcting observed
+signal values within a finite aperture to an estimated total signal for the
+source.  The correction is filter dependent and aperture dependent for imaging,
+and for spectroscopy is also wavelength and possibly order dependent.
+
+For imaging the aperture correction file will be a FITS table with columns
+FILTER, PUPIL, EEFRACTION, RADIUS, APCORR, SKYIN, and SKYOUT.  The FILTER and
+PUPIL values are strings.  The EEFRACTION is a floating point value larger
+than 0.0 and less than 1.0 that gives the fractional signal within the circular
+aperture for the PSF without any background.  The RADIUS value is the extraction
+aperture radius value in pixels for this EEFRACTION, a floating point number.
+The APCORR value is a multiplicative correction (floating point number) that
+scales the observed signal to infinite aperture, and so is a value greater
+than 1.0.  The APCORR value includes a correction for the sky background
+subtraction, so the APCORR value is slightly smaller than the inverse of the
+EEFRACTION value.  The SKYIN and SKYOUT values are the inner and outer radii
+of the sky estimation area, in pixels.  Both these are floating point values.
+Currently in general these SKYIN and SKYOUT values are specific to the
+FILTER and PUPIL values and are not different for the various EEFRACTION
+values, but that may change in the future (i.e. for MIRI where the sky
+background can be large at the longer wavelengths).
+
+Note: the format of the spectroscopic apcorr files has not yet been finalized,
+the following is the initial set of values discussed, but these may change
+as more discussion takes place.
+
+For spectroscopy the aperture correction file will generally be a FITS table
+with columns FILTER, PUPIL (NIRISS and NIRCam) or SUBARRAY (MIRI) or one of
+GRATING (NIRSpec IFU and MOS) or SLIT (NIRSpec fixed slit), ORDER (used only
+for the NIRISS WFSS mode), NELEM, WAVELENGTH, HEIGHT, APCORR, SKYIN, and
+SKYOUT.  The latter three values are floating point arrays of length given
+by the integer value NELEM.  Wavelengths are in microns, HEIGHT is the slit
+extraction width in arc-seconds analgous to the RADIUS value for imaging,
+and the APCORR value is a multiplicative correction factor greater than or
+equal to 1.0.  For spectroscopy the sky background subtraction is generally
+assumed to be carried out prior to the spectroscopic extractions, such as
+using a background image or a scaled background template.  Nonetheless there
+is the option for the SKYIN and SKYOUT values to be specified as a function
+of wavelength.  The SKYIN and SKYOUT values are in pixels by assumption, and
+are measured in cross dispersion direction on both sides of the spectrum.
+If the two values are identical, no background subtraction needs to be carried
+out.  [The definition of SKYIN and SKYOUT for spectroscopy requires further
+discussion.]
+
+For the case of MIRI/MRS the aperture correction values will be given as a
+two-dimensional floating point image of dimensions 1032x1024 pixels, analogous
+to the photometric calibration reference file.  As with the other modes the
+aperture correction values will be multiplicative corrections greater than or
+equal to 1.0.
+
+Originally requested and discussed on Jira CRDS-295.
+"""
+
+selector = Match({
+})

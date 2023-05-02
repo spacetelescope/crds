@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'distortion correction',
+    'ld_tpn': 'wp2_dxy_ld.tpn',
+    'parkey': ('MODE',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'dxy',
+    'text_descr': 'Geometric Distortion Correction File',
+    'tpn': 'wp2_dxy.tpn',
+    'unique_rowkeys': None,
+}

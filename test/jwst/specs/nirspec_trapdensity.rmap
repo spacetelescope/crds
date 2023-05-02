@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 06-22-2017',
+    'file_ext' : '.fits',
+    'filekind' : 'trapdensity',
+    'filetype' : 'TRAPDENSITY',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'nirspec_trapdensity.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : 'ebd57d4f08539c59f34be12ad209e5e8f3f4f1bf',
+    'suffix' : 'trapdensity',
+    'text_descr' : 'Trap Density For Persistence Step',
+}
+
+selector = Match({
+})

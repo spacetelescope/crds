@@ -1,0 +1,34 @@
+header = {
+    'derived_from' : 'jwst_miri_specwcs_0003.rmap',
+    'extra_keys' : ('META.EXPOSURE.TYPE',),
+    'filekind' : 'SPECWCS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_specwcs_0004.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.SUBARRAY.NAME'),),
+    'reference_to_dataset' : {
+        'BAND' : 'META.INSTRUMENT.BAND',
+        'CHANNEL' : 'META.INSTRUMENT.CHANNEL',
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'SUBARRAY' : 'META.SUBARRAY.NAME',
+    },
+    'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE"))',
+    'sha1sum' : '71b70fdeab07ee9c3e2ed10dfa744d31cbc63e4f',
+    'substitutions' : {
+        'META.SUBARRAY.NAME' : {
+            'GENERIC' : 'N/A',
+        },
+    },
+}
+
+selector = Match({
+    ('MIRIFULONG', '34', 'LONG', 'N/A') : 'jwst_miri_specwcs_0006.json',
+    ('MIRIFULONG', '34', 'MEDIUM', 'N/A') : 'jwst_miri_specwcs_0005.json',
+    ('MIRIFULONG', '34', 'SHORT', 'N/A') : 'jwst_miri_specwcs_0004.json',
+    ('MIRIFUSHORT', '12', 'LONG', 'N/A') : 'jwst_miri_specwcs_0003.json',
+    ('MIRIFUSHORT', '12', 'MEDIUM', 'N/A') : 'jwst_miri_specwcs_0002.json',
+    ('MIRIFUSHORT', '12', 'SHORT', 'N/A') : 'jwst_miri_specwcs_0001.json',
+    ('MIRIMAGE', 'N/A', 'N/A', 'GENERIC') : 'jwst_miri_specwcs_0008.json',
+    ('MIRIMAGE', 'N/A', 'N/A', 'SLITLESSPRISM') : 'jwst_miri_specwcs_0007.json',
+})

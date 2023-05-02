@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'dispersion coefficients table',
+    'ld_tpn': 'stis_dsp_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'dsp',
+    'text_descr': 'Dispersion Relation Table',
+    'tpn': 'stis_dsp.tpn',
+    'unique_rowkeys': ('OPT_ELEM', 'CENWAVE', 'A2CENTER'),
+}

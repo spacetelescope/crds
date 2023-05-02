@@ -1,0 +1,16 @@
+{
+    'extra_keys': ('xcorner', 'ycorner', 'ccdchip'),
+    'file_ext': '.fits',
+    'filetype': 'bias',
+    'ld_tpn': 'acs_bia_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 'LTV1', 'LTV2'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'yes',
+    'reffile_switch': 'biascorr',
+    'rmap_relevance': '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
+    'suffix': 'bia',
+    'text_descr': 'Bias Frame',
+    'tpn': 'acs_bia.tpn',
+    'unique_rowkeys': None,
+}

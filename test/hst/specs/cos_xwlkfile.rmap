@@ -1,0 +1,25 @@
+header = {
+    'derived_from' : 'Initial hand made version 2017-02-02. Jira CRDS-98.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'XWLKFILE',
+    'filetype' : 'X WALK CORRECTION LOOKUP REFERENCE IMAGE',
+    'instrument' : 'COS',
+    'ld_tpn' : 'cos_xwalk_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_xwlkfile_0000.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'XWLKCORR',
+    'rmap_relevance' : '((DETECTOR == "FUV") and (OBSMODE=="TIME-TAG") and (XWLKCORR != "OMIT"))',
+    'sha1sum' : '1abaa26bb5daff9963e3c57b6404ac35b28b4aad',
+    'suffix' : 'xwalk',
+    'text_descr' : 'X Walk Correction Lookup Reference Image',
+    'tpn' : 'cos_xwalk.tpn',
+    'unique_rowkeys' : None,
+}
+
+selector = Match({
+})

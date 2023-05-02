@@ -1,0 +1,29 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Handmade 2017-08-11',
+    'file_ext' : '.asdf',
+    'filekind' : 'SPECWCS',
+    'filetype' : 'SPECWCS',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_specwcs.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.PUPIL', 'META.INSTRUMENT.MODULE', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+        'MODULE' : 'META.INSTRUMENT.MODULE',
+        'PUPIL' : 'META.INSTRUMENT.PUPIL',
+    },
+    'sha1sum' : '73011ca05ae4af576f23bfc263432ce84390d431',
+    'suffix' : 'specwcs',
+    'text_descr' : 'Wide Field Slitless Spectral World Coordinate System',
+}
+
+comment = """
+Wide Field Slitless Spectral World Coordinate System
+
+Updated selection criteria for JIRA CRDS-437
+"""
+
+selector = Match({
+})

@@ -1,0 +1,23 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 02/06/12  70397  Mary  initial file
+# 08/18/14  78534  MSwam changes for multi-extension FITS keywords
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    COS
+FILETYPE            H        C         R    "FUV HIGH VOLTAGE HISTORY"
+DETECTOR            H        C         R    FUV
+VCALCOS             H        C         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+DATE                C        D         R
+HVLEVELA            C        I         R
+HVLEVELB            C        I         O

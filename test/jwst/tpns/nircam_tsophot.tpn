@@ -1,0 +1,15 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  TsoPhotModel
+
+META.EXPOSURE.TYPE          H   C   R   NRC_TSIMAGE
+META.VISIT.TSOVISIT         H   C   R   TRUE,FALSE,ANY,N/A

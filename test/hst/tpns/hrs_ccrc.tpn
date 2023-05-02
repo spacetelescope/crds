@@ -1,0 +1,52 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CZCCRCR
+GRATING             C        C         R    G140M,G160M,G200M,G270M,G140L,ECH-A,ECH-B
+MCENTER             C        I         R    
+F00                 C        R         R    
+F01                 C        R         R    
+F02                 C        R         R    
+F10                 C        R         R    
+F11                 C        R         R    
+F12                 C        R         R    
+F20                 C        R         R    
+F21                 C        R         R    
+F22                 C        R         R    
+F30                 C        R         R    
+F31                 C        R         R    
+F32                 C        R         R    
+F40                 C        R         R    
+F41                 C        R         R    
+F42                 C        R         R    
+F50                 C        R         R    
+F51                 C        R         R    
+F52                 C        R         R    
+ZRIUTA              C        R         R    
+ZRIUTB              C        R         R    
+ZDETT1              C        R         R    
+ZDETT2              C        R         R    
+ZDEPTF              C        R         R    
+ZDEPTR              C        R         R    
+ZPABT1              C        R         R    
+ZPABT2              C        R         R    
+ZMEBT1              C        R         R    
+ZMEBT2              C        R         R    
+ZFIAT               C        R         R    
+ZFIBT               C        R         R    
+ZFICT               C        R         R    
+ZCST                C        R         R    
+ZSCT1               C        R         R    
+ZSCT2               C        R         R    
+ZHVPST1             C        R         R    
+ZHVPST2             C        R         R    
+ZDT11               C        R         R    
+ZDT12               C        R         R    
+ZDRT                C        R         R    
+ZOBBT               C        R         R    

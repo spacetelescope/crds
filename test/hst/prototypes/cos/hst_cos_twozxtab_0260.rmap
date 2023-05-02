@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Initial hand made version.  2014-10-09',
+    'filekind' : 'TWOZXTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_twozxtab_0260.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'ALGNCORR',
+    'rmap_relevance' : '(LIFE_ADJ == "3.0")',
+    'sha1sum' : '6452fbba77dc621e2d7916b3d32b3151a45fa687',
+}
+
+selector = Match({
+})

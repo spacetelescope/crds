@@ -1,0 +1,13 @@
+include includes/nir_subarray_baseline.tpn
+include includes/nir_subarray.tpn
+
+replace XDIM_MAX 2048
+replace SCI_TYPE 'FLOAT'
+
+include includes/nir_sci_array_both.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  PsfMaskModel
+
+SCI       A           X         R            (ndim(SCI_ARRAY,2))
+

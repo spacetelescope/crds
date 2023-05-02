@@ -1,0 +1,16 @@
+{
+    'extra_keys': ('exptype',),
+    'file_ext': '.fits',
+    'filetype': 'spectroscopic wcs parameters table',
+    'ld_tpn': 'cos_spwcs_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC") and (EXPTYPE == "EXTERNAL/SCI")',
+    'suffix': 'spwcs',
+    'text_descr': 'Spectroscopic WCS Parameters Table',
+    'tpn': 'cos_spwcs.tpn',
+    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
+}

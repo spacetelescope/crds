@@ -1,0 +1,26 @@
+#! /usr/bin/env python
+
+import glob
+
+from crds.core import pysh
+
+pysh.usage("<instrument_subarrays.xml>", 1, 1, """
+
+Run on .xml for one instrument PRD.
+""")
+
+xmlfile = pysh.arg(1, str)
+xmlfile = glob.glob(xmlfile)
+assert len(xmlfile) == 1
+xmlfile = xmlfile[0]
+
+subarray_lines = pysh.out(f"cat {xmlfile} | grep -i NAME | cut -d '>' -f 2 | cut -d '<' -f 1 | sort | uniq")
+
+subarrays = [ subarray for subarray in subarray_lines.splitlines()
+              if subarray.strip()]
+subarrays += ["GENERIC", "ANY", "N/A"]
+
+tpn_output = "META.SUBARRAY.NAME         H    C   O   "
+tpn_output += ",".join(subarrays)
+
+print(tpn_output)

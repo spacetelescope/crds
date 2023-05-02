@@ -1,0 +1,16 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CZCCR8R
+APERTURE            C        C         R    SC1,SC2,LSA
+GRATING             C        C         R    G140M,G160M,G200M,G270M,G140L,ECH-A,ECH-B
+CARPOS              C        I         R    
+SPORDER             C        I         R    
+A                   C        R         R    
+B                   C        R         R    

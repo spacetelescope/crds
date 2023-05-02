@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'Derived from TEST hst_wfc3_biacfile_0004.rmap on 2016-01-22',
+    'filekind' : 'BIACFILE',
+    'filetype' : 'CTEBIAS',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_biacfile_0004.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'PCTECORR',
+    'rmap_relevance' : '(DETECTOR == "UVIS" and PCTECORR == "PERFORM")',
+    'sha1sum' : '74052c1bda830cc94c8940c0215a0f8497838a39',
+    'suffix' : 'bic',
+    'text_descr' : 'CTE Bias Frame',
+}
+
+selector = Match({
+    () : UseAfter({
+    }),
+})

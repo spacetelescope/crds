@@ -1,0 +1,188 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:42.457291',
+    'extra_keys' : ('SUBARRAY',),
+    'filekind' : 'BIASFILE',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_biasfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'CHINJECT', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'BIASCORR',
+    'rmap_relevance' : '((DETECTOR == "UVIS") and (BIASCORR != "OMIT"))',
+    'sha1sum' : 'f321f5e8a276bb74071c91e305078b331c5752f6',
+}
+
+selector = Match({
+    ('UVIS', 'A', '1.0|1.5|2.0|4.0', 1, 1, 'UVIS1-2K4-SUB|UVIS1-M512-SUB', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347li_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'LINE10', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1k1448oi_bia.fits',
+        '2011-02-08 00:00:00' : 'w1r15487i_bia.fits',
+        '2011-03-01 00:00:00' : 'w1r1548ai_bia.fits',
+        '2011-04-01 00:00:00' : 'w1k1448mi_bia.fits',
+        '2011-05-01 00:00:00' : 'w1k14498i_bia.fits',
+        '2011-05-30 00:00:00' : 'w1r15488i_bia.fits',
+        '2012-11-10 00:00:00' : 'x2m1848gi_bia.fits',
+        '2012-12-21 00:00:00' : 'x2m1848di_bia.fits',
+        '2012-12-30 00:00:00' : 'x2m1848fi_bia.fits',
+        '2013-01-05 00:00:00' : 'x2m1848ei_bia.fits',
+        '2013-02-13 00:00:00' : 'x3f1740di_bia.fits',
+        '2013-02-21 00:00:00' : 'x3f1740ei_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'LINE17', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1k1448qi_bia.fits',
+        '2011-04-18 00:00:00' : 'w1r15489i_bia.fits',
+        '2011-07-01 00:00:00' : 'w1r1548ci_bia.fits',
+        '2011-12-06 13:00:00' : 'w2121240i_bia.fits',
+        '2012-01-22 00:00:00' : 'w4u2007ji_bia.fits',
+        '2012-03-01 00:00:00' : 'w4u2007ki_bia.fits',
+        '2012-03-30 00:00:00' : 'w4u2007ii_bia.fits',
+        '2012-04-16 00:00:00' : 'w8r1420ri_bia.fits',
+        '2012-04-29 00:00:00' : 'w8r1420si_bia.fits',
+        '2012-05-07 00:00:00' : 'w8r14212i_bia.fits',
+        '2012-05-29 00:00:00' : 'w8r14211i_bia.fits',
+        '2012-06-05 00:00:00' : 'w8r14210i_bia.fits',
+        '2012-06-16 00:00:00' : 'w8r1420ti_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'LINE25', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1k1448si_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'NONE', 'N/A') : UseAfter({
+        '2009-05-14 00:00:00' : 'u1r1346ri_bia.fits',
+        '2009-08-21 00:00:00' : 'u1r1346ti_bia.fits',
+        '2009-09-27 00:00:00' : 'u1r13471i_bia.fits',
+        '2009-11-08 00:00:00' : 'u6n1741hi_bia.fits',
+        '2009-12-15 00:00:00' : 'u6n1741ji_bia.fits',
+        '2010-01-26 00:00:00' : 'u6n1741li_bia.fits',
+        '2010-03-06 00:00:00' : 'u6n1741ni_bia.fits',
+        '2010-04-22 00:00:00' : 'u8a1254ti_bia.fits',
+        '2010-05-31 00:00:00' : 'u8a12551i_bia.fits',
+        '2010-07-12 00:00:00' : 'ua11436ti_bia.fits',
+        '2010-08-21 00:00:00' : 'ubt1715ji_bia.fits',
+        '2010-10-03 00:00:00' : 'v1k21345i_bia.fits',
+        '2010-12-10 00:00:00' : 'v5j1716ei_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'NONE', 'N/A') : UseAfter({
+        '2008-02-17 00:00:00' : 't4o1622pi_bia.fits',
+        '2008-02-18 00:00:00' : 't4o1622ri_bia.fits',
+        '2008-02-19 00:00:00' : 't4o1622qi_bia.fits',
+        '2008-02-20 00:00:00' : 't4o1622si_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-2K2A-SUB|UVIS1-2K2B-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-2K2C-SUB|UVIS2-2K2D-SUB|UVIS2-C1K1C-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB|UVIS2-M1K1C-SUB|UVIS2-M512C-SUB', 'LINE10', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1k1448ni_bia.fits',
+        '2011-04-01 00:00:00' : 'w1k1448li_bia.fits',
+        '2011-05-01 00:00:00' : 'w1k14497i_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-2K2A-SUB|UVIS1-2K2B-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-2K2C-SUB|UVIS2-2K2D-SUB|UVIS2-C1K1C-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB|UVIS2-M1K1C-SUB|UVIS2-M512C-SUB', 'LINE17', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1k1448pi_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-2K2A-SUB|UVIS1-2K2B-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-2K2C-SUB|UVIS2-2K2D-SUB|UVIS2-C1K1C-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB|UVIS2-M1K1C-SUB|UVIS2-M512C-SUB', 'LINE25', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1k1448ri_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 2, 2, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'NONE', 'N/A') : UseAfter({
+        '2008-02-19 00:00:00' : 'w461345gi_bia.fits',
+        '2008-02-20 00:00:00' : 'w461345hi_bia.fits',
+    }),
+    ('UVIS', 'ABCD', 1.5, 3, 3, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'NONE', 'N/A') : UseAfter({
+        '2008-02-19 00:00:00' : 'w461345ii_bia.fits',
+        '2008-02-20 00:00:00' : 'w461345ji_bia.fits',
+    }),
+    ('UVIS', 'ABCD', '1.0|1.5|2.0|4.0', 2, 2, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't4d1321ki_bia.fits',
+    }),
+    ('UVIS', 'ABCD', '1.0|1.5|2.0|4.0', 3, 3, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't4d1321li_bia.fits',
+    }),
+    ('UVIS', 'AC', '1.0|1.5|2.0|4.0', 2, 2, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13486i_bia.fits',
+    }),
+    ('UVIS', 'AC', '1.0|1.5|2.0|4.0', 3, 3, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347ri_bia.fits',
+    }),
+    ('UVIS', 'AD', '1.0|1.5|2.0|4.0', 2, 2, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13485i_bia.fits',
+    }),
+    ('UVIS', 'AD', '1.0|1.5|2.0|4.0', 3, 3, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347si_bia.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|1.5|2.0|4.0', 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'A|B|C|D', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'LINE10', 'N/A') : UseAfter({
+        '2011-02-08 00:00:00' : 'w1k14490i_bia.fits',
+        '2011-03-01 00:00:00' : 'w1k14496i_bia.fits',
+        '2011-05-30 00:00:00' : 'w1k14492i_bia.fits',
+    }),
+    ('UVIS', 'A|B|C|D', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'LINE17', 'N/A') : UseAfter({
+        '2011-04-18 00:00:00' : 'w1k14494i_bia.fits',
+        '2011-07-01 00:00:00' : 'w1k1449ai_bia.fits',
+    }),
+    ('UVIS', 'A|B|C|D', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-2K2A-SUB|UVIS1-2K2B-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-2K2C-SUB|UVIS2-2K2D-SUB|UVIS2-C1K1C-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB|UVIS2-M1K1C-SUB|UVIS2-M512C-SUB', 'LINE10', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1r15484i_bia.fits',
+        '2011-02-08 00:00:00' : 'w1k1448ti_bia.fits',
+        '2011-03-01 00:00:00' : 'w1k14495i_bia.fits',
+        '2011-04-01 00:00:00' : 'w1r15483i_bia.fits',
+        '2011-05-01 00:00:00' : 'w1r1548bi_bia.fits',
+        '2011-05-30 00:00:00' : 'w1k14491i_bia.fits',
+    }),
+    ('UVIS', 'A|B|C|D', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-2K2A-SUB|UVIS1-2K2B-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-2K2C-SUB|UVIS2-2K2D-SUB|UVIS2-C1K1C-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB|UVIS2-M1K1C-SUB|UVIS2-M512C-SUB', 'LINE17', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1r15485i_bia.fits',
+        '2011-04-18 00:00:00' : 'w1k14493i_bia.fits',
+        '2011-07-01 00:00:00' : 'w1k14499i_bia.fits',
+        '2011-12-06 13:00:00' : 'w212123ti_bia.fits',
+    }),
+    ('UVIS', 'A|B|C|D', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-2K2A-SUB|UVIS1-2K2B-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-2K2C-SUB|UVIS2-2K2D-SUB|UVIS2-C1K1C-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB|UVIS2-M1K1C-SUB|UVIS2-M512C-SUB', 'LINE25', 'N/A') : UseAfter({
+        '2010-08-01 00:00:00' : 'w1r15486i_bia.fits',
+    }),
+    ('UVIS', 'A|B|C|D', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-2K2A-SUB|UVIS1-2K2B-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-2K2C-SUB|UVIS2-2K2D-SUB|UVIS2-C1K1C-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB|UVIS2-M1K1C-SUB|UVIS2-M512C-SUB', 'NONE', 'N/A') : UseAfter({
+        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits',
+        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits',
+        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits',
+        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits',
+        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits',
+        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits',
+        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits',
+        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits',
+        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits',
+        '2010-07-12 00:00:00' : 'ua114370i_bia.fits',
+        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits',
+        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits',
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits',
+    }),
+    ('UVIS', 'A|B|C|D', 1.5, 1, 1, 'UVIS-QUAD-SUB|UVIS1-C512A-SUB|UVIS1-C512B-SUB|UVIS2-C512C-SUB|UVIS2-C512D-SUB', 'NONE', 'N/A') : UseAfter({
+        '2008-02-17 00:00:00' : 't4o1622li_bia.fits',
+        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits',
+        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits',
+        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits',
+    }),
+    ('UVIS', 'B', '1.0|1.5|2.0|4.0', 1, 1, 'UVIS1-2K4-SUB|UVIS1-M512-SUB', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347pi_bia.fits',
+    }),
+    ('UVIS', 'BC', '1.0|1.5|2.0|4.0', 2, 2, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13484i_bia.fits',
+    }),
+    ('UVIS', 'BC', '1.0|1.5|2.0|4.0', 3, 3, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347ti_bia.fits',
+    }),
+    ('UVIS', 'BD', '1.0|1.5|2.0|4.0', 2, 2, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13483i_bia.fits',
+    }),
+    ('UVIS', 'BD', '1.0|1.5|2.0|4.0', 3, 3, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13480i_bia.fits',
+    }),
+    ('UVIS', 'C', '1.0|1.5|2.0|4.0', 1, 1, 'UVIS1-2K4-SUB|UVIS1-M512-SUB', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347oi_bia.fits',
+    }),
+    ('UVIS', 'C', '1.0|1.5|2.0|4.0', 1, 1, 'UVIS2-2K4-SUB|UVIS2-M512-SUB', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't4h1609ii_bia.fits',
+    }),
+    ('UVIS', 'D', '1.0|1.5|2.0|4.0', 1, 1, 'UVIS1-2K4-SUB|UVIS1-M512-SUB', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347qi_bia.fits',
+    }),
+    ('UVIS', 'D', '1.0|1.5|2.0|4.0', 1, 1, 'UVIS2-2K4-SUB|UVIS2-M512-SUB', 'CONT|LINE10|LINE17|LINE25|NONE', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 't4h1609ji_bia.fits',
+    }),
+})

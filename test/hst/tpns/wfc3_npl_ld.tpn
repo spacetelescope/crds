@@ -1,0 +1,25 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 09/01/11  MSwam  69084  first version
+#
+# NAME          KEYTYPE DATATYPE        PRESENCE        VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE   H       C       R       &SYBDATE
+OPUS_FLAG       H       C       R       Y,N
+COMPARISON_FILE H       C       R
+COMMENT         H       C       R
+INSTRUMENT      H       C       R       WFC3
+REFERENCE_FILE_TYPE H   C       R       NPL
+DETECTOR        C       C       R       UVIS
+OBSTYPE         C       C       R       IMAGING
+FILTER          C       C       R
+CHANGE_LEVEL    C       C       R       TRIVIAL,MODERATE,SEVERE
+PEDIGREE        C       C       R       INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C       C       O       &SYBDATE
+OBSERVATION_END_DATE    C       C       O       &SYBDATE

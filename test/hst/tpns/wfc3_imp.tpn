@@ -1,0 +1,57 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 06/27/11  68306  MSwam   first version
+# 08/18/14  78534  MSwam   changes for multi-extension checks
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    WFC3
+FILETYPE            H        C         R    "IMAGE PHOTOMETRY TABLE"
+DETECTOR            H        C         R    UVIS,IR
+SYNSWVER            H        C         R
+GRAPHTAB            H        C         R
+COMPTAB             H        C         R
+ORIGIN              H        C         R
+PARNUM              H        I         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+
+OBSMODE             C        C         R
+DATACOL             C        C         R    PHOTBW,PHOTBW1,PHOTFLAM,PHOTFLAM1,PHOTPLAM,PHOTPLAM1,PHTFLAM1,PHTFLAM11,PHTFLAM2,PHTFLAM21
+PEDIGREE            C        C         R
+DESCRIP             C        C         R
+
+NELEM1              C        I         O
+NELEM1              C        X         O    (VALUE>=0)
+
+PAR1NAMES           C        C         O
+PAR1NAMES           C        X         O    ((VALUE=='MJD#')or(VALUE==''))
+
+# NOTE: It is not currently (2020-09-24) possible to validate the column
+# type of PAR1VALUES and the parameterized data columns PHOTBW1, PHOTFLAM1,
+# PHOTPLAM1, PHTFLAM11, and PHTFLAM21 because the FITS_rec dtype in the
+# reference file is reporting incorrectly.  This may be an issue with
+# the way the file was generated or a bug in astropy itself, but in any
+# case the instrument team has deemed it too difficult to fix right now.
+
+PHOTBW              A        X         O                                                        (has_column_type(PHOTBW_ARRAY,'PHOTBW','FLOAT'))
+PHOTBW              A        X         (optional(has_columns(PHOTBW_ARRAY,['PHOTBW1'])))        (has_columns(PHOTBW_ARRAY,['NELEM1','PAR1NAMES','PAR1VALUES']))
+
+PHOTFLAM            A        X         O                                                        (has_column_type(PHOTFLAM_ARRAY,'PHOTFLAM','FLOAT'))
+PHOTFLAM            A        X         (optional(has_columns(PHOTFLAM_ARRAY,['PHOTFLAM1'])))    (has_columns(PHOTFLAM_ARRAY,['NELEM1','PAR1NAMES','PAR1VALUES']))
+
+PHOTPLAM            A        X         O                                                        (has_column_type(PHOTPLAM_ARRAY,'PHOTPLAM','FLOAT'))
+PHOTPLAM            A        X         (optional(has_columns(PHOTPLAM_ARRAY,['PHOTPLAM1'])))    (has_columns(PHOTPLAM_ARRAY,['NELEM1','PAR1NAMES','PAR1VALUES']))
+
+PHTFLAM1            A        X         O                                                        (has_column_type(PHTFLAM1_ARRAY,'PHTFLAM1','FLOAT'))
+PHTFLAM1            A        X         (optional(has_columns(PHTFLAM1_ARRAY,['PHTFLAM11'])))    (has_columns(PHTFLAM1_ARRAY,['NELEM1','PAR1NAMES','PAR1VALUES']))
+
+PHTFLAM2            A        X         O                                                        (has_column_type(PHTFLAM2_ARRAY,'PHTFLAM2','FLOAT'))
+PHTFLAM2            A        X         (optional(has_columns(PHTFLAM2_ARRAY,['PHTFLAM21'])))    (has_columns(PHTFLAM2_ARRAY,['NELEM1','PAR1NAMES','PAR1VALUES']))

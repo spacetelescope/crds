@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand-made 2022-05',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-rampfitstep',
+    'filetype' : 'pars-rampfitstep',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_pars-rampfitstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'c79d3697026aeda4b6001806f4c9a7350992d0b3',
+    'suffix' : 'pars-rampfitstep',
+    'text_descr' : 'RampFitStep runtime parameters',
+}
+
+selector = Match({
+})

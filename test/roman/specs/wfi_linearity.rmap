@@ -1,0 +1,20 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2021-10-14',
+    'file_ext' : '.asdf',
+    'filekind' : 'LINEARITY',
+    'filetype' : 'LINEARITY',
+    'instrument' : 'WFI',
+    'ld_tpn' : 'wfi_linearity_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_linearity.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '199fb74f08f398d2311f7d57e587179b2103a687',
+    'suffix' : 'linearity',
+    'text_descr' : 'Linearity coefficients',
+    'tpn' : 'wfi_linearity.tpn',
+}
+
+selector = Match({
+})

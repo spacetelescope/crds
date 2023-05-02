@@ -1,0 +1,19 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2016-10-20',
+    'file_ext' : '.fits',
+    'filekind' : 'PATHLOSS',
+    'filetype' : 'PATHLOSS',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pathloss.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8ee5519e4612b9fdac2234e30340f6b4c6db26b8',
+    'suffix' : 'pathloss',
+    'text_descr' : 'Path loss correction',
+}
+
+selector = Match({
+    ('NOT NIS_SOSS',) : 'N/A',
+})

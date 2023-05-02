@@ -1,0 +1,42 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+META.INSTRUMENT.NAME        H   C   R                   NIRSPEC
+
+META.INSTRUMENT.DETECTOR    H   C   O                   NRS1,NRS2,ANY,N/A
+
+META.EXPOSURE.TYPE          H   C   O   NRS_AUTOFLAT,NRS_AUTOWAVE,NRS_BRIGHTOBJ,NRS_CONFIRM,NRS_DARK,\
+                                        NRS_FIXEDSLIT,NRS_FOCUS,NRS_IFU,NRS_IMAGE,NRS_LAMP,NRS_MIMF,\
+                                        NRS_MSASPEC,NRS_MSATA,NRS_TACONFIRM,NRS_TACQ,NRS_TASLIT,\
+                                        NRS_VERIFY,NRS_WATA,\
+                                        ANY,N/A
+
+
+include includes/nirspec_subarray_baseline.tpn
+
+# META.INSTRUMENT.GRATING     H   C   O  G140M,G235M,G395M,G140H,G235H,G395H,\
+#                                       PRISM,MIRROR,ANY,N/A
+
+# META.EXPOSURE.READPATT      H   C   O  NRSRAPID,NRS,NRSN8R2,NRSN16R4,NRSN32R8,\
+#                                        NRSIRS2,NRSIRS2RAPID,NRSSLOW,\
+#                                        NRSRAPIDD1,NRSRAPIDD2,NRSRAPIDD6,\
+#                                        ANY,N/A
+
+READPATT                    H   C   O
+
+META.EXPOSURE.GAIN_FACTOR     H   R   O  1.0:10.0
+
+# STRIPE not in PRD
+META.SUBARRAY.NAME          H   C   O  ALLSLITS,SUBS200A1,SUBS200A2,SUBS200B1,\
+                                       SUBS400A1,SUB1024A,SUB1024B,\
+                                       SUB2048,SUB32,SUB512,SUB512S,STRIPE,\
+                                       FULL,GENERIC,ANY,N/A
+
+META.INSTRUMENT.LAMP_MODE   H   C   O  BRIGHTOBJ,FIXEDSLIT,GRATING-ONLY,IFU,MSASPEC,\
+                                       ANY,N/A

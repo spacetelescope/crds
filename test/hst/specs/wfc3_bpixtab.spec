@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'bad pixels',
+    'ld_tpn': 'wfc3_bpx_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'dqicorr',
+    'rmap_relevance': '(DQICORR != "OMIT")',
+    'suffix': 'bpx',
+    'text_descr': 'Data Quality (Bad Pixel) Initialization Table',
+    'tpn': 'wfc3_bpx.tpn',
+    'unique_rowkeys': ('CCDCHIP', 'PIX1', 'PIX2'),
+}

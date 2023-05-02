@@ -1,0 +1,42 @@
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  BarshadowModel
+
+EXP_TYPE   H      C      R     NRS_MSASPEC
+
+APERTURE   H      C      R     MOS1x1
+
+BUNIT      H      C      R     UNITLESS
+
+#  Shown in spec,  not in file
+# BSCALE     H      R      R
+# BZERO      H      R      R
+
+CTYPE1     H      C      R     METER
+CTYPE2     H      C      R     UNITLESS
+
+CDELT1     H      R      R
+CDELT2     H      R      R
+
+CRPIX1     H      R      R
+CRPIX2     H      R      R
+
+CRVAL1     H      R      R
+CRVAL2     H      R      R
+
+HEIGHT     H      R      R
+
+DATA1X1     A      X      R     (ndim(DATA1X1_ARRAY,2))
+DATA1X3     A      X      R     (ndim(DATA1X3_ARRAY,2))
+VAR1X1      A      X      R     (ndim(VAR1X1_ARRAY,2))
+VAR1X3      A      X      R     (ndim(VAR1X3_ARRAY,2))
+
+DATA1X1     A      X      R     (DATA1X1_ARRAY.SHAPE==(1001,101))
+DATA1X3     A      X      R     (DATA1X3_ARRAY.SHAPE==(1001,101))
+VAR1X1      A      X      R     (VAR1X1_ARRAY.SHAPE==(1001,101))
+VAR1X3      A      X      R     (VAR1X3_ARRAY.SHAPE==(1001,101))
+
+DATA1X1     A      X      R     (has_type(DATA1X1_ARRAY,'FLOAT'))
+DATA1X3     A      X      R     (has_type(DATA1X3_ARRAY,'FLOAT'))
+VAR1X1      A      X      R     (has_type(VAR1X1_ARRAY,'FLOAT'))
+VAR1X3      A      X      R     (has_type(VAR1X3_ARRAY,'FLOAT'))
+

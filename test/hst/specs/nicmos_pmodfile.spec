@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'pmd',
+    'ld_tpn': 'nic_pmd_ld.tpn',
+    'parkey': ('CAMERA',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'pmd',
+    'text_descr': 'Persistence Model Files',
+    'tpn': 'nic_pmd.tpn',
+    'unique_rowkeys': None,
+}

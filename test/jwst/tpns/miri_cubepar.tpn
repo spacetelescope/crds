@@ -1,0 +1,7 @@
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  MiriIFUCubeParsModel
+
+# Make EXP_TYPE available in headers even if only UNDEFINED
+# Keyword cross-strapping doesn't work for UNDEFINED values...
+META.EXPOSURE.TYPE         H    C   R   MIR_MRS
+META.INSTRUMENT.DETECTOR   H    C   R   MIRIFUSHORT,MIRIFULONG,ANY,N/A

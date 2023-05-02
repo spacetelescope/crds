@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'Hand made 2015-02-09 13:06:00',
+    'file_ext' : '.fits',
+    'filekind' : 'THROUGHPUT',
+    'filetype' : 'THROUGHPUT',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_filter.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.FILTER',),),
+    'sha1sum' : '290f2c6abdbf63c1cb7d6875b2fd103c7976c65d',
+    'suffix' : 'throughput',
+    'text_descr' : 'Throughput',
+    'unique_rowkeys' : ('WAVELENGTH',),
+}
+
+selector = Match({
+})

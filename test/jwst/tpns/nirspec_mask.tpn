@@ -1,0 +1,16 @@
+include includes/nir_subarray.tpn
+
+replace NIR_FILTER (True)
+replace SCI DQ
+replace YDIM_MAX  3200
+replace XDIM_MAX  2048
+replace FLOAT INT
+
+include includes/nirspec_sci_array_striped.tpn
+
+include includes/nir_dq_def_array.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  MaskModel
+
+DQ       A           X        R       (ndim(DQ_ARRAY,2))

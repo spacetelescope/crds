@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'aperture throughput table',
+    'ld_tpn': 'stis_apt_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'apt',
+    'text_descr': 'Aperture Throughput Table',
+    'tpn': 'stis_apt.tpn',
+    'unique_rowkeys': ('APERTURE',),
+}

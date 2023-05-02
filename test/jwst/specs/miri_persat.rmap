@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 09-26-2017',
+    'file_ext' : '.fits',
+    'filekind' : 'persat',
+    'filetype' : 'PERSAT',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'miri_persat.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '6896bfbc69f2276aac8ad7ce6f348d13521917ff',
+    'suffix' : 'persat',
+    'text_descr' : 'Persistence Saturation Threshold',
+}
+
+selector = Match({
+})

@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'Hand made 2015-10-09 11:46:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'fpa',
+    'filetype' : 'FPA',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_fpa_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.EXP_TYPE',),),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+    },
+    'sha1sum' : 'd7fb052691732827cece84142106c82343e8b3db',
+    'suffix' : 'fpa',
+    'text_descr' : 'Transform in the Focal Plane Array',
+}
+
+selector = Match({
+})

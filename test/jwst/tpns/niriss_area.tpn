@@ -1,0 +1,12 @@
+# include includes/nir_subarray.tpn
+
+include includes/nir_sci_array_norefpix.tpn
+
+# Commented out until INS is ready for strict model type validation:
+# META.MODEL_TYPE  H  S  R  PixelAreaModel
+
+# PIXAR_SR = FLOAT / (sr) Nominal pixel area for this detector
+# PIXAR_A2 = FLOAT / (arcsec2) Nominal pixel area for this detector
+
+PIXAR_SR     H      R        R
+PIXAR_A2     H      R        R

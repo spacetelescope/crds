@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'Hand made 2015-10-09 15:35:00',
+    'file_ext' : '.asdf',
+    'filekind' : 'wavelengthrange',
+    'filetype' : 'WAVELENGTHRANGE',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_wavelengthrange_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.EXP_TYPE',),),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+    },
+    'sha1sum' : '8e2347c1b401cb0a43f4a16ffb569d86fd8c5454',
+    'suffix' : 'wavelengthrange',
+    'text_descr' : 'Spectral Configurations',
+}
+
+selector = Match({
+})

@@ -1,0 +1,17 @@
+{
+    'derived_from' : 'jwst_miri_wcsregions_0002.rmap',
+    'extra_keys' : ('META.EXPOSURE.TYPE',),
+    'file_ext' : '.json',
+    'filekind' : 'WCSREGIONS',
+    'filetype' : 'WCSREGIONS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_wcsregions_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'reference_to_dataset' : {'DETECTOR': 'META.INSTRUMENT.DETECTOR'},
+    'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE", "MIR_LRS-FIXEDSLIT", "MIR_LRS-SLITLESS", "NRS_FIXEDSLIT"))',
+    'sha1sum' : 'c08e23b5edd7d613aa92ddeed49024120bd743bb',
+    'suffix' : 'wcsregions',
+    'text_descr' : 'World Coordinate System Regions',
+}

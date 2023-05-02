@@ -1,0 +1,27 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 2014-12-16 Miller  79701   Created based on wfc3_bia_ld
+#
+# NAME      KEYTYPE DATATYPE    PRESENCE    VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE   H   C   R   &SYBDATE
+OPUS_FLAG   H   C   R   Y,N
+COMPARISON_FILE H   C   R    
+COMMENT     H   C   R
+INSTRUMENT  H   C   R   WFC3
+REFERENCE_FILE_TYPE H   C   R       BIC
+DETECTOR    C   C   R   UVIS
+APERTURE    C   C   R       G280-REF,UVIS,UVIS-CENTER,UVIS-FIX,UVIS-QUAD,UVIS-QUAD-FIX,UVIS-QUAD-SUB,UVIS1,UVIS1-2K4-SUB,UVIS1-C512A-SUB,UVIS1-C512B-SUB,UVIS1-FIX,UVIS1-M512-SUB,UVIS2,UVIS2-2K4-SUB,UVIS2-C512C-SUB,UVIS2-C512D-SUB,UVIS2-FIX,UVIS2-M512-SUB,UVIS2-M1K1C-SUB,UVIS2-C1K1C-SUB,UVIS2-M512C-SUB,UVIS2-2K2C-SUB,UVIS1-2K2A-SUB,UVIS1-2K2B-SUB,UVIS2-2K2D-SUB,UVIS-IR-FIX,UVIS2-C512C-CTE,UVIS2-C1K1C-CTE
+CCDAMP      C   C   R   A,B,C,D,AB,AC,AD,BC,BD,CD,ABC,ABD,ACD,BCD,ABCD
+CCDGAIN     C   R   R   1.0,1.5,2.0,4.0
+BINAXIS1        C       I       R       1,2,3
+BINAXIS2        C       I       R       1,2,3
+CHANGE_LEVEL    C   C   R   TRIVIAL,MODERATE,SEVERE
+PEDIGREE    C   C   R   INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C   C   O   &SYBDATE
+OBSERVATION_END_DATE    C   C   O   &SYBDATE

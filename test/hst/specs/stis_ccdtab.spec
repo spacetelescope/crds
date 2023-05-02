@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'ccd parameters table',
+    'ld_tpn': 'stis_ccd_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "CCD")',
+    'suffix': 'ccd',
+    'text_descr': 'Ccd Parameters Table',
+    'tpn': 'stis_ccd.tpn',
+    'unique_rowkeys': ('CCDAMP', 'CCDGAIN', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'),
+}

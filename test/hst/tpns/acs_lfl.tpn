@@ -1,0 +1,30 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 09/15/08 60769 MSwam    new CCDGAIN values
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	ACS
+FILETYPE	H	C	R    	"LARGE SCALE FLAT"
+DETECTOR	H	C	R	WFC,HRC,SBC
+CCDAMP		H	C	R	A,B,C,D,AC,AD,BC,BD,ABCD,N/A,ANY
+CCDGAIN         H       R       R       0.5,1.0,1.4,2.0,4.0,8.0,-1,-999.0
+FILTER1		H	C	R	CLEAR1L,F555W,F775W,F625W,F550M,F850LP,\
+					CLEAR1S,POL0UV,POL60UV,POL120UV,\
+					F892N,F606W,F502N,G800L,F658N,F475W,\
+					F122M,F115LP,F125LP,F140LP,F150LP,\
+					F165LP,PR110L,PR130L,BLOCK1,BLOCK2,\
+					BLOCK3,BLOCK4,N/A,ANY
+FILTER2		H	C	R	CLEAR2L,F660N,F814W,FR388N,FR423N,\
+					FR462N,F435W,FR656N,FR716N,FR782N,\
+					CLEAR2S,POL0V,F330W,POL60V,F250W,\
+					POL120V,PR200L,F344N,F220W,FR914M,\
+					FR853N,FR931N,FR459M,FR647M,FR1016N,\
+					FR505N,FR551N,FR601N,N/A,ANY
+USEAFTER  	H	C	R	&SYBDATE
+PEDIGREE  	H	C	R	&PEDIGREE
