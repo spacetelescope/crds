@@ -45,6 +45,9 @@ test = [
   "flake8",
   "bandit",
   "coverage",
+  "pytest >= 6.0",
+  "pytest-astropy",
+  "pytest-doctestplus>=0.10.0",
 ]
 docs = [
   "sphinx",
@@ -143,19 +146,19 @@ crds = "crds"
   "specs/*.json",
 ]
 
-[tool.distutils.nosetests]
-verbosity = 2
-detailed-errors = 1
-where = "crds"
-with-doctest = 1
-doctest-tests = 1
-doctest-options = "+ELLIPSIS,+NORMALIZE_WHITESPACE,+IGNORE_EXCEPTION_DETAIL"
-logging-clear-handlers = 1
+#[tool.distutils.nosetests]
+#verbosity = 2
+#detailed-errors = 1
+#where = "crds"
+#with-doctest = 1
+#doctest-tests = 1
+#doctest-options = "+ELLIPSIS,+NORMALIZE_WHITESPACE,+IGNORE_EXCEPTION_DETAIL"
+#logging-clear-handlers = 1
 
 [tool.pytest.ini_options]
-python_files = ["pytest_test_*"]
-python_classes = ["*PyTests"]
-python_functions = ["pytest_test_*"]
+python_files = ["test_*"]
+python_classes = ["*Tests"]
+python_functions = ["test_*"]
 markers = [
   "smoke: critical tests required to pass for the system to work.",
   "roman: all tests specific to the ROMAN Space Telescope mission.",
