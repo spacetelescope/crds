@@ -44,6 +44,67 @@ def test_cleanpath(line, expected):
     assert br.cleanpath(line) == expected
 
 
+def test_init_func():
+    test_brs = br.BestrefsScript()
+    assert test_brs.args.new_context is None
+    assert test_brs.args.old_context is None
+    assert test_brs.args.fetch_old_headers is False
+    assert test_brs.args.files is None
+    assert test_brs.args.datasets is None
+    assert test_brs.args.all_instruments is None
+    assert test_brs.args.instruments is None
+    assert test_brs.args.load_pickles is None
+    assert test_brs.args.save_pickle is None
+    assert test_brs.args.types == ()
+    assert test_brs.args.skip_types == ()
+    assert test_brs.args.all_types is False
+    assert test_brs.args.diffs_only is None
+    assert test_brs.args.datasets_since is None
+    assert test_brs.args.compare_source_bestrefs is False
+    assert test_brs.args.update_pickle is False
+    assert test_brs.args.only_ids is None
+    assert test_brs.args.drop_ids == []
+    assert test_brs.args.update_bestrefs is False
+    assert test_brs.args.print_affected is False
+    assert test_brs.args.print_affected_details is False
+    assert test_brs.args.print_new_references is False
+    assert test_brs.args.print_update_counts is False
+    assert test_brs.args.print_error_headers is False
+    assert test_brs.args.remote_bestrefs is False
+    assert test_brs.args.sync_mappings == 1
+    assert test_brs.args.sync_references == 0
+    assert test_brs.args.differences_are_errors is False
+    assert test_brs.args.allow_bad_rules is False
+    assert test_brs.args.allow_bad_references is False
+    assert test_brs.args.undefined_differences_matter is False
+    assert test_brs.args.na_differences_matter is False
+    assert test_brs.args.regression is False
+    assert test_brs.args.check_context is False
+    assert test_brs.args.affected_datasets is False
+    assert test_brs.args.optimize_tables is False
+    assert test_brs.args.eliminate_duplicate_cases is False
+    assert test_brs.args.dump_unique_errors is False
+    assert test_brs.args.unique_errors_file is None
+    assert test_brs.args.all_errors_file is None
+    assert test_brs.args.unique_threshold == 1
+    assert test_brs.args.max_errors_per_class == 500
+    assert test_brs.args.unique_delimiter is None
+    assert test_brs.args.verbose is False
+    assert test_brs.args.verbosity == 0
+    assert test_brs.args.dump_cmdline is False
+    assert test_brs.args.readonly_cache is False
+    assert test_brs.args.ignore_cache is False
+    assert test_brs.args.version is False
+    assert test_brs.args.jwst is False
+    assert test_brs.args.hst is False
+    assert test_brs.args.roman is False
+    assert test_brs.args.stats is False
+    assert test_brs.args.log_time is False
+    assert test_brs.args.pdb is False
+    assert test_brs.args.debug_traps is False
+
+
+
 @pytest.mark.parametrize('line, expected',
                          [
                              ('jw01444-o002_20220618t005802_spec3_001',
@@ -56,18 +117,18 @@ def test_normalize_id(line, expected):
     assert test_brs.normalize_id(line) == expected
 
 
-# Currently hung up on how to test the property decorated functions "only_ids" and "drop_ids"
-#@pytest.mark.parametrize('line, expected',
-#                          [
-#                              ([], [])
-#                              (['id1', 'Id2:iD2'], ['ID1:ID1', 'ID2:ID2']),
-#                          ])
-#def test_only_ids():
-#    """Test should demonstrate normalization of ID list."""
-#    test_brs = br.BestrefsScript()
-#    print(test_brs.args)
-#    print(test_brs.only_ids)
-#    assert test_brs.only_ids == expected
+def test_only_ids():
+    """Test should demonstrate only_ids is set to None."""
+    test_brs = br.BestrefsScript()
+    assert test_brs.only_ids == None
+
+
+def test_drop_ids():
+    """Test should demonstrate drop_ids is set to []."""
+    test_brs = br.BestrefsScript()
+    assert isinstance(test_brs.drop_ids, list)
+    assert len(test_brs.drop_ids) == 0
+
 
 @pytest.mark.parametrize('line, expected',
                           [
@@ -89,9 +150,10 @@ def test_locate_file(line, expected):
     test_brs = br.BestrefsScript()
     assert test_brs.locate_file(line) == expected
 
-# Templates
-#def test_complex_init():
 
+
+
+# Templates
 #def test_auto_datasets_since():
 
 #def test_add_args():
