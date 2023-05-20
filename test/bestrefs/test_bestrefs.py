@@ -120,7 +120,7 @@ def test_normalize_id(line, expected):
 def test_only_ids():
     """Test should demonstrate only_ids is set to None."""
     test_brs = br.BestrefsScript()
-    assert test_brs.only_ids == None
+    assert test_brs.only_ids is None
 
 
 def test_drop_ids():
