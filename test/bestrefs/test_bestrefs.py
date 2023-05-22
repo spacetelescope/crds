@@ -103,6 +103,114 @@ def test_init_func():
     assert test_brs.args.pdb is False
     assert test_brs.args.debug_traps is False
 
+    argv = "crds.bestrefs --regression --affected-datasets --check-context"
+    test_brs2 = br.BestrefsScript(argv)
+    #regression
+    assert test_brs2.args.compare_source_bestrefs is True
+    assert test_brs2.args.differences_are_errors is True
+    assert test_brs2.args.stats is True
+    assert test_brs2.args.dump_unique_errors is True
+    #affeced_datasets
+    assert test_brs2.args.diffs_only is True
+    assert test_brs2.args.datasets_since is 'auto'
+    assert test_brs2.args.print_update_counts is True
+    assert test_brs2.args.print_affected is True
+    assert test_brs2.args.dump_unique_errors is True
+    assert test_brs2.args.stats is True
+    assert test_brs2.args.undefined_differences_matter is True
+    assert test_brs2.args.na_differences_matter is True
+    #check_context
+    assert test_brs2.args.all_errors_file == 'all_errors.ids'
+    assert test_brs2.args.unique_errors_file == 'unique_errors.ids'
+
+
+
+
+    ### assert tests
+    #print('\n\n')
+    #for argy in test_brs2.args.__dict__:
+    #    print(f'assert test_brs2.args.{argy} is {test_brs2.args.__dict__[argy]}')
+    #print('\n\n')
+
+
+def test_complex_init():
+    argv = """crds.bestrefs --load-pickles bestrefs/data/bestrefs.special.json 
+    --new-context hst_0315.pmap
+    """
+    test_brs = br.BestrefsScript(argv)
+    test_brs.complex_init()
+    assert test_brs.args.new_context == 'hst_0315.pmap'
+    assert test_brs.args.old_context is None
+    assert test_brs.args.fetch_old_headers is False
+    assert test_brs.args.files is None
+    assert test_brs.args.datasets is None
+    assert test_brs.args.all_instruments is None
+    assert test_brs.args.instruments is None
+    assert test_brs.args.load_pickles == ['bestrefs/data/bestrefs.special.json']
+    assert test_brs.args.save_pickle is None
+    assert test_brs.args.types is ()
+    assert test_brs.args.skip_types is ()
+    assert test_brs.args.all_types is False
+    assert test_brs.args.diffs_only is None
+    assert test_brs.args.datasets_since is None
+    assert test_brs.args.compare_source_bestrefs is False
+    assert test_brs.args.update_pickle is False
+    assert test_brs.args.only_ids is None
+    assert test_brs.args.drop_ids == []
+    assert test_brs.args.update_bestrefs is False
+    assert test_brs.args.print_affected is False
+    assert test_brs.args.print_affected_details is False
+    assert test_brs.args.print_new_references is False
+    assert test_brs.args.print_update_counts is False
+    assert test_brs.args.print_error_headers is False
+    assert test_brs.args.remote_bestrefs is False
+    assert test_brs.args.sync_mappings == 1
+    assert test_brs.args.sync_references == 0
+    assert test_brs.args.differences_are_errors is False
+    assert test_brs.args.allow_bad_rules is False
+    assert test_brs.args.allow_bad_references is False
+    assert test_brs.args.undefined_differences_matter is False
+    assert test_brs.args.na_differences_matter is False
+    assert test_brs.args.regression is False
+    assert test_brs.args.check_context is False
+    assert test_brs.args.affected_datasets is False
+    assert test_brs.args.optimize_tables is False
+    assert test_brs.args.eliminate_duplicate_cases is False
+    assert test_brs.args.dump_unique_errors is False
+    assert test_brs.args.unique_errors_file is None
+    assert test_brs.args.all_errors_file is None
+    assert test_brs.args.unique_threshold == 1
+    assert test_brs.args.max_errors_per_class == 500
+    assert test_brs.args.unique_delimiter is None
+    assert test_brs.args.verbose is False
+    assert test_brs.args.verbosity == 0
+    assert test_brs.args.dump_cmdline is False
+    assert test_brs.args.readonly_cache is False
+    assert test_brs.args.ignore_cache is False
+    assert test_brs.args.version is False
+    assert test_brs.args.jwst is False
+    assert test_brs.args.hst is False
+    assert test_brs.args.roman is False
+    assert test_brs.args.stats is False
+    assert test_brs.args.profile == ''
+    assert test_brs.args.log_time is False
+    assert test_brs.args.pdb is False
+    assert test_brs.args.debug_traps is False
+
+    #[self.args.files, self.args.datasets, self.args.instruments,
+    # self.args.diffs_only, self.args.all_instruments]
+    # --new-context data/hst_0001.pmap  --old-context hst.pmap
+    # --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits"
+
+    #Debugging for calling contexts
+    #diffs_only
+    #argv = """argv="crds.bestrefs --new-context bestrefs/data/hst_0001.pmap --old-context hst.pmap --diffs-only
+    #"""
+    #test_brs = br.BestrefsScript(argv)
+    #test_brs.complex_init()
+    #print('\n\n')
+    #for argy in test_brs.args.__dict__:
+    #    print(f'assert test_brs.args.{argy} is {test_brs.args.__dict__[argy]}')
 
 
 @pytest.mark.parametrize('line, expected',
@@ -120,7 +228,7 @@ def test_normalize_id(line, expected):
 def test_only_ids():
     """Test should demonstrate only_ids is set to None."""
     test_brs = br.BestrefsScript()
-    assert test_brs.only_ids == None
+    assert test_brs.only_ids is None
 
 
 def test_drop_ids():
@@ -225,7 +333,17 @@ def test_locate_file(line, expected):
 #                          [
 #                              (,),
 #                          ])
-#def test_():
-#    """"""
-#    test_brs = br.BestrefsScript()
+def test_():
+    """"""
+    #argv = """argv="crds.bestrefs --load-pickles bestrefs/data/bestrefs.special.json
+    #    --new-context hst_0315.pmap
+    #    """
+
+    ### Identifying values of self.args for bestrefs
+    #test_brs2 = br.BestrefsScript(argv="crds.bestrefs --regression")
+    #print('\n\n')
+    #for argy in test_brs2.args.__dict__:
+    #    if argy == 'compare_source_bestrefs':
+    #        print(f'{argy} == {test_brs2.args.__dict__[argy]}')
+
 
