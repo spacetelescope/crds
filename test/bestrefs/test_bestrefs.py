@@ -1,10 +1,18 @@
 import pytest
+import os, os.path
 import sys
 import re
 import datetime
+import crds
+from crds.hst import locate
+from crds.core import log, config, utils, timestamp, cmdline, heavy_client
+from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
+from crds.client import api
 from crds.bestrefs import bestrefs as br
 from crds.core.timestamp import format_date, parse_date
 from astropy.time import Time
+
+
 
 
 @pytest.mark.parametrize('line, expected',
@@ -124,17 +132,10 @@ def test_init_func():
     assert test_brs2.args.unique_errors_file == 'unique_errors.ids'
 
 
-
-
-    ### assert tests
-    #print('\n\n')
-    #for argy in test_brs2.args.__dict__:
-    #    print(f'assert test_brs2.args.{argy} is {test_brs2.args.__dict__[argy]}')
-    #print('\n\n')
-
-
 def test_complex_init():
-    argv = """crds.bestrefs --load-pickles bestrefs/data/bestrefs.special.json 
+    """Test should initiate complex init and show each argument working."""
+    os.environ['CRDS_SERVER_URL'] = 'https://hst-crds.stsci.edu'
+    argv = """crds.bestrefs --load-pickles data/bestrefs.special.json
     --new-context hst_0315.pmap
     """
     test_brs = br.BestrefsScript(argv)
@@ -146,7 +147,7 @@ def test_complex_init():
     assert test_brs.args.datasets is None
     assert test_brs.args.all_instruments is None
     assert test_brs.args.instruments is None
-    assert test_brs.args.load_pickles == ['bestrefs/data/bestrefs.special.json']
+    assert test_brs.args.load_pickles == ['data/bestrefs.special.json']
     assert test_brs.args.save_pickle is None
     assert test_brs.args.types is ()
     assert test_brs.args.skip_types is ()
@@ -197,84 +198,137 @@ def test_complex_init():
     assert test_brs.args.pdb is False
     assert test_brs.args.debug_traps is False
 
-    #[self.args.files, self.args.datasets, self.args.instruments,
-    # self.args.diffs_only, self.args.all_instruments]
-    # --new-context data/hst_0001.pmap  --old-context hst.pmap
-    # --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits"
-
-    #Debugging for calling contexts
-    #diffs_only
-    #argv = """argv="crds.bestrefs --new-context bestrefs/data/hst_0001.pmap --old-context hst.pmap --diffs-only
-    #"""
-    #test_brs = br.BestrefsScript(argv)
-    #test_brs.complex_init()
-    #print('\n\n')
+    #rubbish for output testing
+    #Include capsys as argument
+    #captured = capsys.readouterr()
+    #print(f'out is {captured.out}')
+    #print(f'\nerr is {captured.err}\n')
     #for argy in test_brs.args.__dict__:
-    #    print(f'assert test_brs.args.{argy} is {test_brs.args.__dict__[argy]}')
+    #if argy == 'instruments':
+    #print(f'assert test_brs.args.{argy} is {test_brs.args.__dict__[argy]}')
+
+    #diffs_only
+    argv = """crds.bestrefs --new-context data/hst_0001.pmap
+           --old-context data/hst.pmap --hst --diffs-only"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.complex_init()
+    assert test_brs.args.diffs_only is True
+    assert test_brs.args.hst is True
+
+    #all_instruments
+    argv = """crds.bestrefs --all-instruments"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.complex_init()
+    assert test_brs.args.all_instruments is True
+
+    #instruments
+    argv = "crds.bestrefs --instruments acs cos stis wfc3"
+    test_brs = br.BestrefsScript(argv)
+    test_brs.complex_init()
+    assert test_brs.args.instruments == ['acs', 'cos', 'stis', 'wfc3']
+
+
+    #datasets
+    argv = """crds.bestrefs --datasets LB6M01030"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.complex_init()
+    assert test_brs.args.datasets == ['LB6M01030']
+
+
+    #files
+    argv = """crds.bestrefs --files data/j8bt05njq_raw.fits"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.complex_init()
+    assert test_brs.args.files == ['data/j8bt05njq_raw.fits']
+
+
+@pytest.mark.parametrize('line, expected',
+                        [
+                            ('jw01444-o002_20220618t005802_spec3_001',
+                             'JW01444-O002_20220618T005802_SPEC3_001:JW01444-O002_20220618T005802_SPEC3_001'),
+                            ('icir09ehq:icir09ehq', 'ICIR09EHQ:ICIR09EHQ'),
+                        ])
+def test_normalize_id(line, expected):
+   """Test should show that datasets are converted to uppercase and given <exposure>:<exposure> form."""
+   test_brs = br.BestrefsScript()
+   assert test_brs.normalize_id(line) == expected
+
+
+def test_only_ids():
+   """Test should demonstrate only_ids is set to None."""
+   test_brs = br.BestrefsScript()
+   assert test_brs.only_ids is None
+
+
+def test_drop_ids():
+   """Test should demonstrate drop_ids is set to []."""
+   test_brs = br.BestrefsScript()
+   assert isinstance(test_brs.drop_ids, list)
+   assert len(test_brs.drop_ids) == 0
 
 
 @pytest.mark.parametrize('line, expected',
                          [
-                             ('jw01444-o002_20220618t005802_spec3_001',
-                              'JW01444-O002_20220618T005802_SPEC3_001:JW01444-O002_20220618T005802_SPEC3_001'),
-                             ('icir09ehq:icir09ehq', 'ICIR09EHQ:ICIR09EHQ'),
+                             (['id1', 'Id2:iD2'], ['ID1:ID1', 'ID2:ID2']),
+                             ([], [])
                          ])
-def test_normalize_id(line, expected):
-    """Test should show that datasets are converted to uppercase and given <exposure>:<exposure> form."""
-    test_brs = br.BestrefsScript()
-    assert test_brs.normalize_id(line) == expected
-
-
-def test_only_ids():
-    """Test should demonstrate only_ids is set to None."""
-    test_brs = br.BestrefsScript()
-    assert test_brs.only_ids is None
-
-
-def test_drop_ids():
-    """Test should demonstrate drop_ids is set to []."""
-    test_brs = br.BestrefsScript()
-    assert isinstance(test_brs.drop_ids, list)
-    assert len(test_brs.drop_ids) == 0
-
-
-@pytest.mark.parametrize('line, expected',
-                          [
-                              (['id1', 'Id2:iD2'], ['ID1:ID1', 'ID2:ID2']),
-                              ([], [])
-                          ])
 def test__normalized(line, expected):
-    """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = br.BestrefsScript()
-    assert test_brs._normalized(line) == expected
+   """Test should demonstrate that a list of dataset IDs is normalized."""
+   test_brs = br.BestrefsScript()
+   assert test_brs._normalized(line) == expected
 
 
 @pytest.mark.parametrize('line, expected',
-                          [
-                              ('lezcg2010', 'lezcg2010'),
-                          ])
+                         [
+                             ('lezcg2010', 'lezcg2010'),
+                         ])
 def test_locate_file(line, expected):
-    """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = br.BestrefsScript()
-    assert test_brs.locate_file(line) == expected
+   """Test should demonstrate that a list of dataset IDs is normalized."""
+   test_brs = br.BestrefsScript()
+   assert test_brs.locate_file(line) == expected
 
+
+def test_auto_datasets_since():
+   """Test makes a call to the server to identify datasets affected by incrementing pmap."""
+   test_dict = {
+       'acs': '1992-01-02 00:00:00'
+   }
+   argv = """crds.bestrefs  --old-context hst.pmap
+   --new-context data/hst_0001.pmap --diffs-only --hst --datasets-since=auto
+    """
+   test_brs = br.BestrefsScript(argv)
+   test_brs.complex_init()
+   test_val = test_brs.auto_datasets_since()
+   assert test_val == test_dict
+
+
+def test_setup_contexts():
+    os.environ['CRDS_SERVER_URL'] = 'https://hst-crds.stsci.edu'
+    argv = """crds.bestrefs --diffs-only"""
+    test_brs = br.BestrefsScript(argv)
+    new, old = test_brs.setup_contexts()
+    print(test_brs.default_context)
+    assert new == test_brs.default_context
+    assert old is None
+
+    argv = """crds.bestrefs --diffs-only --old-context hst.pmap"""
+    test_brs = br.BestrefsScript(argv)
+    new, old = test_brs.setup_contexts()
+    assert old == 'hst.pmap'
+
+    argv = """crds.bestrefs --diffs-only --new-context data/hst_0001.pmap"""
+    test_brs = br.BestrefsScript(argv)
+    new, old = test_brs.setup_contexts()
+    assert new == 'data/hst_0001.pmap'
 
 
 
 # Templates
-#def test_auto_datasets_since():
-
-#def test_add_args():
-
-#def test_setup_contexts():
-
 #def test_warn_bad_context():
 
 #def test_warn_bad_reference():
 
 #def test_warn_bad_updates():
-
-#def test_locate_file():
 
 #def test_init_headers():
 
@@ -333,9 +387,9 @@ def test_locate_file(line, expected):
 #                          [
 #                              (,),
 #                          ])
-def test_():
+#def test_():
     """"""
-    #argv = """argv="crds.bestrefs --load-pickles bestrefs/data/bestrefs.special.json
+    #argv = """argv="crds.bestrefs --load-pickles data/bestrefs.special.json
     #    --new-context hst_0315.pmap
     #    """
 
