@@ -5,7 +5,7 @@ General
 -------
 
 - Removed python 3.8 check from ci.yml [#934]
-- Removed references to ICD-47 in users guide [#937]
+- Removed references to ICD-47 in users guide [#936]
 
 
 
