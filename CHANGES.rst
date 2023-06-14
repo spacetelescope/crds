@@ -6,8 +6,7 @@ General
 
 - Removed python 3.8 check from ci.yml [#934]
 - Removed references to ICD-47 in users guide [#936]
-
-
+- Switch jwst DATAMODEL to jwst.datamodels.JwstDataModel [#938]
 
 
 11.17.0 (2023-04-21)
