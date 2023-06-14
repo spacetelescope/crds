@@ -55,7 +55,7 @@ def get_datamodels():
     if MODEL is None:
         with log.error_on_exception(
                 "Failed constructing basic JWST DataModel"):
-            MODEL = datamodels.DataModel()
+            MODEL = datamodels.JwstDataModel()
     return datamodels
 
 # =============================================================================
