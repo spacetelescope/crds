@@ -100,7 +100,7 @@ are carefully reraised so the original traceback is not destroyed.
 
 >>> with log.verbose_warning_on_exception("Testing expected verbose warning"):
 ...     raise ValueError("Force verbose warning.")
-...     log.write("This code should not be exected.")
+...     log.write("This code should not be executed.")
 CRDS - WARNING -  Testing expected verbose warning : Force verbose warning.
 
 >>> _ = log.set_verbose(old_verbose)
@@ -308,7 +308,7 @@ def errors():
     return THE_LOGGER.errors
 
 def warnings():
-    """Return the global count of errors."""
+    """Return the global count of warnings."""
     return THE_LOGGER.warnings
 
 def infos():
