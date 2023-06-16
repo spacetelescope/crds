@@ -106,7 +106,7 @@ def _load_schema(schema_name=None):
     """Return the core data model schema."""
     from . import locate
     datamodels = locate.get_datamodels()
-    model = datamodels.DataModel(schema=schema_name)
+    model = datamodels.JwstDataModel(schema=schema_name)
     return model.schema
 
 def _schema_to_flat(schema):
