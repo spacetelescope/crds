@@ -1,4 +1,4 @@
-11.17.02 (unreleased)
+11.17.1 (unreleased)
 =====================
 
 General
@@ -6,8 +6,12 @@ General
 
 - Removed python 3.8 check from ci.yml [#934]
 - Removed references to ICD-47 in users guide [#936]
-- Switch jwst DATAMODEL to jwst.datamodels.JwstDataModel [#938]
+- translate 'ANY' as equal to '*' when selecting match rules in rmap changes. Prevents equal weight special case errors from occurring unnecessarily [#939]
 
+JWST
+----
+
+- Switch jwst DATAMODEL to jwst.datamodels.JwstDataModel [#938]
 
 11.17.0 (2023-04-21)
 ===================
