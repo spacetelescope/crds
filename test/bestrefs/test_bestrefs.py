@@ -386,17 +386,6 @@ def test_warn_bad_reference(capsys):
     assert check_msg in out
     log.reset()
 
-#Still figuring this out
-# def test_warn_bad_updates():
-#     """Test issues a warning for each of the 3 bad references provided."""
-#     os.environ['CRDS_SERVER_URL'] = 'https://jwst-crds.stsci.edu'
-#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
-#     test_brs = br.BestrefsScript(argv)
-#     print('\n')
-#     print(test_brs.bad_files)
-#     print(test_brs.updates)
-#     print(test_brs.warn_bad_updates())
-
 
 def test_verbose_with_prefix(capsys):
     """Test checks that verbose log message has had a prefix format made."""
@@ -412,25 +401,90 @@ def test_verbose_with_prefix(capsys):
     log.reset()
 
 
-def test_screen_bestrefs(capsys):
-    """Test checks for references that are atypical or known to be avoided."""
+def test_handle_na_and_not_found(capsys):
+    """Test obtains bestref if available and handles matched N/A or NOT FOUND references."""
     log.reset()
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
-    test_brs.skip_filekinds.append("brftab")
-    # Send logs to stdout
     log.set_test_mode()
-    test_brs.screen_bestrefs('acs', 'data/j8bt05njq_raw.fits',
-                             {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"})
+    # No match, => 'N/A'
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
+    test_brs.handle_na_and_not_found('Old', bestrefs_dict, 'data/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
     out, _ = capsys.readouterr()
-    check_msg = """CRDS - DEBUG -  instrument='ACS' type='BRFTAB' data='data/j8bt05njq_raw.fits' ::  Skipping type."""
-    assert check_msg in out
+    msg_to_check = """Old No match found: 'UNDEFINED'  => 'N/A'"""
+    assert msg_to_check in out
+    # No match, without => 'N/A'
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
+    out, _ = capsys.readouterr()
+    msg_to_check = """New No match found: 'UNDEFINED'"""
+    msg_not_seen = """=> 'N/A'"""
+    assert msg_to_check in out
+    assert msg_not_seen not in out
+    # Match, natural N/A
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND N/A"}
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
+                                                   'acs', 'jref$n4e12510j_crr.fits')
+    assert ref_ok is True
+    assert ref == 'N/A'
+    # Match, Failed
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND"}
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
+                                                   'acs', 'jref$n4e12510j_crr.fits')
+    out, _ = capsys.readouterr()
+    msg_to_check = """New Bestref FAILED:"""
+    assert msg_to_check in out
+    # Match, good
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "jref$n4e12510j_crr.fits"}
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
+                                                   'acs', 'jref$n4e12510j_crr.fits')
+    assert ref_ok is True
+    assert ref == 'N4E12510J_CRR.FITS'
+
+
+
+
+
+
+# def test_screen_bestrefs(capsys):
+#     """Test checks for references that are atypical or known to be avoided."""
+#     log.reset()
+#     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
+#     test_brs = br.BestrefsScript(argv)
+#     test_brs.skip_filekinds.append("brftab")
+#     # Send logs to stdout
+#     log.set_test_mode()
+#     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
+#     test_brs.screen_bestrefs('acs', 'data/j8bt05njq_raw.fits',
+#                              bestrefs_dict)
+#     out, _ = capsys.readouterr()
+#     check_msg = """CRDS - DEBUG -  instrument='ACS' type='BRFTAB' data='data/j8bt05njq_raw.fits' ::  Skipping type."""
+#     assert check_msg in out
+
 
 # def test_get_bestrefs():
 #     """Test gets bestrefs"""
 #     argv = """crds.bestrefs --new-context data/hst_0001.pmap
 #            --old-context data/hst.pmap --hst --diffs-only --verbosity=-3"""
 #     test_brs = br.BestrefsScript(argv)
+
+#Still figuring this out
+# def test_warn_bad_updates():
+#     """Test issues a warning for each of the 3 bad references provided."""
+#     os.environ['CRDS_SERVER_URL'] = 'https://jwst-crds.stsci.edu'
+#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
+#     test_brs = br.BestrefsScript(argv)
+#     print('\n')
+#     print(test_brs.bad_files)
+#     print(test_brs.updates)
+#     print(test_brs.warn_bad_updates())
 
 
 # Templates
@@ -455,7 +509,7 @@ def test_screen_bestrefs(capsys):
 
 #def test__compare_bestrefs():
 
-#def test_handle_na_and_not_found():
+
 
 #def test_log_and_track_error():
 
