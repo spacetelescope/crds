@@ -882,16 +882,13 @@ than errors as the default.
             ref_ok is True IFF bestrefs did not fail altogether.
         """
         # UNDEFINED corresponds to "no value in database" or "type not defined in CRDS"
-#        print(f'filekind.uper is {filekind.upper()}')
         ref_org = cleanpath(bestrefs.get(filekind.upper(), "UNDEFINED")).strip()
-#        print(f'ref_org is {ref_org}')
         ref = ref_org.upper()
         ref_ok = True
         if ref.startswith("NOT FOUND N/A"):
             self.verbose_with_prefix(dataset, instrument, filekind, "Bestref is natural N/A.", verbosity=60)
             ref = "N/A"
         elif ref in ("NOT FOUND NO MATCH FOUND.", "UNDEFINED", "NONE", "", "*"):
-            print(f'ref is {ref}')
             if self.args.undefined_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
                 self.log_and_track_error(
                     dataset, instrument, filekind, name,  "No match found:", repr(ref_org))
