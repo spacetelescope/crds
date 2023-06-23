@@ -13,6 +13,7 @@ from crds.bestrefs import bestrefs as br
 from crds.core.timestamp import format_date, parse_date
 from astropy.time import Time
 
+#logging.getLogger('CRDS')
 
 @pytest.mark.parametrize('line, expected',
                          [
@@ -30,6 +31,7 @@ def test_reformat_date_or_auto(line, expected):
     """Test should return date if argument is none, 'auto' if arg is a variation of 'auto',
     or a reformatted date otherwise."""
     assert br.reformat_date_or_auto(line) == expected
+    log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -39,6 +41,7 @@ def test_reformat_date_or_auto(line, expected):
 def test_sreprlow(line, expected):
     """Test should return lowercase repr() of input."""
     assert br.sreprlow(line) == expected
+    log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -49,6 +52,7 @@ def test_sreprlow(line, expected):
 def test_cleanpath(line, expected):
     """Test should demonstrate that filename is cleaned of 'ref$' and 'crds://' prepends."""
     assert br.cleanpath(line) == expected
+    log.reset()
 
 
 def test_init_func():
@@ -110,7 +114,7 @@ def test_init_func():
     assert test_brs.args.pdb is False
     assert test_brs.args.debug_traps is False
 
-    argv = "crds.bestrefs --regression --affected-datasets --check-context --verbosity=-3"
+    argv = "crds.bestrefs --regression --affected-datasets --check-context"
     test_brs2 = br.BestrefsScript(argv)
     #regression
     assert test_brs2.args.compare_source_bestrefs is True
@@ -129,14 +133,15 @@ def test_init_func():
     #check_context
     assert test_brs2.args.all_errors_file == 'all_errors.ids'
     assert test_brs2.args.unique_errors_file == 'unique_errors.ids'
+    log.reset()
 
 
 def test_complex_init():
     """Test should initiate complex init and show each argument working."""
 #    os.environ['CRDS_SERVER_URL'] = 'https://hst-crds.stsci.edu'
+    log.reset()
     argv = """crds.bestrefs --load-pickles data/bestrefs.special.json
-    --new-context hst_0315.pmap --verbosity=-3
-    """
+    --new-context hst_0315.pmap"""
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.new_context == 'hst_0315.pmap'
@@ -183,7 +188,7 @@ def test_complex_init():
     assert test_brs.args.max_errors_per_class == 500
     assert test_brs.args.unique_delimiter is None
     assert test_brs.args.verbose is False
-    assert test_brs.args.verbosity == -3
+    assert test_brs.args.verbosity == 0
     assert test_brs.args.dump_cmdline is False
     assert test_brs.args.readonly_cache is False
     assert test_brs.args.ignore_cache is False
@@ -196,6 +201,7 @@ def test_complex_init():
     assert test_brs.args.log_time is False
     assert test_brs.args.pdb is False
     assert test_brs.args.debug_traps is False
+    log.reset()
 
     #rubbish for output testing
     #Include capsys as argument
@@ -208,37 +214,38 @@ def test_complex_init():
 
     #diffs_only
     argv = """crds.bestrefs --new-context data/hst_0001.pmap
-           --old-context data/hst.pmap --hst --diffs-only --verbosity=-3"""
+           --old-context data/hst.pmap --hst --diffs-only"""
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.diffs_only is True
     assert test_brs.args.hst is True
 
     #all_instruments
-    argv = """crds.bestrefs --all-instruments --verbosity=-3"""
+    argv = """crds.bestrefs --all-instruments --hst"""
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.all_instruments is True
 
     #instruments
-    argv = "crds.bestrefs --instruments acs cos stis wfc3 --verbosity=-3"
+    argv = "crds.bestrefs --instruments acs cos stis wfc3 --hst"
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.instruments == ['acs', 'cos', 'stis', 'wfc3']
 
 
     #datasets
-    argv = """crds.bestrefs --datasets LB6M01030 --verbosity=-3"""
+    argv = """crds.bestrefs --datasets LB6M01030 --hst"""
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.datasets == ['LB6M01030']
 
 
     #files
-    argv = """crds.bestrefs --files data/j8bt05njq_raw.fits --verbosity=-3"""
+    argv = """crds.bestrefs --files data/j8bt05njq_raw.fits --hst"""
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.files == ['data/j8bt05njq_raw.fits']
+    log.reset()
 
 #
 @pytest.mark.parametrize('line, expected',
@@ -251,12 +258,14 @@ def test_normalize_id(line, expected):
    """Test should show that datasets are converted to uppercase and given <exposure>:<exposure> form."""
    test_brs = br.BestrefsScript()
    assert test_brs.normalize_id(line) == expected
+   log.reset()
 
 
 def test_only_ids():
    """Test should demonstrate only_ids is set to None."""
    test_brs = br.BestrefsScript()
    assert test_brs.only_ids is None
+   log.reset()
 
 
 def test_drop_ids():
@@ -264,6 +273,7 @@ def test_drop_ids():
    test_brs = br.BestrefsScript()
    assert isinstance(test_brs.drop_ids, list)
    assert len(test_brs.drop_ids) == 0
+   log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -275,6 +285,7 @@ def test__normalized(line, expected):
    """Test should demonstrate that a list of dataset IDs is normalized."""
    test_brs = br.BestrefsScript()
    assert test_brs._normalized(line) == expected
+   log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -285,6 +296,7 @@ def test_locate_file(line, expected):
    """Test should demonstrate that a list of dataset IDs is normalized."""
    test_brs = br.BestrefsScript()
    assert test_brs.locate_file(line) == expected
+   log.reset()
 
 
 def test_auto_datasets_since():
@@ -292,84 +304,20 @@ def test_auto_datasets_since():
    test_dict = {
        'acs': '1992-01-02 00:00:00'
    }
-   argv = """crds.bestrefs  --old-context hst.pmap
-   --new-context data/hst_0001.pmap --diffs-only --hst --datasets-since=auto --verbosity=-3
+   argv = """crds.bestrefs  --old-context hst.pmap --new-context data/hst_0001.pmap
+   --diffs-only --hst --datasets-since=auto
     """
    test_brs = br.BestrefsScript(argv)
    test_brs.complex_init()
    test_val = test_brs.auto_datasets_since()
    assert test_val == test_dict
+   log.reset()
 
-
-
-
-
-## Four options I see for how to make sure the log is what we want it to be.
-## 1. Confirm log.errors() has incrmented, make sure that it is “1". (Done here, a simple shabby test)
-## 2. Add a separate logger in bestrefs.py that pytest can see with caplog.
-## (Doesn’t seem great since I’m just performing idea 1 with more complexity)
-## 3. Modify log.py to keep track of the messages (Feels a bit weird to do that just for log tests)
-## 4. log_and_track_error is part of cmdline.script, maybe there is a way to track it there.
-# ##    Had started to investigate but for now moving on.
-def test_warn_bad_context():
-    """Test logs an error or warning if the named context is a known bad context."""
-    log.reset()
-    assert log.errors() == 0
-    assert log.warnings() == 0
-    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --instruments miri --jwst"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
-    assert log.errors() == 1
-    assert log.warnings() == 0
-    log.reset()
-    assert log.errors() == 0
-    assert log.warnings() == 0
-    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
-    --allow-bad-rules"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
-    assert log.errors() == 0
-    assert log.warnings() == 1
-    log.reset()
-
-
-def test_warn_bad_reference():
-    """Test logs an error or warning if the reference is a known bad reference."""
-    print('\n')
-    log.reset()
-    assert log.errors() == 0
-    assert log.warnings() == 0
-#    Debugging
-#    os.environ['CRDS_SERVER_URL'] = 'https://jwst-crds.stsci.edu'
-    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap','miri', 'ANY', 'jwst_miri_flat_0002.rmap')
-    assert log.errors() == 1
-    assert log.warnings() == 0
-    log.reset()
-    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
-    --allow-bad-references"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap', 'miri', 'ANY', 'jwst_miri_flat_0002.rmap')
-    assert log.errors() == 0
-    assert log.warnings() == 1
-    log.reset()
-
-#Still figuring out
-# def test_warn_bad_updates():
-#     """Test issues a warning for each of the 3 bad references provided."""
-#     os.environ['CRDS_SERVER_URL'] = 'https://jwst-crds.stsci.edu'
-#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
-#     test_brs = br.BestrefsScript(argv)
-#     print('\n')
-#     print(test_brs.bad_files)
-#     print(test_brs.updates)
-#     print(test_brs.warn_bad_updates())
 
 def test_setup_contexts():
     """Test sets up crds contexts by checking if either old or new are defined."""
     #    Debugging
-    #    os.environ['CRDS_SERVER_URL'] = 'https://hst-crds.stsci.edu'
+    #os.environ['CRDS_SERVER_URL'] = 'https://hst-crds.stsci.edu'
     argv = """crds.bestrefs --diffs-only"""
     test_brs = br.BestrefsScript(argv)
     new, old = test_brs.setup_contexts()
@@ -385,20 +333,101 @@ def test_setup_contexts():
     test_brs = br.BestrefsScript(argv)
     new, old = test_brs.setup_contexts()
     assert new == 'data/hst_0001.pmap'
+    log.reset()
 
 def test_update_promise():
-    """Test outputs a """
+    """Test outputs a message if the bestrefs would be updated or it updating has started."""
     argv = """crds.bestrefs --new-context data/hst_0001.pmap
-            --old-context data/hst.pmap --hst --diffs-only --verbosity=-3"""
+            --old-context data/hst.pmap --hst --diffs-only"""
     test_brs = br.BestrefsScript(argv)
     test_val = test_brs.update_promise
     assert test_brs.update_promise == ":: Would update."
     argv = """crds.bestrefs --new-context data/hst_0001.pmap --update-bestrefs
-                --old-context data/hst.pmap --hst --diffs-only --verbosity=-3"""
+                --old-context data/hst.pmap --hst --diffs-only --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     test_val = test_brs.update_promise
     assert test_brs.update_promise == ":: Updating."
+    log.reset()
 
+def test_warn_bad_context(capsys):
+    """Test logs an error or warning if the named context is a known bad context."""
+    log.reset()
+#     # Send logs to stdout
+    log.set_test_mode()
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --instruments miri --jwst"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - ERROR -  instrument='ALL' type='ALL' data='ALL' ::  jwst_miri_flat_0002.rmap"""
+    assert check_msg in out
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
+    --allow-bad-rules"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - WARNING -  jwst_miri_flat_0002.rmap = 'jwst_miri_0011.imap' is bad"""
+    assert check_msg in out
+    log.reset()
+
+
+def test_warn_bad_reference(capsys):
+    """Test logs an error or warning if the reference is a known bad reference."""
+    log.reset()
+    # Send logs to stdout
+    log.set_test_mode()
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap','miri', 'ANY', 'jwst_miri_flat_0002.rmap')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - ERROR -  instrument='MIRI' type='ANY' data='jwst_miri_dark_0008.rmap'"""
+    assert check_msg in out
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
+    --allow-bad-references"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap', 'miri', 'ANY', 'jwst_miri_flat_0002.rmap')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - WARNING -  For jwst_miri_dark_0008.rmap miri ANY File 'jwst_miri_flat_0002.rmap'"""
+    assert check_msg in out
+    log.reset()
+
+#Still figuring this out
+# def test_warn_bad_updates():
+#     """Test issues a warning for each of the 3 bad references provided."""
+#     os.environ['CRDS_SERVER_URL'] = 'https://jwst-crds.stsci.edu'
+#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
+#     test_brs = br.BestrefsScript(argv)
+#     print('\n')
+#     print(test_brs.bad_files)
+#     print(test_brs.updates)
+#     print(test_brs.warn_bad_updates())
+
+
+def test_verbose_with_prefix(capsys):
+    """Test checks that verbose log message has had a prefix format made."""
+    log.reset()
+    argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    # Send logs to stdout
+    log.set_test_mode()
+    test_brs.verbose_with_prefix('data/j8bt05njq_raw.fits', 'acs', 'ANY')
+    msg_to_check = """CRDS - DEBUG -  instrument='ACS' type='ANY' data='data/j8bt05njq_raw.fits' ::"""
+    out, _ = capsys.readouterr()
+    assert msg_to_check in out
+    log.reset()
+
+def test_screen_bestrefs(capsys):
+    """Test checks for references that are atypical or known to be avoided."""
+    log.reset()
+    argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.skip_filekinds.append("brftab")
+    # Send logs to stdout
+    log.set_test_mode()
+    test_brs.screen_bestrefs('acs', 'data/j8bt05njq_raw.fits',
+                             {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"})
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - DEBUG -  instrument='ACS' type='BRFTAB' data='data/j8bt05njq_raw.fits' ::  Skipping type."""
+    assert check_msg in out
 
 # def test_get_bestrefs():
 #     """Test gets bestrefs"""
@@ -422,9 +451,6 @@ def test_update_promise():
 
 
 
-#def test_verbose_with_prefix():
-
-#def test_screen_bestrefs():
 
 #def test__screen_bestrefs():
 
