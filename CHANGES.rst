@@ -4,7 +4,7 @@
 HST
 ---
 
-- Added WFC3 SATUFILE new reference file [#940]
+- Added WFC3 SATUFILE new reference file [#941]
 
 11.17.1 (2023-06-20)
 =====================
