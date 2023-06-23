@@ -1,3 +1,11 @@
+11.17.2 (Unreleased)
+====================
+
+HST
+---
+
+- Added WFC3 SATUFILE new reference file [#941]
+
 11.17.1 (2023-06-20)
 =====================
 

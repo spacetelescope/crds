@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'modified acs_satufile.rmap 06-05-2023',
+    'file_ext' : '.fits',
+    'filekind' : 'SATUFILE',
+    'filetype' : 'FULL-WELL SATURATION LEVEL MAP',
+    'instrument' : 'WFC3',
+    'ld_tpn' : 'wfc3_sat_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfc3_satufile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'BINAXIS1'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'BIASCORR',
+    'rmap_relevance' : '((DETECTOR == "UVIS") and (BIASCORR != "OMIT"))',
+    'sha1sum' : 'e0ba6ffb439f2a7aabd20eed9c40b405e704ac74',
+    'suffix' : 'sat',
+    'text_descr' : 'Full-Well Saturation Level Map',
+    'tpn' : 'wfc3_sat.tpn',
+}
+
+selector = Match({
+})
