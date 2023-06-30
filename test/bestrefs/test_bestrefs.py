@@ -14,6 +14,12 @@ from crds.core.timestamp import format_date, parse_date
 from astropy.time import Time
 
 
+@pytest.fixture(autouse=True)
+def reset_log():
+    yield
+    log.reset()
+
+
 @pytest.mark.parametrize('line, expected',
                          [
                              (None, None),
@@ -30,7 +36,6 @@ def test_reformat_date_or_auto(line, expected):
     """Test should return date if argument is none, 'auto' if arg is a variation of 'auto',
     or a reformatted date otherwise."""
     assert br.reformat_date_or_auto(line) == expected
-    log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -40,7 +45,6 @@ def test_reformat_date_or_auto(line, expected):
 def test_sreprlow(line, expected):
     """Test should return lowercase repr() of input."""
     assert br.sreprlow(line) == expected
-    log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -51,7 +55,6 @@ def test_sreprlow(line, expected):
 def test_cleanpath(line, expected):
     """Test should demonstrate that filename is cleaned of 'ref$' and 'crds://' prepends."""
     assert br.cleanpath(line) == expected
-    log.reset()
 
 
 def test_init_func():
@@ -132,7 +135,6 @@ def test_init_func():
     # check_context
     assert test_brs2.args.all_errors_file == 'all_errors.ids'
     assert test_brs2.args.unique_errors_file == 'unique_errors.ids'
-    log.reset()
 
 
 def test_complex_init():
@@ -199,16 +201,6 @@ def test_complex_init():
     assert test_brs.args.log_time is False
     assert test_brs.args.pdb is False
     assert test_brs.args.debug_traps is False
-    log.reset()
-
-    #rubbish for output testing
-    #Include capsys as argument
-    #captured = capsys.readouterr()
-    #print(f'out is {captured.out}')
-    #print(f'\nerr is {captured.err}\n')
-    #for argy in test_brs.args.__dict__:
-    #if argy == 'instruments':
-    #print(f'assert test_brs.args.{argy} is {test_brs.args.__dict__[argy]}')
 
     # diffs_only
     argv = """crds.bestrefs --new-context data/hst_0001.pmap
@@ -241,7 +233,6 @@ def test_complex_init():
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.files == ['data/j8bt05njq_raw.fits']
-    log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -254,14 +245,12 @@ def test_normalize_id(line, expected):
     """Test should show that datasets are converted to uppercase and given <exposure>:<exposure> form."""
     test_brs = br.BestrefsScript()
     assert test_brs.normalize_id(line) == expected
-    log.reset()
 
 
 def test_only_ids():
     """Test should demonstrate only_ids is set to None."""
     test_brs = br.BestrefsScript()
     assert test_brs.only_ids is None
-    log.reset()
 
 
 def test_drop_ids():
@@ -269,7 +258,6 @@ def test_drop_ids():
     test_brs = br.BestrefsScript()
     assert isinstance(test_brs.drop_ids, list)
     assert len(test_brs.drop_ids) == 0
-    log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -281,7 +269,6 @@ def test__normalized(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
     test_brs = br.BestrefsScript()
     assert test_brs._normalized(line) == expected
-    log.reset()
 
 
 @pytest.mark.parametrize('line, expected',
@@ -292,7 +279,6 @@ def test_locate_file(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
     test_brs = br.BestrefsScript()
     assert test_brs.locate_file(line) == expected
-    log.reset()
 
 
 def test_auto_datasets_since():
@@ -307,7 +293,6 @@ def test_auto_datasets_since():
     test_brs.complex_init()
     test_val = test_brs.auto_datasets_since()
     assert test_val == test_dict
-    log.reset()
 
 
 def test_setup_contexts():
@@ -327,7 +312,6 @@ def test_setup_contexts():
     test_brs = br.BestrefsScript(argv)
     new, old = test_brs.setup_contexts()
     assert new == 'data/hst_0001.pmap'
-    log.reset()
 
 
 def test_update_promise():
@@ -342,7 +326,6 @@ def test_update_promise():
     test_brs = br.BestrefsScript(argv)
     test_val = test_brs.update_promise
     assert test_brs.update_promise == ":: Updating."
-    log.reset()
 
 
 def test_warn_bad_context(capsys):
@@ -363,12 +346,11 @@ def test_warn_bad_context(capsys):
     out, _ = capsys.readouterr()
     check_msg = """CRDS - WARNING -  jwst_miri_flat_0002.rmap = 'jwst_miri_0011.imap' is bad"""
     assert check_msg in out
-    log.reset()
 
 
 def test_warn_bad_reference(capsys):
     """Test logs an error or warning if the reference is a known bad reference."""
-    log.reset()
+#    log.reset()
     # Send logs to stdout
     log.set_test_mode()
     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
@@ -384,7 +366,6 @@ def test_warn_bad_reference(capsys):
     out, _ = capsys.readouterr()
     check_msg = """CRDS - WARNING -  For jwst_miri_dark_0008.rmap miri ANY File 'jwst_miri_flat_0002.rmap'"""
     assert check_msg in out
-    log.reset()
 
 
 def test_verbose_with_prefix(capsys):
@@ -398,12 +379,37 @@ def test_verbose_with_prefix(capsys):
     msg_to_check = """CRDS - DEBUG -  instrument='ACS' type='ANY' data='data/j8bt05njq_raw.fits' ::"""
     out, _ = capsys.readouterr()
     assert msg_to_check in out
-    log.reset()
+
+
+def test_screen_bestrefs(capsys):
+    """Test checks for references that are atypical or known to be avoided."""
+#    log.reset()
+    argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.skip_filekinds.append("brftab")
+    # Send logs to stdout
+    log.set_test_mode()
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
+    tuple1, tuple2 = test_brs.screen_bestrefs('acs', 'data/j8bt05njq_raw.fits', bestrefs_dict)
+    out, err = capsys.readouterr()
+    check_msg1 = """type='BRFTAB' data='data/j8bt05njq_raw.fits' ::  Skipping type."""
+    check_msg2 = """type='SEGMENT' data='data/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
+    check_msg3 = """'WCPTAB' data='data/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
+    assert check_msg1 in out
+    assert check_msg2 in out
+    assert check_msg3 in out
+    assert tuple1[0] == 'acs'
+    assert tuple1[1] == 'segment'
+    assert tuple1[2] is None
+    assert tuple1[3] == 'N/A'
+    assert tuple2[0] == 'acs'
+    assert tuple2[1] == 'wcptab'
+    assert tuple2[2] is None
+    assert tuple2[3] == 'XAF1429EL_WCP.FITS'
 
 
 def test_handle_na_and_not_found(capsys):
     """Test obtains bestref if available and handles matched N/A or NOT FOUND references."""
-    log.reset()
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     log.set_test_mode()
@@ -449,26 +455,6 @@ def test_handle_na_and_not_found(capsys):
     assert ref == 'N4E12510J_CRR.FITS'
 
 
-
-
-
-
-# def test_screen_bestrefs(capsys):
-#     """Test checks for references that are atypical or known to be avoided."""
-#     log.reset()
-#     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.skip_filekinds.append("brftab")
-#     # Send logs to stdout
-#     log.set_test_mode()
-#     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-#     test_brs.screen_bestrefs('acs', 'data/j8bt05njq_raw.fits',
-#                              bestrefs_dict)
-#     out, _ = capsys.readouterr()
-#     check_msg = """CRDS - DEBUG -  instrument='ACS' type='BRFTAB' data='data/j8bt05njq_raw.fits' ::  Skipping type."""
-#     assert check_msg in out
-
-
 # def test_get_bestrefs():
 #     """Test gets bestrefs"""
 #     argv = """crds.bestrefs --new-context data/hst_0001.pmap
@@ -502,8 +488,6 @@ def test_handle_na_and_not_found(capsys):
 
 
 
-
-#def test__screen_bestrefs():
 
 #def test_compare_bestrefs():
 
