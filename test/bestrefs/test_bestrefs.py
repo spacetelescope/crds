@@ -455,11 +455,44 @@ def test_handle_na_and_not_found(capsys):
     assert ref == 'N4E12510J_CRR.FITS'
 
 
-# def test_get_bestrefs():
-#     """Test gets bestrefs"""
-#     argv = """crds.bestrefs --new-context data/hst_0001.pmap
-#            --old-context data/hst.pmap --hst --diffs-only --verbosity=-3"""
-#     test_brs = br.BestrefsScript(argv)
+def test_get_bestrefs():
+    """Test gets bestrefs for supplied header."""
+    # A function that looks a little simple on the surface, this function actually touches some
+    # 10 other functions in several other modules to calculate bestrefs. It took alot of time to look
+    # through them and I still don't think I quite understand how to trigger the system to actually
+    # retrieve the best references, as I tried a dozen or so variations of the supplied header dict
+    # to no avail. I'd like to revisit this at a later time and flesh out more testing capabilities
+    # for one of the namesake functions of the bestrefs module.
+    argv = """crds.bestrefs --hst"""
+    test_brs = br.BestrefsScript(argv)
+    value_to_test = test_brs.get_bestrefs('acs', 'data/hst_acs_atodtab_0251.rmap', 'hst_1000.pmap',
+                    {'instrume': 'acs'})
+    dict_to_verify = {'ATODTAB': 'NOT FOUND No match found.',
+                      'BIASFILE': 'NOT FOUND One or more required date/time values is UNDEFINED',
+                      'BPIXTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'CCDTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'CFLTFILE': 'NOT FOUND n/a',
+                      'CRREJTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'D2IMFILE': 'NOT FOUND n/a',
+                      'DARKFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'DGEOFILE': 'NOT FOUND n/a',
+                      'DRKCFILE': 'NOT FOUND n/a',
+                      'FLSHFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'IDCTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'IMPHTTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'MDRIZTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'MLINTAB': 'NOT FOUND n/a',
+                      'NPOLFILE': 'NOT FOUND n/a',
+                      'OSCNTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'PCTETAB': 'NOT FOUND n/a',
+                      'PFLTFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'SATUFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'SHADFILE': 'NOT FOUND No match found.',
+                      'SNKCFILE': 'NOT FOUND n/a',
+                      'SPOTTAB': 'NOT FOUND n/a'}
+
+    assert value_to_test == dict_to_verify
+
 
 #Still figuring this out
 # def test_warn_bad_updates():
