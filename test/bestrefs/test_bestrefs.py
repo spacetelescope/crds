@@ -139,7 +139,6 @@ def test_init_func():
 
 def test_complex_init():
     """Test should initiate complex init and show each argument working."""
-    log.reset()
     argv = """crds.bestrefs --load-pickles data/bestrefs.special.json
     --new-context hst_0315.pmap"""
     test_brs = br.BestrefsScript(argv)
@@ -327,10 +326,46 @@ def test_update_promise():
     test_val = test_brs.update_promise
     assert test_brs.update_promise == ":: Updating."
 
+def test_get_bestrefs():
+    """Test gets bestrefs for supplied header."""
+    # A function that looks a little simple on the surface, this function actually touches some
+    # 10 other functions in several other modules to calculate bestrefs. It took alot of time to look
+    # through them and I still don't think I quite understand how to trigger the system to actually
+    # retrieve the best references, as I tried a dozen or so variations of the supplied header dict
+    # to no avail. I'd like to revisit this at a later time and flesh out more testing capabilities
+    # for one of the namesake functions of the bestrefs module.
+    argv = """crds.bestrefs --hst"""
+    test_brs = br.BestrefsScript(argv)
+    value_to_test = test_brs.get_bestrefs('acs', 'data/hst_acs_atodtab_0251.rmap', 'hst_1000.pmap',
+                    {'instrume': 'acs'})
+    dict_to_verify = {'ATODTAB': 'NOT FOUND No match found.',
+                      'BIASFILE': 'NOT FOUND One or more required date/time values is UNDEFINED',
+                      'BPIXTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'CCDTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'CFLTFILE': 'NOT FOUND n/a',
+                      'CRREJTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'D2IMFILE': 'NOT FOUND n/a',
+                      'DARKFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'DGEOFILE': 'NOT FOUND n/a',
+                      'DRKCFILE': 'NOT FOUND n/a',
+                      'FLSHFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'IDCTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'IMPHTTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'MDRIZTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'MLINTAB': 'NOT FOUND n/a',
+                      'NPOLFILE': 'NOT FOUND n/a',
+                      'OSCNTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'PCTETAB': 'NOT FOUND n/a',
+                      'PFLTFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
+                      'SATUFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
+                      'SHADFILE': 'NOT FOUND No match found.',
+                      'SNKCFILE': 'NOT FOUND n/a',
+                      'SPOTTAB': 'NOT FOUND n/a'}
+
+    assert value_to_test == dict_to_verify
 
 def test_warn_bad_context(capsys):
     """Test logs an error or warning if the named context is a known bad context."""
-    log.reset()
     # Send logs to stdout
     log.set_test_mode()
     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --instruments miri --jwst"""
@@ -350,7 +385,6 @@ def test_warn_bad_context(capsys):
 
 def test_warn_bad_reference(capsys):
     """Test logs an error or warning if the reference is a known bad reference."""
-#    log.reset()
     # Send logs to stdout
     log.set_test_mode()
     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri"""
@@ -370,7 +404,6 @@ def test_warn_bad_reference(capsys):
 
 def test_verbose_with_prefix(capsys):
     """Test checks that verbose log message has had a prefix format made."""
-    log.reset()
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     # Send logs to stdout
@@ -383,7 +416,6 @@ def test_verbose_with_prefix(capsys):
 
 def test_screen_bestrefs(capsys):
     """Test checks for references that are atypical or known to be avoided."""
-#    log.reset()
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     test_brs.skip_filekinds.append("brftab")
@@ -455,43 +487,21 @@ def test_handle_na_and_not_found(capsys):
     assert ref == 'N4E12510J_CRR.FITS'
 
 
-def test_get_bestrefs():
-    """Test gets bestrefs for supplied header."""
-    # A function that looks a little simple on the surface, this function actually touches some
-    # 10 other functions in several other modules to calculate bestrefs. It took alot of time to look
-    # through them and I still don't think I quite understand how to trigger the system to actually
-    # retrieve the best references, as I tried a dozen or so variations of the supplied header dict
-    # to no avail. I'd like to revisit this at a later time and flesh out more testing capabilities
-    # for one of the namesake functions of the bestrefs module.
-    argv = """crds.bestrefs --hst"""
+def test_unkilled_updates():
+    """Test confirms that unkilled_updates returns a dict minus items found in kill_list."""
+    argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
-    value_to_test = test_brs.get_bestrefs('acs', 'data/hst_acs_atodtab_0251.rmap', 'hst_1000.pmap',
-                    {'instrume': 'acs'})
-    dict_to_verify = {'ATODTAB': 'NOT FOUND No match found.',
-                      'BIASFILE': 'NOT FOUND One or more required date/time values is UNDEFINED',
-                      'BPIXTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
-                      'CCDTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
-                      'CFLTFILE': 'NOT FOUND n/a',
-                      'CRREJTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
-                      'D2IMFILE': 'NOT FOUND n/a',
-                      'DARKFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
-                      'DGEOFILE': 'NOT FOUND n/a',
-                      'DRKCFILE': 'NOT FOUND n/a',
-                      'FLSHFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
-                      'IDCTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
-                      'IMPHTTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
-                      'MDRIZTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
-                      'MLINTAB': 'NOT FOUND n/a',
-                      'NPOLFILE': 'NOT FOUND n/a',
-                      'OSCNTAB': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
-                      'PCTETAB': 'NOT FOUND n/a',
-                      'PFLTFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'SBC', 'WFC']",
-                      'SATUFILE': "NOT FOUND  parameter='DETECTOR' value='UNDEFINED' is not in ['HRC', 'WFC']",
-                      'SHADFILE': 'NOT FOUND No match found.',
-                      'SNKCFILE': 'NOT FOUND n/a',
-                      'SPOTTAB': 'NOT FOUND n/a'}
+    test_brs.skip_filekinds.append("brftab")
+    od_dict1 = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
+    od_dict2 = {"WCPTAB": "XAF1429EL_WCP.FITS"}
+    od_dict3 = {'BRFTAB': 'N/A', 'SEGMENT': 'N/A'}
+    test_brs.updates = od_dict1
+    test_brs.kill_list = od_dict2
+    assert test_brs.unkilled_updates == od_dict3
 
-    assert value_to_test == dict_to_verify
+
+
+
 
 
 #Still figuring this out
@@ -507,7 +517,6 @@ def test_get_bestrefs():
 
 
 # Templates
-#def test_init_headers():
 
 #def test_init_comparison():
 
@@ -526,15 +535,13 @@ def test_get_bestrefs():
 
 #def test__compare_bestrefs():
 
-
+#def test_init_headers():
 
 #def test_log_and_track_error():
 
 #def test_post_processing():
 
 #def test_optimize_tables():
-
-#def test_unkilled_updates():
 
 #def test_print_affected():
 
