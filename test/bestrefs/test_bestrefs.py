@@ -489,7 +489,7 @@ def test_handle_na_and_not_found(capsys):
 
 def test_unkilled_updates():
     """Test confirms that unkilled_updates returns a dict minus items found in kill_list."""
-    argv = """crds.bestrefs --hst --instrument=acs --verbosity=0"""
+    argv = """crds.bestrefs --hst --verbosity=0"""
     test_brs = br.BestrefsScript(argv)
     od_dict1 = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
     od_dict2 = {"WCPTAB": "XAF1429EL_WCP.FITS"}
@@ -501,12 +501,22 @@ def test_unkilled_updates():
 
 def test_dataset_to_product_id():
     """Test confirms that product ID is returned by function."""
-    argv = """crds.bestrefs --hst --instrument=wfc3 --verbosity=0"""
+    argv = """crds.bestrefs --hst --verbosity=0"""
     test_brs = br.BestrefsScript(argv)
     dataset_to_test = 'icir09ehq:ICIR09EHQ'
     product_id = dataset_to_test.split(":")[0].lower()
     assert test_brs.dataset_to_product_id(dataset_to_test) == product_id
 
+
+def test_print_affected(capsys):
+    """Difficult to test"""
+    argv = """crds.bestrefs --hst --verbosity=0"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.updates = {"icir09ehq:icir09ehq": "icir09ehq", "20220618T005802:20220618T005802": "20220618T005802"}
+    test_brs.print_affected()
+    msg_to_check = """20220618t005802\nicir09ehq\n"""
+    out, _ = capsys.readouterr()
+    assert out == msg_to_check
 
 
 
