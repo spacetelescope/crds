@@ -489,9 +489,8 @@ def test_handle_na_and_not_found(capsys):
 
 def test_unkilled_updates():
     """Test confirms that unkilled_updates returns a dict minus items found in kill_list."""
-    argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
+    argv = """crds.bestrefs --hst --instrument=acs --verbosity=0"""
     test_brs = br.BestrefsScript(argv)
-    test_brs.skip_filekinds.append("brftab")
     od_dict1 = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
     od_dict2 = {"WCPTAB": "XAF1429EL_WCP.FITS"}
     od_dict3 = {'BRFTAB': 'N/A', 'SEGMENT': 'N/A'}
@@ -499,6 +498,14 @@ def test_unkilled_updates():
     test_brs.kill_list = od_dict2
     assert test_brs.unkilled_updates == od_dict3
 
+
+def test_dataset_to_product_id():
+    """Test confirms that product ID is returned by function."""
+    argv = """crds.bestrefs --hst --instrument=wfc3 --verbosity=0"""
+    test_brs = br.BestrefsScript(argv)
+    dataset_to_test = 'icir09ehq:ICIR09EHQ'
+    product_id = dataset_to_test.split(":")[0].lower()
+    assert test_brs.dataset_to_product_id(dataset_to_test) == product_id
 
 
 
@@ -542,8 +549,6 @@ def test_unkilled_updates():
 #def test_post_processing():
 
 #def test_optimize_tables():
-
-#def test_print_affected():
 
 #def test_dataset_to_product_id():
 
