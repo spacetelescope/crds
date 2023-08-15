@@ -1,3 +1,11 @@
+11.17.3 (unreleased)
+====================
+
+ROMAN
+-----
+
+- Added metrics-logger decorators with DMS tags to appropriate Roman tests [#942]
+
 11.17.2 (2023-06-29)
 ====================
 
