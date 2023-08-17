@@ -45,6 +45,7 @@ test = [
   "flake8",
   "bandit",
   "coverage",
+  "metrics-logger",
 ]
 docs = [
   "sphinx",
