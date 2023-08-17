@@ -4,7 +4,7 @@
 ROMAN
 -----
 
-- Added metrics-logger decorators with DMS tags to appropriate Roman tests [#942]
+- Added metrics-logger decorators with DMS tags to appropriate Roman tests [#943]
 
 11.17.2 (2023-06-29)
 ====================
