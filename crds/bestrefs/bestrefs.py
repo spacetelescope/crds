@@ -989,6 +989,9 @@ than errors as the default.
         one line per exposure.
         """
         for dataset in sorted(self.updates):
+            print("****")
+            print("Hello my name is dataset:")
+            print(dataset)
             if self.updates[dataset]:
                 types = sorted([update.filekind for update in self.updates[dataset]])
                 print("{} {} {}".format(dataset.lower(), self.updates[dataset][0].instrument.lower(), " ".join(types)))
