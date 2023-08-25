@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'hst_cos_twozxtab_0261.rmap',
+    'filekind' : 'TWOZXTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_twozxtab_0262.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'ALGNCORR',
+    'rmap_relevance' : '(LIFE_ADJ == "3.0")',
+    'sha1sum' : '1dba02732618e20ddd9ac8e4fcba2def71e3bcd8',
+}
+
+selector = Match({
+    ('FUV', 'SPECTROSCOPIC', '3.0') : UseAfter({
+        '2009-05-11 00:00:00' : 'z2d1925ql_2zx.fits',
+    }),
+})

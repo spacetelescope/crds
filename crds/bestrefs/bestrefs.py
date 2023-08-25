@@ -12,6 +12,7 @@ from collections import namedtuple, OrderedDict
 # ===================================================================
 
 import crds
+import logging
 from crds.core import log, config, utils, timestamp, cmdline, heavy_client
 from crds import diff, matches
 from . import table_effects, headers
@@ -25,6 +26,7 @@ MAX_DATE = "9999-01-01 23:59:59"
 # ===================================================================
 
 UpdateTuple = namedtuple("UpdateTuple", ["instrument", "filekind", "old_reference", "new_reference"])
+LOGGER = logging.getLogger(__name__)
 
 # ============================================================================
 
