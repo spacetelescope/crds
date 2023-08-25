@@ -83,7 +83,6 @@ packages = [
   "crds.jwst",
   "crds.tobs",
   "crds.roman",
-  "crds.tests",
 ]
 include-package-data = false
 
@@ -103,7 +102,7 @@ crds = "crds"
 "crds.jwst" = "crds/jwst"
 "crds.roman" = "crds/roman"
 "crds.tobs" = "crds/tobs"
-"crds.tests" = "crds/tests"
+
 
 [tool.setuptools.package-data]
 "crds.hst" = [
@@ -164,6 +163,9 @@ markers = [
   "smoke: critical tests required to pass for the system to work.",
   "roman: all tests specific to the ROMAN Space Telescope mission.",
   "distortion: all tests related to distortion filetype",
+  "asdf: asdf related tests",
+  "core: tests in the crds.core module",
+  "heavy_client",
 ]
 
 [tool.setuptools_scm]
