@@ -8,9 +8,9 @@ files or rules.
 
 This section describes the processes of submitting files to CRDS.  It does not
 detail the formats and requirements of *creating* files which are described
-better elsewhere,  such as `HST ICD-47`_, `JWST CAL Documentation`_, or `Roman Cal Documentation`_.
+better elsewhere,  such as `HST Reference Files Information`_, `JWST CAL Documentation`_, or `Roman Cal Documentation`_.
 
-.. _`HST ICD-47`: http://newcdbs.stsci.edu/doc/ICD47/index.html
+.. _`HST Reference Files Information`: http://newcdbs.stsci.edu/doc/index.html
 
 .. _`JWST CAL Documentation`: https://jwst-pipeline.readthedocs.io/en/latest/jwst/package_index.html
 

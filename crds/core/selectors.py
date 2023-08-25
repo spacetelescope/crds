@@ -2073,6 +2073,8 @@ Restore original debug behavior:
                             valid_values_map[name])
                 self._validate_value(name, value, valid_values_map[name], runtime=False)
         for other in self.keys():
+            # convert 'ANY' to '*'
+            key = tuple([utils.condition_value(k) for k in key])
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
                 # include match case filename and useafter data in log message

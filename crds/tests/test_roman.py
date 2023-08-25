@@ -8,7 +8,7 @@ from crds.core.exceptions import CrdsLookupError
 
 from crds.tests import test_config
 from nose.tools import raises
-
+from metrics_logger.decorators import metrics_logger
 
 class TestRoman(unittest.TestCase):
     """ TestRoman is a collection of crds unit tests for ROMAN.
@@ -23,6 +23,7 @@ class TestRoman(unittest.TestCase):
     def tearDown(self):
         test_config.cleanup(self.old_state)
 
+    @metrics_logger("DMS16", "DMS25")
     def test_getreferences_with_valid_header_ISOT_fmt(self):
         """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
         """
@@ -39,7 +40,8 @@ class TestRoman(unittest.TestCase):
         )
 
         assert pathlib.Path(result["dark"]).name == "roman_wfi_dark_0001.asdf"
-    
+
+    @metrics_logger("DMS16", "DMS25", "DMS26")
     def test_getreferences_with_valid_header_ISO_fmt(self):
         """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
         """
@@ -86,7 +88,7 @@ class TestRoman(unittest.TestCase):
 
         assert pathlib.Path(result["distortion"]).name == "roman_wfi_distortion_0001.asdf"
 
-
+    @metrics_logger("DMS16")
     @raises(CrdsLookupError)
     def test_getreferences_with_invalid_header(self):
         """ test_getreferences_with_invalid_header: test satisfies Roman 303.1
@@ -103,6 +105,7 @@ class TestRoman(unittest.TestCase):
             reftypes=["dark"]
         )
 
+    @metrics_logger("DMS114", "DMS25", "DMS26")
     def test_list_references(self):
         """ test_list_references: test satisfies Roman 303.2 and 628.2
         """
