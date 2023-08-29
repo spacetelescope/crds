@@ -1204,15 +1204,20 @@
             "instrument":"MIRI",
             "ld_tpn":"miri_gain_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_miri_gain_0000.rmap",
+            "name":"miri_gain.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.FILTER"
+                    "META.INSTRUMENT.FILTER",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"09f1b655e8999a1be2ef3aea286e74fc0588738c",
+            "sha1sum":"898a158c3b13c23aa4cb6b2ac6ab12178b5834b1",
             "suffix":"gain",
             "text_descr":"Gain",
             "tpn":"miri_gain.tpn",
