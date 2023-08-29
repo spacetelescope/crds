@@ -1,15 +1,15 @@
 header = {
-    'name' : 'hst.pmap',
     'derived_from' : 'created by hand 12-23-2011',
+    'description' : 'Initially generated on 2011-11-16 10:23:00',
     'mapping' : 'PIPELINE',
+    'name' : 'hst.pmap',
     'observatory' : 'HST',
     'parkey' : ('INSTRUME',),
-    'description' : 'Initially generated on 2011-11-16 10:23:00',
-    'sha1sum' : 'be68227035f79320eea9f355702e0f9a26b27ab5',
+    'sha1sum' : '64e7fe8979d8e449fd32cc4fcb1ca0f1bdd95f8d',
 }
 
 selector = {
-    'ACS' : 'data/hst_acs_0001.imap',
+    'ACS' : 'test/data/hst/hst_acs_0001.imap',
     'COS' : 'hst_cos.imap',
     'NICMOS' : 'hst_nicmos.imap',
     'STIS' : 'hst_stis.imap',

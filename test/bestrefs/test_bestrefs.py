@@ -229,44 +229,47 @@ def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
     default_shared_state.cleanup()
 
 
-def test_bestrefs_all_instruments_hst(default_shared_state, caplog):
-    argv = """bestrefs.py --new-context hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
+
+def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
+    argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
     out_to_check = """ Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  221101 dataset ids for 'acs' since None
+ Downloaded  221121 dataset ids for 'acs' since None
  Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  54271 dataset ids for 'cos' since None
+ Downloaded  54302 dataset ids for 'cos' since None
  Dumping dataset parameters for 'nicmos' from CRDS server at 'https://hst-crds.stsci.edu'
  Downloaded  282999 dataset ids for 'nicmos' since None
  Dumping dataset parameters for 'stis' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  478619 dataset ids for 'stis' since None
+ Downloaded  478767 dataset ids for 'stis' since None
  Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  339162 dataset ids for 'wfc3' since None
+ Downloaded  339256 dataset ids for 'wfc3' since None
  Dumping dataset parameters for 'wfpc2' from CRDS server at 'https://hst-crds.stsci.edu'
  Downloaded  186480 dataset ids for 'wfpc2' since None"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
     default_shared_state.cleanup()
 
-
-# def test_bestrefs_datasets_since_auto_hst(default_shared_state, capsys):
-#     argv = """bestrefs.py --old-context hst.pmap --new-context data/hst_0001.pmap --hst --diffs-only --datasets-since=auto"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.complex_init()
-#     out, _ = capsys.readouterr()
-#     out_to_check = """CRDS - INFO -  Mapping differences from 'hst.pmap' --> 'data/hst_0001.pmap' affect:
-#  {'acs': ['biasfile']}
-# CRDS - INFO -  Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'data/hst_0001.pmap' are:
-#  {'acs': '1992-01-02 00:00:00'}
-# CRDS - INFO -  Computing bestrefs for db datasets for ['acs']
-# CRDS - INFO -  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'
-# CRDS - INFO -  Downloaded  221101 dataset ids for 'acs' since '1992-01-02 00:00:00'"""
-#     assert out_to_check in out
-#     default_shared_state.cleanup()
+@pytest.mark.bestrefs
+def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
+    argv = """bestrefs.py --old-context hst.pmap --new-context test/data/hst/hst_0001.pmap --hst --diffs-only --datasets-since=auto"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs = BestrefsScript(argv)
+        test_brs.complex_init()
+        out = caplog.text
+    out_to_check = """ Mapping differences from 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' affect:
+ {'acs': ['biasfile']}
+ Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' are:
+ {'acs': '1992-01-02 00:00:00'}
+ Computing bestrefs for db datasets for ['acs']
+ Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'
+ Downloaded  221121 dataset ids for 'acs' since '1992-01-02 00:00:00'"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
 # def test_bestrefs_dataset_drop_ids(default_shared_state, capsys):
