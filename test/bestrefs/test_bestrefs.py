@@ -29,48 +29,45 @@ log.THE_LOGGER.logger.propagate=True
 #    log.reset()
 
 
-# def test_warn_bad_context(caplog):
-#     """Test logs an error or warning if the named context is a known bad context."""
-#     # Send logs to stdout
-#     log.set_test_mode()
-#     check_msg = """CRDS - ERROR -  instrument='ALL' type='ALL' data='ALL' ::  jwst_miri_flat_0002.rmap"""
-#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --instruments miri"""
-#     with caplog.at_level(logging.WARNING, logger="CRDS"):
-#         test_brs = BestrefsScript(argv)
-#         test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
-#         out = caplog.text
-#     assert check_msg in out
-
-#     check_msg = """CRDS - WARNING -  jwst_miri_flat_0002.rmap = 'jwst_miri_0011.imap' is bad"""
-#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
-#     --allow-bad-rules"""
-#     with caplog.at_level(logging.WARNING, logger="CRDS"):
-#         test_brs = BestrefsScript(argv)
-#         test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
-#         out = caplog.text
-
-#     assert check_msg in out
-#     caplog.clear()
+@pytest.mark.bestrefs
+def test_warn_bad_context(capsys):
+    """Test logs an error or warning if the named context is a known bad context."""
+    # Send logs to stdout
+    log.set_test_mode()
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --instruments miri"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - ERROR -  instrument='ALL' type='ALL' data='ALL' ::  jwst_miri_flat_0002.rmap"""
+    assert check_msg in out
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
+    --allow-bad-rules"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_context('jwst_miri_flat_0002.rmap', 'jwst_miri_0011.imap', 'miri')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - WARNING -  jwst_miri_flat_0002.rmap = 'jwst_miri_0011.imap' is bad"""
+    assert check_msg in out
 
 
-# def test_warn_bad_reference(capsys):
-#     """Test logs an error or warning if the reference is a known bad reference."""
-#     # Send logs to stdout
-#     log.set_test_mode()
-#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --instruments miri"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap','miri', 'ANY', 'jwst_miri_flat_0002.rmap')
-#     out, _ = capsys.readouterr()
-#     check_msg = """CRDS - ERROR -  instrument='MIRI' type='ANY' data='jwst_miri_dark_0008.rmap'"""
-#     print(out)
-#     assert check_msg in out
-#     argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
-#     --allow-bad-references"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap', 'miri', 'ANY', 'jwst_miri_flat_0002.rmap')
-#     out, _ = capsys.readouterr()
-#     check_msg = """CRDS - WARNING -  For jwst_miri_dark_0008.rmap miri ANY File 'jwst_miri_flat_0002.rmap'"""
-#     assert check_msg in out
+@pytest.mark.bestrefs
+def test_warn_bad_reference(capsys):
+    """Test logs an error or warning if the reference is a known bad reference."""
+    # Send logs to stdout
+    log.set_test_mode()
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --instruments miri"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap','miri', 'ANY', 'jwst_miri_flat_0002.rmap')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - ERROR -  instrument='MIRI' type='ANY' data='jwst_miri_dark_0008.rmap'"""
+    print(out)
+    assert check_msg in out
+    argv = """crds.bestrefs -n jwst_1091.pmap -o jwst_1090.pmap --jwst --instruments miri
+    --allow-bad-references"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.warn_bad_reference('jwst_miri_dark_0008.rmap', 'miri', 'ANY', 'jwst_miri_flat_0002.rmap')
+    out, _ = capsys.readouterr()
+    check_msg = """CRDS - WARNING -  For jwst_miri_dark_0008.rmap miri ANY File 'jwst_miri_flat_0002.rmap'"""
+    assert check_msg in out
 
 
 @pytest.mark.bestrefs
