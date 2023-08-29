@@ -816,7 +816,7 @@ def test_drop_ids():
                          ])
 def test_normalized(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript()
     assert test_brs._normalized(line) == expected
 
 
@@ -827,7 +827,7 @@ def test_normalized(line, expected):
                          ])
 def test_locate_file(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript()
     assert test_brs.locate_file(line) == expected
 
 
@@ -863,7 +863,7 @@ def test_setup_contexts(hst_data):
     argv = f"""crds.bestrefs --diffs-only --new-context {hst_data}/hst_0001.pmap"""
     test_brs = br.BestrefsScript(argv)
     new, old = test_brs.setup_contexts()
-    assert new == 'data/hst_0001.pmap'
+    assert new == f'{hst_data}/hst_0001.pmap'
 
 
 @pytest.mark.bestrefs
@@ -934,109 +934,112 @@ def test_verbose_with_prefix(caplog, hst_data):
         assert msg.strip() in out
 
 
-
-# def test_screen_bestrefs(capsys):
-#     """Test checks for references that are atypical or known to be avoided."""
-#     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.skip_filekinds.append("brftab")
-#     # Send logs to stdout
-#     log.set_test_mode()
-#     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-#     tuple1, tuple2 = test_brs.screen_bestrefs('acs', 'data/j8bt05njq_raw.fits', bestrefs_dict)
-#     out, err = capsys.readouterr()
-#     check_msg1 = """type='BRFTAB' data='data/j8bt05njq_raw.fits' ::  Skipping type."""
-#     check_msg2 = """type='SEGMENT' data='data/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
-#     check_msg3 = """'WCPTAB' data='data/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
-#     assert check_msg1 in out
-#     assert check_msg2 in out
-#     assert check_msg3 in out
-#     assert tuple1[0] == 'acs'
-#     assert tuple1[1] == 'segment'
-#     assert tuple1[2] is None
-#     assert tuple1[3] == 'N/A'
-#     assert tuple2[0] == 'acs'
-#     assert tuple2[1] == 'wcptab'
-#     assert tuple2[2] is None
-#     assert tuple2[3] == 'XAF1429EL_WCP.FITS'
-
-
-# def test_handle_na_and_not_found(capsys):
-#     """Test obtains bestref if available and handles matched N/A or NOT FOUND references."""
-#     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     log.set_test_mode()
-#     # No match, => 'N/A'
-#     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-#     test_brs.handle_na_and_not_found('Old', bestrefs_dict, 'data/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
-#     out, _ = capsys.readouterr()
-#     msg_to_check = """Old No match found: 'UNDEFINED'  => 'N/A'"""
-#     assert msg_to_check in out
-#     # No match, without => 'N/A'
-#     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
-#     out, _ = capsys.readouterr()
-#     msg_to_check = """New No match found: 'UNDEFINED'"""
-#     msg_not_seen = """=> 'N/A'"""
-#     assert msg_to_check in out
-#     assert msg_not_seen not in out
-#     # Match, natural N/A
-#     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND N/A"}
-#     ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
-#                                                    'acs', 'jref$n4e12510j_crr.fits')
-#     assert ref_ok is True
-#     assert ref == 'N/A'
-#     # Match, Failed
-#     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND"}
-#     ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
-#                                                    'acs', 'jref$n4e12510j_crr.fits')
-#     out, _ = capsys.readouterr()
-#     msg_to_check = """New Bestref FAILED:"""
-#     assert msg_to_check in out
-#     # Match, good
-#     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "jref$n4e12510j_crr.fits"}
-#     ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
-#                                                    'acs', 'jref$n4e12510j_crr.fits')
-#     assert ref_ok is True
-#     assert ref == 'N4E12510J_CRR.FITS'
+@pytest.mark.bestrefs
+def test_screen_bestrefs(capsys, hst_data):
+    """Test checks for references that are atypical or known to be avoided."""
+    argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.skip_filekinds.append("brftab")
+    # Send logs to stdout
+    log.set_test_mode()
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
+    tuple1, tuple2 = test_brs.screen_bestrefs('acs', f'{hst_data}/j8bt05njq_raw.fits', bestrefs_dict)
+    out, _ = capsys.readouterr()
+    check_msg1 = f"""type='BRFTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Skipping type."""
+    check_msg2 = f"""type='SEGMENT' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
+    check_msg3 = f"""'WCPTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
+    assert check_msg1 in out
+    assert check_msg2 in out
+    assert check_msg3 in out
+    assert tuple1[0] == 'acs'
+    assert tuple1[1] == 'segment'
+    assert tuple1[2] is None
+    assert tuple1[3] == 'N/A'
+    assert tuple2[0] == 'acs'
+    assert tuple2[1] == 'wcptab'
+    assert tuple2[2] is None
+    assert tuple2[3] == 'XAF1429EL_WCP.FITS'
 
 
-# def test_unkilled_updates():
-#     """Test confirms that unkilled_updates returns a dict minus items found in kill_list."""
-#     argv = """crds.bestrefs --hst --verbosity=55"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.skip_filekinds.append("brftab")
-#     od_dict1 = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-#     od_dict2 = {"WCPTAB": "XAF1429EL_WCP.FITS"}
-#     od_dict3 = {'BRFTAB': 'N/A', 'SEGMENT': 'N/A'}
-#     test_brs.updates = od_dict1
-#     test_brs.kill_list = od_dict2
-#     assert test_brs.unkilled_updates == od_dict3
+@pytest.mark.bestrefs
+def test_handle_na_and_not_found(capsys, hst_data):
+    """Test obtains bestref if available and handles matched N/A or NOT FOUND references."""
+    argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    log.set_test_mode()
+    # No match, => 'N/A'
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
+    test_brs.handle_na_and_not_found('Old', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
+    out, _ = capsys.readouterr()
+    msg_to_check = """Old No match found: 'UNDEFINED'  => 'N/A'"""
+    assert msg_to_check in out
+    # No match, without => 'N/A'
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
+    out, _ = capsys.readouterr()
+    msg_to_check = """New No match found: 'UNDEFINED'"""
+    msg_not_seen = """=> 'N/A'"""
+    assert msg_to_check in out
+    assert msg_not_seen not in out
+    # Match, natural N/A
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND N/A"}
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits',
+                                                   'acs', 'jref$n4e12510j_crr.fits')
+    assert ref_ok is True
+    assert ref == 'N/A'
+    # Match, Failed
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND"}
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits',
+                                                   'acs', 'jref$n4e12510j_crr.fits')
+    out, _ = capsys.readouterr()
+    msg_to_check = """New Bestref FAILED:"""
+    assert msg_to_check in out
+    # Match, good
+    argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "jref$n4e12510j_crr.fits"}
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits',
+                                                   'acs', 'jref$n4e12510j_crr.fits')
+    assert ref_ok is True
+    assert ref == 'N4E12510J_CRR.FITS'
+
+@pytest.mark.bestrefs
+def test_unkilled_updates():
+    """Test confirms that unkilled_updates returns a dict minus items found in kill_list."""
+    argv = """crds.bestrefs --hst --verbosity=55"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.skip_filekinds.append("brftab")
+    od_dict1 = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
+    od_dict2 = {"WCPTAB": "XAF1429EL_WCP.FITS"}
+    od_dict3 = {'BRFTAB': 'N/A', 'SEGMENT': 'N/A'}
+    test_brs.updates = od_dict1
+    test_brs.kill_list = od_dict2
+    assert test_brs.unkilled_updates == od_dict3
 
 
-# def test_dataset_to_product_id():
-#     """Test confirms that product ID is returned by function."""
-#     argv = """crds.bestrefs --hst --verbosity=0"""
-#     test_brs = br.BestrefsScript(argv)
-#     dataset_to_test = 'icir09ehq:ICIR09EHQ'
-#     product_id = dataset_to_test.split(":")[0].lower()
-#     assert test_brs.dataset_to_product_id(dataset_to_test) == product_id
+@pytest.mark.bestrefs
+def test_dataset_to_product_id():
+    """Test confirms that product ID is returned by function."""
+    argv = """crds.bestrefs --hst --verbosity=0"""
+    test_brs = br.BestrefsScript(argv)
+    dataset_to_test = 'icir09ehq:ICIR09EHQ'
+    product_id = dataset_to_test.split(":")[0].lower()
+    assert test_brs.dataset_to_product_id(dataset_to_test) == product_id
 
 
-# def test_print_affected(capsys):
-#     """Test demonstrates that print_affected prints the product ids found in unkilled updates."""
-#     """Difficult to test the logger since the print to stdout comes first."""
-#     argv = """crds.bestrefs --hst --verbosity=0"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.updates = {"icir09ehq:icir09ehq": "icir09ehq", "20220618T005802:20220618T005802": "20220618T005802"}
-#     test_brs.print_affected()
-#     msg_to_check = """20220618t005802\nicir09ehq\n"""
-#     out, _ = capsys.readouterr()
-#     assert out == msg_to_check
+@pytest.mark.bestrefs
+def test_print_affected(capsys):
+    """Test demonstrates that print_affected prints the product ids found in unkilled updates."""
+    """Difficult to test the logger since the print to stdout comes first."""
+    argv = """crds.bestrefs --hst --verbosity=0"""
+    test_brs = br.BestrefsScript(argv)
+    test_brs.updates = {"icir09ehq:icir09ehq": "icir09ehq", "20220618T005802:20220618T005802": "20220618T005802"}
+    test_brs.print_affected()
+    msg_to_check = """20220618t005802\nicir09ehq\n"""
+    out, _ = capsys.readouterr()
+    assert out == msg_to_check
