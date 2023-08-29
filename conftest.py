@@ -149,7 +149,26 @@ def jwst_serverless_state(crds_shared_group_cache):
     )
     cfg.config_setup()
     return cfg
-    
+
+@fixture(scope='function')
+def hst_serverless_state(crds_shared_group_cache):
+    cfg = ConfigState(
+        cache=crds_shared_group_cache,
+        url="https://hst-serverless-mode.stsci.edu",
+        observatory="hst"
+    )
+    cfg.config_setup()
+    return cfg
+
+@fixture(scope='function')
+def roman_serverless_state(crds_shared_group_cache):
+    cfg = ConfigState(
+        cache=crds_shared_group_cache,
+        url="https://roman-crds-serverless.stsci.edu",
+        observatory="roman"
+    )
+    cfg.config_setup()
+    return cfg
 
 
 # ==============================================================================
