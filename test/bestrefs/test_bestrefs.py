@@ -210,44 +210,47 @@ def test_bestrefs_catalog_dataset(default_shared_state, caplog):
     default_shared_state.cleanup()
 
 
+@pytest.mark.bestrefs
 def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
-    argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap  --old-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits
+    argv = f"""bestrefs.py --new-context hst_0001.pmap  --old-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits
     {hst_data}/j8bt06o6q_raw.fits {hst_data}/j8bt09jcq_raw.fits"""
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    out_to_check = f"""CRDS - INFO -  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
-CRDS - INFO -  ===> Processing {hst_data}/j8bt05njq_raw.fits
-CRDS - INFO -  ===> Processing {hst_data}/j8bt06o6q_raw.fits
-CRDS - INFO -  ===> Processing {hst_data}/j8bt09jcq_raw.fits
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  4 infos"""
+    out_to_check = f""" No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
+ ===> Processing {hst_data}/j8bt05njq_raw.fits
+ ===> Processing {hst_data}/j8bt06o6q_raw.fits
+ ===> Processing {hst_data}/j8bt09jcq_raw.fits
+ 0 errors
+ 0 warnings
+ 4 infos"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
     default_shared_state.cleanup()
 
 
-# def test_bestrefs_all_instruments_hst(default_shared_state, capsys):
-#     argv = """bestrefs.py --new-context data/hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
-#     test_brs = br.BestrefsScript(argv)
-#     test_brs.complex_init()
-#     out, _ = capsys.readouterr()
-#     out_to_check = """CRDS - INFO -  Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
-# CRDS - INFO -  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu'
-# CRDS - INFO -  Downloaded  221101 dataset ids for 'acs' since None
-# CRDS - INFO -  Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
-# CRDS - INFO -  Downloaded  54271 dataset ids for 'cos' since None
-# CRDS - INFO -  Dumping dataset parameters for 'nicmos' from CRDS server at 'https://hst-crds.stsci.edu'
-# CRDS - INFO -  Downloaded  282999 dataset ids for 'nicmos' since None
-# CRDS - INFO -  Dumping dataset parameters for 'stis' from CRDS server at 'https://hst-crds.stsci.edu'
-# CRDS - INFO -  Downloaded  478619 dataset ids for 'stis' since None
-# CRDS - INFO -  Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu'
-# CRDS - INFO -  Downloaded  339162 dataset ids for 'wfc3' since None
-# CRDS - INFO -  Dumping dataset parameters for 'wfpc2' from CRDS server at 'https://hst-crds.stsci.edu'
-# CRDS - INFO -  Downloaded  186480 dataset ids for 'wfpc2' since None"""
-#     assert out_to_check in out
-#     default_shared_state.cleanup()
+def test_bestrefs_all_instruments_hst(default_shared_state, caplog):
+    argv = """bestrefs.py --new-context hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs = BestrefsScript(argv)
+        test_brs.complex_init()
+        out = caplog.text
+    out_to_check = """ Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
+ Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  221101 dataset ids for 'acs' since None
+ Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  54271 dataset ids for 'cos' since None
+ Dumping dataset parameters for 'nicmos' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  282999 dataset ids for 'nicmos' since None
+ Dumping dataset parameters for 'stis' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  478619 dataset ids for 'stis' since None
+ Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  339162 dataset ids for 'wfc3' since None
+ Dumping dataset parameters for 'wfpc2' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  186480 dataset ids for 'wfpc2' since None"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
 # def test_bestrefs_datasets_since_auto_hst(default_shared_state, capsys):
