@@ -191,6 +191,8 @@ def roman_serverless_state(crds_shared_group_cache):
 @fixture(scope='function')
 def broken_state():
     cfg = ConfigState(cache="/nowhere", url="https://server-is-out-of-town")
+    cfg.config_setup()
+    return cfg
 
  
 # ==============================================================================
