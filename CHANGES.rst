@@ -4,7 +4,7 @@
 JWST
 ----
 
-- Added new rmap nirspec outlier detection [#946]
+- Added new rmap nirspec outlier detection [#950]
 
 11.17.4 (2023-08-28)
 =====================
