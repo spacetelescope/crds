@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Copied from miri_pars-outlierdetectionstep.rmap 20230831',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-outlierdetectionstep',
+    'filetype' : 'pars-outlierdetectionstep',
+    'instrument' : 'NIRSpec',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pars-outlierdetectionstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.SUBARRAY.NAME', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '2d2e6bbe9ac34b7b5994aa5412652312d27e00c2',
+    'suffix' : 'pars-outlierdetectionstep',
+    'text_descr' : 'OutlierDetectionStep runtime parameters',
+}
+
+selector = Match({
+})
