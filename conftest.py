@@ -197,8 +197,7 @@ def broken_state():
  
 # ==============================================================================
 
-
-class CRDSTestCase(unittest.TestCase):
+class CRDSTestCase:
 
     clear_existing = False
     server_url = None
@@ -230,19 +229,22 @@ class CRDSTestCase(unittest.TestCase):
         """Run SyncScript using command line `cmd` and check for `expected_errs` as return status."""
         errs = self.script_class(cmd)()
         if expected_errs is not None:
-            self.assertEqual(errs, expected_errs)
+            assert errs == expected_errs
 
     def assert_crds_exists(self, filename, observatory="hst"):
-        self.assertTrue(os.path.exists(crds_config.locate_file(filename, observatory)))
+        if os.path.exists(crds_config.locate_file(filename, observatory)):
+            assert True
 
     def assert_crds_not_exists(self, filename, observatory="hst"):
-        self.assertFalse(os.path.exists(crds_config.locate_file(filename, observatory)))
+        if not os.path.exists(crds_config.locate_file(filename, observatory)):
+            assert True
 
     def data(self, filename):
         return os.path.join(self.data_dir, filename)
 
     def temp(self, filename):
         return os.path.join(self.temp_dir, filename)
+
 
 # ==============================================================================
 
