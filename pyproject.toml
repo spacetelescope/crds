@@ -158,6 +158,7 @@ markers = [
   "core: tests in the crds.core module",
   "heavy_client",
   "substitutions",
+  "bestrefs",
 ]
 
 [tool.setuptools_scm]

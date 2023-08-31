@@ -1,40 +1,20 @@
 import pytest
 import os, os.path
 import json
-#import sys
-#import re
 import datetime
 import shutil
-#import crds
-#import logging
-#from crds.hst import locate
-from crds.core import log#, config, utils, timestamp, cmdline, heavy_client
-#from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
-#from crds.client import api
+from crds.core import log
 from crds.bestrefs import bestrefs as br
-#from crds.core.timestamp import format_date, parse_date
-#from astropy.time import Time
-#from collections import namedtuple, OrderedDict
 from crds.bestrefs import BestrefsScript
 from crds import assign_bestrefs
-from crds.tests import test_config
+from crds.hst.locate import header_to_reftypes as hst_header_to_reftypes
+from crds.tobs.locate import header_to_reftypes as tobs_header_to_reftypes
+from crds.jwst.locate import header_to_reftypes as jwst_header_to_reftypes
+import logging
+log.THE_LOGGER.logger.propagate=True
 
 
-@pytest.fixture(autouse=True)
-def reset_log():
-   yield
-   log.reset()
-
-
-# Would like to add a fixture that runs setup and cleanup before and after a test respectively but doesn't seem
-# to work with capsys very well.
-# @pytest.fixture(autouse=True, scope="session")
-# def set_config():
-#     old_state = test_config.setup()
-#     yield old_state
-#     test_config.cleanup(old_state)
-
-
+@pytest.mark.bestrefs
 def test_warn_bad_context(capsys):
     """Test logs an error or warning if the named context is a known bad context."""
     # Send logs to stdout
@@ -54,6 +34,7 @@ def test_warn_bad_context(capsys):
     assert check_msg in out
 
 
+@pytest.mark.bestrefs
 def test_warn_bad_reference(capsys):
     """Test logs an error or warning if the reference is a known bad reference."""
     # Send logs to stdout
@@ -74,333 +55,364 @@ def test_warn_bad_reference(capsys):
     assert check_msg in out
 
 
-def test_bestrefs_3_files(capsys):
+@pytest.mark.bestrefs
+def test_bestrefs_3_files(default_shared_state, caplog, hst_data):
     """Test computes simple bestefs for 3 files."""
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits
-           data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits"""
-    br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  No comparison context or source comparison requested.
-CRDS - INFO -  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
-CRDS - INFO -  ===> Processing data/j8bt05njq_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt06o6q_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt09jcq_raw.fits
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  5 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+    out_to_check = f""" No comparison context or source comparison requested.
+     No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
+     ===> Processing {hst_data}/j8bt05njq_raw.fits
+     ===> Processing {hst_data}/j8bt06o6q_raw.fits
+     ===> Processing {hst_data}/j8bt09jcq_raw.fits
+     0 errors
+     0 warnings
+     5 infos"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        argv = f"""bestrefs.py --new-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits
+            {hst_data}/j8bt06o6q_raw.fits {hst_data}/j8bt09jcq_raw.fits"""
+        BestrefsScript(argv)()
+        out = caplog.text
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
-
-def test_bestrefs_compare_source_files(capsys):
+@pytest.mark.bestrefs
+def test_bestrefs_compare_source_files(default_shared_state, caplog, hst_data):
     """Test prints files with at least one reference change."""
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits
-    data/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs"""
-    br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
-CRDS - INFO -  ===> Processing data/j8bt05njq_raw.fits
-CRDS - INFO -  instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
-CRDS - INFO -  instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n/a' --> 'v9718263j_npl.fits' :: Would update.
-CRDS - INFO -  instrument='ACS' type='SHADFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  ===> Processing data/j8bt06o6q_raw.fits
-CRDS - INFO -  instrument='ACS' type='ATODTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  instrument='ACS' type='CRREJTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
-CRDS - INFO -  instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n/a' --> 'v9718264j_npl.fits' :: Would update.
-CRDS - INFO -  instrument='ACS' type='SHADFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  ===> Processing data/j8bt09jcq_raw.fits
-CRDS - INFO -  instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
-CRDS - INFO -  instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'n/a' --> 'v9718260j_npl.fits' :: Would update.
-CRDS - INFO -  instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-CRDS - INFO -  Affected products = 3
-data/j8bt05njq_raw.fits
-data/j8bt06o6q_raw.fits
-data/j8bt09jcq_raw.fits
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  19 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+    argv = f"""bestrefs.py --new-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits {hst_data}/j8bt06o6q_raw.fits
+    {hst_data}/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = f""" No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
+ ===> Processing {hst_data}/j8bt05njq_raw.fits
+ instrument='ACS' type='ATODTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+ instrument='ACS' type='CRREJTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
+ instrument='ACS' type='IMPHTTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
+ instrument='ACS' type='NPOLFILE' data='{hst_data}/j8bt05njq_raw.fits' ::  New best reference: 'n/a' --> 'v9718263j_npl.fits' :: Would update.
+  instrument='ACS' type='SHADFILE' data='{hst_data}/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+  ===> Processing {hst_data}/j8bt06o6q_raw.fits
+ instrument='ACS' type='ATODTAB' data='{hst_data}/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+ instrument='ACS' type='CRREJTAB' data='{hst_data}/j8bt06o6q_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
+ instrument='ACS' type='IMPHTTAB' data='{hst_data}/j8bt06o6q_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
+ instrument='ACS' type='NPOLFILE' data='{hst_data}/j8bt06o6q_raw.fits' ::  New best reference: 'n/a' --> 'v9718264j_npl.fits' :: Would update.
+ instrument='ACS' type='SHADFILE' data='{hst_data}/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+ ===> Processing {hst_data}/j8bt09jcq_raw.fits
+ instrument='ACS' type='ATODTAB' data='{hst_data}/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+ instrument='ACS' type='IMPHTTAB' data='{hst_data}/j8bt09jcq_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
+ instrument='ACS' type='NPOLFILE' data='{hst_data}/j8bt09jcq_raw.fits' ::  New best reference: 'n/a' --> 'v9718260j_npl.fits' :: Would update.
+ instrument='ACS' type='SHADFILE' data='{hst_data}/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+ Affected products = 3
+ {hst_data}/j8bt05njq_raw.fits
+ {hst_data}/j8bt06o6q_raw.fits
+ {hst_data}/j8bt09jcq_raw.fits
+ 0 errors
+ 0 warnings
+ 19 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_3_files_default_context_from_server(capsys):
+@pytest.mark.bestrefs
+def test_bestrefs_3_files_default_context_from_server(default_shared_state, caplog, hst_data):
     """Test computes simple bestrefs for 3 files using the default context from the server."""
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context=hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits
-     data/j8bt09jcq_raw.fits"""
-    br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  No comparison context or source comparison requested.
-CRDS - INFO -  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
-CRDS - INFO -  ===> Processing data/j8bt05njq_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt06o6q_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt09jcq_raw.fits
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  5 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+    argv = f"""bestrefs.py --new-context=hst.pmap --files {hst_data}/j8bt05njq_raw.fits {hst_data}/j8bt06o6q_raw.fits
+     {hst_data}/j8bt09jcq_raw.fits"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+
+    out_to_check = f""" No comparison context or source comparison requested.
+ No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
+ ===> Processing {hst_data}/j8bt05njq_raw.fits
+ ===> Processing {hst_data}/j8bt06o6q_raw.fits
+ ===> Processing {hst_data}/j8bt09jcq_raw.fits
+ 0 errors
+ 0 warnings
+ 5 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_broken_dataset_file(capsys):
+@pytest.mark.bestrefs
+def test_bestrefs_broken_dataset_file(default_shared_state, caplog, hst_data):
     """Test tests error status when one broken file is included."""
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt05njq_raw_broke.fits
-    data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits"""
-    br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  No comparison context or source comparison requested.
-CRDS - INFO -  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
-CRDS - INFO -  ===> Processing data/j8bt05njq_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt05njq_raw_broke.fits
-CRDS - ERROR -  instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D']
-CRDS - INFO -  ===> Processing data/j8bt06o6q_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt09jcq_raw.fits
-CRDS - INFO -  1 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  6 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+    argv = f"""bestrefs.py --new-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits {hst_data}/j8bt05njq_raw_broke.fits
+    {hst_data}/j8bt06o6q_raw.fits {hst_data}/j8bt09jcq_raw.fits"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = f""" No comparison context or source comparison requested.
+ No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
+ ===> Processing {hst_data}/j8bt05njq_raw.fits
+ ===> Processing {hst_data}/j8bt05njq_raw_broke.fits
+ instrument='ACS' type='BIASFILE' data='{hst_data}/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D']
+ ===> Processing {hst_data}/j8bt06o6q_raw.fits
+ ===> Processing {hst_data}/j8bt09jcq_raw.fits
+ 1 errors
+ 0 warnings
+ 6 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-# Hard to test due to failures
-# def test_bestrefs_broken_cache_and_server(capsys):
-#     """Test """
-#     old_state = test_config.setup(cache="/nowhere", url="https://server-is-out-of-town")
-#     argv = """bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits"""
-#     try:
-#         br.BestrefsScript(argv)()
-#     except OSError as e:
-#         pass
-#     out, err = capsys.readouterr()
-#     #print(err)
-# #    out_to_check = “”””””
-# #    assert out_to_check in out
-# #    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_broken_cache_and_server(broken_state, caplog, hst_data):
+    """Test """
+    argv = f"""bestrefs.py --new-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            BestrefsScript(argv)()
+            assert pytest_wrapped_e.type == SystemExit
+        out = caplog.text
+        
+    out_to_check = """ (FATAL) CRDS server connection and cache load FAILED.  Cannot continue.
+ See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/
+ for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL. : [Errno 2] No such file or directory: '/nowhere/config/hst/server_config'"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    broken_state.cleanup()
 
 
-def test_bestrefs_catalog_dataset(capsys):
-    old_state = test_config.setup()
+@pytest.mark.bestrefs
+def test_bestrefs_catalog_dataset(default_shared_state, caplog):
     argv = """bestrefs.py --new-context hst.pmap --hst --datasets LB6M01030"""
-    br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['LB6M01030']
-CRDS - INFO -  Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Computing bestrefs for datasets ['LB6M01030']
-CRDS - INFO -  No comparison context or source comparison requested.
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  4 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = """ Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['LB6M01030']
+ Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
+ Computing bestrefs for datasets ['LB6M01030']
+ No comparison context or source comparison requested.
+ 0 errors
+ 0 warnings
+ 4 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_context_to_context(capsys):
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --files data/j8bt05njq_raw.fits
-    data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits"""
-    br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
-CRDS - INFO -  ===> Processing data/j8bt05njq_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt06o6q_raw.fits
-CRDS - INFO -  ===> Processing data/j8bt09jcq_raw.fits
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  4 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
+    argv = f"""bestrefs.py --new-context hst_0001.pmap  --old-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits
+    {hst_data}/j8bt06o6q_raw.fits {hst_data}/j8bt09jcq_raw.fits"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = f""" No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
+ ===> Processing {hst_data}/j8bt05njq_raw.fits
+ ===> Processing {hst_data}/j8bt06o6q_raw.fits
+ ===> Processing {hst_data}/j8bt09jcq_raw.fits
+ 0 errors
+ 0 warnings
+ 4 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_all_instruments_hst(capsys):
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context data/hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.complex_init()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
-CRDS - INFO -  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Downloaded  221101 dataset ids for 'acs' since None
-CRDS - INFO -  Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Downloaded  54271 dataset ids for 'cos' since None
-CRDS - INFO -  Dumping dataset parameters for 'nicmos' from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Downloaded  282999 dataset ids for 'nicmos' since None
-CRDS - INFO -  Dumping dataset parameters for 'stis' from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Downloaded  478619 dataset ids for 'stis' since None
-CRDS - INFO -  Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Downloaded  339162 dataset ids for 'wfc3' since None
-CRDS - INFO -  Dumping dataset parameters for 'wfpc2' from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Downloaded  186480 dataset ids for 'wfpc2' since None"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
+    argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs = BestrefsScript(argv)
+        test_brs.complex_init()
+        out = caplog.text
+    out_to_check = """ Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
+ Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  221121 dataset ids for 'acs' since None
+ Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  54302 dataset ids for 'cos' since None
+ Dumping dataset parameters for 'nicmos' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  282999 dataset ids for 'nicmos' since None
+ Dumping dataset parameters for 'stis' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  478767 dataset ids for 'stis' since None
+ Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  339256 dataset ids for 'wfc3' since None
+ Dumping dataset parameters for 'wfpc2' from CRDS server at 'https://hst-crds.stsci.edu'
+ Downloaded  186480 dataset ids for 'wfpc2' since None"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_datasets_since_auto_hst(capsys):
-    old_state = test_config.setup()
-    argv = """bestrefs.py --old-context hst.pmap --new-context data/hst_0001.pmap --hst --diffs-only --datasets-since=auto"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.complex_init()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  Mapping differences from 'hst.pmap' --> 'data/hst_0001.pmap' affect:
+@pytest.mark.bestrefs
+def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
+    argv = """bestrefs.py --old-context hst.pmap --new-context test/data/hst/hst_0001.pmap --hst --diffs-only --datasets-since=auto"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs = BestrefsScript(argv)
+        test_brs.complex_init()
+        out = caplog.text
+    out_to_check = """ Mapping differences from 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' affect:
  {'acs': ['biasfile']}
-CRDS - INFO -  Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'data/hst_0001.pmap' are:
+ Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' are:
  {'acs': '1992-01-02 00:00:00'}
-CRDS - INFO -  Computing bestrefs for db datasets for ['acs']
-CRDS - INFO -  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'
-CRDS - INFO -  Downloaded  221101 dataset ids for 'acs' since '1992-01-02 00:00:00'"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+ Computing bestrefs for db datasets for ['acs']
+ Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'
+ Downloaded  221121 dataset ids for 'acs' since '1992-01-02 00:00:00'"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_dataset_drop_ids(capsys):
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --load-pickle data/test_cos.json --drop-ids LCE31SW6Q:LCE31SW6Q"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.complex_init()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  Loading file 'data/test_cos.json'
-CRDS - INFO -  Loaded 1 datasets from file 'data/test_cos.json' completely replacing existing headers."""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_dataset_drop_ids(default_shared_state, caplog, hst_data):
+    argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap  --old-context hst.pmap --load-pickle {hst_data}/test_cos.json --drop-ids LCE31SW6Q:LCE31SW6Q"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"): 
+        test_brs = BestrefsScript(argv)
+        test_brs.complex_init()
+        out = caplog.text
+    out_to_check = f""" Loading file '{hst_data}/test_cos.json'
+ Loaded 1 datasets from file '{hst_data}/test_cos.json' completely replacing existing headers."""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_dataset_only_ids(capsys):
-    old_state = test_config.setup()
-    argv = """bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --load-pickle data/test_cos.json --only-ids LPPPPPP6Q:LCE31SW6Q"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.complex_init()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  Loading file 'data/test_cos.json'
-CRDS - INFO -  Loaded 1 datasets from file 'data/test_cos.json' completely replacing existing headers."""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_dataset_only_ids(default_shared_state, caplog, hst_data):
+    argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap  --old-context hst.pmap --load-pickle {hst_data}/test_cos.json --only-ids LPPPPPP6Q:LCE31SW6Q"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs = BestrefsScript(argv)
+        test_brs.complex_init()
+        out = caplog.text
+    out_to_check = f""" Loading file '{hst_data}/test_cos.json'
+ Loaded 1 datasets from file '{hst_data}/test_cos.json' completely replacing existing headers."""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_compare_source_canary(capsys):
-    old_state = test_config.setup()
-    argv = """crds.bestrefs --new-context hst_0551.pmap --compare-source --load-pickles data/canary.json --differences-are-errors --hst"""
-    test_brs = br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  Loading file 'data/canary.json'
-CRDS - INFO -  Loaded 1 datasets from file 'data/canary.json' completely replacing existing headers.
-CRDS - ERROR -  instrument='COS' type='BPIXTAB' data='LA7803FIQ' ::  Comparison difference: 'bar.fits' --> 'yae1249sl_bpix.fits' :: Would update.
-CRDS - ERROR -  instrument='COS' type='XWLKFILE' data='LA7803FIQ' ::  Comparison difference: 'foo.fits' --> '14o2013ql_xwalk.fits' :: Would update.
-CRDS - INFO -  2 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  2 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_compare_source_canary(default_shared_state, caplog, hst_data):
+    argv = f"""crds.bestrefs --new-context hst_0551.pmap --compare-source --load-pickles {hst_data}/canary.json --differences-are-errors --hst"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs = BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = f""" Loading file '{hst_data}/canary.json'
+ Loaded 1 datasets from file '{hst_data}/canary.json' completely replacing existing headers.
+ instrument='COS' type='BPIXTAB' data='LA7803FIQ' ::  Comparison difference: 'bar.fits' --> 'yae1249sl_bpix.fits' :: Would update.
+ instrument='COS' type='XWLKFILE' data='LA7803FIQ' ::  Comparison difference: 'foo.fits' --> '14o2013ql_xwalk.fits' :: Would update.
+ 2 errors
+ 0 warnings
+ 2 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
-def test_bestrefs_donotreprocess_datasets(capsys):
-    old_state = test_config.setup()
+
+@pytest.mark.bestrefs
+def test_bestrefs_donotreprocess_datasets(default_shared_state, caplog):
     argv = """crds.bestrefs --old-context hst_0628.pmap --new-context hst_0633.pmap --hst --datasets JA9553LVQ JBBGRCGFQ"""
-    test_brs = br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - INFO -  Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['JA9553LVQ', 'JBBGRCGFQ']
-CRDS - INFO -  Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS - INFO -  Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  3 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = """ Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['JA9553LVQ', 'JBBGRCGFQ']
+ Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds.stsci.edu'
+ Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
+ 0 errors
+ 0 warnings
+ 3 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_donotreprocess_fix(capsys):
-    old_state = test_config.setup()
-    argv = """crds.bestrefs --hst --old-context hst_0628.pmap --new-context hst_0633.pmap --print-affected --load-pickle data/bestrefs_dnr_fix.json --verbosity=30"""
-    test_brs = br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - DEBUG -  Command: ['crds.bestrefs', '--hst', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', 'data/bestrefs_dnr_fix.json', '--verbosity=30']
-CRDS - DEBUG -  Using explicit new context 'hst_0633.pmap' for computing updated best references.
-CRDS - DEBUG -  Using explicit old context 'hst_0628.pmap'
-CRDS - INFO -  Loading file 'data/bestrefs_dnr_fix.json'
-CRDS - INFO -  Loaded 1 datasets from file 'data/bestrefs_dnr_fix.json' completely replacing existing headers.
-CRDS - DEBUG -  ===> Processing JA9553M3Q:JA9553M3Q
-CRDS - DEBUG -  instrument='ACS' type='ATODTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='BIASFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='BPIXTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 't3n1116nj_bpx.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='CCDTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'uc82140bj_ccd.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='CFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='CRREJTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='D2IMFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - INFO -  instrument='ACS' type='DARKFILE' data='JA9553M3Q:JA9553M3Q' ::  New best reference: '1ag2019jj_drk.fits' --> '25815071j_drk.fits' :: Would update.
-CRDS - DEBUG -  instrument='ACS' type='DGEOFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'qbu16423j_dxy.fits' :: No update.
-CRDS - INFO -  instrument='ACS' type='DRKCFILE' data='JA9553M3Q:JA9553M3Q' ::  New best reference: '1ag20119j_dkc.fits' --> '2581508ij_dkc.fits' :: Would update.
-CRDS - DEBUG -  instrument='ACS' type='FLSHFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='IDCTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '0461802dj_idc.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='IMPHTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='MDRIZTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='MLINTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='NPOLFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='OSCNTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '17717071j_osc.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='PCTETAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '19i16323j_cte.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='PFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='SHADFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='SNKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='SPOTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - INFO -  Affected products = 1
-ja9553m3q
-CRDS - DEBUG -  1 sources processed
-CRDS - DEBUG -  1 source updates
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  5 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_donotreprocess_fix(default_shared_state, caplog, hst_data):
+    argv = f"""crds.bestrefs --hst --old-context hst_0628.pmap --new-context hst_0633.pmap --print-affected --load-pickle {hst_data}/bestrefs_dnr_fix.json --verbosity=30"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = f""" Command: ['crds.bestrefs', '--hst', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', '{hst_data}/bestrefs_dnr_fix.json', '--verbosity=30']
+ Using explicit new context 'hst_0633.pmap' for computing updated best references.
+ Using explicit old context 'hst_0628.pmap'
+ Loading file '{hst_data}/bestrefs_dnr_fix.json'
+ Loaded 1 datasets from file '{hst_data}/bestrefs_dnr_fix.json' completely replacing existing headers.
+ ===> Processing JA9553M3Q:JA9553M3Q
+ instrument='ACS' type='ATODTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='BIASFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='BPIXTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 't3n1116nj_bpx.fits' :: No update.
+ instrument='ACS' type='CCDTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'uc82140bj_ccd.fits' :: No update.
+ instrument='ACS' type='CFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='CRREJTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='D2IMFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='DARKFILE' data='JA9553M3Q:JA9553M3Q' ::  New best reference: '1ag2019jj_drk.fits' --> '25815071j_drk.fits' :: Would update.
+ instrument='ACS' type='DGEOFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'qbu16423j_dxy.fits' :: No update.
+ instrument='ACS' type='DRKCFILE' data='JA9553M3Q:JA9553M3Q' ::  New best reference: '1ag20119j_dkc.fits' --> '2581508ij_dkc.fits' :: Would update.
+ instrument='ACS' type='FLSHFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='IDCTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '0461802dj_idc.fits' :: No update.
+ instrument='ACS' type='IMPHTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='MDRIZTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='MLINTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='NPOLFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='OSCNTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '17717071j_osc.fits' :: No update.
+ instrument='ACS' type='PCTETAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '19i16323j_cte.fits' :: No update.
+ instrument='ACS' type='PFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='SHADFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='SNKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='SPOTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ Affected products = 1
+ 1 sources processed
+ 1 source updates
+ 0 errors
+ 0 warnings
+ 5 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_bestrefs_multiple_updates_with_error(capsys):
-    old_state = test_config.setup()
-    argv = """crds.bestrefs --hst --old-context hst_0628.pmap --new-context hst_0633.pmap --print-affected --load-pickle data/bestrefs_new_error.json --verbosity=30"""
-    test_brs = br.BestrefsScript(argv)()
-    out, _ = capsys.readouterr()
-    out_to_check = """CRDS - DEBUG -  Command: ['crds.bestrefs', '--hst', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', 'data/bestrefs_new_error.json', '--verbosity=30']
-CRDS - DEBUG -  Using explicit new context 'hst_0633.pmap' for computing updated best references.
-CRDS - DEBUG -  Using explicit old context 'hst_0628.pmap'
-CRDS - INFO -  Loading file 'data/bestrefs_new_error.json'
-CRDS - INFO -  Loaded 1 datasets from file 'data/bestrefs_new_error.json' completely replacing existing headers.
-CRDS - DEBUG -  ===> Processing JA9553M3Q:JA9553M3Q
-CRDS - DEBUG -  instrument='ACS' type='ATODTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - ERROR -  instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  Old: Bestref FAILED:   parameter='CCDGAIN' value='2.4' is not in ['0.5', '1.0', '1.4', '2.0', '4.0', '8.0']
-CRDS - ERROR -  instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  New: Bestref FAILED:   parameter='CCDGAIN' value='2.4' is not in ['1.0', '2.0', '4.0', '8.0']
-CRDS - DEBUG -  instrument='ACS' type='BPIXTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 't3n1116nj_bpx.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='CCDTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'uc82140bj_ccd.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='CFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='CRREJTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='D2IMFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='DARKFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='DGEOFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'qbu16423j_dxy.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='DRKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='FLSHFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='IDCTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '0461802dj_idc.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='IMPHTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='MDRIZTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='MLINTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='NPOLFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='OSCNTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '17717071j_osc.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='PCTETAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '19i16323j_cte.fits' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='PFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='SHADFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='SNKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - DEBUG -  instrument='ACS' type='SPOTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
-CRDS - INFO -  Affected products = 0
-CRDS - DEBUG -  1 sources processed
-CRDS - DEBUG -  0 source updates
-CRDS - INFO -  2 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  3 infos"""
-    assert out_to_check in out
-    test_config.cleanup(old_state)
+@pytest.mark.bestrefs
+def test_bestrefs_multiple_updates_with_error(default_shared_state, caplog, hst_data):
+    argv = f"""crds.bestrefs --hst --old-context hst_0628.pmap --new-context hst_0633.pmap --print-affected --load-pickle {hst_data}/bestrefs_new_error.json --verbosity=30"""
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        BestrefsScript(argv)()
+        out = caplog.text
+    out_to_check = f""" Command: ['crds.bestrefs', '--hst', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', '{hst_data}/bestrefs_new_error.json', '--verbosity=30']
+ Using explicit new context 'hst_0633.pmap' for computing updated best references.
+ Using explicit old context 'hst_0628.pmap'
+ Loading file '{hst_data}/bestrefs_new_error.json'
+ Loaded 1 datasets from file '{hst_data}/bestrefs_new_error.json' completely replacing existing headers.
+ ===> Processing JA9553M3Q:JA9553M3Q
+ instrument='ACS' type='ATODTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  Old: Bestref FAILED:   parameter='CCDGAIN' value='2.4' is not in ['0.5', '1.0', '1.4', '2.0', '4.0', '8.0']
+ instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  New: Bestref FAILED:   parameter='CCDGAIN' value='2.4' is not in ['1.0', '2.0', '4.0', '8.0']
+ instrument='ACS' type='BPIXTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 't3n1116nj_bpx.fits' :: No update.
+ instrument='ACS' type='CCDTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'uc82140bj_ccd.fits' :: No update.
+ instrument='ACS' type='CFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='CRREJTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='D2IMFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='DARKFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='DGEOFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'qbu16423j_dxy.fits' :: No update.
+ instrument='ACS' type='DRKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='FLSHFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='IDCTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '0461802dj_idc.fits' :: No update.
+ instrument='ACS' type='IMPHTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='MDRIZTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='MLINTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='NPOLFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='OSCNTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '17717071j_osc.fits' :: No update.
+ instrument='ACS' type='PCTETAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: '19i16323j_cte.fits' :: No update.
+ instrument='ACS' type='PFLTFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='SHADFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='SNKCFILE' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ instrument='ACS' type='SPOTTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
+ Affected products = 0
+ 1 sources processed
+ 0 source updates
+ 2 errors
+ 0 warnings
+ 3 infos"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
+    default_shared_state.cleanup()
 
 
-def test_cleanpath(capsys):
+@pytest.mark.bestrefs
+def test_cleanpath():
     """Test removes prefixes added to reference files prior to writing into FITS headers."""
     assert br.cleanpath('jref$foo.fits') == 'foo.fits'
     assert br.cleanpath('crds://foo.fits') == 'foo.fits'
@@ -408,16 +420,14 @@ def test_cleanpath(capsys):
     assert br.cleanpath('something/foo.fits') == 'something/foo.fits'
 
 
+@pytest.mark.bestrefs
 def test_hst_tobs_header_to_reftypes(capsys):
     """Test demonstrates header_to_reftypes will get reftypes to list form."""
-    from crds.hst.locate import header_to_reftypes
-    assert header_to_reftypes({}, "hst.pmap") == []
-    from crds.tobs.locate import header_to_reftypes
-    assert header_to_reftypes({}, "tobs.pmap") == []
-    from crds.jwst.locate import header_to_reftypes
+    assert hst_header_to_reftypes({}, "hst.pmap") == []
+    assert tobs_header_to_reftypes({}, "tobs.pmap") == []
     ref_to_c = ['ipc', 'linearity', 'mask', 'refpix', 'rscd', 'saturation', 'superbias']
-    assert header_to_reftypes({"EXP_TYPE": "MIR_DARK", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == ref_to_c
-    assert header_to_reftypes({"EXP_TYPE": "NIR_IMAGE", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == []
+    assert jwst_header_to_reftypes({"EXP_TYPE": "MIR_DARK", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == ref_to_c
+    assert jwst_header_to_reftypes({"EXP_TYPE": "NIR_IMAGE", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == []
     out, _ = capsys.readouterr()
     out_to_check = """CRDS - WARNING -  Failed determining reftypes for {'CAL_VER': '0.7.0', 'EXP_TYPE': 'NIR_IMAGE'} : "Failed determining required pipeline .cfgs for EXP_TYPE 'NIR_IMAGE' : 'NIR_IMAGE'"
     """
@@ -426,15 +436,22 @@ def test_hst_tobs_header_to_reftypes(capsys):
                 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'photom',
                 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'superbias', 'v2v3',
                 'wavelengthrange']
+    assert jwst_header_to_reftypes({"EXP_TYPE":"MIR_IMAGE", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == ref_to_c
 
-    assert header_to_reftypes({"EXP_TYPE":"MIR_IMAGE", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == ref_to_c
 
 
-class TestBestrefs(test_config.CRDSTestCase):
+class CRDSTestConfig:
 
-    script_class = BestrefsScript
-    # server_url = "https://hst-crds-dev.stsci.edu"
-    cache = test_config.CRDS_TESTING_CACHE
+    def __init__(self, CrdsTestConfig):
+        super().__init__(CrdsTestConfig)
+
+@pytest.mark.bestrefs
+class TestBestrefs(CRDSTestConfig):
+
+    def __init__(self):
+        self.script_class = BestrefsScript
+        # server_url = "https://hst-crds-dev.stsci.edu"
+        self.obs = "hst"
 
     def get_10_days_ago(self):
         now = datetime.datetime.now()
@@ -446,8 +463,8 @@ class TestBestrefs(test_config.CRDSTestCase):
                         f"--datasets-since {self.get_10_days_ago()}",
                         expected_errs=0)
 
-    def test_bestrefs_from_pickle(self):
-        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.pkl --stats --print-affected-details",
+    def test_bestrefs_from_pickle(self, hst_data):
+        self.run_script(f"crds.bestrefs --new-context hst_0315.pmap --load-pickle @data/test_cos.pkl --stats --print-affected-details",
                         expected_errs=0)
 
     def test_bestrefs_to_pickle(self):
@@ -457,7 +474,7 @@ class TestBestrefs(test_config.CRDSTestCase):
         os.remove("test_cos.pkl")
 
     def test_bestrefs_from_json(self):
-        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.json --stats",
+        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle @data/test_cos.json --stats",
                         expected_errs=1)
 
     def test_bestrefs_to_json(self):
@@ -501,7 +518,7 @@ class TestBestrefs(test_config.CRDSTestCase):
 
     def test_bestrefs_update_headers(self):
         # """update_headers updates original headers from a pickle saving a new pickle withn orginal + overrides."""
-        self.run_script("crds.bestrefs --new-context hst_0315.pmap --datasets LCE31SW6Q:LCE31SW6Q --load-pickle data/test_cos_update.json "
+        self.run_script("crds.bestrefs --new-context hst_0315.pmap --datasets LCE31SW6Q:LCE31SW6Q --load-pickle @data/test_cos_update.json "
                         " --save-pickle ./test_cos_combined.json --update-bestrefs --update-pickle", expected_errs=1)
         with open("./test_cos_combined.json") as pfile:
             header = json.load(pfile)
@@ -516,7 +533,7 @@ class TestBestrefs(test_config.CRDSTestCase):
 
     def test_assign_bestrefs(self):
         test_copy = "cos_N8XTZCAWQ_updated.fits"
-        shutil.copy("data/cos_N8XTZCAWQ.fits", test_copy)
+        shutil.copy("@data/cos_N8XTZCAWQ.fits", test_copy)
 
         errors = assign_bestrefs([test_copy], context="hst_0500.pmap")
         self.assertEqual(errors, 0)
@@ -526,6 +543,7 @@ class TestBestrefs(test_config.CRDSTestCase):
 
 
 # # New tests
+@pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
                              (None, None),
@@ -544,6 +562,7 @@ def test_reformat_date_or_auto(line, expected):
     assert br.reformat_date_or_auto(line) == expected
 
 
+@pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
                              ('\u0068\u0065\u006C\u006C\u006F', "'hello'"),
@@ -553,6 +572,7 @@ def test_sreprlow(line, expected):
     assert br.sreprlow(line) == expected
 
 
+@pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
                              ('jref$n4e12510j_crr.fits', 'n4e12510j_crr.fits'),
@@ -563,8 +583,9 @@ def test_cleanpath(line, expected):
     assert br.cleanpath(line) == expected
 
 
+@pytest.mark.bestrefs
 def test_init_func():
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript()
     assert test_brs.args.new_context is None
     assert test_brs.args.old_context is None
     assert test_brs.args.fetch_old_headers is False
@@ -623,7 +644,7 @@ def test_init_func():
     assert test_brs.args.debug_traps is False
 
     argv = "crds.bestrefs --regression --affected-datasets --check-context"
-    test_brs2 = br.BestrefsScript(argv)
+    test_brs2 = BestrefsScript(argv)
     # regression
     assert test_brs2.args.compare_source_bestrefs is True
     assert test_brs2.args.differences_are_errors is True
@@ -643,9 +664,10 @@ def test_init_func():
     assert test_brs2.args.unique_errors_file == 'unique_errors.ids'
 
 
-def test_complex_init():
+@pytest.mark.bestrefs
+def test_complex_init(hst_data):
     """Test should initiate complex init and show each argument working."""
-    argv = """crds.bestrefs --load-pickles data/bestrefs.special.json
+    argv = f"""crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json
     --new-context hst_0315.pmap"""
     test_brs = br.BestrefsScript(argv)
     test_brs.complex_init()
@@ -656,7 +678,7 @@ def test_complex_init():
     assert test_brs.args.datasets is None
     assert test_brs.args.all_instruments is None
     assert test_brs.args.instruments is None
-    assert test_brs.args.load_pickles == ['data/bestrefs.special.json']
+    assert test_brs.args.load_pickles == [f'{hst_data}/bestrefs.special.json']
     assert test_brs.args.save_pickle is None
     assert test_brs.args.types is ()
     assert test_brs.args.skip_types is ()
@@ -708,38 +730,39 @@ def test_complex_init():
     assert test_brs.args.debug_traps is False
 
     # diffs_only
-    argv = """crds.bestrefs --new-context data/hst_0001.pmap
-           --old-context data/hst.pmap --hst --diffs-only"""
-    test_brs = br.BestrefsScript(argv)
+    argv = f"""crds.bestrefs --new-context {hst_data}/hst_0001.pmap
+           --old-context hst.pmap --hst --diffs-only"""
+    test_brs = BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.diffs_only is True
     assert test_brs.args.hst is True
 
     # all_instruments
     argv = """crds.bestrefs --all-instruments --hst"""
-    test_brs = br.BestrefsScript(argv)
+    test_brs = BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.all_instruments is True
 
     # instruments
     argv = "crds.bestrefs --instruments acs cos stis wfc3 --hst"
-    test_brs = br.BestrefsScript(argv)
+    test_brs = BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.instruments == ['acs', 'cos', 'stis', 'wfc3']
 
     # datasets
     argv = """crds.bestrefs --datasets LB6M01030 --hst"""
-    test_brs = br.BestrefsScript(argv)
+    test_brs = BestrefsScript(argv)
     test_brs.complex_init()
     assert test_brs.args.datasets == ['LB6M01030']
 
     # files
-    argv = """crds.bestrefs --files data/j8bt05njq_raw.fits --hst"""
-    test_brs = br.BestrefsScript(argv)
+    argv = f"""crds.bestrefs --files {hst_data}/j8bt05njq_raw.fits --hst"""
+    test_brs = BestrefsScript(argv)
     test_brs.complex_init()
-    assert test_brs.args.files == ['data/j8bt05njq_raw.fits']
+    assert test_brs.args.files == [f'{hst_data}/j8bt05njq_raw.fits']
 
 
+@pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                         [
                             ('jw01444-o002_20220618t005802_spec3_001',
@@ -752,12 +775,14 @@ def test_normalize_id(line, expected):
     assert test_brs.normalize_id(line) == expected
 
 
+@pytest.mark.bestrefs
 def test_only_ids():
     """Test should demonstrate only_ids is set to None."""
     test_brs = br.BestrefsScript()
     assert test_brs.only_ids is None
 
 
+@pytest.mark.bestrefs
 def test_drop_ids():
     """Test should demonstrate drop_ids is set to []."""
     test_brs = br.BestrefsScript()
@@ -765,33 +790,36 @@ def test_drop_ids():
     assert len(test_brs.drop_ids) == 0
 
 
+@pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
                              (['id1', 'Id2:iD2'], ['ID1:ID1', 'ID2:ID2']),
                              ([], [])
                          ])
-def test__normalized(line, expected):
+def test_normalized(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript()
     assert test_brs._normalized(line) == expected
 
 
+@pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
                              ('lezcg2010', 'lezcg2010'),
                          ])
 def test_locate_file(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript()
     assert test_brs.locate_file(line) == expected
 
 
-def test_auto_datasets_since():
+@pytest.mark.bestrefs
+def test_auto_datasets_since(hst_data):
     """Test makes a call to the server to identify datasets affected by incrementing pmap."""
     test_dict = {
         'acs': '1992-01-02 00:00:00'
     }
-    argv = """crds.bestrefs  --old-context hst.pmap --new-context data/hst_0001.pmap
+    argv = f"""crds.bestrefs  --old-context hst.pmap --new-context {hst_data}/hst_0001.pmap
     --diffs-only --hst --datasets-since=auto
     """
     test_brs = br.BestrefsScript(argv)
@@ -800,7 +828,8 @@ def test_auto_datasets_since():
     assert test_val == test_dict
 
 
-def test_setup_contexts():
+@pytest.mark.bestrefs
+def test_setup_contexts(hst_data):
     """Test sets up crds contexts by checking if either old or new are defined."""
     argv = """crds.bestrefs --diffs-only"""
     test_brs = br.BestrefsScript(argv)
@@ -813,26 +842,29 @@ def test_setup_contexts():
     new, old = test_brs.setup_contexts()
     assert old == 'hst.pmap'
 
-    argv = """crds.bestrefs --diffs-only --new-context data/hst_0001.pmap"""
+    argv = f"""crds.bestrefs --diffs-only --new-context {hst_data}/hst_0001.pmap"""
     test_brs = br.BestrefsScript(argv)
     new, old = test_brs.setup_contexts()
-    assert new == 'data/hst_0001.pmap'
+    assert new == f'{hst_data}/hst_0001.pmap'
 
 
-def test_update_promise():
+@pytest.mark.bestrefs
+def test_update_promise(hst_data):
     """Test outputs a message if the bestrefs would be updated or it updating has started."""
-    argv = """crds.bestrefs --new-context data/hst_0001.pmap
-            --old-context data/hst.pmap --hst --diffs-only"""
+    argv = f"""crds.bestrefs --new-context {hst_data}/hst_0001.pmap
+            --old-context {hst_data}/hst.pmap --hst --diffs-only"""
     test_brs = br.BestrefsScript(argv)
     test_val = test_brs.update_promise
     assert test_brs.update_promise == ":: Would update."
-    argv = """crds.bestrefs --new-context data/hst_0001.pmap --update-bestrefs
-                --old-context data/hst.pmap --hst --diffs-only --verbosity=55"""
+    argv = f"""crds.bestrefs --new-context {hst_data}/hst_0001.pmap --update-bestrefs
+                --old-context {hst_data}/hst.pmap --hst --diffs-only --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     test_val = test_brs.update_promise
     assert test_brs.update_promise == ":: Updating."
 
-def test_get_bestrefs():
+
+@pytest.mark.bestrefs
+def test_get_bestrefs(hst_data):
     """Test gets bestrefs for supplied header."""
     # A function that looks a little simple on the surface, this function actually touches some
     # 10 other functions in several other modules to calculate bestrefs. It took alot of time to look
@@ -842,7 +874,7 @@ def test_get_bestrefs():
     # for one of the namesake functions of the bestrefs module.
     argv = """crds.bestrefs --hst"""
     test_brs = br.BestrefsScript(argv)
-    value_to_test = test_brs.get_bestrefs('acs', 'data/hst_acs_atodtab_0251.rmap', 'hst_1000.pmap',
+    value_to_test = test_brs.get_bestrefs('acs', f'{hst_data}/hst_acs_atodtab_0251.rmap', 'hst_1000.pmap',
                     {'instrume': 'acs'})
     dict_to_verify = {'ATODTAB': 'NOT FOUND No match found.',
                       'BIASFILE': 'NOT FOUND One or more required date/time values is UNDEFINED',
@@ -871,19 +903,21 @@ def test_get_bestrefs():
     assert value_to_test == dict_to_verify
 
 
-def test_verbose_with_prefix(capsys):
+@pytest.mark.bestrefs
+def test_verbose_with_prefix(caplog, hst_data):
     """Test checks that verbose log message has had a prefix format made."""
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
-    test_brs = br.BestrefsScript(argv)
-    # Send logs to stdout
-    log.set_test_mode()
-    test_brs.verbose_with_prefix('data/j8bt05njq_raw.fits', 'acs', 'ANY')
-    msg_to_check = """CRDS - DEBUG -  instrument='ACS' type='ANY' data='data/j8bt05njq_raw.fits' ::"""
-    out, _ = capsys.readouterr()
-    assert msg_to_check in out
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs = br.BestrefsScript(argv)
+        test_brs.verbose_with_prefix(f'{hst_data}/j8bt05njq_raw.fits', 'acs', 'ANY')
+        out = caplog.text
+    out_to_check = f""" instrument='ACS' type='ANY' data='{hst_data}/j8bt05njq_raw.fits' ::"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
 
 
-def test_screen_bestrefs(capsys):
+@pytest.mark.bestrefs
+def test_screen_bestrefs(capsys, hst_data):
     """Test checks for references that are atypical or known to be avoided."""
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
@@ -891,11 +925,11 @@ def test_screen_bestrefs(capsys):
     # Send logs to stdout
     log.set_test_mode()
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-    tuple1, tuple2 = test_brs.screen_bestrefs('acs', 'data/j8bt05njq_raw.fits', bestrefs_dict)
-    out, err = capsys.readouterr()
-    check_msg1 = """type='BRFTAB' data='data/j8bt05njq_raw.fits' ::  Skipping type."""
-    check_msg2 = """type='SEGMENT' data='data/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
-    check_msg3 = """'WCPTAB' data='data/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
+    tuple1, tuple2 = test_brs.screen_bestrefs('acs', f'{hst_data}/j8bt05njq_raw.fits', bestrefs_dict)
+    out, _ = capsys.readouterr()
+    check_msg1 = f"""type='BRFTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Skipping type."""
+    check_msg2 = f"""type='SEGMENT' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
+    check_msg3 = f"""'WCPTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
     assert check_msg1 in out
     assert check_msg2 in out
     assert check_msg3 in out
@@ -909,21 +943,22 @@ def test_screen_bestrefs(capsys):
     assert tuple2[3] == 'XAF1429EL_WCP.FITS'
 
 
-def test_handle_na_and_not_found(capsys):
+@pytest.mark.bestrefs
+def test_handle_na_and_not_found(capsys, hst_data):
     """Test obtains bestref if available and handles matched N/A or NOT FOUND references."""
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     log.set_test_mode()
     # No match, => 'N/A'
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-    test_brs.handle_na_and_not_found('Old', bestrefs_dict, 'data/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
+    test_brs.handle_na_and_not_found('Old', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
     out, _ = capsys.readouterr()
     msg_to_check = """Old No match found: 'UNDEFINED'  => 'N/A'"""
     assert msg_to_check in out
     # No match, without => 'N/A'
     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
-    test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
+    test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits', 'acs', 'jref$n4e12510j_crr.fits')
     out, _ = capsys.readouterr()
     msg_to_check = """New No match found: 'UNDEFINED'"""
     msg_not_seen = """=> 'N/A'"""
@@ -933,7 +968,7 @@ def test_handle_na_and_not_found(capsys):
     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND N/A"}
-    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits',
                                                    'acs', 'jref$n4e12510j_crr.fits')
     assert ref_ok is True
     assert ref == 'N/A'
@@ -941,7 +976,7 @@ def test_handle_na_and_not_found(capsys):
     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "NOT FOUND"}
-    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits',
                                                    'acs', 'jref$n4e12510j_crr.fits')
     out, _ = capsys.readouterr()
     msg_to_check = """New Bestref FAILED:"""
@@ -950,12 +985,12 @@ def test_handle_na_and_not_found(capsys):
     argv = """crds.bestrefs --hst --instrument=acs --check-context --old-context hst_0315.pmap --verbosity=55"""
     test_brs = br.BestrefsScript(argv)
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "JREF$N4E12510J_CRR.FITS": "jref$n4e12510j_crr.fits"}
-    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, 'data/j8bt05njq_raw.fits',
+    ref_ok, ref = test_brs.handle_na_and_not_found('New', bestrefs_dict, f'{hst_data}/j8bt05njq_raw.fits',
                                                    'acs', 'jref$n4e12510j_crr.fits')
     assert ref_ok is True
     assert ref == 'N4E12510J_CRR.FITS'
 
-
+@pytest.mark.bestrefs
 def test_unkilled_updates():
     """Test confirms that unkilled_updates returns a dict minus items found in kill_list."""
     argv = """crds.bestrefs --hst --verbosity=55"""
@@ -969,6 +1004,7 @@ def test_unkilled_updates():
     assert test_brs.unkilled_updates == od_dict3
 
 
+@pytest.mark.bestrefs
 def test_dataset_to_product_id():
     """Test confirms that product ID is returned by function."""
     argv = """crds.bestrefs --hst --verbosity=0"""
@@ -978,6 +1014,7 @@ def test_dataset_to_product_id():
     assert test_brs.dataset_to_product_id(dataset_to_test) == product_id
 
 
+@pytest.mark.bestrefs
 def test_print_affected(capsys):
     """Test demonstrates that print_affected prints the product ids found in unkilled updates."""
     """Difficult to test the logger since the print to stdout comes first."""
@@ -988,9 +1025,3 @@ def test_print_affected(capsys):
     msg_to_check = """20220618t005802\nicir09ehq\n"""
     out, _ = capsys.readouterr()
     assert out == msg_to_check
-
-
-
-
-
-
