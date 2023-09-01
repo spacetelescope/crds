@@ -159,6 +159,7 @@ markers = [
   "heavy_client",
   "substitutions",
   "bestrefs",
+  "cmdline",
 ]
 
 [tool.setuptools_scm]
