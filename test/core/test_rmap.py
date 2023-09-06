@@ -3,7 +3,6 @@
 from pytest import mark
 import os
 import json
-from pprint import pprint as pp
 import pickle
 
 from crds import rmap, log, utils
