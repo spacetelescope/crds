@@ -160,6 +160,7 @@ markers = [
   "substitutions",
   "bestrefs",
   "reftypes",
+  "cmdline",
 ]
 
 [tool.setuptools_scm]
