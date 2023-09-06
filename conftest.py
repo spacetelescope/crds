@@ -200,6 +200,13 @@ def default_test_cache_state(test_cache):
     cfg = ConfigState(cache=test_cache)
     cfg.config_setup()
     return cfg
+
+
+@fixture(scope='function')
+def jwst_test_cache_state(test_cache):
+    cfg = ConfigState(cache=test_cache, observatory="jwst")
+    cfg.config_setup()
+    return cfg
  
 # ==============================================================================
 

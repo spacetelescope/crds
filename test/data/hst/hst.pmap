@@ -5,14 +5,14 @@ header = {
     'name' : 'hst.pmap',
     'observatory' : 'HST',
     'parkey' : ('A_DIFFERENT_ONE',),
-    'sha1sum' : 'f3338cfdbef9e634caaa743b2374356242d4fbc4',
+    'sha1sum' : '17af8e804bfdcfe74c5497edbd26d60d8f6639b9',
 }
 
 selector = {
-    'ACS' : 'data/hst_acs.imap',
-    'COS' : 'data/hst_cos.imap',
-    'NICMOS' : 'data/hst_nicmos.imap',
-    'STIS' : 'data/hst_stis.imap',
-    'WFC3' : 'data/hst_wfc3.imap',
-    'WFPC2' : 'data/hst_wfpc2.imap',
+    'ACS' : 'test/data/hst/hst_acs.imap',
+    'COS' : 'test/data/hst/hst_cos.imap',
+    'NICMOS' : 'test/data/hst/hst_nicmos.imap',
+    'STIS' : 'test/data/hst/hst_stis.imap',
+    'WFC3' : 'test/data/hst/hst_wfc3.imap',
+    'WFPC2' : 'test/data/hst/hst_wfpc2.imap',
 }

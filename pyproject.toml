@@ -161,6 +161,7 @@ markers = [
   "bestrefs",
   "reftypes",
   "cmdline",
+  "rmap",
 ]
 
 [tool.setuptools_scm]

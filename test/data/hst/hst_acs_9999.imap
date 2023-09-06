@@ -5,7 +5,7 @@ header = {
     'name' : 'hst_acs_9999.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'ef1dc5dc628453b11b27c866b824e597f27315cc',
+    'sha1sum' : 'd479a31930b620806cee2c7d264af9c1e0d64a3b',
 }
 
 selector = {
@@ -16,7 +16,7 @@ selector = {
     'cfltfile' : 'hst_acs_cfltfile.rmap',
     'crrejtab' : 'N/A',
     'd2imfile' : 'hst_acs_d2imfile.rmap',
-    'darkfile' : 'data/hst_acs_darkfile_na_omit.rmap',
+    'darkfile' : 'test/data/hst/hst_acs_darkfile_na_omit.rmap',
     'dgeofile' : 'hst_acs_dgeofile.rmap',
     'drkcfile' : 'hst_acs_drkcfile.rmap',
     'flshfile' : 'hst_acs_flshfile.rmap',
