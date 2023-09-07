@@ -9,7 +9,7 @@ header = {
 }
 
 selector = {
-    'ACS' : 'data/hst_acs_0002.imap',
+    'ACS' : 'test/data/hst/hst_acs_0002.imap',
     'COS' : 'hst_cos.imap',
     'NICMOS' : 'hst_nicmos.imap',
     'STIS' : 'hst_stis.imap',

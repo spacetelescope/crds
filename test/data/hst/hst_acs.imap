@@ -5,12 +5,12 @@ header = {
     'name' : 'hst_acs.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '02b39a6f7046ea550f6ee77be5797cb00af6931f',
+    'sha1sum' : '3e6a13d65f1e91682d77cf5535c61a199a4593a6',
 }
 
 selector = {
     'atodtab' : 'hst_acs_atodtab.rmap',
-    'biasfile' : 'data/hst_acs_biasfile_0001.rmap',
+    'biasfile' : 'test/data/hst/hst_acs_biasfile_0001.rmap',
     'bpixtab' : 'hst_acs_bpixtab.rmap',
     'ccdtab' : 'hst_acs_ccdtab.rmap',
     'cfltfile' : 'hst_acs_cfltfile.rmap',
