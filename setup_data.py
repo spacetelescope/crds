@@ -7,11 +7,10 @@ from distutils.core import setup
 setup_pars = {
     "packages": [
         "crds",
-        "crds.tests",
     ],
     "package_dir": {
         "crds": "crds",
-        "crds.tests": "crds/tests",
+        "crds.tests": "crds/test",
     },
     "package_data": {
         "crds.tests": [
