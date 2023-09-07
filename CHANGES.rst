@@ -1,10 +1,14 @@
-11.17.5 (2023-08-31)
+
+11.17.5 (2023-09-07)
 =====================
 
 JWST
 ----
 
 - Added new rmap nirspec outlier detection [#950]
+- Added new rmap miri Interpixel Capacitance [#954]
+- Added CHANNEL to parkeys for miri_apcorr.rmap [#955]
+- Added new rmap niriss charge_migration step [#956] 
 
 11.17.4 (2023-08-28)
 =====================

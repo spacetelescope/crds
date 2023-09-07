@@ -919,14 +919,15 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.CHANNEL"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"e2255db2e45b01b85aa4686d6e1811ad77ff33b8",
+            "sha1sum":"b18a61dfb7808fae468739cdbe743da848eb443d",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"miri_apcorr.tpn",
@@ -1232,14 +1233,14 @@
             "instrument":"MIRI",
             "ld_tpn":"miri_ipc_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_miri_ipc_0000.rmap",
+            "name":"miri_ipc.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR"
                 ]
             ],
-            "sha1sum":"0f07718e051396c851bbaa03a917487abec80843",
+            "sha1sum":"02e9c784a6c48a9c1a6952fb68a9b0d35fc2f28e",
             "suffix":"ipc",
             "text_descr":"Interpixel Capacitance",
             "tpn":"miri_ipc.tpn",
@@ -5160,6 +5161,34 @@
             "suffix":"mask",
             "text_descr":"Bad Pixel Mask",
             "tpn":"niriss_mask.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-chargemigrationstep":{
+            "derived_from":"Derived from niriss_pars-jumpstep 2023-09-07",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-chargemigrationstep",
+            "filetype":"pars-chargemigrationstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-chargemigrationstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"niriss_pars-chargemigrationstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.EXP_TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"5b4eef86c56f5ede23d1010734b3a12cbbdf0e47",
+            "suffix":"pars-chargemigrationstep",
+            "text_descr":"Parameters to correct charge migration and the jump detection step interaction.",
+            "tpn":"niriss_pars-chargemigrationstep.tpn",
             "unique_rowkeys":null
         },
         "pars-darkpipeline":{
