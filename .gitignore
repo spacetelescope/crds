@@ -1,5 +1,7 @@
 coverage
 .coverage
+coverage.*
+.profile-stats
 .pydevproject
 .project
 *.pyc

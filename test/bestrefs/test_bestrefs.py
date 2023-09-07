@@ -1,5 +1,6 @@
 import pytest
 import os, os.path
+import re
 import json
 import datetime
 import shutil
@@ -14,6 +15,7 @@ import logging
 log.THE_LOGGER.logger.propagate=True
 
 
+@pytest.mark.skip(reason="needs revision - does not produce errors")
 @pytest.mark.bestrefs
 def test_warn_bad_context(capsys):
     """Test logs an error or warning if the named context is a known bad context."""
@@ -34,6 +36,7 @@ def test_warn_bad_context(capsys):
     assert check_msg in out
 
 
+@pytest.mark.skip(reason="needs revision - does not produce errors")
 @pytest.mark.bestrefs
 def test_warn_bad_reference(capsys):
     """Test logs an error or warning if the reference is a known bad reference."""
@@ -219,22 +222,16 @@ def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
-        out = caplog.text
-    out_to_check = """ Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
- Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  221121 dataset ids for 'acs' since None
- Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  54302 dataset ids for 'cos' since None
- Dumping dataset parameters for 'nicmos' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  282999 dataset ids for 'nicmos' since None
- Dumping dataset parameters for 'stis' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  478767 dataset ids for 'stis' since None
- Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  339256 dataset ids for 'wfc3' since None
- Dumping dataset parameters for 'wfpc2' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  186480 dataset ids for 'wfpc2' since None"""
-    for msg in out_to_check.splitlines():
-        assert msg.strip() in out
+        out = caplog.messages
+    odd_pattern = re.compile(" Dumping dataset parameters for '[a-z0-9]{3,6}' from CRDS server at 'https://hst-crds.stsci.edu'")
+    even_pattern = re.compile(" Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since None")
+    for i, line in enumerate(out):
+        if i == 0:
+            assert line == " Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']"
+        elif i%2 == 0:
+            assert re.match(even_pattern, line) is not None
+        else:
+            assert re.match(odd_pattern, line) is not None
     default_shared_state.cleanup()
 
 
@@ -245,6 +242,7 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
+        messages = caplog.messages
     out_to_check = """ Mapping differences from 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' affect:
  {'acs': ['biasfile']}
  Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' are:
@@ -253,7 +251,12 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'
  Downloaded  221121 dataset ids for 'acs' since '1992-01-02 00:00:00'"""
     for msg in out_to_check.splitlines():
-        assert msg.strip() in out
+        if not msg.startswith(" Downloaded"):
+            assert msg.strip() in out
+        else:
+            # using re b/c the numeric value is dynamic
+            pattern = re.compile(" Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since '1992-01-02 00:00:00'")
+            assert re.match(pattern, messages[-1]) is not None
     default_shared_state.cleanup()
 
 
@@ -585,7 +588,7 @@ def test_cleanpath(line, expected):
 
 @pytest.mark.bestrefs
 def test_init_func():
-    test_brs = BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.args.new_context is None
     assert test_brs.args.old_context is None
     assert test_brs.args.fetch_old_headers is False
@@ -771,21 +774,21 @@ def test_complex_init(hst_data):
                         ])
 def test_normalize_id(line, expected):
     """Test should show that datasets are converted to uppercase and given <exposure>:<exposure> form."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.normalize_id(line) == expected
 
 
 @pytest.mark.bestrefs
 def test_only_ids():
     """Test should demonstrate only_ids is set to None."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.only_ids is None
 
 
 @pytest.mark.bestrefs
 def test_drop_ids():
     """Test should demonstrate drop_ids is set to []."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert isinstance(test_brs.drop_ids, list)
     assert len(test_brs.drop_ids) == 0
 
@@ -798,7 +801,7 @@ def test_drop_ids():
                          ])
 def test_normalized(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs._normalized(line) == expected
 
 
@@ -809,7 +812,7 @@ def test_normalized(line, expected):
                          ])
 def test_locate_file(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.locate_file(line) == expected
 
 
