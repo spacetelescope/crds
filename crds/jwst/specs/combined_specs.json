@@ -902,36 +902,6 @@
             "tpn":"miri_amplifier.tpn",
             "unique_rowkeys":null
         },
-        "apcorr":{
-            "classes":[
-                "Match",
-                "UseAfter"
-            ],
-            "derived_from":"Hand made 2020-01-13",
-            "extra_keys":null,
-            "file_ext":".fits",
-            "filekind":"APCORR",
-            "filetype":"APCORR",
-            "instrument":"MIRI",
-            "ld_tpn":"miri_apcorr_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"jwst_miri_apcorr.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.EXPOSURE.TYPE"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
-                ]
-            ],
-            "sha1sum":"e2255db2e45b01b85aa4686d6e1811ad77ff33b8",
-            "suffix":"apcorr",
-            "text_descr":"Aperture Correction",
-            "tpn":"miri_apcorr.tpn",
-            "unique_rowkeys":null
-        },
         "area":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
             "extra_keys":null,
@@ -1232,14 +1202,14 @@
             "instrument":"MIRI",
             "ld_tpn":"miri_ipc_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_miri_ipc_0000.rmap",
+            "name":"miri_ipc.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR"
                 ]
             ],
-            "sha1sum":"0f07718e051396c851bbaa03a917487abec80843",
+            "sha1sum":"02e9c784a6c48a9c1a6952fb68a9b0d35fc2f28e",
             "suffix":"ipc",
             "text_descr":"Interpixel Capacitance",
             "tpn":"miri_ipc.tpn",
