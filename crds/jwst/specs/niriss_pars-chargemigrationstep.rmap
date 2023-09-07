@@ -5,10 +5,10 @@ header = {
     'filetype' : 'pars-chargemigrationstep',
     'instrument' : 'NIRISS',
     'mapping' : 'REFERENCE',
-    'name' : 'jwst_niriss_pars-chargemigrationstep.rmap',
+    'name' : 'niriss_pars-chargemigrationstep.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.EXP_TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'),),
-    'sha1sum' : '29c1ce44d948323b0d5767bf61b05bf99682515a',
+    'parkey' : (('META.INSTRUMENT.EXP_TYPE', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '5b4eef86c56f5ede23d1010734b3a12cbbdf0e47',
     'suffix' : 'pars-chargemigrationstep',
     'text_descr' : 'Parameters to correct charge migration and the jump detection step interaction.',
 }

@@ -5163,6 +5163,34 @@
             "tpn":"niriss_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-chargemigrationstep":{
+            "derived_from":"Derived from niriss_pars-jumpstep 2023-09-07",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-chargemigrationstep",
+            "filetype":"pars-chargemigrationstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-chargemigrationstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"niriss_pars-chargemigrationstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.EXP_TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"5b4eef86c56f5ede23d1010734b3a12cbbdf0e47",
+            "suffix":"pars-chargemigrationstep",
+            "text_descr":"Parameters to correct charge migration and the jump detection step interaction.",
+            "tpn":"niriss_pars-chargemigrationstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-darkpipeline":{
             "classes":[
                 "Match",
