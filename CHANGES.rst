@@ -6,7 +6,7 @@ JWST
 ----
 
 - Added new rmap nirspec outlier detection [#950]
-- Added new rmap miri Interpixel Capacitance [#951]
+- Added new rmap miri Interpixel Capacitance [#954]
 
 11.17.4 (2023-08-28)
 =====================
