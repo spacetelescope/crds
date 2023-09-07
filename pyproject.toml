@@ -161,7 +161,6 @@ markers = [
   "reftypes",
   "cmdline",
   "rmap",
-  "smoke",
 ]
 
 [tool.setuptools_scm]
