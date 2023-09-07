@@ -902,6 +902,37 @@
             "tpn":"miri_amplifier.tpn",
             "unique_rowkeys":null
         },
+        "apcorr":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2020-01-13",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"APCORR",
+            "filetype":"APCORR",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_apcorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_apcorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.CHANNEL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"b18a61dfb7808fae468739cdbe743da848eb443d",
+            "suffix":"apcorr",
+            "text_descr":"Aperture Correction",
+            "tpn":"miri_apcorr.tpn",
+            "unique_rowkeys":null
+        },
         "area":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
             "extra_keys":null,
