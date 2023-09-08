@@ -1237,12 +1237,17 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR"
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"20f73b9c74dd307cd3d1529d51c5e34e0bc8c490",
+            "sha1sum":"8c4873a3341cc3132d29b8b447535db189c6d826",
             "substitutions":{
-                "META.SUBARRAY.NAME":{
+                "META.DETECTOR":{
                     "GENERIC":"N/A"
                 }
             },
