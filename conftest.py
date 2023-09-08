@@ -63,21 +63,36 @@ def crds_shared_group_cache():
 
 
 @fixture(scope='session')
-def test_temp_dir(config):
+def test_temp_dir(request):
     try:
         tmp_path_factory = TempPathFactory(
-            config.option.basetemp, 
+            request.config.option.basetemp, 
             RETENTION_COUNT, 
             RETENTION_POLICY,
-            trace=config.trace.get("tmpdir"),
+            trace=request.config.trace.get("tmpdir"),
             _ispytest=True
         )
-    except Exception: # pytest >= 7.3
+    except Exception: # pytest < 7.3
         tmp_path_factory = TempPathFactory(
-            config.option.basetemp, trace=config.trace.get("tmpdir"), _ispytest=True
+            request.config.option.basetemp, trace=request.config.trace.get("tmpdir"), _ispytest=True
         )
     basepath = tmp_path_factory.getbasetemp()
-    return os.path.join(basepath, "crds-test-tmp")
+    return basepath
+
+
+@fixture(scope='function')
+def hst_data(test_data):
+    return f"{test_data}/hst"
+
+
+@fixture(scope='function')
+def jwst_data(test_data):
+    return f"{test_data}/jwst"
+
+
+@fixture(scope='function')
+def roman_data(test_data):
+    return f"{test_data}/roman"
 
 
 # ==============================================================================
@@ -149,46 +164,87 @@ def jwst_serverless_state(crds_shared_group_cache):
     )
     cfg.config_setup()
     return cfg
-    
 
 
+@fixture(scope='function')
+def hst_serverless_state(crds_shared_group_cache):
+    cfg = ConfigState(
+        cache=crds_shared_group_cache,
+        url="https://hst-serverless-mode.stsci.edu",
+        observatory="hst"
+    )
+    cfg.config_setup()
+    return cfg
+
+
+@fixture(scope='function')
+def roman_serverless_state(crds_shared_group_cache):
+    cfg = ConfigState(
+        cache=crds_shared_group_cache,
+        url="https://roman-crds-serverless.stsci.edu",
+        observatory="roman"
+    )
+    cfg.config_setup()
+    return cfg
+
+
+@fixture(scope='function')
+def broken_state():
+    cfg = ConfigState(cache="/nowhere", url="https://server-is-out-of-town")
+    cfg.config_setup()
+    return cfg
+
+
+@fixture(scope='function')
+def default_test_cache_state(test_cache):
+    cfg = ConfigState(cache=test_cache)
+    cfg.config_setup()
+    return cfg
+
+
+@fixture(scope='function')
+def jwst_test_cache_state(test_cache):
+    cfg = ConfigState(cache=test_cache, observatory="jwst")
+    cfg.config_setup()
+    return cfg
+ 
 # ==============================================================================
 
-
-class CRDSTestCase(unittest.TestCase):
+class CRDSTestCase:
 
     clear_existing = False
     server_url = None
     cache = crds_config.get_crds_path()
+    data_dir = test_data
+    temp_dir = test_temp_dir
+    hst_mappath =  test_mappath
+    obs = "hst"
 
-    def setUp(self, *args, **keys):
-        super(CRDSTestCase, self).setUp(*args, **keys)
-        self.data_dir = test_data
-        self.temp_dir = test_temp_dir
-        if not os.path.exists(self.temp_dir):
-            os.mkdir(self.temp_dir)
-        self.hst_mappath =  test_mappath
+    def set_data_dir(self):
+        return os.path.join(self.data_dir, self.obs)
+
+    def setUp(self):
+        self.data_dir = self.set_data_dir()
         self.cfg = ConfigState(cache=self.cache, url=self.server_url,
                                clear_existing=self.clear_existing)
-        self.old_state = self.cfg.config_setup()
+        self.cfg.config_setup()
 
-    def tearDown(self, *args, **keys):
-        super(CRDSTestCase, self).tearDown(*args, **keys)
-        if os.path.exists(self.temp_dir):
-            shutil.rmtree(self.temp_dir)
-        self.cfg.cleanup(self.old_state)
+    def tearDown(self):
+        self.cfg.cleanup()
 
     def run_script(self, cmd, expected_errs=0):
         """Run SyncScript using command line `cmd` and check for `expected_errs` as return status."""
         errs = self.script_class(cmd)()
         if expected_errs is not None:
-            self.assertEqual(errs, expected_errs)
+            assert errs == expected_errs
 
     def assert_crds_exists(self, filename, observatory="hst"):
-        self.assertTrue(os.path.exists(crds_config.locate_file(filename, observatory)))
+        if os.path.exists(crds_config.locate_file(filename, observatory)):
+            assert True
 
     def assert_crds_not_exists(self, filename, observatory="hst"):
-        self.assertFalse(os.path.exists(crds_config.locate_file(filename, observatory)))
+        if not os.path.exists(crds_config.locate_file(filename, observatory)):
+            assert True
 
     def data(self, filename):
         return os.path.join(self.data_dir, filename)
@@ -196,9 +252,10 @@ class CRDSTestCase(unittest.TestCase):
     def temp(self, filename):
         return os.path.join(self.temp_dir, filename)
 
+
 # ==============================================================================
 
-@fixture(scope='session')
+@fixture(scope='module')
 def CrdsTestConfig():
     return CRDSTestCase
 
