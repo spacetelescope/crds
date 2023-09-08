@@ -10,10 +10,10 @@ setup_pars = {
     ],
     "package_dir": {
         "crds": "crds",
-        "crds.tests": "crds/test",
+        "test": "test",
     },
     "package_data": {
-        "crds.tests": [
+        "test": [
             "data/*",
         ],
     },
@@ -24,7 +24,7 @@ import crds  #  local subdirectory...  ew...
 setup(
     name="crds_test_data",
     provides=[
-        "crds.tests.data",
+        "test.data",
     ],
     version=crds.__version__,
     description="Calibration Reference Data System,  HST/JWST reference file management (test data)",

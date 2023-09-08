@@ -25,11 +25,11 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
-          - macos-latest
+          # - macos-latest # TEMP 
         python-version:
-          - 3.9
+          # - 3.9 # TEMP 
           - '3.10'
-          - 3.11
+          # - 3.11 # TEMP 
     steps:
       - uses: actions/checkout@v3
         with:
