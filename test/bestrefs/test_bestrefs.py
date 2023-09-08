@@ -1,20 +1,10 @@
 import pytest
 import os, os.path
 import json
-#import sys
-#import re
 import datetime
 import shutil
-#import crds
-#import logging
-#from crds.hst import locate
-from crds.core import log#, config, utils, timestamp, cmdline, heavy_client
-#from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
-#from crds.client import api
+from crds.core import log
 from crds.bestrefs import bestrefs as br
-#from crds.core.timestamp import format_date, parse_date
-#from astropy.time import Time
-#from collections import namedtuple, OrderedDict
 from crds.bestrefs import BestrefsScript
 from crds import assign_bestrefs
 from crds.tests import test_config

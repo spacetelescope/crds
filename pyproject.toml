@@ -157,6 +157,8 @@ markers = [
   "asdf: asdf related tests",
   "core: tests in the crds.core module",
   "heavy_client",
+  "bestrefs",
+  "list"
 ]
 
 [tool.setuptools_scm]
