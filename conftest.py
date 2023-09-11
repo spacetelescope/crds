@@ -207,6 +207,12 @@ def jwst_test_cache_state(test_cache):
     cfg = ConfigState(cache=test_cache, observatory="jwst")
     cfg.config_setup()
     return cfg
+
+@fixture(scope='function')
+def roman_test_cache_state(test_cache):
+    cfg = ConfigState(cache=test_cache, url="https://roman-serverless-mode.stsci.edu", observatory="roman")
+    cfg.config_setup()
+    return cfg
  
 # ==============================================================================
 
