@@ -1,9 +1,8 @@
 from pytest import mark
 from crds.list import ListScript
 from crds.core import log
-from crds import tests
-from crds.tests import test_config
-from crds.diff import DiffScript
+import logging
+log.THE_LOGGER.logger.propagate=True
 
 
 @mark.tobs
@@ -234,13 +233,16 @@ def test_list_dataset_headers_json(capsys):
 "TIME-OBS": "10:07:16.929999"}}"""
     assert out_to_check in out
 
-# At the moment, this test prints an error as expected. However, I'm not sure how to capture it without it getting logged
-# def test_list_dataset_headers_bogus(capsys):
-#    ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap --hst")()
-#    out, err = capsys.readouterr()
-#    out_to_check = """CRDS - ERROR -  Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : \
-# CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset 'BAR'"""
-#    assert out_to_check in err
+#At the moment, this test prints an error as expected. However, I'm not sure how to capture it without it getting logged
+def test_list_dataset_headers_bogus(default_shared_state, caplog):
+   ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap --hst")()
+   with caplog.at_level(logging.ERROR, logger="CRDS"):
+      out = caplog.text
+   out_to_check = """Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset 'BAR'"""
+   assert out_to_check in out
+#   print(out)
+#   default_shared_state.cleanup()
+
 
 def test_list_dataset_headers_id_expansions_only(capsys):
    ListScript("crds.list --dataset-headers I9ZF01010 --id-expansions-only --contexts hst.pmap --hst")()
