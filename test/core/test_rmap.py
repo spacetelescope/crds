@@ -344,6 +344,8 @@ def test_validate_mapping_valid(default_shared_state, hst_data):
 @mark.core
 @mark.rmap
 def test_validate_mapping_ambiguous(default_shared_state, hst_data, caplog):
+    default_shared_state.url = "https://hst-crds.stsci.edu"
+    default_shared_state.config_setup()
     r = rmap.get_cached_mapping(f"{hst_data}/hst_acs_darkfile_ewsc.rmap")
     with caplog.at_level(logging.INFO, logger="CRDS"):
         r.validate_mapping()

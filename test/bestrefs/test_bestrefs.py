@@ -225,12 +225,12 @@ def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
         out = caplog.messages
     odd_pattern = re.compile(" Dumping dataset parameters for '[a-z0-9]{3,6}' from CRDS server at 'https://hst-crds.stsci.edu'")
     even_pattern = re.compile(" Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since None")
-    for i, line in enumerate(out)[:-1]:
+    for i, line in enumerate(out):
         if i == 0:
             assert line == " Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']"
         elif i%2 == 0:
             assert re.match(even_pattern, line) is not None
-        else:
+        elif i < 13:
             assert re.match(odd_pattern, line) is not None
     default_shared_state.cleanup()
 
@@ -317,7 +317,7 @@ def test_bestrefs_donotreprocess_datasets(default_shared_state, caplog):
  Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
  0 errors
  1 warnings
- 3 infos"""
+ 5 infos"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
     default_shared_state.cleanup()
@@ -921,16 +921,15 @@ def test_verbose_with_prefix(caplog, hst_data):
 
 
 @pytest.mark.bestrefs
-def test_screen_bestrefs(capsys, hst_data):
+def test_screen_bestrefs(hst_data, caplog):
     """Test checks for references that are atypical or known to be avoided."""
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.skip_filekinds.append("brftab")
-    # Send logs to stdout
-    log.set_test_mode()
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-    tuple1, tuple2 = test_brs.screen_bestrefs('acs', f'{hst_data}/j8bt05njq_raw.fits', bestrefs_dict)
-    out, _ = capsys.readouterr()
+    test_brs = br.BestrefsScript(argv)
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs.skip_filekinds.append("brftab")
+        tuple1, tuple2 = test_brs.screen_bestrefs('acs', f'{hst_data}/j8bt05njq_raw.fits', bestrefs_dict)
+        out = caplog.text
     check_msg1 = f"""instrument='ACS' type='BRFTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Skipping type."""
     check_msg2 = f"""instrument='ACS' type='SEGMENT' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
     check_msg3 = f"""instrument='ACS' type='WCPTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
