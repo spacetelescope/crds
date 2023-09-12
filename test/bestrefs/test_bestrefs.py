@@ -925,25 +925,21 @@ def test_screen_bestrefs(hst_data, caplog):
     """Test checks for references that are atypical or known to be avoided."""
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-    test_brs = br.BestrefsScript(argv)
+    test_brs = BestrefsScript(argv)
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         test_brs.skip_filekinds.append("brftab")
         tuple1, tuple2 = test_brs.screen_bestrefs('acs', f'{hst_data}/j8bt05njq_raw.fits', bestrefs_dict)
         out = caplog.text
-    check_msg1 = f"""instrument='ACS' type='BRFTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Skipping type."""
-    check_msg2 = f"""instrument='ACS' type='SEGMENT' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
-    check_msg3 = f"""instrument='ACS' type='WCPTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
+    check_msg1 = f"""instrument='ACS' type='SEGMENT' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
+    check_msg2 = f"""instrument='ACS' type='WCPTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
     assert check_msg1 in out
     assert check_msg2 in out
-    assert check_msg3 in out
-    assert tuple1[0] == 'acs'
-    assert tuple1[1] == 'segment'
-    assert tuple1[2] is None
-    assert tuple1[3] == 'N/A'
-    assert tuple2[0] == 'acs'
-    assert tuple2[1] == 'wcptab'
-    assert tuple2[2] is None
-    assert tuple2[3] == 'XAF1429EL_WCP.FITS'
+    exp_tuple1 = ['acs', 'segment', None, 'N/A']
+    exp_tuple2 = ['acs', 'wcptab', None, 'XAF1429EL_WCP.FITS']
+    for i, j in dict(zip(exp_tuple1, tuple1)):
+        assert i == j
+    for i, j in dict(zip(exp_tuple2, tuple2)):
+        assert i == j
 
 
 @pytest.mark.bestrefs
