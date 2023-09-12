@@ -233,15 +233,14 @@ def test_list_dataset_headers_json(capsys):
 "TIME-OBS": "10:07:16.929999"}}"""
     assert out_to_check in out
 
-#At the moment, this test prints an error as expected. However, I'm not sure how to capture it without it getting logged
+
+# At the moment, this test prints an error as expected. Not sure how to capture it without it getting logged though.
 def test_list_dataset_headers_bogus(default_shared_state, caplog):
-   ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap --hst")()
-   with caplog.at_level(logging.ERROR, logger="CRDS"):
-      out = caplog.text
-   out_to_check = """Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset 'BAR'"""
-   assert out_to_check in out
-#   print(out)
-#   default_shared_state.cleanup()
+    ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap --hst")()
+    with caplog.at_level(logging.ERROR, logger="CRDS"):
+        out = caplog.text
+    out_to_check = """Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset 'BAR'"""
+    assert out_to_check in out
 
 
 def test_list_dataset_headers_id_expansions_only(capsys):
