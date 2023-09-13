@@ -168,11 +168,11 @@ def test_substitutions_validate_jwst(jwst_serverless_state, caplog):
 
 @pytest.mark.substitutions
 @pytest.mark.core
-def test_substitutions_validate_roman(roman_serverless_state, caplog):
+def test_substitutions_validate_roman(roman_test_cache_state, caplog):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         substitutions.validate_substitutions("roman-operational")
         out = caplog.text
     expected_out = """ Instrument 'wfi' has no substitutions."""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    roman_serverless_state.cleanup()
+    roman_test_cache_state.cleanup()

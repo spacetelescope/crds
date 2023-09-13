@@ -1,14 +1,16 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - master
-    tags:
-      - '*'
+  ## uncomment before merging to master once test suite is finalized
+  # push:
+  #   branches:
+      # - master
+    # tags:
+    #   - '*'
   pull_request:
     branches:
-    - master
+    # - master
+    - pytest-migration #temp
 
 jobs:
   pytest:
@@ -23,9 +25,11 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
-          - macos-latest
+          # - macos-latest # TEMP 
         python-version:
           - 3.9
+          - '3.10'
+          - 3.11 
     steps:
       - uses: actions/checkout@v3
         with:

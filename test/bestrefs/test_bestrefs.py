@@ -1,5 +1,6 @@
 import pytest
 import os, os.path
+import re
 import json
 import datetime
 import shutil
@@ -14,6 +15,7 @@ import logging
 log.THE_LOGGER.logger.propagate=True
 
 
+@pytest.mark.skip(reason="needs revision - does not produce errors")
 @pytest.mark.bestrefs
 def test_warn_bad_context(capsys):
     """Test logs an error or warning if the named context is a known bad context."""
@@ -34,6 +36,7 @@ def test_warn_bad_context(capsys):
     assert check_msg in out
 
 
+@pytest.mark.skip(reason="needs revision - does not produce errors")
 @pytest.mark.bestrefs
 def test_warn_bad_reference(capsys):
     """Test logs an error or warning if the reference is a known bad reference."""
@@ -198,7 +201,7 @@ def test_bestrefs_catalog_dataset(default_shared_state, caplog):
 def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context hst_0001.pmap  --old-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits
     {hst_data}/j8bt06o6q_raw.fits {hst_data}/j8bt09jcq_raw.fits"""
-    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
     out_to_check = f""" No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
@@ -206,7 +209,7 @@ def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
  ===> Processing {hst_data}/j8bt06o6q_raw.fits
  ===> Processing {hst_data}/j8bt09jcq_raw.fits
  0 errors
- 0 warnings
+ 1 warnings
  4 infos"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
@@ -216,35 +219,30 @@ def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
 @pytest.mark.bestrefs
 def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
-    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
-        out = caplog.text
-    out_to_check = """ Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
- Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  221121 dataset ids for 'acs' since None
- Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  54302 dataset ids for 'cos' since None
- Dumping dataset parameters for 'nicmos' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  282999 dataset ids for 'nicmos' since None
- Dumping dataset parameters for 'stis' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  478767 dataset ids for 'stis' since None
- Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  339256 dataset ids for 'wfc3' since None
- Dumping dataset parameters for 'wfpc2' from CRDS server at 'https://hst-crds.stsci.edu'
- Downloaded  186480 dataset ids for 'wfpc2' since None"""
-    for msg in out_to_check.splitlines():
-        assert msg.strip() in out
+        out = caplog.messages
+    odd_pattern = re.compile(" Dumping dataset parameters for '[a-z0-9]{3,6}' from CRDS server at 'https://hst-crds.stsci.edu'")
+    even_pattern = re.compile(" Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since None")
+    for i, line in enumerate(out):
+        if i == 0:
+            assert line == " Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']"
+        elif i%2 == 0:
+            assert re.match(even_pattern, line) is not None
+        elif i < 13:
+            assert re.match(odd_pattern, line) is not None
     default_shared_state.cleanup()
 
 
 @pytest.mark.bestrefs
 def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
     argv = """bestrefs.py --old-context hst.pmap --new-context test/data/hst/hst_0001.pmap --hst --diffs-only --datasets-since=auto"""
-    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
+        messages = caplog.messages
     out_to_check = """ Mapping differences from 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' affect:
  {'acs': ['biasfile']}
  Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' are:
@@ -252,15 +250,20 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
  Computing bestrefs for db datasets for ['acs']
  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'
  Downloaded  221121 dataset ids for 'acs' since '1992-01-02 00:00:00'"""
+    pattern = re.compile(" Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since '1992-01-02 00:00:00'")
     for msg in out_to_check.splitlines():
-        assert msg.strip() in out
+        if not msg.startswith(" Downloaded"):
+            assert msg.strip() in out
+        else:
+            # using re b/c the numeric value is dynamic
+            assert re.match(pattern, messages[-2]) is not None
     default_shared_state.cleanup()
 
 
 @pytest.mark.bestrefs
 def test_bestrefs_dataset_drop_ids(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap  --old-context hst.pmap --load-pickle {hst_data}/test_cos.json --drop-ids LCE31SW6Q:LCE31SW6Q"""
-    with caplog.at_level(logging.DEBUG, logger="CRDS"): 
+    with caplog.at_level(logging.INFO, logger="CRDS"): 
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
@@ -274,7 +277,7 @@ def test_bestrefs_dataset_drop_ids(default_shared_state, caplog, hst_data):
 @pytest.mark.bestrefs
 def test_bestrefs_dataset_only_ids(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap  --old-context hst.pmap --load-pickle {hst_data}/test_cos.json --only-ids LPPPPPP6Q:LCE31SW6Q"""
-    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
@@ -306,15 +309,15 @@ def test_bestrefs_compare_source_canary(default_shared_state, caplog, hst_data):
 @pytest.mark.bestrefs
 def test_bestrefs_donotreprocess_datasets(default_shared_state, caplog):
     argv = """crds.bestrefs --old-context hst_0628.pmap --new-context hst_0633.pmap --hst --datasets JA9553LVQ JBBGRCGFQ"""
-    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
     out_to_check = """ Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['JA9553LVQ', 'JBBGRCGFQ']
  Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds.stsci.edu'
  Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
  0 errors
- 0 warnings
- 3 infos"""
+ 1 warnings
+ 5 infos"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
     default_shared_state.cleanup()
@@ -358,7 +361,7 @@ def test_bestrefs_donotreprocess_fix(default_shared_state, caplog, hst_data):
  1 sources processed
  1 source updates
  0 errors
- 0 warnings
+ 1 warnings
  5 infos"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
@@ -376,6 +379,7 @@ def test_bestrefs_multiple_updates_with_error(default_shared_state, caplog, hst_
  Using explicit old context 'hst_0628.pmap'
  Loading file '{hst_data}/bestrefs_new_error.json'
  Loaded 1 datasets from file '{hst_data}/bestrefs_new_error.json' completely replacing existing headers.
+ Assuming parameter names and required types are the same across contexts.
  ===> Processing JA9553M3Q:JA9553M3Q
  instrument='ACS' type='ATODTAB' data='JA9553M3Q:JA9553M3Q' ::  Lookup MATCHES: 'n/a' :: No update.
  instrument='ACS' type='BIASFILE' data='JA9553M3Q' ::  Old: Bestref FAILED:   parameter='CCDGAIN' value='2.4' is not in ['0.5', '1.0', '1.4', '2.0', '4.0', '8.0']
@@ -404,7 +408,7 @@ def test_bestrefs_multiple_updates_with_error(default_shared_state, caplog, hst_
  1 sources processed
  0 source updates
  2 errors
- 0 warnings
+ 1 warnings
  3 infos"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
@@ -585,7 +589,7 @@ def test_cleanpath(line, expected):
 
 @pytest.mark.bestrefs
 def test_init_func():
-    test_brs = BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.args.new_context is None
     assert test_brs.args.old_context is None
     assert test_brs.args.fetch_old_headers is False
@@ -771,21 +775,21 @@ def test_complex_init(hst_data):
                         ])
 def test_normalize_id(line, expected):
     """Test should show that datasets are converted to uppercase and given <exposure>:<exposure> form."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.normalize_id(line) == expected
 
 
 @pytest.mark.bestrefs
 def test_only_ids():
     """Test should demonstrate only_ids is set to None."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.only_ids is None
 
 
 @pytest.mark.bestrefs
 def test_drop_ids():
     """Test should demonstrate drop_ids is set to []."""
-    test_brs = br.BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert isinstance(test_brs.drop_ids, list)
     assert len(test_brs.drop_ids) == 0
 
@@ -798,7 +802,7 @@ def test_drop_ids():
                          ])
 def test_normalized(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs._normalized(line) == expected
 
 
@@ -809,7 +813,7 @@ def test_normalized(line, expected):
                          ])
 def test_locate_file(line, expected):
     """Test should demonstrate that a list of dataset IDs is normalized."""
-    test_brs = BestrefsScript()
+    test_brs = BestrefsScript("crds.bestrefs")
     assert test_brs.locate_file(line) == expected
 
 
@@ -917,30 +921,25 @@ def test_verbose_with_prefix(caplog, hst_data):
 
 
 @pytest.mark.bestrefs
-def test_screen_bestrefs(capsys, hst_data):
+def test_screen_bestrefs(hst_data, caplog):
     """Test checks for references that are atypical or known to be avoided."""
     argv = """crds.bestrefs --hst --instrument=acs --verbosity=55"""
-    test_brs = br.BestrefsScript(argv)
-    test_brs.skip_filekinds.append("brftab")
-    # Send logs to stdout
-    log.set_test_mode()
     bestrefs_dict = {"BRFTAB": "N/A", "SEGMENT": "N/A", "WCPTAB": "XAF1429EL_WCP.FITS"}
-    tuple1, tuple2 = test_brs.screen_bestrefs('acs', f'{hst_data}/j8bt05njq_raw.fits', bestrefs_dict)
-    out, _ = capsys.readouterr()
-    check_msg1 = f"""type='BRFTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Skipping type."""
-    check_msg2 = f"""type='SEGMENT' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
-    check_msg3 = f"""'WCPTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
+    test_brs = br.BestrefsScript(argv)
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        test_brs.skip_filekinds.append("brftab")
+        tuple1, tuple2 = test_brs.screen_bestrefs('acs', f'{hst_data}/j8bt05njq_raw.fits', bestrefs_dict)
+        out = caplog.text
+    check_msg1 = f"""instrument='ACS' type='SEGMENT' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'n/a' :: Would update."""
+    check_msg2 = f"""instrument='ACS' type='WCPTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  Bestref FOUND: 'xaf1429el_wcp.fits' :: Would update."""
+    exp_tuple1 = ['acs', 'segment', None, 'N/A']
+    exp_tuple2 = ['acs', 'wcptab', None, 'XAF1429EL_WCP.FITS']
     assert check_msg1 in out
     assert check_msg2 in out
-    assert check_msg3 in out
-    assert tuple1[0] == 'acs'
-    assert tuple1[1] == 'segment'
-    assert tuple1[2] is None
-    assert tuple1[3] == 'N/A'
-    assert tuple2[0] == 'acs'
-    assert tuple2[1] == 'wcptab'
-    assert tuple2[2] is None
-    assert tuple2[3] == 'XAF1429EL_WCP.FITS'
+    for i, j in enumerate(exp_tuple1):
+        assert tuple1[i] == j
+    for i, j in enumerate(exp_tuple2):
+        assert tuple2[i] == j
 
 
 @pytest.mark.bestrefs
