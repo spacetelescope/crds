@@ -162,6 +162,7 @@ markers = [
   "reftypes",
   "cmdline",
   "rmap",
+  "list",
   "roman",
 ]
 
