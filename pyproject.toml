@@ -163,6 +163,7 @@ markers = [
   "cmdline",
   "rmap",
   "list",
+  "roman",
 ]
 
 [tool.setuptools_scm]
