@@ -1,11 +1,8 @@
-from pytest import mark
-from crds.list import ListScript
 from crds.core import log, config, crds_cache_locking
 import logging
 import time
 import multiprocessing
 import tempfile
-from crds.tests import test_config
 log.THE_LOGGER.logger.propagate = True
 log.set_verbose(10)
 
