@@ -163,6 +163,7 @@ markers = [
   "cmdline",
   "rmap",
   "roman",
+  "locking",
 ]
 
 [tool.setuptools_scm]
