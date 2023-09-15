@@ -148,10 +148,10 @@ def test_list_cached_mappings(capsys):
     # Reducing the large output since otherwise the output is hundreds of lines.
     ListScript("crds.list --cached-mappings --full-path")()
     out, _ = capsys.readouterr()
-    out_to_check1 = '/grp/crds/cache/mappings/jwst/jwst.pmap'
-    out_to_check2 = '/grp/crds/cache/mappings/jwst/jwst_miri_photom_0027.rmap'
-    out_to_check3 = '/grp/crds/cache/mappings/jwst/jwst_niriss_abvegaoffset_0001.rmap'
-    out_to_check4 = '/grp/crds/cache/mappings/jwst/jwst_nirspec_superbias_0022.rmap'
+    out_to_check1 = '/mappings/jwst/jwst.pmap'
+    out_to_check2 = '/mappings/jwst/jwst_miri_photom_0027.rmap'
+    out_to_check3 = '/mappings/jwst/jwst_niriss_abvegaoffset_0001.rmap'
+    out_to_check4 = '/mappings/jwst/jwst_nirspec_superbias_0022.rmap'
     assert out_to_check1 in out, out_to_check2 in out
     assert out_to_check3 in out, out_to_check4 in out
 
@@ -173,23 +173,23 @@ def test_list_cached_references(capsys):
     ListScript("crds.list --cached-references --full-path")()
     out, _ = capsys.readouterr()
     print(out)
-    out_to_check1 = '/grp/crds/cache/references/jwst/jwst_fgs_abvegaoffset_0001.asdf'
-    out_to_check2 = '/grp/crds/cache/references/jwst/jwst_nircam_flat_0047.fits'
-    out_to_check3 = '/grp/crds/cache/references/jwst/jwst_nirspec_disperser_0033.asdf'
-    out_to_check4 = '/grp/crds/cache/references/jwst/jwst_system_datalvl_0001.json'
+    out_to_check1 = '/references/jwst/jwst_fgs_abvegaoffset_0001.asdf'
+    out_to_check2 = '/references/jwst/jwst_nircam_flat_0047.fits'
+    out_to_check3 = '/references/jwst/jwst_nirspec_disperser_0033.asdf'
+    out_to_check4 = '/references/jwst/jwst_system_datalvl_0001.json'
     assert out_to_check1 in out, out_to_check2 in out
     assert out_to_check3 in out, out_to_check4 in out
     ListScript("crds.list --cached-references --full-path --hst")()
     out, _ = capsys.readouterr()
-    out_to_check1 = '/grp/crds/cache/references/hst/01718255j_bia.fits'
-    out_to_check2 = '/grp/crds/cache/references/hst/19l18498j_dkc.fits'
-    out_to_check3 = '/grp/crds/cache/references/hst/54p15459i_dkc.fits'
-    out_to_check4 = '/grp/crds/cache/references/hst/5551551bi_drk.fits'
+    out_to_check1 = '/references/hst/01718255j_bia.fits'
+    out_to_check2 = '/references/hst/19l18498j_dkc.fits'
+    out_to_check3 = '/references/hst/54p15459i_dkc.fits'
+    out_to_check4 = '/references/hst/5551551bi_drk.fits'
     assert out_to_check1 in out, out_to_check2 in out
     assert out_to_check3 in out, out_to_check4 in out
 
 
-def test_list_dataset_ids(capsys):
+def test_list_dataset_ids(capsys, hst_data):
     ListScript("crds.list --dataset-ids acs --hst")()
     out, _ = capsys.readouterr()
     out_to_check_acs = """J6FY01020:J6FY01EEQ
@@ -197,6 +197,7 @@ J6FY01020:J6FY01EJQ
 J6FY01020:J6FY01EOQ
 J6FY01020:J6FY01ESQ"""
     assert out_to_check_acs in out
+
 
 
 def test_list_dataset_headers(capsys):
