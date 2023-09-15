@@ -163,6 +163,7 @@ markers = [
   "rmap",
   "list",
   "roman",
+  "certify",
 ]
 
 [tool.setuptools_scm]
