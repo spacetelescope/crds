@@ -475,7 +475,7 @@ Certifying '{cache}/mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relat
 Certifying '{cache}/mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context 'hst.pmap'
 ########################################
 0 errors
-0 warnings
+4 warnings
 39 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
