@@ -12,7 +12,7 @@ from crds.refactoring.checksum import ChecksumScript
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_fits_add():
+def test_checksum_script_fits_add():
     """
     >>> old_state = test_config.setup()
 
@@ -42,7 +42,7 @@ def dt_checksum_script_fits_add():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_fits_remove():
+def test_checksum_script_fits_remove():
     """
     >>> old_state = test_config.setup()
 
@@ -71,7 +71,7 @@ def dt_checksum_script_fits_remove():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_fits_verify_good():
+def test_checksum_script_fits_verify_good():
     """
     >>> old_state = test_config.setup()
 
@@ -93,7 +93,7 @@ def dt_checksum_script_fits_verify_good():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_fits_verify_bad():
+def test_checksum_script_fits_verify_bad():
     """
     >>> old_state = test_config.setup()
     >>> _ = shutil.copy("data/s7g1700gl_dead_bad_xsum.fits", "./verify_bad.fits")
@@ -111,7 +111,7 @@ def dt_checksum_script_fits_verify_bad():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_rmap_verify_good():
+def test_checksum_script_rmap_verify_good():
     """
     >>> old_state = test_config.setup()
     >>> ChecksumScript("crds.refactor.checksum --verify data/hst.pmap")()  # doctest: +ELLIPSIS
@@ -123,7 +123,7 @@ def dt_checksum_script_rmap_verify_good():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_rmap_add_bad():
+def test_checksum_script_rmap_add_bad():
     """
     >>> old_state = test_config.setup()
     >>> _ = shutil.copy("data/hst-bad-xsum.rmap", "./add_bad.rmap")
@@ -143,7 +143,7 @@ def dt_checksum_script_rmap_add_bad():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_rmap_verify_bad():
+def test_checksum_script_rmap_verify_bad():
     """
     >>> old_state = test_config.setup()
     >>> _ = shutil.copy("data/hst-bad-xsum.rmap", "./verify_bad.rmap")
@@ -158,7 +158,7 @@ def dt_checksum_script_rmap_verify_bad():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_rmap_remove_bad():
+def test_checksum_script_rmap_remove_bad():
     """
     >>> old_state = test_config.setup()
     >>> _ = shutil.copy("data/hst-bad-xsum.rmap", "./remove_bad.rmap")
@@ -173,7 +173,7 @@ def dt_checksum_script_rmap_remove_bad():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_rmap_verify_missing():
+def test_checksum_script_rmap_verify_missing():
     """
     >>> old_state = test_config.setup()
     >>> _ = shutil.copy("data/hst-missing-xsum.rmap", "./verify_missing.rmap")
@@ -190,7 +190,7 @@ def dt_checksum_script_rmap_verify_missing():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_unsupported_asdf():
+def test_checksum_script_unsupported_asdf():
     """
     >>> old_state = test_config.setup()
     >>> ChecksumScript("crds.refactor.checksum data/valid.asdf")()  # doctest: +ELLIPSIS
@@ -211,7 +211,7 @@ def dt_checksum_script_unsupported_asdf():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_unsupported_json():
+def test_checksum_script_unsupported_json():
     """
     >>> old_state = test_config.setup()
     >>> ChecksumScript("crds.refactor.checksum data/valid.json")()  # doctest: +ELLIPSIS
@@ -232,7 +232,7 @@ def dt_checksum_script_unsupported_json():
 
 @mark.refactoring
 @mark.checksum
-def dt_checksum_script_unsupported_text():
+def test_checksum_script_unsupported_text():
     """
     >>> old_state = test_config.setup()
     >>> ChecksumScript("crds.refactor.checksum data/opaque_fts.tmp")()  # doctest: +ELLIPSIS
