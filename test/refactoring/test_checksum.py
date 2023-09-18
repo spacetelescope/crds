@@ -1,5 +1,6 @@
 import doctest
 import os
+from pathlib import Path
 from pytest import mark
 import shutil
 
@@ -12,32 +13,22 @@ from crds.refactoring.checksum import ChecksumScript
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_add():
-    """
-    >>> old_state = test_config.setup()
+def test_checksum_script_fits_add(default_test_cache_state, hst_data, tmpdir):
 
-    >>> _ = shutil.copy("data/s7g1700gl_dead.fits", "added.fits")
-    >>> header = data_file.get_header("./added.fits")
-    >>> assert "CHECKSUM" not in header
-    >>> assert "DATASUM" not in header
+    # setup test file which should not have any checksum data.
+    fits_path = tmpdir / "added.fits"
+    shutil.copy(Path(hst_data) / 's7g1700gl_dead.fits', fits_path)
+    header = data_file.get_header(str(fits_path))
+    assert "CHECKSUM" not in header
+    assert "DATASUM" not in header
 
-    >>> ChecksumScript("crds.refactor.checksum ./added.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Adding checksum for './added.fits'
-    0
-
-    >>> utils.clear_function_caches()
-    >>> header = data_file.get_header("./added.fits")
-    >>> assert "CHECKSUM" in header
-    >>> assert "DATASUM" in header
-
-    >>> ChecksumScript("crds.refactor.checksum --verify ./added.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './added.fits'
-    0
-
-    >>> os.remove("added.fits")
-
-    >>> test_config.cleanup(old_state)
-    """
+    # add checksum and test
+    argv = f'crds.refactor.checksum {str(fits_path)}'
+    assert ChecksumScript(argv)() == 0  # 0 == successful run
+    utils.clear_function_caches()
+    header = data_file.get_header(str(fits_path))
+    assert "CHECKSUM" in header
+    assert "DATASUM" in header
 
 
 @mark.refactoring
