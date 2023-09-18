@@ -7,7 +7,6 @@ log.THE_LOGGER.logger.propagate=True
 
 @mark.list
 def test_list_hst_mappings(capsys, default_shared_state):
-    default_shared_state.cleanup()
     ListScript("crds.list --mappings --contexts hst.pmap")()
     out, _ = capsys.readouterr()
     out_to_check = """hst.pmap
@@ -128,11 +127,11 @@ hst_wfpc2_offtab.rmap
 hst_wfpc2_shadfile.rmap
 hst_wfpc2_wf4tfile.rmap"""
     assert out_to_check in out
+    default_shared_state.cleanup()
 
 
 @mark.list
 def test_list_jwst_mappings(capsys, jwst_shared_cache_state):
-    jwst_shared_cache_state.cleanup()
     ListScript("crds.list --mappings --contexts jwst.pmap")()
     out, _ = capsys.readouterr()
     out_to_check = """jwst_miri.imap
@@ -144,6 +143,7 @@ jwst_nircam_photom.rmap
 jwst_nirspec.imap
 jwst_nirspec_photom.rmap"""
     assert out_to_check in out
+    jwst_shared_cache_state.cleanup()
 
 
 @mark.list
@@ -376,7 +376,6 @@ s7g1700ql_dead.fits"""
 
 @mark.list
 def test_list_cat_mappings(capsys, default_shared_state):
-    default_shared_state.cleanup()
     ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00 --hst")()
     out, _ = capsys.readouterr()
     out_to_check1 = """mappings/hst/hst_cos_deadtab_0250.rmap"""
@@ -427,6 +426,7 @@ def test_list_cat_mappings(capsys, default_shared_state):
  'type': 'mapping',
  'uploaded_as': 'hst_cos_deadtab_0250.rmap',
  'useafter_date': '2050-01-01 00:00:00'}"""
+    default_shared_state.cleanup()
     assert out_to_check1 in out
     assert out_to_check2 in out
     assert out_to_check3 in out
@@ -438,6 +438,7 @@ def test_list_cat_mappings(capsys, default_shared_state):
 def test_list_status(capsys, default_shared_state):
     ListScript("crds.list --status --hst")()
     out, _ = capsys.readouterr()
+    default_shared_state.cleanup()
     assert "CRDS Summary =" in out
     assert "CRDS Version = " in out
     assert "CRDS_MODE = 'auto'" in out
@@ -456,6 +457,7 @@ def test_list_status(capsys, default_shared_state):
 def test_list_config(capsys, default_shared_state):
     ListScript("crds.list --config --hst")()
     out, _ = capsys.readouterr()
+    default_shared_state.cleanup()
     assert "CRDS Environment" in out
     assert "CRDS Client Config" in out
     assert "CRDS Actual Paths" in out
