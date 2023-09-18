@@ -849,12 +849,12 @@ def test_certify_AsdfCertify_valid_with_astropy_time(jwst_serverless_state, jwst
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid_with_astropy_time.asdf", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/valid_with_astropy_time.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels."""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -862,9 +862,9 @@ def test_certify_FitsCertify_opaque_name(hst_serverless_state, hst_data, caplog)
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{hst_data}/opaque_fts.tmp", "hst.pmap", observatory="hst")
         out = caplog.text
+    hst_serverless_state.cleanup()
     expected_out = f"Certifying '{hst_data}/opaque_fts.tmp' as 'FITS' relative to context 'hst.pmap'"
     assert expected_out in out
-    hst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -874,13 +874,13 @@ def test_certify_AsdfCertify_opaque_name(jwst_serverless_state, jwst_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/opaque_asd.tmp", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels.
 {jwst_data}/opaque_asd.tmp Validation error : JWST Data Models: Unrecognized file type for: {jwst_data}/opaque_asd.tmp"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -888,10 +888,10 @@ def test_certify_rmap_compare(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file("jwst_miri_distortion_0025.rmap", "jwst_0357.pmap")        
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = "Certifying 'jwst_miri_distortion_0025.rmap' as 'MAPPING' relative to context 'jwst_0357.pmap'"
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -1000,7 +1000,6 @@ Checking diffs from 'roman_wfi_flat_0001.rmap' to 'roman_wfi_flat_0004_badtpn.rm
 Rule change at ('{roman_data}/roman_wfi_flat_0004_badtpn.rmap', ('WFI21', 'F158'), ('2020-01-01 00:00:00',)) added Match rule for 'roman_wfi_flat_0003.asdf'"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    
 
 
 @mark.certify
@@ -1026,6 +1025,7 @@ def test_load_nirspec_staturation_tpn_lines(jwst_serverless_state):
     "include" and reuse of generic files."""
     path = generic_tpn.get_tpn_path("nirspec_saturation.tpn","jwst")
     lines = generic_tpn.load_tpn_lines(path)
+    jwst_serverless_state.cleanup()
     expected = [
         'META.SUBARRAY.NAME          H   C   (is_imaging_mode(EXP_TYPE))',
         'SUBARRAY                    H   C   O',
@@ -1082,7 +1082,6 @@ def test_load_nirspec_staturation_tpn_lines(jwst_serverless_state):
     ]
     for line, exp in zip(lines, expected):
         assert line == exp
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -1092,6 +1091,7 @@ def test_load_nirspec_saturation_tpn(jwst_serverless_state):
     """
     path = generic_tpn.get_tpn_path("nirspec_saturation.tpn","jwst")
     loaded = generic_tpn.load_tpn(path)
+    jwst_serverless_state.cleanup()
     expected = """('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', condition='(is_imaging_mode(EXP_TYPE))', values=())
 ('SUBARRAY', 'HEADER', 'CHARACTER', 'OPTIONAL', values=())
 ('META.SUBARRAY.XSTART', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=())
@@ -1146,7 +1146,6 @@ def test_load_nirspec_saturation_tpn(jwst_serverless_state):
 ('META.EXPOSURE.GAIN_FACTOR', 'HEADER', 'REAL', 'WARN', values=('1.0:10.0',))""".splitlines()
     for line, exp in zip(loaded, expected):
         assert str(line) == exp
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
