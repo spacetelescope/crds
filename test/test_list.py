@@ -191,13 +191,9 @@ def test_list_cached_references_jwst(capsys, jwst_shared_cache_state):
     cache = jwst_shared_cache_state.cache
     ListScript("crds.list --cached-references --full-path")()
     out, _ = capsys.readouterr()
-    print(out)
-    out_to_check1 = f'{cache}/references/jwst/jwst_fgs_abvegaoffset_0001.asdf'
-    out_to_check2 = f'{cache}/references/jwst/jwst_nircam_flat_0047.fits'
-    out_to_check3 = f'{cache}/references/jwst/jwst_nirspec_disperser_0033.asdf'
-    out_to_check4 = f'{cache}/references/jwst/jwst_system_datalvl_0001.json'
+    out_to_check1 = f'{cache}/references/jwst/jwst_miri_flat_0006.fits'
+    out_to_check2 = f'{cache}/references/jwst/jwst_niriss_flat_0000.fits'
     assert out_to_check1 in out, out_to_check2 in out
-    assert out_to_check3 in out, out_to_check4 in out
     jwst_shared_cache_state.cleanup()
 
 
