@@ -14,6 +14,7 @@ def test_certify_truncated_file(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{hst_data}/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
  0 errors
@@ -21,7 +22,6 @@ def test_certify_truncated_file(default_shared_state, hst_data, caplog):
  4 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.certify
@@ -30,6 +30,7 @@ def test_certify_bad_checksum(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
 AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
 AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
@@ -84,7 +85,6 @@ Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
 40 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.certify
@@ -93,6 +93,7 @@ def test_certify_good_checksum(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
  FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
  Running fitsverify.
@@ -135,7 +136,6 @@ def test_certify_good_checksum(default_shared_state, hst_data, caplog):
  38 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 INTERPRET_FITSVERIFY = """
@@ -234,6 +234,7 @@ def test_certify_interpret_fitsverify_1(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY)
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = """ >> Running fitsverify.
 >>
 >>               fitsverify 4.18 (CFITSIO V3.370)
@@ -276,7 +277,6 @@ Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs."""
     certify.certify.interpret_fitsverify_output(0, "")
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -284,6 +284,7 @@ def test_certify_interpret_fitsverify_2(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY2)
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out =     """
 >>
 >>               fitsverify 4.18 (CFITSIO V3.410)
@@ -337,7 +338,6 @@ Fitsverify output contains errors or warnings CRDS recategorizes as INFOs."""
     certify.certify.interpret_fitsverify_output(0, "")
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -346,6 +346,7 @@ def test_certify_dump_provenance_fits(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
 FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
 [0] COMMENT = 'Created by S. Beland and IDT and P. Hodge converted to user coord.'
@@ -366,7 +367,6 @@ TIME-OBS = '00:00:00'
 16 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.certify
@@ -375,6 +375,7 @@ def test_certify_dump_provenance_generic(jwst_serverless_state, jwst_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
 EXP_TYPE = 'mir_image'
 META.AUTHOR [AUTHOR] = 'Todd Miller'
@@ -408,7 +409,6 @@ META.USEAFTER [USEAFTER] = '2015-01-25T12:00:00'
 29 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -417,6 +417,7 @@ def test_certify_missing_keyword(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{hst_data}/missing_keyword.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
 FITS file 'missing_keyword.fits' conforms to FITS standards.
 instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
@@ -426,7 +427,7 @@ instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Check
 4 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.certify
@@ -436,6 +437,7 @@ def test_certify_recursive(default_shared_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{cache}/mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context 'hst.pmap'
 ########################################
 Certifying '{cache}/mappings/hst/hst_cos_badttab.rmap' (2/19) as 'MAPPING' relative to context 'hst.pmap'
@@ -475,11 +477,10 @@ Certifying '{cache}/mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relat
 Certifying '{cache}/mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context 'hst.pmap'
 ########################################
 0 errors
-4 warnings
+0 warnings
 39 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.certify
@@ -489,6 +490,7 @@ def test_certify_table_comparison_context(default_shared_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{cache}/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
 FITS file 'y951738kl_hv.fits' conforms to FITS standards.
 Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
@@ -525,7 +527,6 @@ Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is 
 17 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.certify
@@ -534,6 +535,7 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{hst_data}/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0857.pmap' and comparison reference '{hst_data}/y9j16159l_hv.fits'
 FITS file 'y951738kl_hv.fits' conforms to FITS standards.
 Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
@@ -568,7 +570,6 @@ Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT
 16 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.certify
@@ -577,6 +578,7 @@ def test_certify_duplicate_sha1sum(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    default_shared_state.cleanup()
     expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context 'hst_1099.pmap'
 instrument='COS' type='DEADTAB' data='{hst_data}/s7g1700gl_dead.fits' ::  Duplicate file check : File 's7g1700gl_dead.fits' is identical to existing CRDS file 's7g1700gl_dead.fits'
 FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
@@ -586,7 +588,6 @@ FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
 4 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.certify
@@ -595,6 +596,7 @@ def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    jwst_shared_cache_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/niriss_ref_photom.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
 FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
 Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
@@ -604,7 +606,6 @@ Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' 
 8 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_shared_cache_state.cleanup()
 
 
 @mark.certify
@@ -613,6 +614,7 @@ def test_certify_jwst_missing_optional_parkey(jwst_serverless_state, jwst_data, 
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/jwst_miri_ipc_0003.add.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
 FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
 Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'SHORT | MEDIUM |'
@@ -624,7 +626,6 @@ Checking JWST datamodels.
 7 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -633,6 +634,7 @@ def test_certify_jwst_invalid_asdf(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validation error : Input object does not appear to be an ASDF file or a FITS with ASDF extension
 ########################################
@@ -641,7 +643,6 @@ instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validati
 3 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -650,6 +651,7 @@ def test_certify_jwst_invalid_json(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/invalid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.json' ::  Validation error : JSON wouldn't load from '{jwst_data}/invalid.json' : Expecting ',' delimiter: line 5 column 1 (char 77)
 ########################################
@@ -658,7 +660,6 @@ instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.json' ::  Validati
 3 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -667,6 +668,7 @@ def test_certify_jwst_invalid_yaml(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/invalid.yaml' (1/1) as 'YAML' relative to context 'jwst_0034.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.yaml' ::  Validation error : while scanning a tag
   in "{jwst_data}/invalid.yaml", line 1, column 5
@@ -678,7 +680,6 @@ expected ' ', but found '^'
 3 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -713,19 +714,19 @@ def test_certify_JsonCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid.json", "jwst_0034.pmap", observatory="jwst")
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"Certifying '{jwst_data}/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'"
     assert expected_out in out
-    jwst_serverless_state.cleanup()
-    
+
 
 @mark.certify
 def test_certify_YamlCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid.yaml", "jwst_0034.pmap", observatory="jwst")
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"Certifying '{jwst_data}/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'"
     assert expected_out in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -733,12 +734,12 @@ def test_certify_AsdfCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid.asdf", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
+    jwst_serverless_state.cleanup()
     expected_out = f"""Certifying '{jwst_data}/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels."""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
 
 
 @mark.certify
@@ -748,9 +749,9 @@ def test_certify_roman_valid_asdf(roman_test_cache_state, roman_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_small.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
+    roman_test_cache_state.cleanup()
     expected_out = f"Certifying '{roman_data}/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'"
     assert expected_out in out
-    roman_test_cache_state.cleanup()
 
 
 @mark.certify
@@ -761,13 +762,13 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
+    roman_test_cache_state.cleanup()
     expected_out = [
         f"Certifying '{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'",
         f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"
     ]
     for msg in expected_out:
         assert msg in out
-    roman_test_cache_state.cleanup()
 
 
 @mark.certify
@@ -779,6 +780,7 @@ def test_certify_roman_invalid_asdf_tpn(roman_test_cache_state, roman_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
+    roman_test_cache_state.cleanup()
     expected_out = f"""Certifying '{roman_data}/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
 In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]' : Value 'BAD' is not one of ['ANY',
 'CLEAR',
@@ -797,7 +799,6 @@ In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.INSTRUMENT.OP
 'UNKNOWN']"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    roman_test_cache_state.cleanup()
 
 
 @mark.certify
@@ -806,9 +807,9 @@ def test_certify_roman_valid_spec_asdf(roman_test_cache_state, roman_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_small.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
+    roman_test_cache_state.cleanup()
     expected_out = f"Certifying '{roman_data}/roman_wfi16_grism_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'"
     assert expected_out in out
-    roman_test_cache_state.cleanup()
 
 
 @mark.certify
@@ -818,11 +819,11 @@ def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_da
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")        
         out = caplog.text
+    roman_test_cache_state.cleanup()
     expected_out =f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
 {roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    roman_test_cache_state.cleanup()
 
 
 @mark.certify
