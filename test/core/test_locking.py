@@ -3,6 +3,7 @@ import logging
 import time
 import multiprocessing
 import tempfile
+from pytest import mark
 log.THE_LOGGER.logger.propagate = True
 log.set_verbose(10)
 
@@ -34,8 +35,9 @@ def try_multiprocessing():
         pool.close()
         reader = open(output_file.name)
         print(reader.read())
-#
-#
+
+
+@mark.locking
 def test_default_locking(default_shared_state, capsys):
     crds_cache_locking.init_locks()
     status = crds_cache_locking.status()
@@ -53,6 +55,7 @@ testing
     default_shared_state.cleanup()
 
 
+@mark.locking
 def test_multiprocessing_locking(default_shared_state, capsys):
     _ = config.LOCKING_MODE.set("multiprocessing")
     crds_cache_locking.init_locks()
@@ -71,6 +74,7 @@ testing
     default_shared_state.cleanup()
 
 
+@mark.locking
 def test_filelock_locking(default_shared_state, capsys):
     _ = config.LOCKING_MODE.set("filelock")
     crds_cache_locking.init_locks()
@@ -91,6 +95,7 @@ testing
     default_shared_state.cleanup()
 
 
+@mark.locking
 def test_default_disabled(default_shared_state, capsys, caplog):
     _ = config.USE_LOCKING.set(False)
     _ = log.set_verbose()
@@ -108,7 +113,7 @@ def test_default_disabled(default_shared_state, capsys, caplog):
     default_shared_state.cleanup()
 
 
-
+@mark.locking
 def test_default_readonly(default_shared_state, capsys):
     _ = config.set_cache_readonly()
     _ = log.set_verbose()
