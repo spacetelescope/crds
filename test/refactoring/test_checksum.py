@@ -98,14 +98,12 @@ def test_checksum_script_fits_verify_bad(default_test_cache_state, hst_data, tmp
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_verify_good():
-    """
-    >>> old_state = test_config.setup()
-    >>> ChecksumScript("crds.refactor.checksum --verify data/hst.pmap")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for 'data/hst.pmap'
-    0
-    >>> test_config.cleanup(old_state)
-    """
+def test_checksum_script_rmap_verify_good(default_test_cache_state, hst_data):
+    """Test checksum verification for rmaps"""
+
+    pmap_path = Path(hst_data) / 'hst.pmap'
+    argv = f'crds.refactor.checksum --verify {str(pmap_path)}'
+    assert ChecksumScript(argv)() == 0
 
 
 @mark.refactoring
