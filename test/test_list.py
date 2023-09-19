@@ -374,6 +374,7 @@ s7g1700ql_dead.fits"""
     default_shared_state.cleanup()
 
 
+@mark.go
 @mark.list
 def test_list_cat_mappings(capsys, default_shared_state):
     ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00 --hst")()
@@ -431,9 +432,9 @@ def test_list_cat_mappings(capsys, default_shared_state):
     assert out_to_check2 in out
     assert out_to_check3 in out
     assert out_to_check4 in out
-    default_shared_state.cleanup()
 
 
+@mark.go
 @mark.list
 def test_list_status(capsys, default_shared_state):
     ListScript("crds.list --status --hst")()
@@ -450,9 +451,9 @@ def test_list_status(capsys, default_shared_state):
     assert "Python Executable =" in out
     assert "Python Version =" in out
     assert "Readonly Cache = False" in out
-    default_shared_state.cleanup()
 
 
+@mark.go
 @mark.list
 def test_list_config(capsys, default_shared_state):
     ListScript("crds.list --config --hst")()
@@ -464,4 +465,3 @@ def test_list_config(capsys, default_shared_state):
     assert "CRDS Server Info" in out
     assert "Calibration Environment" in out
     assert "Python Environment" in out
-    default_shared_state.cleanup()
