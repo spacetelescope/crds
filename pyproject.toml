@@ -164,6 +164,7 @@ markers = [
   "list",
   "roman",
   'matches',
+  "certify",
 ]
 
 [tool.setuptools_scm]
