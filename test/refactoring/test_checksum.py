@@ -164,7 +164,7 @@ def test_checksum_script_rmap_verify_missing(hst_data, caplog):
 def test_checksum_script_unsupported_asdf(jwst_data, tmpdir, caplog):
     """Test that ASDF is still unsupported with-respect-to checksum"""
 
-    # setup test file which should bad checksum data.
+    # setup test file
     asdf_path = tmpdir / 'valid.asdf'
     shutil.copy(Path(jwst_data) / 'valid.asdf', asdf_path)
 
@@ -191,7 +191,7 @@ def test_checksum_script_unsupported_asdf(jwst_data, tmpdir, caplog):
 def test_checksum_script_unsupported_json(test_data, tmpdir, caplog):
     """Test that JSON is still unsupported with-respect-to-checksum"""
 
-    # setup test file which should bad checksum data.
+    # setup test file
     json_path = tmpdir / 'valid.json'
     shutil.copy(Path(test_data) / 'valid.json', json_path)
 
@@ -215,20 +215,26 @@ def test_checksum_script_unsupported_json(test_data, tmpdir, caplog):
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_unsupported_text():
-    """
-    >>> old_state = test_config.setup()
-    >>> ChecksumScript("crds.refactor.checksum data/opaque_fts.tmp")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Adding checksum for 'data/opaque_fts.tmp'
-    CRDS - ERROR -  Checksum operation FAILED : File 'data/opaque_fts.tmp' does not appear to be a CRDS reference or mapping file.
-    1
-    >>> ChecksumScript("crds.refactor.checksum --remove ddata/opaque_fts.tmp")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for 'ddata/opaque_fts.tmp'
-    CRDS - ERROR -  Checksum operation FAILED : File 'ddata/opaque_fts.tmp' does not appear to be a CRDS reference or mapping file.
-    1
-    >>> ChecksumScript("crds.refactor.checksum --verify data/opaque_fts.tmp")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for 'data/opaque_fts.tmp'
-    CRDS - ERROR -  Checksum operation FAILED : File 'data/opaque_fts.tmp' does not appear to be a CRDS reference or mapping file.
-    1
-    >>> test_config.cleanup(old_state)
-    """
+def test_checksum_script_unsupported_text(test_data, tmpdir, caplog):
+    """Test that unrecognized files types are not supported"""
+
+    # setup test file
+    file_path = tmpdir / 'opaque_fts.tmp'
+    shutil.copy(Path(test_data) / 'opaque_fts.tmp', file_path)
+
+    # Test that adding is not supported.
+    argv = f'crds.refactor.checksum {str(file_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "does not appear to be a CRDS reference or mapping file." in caplog.text
+
+    # Test that removing is not supported.
+    caplog.clear()
+    argv = f'crds.refactor.checksum --remove {str(file_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "does not appear to be a CRDS reference or mapping file." in caplog.text
+
+    # Test that verification is not supported.
+    caplog.clear()
+    argv = f'crds.refactor.checksum --verify {str(file_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "does not appear to be a CRDS reference or mapping file." in caplog.text
