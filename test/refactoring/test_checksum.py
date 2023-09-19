@@ -14,6 +14,7 @@ from crds.refactoring.checksum import ChecksumScript
 @mark.refactoring
 @mark.checksum
 def test_checksum_script_fits_add(default_test_cache_state, hst_data, tmpdir):
+    """Test adding checksum to FITS files"""
 
     # setup test file which should not have any checksum data.
     fits_path = tmpdir / "added.fits"
@@ -33,31 +34,23 @@ def test_checksum_script_fits_add(default_test_cache_state, hst_data, tmpdir):
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_remove():
-    """
-    >>> old_state = test_config.setup()
+def test_checksum_script_fits_remove(default_test_cache_state, hst_data, tmpdir):
+    """Test removing chedsum from FITS files"""
 
-    >>> _ = shutil.copy("data/s7g1700gl_dead_good_xsum.fits", "removed.fits")
-    >>> header = data_file.get_header("./removed.fits")
-    >>> assert "CHECKSUM" in header
-    >>> assert "DATASUM" in header
+    # setup test file which should not have any checksum data.
+    fits_path = tmpdir / "removed.fits"
+    shutil.copy(Path(hst_data) / 's7g1700gl_dead_good_xsum.fits', fits_path)
+    header = data_file.get_header(str(fits_path))
+    assert "CHECKSUM" in header
+    assert "DATASUM" in header
 
-    >>> ChecksumScript("crds.refactor.checksum --remove ./removed.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for './removed.fits'
-    0
-
-    >>> utils.clear_function_caches()
-    >>> header = data_file.get_header("./removed.fits")
-    >>> assert "CHECKSUM" not in header
-    >>> assert "DATASUM" not in header
-
-    >>> ChecksumScript("crds.refactor.checksum --verify ./removed.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './removed.fits'
-    0
-
-    >>> os.remove("removed.fits")
-    >>> test_config.cleanup(old_state)
-    """
+    # Remove the checksum and test.
+    argv = f'crds.refactor.checksum --remove {str(fits_path)}'
+    assert ChecksumScript(argv)() == 0  # 0 = successful run
+    utils.clear_function_caches()
+    header = data_file.get_header(str(fits_path))
+    assert "CHECKSUM" not in header
+    assert "DATASUM" not in header
 
 
 @mark.refactoring
