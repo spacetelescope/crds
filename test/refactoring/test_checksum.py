@@ -126,17 +126,12 @@ def test_checksum_script_rmap_add_bad(default_test_cache_state, hst_data, tmpdir
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_verify_bad():
-    """
-    >>> old_state = test_config.setup()
-    >>> _ = shutil.copy("data/hst-bad-xsum.rmap", "./verify_bad.rmap")
-    >>> ChecksumScript("crds.refactor.checksum --verify ./verify_bad.rmap")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './verify_bad.rmap'
-    CRDS - ERROR -  Checksum operation FAILED : sha1sum mismatch in 'verify_bad.rmap'
-    1
-    >>> os.remove("verify_bad.rmap")
-    >>> test_config.cleanup(old_state)
-    """
+def test_checksum_script_rmap_verify_bad(default_test_cache_state, hst_data, caplog):
+    """Test bad checksum in rmap"""
+
+    argv = f'crds.refactor.checksum --verify {str(Path(hst_data) / "hst-bad-xsum.rmap")}'
+    assert ChecksumScript(argv)() == 1
+    assert 'Checksum operation FAILED : sha1sum mismatch' in caplog.text
 
 
 @mark.refactoring
