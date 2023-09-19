@@ -161,23 +161,29 @@ def test_checksum_script_rmap_verify_missing(default_test_cache_state, hst_data,
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_unsupported_asdf():
-    """
-    >>> old_state = test_config.setup()
-    >>> ChecksumScript("crds.refactor.checksum data/valid.asdf")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Adding checksum for 'data/valid.asdf'
-    CRDS - ERROR -  Failed updating checksum for 'data/valid.asdf' : Method 'add_checksum' is not supported for file format 'ASDF'
-    1
-    >>> ChecksumScript("crds.refactor.checksum --remove data/valid.asdf")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for 'data/valid.asdf'
-    CRDS - ERROR -  Checksum operation FAILED : Method 'remove_checksum' is not supported for file format 'ASDF'
-    1
-    >>> ChecksumScript("crds.refactor.checksum --verify data/valid.asdf")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for 'data/valid.asdf'
-    CRDS - ERROR -  Checksum operation FAILED : Method 'verify_checksum' is not supported for file format 'ASDF'
-    1
-    >>> test_config.cleanup(old_state)
-    """
+def test_checksum_script_unsupported_asdf(default_test_cache_state, jwst_data, tmpdir, caplog):
+    """Test that ASDF is still unsupported with-respect-to checksum"""
+
+    # setup test file which should bad checksum data.
+    asdf_path = tmpdir / 'valid.asdf'
+    shutil.copy(Path(jwst_data) / 'valid.asdf', asdf_path)
+
+    # Test that adding is not supported.
+    argv = f'crds.refactor.checksum {str(asdf_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "Method 'add_checksum' is not supported for file format 'ASDF'" in caplog.text
+
+    # Test that removing is not supported.
+    caplog.clear()
+    argv = f'crds.refactor.checksum --remove {str(asdf_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "Method 'remove_checksum' is not supported for file format 'ASDF'" in caplog.text
+
+    # Test that verification is not supported.
+    caplog.clear()
+    argv = f'crds.refactor.checksum --verify {str(asdf_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "Method 'verify_checksum' is not supported for file format 'ASDF'" in caplog.text
 
 
 @mark.refactoring
