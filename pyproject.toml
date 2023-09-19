@@ -163,6 +163,7 @@ markers = [
   "rmap",
   "list",
   "roman",
+  'matches',
 ]
 
 [tool.setuptools_scm]
