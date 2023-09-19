@@ -150,19 +150,13 @@ def test_checksum_script_rmap_remove_bad(default_test_cache_state, hst_data, tmp
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_verify_missing():
-    """
-    >>> old_state = test_config.setup()
-    >>> _ = shutil.copy("data/hst-missing-xsum.rmap", "./verify_missing.rmap")
+def test_checksum_script_rmap_verify_missing(default_test_cache_state, hst_data, caplog):
+    """Test that checksum information is missing from a map"""
 
-    >>> ChecksumScript("crds.refactor.checksum --verify ./verify_missing.rmap")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './verify_missing.rmap'
-    CRDS - ERROR -  Checksum operation FAILED : sha1sum is missing in 'verify_missing.rmap'
-    1
-
-    >>> os.remove("verify_missing.rmap")
-    >>> test_config.cleanup(old_state)
-    """
+    map_path = Path(hst_data) / 'hst-missing-xsum.rmap'
+    argv = f'crds.refactor.checksum --verify {str(map_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert 'Checksum operation FAILED : sha1sum is missing in' in caplog.text
 
 
 @mark.refactoring
