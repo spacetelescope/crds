@@ -188,23 +188,29 @@ def test_checksum_script_unsupported_asdf(jwst_data, tmpdir, caplog):
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_unsupported_json():
-    """
-    >>> old_state = test_config.setup()
-    >>> ChecksumScript("crds.refactor.checksum data/valid.json")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Adding checksum for 'data/valid.json'
-    CRDS - ERROR -  Failed updating checksum for 'data/valid.json' : Method 'add_checksum' is not supported for file format 'JSON'
-    1
-    >>> ChecksumScript("crds.refactor.checksum --remove data/valid.json")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for 'data/valid.json'
-    CRDS - ERROR -  Checksum operation FAILED : Method 'remove_checksum' is not supported for file format 'JSON'
-    1
-    >>> ChecksumScript("crds.refactor.checksum --verify data/valid.json")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for 'data/valid.json'
-    CRDS - ERROR -  Checksum operation FAILED : Method 'verify_checksum' is not supported for file format 'JSON'
-    1
-    >>> test_config.cleanup(old_state)
-    """
+def test_checksum_script_unsupported_json(test_data, tmpdir, caplog):
+    """Test that JSON is still unsupported with-respect-to-checksum"""
+
+    # setup test file which should bad checksum data.
+    json_path = tmpdir / 'valid.json'
+    shutil.copy(Path(test_data) / 'valid.json', json_path)
+
+    # Test that adding is not supported.
+    argv = f'crds.refactor.checksum {str(json_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "Method 'add_checksum' is not supported for file format 'JSON'" in caplog.text
+
+    # Test that removing is not supported.
+    caplog.clear()
+    argv = f'crds.refactor.checksum --remove {str(json_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "Method 'remove_checksum' is not supported for file format 'JSON'" in caplog.text
+
+    # Test that verification is not supported.
+    caplog.clear()
+    argv = f'crds.refactor.checksum --verify {str(json_path)}'
+    assert ChecksumScript(argv)() == 1
+    assert "Method 'verify_checksum' is not supported for file format 'JSON'" in caplog.text
 
 
 @mark.refactoring
