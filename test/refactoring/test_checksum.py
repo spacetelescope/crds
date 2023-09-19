@@ -188,12 +188,12 @@ def test_checksum_script_unsupported_asdf(jwst_data, tmpdir, caplog):
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_unsupported_json(test_data, tmpdir, caplog):
+def test_checksum_script_unsupported_json(jwst_data, tmpdir, caplog):
     """Test that JSON is still unsupported with-respect-to-checksum"""
 
     # setup test file
     json_path = tmpdir / 'valid.json'
-    shutil.copy(Path(test_data) / 'valid.json', json_path)
+    shutil.copy(Path(jwst_data) / 'valid.json', json_path)
 
     # Test that adding is not supported.
     argv = f'crds.refactor.checksum {str(json_path)}'
@@ -215,12 +215,12 @@ def test_checksum_script_unsupported_json(test_data, tmpdir, caplog):
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_unsupported_text(test_data, tmpdir, caplog):
+def test_checksum_script_unsupported_text(hst_data, tmpdir, caplog):
     """Test that unrecognized files types are not supported"""
 
     # setup test file
     file_path = tmpdir / 'opaque_fts.tmp'
-    shutil.copy(Path(test_data) / 'opaque_fts.tmp', file_path)
+    shutil.copy(Path(hst_data) / 'opaque_fts.tmp', file_path)
 
     # Test that adding is not supported.
     argv = f'crds.refactor.checksum {str(file_path)}'
