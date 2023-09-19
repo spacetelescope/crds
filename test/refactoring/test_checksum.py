@@ -10,6 +10,10 @@ from crds import data_file
 from crds.refactoring import checksum
 from crds.refactoring.checksum import ChecksumScript
 
+# For log capture tests, need to ensure that the CRDS
+# logger propagates its events.
+log.THE_LOGGER.logger.propagate = True
+
 
 @mark.refactoring
 @mark.checksum
@@ -56,14 +60,14 @@ def test_checksum_script_fits_remove(default_test_cache_state, hst_data, tmpdir)
 @mark.refactoring
 @mark.checksum
 def test_checksum_script_fits_verify_good(default_test_cache_state, hst_data, tmpdir):
-    """Test checksum verification"""
+    """Test checksum verification of a good file"""
 
     # setup test file and confirm it contains checksum information.
     fits_path = tmpdir / "verify_good.fits"
     shutil.copy(Path(hst_data) / "s7g1700gl_dead_good_xsum.fits", fits_path)
     header = data_file.get_header(str(fits_path))
     assert header["CHECKSUM"] == 'i2PMi1MJi1MJi1MJ'
-    assert header["DATASUM"] === '0'
+    assert header["DATASUM"] == '0'
 
     # Verify checksum information
     argv = f'crds.refactor.checksum --verify {str(fits_path)}'
@@ -72,18 +76,22 @@ def test_checksum_script_fits_verify_good(default_test_cache_state, hst_data, tm
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_verify_bad():
-    """
-    >>> old_state = test_config.setup()
-    >>> _ = shutil.copy("data/s7g1700gl_dead_bad_xsum.fits", "./verify_bad.fits")
-    >>> ChecksumScript("crds.refactor.checksum --verify ./verify_bad.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './verify_bad.fits'
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-    0
-    >>> os.remove("verify_bad.fits")
-    >>> test_config.cleanup(old_state)
-    """
+def test_checksum_script_fits_verify_bad(default_test_cache_state, hst_data, tmpdir, caplog):
+    """Test checksum verification of a bad file"""
+
+    # setup test file.
+    fits_path = tmpdir / 'verify_bad.fits'
+    shutil.copy(Path(hst_data) / 's7g1700gl_dead_bad_xsum.fits', fits_path)
+
+    # Verify that bad information is found.
+    argv = f'crds.refactor.checksum --verify {str(fits_path)}'
+    script = ChecksumScript(argv)
+    caplog.clear()
+    assert script() == 0  # 0 == successful run
+    assert f"Verifying checksum for '{str(fits_path)[:10]}" in caplog.text
+    assert "Checksum verification failed for HDU ('', 1)." in caplog.text
+    assert "Datasum verification failed for HDU ('', 1)." in caplog.text
+
 
 # ----------------------------------------------------------------------
 
