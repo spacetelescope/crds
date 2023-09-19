@@ -374,7 +374,6 @@ s7g1700ql_dead.fits"""
     default_shared_state.cleanup()
 
 
-@mark.go
 @mark.list
 def test_list_cat_mappings(capsys, default_shared_state):
     ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00 --hst")()
@@ -434,7 +433,6 @@ def test_list_cat_mappings(capsys, default_shared_state):
     assert out_to_check4 in out
 
 
-@mark.go
 @mark.list
 def test_list_status(capsys, default_shared_state):
     ListScript("crds.list --status --hst")()
@@ -453,7 +451,6 @@ def test_list_status(capsys, default_shared_state):
     assert "Readonly Cache = False" in out
 
 
-@mark.go
 @mark.list
 def test_list_config(capsys, default_shared_state):
     ListScript("crds.list --config --hst")()
