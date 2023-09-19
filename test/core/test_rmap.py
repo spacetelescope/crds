@@ -344,95 +344,97 @@ def test_validate_mapping_valid(default_shared_state, hst_data):
 @mark.core
 @mark.rmap
 def test_validate_mapping_ambiguous(default_shared_state, hst_data, caplog):
+    default_shared_state.url = "https://hst-crds.stsci.edu"
+    default_shared_state.config_setup()
     r = rmap.get_cached_mapping(f"{hst_data}/hst_acs_darkfile_ewsc.rmap")
     with caplog.at_level(logging.INFO, logger="CRDS"):
         r.validate_mapping()
         out = caplog.text
     expected = """ Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'C', '1.0|2.0|4.0|8.0') : 
-    ----------------------------------------
-    Match case
-    ('HRC', 'C', '1.0|2.0|4.0|8.0') : UseAfter({
-        '2003-11-06 15:11:06' : nc113178j_drk.fits
-    is an equal weight special case of
-    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '1992-01-01 00:00:00' : lcb12060j_drk.fits
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://hst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
-     Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'C', '2.0') : 
-    ----------------------------------------
-    Match case
-    ('HRC', 'C', '2.0') : UseAfter({
-        '2002-03-26 00:00:00' : m3t1633tj_drk.fits
-    is an equal weight special case of
-    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '1992-01-01 00:00:00' : lcb12060j_drk.fits
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://hst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
-     Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'D', '1.0|2.0|4.0|8.0') : 
-    ----------------------------------------
-    Match case
-    ('HRC', 'D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '1991-01-01 00:00:00' : j4d1435nj_drk.fits
-    is an equal weight special case of
-    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '1992-01-01 00:00:00' : lcb12060j_drk.fits
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://hst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
-     Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'ABCD', '1.0') : 
-    ----------------------------------------
-    Match case
-    ('WFC', 'ABCD', '1.0') : UseAfter({
-        '2003-10-25 01:18:03' : nba1143tj_drk.fits
-    is an equal weight special case of
-    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : UseAfter({
-        '2003-09-13 00:48:08' : na11410lj_drk.fits
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://hst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
-     Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : 
-    ----------------------------------------
-    Match case
-    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : UseAfter({
-        '2003-09-13 00:48:08' : na11410lj_drk.fits
-    is an equal weight special case of
-    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '1991-01-01 00:00:00' : lcb1202gj_drk.fits
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://hst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
-     Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : 
-    ----------------------------------------
-    Match case
-    ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '2006-07-30 02:04:10' : q9520146j_drk.fits
-    is an equal weight special case of
-    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
-        '1991-01-01 00:00:00' : lcb1202gj_drk.fits
-    Cancel the submission and regenerate the reference files
-    with different parameter values which coincide with an existing category.
-    For some parameter sets, CRDS interprets both matches as equally good.
-    For more explanation, see the file submission section of the CRDS server user's guide here:
-    https://hst-crds.stsci.edu/static/users_guide/index.html
-    ----------------------------------------
-    """
+----------------------------------------
+Match case
+('HRC', 'C', '1.0|2.0|4.0|8.0') : UseAfter({
+    '2003-11-06 15:11:06' : nc113178j_drk.fits
+is an equal weight special case of
+('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    '1992-01-01 00:00:00' : lcb12060j_drk.fits
+Cancel the submission and regenerate the reference files
+with different parameter values which coincide with an existing category.
+For some parameter sets, CRDS interprets both matches as equally good.
+For more explanation, see the file submission section of the CRDS server user's guide here:
+https://hst-crds.stsci.edu/static/users_guide/index.html
+----------------------------------------
+    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'C', '2.0') : 
+----------------------------------------
+Match case
+('HRC', 'C', '2.0') : UseAfter({
+    '2002-03-26 00:00:00' : m3t1633tj_drk.fits
+is an equal weight special case of
+('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    '1992-01-01 00:00:00' : lcb12060j_drk.fits
+Cancel the submission and regenerate the reference files
+with different parameter values which coincide with an existing category.
+For some parameter sets, CRDS interprets both matches as equally good.
+For more explanation, see the file submission section of the CRDS server user's guide here:
+https://hst-crds.stsci.edu/static/users_guide/index.html
+----------------------------------------
+    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'D', '1.0|2.0|4.0|8.0') : 
+----------------------------------------
+Match case
+('HRC', 'D', '1.0|2.0|4.0|8.0') : UseAfter({
+    '1991-01-01 00:00:00' : j4d1435nj_drk.fits
+is an equal weight special case of
+('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    '1992-01-01 00:00:00' : lcb12060j_drk.fits
+Cancel the submission and regenerate the reference files
+with different parameter values which coincide with an existing category.
+For some parameter sets, CRDS interprets both matches as equally good.
+For more explanation, see the file submission section of the CRDS server user's guide here:
+https://hst-crds.stsci.edu/static/users_guide/index.html
+----------------------------------------
+    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'ABCD', '1.0') : 
+----------------------------------------
+Match case
+('WFC', 'ABCD', '1.0') : UseAfter({
+    '2003-10-25 01:18:03' : nba1143tj_drk.fits
+is an equal weight special case of
+('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : UseAfter({
+    '2003-09-13 00:48:08' : na11410lj_drk.fits
+Cancel the submission and regenerate the reference files
+with different parameter values which coincide with an existing category.
+For some parameter sets, CRDS interprets both matches as equally good.
+For more explanation, see the file submission section of the CRDS server user's guide here:
+https://hst-crds.stsci.edu/static/users_guide/index.html
+----------------------------------------
+    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : 
+----------------------------------------
+Match case
+('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') : UseAfter({
+    '2003-09-13 00:48:08' : na11410lj_drk.fits
+is an equal weight special case of
+('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    '1991-01-01 00:00:00' : lcb1202gj_drk.fits
+Cancel the submission and regenerate the reference files
+with different parameter values which coincide with an existing category.
+For some parameter sets, CRDS interprets both matches as equally good.
+For more explanation, see the file submission section of the CRDS server user's guide here:
+https://hst-crds.stsci.edu/static/users_guide/index.html
+----------------------------------------
+    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : 
+----------------------------------------
+Match case
+('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    '2006-07-30 02:04:10' : q9520146j_drk.fits
+is an equal weight special case of
+('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    '1991-01-01 00:00:00' : lcb1202gj_drk.fits
+Cancel the submission and regenerate the reference files
+with different parameter values which coincide with an existing category.
+For some parameter sets, CRDS interprets both matches as equally good.
+For more explanation, see the file submission section of the CRDS server user's guide here:
+https://hst-crds.stsci.edu/static/users_guide/index.html
+----------------------------------------
+"""
     for line in expected.splitlines():
         assert line.strip() in out
     default_shared_state.cleanup()
@@ -445,7 +447,7 @@ def test_validate_mapping_ambiguous_roman(roman_serverless_state, roman_data, ca
     with caplog.at_level(logging.INFO, logger="CRDS"):
         r.validate_mapping()
         out = caplog.text
-    expected = """ Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT') : ('WFI01', 'F158') : 
+    expected = """ Match('ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]') : ('WFI01', 'F158') : 
 ----------------------------------------
 Match case
 ('WFI01', 'F158') : UseAfter({

@@ -2,9 +2,7 @@ import json
 from pathlib import Path
 from pytest import fixture
 import os, os.path
-import shutil
 from pytest import TempPathFactory
-import unittest
 import cProfile
 import pstats
 
