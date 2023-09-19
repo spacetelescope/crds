@@ -136,17 +136,16 @@ def test_checksum_script_rmap_verify_bad(default_test_cache_state, hst_data, cap
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_remove_bad():
-    """
-    >>> old_state = test_config.setup()
-    >>> _ = shutil.copy("data/hst-bad-xsum.rmap", "./remove_bad.rmap")
-    >>> ChecksumScript("crds.refactor.checksum --remove ./remove_bad.rmap")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Removing checksum for './remove_bad.rmap'
-    CRDS - ERROR -  Checksum operation FAILED : Mapping checksums cannot be removed for: './remove_bad.rmap'
-    1
-    >>> os.remove("remove_bad.rmap")
-    >>> test_config.cleanup(old_state)
-    """
+def test_checksum_script_rmap_remove_bad(default_test_cache_state, hst_data, tmpdir, caplog):
+    """Test removing a bad checksum from a rmap"""
+
+    # setup test file which should bad checksum data.
+    map_path = tmpdir / "remove_bad.rmap"
+    shutil.copy(Path(hst_data) / 'hst-bad-xsum.rmap', map_path)
+
+    # Attempt removing checksum
+    assert ChecksumScript(f"crds.refactor.checksum --remove {str(map_path)}")() == 1
+    assert 'Checksum operation FAILED : Mapping checksums cannot be removed for:' in caplog.text
 
 
 @mark.refactoring
