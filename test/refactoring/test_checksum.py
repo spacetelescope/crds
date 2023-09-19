@@ -17,7 +17,7 @@ log.THE_LOGGER.logger.propagate = True
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_add(default_test_cache_state, hst_data, tmpdir):
+def test_checksum_script_fits_add(hst_data, tmpdir):
     """Test adding checksum to FITS files"""
 
     # setup test file which should not have any checksum data.
@@ -38,7 +38,7 @@ def test_checksum_script_fits_add(default_test_cache_state, hst_data, tmpdir):
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_remove(default_test_cache_state, hst_data, tmpdir):
+def test_checksum_script_fits_remove(hst_data, tmpdir):
     """Test removing chedsum from FITS files"""
 
     # setup test file which should not have any checksum data.
@@ -59,7 +59,7 @@ def test_checksum_script_fits_remove(default_test_cache_state, hst_data, tmpdir)
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_verify_good(default_test_cache_state, hst_data, tmpdir):
+def test_checksum_script_fits_verify_good(hst_data, tmpdir):
     """Test checksum verification of a good file"""
 
     # setup test file and confirm it contains checksum information.
@@ -76,7 +76,7 @@ def test_checksum_script_fits_verify_good(default_test_cache_state, hst_data, tm
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_verify_bad(default_test_cache_state, hst_data, tmpdir, caplog):
+def test_checksum_script_fits_verify_bad(hst_data, tmpdir, caplog):
     """Test checksum verification of a bad file"""
 
     # setup test file.
@@ -98,7 +98,7 @@ def test_checksum_script_fits_verify_bad(default_test_cache_state, hst_data, tmp
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_verify_good(default_test_cache_state, hst_data):
+def test_checksum_script_rmap_verify_good(hst_data):
     """Test checksum verification for rmaps"""
 
     map_path = Path(hst_data) / 'hst.pmap'
@@ -108,7 +108,7 @@ def test_checksum_script_rmap_verify_good(default_test_cache_state, hst_data):
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_add_bad(default_test_cache_state, hst_data, tmpdir, caplog):
+def test_checksum_script_rmap_add_bad(hst_data, tmpdir, caplog):
     """TEst adding checksum to an rmap file"""
 
     # setup test file which should bad checksum data.
@@ -126,7 +126,7 @@ def test_checksum_script_rmap_add_bad(default_test_cache_state, hst_data, tmpdir
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_verify_bad(default_test_cache_state, hst_data, caplog):
+def test_checksum_script_rmap_verify_bad(hst_data, caplog):
     """Test bad checksum in rmap"""
 
     argv = f'crds.refactor.checksum --verify {str(Path(hst_data) / "hst-bad-xsum.rmap")}'
@@ -136,7 +136,7 @@ def test_checksum_script_rmap_verify_bad(default_test_cache_state, hst_data, cap
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_remove_bad(default_test_cache_state, hst_data, tmpdir, caplog):
+def test_checksum_script_rmap_remove_bad(hst_data, tmpdir, caplog):
     """Test removing a bad checksum from a rmap"""
 
     # setup test file which should bad checksum data.
@@ -150,7 +150,7 @@ def test_checksum_script_rmap_remove_bad(default_test_cache_state, hst_data, tmp
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_rmap_verify_missing(default_test_cache_state, hst_data, caplog):
+def test_checksum_script_rmap_verify_missing(hst_data, caplog):
     """Test that checksum information is missing from a map"""
 
     map_path = Path(hst_data) / 'hst-missing-xsum.rmap'
@@ -161,7 +161,7 @@ def test_checksum_script_rmap_verify_missing(default_test_cache_state, hst_data,
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_unsupported_asdf(default_test_cache_state, jwst_data, tmpdir, caplog):
+def test_checksum_script_unsupported_asdf(jwst_data, tmpdir, caplog):
     """Test that ASDF is still unsupported with-respect-to checksum"""
 
     # setup test file which should bad checksum data.
