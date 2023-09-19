@@ -55,24 +55,19 @@ def test_checksum_script_fits_remove(default_test_cache_state, hst_data, tmpdir)
 
 @mark.refactoring
 @mark.checksum
-def test_checksum_script_fits_verify_good():
-    """
-    >>> old_state = test_config.setup()
+def test_checksum_script_fits_verify_good(default_test_cache_state, hst_data, tmpdir):
+    """Test checksum verification"""
 
-    >>> _ = shutil.copy("data/s7g1700gl_dead_good_xsum.fits", "verify_good.fits")
-    >>> header = data_file.get_header("verify_good.fits")
-    >>> header["CHECKSUM"]
-    'i2PMi1MJi1MJi1MJ'
-    >>> header["DATASUM"]
-    '0'
+    # setup test file and confirm it contains checksum information.
+    fits_path = tmpdir / "verify_good.fits"
+    shutil.copy(Path(hst_data) / "s7g1700gl_dead_good_xsum.fits", fits_path)
+    header = data_file.get_header(str(fits_path))
+    assert header["CHECKSUM"] == 'i2PMi1MJi1MJi1MJ'
+    assert header["DATASUM"] === '0'
 
-    >>> ChecksumScript("crds.refactor.checksum --verify ./verify_good.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Verifying checksum for './verify_good.fits'
-    0
-
-    >>> os.remove("verify_good.fits")
-    >>> test_config.cleanup(old_state)
-    """
+    # Verify checksum information
+    argv = f'crds.refactor.checksum --verify {str(fits_path)}'
+    assert ChecksumScript(argv)() == 0
 
 
 @mark.refactoring
