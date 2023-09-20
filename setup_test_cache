@@ -1,9 +1,9 @@
 #! /bin/bash -x
 usage="Usage: setup_test_cache CRDS_TEST_ROOT <c/u> where 'c' means clean and 'u' means update"
-update=${2:-"n"}
+update=${2:-"c"}
 export CRDS_TEST_ROOT=${1?$usage}
 
-if [ "$update" = "n" ]; then
+if [ "$update" = "c" ]; then
     (cd $CRDS_TEST_ROOT; rm -rf crds-cache-test;  git clone https://github.com/spacetelescope/crds-cache-test.git;)
     (cd $CRDS_TEST_ROOT; rm -rf crds-cache-default-test; mkdir crds-cache-default-test;)
 fi
