@@ -98,7 +98,7 @@ def test_certify_good_checksum(default_shared_state, hst_data, caplog):
  FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
  Running fitsverify.
  >>
- >>               fitsverify 4.20 (CFITSIO V3.490)
+ >>               fitsverify
  >>               --------------------------------
  >>
  >>
