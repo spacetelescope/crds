@@ -41,7 +41,6 @@ def test_reftypes_hst_save_json_specs(default_shared_state, test_temp_dir):
     default_shared_state.cleanup()
 
 
-@pytest.mark.jwst
 @pytest.mark.reftypes
 @pytest.mark.core
 def test_reftypes_jwst_load_raw_specs(default_shared_state):
