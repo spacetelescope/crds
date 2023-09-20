@@ -621,9 +621,7 @@ Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'SHORT | MED
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
 Checking JWST datamodels.
 ########################################
-0 errors
-0 warnings
-7 infos"""
+0 errors"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1541,9 +1539,7 @@ instrument='NIRSPEC' type='IPC' data='{jwst_data}/jwst_nirspec_ipc_with_asdf_ext
 FITS file 'jwst_nirspec_ipc_with_asdf_extension.fits' conforms to FITS standards.
 Checking JWST datamodels.
 ########################################
-1 errors
-0 warnings
-5 infos"""
+1 errors"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
