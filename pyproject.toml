@@ -162,6 +162,7 @@ markers = [
   "heavy_client",
   "list",
   "locking",
+  "matches",
   "refactoring: tests in the crds.refactoring module",
   "reftypes",
   "rmap",
