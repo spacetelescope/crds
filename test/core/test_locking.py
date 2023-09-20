@@ -57,7 +57,7 @@ testing
 
 @mark.locking
 def test_multiprocessing_locking(default_shared_state, capsys):
-    _ = config.LOCKING_MODE.set("multiprocessing")
+    config.LOCKING_MODE.set("multiprocessing")
     crds_cache_locking.init_locks()
     status = crds_cache_locking.status()
     try_multiprocessing()
@@ -76,7 +76,7 @@ testing
 
 @mark.locking
 def test_filelock_locking(default_shared_state, capsys):
-    _ = config.LOCKING_MODE.set("filelock")
+    config.LOCKING_MODE.set("filelock")
     crds_cache_locking.init_locks()
     status = crds_cache_locking.status()
     cache = crds_cache_locking.get_cache_lock()
@@ -97,8 +97,8 @@ testing
 
 @mark.locking
 def test_default_disabled(default_shared_state, capsys, caplog):
-    _ = config.USE_LOCKING.set(False)
-    _ = log.set_verbose()
+    config.USE_LOCKING.set(False)
+    log.set_verbose()
     crds_cache_locking.init_locks()
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         out = caplog.text
@@ -115,8 +115,8 @@ def test_default_disabled(default_shared_state, capsys, caplog):
 
 @mark.locking
 def test_default_readonly(default_shared_state, capsys):
-    _ = config.set_cache_readonly()
-    _ = log.set_verbose()
+    config.set_cache_readonly()
+    log.set_verbose()
     crds_cache_locking.init_locks()
     status = crds_cache_locking.status()
     try_multiprocessing()
