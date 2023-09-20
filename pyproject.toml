@@ -161,9 +161,11 @@ markers = [
   "distortion: all tests related to distortion filetype",
   "heavy_client",
   "list",
+  "locking",
   "refactoring: tests in the crds.refactoring module",
   "reftypes",
   "rmap",
+  "roman",
   "substitutions",
 ]
 
