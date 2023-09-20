@@ -41,7 +41,7 @@ AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for
 AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
 Running fitsverify.
 >>
->>               fitsverify 4.20 (CFITSIO V3.490) 
+>>               fitsverify
 >>               --------------------------------
 >>
 >>
