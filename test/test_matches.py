@@ -41,6 +41,7 @@ def test_matches_datasets_minimize_headers_contexts_condition(capsys, default_sh
     MatchesScript(
         "crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap --condition-values")()
     out, _ = capsys.readouterr()
+    default_shared_state.cleanup()
     out_to_check = """JBANJOF3Q:JBANJOF3Q : hst_0044.pmap : APERTURE='WFC1-2K' ATODCORR='OMIT' BIASCORR='OMIT' \
 CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='OMIT' DARKCORR='OMIT' DATE-OBS='2010-01-31' DETECTOR='WFC' \
 DQICORR='PERFORM' DRIZCORR='OMIT' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='OMIT' FLSHCORR='OMIT' \
