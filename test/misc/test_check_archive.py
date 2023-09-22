@@ -18,28 +18,28 @@ log.THE_LOGGER.logger.propagate = True
 [sys.argv.remove(a) for a in sys.argv]
 
 @mark.misc
-def test_check_archive_file_api_true(default_shared_state):
+def test_check_archive_file_api_true(hst_shared_cache_state):
     chk = check_archive.file_available("hst.pmap")
-    default_shared_state.cleanup()
+    hst_shared_cache_state.cleanup()
     assert chk is True
 
 
 @mark.misc
-def test_check_archive_file_api_false(default_shared_state, caplog):
+def test_check_archive_file_api_false(hst_shared_cache_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         chk = check_archive.file_available("foo.pmap")
         out = caplog.text
-    default_shared_state.cleanup()
+    hst_shared_cache_state.cleanup()
     assert chk is False
     assert "File 'foo.pmap' failed HTTP HEAD with code = 404 from 'https://hst-crds.stsci.edu/unchecked_get/mappings/hst/foo.pmap'" in out
 
 
 @mark.misc
-def test_check_archive_script(default_shared_state, caplog):
+def test_check_archive_script(hst_shared_cache_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         check_archive.CheckArchiveScript("crds.misc.check_archive --files foo.map hst.pmap")()
         out = caplog.text
-    default_shared_state.cleanup()
+    hst_shared_cache_state.cleanup()
     expected = """Mapping URL: 'https://hst-crds.stsci.edu/unchecked_get/mappings/hst/'
 Reference URL: 'https://hst-crds.stsci.edu/unchecked_get/references/hst/'
 File 'foo.map' failed HTTP HEAD with code = 404 from 'https://hst-crds.stsci.edu/unchecked_get/references/hst/foo.map'
