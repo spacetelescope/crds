@@ -153,6 +153,7 @@ markers = [
   "smoke: critical tests required to pass for the system to work.",
   "roman: all tests specific to the ROMAN Space Telescope mission.",
   "asdf: asdf related tests",
+  "bad_files",
   "bestrefs",
   "certify",
   "checksum",

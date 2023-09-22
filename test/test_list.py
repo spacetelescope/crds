@@ -177,7 +177,6 @@ def test_list_references(capsys, default_shared_state):
 def test_list_cached_references_hst(capsys, crds_shared_group_cache):
 
    ListScript("crds.list --cached-references --full-path")()
-   print()
    out, _ = capsys.readouterr()
    out_to_check1 = '/references/hst/41g16069m_tmg.fits'
    out_to_check2 = '/references/hst/y951738kl_hv.fits'
