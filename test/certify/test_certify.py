@@ -477,7 +477,6 @@ Certifying '{cache}/mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relat
 Certifying '{cache}/mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context 'hst.pmap'
 ########################################
 0 errors
-0 warnings
 39 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
@@ -622,7 +621,6 @@ Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT
 Checking JWST datamodels.
 ########################################
 0 errors
-0 warnings
 7 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
@@ -1542,7 +1540,6 @@ FITS file 'jwst_nirspec_ipc_with_asdf_extension.fits' conforms to FITS standards
 Checking JWST datamodels.
 ########################################
 1 errors
-0 warnings
 5 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out

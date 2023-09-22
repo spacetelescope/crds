@@ -139,6 +139,13 @@ def default_shared_state(crds_shared_group_cache):
 
 
 @fixture(scope='function')
+def hst_shared_cache_state(crds_shared_group_cache):
+    cfg = ConfigState(cache=crds_shared_group_cache, url="https://hst-crds.stsci.edu", observatory="hst")
+    cfg.config_setup()
+    return cfg
+
+
+@fixture(scope='function')
 def jwst_no_cache_state():
     #os.environ["CRDS_MAPPATH_SINGLE"] = test_data
     cfg = ConfigState(cache=None, url="https://jwst-crds.stsci.edu")

@@ -163,6 +163,7 @@ markers = [
   "list",
   "locking",
   "matches",
+  "misc",
   "refactoring: tests in the crds.refactoring module",
   "reftypes",
   "rmap",
