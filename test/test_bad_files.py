@@ -135,7 +135,7 @@ def test_bad_rules_jwst_getreferences_warning(jwst_serverless_state):
     refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
     jwst_serverless_state.cleanup()
     assert list(refs.keys()) == ['flat']
-    assert os.path.basename(refs['flat'])
+    assert os.path.basename(refs['flat']) == 'jwst_miri_flat_0006.fits'
 
 
 @mark.bad_files
