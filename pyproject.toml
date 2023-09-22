@@ -159,7 +159,9 @@ markers = [
   "cmdline",
   "core: tests in the crds.core module",
   "distortion: all tests related to distortion filetype",
+  "factory",
   "heavy_client",
+  "io",
   "list",
   "locking",
   "matches",
@@ -169,6 +171,7 @@ markers = [
   "rmap",
   "roman",
   "substitutions",
+  "tables",
 ]
 
 [tool.setuptools_scm]

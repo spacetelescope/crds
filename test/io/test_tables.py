@@ -34,7 +34,7 @@ def test_csv_table(hst_serverless_state, hst_data):
     tab = tables.tables(CSV_FILE)[0]
     hst_serverless_state.cleanup()
     assert tab.segment == 1
-    assert tab.rows[0] == "(3102, 0.32..., 4167, 4085, 'Q1250+568-A')"
+    assert tab.rows[0] == (3102, 0.32, 4167, 4085, 'Q1250+568-A')
     assert tab.colnames[0] == 'OBSID'
     assert tab.columns['OBSID'][0] == 3102
     expected = "SimpleTable('ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT'), nrows=2)"
