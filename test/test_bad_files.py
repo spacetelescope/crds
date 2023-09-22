@@ -1,10 +1,8 @@
 import logging
 import os
 import crds
-from crds.core import log, utils, config, exceptions
-from crds import client
+from crds.core import log, config, exceptions
 from crds.bestrefs import BestrefsScript
-from crds.tests import test_config
 from pytest import mark
 
 # ensure CRDS logger propagates events to pytest log capture.
