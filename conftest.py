@@ -142,6 +142,7 @@ def default_shared_state(crds_shared_group_cache):
 def hst_shared_cache_state(crds_shared_group_cache):
     cfg = ConfigState(cache=crds_shared_group_cache, url="https://hst-crds.stsci.edu", observatory="hst")
     cfg.config_setup()
+    return cfg
 
 
 @fixture(scope='function')
