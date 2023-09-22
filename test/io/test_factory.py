@@ -1,13 +1,10 @@
 from pytest import mark
-import os
 from pprint import pprint
-import numpy as np
-
 from crds import data_file
-from crds.core import utils, log, exceptions
 from crds.io import factory
 
-
+@mark.io
+@mark.factory
 def test_get_fits_type(jwst_serverless_state, jwst_data):
     t = factory.get_filetype(f"{jwst_data}/valid.fits")
     jwst_serverless_state.cleanup()
