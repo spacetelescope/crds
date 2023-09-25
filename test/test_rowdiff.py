@@ -1,74 +1,39 @@
+"""rowdiff unit test module
 """
-usage: /Users/eisenham/Documents/ssbdev/crds/crds/rowdiff.py
-       [-h] [--ignore-fields IGNORE_FIELDS] [--fields FIELDS]
-       [--mode-fields MODE_FIELDS] [-v] [--verbosity VERBOSITY] [-V] [-J] [-H]
-       [--stats] [--profile PROFILE] [--pdb]
-       tableA tableB
+from pathlib import Path
+from pytest import mark
 
-Perform FITS table difference by rows
+from crds.core import log, utils
 
-positional arguments:
-  tableA                First table to compare
-  tableB                Second table to compare
+from crds.rowdiff import RowDiffScript
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --ignore-fields IGNORE_FIELDS
-                        List of fields to ignore
-  --fields FIELDS       List of fields to compare
-  --mode-fields MODE_FIELDS
-                        List of fields to do a mode compare
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
-                        Set log verbosity to a specific level: 0..100.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
-  --stats               Track and print timing statistics.
-  --profile PROFILE     Output profile stats to the specified file.
-  --pdb                 Run under pdb.
+# For log capture tests, need to ensure that the CRDS
+# logger propagates its events.
+log.THE_LOGGER.logger.propagate = True
 
-Perform FITS table difference by rows
+@mark.rowdiff
+def test_withtableexts(hst_data, capsys):
+    """Only should work with Table extensions"""
+    fits1_path = Path(hst_data) / 'hst_acs_biasfile_0001.fits'
+    fits2_path = Path(hst_data) / 'hst_acs_biasfile_0002.fits'
+    argv = f'crds.rowdiff {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
 
-    Input:
-      fits_a, fits_b: Paths or HDUList objects of the
-                      two FITS files to compare.
-      fields: List of fields to compare on.
-      ignore-fields: List of fields to ignore.
-      mode-fields: List of fields that define modes to compare
+    # Success if there is only a blank line
+    assert '\n' == capsys.readouterr().out
 
-    Note: The parameters 'fields' and 'ignore-fields' are mutually exclusive.
-          An error will be raised if both are specified.
 
-    Output:
-      object variables:
-          diffs: tuple of the differences for each table extension found.
-                 This is either None for no differences, or is again a
-                 tuple consisting of:
-                     - If mode-fields is specified, the tuple is described by
-                       modediff
-                     - Otherwise the tuple is described by rowdiff
-      stdout: Human readable report.
+@mark.rowdiff
+def test_nodiff(test_data, capsys):
+    """Basic functionality: No differences"""
+    fits_path = str(Path(test_data) / 'test-source.fits')
+    argv = f'crds.rowdiff {fits_path} {fits_path}'
+    RowDiffScript(argv)()
 
-----------
-TEST CASES
-----------
+    assert 'HDU extension #1 contains no differences' in capsys.readouterr().out
 
->>> from crds.tests import test_config
->>> old_state = test_config.setup()
 
->>> from crds.rowdiff import RowDiffScript
-
-Only should work with Table extensions
-    >>> case = RowDiffScript(argv="rowdiff.py data/hst_acs_biasfile_0001.fits data/hst_acs_biasfile_0002.fits")
-    >>> case.run()
-    <BLANKLINE>
-
-Basic functionality: No differences
-    >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-source.fits")
-    >>> case.run()
-        HDU extension #1 contains no differences
-
+"""
 Row change
     >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-change-row1-valueLeft.fits")
     >>> case.run() # doctest: +ELLIPSIS
