@@ -33,30 +33,34 @@ def test_nodiff(test_data, capsys):
     assert 'HDU extension #1 contains no differences' in capsys.readouterr().out
 
 
-"""
-Row change
-    >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run() # doctest: +ELLIPSIS
-    Row differences for HDU extension #1
-    <BLANKLINE>
-        Summary:
-            a rows 1-1 differ from b rows 1-1
-    <BLANKLINE>
-        Row difference, unified diff format:
-            --- Table A
-    <BLANKLINE>
-            +++ Table B
-    <BLANKLINE>
-            @@ -1,5 +1,5 @@
-    <BLANKLINE>
-             'yes', 'yes', 2988, -2779.03..., 'coquille'
-            -'yes', 'no', 5748, 6357.97..., 'ferly'
-            +'yes', 'no', -1, 6357.97..., 'ferly'
-             'yes', 'maybe', 9735, -9132.53..., 'misreliance'
-             'no', 'yes', 425, -2689.26..., 'ogeed'
-             'no', 'no', 8989, 9870.02..., 'readmittance'
-    <BLANKLINE>
+@mark.rowdiff
+def test_rowchange(test_data, capsys):
+    """Row change"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-change-row1-valueLeft.fits'
+    argv = f'crds.rowdiff {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
 
+    expected = """Row differences for HDU extension #1\n\n
+    Summary:\n
+    a rows 1-1 differ from b rows 1-1\n\n
+    Row difference, unified diff format:\n
+    --- Table A\n\n
+    +++ Table B\n\n
+    @@ -1,5 +1,5 @@\n\n
+    'yes', 'yes', 2988, -2779.0352, 'coquille'\n
+    -'yes', 'no', 5748, 6357.9727, 'ferly'\n
+    +'yes', 'no', -1, 6357.9727, 'ferly'\n
+    'yes', 'maybe', 9735, -9132.532, 'misreliance'\n
+    'no', 'yes', 425, -2689.2646, 'ogeed'\n
+    'no', 'no', 8989, 9870.025, 'readmittance'
+    """
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+
+"""
 Row removal
     >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-single-modes.fits")
     >>> case.run() # doctest: +ELLIPSIS
