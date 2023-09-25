@@ -159,7 +159,7 @@ def test_diff_fits_diff(capsys, default_shared_state):
 
     assert status == 1
 
-def test_diff_asdf(capsys, default_shared_state):
+def test_diff_asdf(capsys, jwst_shared_cache_state):
     """
     Compute diffs for two .asdf's:
     """
