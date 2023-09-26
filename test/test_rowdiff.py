@@ -220,33 +220,33 @@ def test_nodiff(test_data, capsys):
         assert msg.strip() in out
 
 
-"""
-Mode test: No mode changes, but change in rows selected
-    >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run() # doctest: +ELLIPSIS
-    Difference for HDU extension #1
-    <BLANKLINE>
-        Table A has all modes.
-    <BLANKLINE>
-        Table B has all modes.
-    <BLANKLINE>
-        Table A and B share all modes.
-    <BLANKLINE>
-        Common mode changes:
-        If there were duplicate modes, the following may be nonsensical.
-    <BLANKLINE>
-            Changed Modes:
-            From Table A:
-    modeup modedown valueleft valueright wordage
-    ------ -------- --------- ---------- -------
-       yes       no      5748  6357.97...   ferly
-    <BLANKLINE>
-            To Table B:
-    modeup modedown valueleft valueright wordage
-    ------ -------- --------- ---------- -------
-       yes       no        -1  6357.97...   ferly
-    <BLANKLINE>
+@mark.rowdiff
+def test_nodiff_diffrows(test_data, capsys):
+    """Mode test: No mode changes, but change in rows selected"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-change-row1-valueLeft.fits'
+    argv = f'crds.rowdiff --mode-fields=modeup,modedown {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
 
+    expected = """Difference for HDU extension #1\n\n
+    Table A has all modes.\n\n
+    Table B has all modes.\n\n
+    Table A and B share all modes.\n\n
+    Common mode changes:\n
+    If there were duplicate modes, the following may be nonsensical.\n\n
+    Changed Modes:\n
+    From Table A:\nmodeup modedown valueleft valueright wordage\n
+    ------ -------- --------- ---------- -------\n
+    yes       no      5748  6357.9727   ferly\n\n
+    To Table B:\n
+    modeup modedown valueleft valueright wordage\n
+    ------ -------- --------- ---------- -------\n
+    yes       no        -1  6357.9727   ferly"""
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+"""
 Mode test: removed modes
     >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-alternate-modes.fits")
     >>> case.run()
