@@ -165,7 +165,7 @@ def test_ignorefields_specific(test_data, capsys):
 
 @mark.rowdiff
 def test_switchfields_nodiff(test_data, capsys):
-    """Test of switch fields"""
+    """Test of switching fields that have no differences"""
     fits1_path = Path(test_data) / 'test-source.fits'
     fits2_path = Path(test_data) / 'test-change-row1-valueLeft.fits'
     argv = f'crds.rowdiff --fields=modeup {str(fits1_path)} {str(fits2_path)}'
@@ -177,30 +177,33 @@ def test_switchfields_nodiff(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.rowdiff
+def test_switchfields_withdiff(test_data, capsys):
+    """Test of switching fields that do have differences"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-change-row1-valueLeft.fits'
+    argv = f'crds.rowdiff --fields=valueleft {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
+
+    expected = """Row differences for HDU extension #1\n\n
+    Summary:\n
+    a rows 1-1 differ from b rows 1-1\n\n
+    Row difference, unified diff format:\n
+    --- Table A\n\n
+    +++ Table B\n\n
+    @@ -1,5 +1,5 @@\n\n
+    2988\n
+    -5748\n
+    +-1\n
+    9735\n
+    425\n
+    8989"""
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+
 """
-
-    >>> case = RowDiffScript(argv="rowdiff.py --fields=valueleft data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run()
-    Row differences for HDU extension #1
-    <BLANKLINE>
-        Summary:
-            a rows 1-1 differ from b rows 1-1
-    <BLANKLINE>
-        Row difference, unified diff format:
-            --- Table A
-    <BLANKLINE>
-            +++ Table B
-    <BLANKLINE>
-            @@ -1,5 +1,5 @@
-    <BLANKLINE>
-             2988
-            -5748
-            +-1
-             9735
-             425
-             8989
-    <BLANKLINE>
-
 Mode test: no differences
     >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-source.fits")
     >>> case.run()
