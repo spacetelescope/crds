@@ -248,10 +248,9 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
-        out = caplog.text
+        out = caplog.messages
     default_shared_state.cleanup()
     # remove duplicate log messages from stpipe, up to the last two lines:
-    out = out.splitlines()
     line_check = [0,1,4,5,8,10,12]
     if len(out) > 8:
         out = [o for i, o in enumerate(out) if i in line_check]
