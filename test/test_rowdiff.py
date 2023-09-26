@@ -276,53 +276,37 @@ def test_removedmodes(test_data, capsys):
         assert msg.strip() in out
 
 
-"""
-Mode test: duplicate modes
-    >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-duplicate-mode.fits")
-    >>> case.run()  # doctest: +ELLIPSIS
-    Difference for HDU extension #1
-    <BLANKLINE>
-        Table A has all modes.
-    <BLANKLINE>
-        Table B changes:
-    <BLANKLINE>
-            Duplicated Modes:
-    modeup modedown
-    ------ --------
-        no    maybe
-    <BLANKLINE>
-        Table A to B changes:
-    <BLANKLINE>
-            Duplicated Modes:
-    modeup modedown
-    ------ --------
-        no    maybe
-    <BLANKLINE>
-        Common mode changes:
-        If there were duplicate modes, the following may be nonsensical.
-    <BLANKLINE>
-            Changed Modes:
-            From Table A:
-    modeup modedown valueleft valueright wordage
-    ------ -------- --------- ---------- -------
-        no      yes       425 -2689.26...   ogeed
-    <BLANKLINE>
-            To Table B:
-    modeup modedown valueleft valueright wordage
-    ------ -------- --------- ---------- -------
-        no      yes        -1 -2689.26...   ogeed
-    <BLANKLINE>
+@mark.rowdiff
+def test_duplicatemodes(test_data, capsys):
+    """Mode test: duplicate modes"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-duplicate-mode.fits'
+    argv = f'crds.rowdiff --mode-fields=modeup,modedown {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
 
-CLEANUP
-
-    >>> test_config.cleanup(old_state)
-
-"""
-
-def main():
-    """Run module tests,  for now just doctests only."""
-    from crds.tests import test_rowdiff, tstmod
-    return tstmod(test_rowdiff)
-
-if __name__ == "__main__":
-    print(main())
+    expected = """Difference for HDU extension #1\n\n
+    Table A has all modes.\n\n
+    Table B changes:\n\n
+    Duplicated Modes:\n
+    modeup modedown\n
+    ------ --------\n
+    no    maybe\n\n
+    Table A to B changes:\n\n
+    Duplicated Modes:\n
+    modeup modedown\n
+    ------ --------\n
+    no    maybe\n\n
+    Common mode changes:\n
+    If there were duplicate modes, the following may be nonsensical.\n\n
+    Changed Modes:\n
+    From Table A:\n
+    modeup modedown valueleft valueright wordage\n
+    ------ -------- --------- ---------- -------\n
+    no      yes       425 -2689.2646   ogeed\n\n
+    To Table B:\n
+    modeup modedown valueleft valueright wordage\n
+    ------ -------- --------- ---------- -------\n
+    no      yes        -1 -2689.2646   ogeed"""
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
