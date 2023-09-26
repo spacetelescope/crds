@@ -121,12 +121,22 @@ def test_rowaddition(test_data, capsys):
     for msg in expected.splitlines():
         assert msg.strip() in out
 
-"""
-Test of switch ignore-fields
-    >>> case = RowDiffScript(argv="rowdiff.py --ignore-fields=valueleft data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run()
-        HDU extension #1 contains no differences
 
+@mark.rowdiff
+def test_ignorefields(test_data, capsys):
+    """Test of switch ignore-fields"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-change-row1-valueLeft.fits'
+    argv = f'crds.rowdiff --ignore-fields=valueleft {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
+
+    expected = """HDU extension #1 contains no differences"""
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+
+"""
     >>> case = RowDiffScript(argv="rowdiff.py --ignore-fields=modeup,modedown data/test-source.fits data/test-change-row1-valueLeft.fits")
     >>> case.run() # doctest: +ELLIPSIS
     Row differences for HDU extension #1
@@ -148,6 +158,7 @@ Test of switch ignore-fields
              425, -2689.26..., 'ogeed'
              8989, 9870.02..., 'readmittance'
     <BLANKLINE>
+
 
 Test of switch fields
     >>> case = RowDiffScript(argv="rowdiff.py --fields=modeup data/test-source.fits data/test-change-row1-valueLeft.fits")
