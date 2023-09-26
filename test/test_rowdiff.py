@@ -136,30 +136,33 @@ def test_ignorefields(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.rowdiff
+def test_ignorefields_specific(test_data, capsys):
+    """Test ignoring specific fields"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-change-row1-valueLeft.fits'
+    argv = f'crds.rowdiff --ignore-fields=modeup,modedown {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
+
+    expected = """Row differences for HDU extension #1\n\n
+    Summary:\n
+    a rows 1-1 differ from b rows 1-1\n\n
+    Row difference, unified diff format:\n
+    --- Table A\n\n
+    +++ Table B\n\n
+    @@ -1,5 +1,5 @@\n\n
+    2988, -2779.0352, 'coquille'\n
+    -5748, 6357.9727, 'ferly'\n
+    +-1, 6357.9727, 'ferly'\n
+    9735, -9132.532, 'misreliance'\n
+    425, -2689.2646, 'ogeed'\n
+    8989, 9870.025, 'readmittance'
+    """
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
 """
-    >>> case = RowDiffScript(argv="rowdiff.py --ignore-fields=modeup,modedown data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run() # doctest: +ELLIPSIS
-    Row differences for HDU extension #1
-    <BLANKLINE>
-        Summary:
-            a rows 1-1 differ from b rows 1-1
-    <BLANKLINE>
-        Row difference, unified diff format:
-            --- Table A
-    <BLANKLINE>
-            +++ Table B
-    <BLANKLINE>
-            @@ -1,5 +1,5 @@
-    <BLANKLINE>
-             2988, -2779.03..., 'coquille'
-            -5748, 6357.97..., 'ferly'
-            +-1, 6357.97..., 'ferly'
-             9735, -9132.53..., 'misreliance'
-             425, -2689.26..., 'ogeed'
-             8989, 9870.02..., 'readmittance'
-    <BLANKLINE>
-
-
 Test of switch fields
     >>> case = RowDiffScript(argv="rowdiff.py --fields=modeup data/test-source.fits data/test-change-row1-valueLeft.fits")
     >>> case.run()
