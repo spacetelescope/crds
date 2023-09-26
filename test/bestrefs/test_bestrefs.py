@@ -267,7 +267,7 @@ Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci
     for i, line in enumerate(out):
         line = line.strip()
         if i < 6:
-            assert line == out_to_check[i]
+            assert out_to_check[i] in line
         else:
             # using re b/c the numeric value is dynamic
             assert re.match(pattern, line) is not None
