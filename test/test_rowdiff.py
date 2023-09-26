@@ -162,11 +162,22 @@ def test_ignorefields_specific(test_data, capsys):
     for msg in expected.splitlines():
         assert msg.strip() in out
 
+
+@mark.rowdiff
+def test_switchfields_nodiff(test_data, capsys):
+    """Test of switch fields"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-change-row1-valueLeft.fits'
+    argv = f'crds.rowdiff --fields=modeup {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
+
+    expected = """HDU extension #1 contains no differences"""
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+
 """
-Test of switch fields
-    >>> case = RowDiffScript(argv="rowdiff.py --fields=modeup data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run()
-        HDU extension #1 contains no differences
 
     >>> case = RowDiffScript(argv="rowdiff.py --fields=valueleft data/test-source.fits data/test-change-row1-valueLeft.fits")
     >>> case.run()
