@@ -60,34 +60,38 @@ def test_rowchange(test_data, capsys):
         assert msg.strip() in out
 
 
-"""
-Row removal
-    >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-single-modes.fits")
-    >>> case.run() # doctest: +ELLIPSIS
-    Row differences for HDU extension #1
-    <BLANKLINE>
-        Summary:
-            Remove from a rows 1-3
-            Remove from a rows 5-7
-    <BLANKLINE>
-        Row difference, unified diff format:
-            --- Table A
-    <BLANKLINE>
-            +++ Table B
-    <BLANKLINE>
-            @@ -1,9 +1,3 @@
-    <BLANKLINE>
-             'yes', 'yes', 2988, -2779.03..., 'coquille'
-            -'yes', 'no', 5748, 6357.97..., 'ferly'
-            -'yes', 'maybe', 9735, -9132.5..., 'misreliance'
-            -'no', 'yes', 425, -2689.26..., 'ogeed'
-             'no', 'no', 8989, 9870.025..., 'readmittance'
-            -'no', 'maybe', 3537, -8615.03..., 'anacatadidymus'
-            -'maybe', 'yes', 1763, -2442.96..., 'monochromat'
-            -'maybe', 'no', 8023, 4665.56..., 'ranarium'
-             'maybe', 'maybe', 7347, 1705.58..., 'Dode'
-    <BLANKLINE>
+@mark.rowdiff
+def test_rowremoval(test_data, capsys):
+    """Test Row removal"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-single-modes.fits'
+    argv = f'crds.rowdiff {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
 
+    expected = """Row differences for HDU extension #1\n\n
+    Summary:\n
+    Remove from a rows 1-3\n
+    Remove from a rows 5-7\n\n
+    Row difference, unified diff format:\n
+    --- Table A\n\n
+    +++ Table B\n\n
+    @@ -1,9 +1,3 @@\n\n
+    'yes', 'yes', 2988, -2779.0352, 'coquille'\n
+    -'yes', 'no', 5748, 6357.9727, 'ferly'\n
+    -'yes', 'maybe', 9735, -9132.532, 'misreliance'\n
+    -'no', 'yes', 425, -2689.2646, 'ogeed'\n
+    'no', 'no', 8989, 9870.025, 'readmittance'\n
+    -'no', 'maybe', 3537, -8615.033, 'anacatadidymus'\n
+    -'maybe', 'yes', 1763, -2442.9683, 'monochromat'\n
+    -'maybe', 'no', 8023, 4665.564, 'ranarium'\n
+    'maybe', 'maybe', 7347, 1705.5876, 'Dode'
+    """
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+
+"""
 Row addition
     >>> case = RowDiffScript(argv="rowdiff.py data/test-single-modes.fits data/test-source.fits")
     >>> case.run() # doctest: +ELLIPSIS
