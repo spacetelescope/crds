@@ -203,21 +203,24 @@ def test_switchfields_withdiff(test_data, capsys):
         assert msg.strip() in out
 
 
-"""
-Mode test: no differences
-    >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-source.fits")
-    >>> case.run()
-    Difference for HDU extension #1
-    <BLANKLINE>
-        Table A has all modes.
-    <BLANKLINE>
-        Table B has all modes.
-    <BLANKLINE>
-        Table A and B share all modes.
-    <BLANKLINE>
-        All common modes are equivalent.
-    <BLANKLINE>
+@mark.rowdiff
+def test_nodiff(test_data, capsys):
+    """Mode test: no differences"""
+    fits_path = Path(test_data) / 'test-source.fits'
+    argv = f'crds.rowdiff --mode-fields=modeup,modedown {str(fits_path)} {str(fits_path)}'
+    RowDiffScript(argv)()
 
+    expected = """Difference for HDU extension #1\n\n
+    Table A has all modes.\n\n
+    Table B has all modes.\n\n
+    Table A and B share all modes.\n\n
+    All common modes are equivalent."""
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+
+"""
 Mode test: No mode changes, but change in rows selected
     >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-change-row1-valueLeft.fits")
     >>> case.run() # doctest: +ELLIPSIS
