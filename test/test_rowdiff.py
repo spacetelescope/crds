@@ -246,35 +246,37 @@ def test_nodiff_diffrows(test_data, capsys):
     for msg in expected.splitlines():
         assert msg.strip() in out
 
-"""
-Mode test: removed modes
-    >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-alternate-modes.fits")
-    >>> case.run()
-    Difference for HDU extension #1
-    <BLANKLINE>
-        Table A has all modes.
-    <BLANKLINE>
-        Table B changes:
-    <BLANKLINE>
-            Missing Modes:
-    modeup modedown
-    ------ --------
-     maybe    maybe
-        no       no
-       yes      yes
-    <BLANKLINE>
-        Table A to B changes:
-    <BLANKLINE>
-            Missing Modes:
-    modeup modedown
-    ------ --------
-     maybe    maybe
-        no       no
-       yes      yes
-    <BLANKLINE>
-        All common modes are equivalent.
-    <BLANKLINE>
 
+@mark.rowdiff
+def test_removedmodes(test_data, capsys):
+    """Mode test: removed modes"""
+    fits1_path = Path(test_data) / 'test-source.fits'
+    fits2_path = Path(test_data) / 'test-alternate-modes.fits'
+    argv = f'crds.rowdiff --mode-fields=modeup,modedown {str(fits1_path)} {str(fits2_path)}'
+    RowDiffScript(argv)()
+
+    expected = """Difference for HDU extension #1\n\n
+    Table A has all modes.\n\n
+    Table B changes:\n\n
+    Missing Modes:\nmodeup modedown\n
+    ------ --------\n
+    maybe    maybe\n
+    no       no\n
+    yes      yes\n\n
+    Table A to B changes:\n\n
+    Missing Modes:\n
+    modeup modedown\n
+    ------ --------\n
+    maybe    maybe\n
+    no       no\n
+    yes      yes\n\n
+    All common modes are equivalent."""
+    out = capsys.readouterr().out
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+
+"""
 Mode test: duplicate modes
     >>> case = RowDiffScript(argv="rowdiff.py --mode-fields=modeup,modedown data/test-source.fits data/test-duplicate-mode.fits")
     >>> case.run()  # doctest: +ELLIPSIS
