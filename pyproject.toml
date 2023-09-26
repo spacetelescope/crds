@@ -171,6 +171,7 @@ markers = [
   "reftypes",
   "rmap",
   "roman",
+  "rowdiff",
   "substitutions",
   "tables",
 ]
