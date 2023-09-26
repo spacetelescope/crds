@@ -1,3 +1,12 @@
+11.17.7 (unreleased)
+====================
+
+General
+-------
+
+- Replaced deprecated np.product with np.prod in crds.certify.validators.core [#975]
+
+
 11.17.6 (2023-09-08)
 =====================
 
