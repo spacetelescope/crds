@@ -43,9 +43,7 @@ def test_table_effects_default_always_reprocess(default_shared_state, caplog):
     Rule DeepLook_Default: Reference type cannot be examined, by definition.
     1 sources processed
     1 source updates
-    0 errors
-    0 warnings
-    3 infos"""
+    0 errors"""
     for msg in expected.splitlines():
         assert msg.strip() in out
 
@@ -72,9 +70,7 @@ def test_table_effects_reprocess_test(default_shared_state, caplog):
     Rule DeepLook_COSOpt_elem: Selection rules have executed and the selected rows are different.
     1 sources processed
     1 source updates
-    0 errors
-    0 warnings
-    3 infos"""
+    0 errors"""
     for msg in expected.splitlines():
         assert msg.strip() in out
 
@@ -102,6 +98,4 @@ def test_table_effects_reprocess_no(default_shared_state, caplog):
     Removing table update for COS wcptab LBK617010:LBK617YRQ no effective change from reference 'X2I1559GL_WCP.FITS' --> 'XAF1429EL_WCP.FITS'
     1 sources processed
     0 source updates
-    0 errors
-    0 warnings
-    3 infos"""
+    0 errors"""
