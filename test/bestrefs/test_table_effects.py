@@ -50,33 +50,34 @@ def test_table_effects_default_always_reprocess(default_shared_state, caplog):
         assert msg.strip() in out
 
 
-def test_table_effects_reprocess_test():
-    """
-    Test: COS WCPTAB, reprocess yes
+def test_table_effects_reprocess_test(default_shared_state, caplog):
+    """Test: COS WCPTAB, reprocess yes"""
+    argv="""bestrefs.py -z  --verbosity 25
+    --old-context hst_0018.pmap  --new-context hst_0024.pmap --datasets LB6M01030"""
+    assert BestrefsScript(argv=argv)() == 0
+    out = caplog.text
 
-    >>> old_state = test_config.setup()
+    expected = """Using explicit new context 'hst_0024.pmap' for computing updated best references.
+    Using explicit old context 'hst_0018.pmap'
+    Dumping dataset parameters from CRDS server at
+    for ['LB6M01030']
+    Dumped 1 of 1 datasets from CRDS server at
+    Computing bestrefs for datasets ['LB6M01030']
+    ===> Processing LB6M01030:LB6M01AVQ
+    Deep Reference examination between
+    x2i1559gl_wcp.fits and
+    xaf1429el_wcp.fits initiated.
+    Instantiating rules for reference type cos_wcptab.
+    Rule DeepLook_COSOpt_elem: Reprocessing is required.
+    Rule DeepLook_COSOpt_elem: Selection rules have executed and the selected rows are different.
+    1 sources processed
+    1 source updates
+    0 errors
+    0 warnings
+    3 infos"""
+    for msg in expected.splitlines():
+        assert msg.strip() in out
 
-    >>> doctest.ELLIPSIS_MARKER = '...'
-    >>> BestrefsScript(argv="bestrefs.py -z  --verbosity 25 --old-context hst_0018.pmap  --new-context hst_0024.pmap --datasets LB6M01030")() # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Using explicit new context 'hst_0024.pmap' for computing updated best references.
-    CRDS - DEBUG -  Using explicit old context 'hst_0018.pmap'
-    CRDS - INFO -  Dumping dataset parameters from CRDS server at 'https://...' for ['LB6M01030']
-    CRDS - INFO -  Dumped 1 of 1 datasets from CRDS server at 'https://...'
-    CRDS - INFO -  Computing bestrefs for datasets ['LB6M01030']
-    CRDS - DEBUG -  ===> Processing LB6M01030:LB6M01AVQ
-    CRDS - DEBUG -  Deep Reference examination between .../x2i1559gl_wcp.fits and .../xaf1429el_wcp.fits initiated.
-    CRDS - DEBUG -  Instantiating rules for reference type cos_wcptab.
-    CRDS - DEBUG -  Rule DeepLook_COSOpt_elem: Reprocessing is required.
-    CRDS - DEBUG -  Rule DeepLook_COSOpt_elem: Selection rules have executed and the selected rows are different.
-    CRDS - DEBUG -  1 sources processed
-    CRDS - DEBUG -  1 source updates
-    CRDS - INFO -  0 errors
-    CRDS - INFO -  0 warnings
-    CRDS - INFO -  3 infos
-    0
-
-    >>> test_config.cleanup(old_state)
-    """
 
 def test_table_effects_reprocess_no():
     """
@@ -86,22 +87,22 @@ def test_table_effects_reprocess_no():
 
     >>> doctest.ELLIPSIS_MARKER = '...'
     >>> BestrefsScript(argv="bestrefs.py -z  --verbosity 25 --old-context hst_0018.pmap  --new-context hst_0024.pmap --datasets LBK617YRQ")() # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Using explicit new context 'hst_0024.pmap' for computing updated best references.
-    CRDS - DEBUG -  Using explicit old context 'hst_0018.pmap'
-    CRDS - INFO -  Dumping dataset parameters from CRDS server at 'https://...' for ['LBK617YRQ']
-    CRDS - INFO -  Dumped 1 of 1 datasets from CRDS server at 'https://...'
-    CRDS - INFO -  Computing bestrefs for datasets ['LBK617YRQ']
-    CRDS - DEBUG -  ===> Processing LBK617010:LBK617YRQ
-    CRDS - DEBUG -  Deep Reference examination between .../x2i1559gl_wcp.fits and .../xaf1429el_wcp.fits initiated.
-    CRDS - DEBUG -  Instantiating rules for reference type cos_wcptab.
-    CRDS - DEBUG -  Rule DeepLook_COSOpt_elem: Reprocessing is not required.
-    CRDS - DEBUG -  Rule DeepLook_COSOpt_elem: Selection rules have executed and the selected rows are the same.
-    CRDS - DEBUG -  Removing table update for COS wcptab LBK617010:LBK617YRQ no effective change from reference 'X2I1559GL_WCP.FITS' --> 'XAF1429EL_WCP.FITS'
-    CRDS - DEBUG -  1 sources processed
-    CRDS - DEBUG -  0 source updates
-    CRDS - INFO -  0 errors
-    CRDS - INFO -  0 warnings
-    CRDS - INFO -  3 infos
+    Using explicit new context 'hst_0024.pmap' for computing updated best references.
+    Using explicit old context 'hst_0018.pmap'
+    Dumping dataset parameters from CRDS server at 'https://...' for ['LBK617YRQ']
+    Dumped 1 of 1 datasets from CRDS server at 'https://...'
+    Computing bestrefs for datasets ['LBK617YRQ']
+    ===> Processing LBK617010:LBK617YRQ
+    Deep Reference examination between .../x2i1559gl_wcp.fits and .../xaf1429el_wcp.fits initiated.
+    Instantiating rules for reference type cos_wcptab.
+    Rule DeepLook_COSOpt_elem: Reprocessing is not required.
+    Rule DeepLook_COSOpt_elem: Selection rules have executed and the selected rows are the same.
+    Removing table update for COS wcptab LBK617010:LBK617YRQ no effective change from reference 'X2I1559GL_WCP.FITS' --> 'XAF1429EL_WCP.FITS'
+    1 sources processed
+    0 source updates
+    0 errors
+    0 warnings
+    3 infos
     0
 
     >>> test_config.cleanup(old_state)
