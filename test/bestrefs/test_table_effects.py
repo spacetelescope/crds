@@ -79,21 +79,23 @@ def test_table_effects_reprocess_test(default_shared_state, caplog):
         assert msg.strip() in out
 
 
-def test_table_effects_reprocess_no():
-    """
-    Test: COS WCPTAB, reprocess no
+def test_table_effects_reprocess_no(default_shared_state, caplog):
+    """Test: COS WCPTAB, reprocess no"""
+    argv="""bestrefs.py -z  --verbosity 25
+    --old-context hst_0018.pmap  --new-context hst_0024.pmap --datasets LBK617YRQ"""
+    assert BestrefsScript(argv=argv)() == 0
+    out = caplog.text
 
-    >>> old_state = test_config.setup()
-
-    >>> doctest.ELLIPSIS_MARKER = '...'
-    >>> BestrefsScript(argv="bestrefs.py -z  --verbosity 25 --old-context hst_0018.pmap  --new-context hst_0024.pmap --datasets LBK617YRQ")() # doctest: +ELLIPSIS
-    Using explicit new context 'hst_0024.pmap' for computing updated best references.
+    expected = """Using explicit new context 'hst_0024.pmap' for computing updated best references.
     Using explicit old context 'hst_0018.pmap'
-    Dumping dataset parameters from CRDS server at 'https://...' for ['LBK617YRQ']
-    Dumped 1 of 1 datasets from CRDS server at 'https://...'
+    Dumping dataset parameters from CRDS server at
+    for ['LBK617YRQ']
+    Dumped 1 of 1 datasets from CRDS server at
     Computing bestrefs for datasets ['LBK617YRQ']
     ===> Processing LBK617010:LBK617YRQ
-    Deep Reference examination between .../x2i1559gl_wcp.fits and .../xaf1429el_wcp.fits initiated.
+    Deep Reference examination between
+    x2i1559gl_wcp.fits and
+    xaf1429el_wcp.fits initiated.
     Instantiating rules for reference type cos_wcptab.
     Rule DeepLook_COSOpt_elem: Reprocessing is not required.
     Rule DeepLook_COSOpt_elem: Selection rules have executed and the selected rows are the same.
@@ -102,16 +104,4 @@ def test_table_effects_reprocess_no():
     0 source updates
     0 errors
     0 warnings
-    3 infos
-    0
-
-    >>> test_config.cleanup(old_state)
-    """
-
-def main():
-    """Run module tests,  for now just doctests only."""
-    from crds.tests import test_table_effects, tstmod
-    return tstmod(test_table_effects)
-
-if __name__ == "__main__":
-    print(main())
+    3 infos"""
