@@ -224,14 +224,21 @@ def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
         test_brs.complex_init()
         out = caplog.messages
     default_shared_state.cleanup()
-    odd_pattern = re.compile(" Dumping dataset parameters for '[a-z0-9]{3,6}' from CRDS server at 'https://hst-crds.stsci.edu'")
-    even_pattern = re.compile(" Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since None")
+    odd_pattern = re.compile("Dumping dataset parameters for '[a-z0-9]{3,6}' from CRDS server at 'https://hst-crds.stsci.edu'")
+    even_pattern = re.compile("Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since None")
+    first_line = "Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']"
+    # remove duplicate log messages from stpipe, up to the last two lines:
+    if len(out) > 14:
+        out = [o for i, o in enumerate(out[:-2]) if i%2 != 0]
+    else: # ignore warning "Assuming parameter names ..."
+        out = out[:-1]
     for i, line in enumerate(out):
+        line = line.strip()
         if i == 0:
-            assert line == " Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']"
+            assert line == first_line
         elif i%2 == 0:
             assert re.match(even_pattern, line) is not None
-        elif i < 13:
+        else:
             assert re.match(odd_pattern, line) is not None
 
 
@@ -242,22 +249,29 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
-        messages = caplog.messages
     default_shared_state.cleanup()
-    out_to_check = """ Mapping differences from 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' affect:
- {'acs': ['biasfile']}
- Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' are:
- {'acs': '1992-01-02 00:00:00'}
- Computing bestrefs for db datasets for ['acs']
- Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'
- Downloaded  221121 dataset ids for 'acs' since '1992-01-02 00:00:00'"""
-    pattern = re.compile(" Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since '1992-01-02 00:00:00'")
-    for msg in out_to_check.splitlines():
-        if not msg.startswith(" Downloaded"):
-            assert msg.strip() in out
+    # remove duplicate log messages from stpipe, up to the last two lines:
+    out = out.splitlines()
+    line_check = [0,1,4,5,8,10,12]
+    if len(out) > 8:
+        out = [o for i, o in enumerate(out) if i in line_check]
+    else: # ignore warning "Assuming parameter names ..."
+        out = out[:-1]
+    out_to_check = """Mapping differences from 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' affect:
+{'acs': ['biasfile']}
+Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' are:
+{'acs': '1992-01-02 00:00:00'}
+Computing bestrefs for db datasets for ['acs']
+Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'""".splitlines()
+    pattern = re.compile("Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since '1992-01-02 00:00:00'")
+    for i, line in enumerate(out):
+        line = line.strip()
+        if i < 6:
+            assert out_to_check[i] in line
         else:
             # using re b/c the numeric value is dynamic
-            assert re.match(pattern, messages[-2]) is not None
+            line = line.replace("INFO     stpipe:log.py:180  ", "")
+            assert re.match(pattern, line) is not None
 
 
 @pytest.mark.bestrefs
