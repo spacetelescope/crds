@@ -1,9 +1,16 @@
 """This tests, through the use of bestrefs, the functioning of table effects."""
-import doctest
+from pathlib import Path
+from pytest import mark
 
-from crds import tests
-from crds.tests import test_config
+from crds.core import log, utils
+from crds import data_file
+
 from crds.bestrefs import BestrefsScript
+
+# For log capture tests, need to ensure that the CRDS
+# logger propagates its events.
+log.THE_LOGGER.logger.propagate = True
+
 
 def dt_table_effects_default_always_reprocess():
     """
