@@ -2776,8 +2776,6 @@ def test_certify_kernel_unity_validator_bad():
         assert True
 
 
-
-@mark.smoke
 @mark.certify
 @mark.or_bars
 def test_or_bars_certify_bad_keyword(jwst_serverless_state, jwst_data, caplog):
@@ -2798,7 +2796,6 @@ Checking JWST datamodels.
         assert line in out
 
 
-@mark.smoke
 @mark.certify
 @mark.or_bars
 def test_or_bars_certify_bad_value(jwst_serverless_state, jwst_data, caplog):
