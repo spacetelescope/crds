@@ -2774,3 +2774,45 @@ def test_certify_kernel_unity_validator_bad():
         checker.check("test.fits", header)
     except exceptions.BadKernelSumError:
         assert True
+
+
+
+@mark.smoke
+@mark.certify
+@mark.or_bars
+def test_or_bars_certify_bad_keyword(jwst_serverless_state, jwst_data, caplog):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        CertifyScript(f"crds.certify {jwst_data}/jwst_miri_ipc.bad-keyword.fits --comparison-context jwst_0361.pmap")()
+        out = caplog.text
+    jwst_serverless_state.cleanup()
+    expected = f"""Certifying '{jwst_data}/jwst_miri_ipc.bad-keyword.fits' (1/1) as 'FITS' relative to context 'jwst_0361.pmap'
+FITS file 'jwst_miri_ipc.bad-keyword.fits' conforms to FITS standards.
+CRDS-pattern-like keyword 'P_DETEC' w/o CRDS translation to corresponding dataset keyword.
+Pattern-like keyword 'P_DETEC' may be misspelled or missing its translation in CRDS.  Pattern will not be used.
+The translation for 'P_DETEC' can be defined in crds.jwst.locate or rmap header reference_to_dataset field.
+If this is not a pattern keyword, adding a translation to 'not-a-pattern' will suppress this warning.
+Checking JWST datamodels.
+0 errors
+8 infos""".splitlines()
+    for line in expected:
+        assert line in out
+
+
+@mark.smoke
+@mark.certify
+@mark.or_bars
+def test_or_bars_certify_bad_value(jwst_serverless_state, jwst_data, caplog):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        CertifyScript(f"crds.certify {jwst_data}/jwst_miri_ipc.bad-value.fits --comparison-context jwst_0361.pmap")()
+        out = caplog.text
+    jwst_serverless_state.cleanup()
+    expected = f"""Certifying '{jwst_data}/jwst_miri_ipc.bad-value.fits' (1/1) as 'FITS' relative to context 'jwst_0361.pmap'
+FITS file 'jwst_miri_ipc.bad-value.fits' conforms to FITS standards.
+Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'LONG'
+Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|FOO|'
+instrument='MIRI' type='IPC' data='{jwst_data}/jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
+Checking JWST datamodels.
+1 errors
+7 infos""".splitlines()
+    for line in expected:
+        assert line in out

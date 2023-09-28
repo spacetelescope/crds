@@ -167,6 +167,7 @@ markers = [
   "locking",
   "matches",
   "misc",
+  "or_bars",
   "refactor",
   "refactoring: tests in the crds.refactoring module",
   "reftypes",
