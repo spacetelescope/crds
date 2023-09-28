@@ -1,5 +1,3 @@
-import doctest
-import os
 from pathlib import Path
 from pytest import mark
 import shutil
@@ -7,7 +5,6 @@ import shutil
 from crds.core import log, utils
 from crds import data_file
 
-from crds.refactoring import checksum
 from crds.refactoring.checksum import ChecksumScript
 
 # For log capture tests, need to ensure that the CRDS
