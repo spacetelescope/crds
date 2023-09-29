@@ -458,7 +458,6 @@ def test_hst_tobs_header_to_reftypes(capsys):
 
 
 @pytest.mark.bestrefs
-@pytest.mark.smoke
 class TestBestrefs:
 
     script_class = BestrefsScript
