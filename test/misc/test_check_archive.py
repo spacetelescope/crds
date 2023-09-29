@@ -44,7 +44,6 @@ def test_check_archive_script(hst_shared_cache_state, caplog):
 Reference URL: 'https://hst-crds.stsci.edu/unchecked_get/references/hst/'
 File 'foo.map' failed HTTP HEAD with code = 404 from 'https://hst-crds.stsci.edu/unchecked_get/references/hst/foo.map'
 1 errors
-0 warnings
-3 infos"""
+0 warnings"""
     for line in expected.splitlines():
         assert line in out

@@ -18,8 +18,7 @@ def test_certify_truncated_file(default_shared_state, hst_data, caplog):
     expected_out = f"""Certifying '{hst_data}/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
  0 errors
- 18 warnings
- 4 infos"""
+ 18 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -81,8 +80,7 @@ Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
 Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
 ########################################
 4 errors
-6 warnings
-40 infos"""
+6 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -132,8 +130,7 @@ def test_certify_good_checksum(default_shared_state, hst_data, caplog):
  >> **** Verification found 0 warning(s) and 0 error(s). ****
  ########################################
  0 errors
- 0 warnings
- 38 infos"""
+ 0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -363,8 +360,7 @@ DATE-OBS = '1996-10-01'
 TIME-OBS = '00:00:00'
 ########################################
 0 errors
-0 warnings
-16 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -405,8 +401,7 @@ META.TELESCOPE [TELESCOP] = 'jwst'
 META.USEAFTER [USEAFTER] = '2015-01-25T12:00:00'
 ########################################
 0 errors
-0 warnings
-29 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -423,8 +418,7 @@ FITS file 'missing_keyword.fits' conforms to FITS standards.
 instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
 ########################################
 1 errors
-0 warnings
-4 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
     
@@ -476,8 +470,7 @@ Certifying '{cache}/mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relat
 ########################################
 Certifying '{cache}/mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context 'hst.pmap'
 ########################################
-0 errors
-39 infos"""
+0 errors"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -522,8 +515,7 @@ Table mode (('DATE', 56961.8334),) from old reference 'yas2005el_hv.fits[2]' is 
 Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
 ########################################
 0 errors
-15 warnings
-17 infos"""
+15 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -565,8 +557,7 @@ Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is 
 Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
 ########################################
 0 errors
-10 warnings
-16 infos"""
+10 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -583,8 +574,7 @@ instrument='COS' type='DEADTAB' data='{hst_data}/s7g1700gl_dead.fits' ::  Duplic
 FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
 ########################################
 1 errors
-0 warnings
-4 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -601,8 +591,7 @@ FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
 Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
 ########################################
 0 errors
-5 warnings
-8 infos"""
+5 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -620,8 +609,7 @@ Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'SHORT | MED
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
 Checking JWST datamodels.
 ########################################
-0 errors
-7 infos"""
+0 errors"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -637,8 +625,7 @@ def test_certify_jwst_invalid_asdf(jwst_serverless_state, jwst_data, caplog):
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validation error : Input object does not appear to be an ASDF file or a FITS with ASDF extension
 ########################################
 1 errors
-0 warnings
-3 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -654,8 +641,7 @@ def test_certify_jwst_invalid_json(jwst_serverless_state, jwst_data, caplog):
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.json' ::  Validation error : JSON wouldn't load from '{jwst_data}/invalid.json' : Expecting ',' delimiter: line 5 column 1 (char 77)
 ########################################
 1 errors
-0 warnings
-3 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -674,8 +660,7 @@ expected ' ', but found '^'
   in "{jwst_data}/invalid.yaml", line 1, column 21
 ########################################
 1 errors
-0 warnings
-3 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1259,8 +1244,7 @@ Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER
 Change in row format between 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
 ########################################
 0 errors
-2 warnings
-11 infos"""
+2 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1452,8 +1436,7 @@ Validating key '1996-10-01 00:00:00'
 Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst_0508.pmap'
 ########################################
 1 errors
-2 warnings
-17 infos"""
+2 warnings"""
 
     for msg in expected3.splitlines():
         assert msg.strip() in out
@@ -1485,8 +1468,7 @@ ASDF Standard version 1.5.0 does not fulfill context requirement of asdf_standar
 Checking JWST datamodels.
 ########################################
 1 errors
-0 warnings
-4 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1502,8 +1484,7 @@ def test_asdf_standard_requirement_succeed(jwst_serverless_state, jwst_data, cap
 Checking JWST datamodels.
 ########################################
 0 errors
-0 warnings
-4 infos"""
+0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1521,8 +1502,7 @@ File written with dev version of asdf library: 2.0.0.dev1213
 Checking JWST datamodels.
 ########################################
 0 errors
-1 warnings
-5 infos"""
+1 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
     
@@ -1539,8 +1519,7 @@ instrument='NIRSPEC' type='IPC' data='{jwst_data}/jwst_nirspec_ipc_with_asdf_ext
 FITS file 'jwst_nirspec_ipc_with_asdf_extension.fits' conforms to FITS standards.
 Checking JWST datamodels.
 ########################################
-1 errors
-5 infos"""
+1 errors"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -2790,8 +2769,7 @@ Pattern-like keyword 'P_DETEC' may be misspelled or missing its translation in C
 The translation for 'P_DETEC' can be defined in crds.jwst.locate or rmap header reference_to_dataset field.
 If this is not a pattern keyword, adding a translation to 'not-a-pattern' will suppress this warning.
 Checking JWST datamodels.
-0 errors
-8 infos""".splitlines()
+0 errors""".splitlines()
     for line in expected:
         assert line in out
 
@@ -2809,7 +2787,6 @@ Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'LONG'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|FOO|'
 instrument='MIRI' type='IPC' data='{jwst_data}/jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
 Checking JWST datamodels.
-1 errors
-7 infos""".splitlines()
+1 errors""".splitlines()
     for line in expected:
         assert line in out

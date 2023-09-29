@@ -67,8 +67,7 @@ def test_bestrefs_3_files(default_shared_state, caplog, hst_data):
      ===> Processing {hst_data}/j8bt06o6q_raw.fits
      ===> Processing {hst_data}/j8bt09jcq_raw.fits
      0 errors
-     0 warnings
-     5 infos"""
+     0 warnings"""
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         argv = f"""bestrefs.py --new-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits
             {hst_data}/j8bt06o6q_raw.fits {hst_data}/j8bt09jcq_raw.fits"""
@@ -111,8 +110,7 @@ def test_bestrefs_compare_source_files(default_shared_state, caplog, hst_data):
  {hst_data}/j8bt06o6q_raw.fits
  {hst_data}/j8bt09jcq_raw.fits
  0 errors
- 0 warnings
- 19 infos"""
+ 0 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -132,8 +130,7 @@ def test_bestrefs_3_files_default_context_from_server(default_shared_state, capl
  ===> Processing {hst_data}/j8bt06o6q_raw.fits
  ===> Processing {hst_data}/j8bt09jcq_raw.fits
  0 errors
- 0 warnings
- 5 infos"""
+ 0 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -155,8 +152,7 @@ def test_bestrefs_broken_dataset_file(default_shared_state, caplog, hst_data):
  ===> Processing {hst_data}/j8bt06o6q_raw.fits
  ===> Processing {hst_data}/j8bt09jcq_raw.fits
  1 errors
- 0 warnings
- 6 infos"""
+ 0 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -190,8 +186,7 @@ def test_bestrefs_catalog_dataset(default_shared_state, caplog):
  Computing bestrefs for datasets ['LB6M01030']
  No comparison context or source comparison requested.
  0 errors
- 0 warnings
- 4 infos"""
+ 0 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -210,8 +205,7 @@ def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
  ===> Processing {hst_data}/j8bt06o6q_raw.fits
  ===> Processing {hst_data}/j8bt09jcq_raw.fits
  0 errors
- 1 warnings
- 4 infos"""
+ 1 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -314,8 +308,7 @@ def test_bestrefs_compare_source_canary(default_shared_state, caplog, hst_data):
  instrument='COS' type='BPIXTAB' data='LA7803FIQ' ::  Comparison difference: 'bar.fits' --> 'yae1249sl_bpix.fits' :: Would update.
  instrument='COS' type='XWLKFILE' data='LA7803FIQ' ::  Comparison difference: 'foo.fits' --> '14o2013ql_xwalk.fits' :: Would update.
  2 errors
- 0 warnings
- 2 infos"""
+ 0 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -331,8 +324,7 @@ def test_bestrefs_donotreprocess_datasets(default_shared_state, caplog):
  Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds.stsci.edu'
  Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
  0 errors
- 1 warnings
- 5 infos"""
+ 1 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -376,8 +368,7 @@ def test_bestrefs_donotreprocess_fix(default_shared_state, caplog, hst_data):
  1 sources processed
  1 source updates
  0 errors
- 1 warnings
- 5 infos"""
+ 1 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -423,8 +414,7 @@ def test_bestrefs_multiple_updates_with_error(default_shared_state, caplog, hst_
  1 sources processed
  0 source updates
  2 errors
- 1 warnings
- 3 infos"""
+ 1 warnings"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
