@@ -52,14 +52,9 @@ def test_cdbs_uniqname(default_shared_state, hst_data, caplog, tmpdir):
 
 @mark.misc
 @mark.uniqname
-def test_has_checksum():
-    """
-    Compute diffs for two .pmap's:
+def test_has_checksum(default_shared_state, hst_data, caplog):
+    """Compute diffs for two .pmap's"""
 
-    >>> old_state = test_config.setup()
-    >>> uniqname.has_checksum("data/16n1832tm_tmc.fits")  # doctest: +ELLIPSIS
-    False
-    >>> uniqname.has_checksum("data/s7g1700gl_dead_good_xsum.fits") # doctest: +ELLIPSIS
-    True
-    >>> test_config.cleanup(old_state)
-    """
+    hst_data = Path(hst_data)
+    assert not uniqname.has_checksum(hst_data / "16n1832tm_tmc.fits")
+    assert uniqname.has_checksum(hst_data / "s7g1700gl_dead_good_xsum.fits")
