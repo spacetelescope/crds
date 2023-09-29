@@ -2,6 +2,7 @@
 """
 from pathlib import Path
 from pytest import mark
+import shutil
 
 from crds.core import log
 
@@ -17,7 +18,6 @@ log.THE_LOGGER.logger.propagate = True
 @mark.uniqname
 def test_synphot_uniqname(default_shared_state, caplog):
     """Compute diffs for two .pmap's:"""
-
     name = UniqnameScript("crds.misc.uniqname --dry-run --files data/16n1832tm_tmc.fits")()
     out = caplog.text
 
@@ -31,18 +31,24 @@ def test_synphot_uniqname(default_shared_state, caplog):
 
 @mark.misc
 @mark.uniqname
-def test_cdbs_uniqname():
-    """
-    Compute diffs for two .pmap's:
+def test_cdbs_uniqname(default_shared_state, hst_data, caplog, tmpdir):
+    """Compute diffs for two .pmap's"""
+    fname = 's7g1700gl_dead.fits'
+    path = tmpdir / fname
+    shutil.copy(Path(hst_data) / fname, path)
+    name = UniqnameScript(f'crds.misc.uniqname --standard --files {path}')()
+    out = caplog.text
 
-    >>> old_state = test_config.setup()
-    >>> name = UniqnameScript("crds.misc.uniqname --standard --files data/s7g1700gl_dead.fits")()  # doctest: +ELLIPSIS
-    CRDS - INFO -  Rewriting 'data/s7g1700gl_dead.fits' --> 'data/..._dead.fits'
-    >>> name1 = uniqname.uniqname(name)
-    CRDS - INFO -  Rewriting '..._dead.fits' --> '..._dead.fits'
-    >>> os.remove(name1)
-    >>> test_config.cleanup(old_state)
-    """
+    expected = f"""Rewriting '{str(path)}' --> '{name}'"""
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
+    name1 = uniqname.uniqname(name)
+    out = caplog.text
+    expected = f"""Rewriting '{name}' --> '{name1}'"""
+    for msg in expected.splitlines():
+        assert msg.strip() in out
+
 
 @mark.misc
 @mark.uniqname
