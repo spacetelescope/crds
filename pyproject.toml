@@ -147,7 +147,7 @@ crds = "crds"
 
 [tool.pytest.ini_options]
 python_files = ["test_*"]
-python_classes = ["*Tests"]
+python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
   "smoke: critical tests required to pass for the system to work.",

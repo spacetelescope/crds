@@ -5,6 +5,7 @@ import json
 import datetime
 import shutil
 from crds.core import log
+from crds.core.config import locate_file
 from crds.bestrefs import bestrefs as br
 from crds.bestrefs import BestrefsScript
 from crds import assign_bestrefs
@@ -457,19 +458,32 @@ def test_hst_tobs_header_to_reftypes(capsys):
     assert jwst_header_to_reftypes({"EXP_TYPE":"MIR_IMAGE", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == ref_to_c
 
 
-
-class CRDSTestConfig:
-
-    def __init__(self, CrdsTestConfig):
-        super().__init__(CrdsTestConfig)
-
 @pytest.mark.bestrefs
-class TestBestrefs(CRDSTestConfig):
+@pytest.mark.smoke
+class TestBestrefs:
 
-    def __init__(self):
-        self.script_class = BestrefsScript
-        # server_url = "https://hst-crds-dev.stsci.edu"
-        self.obs = "hst"
+    script_class = BestrefsScript
+    obs = "hst"
+    clear_existing = False
+    server_url = None
+    # server_url = "https://hst-crds-dev.stsci.edu"
+    
+    def setup(self, hst_shared_cache_state, test_temp_dir, hst_data, test_mappath):
+        hst_shared_cache_state.server_url = self.server_url
+        hst_shared_cache_state.clear_existing = self.clear_existing
+        hst_shared_cache_state.config_setup()
+        self.cache = hst_shared_cache_state.cache
+        self.data = hst_data
+        self.temp_dir = test_temp_dir
+        self.hst_mappath = test_mappath
+
+    def run_script(self, cmd, expected_errs=None):
+        """Run SyncScript using command line `cmd` and check for `expected_errs` as return status."""
+        errs = self.script_class(cmd)()
+        assert errs == expected_errs
+
+    def crds_exists(self, filename, observatory="hst"):
+        return os.path.exists(locate_file(filename, observatory))
 
     def get_10_days_ago(self):
         now = datetime.datetime.now()
@@ -477,13 +491,11 @@ class TestBestrefs(CRDSTestConfig):
         return now.isoformat().split("T")[0]
 
     def test_bestrefs_affected_datasets(self):
-        self.run_script(f"crds.bestrefs --affected-datasets --old-context hst_0978.pmap --new-context hst_0980.pmap "
-                        f"--datasets-since {self.get_10_days_ago()}",
-                        expected_errs=0)
+        self.run_script(f"crds.bestrefs --affected-datasets --old-context hst_0978.pmap --new-context hst_0980.pmap"
+                        f"--datasets-since {self.get_10_days_ago()}")
 
-    def test_bestrefs_from_pickle(self, hst_data):
-        self.run_script(f"crds.bestrefs --new-context hst_0315.pmap --load-pickle @data/test_cos.pkl --stats --print-affected-details",
-                        expected_errs=0)
+    def test_bestrefs_from_pickle(self):
+        self.run_script(f"crds.bestrefs --new-context hst_0315.pmap --load-pickle {self.data}/test_cos.pkl --stats --print-affected-details")
 
     def test_bestrefs_to_pickle(self):
         self.run_script("crds.bestrefs --datasets LA9K03C3Q:LA9K03C3Q LA9K03C5Q:LA9K03C5Q LA9K03C7Q:LA9K03C7Q "

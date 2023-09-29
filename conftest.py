@@ -181,6 +181,17 @@ def hst_serverless_state(crds_shared_group_cache):
     cfg.config_setup()
     return cfg
 
+@fixture(scope='class')
+def hst_persistent_state(crds_shared_group_cache):
+    cfg = ConfigState(
+        cache=crds_shared_group_cache,
+        url=None,
+        observatory="hst",
+        clear_existing=False
+    )
+    cfg.config_setup()
+    return cfg
+
 
 @fixture(scope='function')
 def roman_serverless_state(crds_shared_group_cache):
