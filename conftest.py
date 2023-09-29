@@ -185,7 +185,6 @@ def hst_serverless_state(crds_shared_group_cache):
 def hst_persistent_state(crds_shared_group_cache):
     cfg = ConfigState(
         cache=crds_shared_group_cache,
-        #url="https://hst-crds.stsci.edu",
         url=None,
         observatory="hst",
         clear_existing=False
