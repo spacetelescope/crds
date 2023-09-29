@@ -176,6 +176,7 @@ markers = [
   "substitutions",
   "tables",
   "table_effects",
+  "uniqname",
 ]
 
 [tool.setuptools_scm]
