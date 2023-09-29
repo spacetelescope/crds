@@ -687,7 +687,7 @@ class KernelunityValidator(Validator):
         # super(KernelunityValidator, self).check_header(filename, header)
         array_name = self.complex_name
         all_data = header[array_name].DATA.transpose()
-        images = int(np.product(all_data.shape[:-2]))
+        images = int(np.prod(all_data.shape[:-2]))
         images_shape = (images,) + all_data.shape[-2:]
         images_data = np.reshape(all_data, images_shape)
         log.verbose("File=" + repr(os.path.basename(filename)),
