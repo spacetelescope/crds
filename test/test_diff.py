@@ -53,8 +53,11 @@ TEST CASES
 ----------
 """
 
+from pytest import mark
+
 from crds.diff import DiffScript
 
+@mark.diff
 def test_diff_pmap_diffs(capsys, default_shared_state, hst_data):
     """
     Compute diffs for two .pmap's:
@@ -77,6 +80,7 @@ def test_diff_pmap_diffs(capsys, default_shared_state, hst_data):
 
     assert status == 1
 
+@mark.diff
 def test_diff_imap_diffs(capsys, default_shared_state, hst_data):
     """
     Compute diffs for two .imap's:
@@ -98,6 +102,7 @@ def test_diff_imap_diffs(capsys, default_shared_state, hst_data):
 
     assert status == 1
 
+@mark.diff
 def test_diff_rmap_diffs(capsys, default_shared_state, hst_data):
     """
     Compute diffs for two .rmap's:
@@ -123,6 +128,7 @@ def test_diff_rmap_diffs(capsys, default_shared_state, hst_data):
     
     assert status == 1
 
+@mark.diff
 def test_diff_fits_diff(capsys, default_shared_state, hst_data):
     """
     Compute diffs for two .fits's:
@@ -155,6 +161,7 @@ Primary HDU:
 
     assert status == 1
 
+@mark.diff
 def test_diff_asdf(capsys, jwst_shared_cache_state, jwst_data):
     """
     Compute diffs for two .asdf's:
@@ -203,6 +210,7 @@ tree:
     
     assert status == 0
 
+@mark.diff
 def test_diff_rmap_primitive_diffs(capsys, default_shared_state, hst_data):
     """
     Compute primitive diffs for two .rmap's:
@@ -249,6 +257,7 @@ Primary HDU:
     
     assert status == 1
 
+@mark.diff
 def test_diff_file_reversions(capsys, default_shared_state, hst_data):
     """
     Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
@@ -280,6 +289,7 @@ CRDS - WARNING - Reversion at ('{hst_data}/hst_0001.pmap', ('acs',)) replaced '{
     
     assert status == 2
 
+@mark.diff
 def test_diff_row_change(capsys, default_shared_state, hst_data):
     """
     Row change
@@ -327,6 +337,7 @@ Extension HDU 1:
     
     assert status == 1
 
+@mark.diff
 def test_diff_rmap_primitive_diffs(capsys, default_shared_state, hst_data):
     """
     Compute primitive diffs for two .rmap's:
@@ -373,6 +384,7 @@ Primary HDU:
     
     assert status == 1
 
+@mark.diff
 def test_diff_file_reversions(capsys, default_shared_state, hst_data):
     """
     Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
@@ -395,6 +407,7 @@ def test_diff_file_reversions(capsys, default_shared_state, hst_data):
     
     assert status == 2
 
+@mark.diff
 def test_diff_row_change(capsys, default_shared_state, hst_data):
     """
     Row change
@@ -442,6 +455,7 @@ Extension HDU 1:
     
     assert status == 1
 
+@mark.diff
 def test_diff_print_affected_modes(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-modes")()
 
@@ -453,6 +467,7 @@ INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='NUV' DIFF_COUNT='1'
 
     assert status == 1
 
+@mark.diff
 def test_diff_print_all_new_files(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0008.pmap --print-all-new-files --sync-files --include-header-diffs --hide-boring")()
 
@@ -544,6 +559,7 @@ x9c18023o_drk.fits stis darkfile
     
     assert status == 1
 
+@mark.diff
 def test_diff_print_new_files(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0002.pmap --print-new-files")()
 
@@ -557,6 +573,7 @@ hst_acs_biasfile_0002.rmap
 
     assert status == 1
 
+@mark.diff
 def test_diff_print_affected_types(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-types")()
 
@@ -566,6 +583,7 @@ def test_diff_print_affected_types(capsys, default_shared_state, hst_data):
     
     assert status == 1
 
+@mark.diff
 def test_diff_print_affected_instruments(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-instruments")()
     
