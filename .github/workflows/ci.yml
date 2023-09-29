@@ -82,6 +82,7 @@ jobs:
           ./install
           pip install .[submission,test,docs,synphot]
       - uses: actions/cache@v3
+        if: always()
         with:
           path: ${{ needs.data.outputs.crds_path }}
           key: ${{ needs.data.outputs.crds_context }}
