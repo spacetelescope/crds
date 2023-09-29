@@ -181,10 +181,11 @@ def hst_serverless_state(crds_shared_group_cache):
     cfg.config_setup()
     return cfg
 
-@fixture(scope='class')
+@fixture(scope='function')
 def hst_persistent_state(crds_shared_group_cache):
     cfg = ConfigState(
         cache=crds_shared_group_cache,
+        #url="https://hst-crds.stsci.edu",
         url=None,
         observatory="hst",
         clear_existing=False
@@ -230,56 +231,6 @@ def roman_test_cache_state(test_cache):
     cfg.config_setup()
     return cfg
  
-# ==============================================================================
-
-class CRDSTestCase:
-
-    clear_existing = False
-    server_url = None
-    cache = crds_config.get_crds_path()
-    data_dir = test_data
-    temp_dir = test_temp_dir
-    hst_mappath =  test_mappath
-    obs = "hst"
-
-    def set_data_dir(self):
-        return os.path.join(self.data_dir, self.obs)
-
-    def setUp(self):
-        self.data_dir = self.set_data_dir()
-        self.cfg = ConfigState(cache=self.cache, url=self.server_url,
-                               clear_existing=self.clear_existing)
-        self.cfg.config_setup()
-
-    def tearDown(self):
-        self.cfg.cleanup()
-
-    def run_script(self, cmd, expected_errs=0):
-        """Run SyncScript using command line `cmd` and check for `expected_errs` as return status."""
-        errs = self.script_class(cmd)()
-        if expected_errs is not None:
-            assert errs == expected_errs
-
-    def assert_crds_exists(self, filename, observatory="hst"):
-        if os.path.exists(crds_config.locate_file(filename, observatory)):
-            assert True
-
-    def assert_crds_not_exists(self, filename, observatory="hst"):
-        if not os.path.exists(crds_config.locate_file(filename, observatory)):
-            assert True
-
-    def data(self, filename):
-        return os.path.join(self.data_dir, filename)
-
-    def temp(self, filename):
-        return os.path.join(self.temp_dir, filename)
-
-
-# ==============================================================================
-
-@fixture(scope='module')
-def CrdsTestConfig():
-    return CRDSTestCase
 
 # ==============================================================================
 
