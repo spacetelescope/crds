@@ -56,7 +56,7 @@ class TestSync(CRDSTestCase):
     def test_sync_explicit_files(self, hst_shared_cache_state):
         print(os.path.exists(config.locate_file('hst_cos_deadtab.rmap', 'hst')))
         # Not really sure how either of these lines are supposed to interact, as including neither, one nor both makes
-        # no difference.
+        # no differences.
         # self.assert_crds_not_exists("hst_cos_deadtab.rmap")
         # self.assert_crds_exists("hst_cos_deadtab.rmap")
         self.run_script("crds.sync --files hst_cos_deadtab.rmap --check-files --repair-files --check-sha1sum")
