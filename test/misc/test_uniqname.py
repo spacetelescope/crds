@@ -16,7 +16,7 @@ log.THE_LOGGER.logger.propagate = True
 
 @mark.misc
 @mark.uniqname
-def test_synphot_uniqname(default_shared_state, caplog):
+def test_synphot_uniqname(hst_shared_cache_state, caplog):
     """Compute diffs for two .pmap's:"""
     name = UniqnameScript("crds.misc.uniqname --dry-run --files data/16n1832tm_tmc.fits")()
     out = caplog.text
@@ -31,7 +31,7 @@ def test_synphot_uniqname(default_shared_state, caplog):
 
 @mark.misc
 @mark.uniqname
-def test_cdbs_uniqname(default_shared_state, hst_data, caplog, tmpdir):
+def test_cdbs_uniqname(hst_shared_cache_state, hst_data, caplog, tmpdir):
     """Compute diffs for two .pmap's"""
     fname = 's7g1700gl_dead.fits'
     path = tmpdir / fname
@@ -52,7 +52,7 @@ def test_cdbs_uniqname(default_shared_state, hst_data, caplog, tmpdir):
 
 @mark.misc
 @mark.uniqname
-def test_has_checksum(default_shared_state, hst_data, caplog):
+def test_has_checksum(hst_shared_cache_state, hst_data, caplog):
     """Compute diffs for two .pmap's"""
 
     hst_data = Path(hst_data)
