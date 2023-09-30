@@ -534,6 +534,9 @@ class TestBestrefs:
         shutil.copy(f"{self._dpath}/cos_N8XTZCAWQ.fits", test_copy)
         errors = assign_bestrefs([test_copy], context="hst_0500.pmap")
         assert errors == 0
+
+    def test_cleanup(self):
+        """Not actually a test"""
         self._config.cleanup()
 
 
