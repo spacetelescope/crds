@@ -73,15 +73,17 @@ def test_uses_rmaps(hst_shared_cache_state, capsys):
 
 
 @mark.uses
-def test_disabled_uses_imap():
-    """
-    >>> old_state = test_config.setup()
+def test_uses_imap(hst_shared_cache_state, capsys):
+    """TEst finding maps where an imap is used"""
 
-    >> uses.UsesScript("crds.uses --files hst_cos.imap")()
+    argv = 'crds.uses --files hst_cos.imap'
+    UsesScript(argv=argv)()
+    out = capsys.readouterr().out
+
+    expected = """
     hst.pmap
     hst_0001.pmap
     hst_0002.pmap
-    0
-
-    >>> test_config.cleanup(old_state)
     """
+    for msg in expected.splitlines():
+        assert msg.strip() in out
