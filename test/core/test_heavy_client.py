@@ -13,8 +13,8 @@ from crds.client import api
 
 @mark.core
 @mark.heavy_client
-def test_getreferences_rmap_na(jwst_no_cache_state, jwst_data):
-    os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
+def test_getreferences_rmap_na(jwst_no_cache_state, jwst_data, test_mappath):
+    os.environ["CRDS_MAPPATH_SINGLE"] = os.path.join(test_mappath, "jwst")
     refs = heavy_client.getreferences({
         "META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS",
         "META.INSTRUMENT.FILTER":"BOGUS2", "META.EXPOSURE.TYPE":"NIS_IMAGE"
@@ -23,13 +23,14 @@ def test_getreferences_rmap_na(jwst_no_cache_state, jwst_data):
     context=f"{jwst_data}/jwst_na_omit.pmap", 
     ignore_cache=False, 
     reftypes=["flat"])
+    del os.environ["CRDS_MAPPATH_SINGLE"]
     assert refs == {'flat': 'NOT FOUND n/a'}
 
 
 @mark.core
 @mark.heavy_client
-def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
-    os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
+def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data, test_mappath):
+    os.environ["CRDS_MAPPATH_SINGLE"] = os.path.join(test_mappath, "jwst")
     refs = heavy_client.getreferences(
         {
             "META.INSTRUMENT.NAME":"NIRISS", 
@@ -42,13 +43,14 @@ def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
         ignore_cache=False, 
         reftypes=["flat"]
     )
+    del os.environ["CRDS_MAPPATH_SINGLE"]
     assert refs == {}
 
 
 @mark.core
 @mark.heavy_client
-def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
-    os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
+def test_getreferences_imap_na(jwst_no_cache_state, jwst_data, test_mappath):
+    os.environ["CRDS_MAPPATH_SINGLE"] = os.path.join(test_mappath, "jwst")
     refs = heavy_client.getreferences(
         {
             "META.INSTRUMENT.NAME":"FGS",
@@ -59,13 +61,14 @@ def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
         ignore_cache=False,
         reftypes=["flat"]
     )
+    del os.environ["CRDS_MAPPATH_SINGLE"]
     assert refs == {'flat': 'NOT FOUND n/a'}
 
 
 @mark.core
 @mark.heavy_client
-def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
-    os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
+def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data, test_mappath):
+    os.environ["CRDS_MAPPATH_SINGLE"] = os.path.join(test_mappath, "jwst")
     refs = heavy_client.getreferences(
         {
             "META.INSTRUMENT.NAME":"MIRI",
@@ -76,6 +79,7 @@ def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
         ignore_cache=False,
         reftypes=["flat"]
     )
+    del os.environ["CRDS_MAPPATH_SINGLE"]
     assert refs == {}
 
 
