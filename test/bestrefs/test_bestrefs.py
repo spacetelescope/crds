@@ -453,16 +453,16 @@ class TestBestrefs:
     script_class = BestrefsScript
     obs = "hst"
     new_context = "hst_0315.pmap"
+    bestrefs_list = "@test/data/hst/bestrefs_file_list"
 
     @pytest.fixture(autouse=True)
-    def _get_config(self, hst_persistent_state):
-        self._config = hst_persistent_state
-
-    @pytest.fixture(autouse=True)
-    def _data(self, hst_data, test_temp_dir):
+    def _get_data(self, hst_data, test_temp_dir):
         self._dpath = hst_data
         self._tmp = test_temp_dir
-        self._bestrefs_list = "@test/data/hst/bestrefs_file_list"
+
+    @pytest.fixture()
+    def _get_config(self, hst_persistent_state):
+        self._config = hst_persistent_state
 
     def run_script(self, cmd, expected_errs=0):
         """Run SyncScript using command line `cmd` and check for `expected_errs` as return status."""
@@ -492,16 +492,16 @@ class TestBestrefs:
         self.run_script(f"crds.bestrefs --instrument cos --new-context {self.new_context} --save-pickle {self._tmp}/test_cos.json --datasets-since {self.get_10_days_ago()}", expected_errs=None)
 
     def test_bestrefs_at_file(self):
-        self.run_script(f"crds.bestrefs --files {self._bestrefs_list}  --new-context {self.new_context} --stats")
+        self.run_script(f"crds.bestrefs --files {self.bestrefs_list}  --new-context {self.new_context} --stats")
 
     def test_bestrefs_remote(self):
-        self.run_script(f"crds.bestrefs --files {self._bestrefs_list}  --new-context {self.new_context} --remote --stats")
+        self.run_script(f"crds.bestrefs --files {self.bestrefs_list}  --new-context {self.new_context} --remote --stats")
 
     def test_bestrefs_new_references(self):
-        self.run_script(f"crds.bestrefs --files {self._bestrefs_list}  --new-context {self.new_context} --print-new-references --stats")
+        self.run_script(f"crds.bestrefs --files {self.bestrefs_list}  --new-context {self.new_context} --print-new-references --stats")
 
     def test_bestrefs_default_new_context(self):
-        self.run_script(f"crds.bestrefs --files {self._bestrefs_list}  --stats")
+        self.run_script(f"crds.bestrefs --files {self.bestrefs_list}  --stats")
 
     def test_bestrefs_update_file_headers(self):
         shutil.copy(f"{self._dpath}/j8bt06o6q_raw.fits", f"{self._tmp}/j8bt06o6q_raw.fits")
@@ -534,10 +534,6 @@ class TestBestrefs:
         shutil.copy(f"{self._dpath}/cos_N8XTZCAWQ.fits", test_copy)
         errors = assign_bestrefs([test_copy], context="hst_0500.pmap")
         assert errors == 0
-
-    def test_cleanup(self):
-        """Not actually a test"""
-        self._config.cleanup()
 
 
 # # New tests

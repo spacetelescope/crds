@@ -187,16 +187,16 @@ def hst_serverless_state(crds_shared_group_cache):
     cfg.config_setup()
     return cfg
 
-@fixture(scope='function')
-def hst_persistent_state(crds_shared_group_cache):
+@fixture()
+def hst_persistent_state(test_cache):
     cfg = ConfigState(
-        cache=crds_shared_group_cache,
-        url=None,
+        cache=test_cache,
+        clear_existing=False,
         observatory="hst",
-        clear_existing=False
     )
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
