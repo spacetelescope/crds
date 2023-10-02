@@ -1,28 +1,25 @@
 """This module contains doctests and unit tests which exercise the crds.uses
 module that identifies mappings that reference a file.
 """
-from pathlib import Path
 from pytest import mark
 
-from crds.core import log, utils
+from crds.core import log
 
-from crds import uses
-
-from nose.tools import assert_raises, assert_true
+from crds.uses import UsesScript
 
 # For log capture tests, need to ensure that the CRDS
 # logger propagates its events.
 log.THE_LOGGER.logger.propagate = True
 
-HERE = os.path.dirname(__file__) or "."
-
 
 @mark.uses
-def test_disabled_uses_finaall_mappings_using_reference():
-    """
-    >>> old_state = test_config.setup()
+def test_uses_findall_mappings_using_reference(hst_shared_cache_state, capsys):
+    """Test finding maps where a reference is located"""
 
-    >> uses.UsesScript("crds.uses --files v2e20129l_flat.fits")()
+    argv = 'crds.uses --files v2e20129l_flat.fits'
+    UsesScript(argv=argv)()
+    out = capsys.readouterr().out
+    expected = """
     hst.pmap
     hst_0001.pmap
     hst_0002.pmap
@@ -34,10 +31,9 @@ def test_disabled_uses_finaall_mappings_using_reference():
     hst_cos_0001.imap
     hst_cos_flatfile.rmap
     hst_cos_flatfile_0002.rmap
-    0
-
-    >>> test_config.cleanup(old_state)
     """
+    for msg in expected.splitlines():
+        assert msg.strip() in out
 
 
 @mark.uses
@@ -86,27 +82,3 @@ def test_disabled_uses_imap():
 
     >>> test_config.cleanup(old_state)
     """
-
-class TestUses(test_config.CRDSTestCase):
-    '''
-    def test_get_imap_except(self):
-        r = rmap.get_cached_mapping("hst.pmap")
-        with self.assertRaises(exceptions.CrdsUnknownInstrumentError):
-            r.get_imap("foo")
-    '''
-
-# ==================================================================================
-
-
-def tst():
-    """Run module tests,  for now just doctests only."""
-
-    import unittest
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestUses)
-    unittest.TextTestRunner().run(suite)
-
-    from crds.tests import test_uses, tstmod
-    return tstmod(test_uses)
-
-if __name__ == "__main__":
-    print(tst())
