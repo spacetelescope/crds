@@ -19,6 +19,7 @@ def test_uses_findall_mappings_using_reference(hst_shared_cache_state, capsys):
     argv = 'crds.uses --files v2e20129l_flat.fits'
     UsesScript(argv=argv)()
     out = capsys.readouterr().out
+
     expected = """
     hst.pmap
     hst_0001.pmap
@@ -37,11 +38,14 @@ def test_uses_findall_mappings_using_reference(hst_shared_cache_state, capsys):
 
 
 @mark.uses
-def test_disabled_uses_rmaps():
-    """
-    >>> old_state = test_config.setup()
+def test_uses_rmaps(hst_shared_cache_state, capsys):
+    """Test finding maps where an rmap is used"""
 
-    >> uses.UsesScript("crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used")()
+    argv = 'crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used'
+    UsesScript(argv=argv)()
+    out = capsys.readouterr().out
+
+    expected = """
     hst_cos_flatfile.rmap hst.pmap
     hst_cos_flatfile.rmap hst_0001.pmap
     hst_cos_flatfile.rmap hst_0002.pmap
@@ -63,10 +67,9 @@ def test_disabled_uses_rmaps():
     hst_acs_darkfile.rmap hst_0014.pmap
     hst_acs_darkfile.rmap hst_acs.imap
     hst_acs_darkfile.rmap hst_acs_0001.imap
-    0
-
-    >>> test_config.cleanup(old_state)
     """
+    for msg in expected.splitlines():
+        assert msg.strip() in out
 
 
 @mark.uses
