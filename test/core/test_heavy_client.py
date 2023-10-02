@@ -24,7 +24,6 @@ def test_getreferences_rmap_na(jwst_no_cache_state, jwst_data):
     ignore_cache=False, 
     reftypes=["flat"])
     assert refs == {'flat': 'NOT FOUND n/a'}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
@@ -44,7 +43,6 @@ def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
         reftypes=["flat"]
     )
     assert refs == {}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
@@ -62,7 +60,6 @@ def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
         reftypes=["flat"]
     )
     assert refs == {'flat': 'NOT FOUND n/a'}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
@@ -80,7 +77,6 @@ def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
         reftypes=["flat"]
     )
     assert refs == {}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
@@ -100,8 +96,8 @@ def test_getreferences_ignore_cache(jwst_shared_cache_state):
         reftypes=["flat"]
     )
     cache_path = jwst_shared_cache_state.cache
-    assert refs == {'flat': f'{cache_path}/references/jwst/jwst_miri_flat_0001.fits'}
     jwst_shared_cache_state.cleanup()
+    assert refs == {'flat': f'{cache_path}/references/jwst/jwst_miri_flat_0001.fits'}
 
 
 @mark.core
@@ -126,16 +122,17 @@ def test_cache_references_multiple_bad_files(default_shared_state):
         api.cache_references("jwst.pmap", bestrefs)
     except CrdsLookupError as e:
         error_message = str(e)
-    assert error_message == expected
     default_shared_state.cleanup()
+    assert error_message == expected
+
 
 
 @mark.core
 @mark.heavy_client
 def test_get_context_name_literal(jwst_serverless_state):
     context = heavy_client.get_context_name("jwst", "jwst_0341.pmap")
-    assert context == 'jwst_0341.pmap'
     jwst_serverless_state.cleanup()
+    assert context == 'jwst_0341.pmap'
 
 
 @mark.core
@@ -143,9 +140,9 @@ def test_get_context_name_literal(jwst_serverless_state):
 def test_get_context_name_crds_context(jwst_serverless_state):
     os.environ["CRDS_CONTEXT"] = "jwst_0399.pmap"
     context = heavy_client.get_context_name("jwst")
+    jwst_serverless_state.cleanup()
     assert context == 'jwst_0399.pmap'
     del os.environ["CRDS_CONTEXT"]
-    jwst_serverless_state.cleanup()
 
 
 @mark.core
@@ -155,10 +152,10 @@ def test_get_context_name_symbolic(jwst_serverless_state):
     ops_context = heavy_client.get_context_name("jwst", "jwst-operational")
     edit_context = heavy_client.get_context_name("jwst", "jwst-edit")
     ver_context = heavy_client.get_context_name("jwst", "jwst-versions")
+    jwst_serverless_state.cleanup()
     for context in [ops_context, edit_context, ver_context]:
         matches = re.match(pattern, context)
         assert matches.group() is not None
-    jwst_serverless_state.cleanup()
 
 
 @mark.core
@@ -168,8 +165,9 @@ def test_translate_date_based_context_no_observatory(jwst_serverless_state):
         heavy_client.translate_date_based_context("foo-edit", observatory=None)
     except CrdsError as e:
         error = str(e)
-    assert error == "Cannot determine observatory to translate mapping 'foo-edit'"
     jwst_serverless_state.cleanup()
+    assert error == "Cannot determine observatory to translate mapping 'foo-edit'"
+
 
 @mark.core
 @mark.heavy_client
@@ -191,17 +189,17 @@ def test_translate_date_based_context_bad_instrument(jwst_shared_cache_state):
         heavy_client.translate_date_based_context("jwst-foo-2018-01-01T00:00:00")
     except ServiceError as e:
         error = str(e)
-    assert error == "CRDS jsonrpc failure 'get_context_by_date' InvalidDateBasedContext: Bad instrument 'foo' in CRDS date based context specification."
     jwst_shared_cache_state.cleanup()
+    assert error == "CRDS jsonrpc failure 'get_context_by_date' InvalidDateBasedContext: Bad instrument 'foo' in CRDS date based context specification."
 
 
 @mark.core
 @mark.heavy_client
 def test_get_bad_mappings_in_context_no_instrument(jwst_serverless_state):
     mappings = heavy_client.get_bad_mappings_in_context("jwst", "jwst_0016.pmap")
-    assert mappings == ['jwst_miri_flat_0002.rmap']
     jwst_serverless_state.cleanup()
-
+    assert mappings == ['jwst_miri_flat_0002.rmap']
+    
 
 @mark.core
 @mark.heavy_client
@@ -226,38 +224,29 @@ def test_pickled_mappings(default_shared_state):
     os.chmod(pickle_file, 0o444)
     heavy_client.remove_pickled_mapping("jwst_0016.pmap")
     assert os.path.exists(pickle_file)
-    """
-    >>> heavy_client.remove_pickled_mapping("jwst_0016.pmap")  # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Pickle file '.../crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl' is not writable,  skipping pickle remove.
-    """
+
     os.chmod(pickle_file, 0o666)
     heavy_client.remove_pickled_mapping("jwst_0016.pmap")
     assert not os.path.exists(pickle_file)
-    """
-    >>> heavy_client.remove_pickled_mapping("somewhere/foo.pmap")  # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Pickle file 'somewhere/foo.pmap' is not writable,  skipping pickle remove.
-    """
     default_shared_state.cleanup()
 
 
 @mark.core
 @mark.heavy_client
 def test_check_parameters(jwst_serverless_state):
-    header = { "NAME" : "VALID_VALUE",  "NAME1" : 1.0, "META.VALID.NAME3" : 1,   "NAME4" : True}
-    out = heavy_client.check_parameters(header)
-    assert out == {'NAME': 'VALID_VALUE', 'NAME1': 1.0, 'META.VALID.NAME3': 1, 'NAME4': True}
-
-    header = { (1,2,3) : "something for invalid key" }
+    header1 = { "NAME" : "VALID_VALUE",  "NAME1" : 1.0, "META.VALID.NAME3" : 1,   "NAME4" : True}
+    out1 = heavy_client.check_parameters(header1)
+    header2 = { (1,2,3) : "something for invalid key" }
     try:
-        heavy_client.check_parameters(header)
+        heavy_client.check_parameters(header2)
     except AssertionError as e:
         err = str(e)
-    assert err == "Non-string key (1, 2, 3) in parameters."
-
-    header = { "META.BAD.VALUE" : object() }
-    out = heavy_client.check_parameters(header)
-    assert out == {}
+    header3 = { "META.BAD.VALUE" : object() }
+    out3 = heavy_client.check_parameters(header3)
     jwst_serverless_state.cleanup()
+    assert out1 == {'NAME': 'VALID_VALUE', 'NAME1': 1.0, 'META.VALID.NAME3': 1, 'NAME4': True}
+    assert err == "Non-string key (1, 2, 3) in parameters."
+    assert out3 == {}
 
 
 @mark.core

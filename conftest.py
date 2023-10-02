@@ -153,7 +153,8 @@ def jwst_no_cache_state():
         url="https://jwst-crds.stsci.edu",
         observatory="jwst")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
