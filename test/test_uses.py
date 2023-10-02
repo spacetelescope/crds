@@ -13,6 +13,7 @@ log.THE_LOGGER.logger.propagate = True
 
 
 @mark.uses
+@mark.slow
 def test_uses_findall_mappings_using_reference(hst_shared_cache_state, capsys):
     """Test finding maps where a reference is located"""
 
@@ -38,6 +39,7 @@ def test_uses_findall_mappings_using_reference(hst_shared_cache_state, capsys):
 
 
 @mark.uses
+@mark.slow
 def test_uses_rmaps(hst_shared_cache_state, capsys):
     """Test finding maps where an rmap is used"""
 
@@ -73,6 +75,7 @@ def test_uses_rmaps(hst_shared_cache_state, capsys):
 
 
 @mark.uses
+@mark.slow
 def test_uses_imap(hst_shared_cache_state, capsys):
     """TEst finding maps where an imap is used"""
 
