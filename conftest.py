@@ -98,11 +98,12 @@ def roman_data(test_data):
 
 class ConfigState:
 
-    def __init__(self, cache=None, url=None, clear_existing=True, observatory=None):
+    def __init__(self, cache=None, url=None, clear_existing=True, observatory=None, mode=None):
         self.cache = cache
         self.url = url
         self.clear_existing = clear_existing
         self.observatory = observatory
+        self.mode = mode
         self.old_state = None
         self.new_state = None
 
@@ -122,6 +123,8 @@ class ConfigState:
             self.new_state["CRDS_PATH"] = self.cache
         if self.observatory is not None:
             self.new_state["CRDS_OBSERVATORY"] = self.observatory
+        if self.mode is not None:
+            self.new_state['CRDS_MODE'] = self.mode
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
 
@@ -153,7 +156,8 @@ def jwst_no_cache_state():
     cfg = ConfigState(
         cache=None,
         url="https://jwst-crds.stsci.edu",
-        observatory="jwst")
+        observatory="jwst",
+        mode='local')
     cfg.config_setup()
     yield cfg
     cfg.cleanup()
