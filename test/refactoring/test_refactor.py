@@ -175,3 +175,69 @@ Expected one of ('add',) but got 'replace' from change (('{hst_data}/hst_cos_dea
         assert line in out1
     assert rmap_chk2 is False
     assert out2 in expected2
+
+
+@mark.refactoring
+@mark.refactor
+@mark.or_bars
+def test_or_bars_refactor_add_file(jwst_serverless_state, jwst_data, test_temp_dir, caplog, capsys):
+    files = f"{jwst_data}/jwst_miri_ipc_0002.rmap \
+        {test_temp_dir}/jwst_miri_ipc_0003.add.rmap \
+            {jwst_data}/jwst_miri_ipc_0003.add.fits"
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        RefactorScript(f"crds.refactor insert {files}")()
+        out = caplog.text
+    expected = """Inserting jwst_miri_ipc_0003.add.fits into 'jwst_miri_ipc_0002.rmap'
+Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'SHORT | MEDIUM |'
+Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
+0 errors
+3 infos""".splitlines()
+
+    ndiffs = diff.DiffScript(f"crds.diff {jwst_data}/jwst_miri_ipc_0002.rmap {test_temp_dir}/jwst_miri_ipc_0003.add.rmap")()
+    sout, _ = capsys.readouterr()
+    print(sout)
+    exp_sout = f"(('{jwst_data}/jwst_miri_ipc_0002.rmap', '{test_temp_dir}/jwst_miri_ipc_0003.add.rmap'), ('MIRIFULONG|MIRIFUSHORT', 'MEDIUM|SHORT'), ('2014-01-01', '00:00:00'), 'added Match rule for jwst_miri_ipc_0003.add.fits')"
+
+    rmap_chk = rmap_check_modifications(f"{jwst_data}/jwst_miri_ipc_0002.rmap", f"{test_temp_dir}/jwst_miri_ipc_0003.add.rmap", "none", f"{jwst_data}/jwst_miri_ipc_0003.add.fits", expected=("add_rule",))
+
+    jwst_serverless_state.cleanup()
+
+    for line in expected:
+        assert line in out    
+    assert ndiffs == 1
+    assert exp_sout in sout
+    assert rmap_chk is True
+
+
+@mark.refactoring
+@mark.refactor
+@mark.or_bars
+def test_or_bars_refactor_replace_file(jwst_serverless_state, jwst_data, test_temp_dir, caplog, capsys):
+    files = f"{jwst_data}/jwst_miri_ipc_0002.rmap \
+        {test_temp_dir}/jwst_miri_ipc_0004.replace.rmap \
+        {jwst_data}/jwst_miri_ipc_0004.replace.fits"
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        RefactorScript(f"crds.refactor insert {files}")()
+        out = caplog.text
+    expected = """Inserting jwst_miri_ipc_0004.replace.fits into 'jwst_miri_ipc_0002.rmap'
+Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'LONG |'
+Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFULONG|'
+0 errors
+3 infos""".splitlines()
+
+    ndiffs = diff.DiffScript(f"crds.diff {jwst_data}/jwst_miri_ipc_0002.rmap {test_temp_dir}/jwst_miri_ipc_0004.replace.rmap")()
+    sout, _ = capsys.readouterr()
+    print(sout)
+    exp_sout = f"(('{jwst_data}/jwst_miri_ipc_0002.rmap', '{test_temp_dir}/jwst_miri_ipc_0004.replace.rmap'), ('MIRIFULONG', 'LONG'), ('1900-01-01', '00:00:00'), 'replaced jwst_miri_ipc_0004.fits with jwst_miri_ipc_0004.replace.fits')" 
+    
+    rmap_chk1 = rmap_check_modifications(f"{jwst_data}/jwst_miri_ipc_0002.rmap", f"{test_temp_dir}/jwst_miri_ipc_0004.replace.rmap", "jwst_miri_ipc_0004.fits", f"{jwst_data}/jwst_miri_ipc_0004.replace.fits", expected=("replace",))
+
+    rmap_chk2 = rmap_check_modifications(f"{jwst_data}/jwst_miri_ipc_0002.rmap", f"{test_temp_dir}/jwst_miri_ipc_0004.replace.rmap", f"{jwst_data}/jwst_miri_ipc_0004.fits", f"{jwst_data}/jwst_miri_ipc_0004.replace.fits", expected=("replace",))
+    jwst_serverless_state.cleanup()
+
+    assert ndiffs == 1
+    assert rmap_chk1 is True
+    assert rmap_chk2 is True
+    for line in expected:
+        assert line in out
+    assert exp_sout in sout
