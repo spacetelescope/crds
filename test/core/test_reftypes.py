@@ -11,7 +11,7 @@ from crds import hst, jwst, roman
 def test_reftypes_load_type_spec_spec(default_shared_state):
     SPEC_FILE = os.path.join(os.path.abspath(hst.HERE), "specs", "acs_biasfile.spec")
     spec = reftypes.TypeSpec.from_file(SPEC_FILE)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -19,7 +19,7 @@ def test_reftypes_load_type_spec_spec(default_shared_state):
 def test_reftypes_load_type_spec_rmap(default_shared_state):
     SPEC_FILE = os.path.join(os.path.abspath(hst.HERE), "specs", "cos_xwlkfile.rmap")
     spec = reftypes.TypeSpec.from_file(SPEC_FILE)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -27,7 +27,7 @@ def test_reftypes_load_type_spec_rmap(default_shared_state):
 def test_reftypes_hst_load_raw_specs(default_shared_state):
     SPECS = os.path.join(os.path.abspath(hst.HERE), "specs")
     spec = reftypes.load_raw_specs(SPECS)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -38,7 +38,7 @@ def test_reftypes_hst_save_json_specs(default_shared_state, test_temp_dir):
     f = os.path.join(test_temp_dir, "specfile.json")
     reftypes.save_json_specs(specs, f)
     assert os.path.exists(f)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -46,7 +46,7 @@ def test_reftypes_hst_save_json_specs(default_shared_state, test_temp_dir):
 def test_reftypes_jwst_load_raw_specs(default_shared_state):
     SPECS = os.path.join(os.path.abspath(jwst.HERE), "specs")
     spec = reftypes.load_raw_specs(SPECS)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -57,7 +57,7 @@ def test_reftypes_jwst_save_json_specs(default_shared_state, test_temp_dir):
     f = os.path.join(test_temp_dir, "specfile.json")
     reftypes.save_json_specs(specs, f)
     assert os.path.exists(f)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -65,7 +65,7 @@ def test_reftypes_jwst_save_json_specs(default_shared_state, test_temp_dir):
 def test_reftypes_roman_load_raw_specs(default_shared_state):
     SPECS = os.path.join(os.path.abspath(roman.HERE), "specs")
     spec = reftypes.load_raw_specs(SPECS)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -76,7 +76,7 @@ def test_reftypes_roman_save_json_specs(default_shared_state, test_temp_dir):
     f = os.path.join(test_temp_dir, "specfile.json")
     reftypes.save_json_specs(specs, f)
     assert os.path.exists(f)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -94,7 +94,7 @@ def test_reftypes_hst_reference_name_to_tpn_infos(default_shared_state, hst_data
 ('VCALCOS', 'HEADER', 'CHARACTER', 'REQUIRED', values=())""".splitlines()
     for i, msg in enumerate(infos):
         assert str(msg) == expected[i]
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -169,7 +169,7 @@ def test_reftypes_jwst_reference_name_to_tpn_infos(default_shared_state, jwst_da
      ('SUBARRAY_YSTART', 'EXPRESSION', 'EXPRESSION', 'IF_SUBARRAY', expression='(1<=META_SUBARRAY_YSTART<=1024)')""".splitlines()
     for i, msg in enumerate(infos):
         assert str(msg) == expected[i].strip()
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -193,7 +193,7 @@ def test_reftypes_roman_reference_name_to_tpn_infos(default_shared_state, roman_
      ('ROMAN.META.USEAFTER', 'HEADER', 'CHARACTER', 'REQUIRED', values=('&JWSTDATE',))""".splitlines()
     for i, msg in enumerate(infos):
         assert str(msg) == expected[i].strip()
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -203,7 +203,7 @@ def test_reftypes_hst_get_filekinds(default_shared_state):
     nicmos_types = types.get_filekinds("nicmos")
     expected_types = ['backtab', 'darkfile', 'flatfile', 'idctab', 'illmfile', 'maskfile', 'nlinfile', 'noisfile', 'pedsbtab', 'phottab', 'pmodfile', 'pmskfile', 'rnlcortb', 'saacntab', 'saadfile', 'tdffile', 'tempfile', 'zprattab']
     assert sorted(nicmos_types) == sorted(expected_types)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -213,7 +213,7 @@ def test_reftypes_jwst_get_filekinds(default_shared_state):
     niriss_types = types.get_filekinds("niriss")
     expected_types = ['abvegaoffset', 'all', 'amplifier', 'apcorr', 'area', 'dark', 'distortion', 'drizpars', 'extract1d', 'filteroffset', 'flat', 'gain', 'ipc', 'linearity', 'mask', 'pars-darkpipeline', 'pars-detector1pipeline', 'pars-image2pipeline', 'pars-jumpstep', 'pars-outlierdetectionstep', 'pars-rampfitstep', 'pars-sourcecatalogstep', 'pars-spec2pipeline', 'pars-tweakregstep', 'pars-undersamplecorrectionstep', 'pathloss', 'persat', 'photom', 'readnoise', 'regions', 'saturation', 'speckernel', 'specprofile', 'spectrace', 'specwcs', 'superbias', 'throughput', 'trapdensity', 'trappars', 'wavelengthrange', 'wavemap', 'wcsregions', 'wfssbkg']
     assert sorted(niriss_types) == sorted(expected_types)
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -221,7 +221,7 @@ def test_reftypes_jwst_get_filekinds(default_shared_state):
 def test_reftypes_roman_get_filekinds(default_shared_state):
     types = reftypes.get_types_object("roman")
     assert {'all', 'flat'}.issubset(types.get_filekinds("wfi")) is True
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -242,7 +242,7 @@ def test_reftypes_reference_name_to_tpn_text(default_shared_state, hst_data):
     """.splitlines()
     for i, line in enumerate(text):
         assert line.strip() == expected[i].strip()
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -264,7 +264,7 @@ def test_reftypes_reference_name_to_ld_tpn_text(default_shared_state, hst_data):
     """.splitlines()
     for i, line in enumerate(text):
         assert line.strip() == expected[i].strip()
-    default_shared_state.cleanup()
+    
 
 
 @pytest.mark.reftypes
@@ -274,4 +274,4 @@ def test_reftypes_get_row_keys_by_instrument(default_shared_state):
     cos_keys = types.get_row_keys_by_instrument("cos")
     expected = ['aperture', 'cenwave', 'date', 'fpoffset', 'opt_elem', 'segment']
     assert sorted(cos_keys) == sorted(expected)
-    default_shared_state.cleanup()
+    

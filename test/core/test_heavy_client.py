@@ -96,7 +96,6 @@ def test_getreferences_ignore_cache(jwst_shared_cache_state):
         reftypes=["flat"]
     )
     cache_path = jwst_shared_cache_state.cache
-    jwst_shared_cache_state.cleanup()
     assert refs == {'flat': f'{cache_path}/references/jwst/jwst_miri_flat_0001.fits'}
 
 
@@ -122,7 +121,7 @@ def test_cache_references_multiple_bad_files(default_shared_state):
         api.cache_references("jwst.pmap", bestrefs)
     except CrdsLookupError as e:
         error_message = str(e)
-    default_shared_state.cleanup()
+    
     assert error_message == expected
 
 
@@ -131,7 +130,7 @@ def test_cache_references_multiple_bad_files(default_shared_state):
 def test_get_context_name_literal(jwst_serverless_state):
     utils.clear_function_caches()
     context = heavy_client.get_context_name("jwst", "jwst_0341.pmap")
-    jwst_serverless_state.cleanup()
+    
     assert context == 'jwst_0341.pmap'
 
 
@@ -140,7 +139,7 @@ def test_get_context_name_literal(jwst_serverless_state):
 def test_get_context_name_crds_context(jwst_serverless_state):
     os.environ["CRDS_CONTEXT"] = "jwst_0399.pmap"
     context = heavy_client.get_context_name("jwst")
-    jwst_serverless_state.cleanup()
+    
     del os.environ["CRDS_CONTEXT"]
     assert context == 'jwst_0399.pmap'
 
@@ -152,7 +151,7 @@ def test_get_context_name_symbolic(jwst_serverless_state):
     ops_context = heavy_client.get_context_name("jwst", "jwst-operational")
     edit_context = heavy_client.get_context_name("jwst", "jwst-edit")
     ver_context = heavy_client.get_context_name("jwst", "jwst-versions")
-    jwst_serverless_state.cleanup()
+    
     for context in [ops_context, edit_context, ver_context]:
         matches = re.match(pattern, context)
         assert matches.group() is not None
@@ -165,7 +164,7 @@ def test_translate_date_based_context_no_observatory(jwst_serverless_state):
         heavy_client.translate_date_based_context("foo-edit", observatory=None)
     except CrdsError as e:
         error = str(e)
-    jwst_serverless_state.cleanup()
+    
     assert error == "Cannot determine observatory to translate mapping 'foo-edit'"
 
 
@@ -177,7 +176,7 @@ def test_translate_date_based_context_bad_date(jwst_serverless_state):
     except CrdsError as e:
         error = str(e)
     assert error == "Specified CRDS context by date 'jwst-2018-01-01T00:00:00' and CRDS server is not reachable."
-    jwst_serverless_state.cleanup()
+    
 
 
 @mark.core
@@ -189,7 +188,6 @@ def test_translate_date_based_context_bad_instrument(jwst_shared_cache_state):
         heavy_client.translate_date_based_context("jwst-foo-2018-01-01T00:00:00")
     except ServiceError as e:
         error = str(e)
-    jwst_shared_cache_state.cleanup()
     assert error == "CRDS jsonrpc failure 'get_context_by_date' InvalidDateBasedContext: Bad instrument 'foo' in CRDS date based context specification."
 
 
@@ -197,7 +195,7 @@ def test_translate_date_based_context_bad_instrument(jwst_shared_cache_state):
 @mark.heavy_client
 def test_get_bad_mappings_in_context_no_instrument(jwst_serverless_state):
     mappings = heavy_client.get_bad_mappings_in_context("jwst", "jwst_0016.pmap")
-    jwst_serverless_state.cleanup()
+    
     assert mappings == ['jwst_miri_flat_0002.rmap']
     
 
@@ -228,7 +226,7 @@ def test_pickled_mappings(default_shared_state):
     os.chmod(pickle_file, 0o666)
     heavy_client.remove_pickled_mapping("jwst_0016.pmap")
     assert not os.path.exists(pickle_file)
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -243,7 +241,7 @@ def test_check_parameters(jwst_serverless_state):
         err = str(e)
     header3 = { "META.BAD.VALUE" : object() }
     out3 = heavy_client.check_parameters(header3)
-    jwst_serverless_state.cleanup()
+    
     assert out1 == {'NAME': 'VALID_VALUE', 'NAME1': 1.0, 'META.VALID.NAME3': 1, 'NAME4': True}
     assert err == "Non-string key (1, 2, 3) in parameters."
     assert out3 == {}
@@ -271,4 +269,4 @@ def dt_get_context_parkeys(jwst_serverless_state):
 
     parkeys3 = heavy_client.get_context_parkeys("jwst_miri_flat.rmap","miri")
     assert parkeys3 == ['META.OBSERVATION.DATE', 'META.VISIT.TSOVISIT', 'META.INSTRUMENT.LAMP_STATE']
-    jwst_serverless_state.cleanup()
+    

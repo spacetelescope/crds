@@ -52,7 +52,7 @@ testing
 """
     assert out_to_check in out
     assert status == "enabled, multiprocessing"
-    default_shared_state.cleanup()
+    
 
 
 @mark.locking
@@ -71,7 +71,7 @@ testing
 """
     assert out_to_check in out
     assert status == "enabled, multiprocessing"
-    default_shared_state.cleanup()
+    
 
 
 @mark.locking
@@ -92,7 +92,7 @@ testing
     assert out_to_check in out
     assert status == "enabled, filelock"
     assert cache == crds_cache_locking.get_lock("crds.cache")
-    default_shared_state.cleanup()
+    
 
 
 @mark.locking
@@ -110,7 +110,7 @@ def test_default_disabled(default_shared_state, capsys, caplog):
     out_to_check = "CRDS_USE_LOCKING = False. Cannot support downloading CRDS files while multiprocessing."
     assert status == "disabled, multiprocessing"
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.locking
@@ -123,7 +123,7 @@ def test_default_readonly(default_shared_state, capsys):
     # Same reason to include capsys as in default_disabled()
     _, _ = capsys.readouterr()
     assert status == "disabled, multiprocessing"
-    default_shared_state.cleanup()
+    
 
 
 

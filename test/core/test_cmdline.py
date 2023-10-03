@@ -19,7 +19,7 @@ def test_valid_and_invalid_dataset(default_shared_state, hst_data):
         assert True
     fpath = cmdline.dataset(f"{hst_data}/j8bt05njq_raw.fits")
     assert fpath == f"{hst_data}/j8bt05njq_raw.fits"
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -34,7 +34,7 @@ def test_valid_and_invalid_mapping(default_shared_state, hst_data):
         assert True
     mp = cmdline.mapping("hst.pmap")
     assert mp == 'hst.pmap'
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -53,7 +53,7 @@ def test_context_spec(default_shared_state):
         cmdline.context_spec("hst-acs-2040-01-29T12:00:00")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -69,7 +69,7 @@ def test_observatory_valid_and_invalid(default_shared_state):
         cmdline.observatory("foo")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -83,7 +83,7 @@ def test_process_key(default_shared_state):
         cmdline.process_key("/foo/bar")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -103,7 +103,7 @@ def test_user_name(default_shared_state):
         cmdline.user_name("/foo/bar")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -129,14 +129,14 @@ def test_observatories_obs_pkg(default_shared_state):
 @mark.cmdline
 def test_print_help(default_shared_state):
     Script("cmdline.Script").print_help()
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
 @mark.cmdline
 def test_require_server_connnection(default_shared_state):
     Script("cmdline.Script").require_server_connection()
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -146,7 +146,7 @@ def test_no_files_in_class(default_shared_state):
         Script("cmdline.Script").files
     except NotImplementedError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -157,7 +157,7 @@ def test_get_files(default_shared_state, hst_data):
     assert files == [f'{hst_data}/file_list1']
     files = s.get_files(["@test/data/hst/file_list1"])
     assert files == ['hst.pmap', 'hst_0002.pmap', 'hst_0001.pmap']
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -170,7 +170,7 @@ def test_resolve_context(default_shared_state, caplog):
     assert ctx == 'hst_0379.pmap'
     expected = " Symbolic context 'hst-2016-01-01' resolves to 'hst_0379.pmap'"
     assert expected in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -184,7 +184,7 @@ def test_get_file_properties(default_shared_state, jwst_data):
     s = Script("crds.Script --jwst")
     props = s.get_file_properties(f"{jwst_data}/valid.asdf")
     assert props == ('nirspec', 'wavecorr')
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -193,7 +193,7 @@ def test_categorize_files(default_shared_state, hst_data):
     s = Script("cmdline.Script")
     cats = s.categorize_files(["hst.pmap", f"{hst_data}/hst_acs_9999.imap", f"{hst_data}/acs_new_idc.fits"])
     assert sorted(cats.items()) == [(('', ''), ['hst.pmap']), (('acs', ''), [f'{hst_data}/hst_acs_9999.imap']), (('acs', 'idctab'), [f'{hst_data}/acs_new_idc.fits'])]
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -201,7 +201,7 @@ def test_categorize_files(default_shared_state, hst_data):
 def test_dump_files(default_shared_state):
     s = Script("cmdline.Script")
     s.dump_files(files=["hst.pmap","hst_acs_biasfile_0250.rmap"])
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -209,7 +209,7 @@ def test_dump_files(default_shared_state):
 def test_sync_files(default_shared_state):
     s = Script("cmdline.Script")
     s.sync_files(["hst_acs_biasfile_0250.rmap"])
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -220,7 +220,7 @@ def test_are_all_mappings(default_shared_state):
     assert allmaps is True
     notallmaps = s.are_all_mappings(["hst_acs_biasfile_0250.rmap", "somethingelse.fits"])
     assert notallmaps is False
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -229,7 +229,7 @@ def test_file_outside_cache_pathless(default_shared_state):
     s = Script("cmdline.Script")
     path = s.locate_file_outside_cache("hst_0001.pmap")
     assert path.endswith('./hst_0001.pmap')
-    default_shared_state.cleanup()
+    
 
 
 @mark.core

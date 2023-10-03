@@ -73,7 +73,7 @@ def test_bestrefs_3_files(default_shared_state, caplog, hst_data):
             {hst_data}/j8bt06o6q_raw.fits {hst_data}/j8bt09jcq_raw.fits"""
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 
@@ -86,7 +86,7 @@ def test_bestrefs_compare_source_files(default_shared_state, caplog, hst_data):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
  ===> Processing {hst_data}/j8bt05njq_raw.fits
  instrument='ACS' type='ATODTAB' data='{hst_data}/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
@@ -123,7 +123,7 @@ def test_bestrefs_3_files_default_context_from_server(default_shared_state, capl
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" No comparison context or source comparison requested.
  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
  ===> Processing {hst_data}/j8bt05njq_raw.fits
@@ -143,7 +143,7 @@ def test_bestrefs_broken_dataset_file(default_shared_state, caplog, hst_data):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" No comparison context or source comparison requested.
  No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
  ===> Processing {hst_data}/j8bt05njq_raw.fits
@@ -166,7 +166,6 @@ def test_bestrefs_broken_cache_and_server(broken_state, caplog, hst_data):
             BestrefsScript(argv)()
             assert pytest_wrapped_e.type == SystemExit
         out = caplog.text
-    broken_state.cleanup()
     out_to_check = """ (FATAL) CRDS server connection and cache load FAILED.  Cannot continue.
  See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/
  for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL. : [Errno 2] No such file or directory: '/nowhere/config/hst/server_config'"""
@@ -180,7 +179,7 @@ def test_bestrefs_catalog_dataset(default_shared_state, caplog):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = """ Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['LB6M01030']
  Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
  Computing bestrefs for datasets ['LB6M01030']
@@ -199,7 +198,7 @@ def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
  ===> Processing {hst_data}/j8bt05njq_raw.fits
  ===> Processing {hst_data}/j8bt06o6q_raw.fits
@@ -217,7 +216,7 @@ def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.messages
-    default_shared_state.cleanup()
+    
     odd_pattern = re.compile("Dumping dataset parameters for '[a-z0-9]{3,6}' from CRDS server at 'https://hst-crds.stsci.edu'")
     even_pattern = re.compile("Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since None")
     first_line = "Computing bestrefs for db datasets for ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']"
@@ -243,7 +242,7 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     # remove duplicate log messages from stpipe, up to the last two lines:
     out = out.splitlines()
     line_check = [0,1,4,5,8,10,12]
@@ -275,7 +274,7 @@ def test_bestrefs_dataset_drop_ids(default_shared_state, caplog, hst_data):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" Loading file '{hst_data}/test_cos.json'
  Loaded 1 datasets from file '{hst_data}/test_cos.json' completely replacing existing headers."""
     for msg in out_to_check.splitlines():
@@ -289,7 +288,7 @@ def test_bestrefs_dataset_only_ids(default_shared_state, caplog, hst_data):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" Loading file '{hst_data}/test_cos.json'
  Loaded 1 datasets from file '{hst_data}/test_cos.json' completely replacing existing headers."""
     for msg in out_to_check.splitlines():
@@ -302,7 +301,7 @@ def test_bestrefs_compare_source_canary(default_shared_state, caplog, hst_data):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" Loading file '{hst_data}/canary.json'
  Loaded 1 datasets from file '{hst_data}/canary.json' completely replacing existing headers.
  instrument='COS' type='BPIXTAB' data='LA7803FIQ' ::  Comparison difference: 'bar.fits' --> 'yae1249sl_bpix.fits' :: Would update.
@@ -319,7 +318,7 @@ def test_bestrefs_donotreprocess_datasets(default_shared_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = """ Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['JA9553LVQ', 'JBBGRCGFQ']
  Dumped 2 of 2 datasets from CRDS server at 'https://hst-crds.stsci.edu'
  Computing bestrefs for datasets ['JA9553LVQ', 'JBBGRCGFQ']
@@ -335,7 +334,7 @@ def test_bestrefs_donotreprocess_fix(default_shared_state, caplog, hst_data):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" Command: ['crds.bestrefs', '--hst', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', '{hst_data}/bestrefs_dnr_fix.json', '--verbosity=30']
  Using explicit new context 'hst_0633.pmap' for computing updated best references.
  Using explicit old context 'hst_0628.pmap'
@@ -379,7 +378,7 @@ def test_bestrefs_multiple_updates_with_error(default_shared_state, caplog, hst_
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         BestrefsScript(argv)()
         out = caplog.text
-    default_shared_state.cleanup()
+    
     out_to_check = f""" Command: ['crds.bestrefs', '--hst', '--old-context', 'hst_0628.pmap', '--new-context', 'hst_0633.pmap', '--print-affected', '--load-pickle', '{hst_data}/bestrefs_new_error.json', '--verbosity=30']
  Using explicit new context 'hst_0633.pmap' for computing updated best references.
  Using explicit old context 'hst_0628.pmap'

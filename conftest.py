@@ -135,14 +135,16 @@ class ConfigState:
 def default_shared_state(crds_shared_group_cache):
     cfg = ConfigState(cache=crds_shared_group_cache)
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def hst_shared_cache_state(crds_shared_group_cache):
     cfg = ConfigState(cache=crds_shared_group_cache, url="https://hst-crds.stsci.edu", observatory="hst")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
@@ -155,8 +157,6 @@ def jwst_no_cache_state():
     cfg.config_setup()
     yield cfg
     cfg.cleanup()
-    crds_config.get_crds_state()
-    utils.clear_function_caches()
 
 
 @fixture(scope='function')
@@ -166,7 +166,8 @@ def jwst_shared_cache_state(crds_shared_group_cache):
         url="https://jwst-crds.stsci.edu",
         observatory="jwst")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
@@ -177,7 +178,8 @@ def jwst_serverless_state(crds_shared_group_cache):
         observatory="jwst"
     )
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
@@ -188,7 +190,8 @@ def hst_serverless_state(crds_shared_group_cache):
         observatory="hst"
     )
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 @fixture()
 def hst_persistent_state(test_cache):
@@ -210,14 +213,16 @@ def roman_serverless_state(crds_shared_group_cache):
         observatory="roman"
     )
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def broken_state():
     cfg = ConfigState(cache="/nowhere", url="https://server-is-out-of-town")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
@@ -232,7 +237,9 @@ def default_test_cache_state(test_cache):
 def jwst_test_cache_state(test_cache):
     cfg = ConfigState(cache=test_cache, observatory="jwst")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
+
 
 @fixture(scope='function')
 def roman_test_cache_state(test_cache):
