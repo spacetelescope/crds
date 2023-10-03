@@ -1,12 +1,8 @@
 from pytest import mark
 import os
 import re
-import json
-from pprint import pprint as pp
-import doctest
-
-
-from crds.core import rmap, log, config, heavy_client
+from crds.core import log, heavy_client
+from crds.core import config as crds_config
 from crds.core.exceptions import *
 from crds.client import api
 
@@ -209,7 +205,7 @@ def test_get_bad_mappings_in_context_no_instrument(jwst_serverless_state):
 @mark.heavy_client
 def test_pickled_mappings(default_shared_state):
     cache_path = default_shared_state.cache
-    pickle_file = config.locate_pickle("jwst_0016.pmap","jwst")
+    pickle_file = crds_config.locate_pickle("jwst_0016.pmap","jwst")
     assert pickle_file == f"{cache_path}/pickles/jwst/jwst_0016.pmap.pkl"
 
     _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=True, use_pickles=True, save_pickles=True)
