@@ -15,7 +15,6 @@ def test_fake_name(default_shared_state, hst_data):
     assert out == './hst_cos_0001.imap'
     out = newcontext.fake_name(f"{hst_data}/hst_cos_deadtab_9999.rmap")
     assert out ==  './hst_cos_deadtab_10000.rmap'
-    default_shared_state.cleanup()
 
 
 @mark.refactoring
@@ -43,8 +42,3 @@ producing './hst_cos_0001.imap'"""
     assert out_to_check in out
     out_to_check = """Adjusting name 'hst_cos_0001.imap' derived_from 'hst_cos.imap' in './hst_cos_0001.imap'"""
     assert out_to_check in out
-    default_shared_state.cleanup()
-
-
-
-
