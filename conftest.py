@@ -155,6 +155,7 @@ def jwst_no_cache_state():
     cfg.config_setup()
     yield cfg
     cfg.cleanup()
+    crds_config.get_crds_state()
 
 
 @fixture(scope='function')
