@@ -168,6 +168,7 @@ markers = [
   "matches",
   "misc",
   "newcontext",
+  "or_bars",
   "refactor",
   "refactoring: tests in the crds.refactoring module",
   "reftypes",
@@ -176,6 +177,9 @@ markers = [
   "rowdiff",
   "substitutions",
   "tables",
+  "table_effects",
+  "uniqname",
+  "uses",
 ]
 
 [tool.setuptools_scm]
