@@ -222,7 +222,8 @@ def broken_state():
 def default_test_cache_state(test_cache):
     cfg = ConfigState(cache=test_cache)
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')

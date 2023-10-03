@@ -239,7 +239,6 @@ def test_file_outside_cache_uri(default_test_cache_state):
     s = Script("cmdline.Script --jwst")
     path = s.locate_file_outside_cache("crds://jwst_0001.pmap")
     assert path.endswith("crds-cache-test/mappings/jwst/jwst_0001.pmap")
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -248,7 +247,6 @@ def test_file_outside_cache_mapping_spec(default_test_cache_state):
     s = Script("cmdline.Script --hst")
     path = s.locate_file_outside_cache("hst-2016-01-01")
     assert path.endswith("crds-cache-test/mappings/hst/hst_0379.pmap")
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -257,7 +255,6 @@ def test_resolve_context_operational(default_test_cache_state):
     s = Script("cmdline.Script --hst")
     context = s.resolve_context("hst-operational")
     assert context.startswith("hst_") and context.endswith(".pmap")
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -265,7 +262,6 @@ def test_resolve_context_operational(default_test_cache_state):
 def test_dump_mappings(default_test_cache_state):
     s = Script("cmdline.Script --ignore-cache")
     s.dump_mappings(["hst_acs.imap"])
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -274,7 +270,6 @@ def test_determine_contexts_all(default_test_cache_state):
     s = ContextsScript("cmdline.ContextsScript --all")
     contexts = s.determine_contexts()
     assert len(contexts) > 100
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -283,7 +278,6 @@ def test_determine_contexts_last_n(default_test_cache_state):
     s = ContextsScript("cmdline.ContextsScript --last 5")
     contexts = s.determine_contexts()
     assert len(contexts) == 5
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -292,7 +286,6 @@ def test_determine_contexts_range(default_test_cache_state):
     s = ContextsScript("cmdline.ContextsScript --range 1:7")
     contexts = s.determine_contexts()
     assert len(contexts) == 7
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -302,7 +295,6 @@ def test_determine_contexts_upto(default_test_cache_state):
     contexts = s.determine_contexts()
     assert len(contexts) == 195
     assert contexts[0] == "hst.pmap"
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -312,7 +304,6 @@ def test_determine_contexts_after(default_test_cache_state):
     contexts = s.determine_contexts()
     assert len(contexts) >= 108
     assert contexts[0] == "hst_0379.pmap"
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -324,4 +315,3 @@ def test_determine_contexts_direct(default_test_cache_state):
     assert contexts[0] == "hst.pmap"
     mappings = sorted(list(set(s.get_context_mappings())))
     assert len(mappings) >= 116
-    default_test_cache_state.cleanup()
