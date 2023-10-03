@@ -6,6 +6,7 @@ import logging
 log.THE_LOGGER.logger.propagate=True
 
 
+@mark.refactoring
 @mark.newcontext
 def test_fake_name(default_shared_state, hst_data):
     out = newcontext.fake_name(f"{hst_data}/hst.pmap")
@@ -16,6 +17,8 @@ def test_fake_name(default_shared_state, hst_data):
     assert out ==  './hst_cos_deadtab_10000.rmap'
     default_shared_state.cleanup()
 
+
+@mark.refactoring
 @mark.newcontext
 def test_new_context(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
