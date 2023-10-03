@@ -3,8 +3,8 @@ import os
 import logging
 from crds.core import cmdline, utils, log
 from crds.core import config as crds_config
-from crds.core.cmdline import Script, ContextsScript, UniqueErrorsMixin
-from crds.list import ListScript
+from crds.core.cmdline import Script, ContextsScript
+
 log.THE_LOGGER.logger.propagate=True
 
 @mark.core

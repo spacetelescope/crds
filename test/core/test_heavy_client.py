@@ -10,6 +10,7 @@ from crds.client import api
 @mark.core
 @mark.heavy_client
 def test_getreferences_rmap_na(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences({
         "META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS",
@@ -25,6 +26,7 @@ def test_getreferences_rmap_na(jwst_no_cache_state, jwst_data):
 @mark.core
 @mark.heavy_client
 def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences(
         {
@@ -44,6 +46,7 @@ def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
 @mark.core
 @mark.heavy_client
 def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences(
         {
@@ -61,6 +64,7 @@ def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
 @mark.core
 @mark.heavy_client
 def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences(
         {
