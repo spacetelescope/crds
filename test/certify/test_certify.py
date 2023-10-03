@@ -668,7 +668,6 @@ expected ' ', but found '^'
 @mark.certify
 def test_certify_roman_load_all_type_constraints(roman_test_cache_state):
     generic_tpn.load_all_type_constraints("roman")
-    roman_test_cache_state.cleanup()
 
 
 @mark.certify
@@ -732,7 +731,6 @@ def test_certify_roman_valid_asdf(roman_test_cache_state, roman_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_small.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = f"Certifying '{roman_data}/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'"
     assert expected_out in out
 
@@ -745,7 +743,6 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = [
         f"Certifying '{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'",
         f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"
@@ -763,7 +760,6 @@ def test_certify_roman_invalid_asdf_tpn(roman_test_cache_state, roman_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = f"""Certifying '{roman_data}/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
 In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]' : Value 'BAD' is not one of ['ANY',
 'CLEAR',
@@ -790,7 +786,6 @@ def test_certify_roman_valid_spec_asdf(roman_test_cache_state, roman_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_small.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = f"Certifying '{roman_data}/roman_wfi16_grism_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'"
     assert expected_out in out
 
@@ -802,7 +797,6 @@ def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_da
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")        
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out =f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
 {roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"""
     for msg in expected_out.splitlines():
@@ -818,7 +812,6 @@ def test_certify_roman_invalid_spec_asdf_tpn(roman_test_cache_state, roman_data,
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = 'yesterday'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.USEAFTER [USEAFTER]' : Invalid 'Jwstdate' format 'yesterday' should be '2018-12-22T00:00:00'
@@ -883,7 +876,6 @@ def test_certify_roman_rmap_compare(roman_test_cache_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file("roman_wfi_flat_0004.rmap", "roman_0004.pmap")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = """Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'"""
     assert expected_out in out
 
@@ -929,7 +921,6 @@ def test_certify_roman_duplicate_rmap_case_error(roman_test_cache_state, roman_d
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_flat_0004_duplicate.rmap", "roman_0003.pmap")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
 Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter
 Checksum error : sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'
@@ -975,7 +966,6 @@ def test_certify_roman_invalid_rmap_tpn(roman_test_cache_state, roman_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_flat_0004_badtpn.rmap", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    roman_test_cache_state.cleanup()
     expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
 Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]') : ('WFI21', 'F158') :  parameter='ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]' value='WFI21' is not in ('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', '*', 'N/A')
 Mapping 'roman_wfi_flat_0004_badtpn.rmap' corresponds to 'roman_wfi_flat_0001.rmap' from context 'roman_0003.pmap' for checking mapping differences.

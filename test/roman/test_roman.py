@@ -25,7 +25,6 @@ def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
         reftypes=["dark"]
     )
     assert pathlib.Path(result["dark"]).name == "roman_wfi_dark_0001.asdf"
-    roman_test_cache_state.cleanup()
 
 
 @mark.roman
@@ -73,7 +72,6 @@ def test_getreferences_with_valid_header_ISO_fmt(roman_test_cache_state):
     )
 
     assert pathlib.Path(result["distortion"]).name == "roman_wfi_distortion_0001.asdf"
-    roman_test_cache_state.cleanup()
 
 
 @mark.roman
@@ -95,7 +93,6 @@ def test_getreferences_with_invalid_header(roman_test_cache_state):
         )
     except CrdsLookupError:
         assert True
-    roman_test_cache_state.cleanup()
 
 
 @mark.roman
@@ -129,4 +126,3 @@ def test_list_references(roman_test_cache_state):
     results = results.decode('ascii').split("\n")
 
     assert {item for item in results if item} == expected_result
-    roman_test_cache_state.cleanup()

@@ -1,7 +1,7 @@
 from pytest import mark
 import os
 import re
-from crds.core import log, heavy_client
+from crds.core import log, heavy_client, utils
 from crds.core import config as crds_config
 from crds.core.exceptions import *
 from crds.client import api
@@ -72,7 +72,6 @@ def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
         ignore_cache=False,
         reftypes=["flat"]
     )
-    del os.environ["CRDS_MAPPATH_SINGLE"]
     assert refs == {}
 
 
@@ -123,10 +122,10 @@ def test_cache_references_multiple_bad_files(default_shared_state):
     assert error_message == expected
 
 
-
 @mark.core
 @mark.heavy_client
 def test_get_context_name_literal(jwst_serverless_state):
+    utils.clear_function_caches()
     context = heavy_client.get_context_name("jwst", "jwst_0341.pmap")
     jwst_serverless_state.cleanup()
     assert context == 'jwst_0341.pmap'
