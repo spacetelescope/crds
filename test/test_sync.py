@@ -1,11 +1,8 @@
 import os
-
 import crds
 from conftest import CRDSTestCase
 from crds.core import config, rmap
 from crds.sync import SyncScript
-from crds.core import log
-
 from pytest import mark
 
 
