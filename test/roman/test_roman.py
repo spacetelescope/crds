@@ -2,17 +2,16 @@ from pytest import mark
 import os
 import subprocess
 import pathlib
-from crds.core import heavy_client, utils
-from crds.core.exceptions import CrdsLookupError, CrdsError
+from crds.core import heavy_client
+from crds.core.exceptions import CrdsLookupError
 from metrics_logger.decorators import metrics_logger
-from crds import log
+
 
 @mark.roman
 @metrics_logger("DMS16", "DMS25")
 def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
-    utils.clear_function_caches()
     roman_test_cache_state.mode = 'local'
     roman_test_cache_state.config_setup()
 
