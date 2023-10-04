@@ -2,11 +2,11 @@ from pytest import mark
 import os
 import subprocess
 import pathlib
-from crds.core import heavy_client
+from crds.core import heavy_client, utils
 from crds.core.exceptions import CrdsLookupError
 from metrics_logger.decorators import metrics_logger
 
-
+utils.clear_function_caches()
 
 @mark.roman
 @metrics_logger("DMS16", "DMS25")
@@ -120,7 +120,6 @@ def test_list_references(roman_test_cache_state):
         list_command,
         env=env,
         stdout=subprocess.PIPE
-
     )
     results, _ = p.communicate()
     results = results.decode('ascii').split("\n")

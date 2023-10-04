@@ -36,7 +36,7 @@ def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
             "META.EXPOSURE.TYPE":"NIS_IMAGE"
         },
         observatory="jwst", 
-        context=os.path.join("jwst_na_omit.pmap", jwst_data),
+        context=os.path.join(jwst_data, "jwst_na_omit.pmap"),
         ignore_cache=False, 
         reftypes=["flat"]
     )
@@ -54,7 +54,7 @@ def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
             "META.EXPOSURE.TYPE":"FGS_IMAGE"
         },
         observatory="jwst",
-        context=os.path.join("jwst_na_omit.pmap", jwst_data),
+        context=os.path.join(jwst_data, "jwst_na_omit.pmap"),
         ignore_cache=False,
         reftypes=["flat"]
     )
@@ -72,7 +72,7 @@ def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
             "META.EXPOSURE.TYPE":"MIR_IMAGE"
         },
         observatory="jwst",
-        context=os.path.join("jwst_na_omit.pmap", jwst_data),
+        context=os.path.join(jwst_data, "jwst_na_omit.pmap"),
         ignore_cache=False,
         reftypes=["flat"]
     )
@@ -127,7 +127,8 @@ def test_cache_references_multiple_bad_files(default_shared_state):
 @mark.core
 @mark.heavy_client
 def test_get_context_name_literal(jwst_serverless_state):
-    utils.clear_function_caches()
+    jwst_serverless_state.mode = 'local'
+    jwst_serverless_state.config_setup()
     context = heavy_client.get_context_name("jwst", "jwst_0341.pmap")
     assert context == 'jwst_0341.pmap'
 
@@ -135,6 +136,8 @@ def test_get_context_name_literal(jwst_serverless_state):
 @mark.core
 @mark.heavy_client
 def test_get_context_name_crds_context(jwst_serverless_state):
+    jwst_serverless_state.mode = 'local'
+    jwst_serverless_state.config_setup()
     os.environ["CRDS_CONTEXT"] = "jwst_0399.pmap"
     context = heavy_client.get_context_name("jwst")
     del os.environ["CRDS_CONTEXT"]
@@ -144,10 +147,13 @@ def test_get_context_name_crds_context(jwst_serverless_state):
 @mark.core
 @mark.heavy_client
 def test_get_context_name_symbolic(jwst_serverless_state):
+    jwst_serverless_state.mode = 'local'
+    jwst_serverless_state.config_setup()
     pattern = re.compile("jwst_[0-9]{4}.pmap")
     ops_context = heavy_client.get_context_name("jwst", "jwst-operational")
     edit_context = heavy_client.get_context_name("jwst", "jwst-edit")
     ver_context = heavy_client.get_context_name("jwst", "jwst-versions")
+
     for context in [ops_context, edit_context, ver_context]:
         matches = re.match(pattern, context)
         assert matches.group() is not None
