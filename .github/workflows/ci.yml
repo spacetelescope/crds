@@ -67,6 +67,7 @@ jobs:
           fetch-depth: 0
       - uses: mamba-org/setup-micromamba@v1
         with:
+          environment-name: crds-testing
           create-args: >-
             python=${{ matrix.python-version }}
             fitsverify
