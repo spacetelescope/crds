@@ -25,7 +25,6 @@ def test_get_derived_from_created(default_shared_state, caplog):
     expected = " Skipping derivation checks for root mapping 'hst.pmap' derived_from = 'created by hand 12-23-2011'"
     for msg in expected.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -38,7 +37,6 @@ def test_get_derived_from_phony(default_shared_state, caplog, hst_data):
     expected = " Parent mapping for 'hst_acs_darkfile_phony_derive.rmap' = 'phony.rmap' does not exist."
     for msg in expected.splitlines():
         assert msg.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -64,7 +62,6 @@ def test_rmap_missing_references(default_shared_state, hst_data):
     ]
     for i in expected:
         assert i in missing
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -86,7 +83,6 @@ def test_rmap_minimum_header(default_shared_state, hst_data):
     }
     for k, v in expected.items():
         assert header[k] == v
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -96,7 +92,6 @@ def test_rmap_str(default_shared_state, hst_data):
     header = str(r)
     expected = "header = {\n    'derived_from' : 'hst_cos_bpixtab_0251.rmap',\n    'filekind' : 'BPIXTAB',\n    'instrument' : 'COS',\n    'mapping' : 'REFERENCE',\n    'name' : 'hst_cos_bpixtab_0252.rmap',\n    'observatory' : 'HST',\n    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),\n    'reffile_format' : 'TABLE',\n    'reffile_required' : 'NONE',\n    'reffile_switch' : 'NONE',\n    'rmap_relevance' : 'ALWAYS',\n    'sha1sum' : 'd2024dade52a406af70fcdf27a81088004d67cae',\n}\n\nselector = Match({\n    ('FUV',) : UseAfter({\n        '1996-10-01 00:00:00' : 's7g1700dl_bpix.fits',\n        '2009-05-11 00:00:00' : 'z1r1943fl_bpix.fits',\n    }),\n    ('NUV',) : UseAfter({\n        '1996-10-01 00:00:00' : 's7g1700pl_bpix.fits',\n        '2009-05-11 00:00:00' : 'uas19356l_bpix.fits',\n    }),\n})\n"
     assert expected == header
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -104,7 +99,6 @@ def test_rmap_str(default_shared_state, hst_data):
 def test_rmap_obs_package(default_shared_state, hst_data):
     p = rmap.get_cached_mapping(f"{hst_data}/hst_acs_darkfile.rmap")
     assert p.obs_package.__name__ == 'crds.hst'
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -117,7 +111,6 @@ def test_rmap_format_with_comment(default_shared_state, hst_data):
     header = str(r)
     expected = 'header = {\n    \'derived_from\' : \'generated from CDBS database 2013-01-11 13:58:14.664182\',\n    \'filekind\' : \'DARKFILE\',\n    \'instrument\' : \'ACS\',\n    \'mapping\' : \'REFERENCE\',\n    \'name\' : \'hst_acs_darkfile_comment.rmap\',\n    \'observatory\' : \'HST\',\n    \'parkey\' : ((\'DETECTOR\', \'CCDAMP\', \'CCDGAIN\'), (\'DATE-OBS\', \'TIME-OBS\')),\n    \'parkey_relevance\' : {\n        \'ccdamp\' : \'(DETECTOR != "SBC")\',\n        \'ccdgain\' : \'(DETECTOR != "SBC")\',\n    },\n    \'rmap_relevance\' : \'ALWAYS\',\n    \'sha1sum\' : \'0b3af86642812a1af65b77d429886e186acef915\',\n}\n\ncomment = """\nThis is a block comment which can be used to store additional metadata\nabout the state and evolution of this type and files.\n"""\n\nselector = Match({\n    (\'HRC\', \'A|ABCD|AD|B|BC|C|D\', \'1.0|2.0|4.0|8.0\') : UseAfter({\n        \'1992-01-01 00:00:00\' : \'lcb12060j_drk.fits\',\n        \'2002-03-01 00:00:00\' : \'n3o1022cj_drk.fits\',\n        \'2002-03-18 00:00:00\' : \'n3o1022ej_drk.fits\',\n        \'2002-03-19 00:34:31\' : \'n3o1022fj_drk.fits\',\n        \'2002-03-20 00:34:32\' : \'n3o1022hj_drk.fits\',\n        \'2002-03-21 00:34:31\' : \'n3o1022ij_drk.fits\',\n        \'2002-03-22 00:34:30\' : \'n3o1022kj_drk.fits\',\n        \'2002-03-23 00:34:28\' : \'n3o1022lj_drk.fits\',\n        \'2007-01-21 02:09:05\' : \'r1u1415ij_drk.fits\',\n        \'2007-01-22 00:40:13\' : \'r1u1415kj_drk.fits\',\n        \'2007-01-26 00:07:33\' : \'r1u1415mj_drk.fits\',\n    }),\n})\n'
     assert header == expected
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -142,7 +135,6 @@ selector = Match({
         out = caplog.text
     expected = " Checksum error : sha1sum mismatch in '(noname)'"
     assert expected in out
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -151,7 +143,6 @@ def test_rmap_get_reference_parkeys(default_shared_state, jwst_data):
     r = rmap.get_cached_mapping(f"{jwst_data}/jwst_miri_specwcs_0004.rmap")
     assert r.parkey == (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.SUBARRAY.NAME'),)
     assert r.get_reference_parkeys() == ('BAND', 'CHANNEL', 'DETECTOR', 'META.EXPOSURE.TYPE', 'META.INSTRUMENT.BAND', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.LAMP_STATE', 'META.SUBARRAY.NAME', 'META.VISIT.TSOVISIT', 'SUBARRAY')
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -305,7 +296,6 @@ def test_rmap_get_valid_values_map(default_shared_state):
 
     fw1map = i.get_valid_values_map(condition=True)["FW1OFFST"]
     assert fw1map == ['-1.0', '0.0', '1.0', '2.0']
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -314,7 +304,6 @@ def test_rmap_get_valid_values_map_range(default_shared_state, hst_data):
     r = rmap.get_cached_mapping(f"{hst_data}/hst_wfpc2_flatfile.rmap")
     vvmap = r.get_valid_values_map() 
     assert vvmap == {'FILTER1': ('0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0', '11.0', '12.0', '13.0', '14.0', '15.0', '16.0', '17.0', '18.0', '19.0', '20.0', '21.0', '22.0', '23.0', '24.0', '25.0', '26.0', '27.0', '28.0', '29.0', '30.0', '31.0', '32.0', '33.0', '34.0', '35.0', '36.0', '37.0', '38.0', '39.0', '40.0', '41.0', '42.0', '43.0', '44.0', '45.0', '46.0', '47.0', '48.0', '49.0', '50.0', '51.0', '52.0', '53.0', '54.0', '55.0', '56.0', '57.0', '58.0', '59.0', '60.0', '61.0', '62.0', '63.0', '64.0', '65.0', '66.0', '67.0', '68.0', '69.0', '70.0', '71.0'), 'FILTER2': ('0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0', '11.0', '12.0', '13.0', '14.0', '15.0', '16.0', '17.0', '18.0', '19.0', '20.0', '21.0', '22.0', '23.0', '24.0', '25.0', '26.0', '27.0', '28.0', '29.0', '30.0', '31.0', '32.0', '33.0', '34.0', '35.0', '36.0', '37.0', '38.0', '39.0', '40.0', '41.0', '42.0', '43.0', '44.0', '45.0', '46.0', '47.0', '48.0', '49.0', '50.0', '51.0', '52.0', '53.0', '54.0', '55.0', '56.0', '57.0', '58.0', '59.0', '60.0', '61.0', '62.0', '63.0', '64.0', '65.0', '66.0', '67.0', '68.0', '69.0', '70.0', '71.0'), 'MODE': ('FULL', 'AREA')}
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -330,7 +319,6 @@ def test_rmap_get_best_references_fail(default_shared_state):
     "TIME-OBS" : "16:43:00",
     }, include=["darkfile"])
     assert out == {'darkfile': 'NOT FOUND No match found.'}
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -338,7 +326,6 @@ def test_rmap_get_best_references_fail(default_shared_state):
 def test_validate_mapping_valid(default_shared_state, hst_data):
     r = rmap.get_cached_mapping(f"{hst_data}/hst_acs_darkfile.rmap")
     r.validate_mapping()
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -437,7 +424,6 @@ https://hst-crds.stsci.edu/static/users_guide/index.html
 """
     for line in expected.splitlines():
         assert line.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -464,7 +450,6 @@ https://roman-crds.stsci.edu/static/users_guide/index.html
 """
     for line in expected.splitlines():
         assert line.strip() in out
-    roman_serverless_state.cleanup()
 
 
 @mark.core
@@ -477,7 +462,6 @@ def test_validate_mapping_invalid1(default_shared_state, hst_data, caplog):
     expected = """  Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='CCDAMP' value='DDDD' is not in ('A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD', 'ABCD', 'N/A')"""
     for line in expected.splitlines():
         assert line.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -490,14 +474,12 @@ def test_validate_mapping_invalid2(default_shared_state, hst_data, caplog):
     expected = """ Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('FOOBAR', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='DETECTOR' value='FOOBAR' is not in ('WFC', 'HRC', 'SBC')"""
     for line in expected.splitlines():
         assert line.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.core
 @mark.rmap
 def test_rmap_asmapping_readonly(default_shared_state, hst_data):
     r = rmap.asmapping(f"{hst_data}/hst_acs_darkfile.rmap", cached="readonly")
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -510,7 +492,6 @@ def test_rmap_get_equivalent_mapping_missing(default_shared_state, caplog):
     expected = """ No equivalent filekind in 'hst_cos.imap' corresponding to 'hst_cos_twozxtab_0001.rmap'"""
     for line in expected.splitlines():
         assert line.strip() in out
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -531,8 +512,7 @@ def test_imap_match_not_applicable(default_shared_state, hst_data):
         "DRIZCORR" : "PERFORM",
     })["pctetab"]
     assert na == 'NOT FOUND n/a'
-    default_shared_state.cleanup()
-    
+
 
 @mark.core
 @mark.rmap
@@ -551,7 +531,6 @@ def test_imap_match_omit(default_shared_state, hst_data):
         "PHOTCORR" : "PERFORM",
         "DRIZCORR" : "PERFORM",
     })
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -570,7 +549,6 @@ def test_pickling(default_shared_state, hst_data):
     refs_p = p.get_best_references(header)
     refs_q = q.get_best_references(header)
     assert refs_p == refs_q
-    default_shared_state.cleanup()
 
 
 # ==================================================================================
@@ -584,7 +562,6 @@ def test_rmap_get_imap_except(default_shared_state):
         r.get_imap("foo")
     except CrdsUnknownInstrumentError:
         assert True
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -596,7 +573,6 @@ def test_rmap_get_filekind(default_shared_state, hst_data):
                         'd2imfile','darkfile','dgeofile','drkcfile','flshfile','idctab',
                         'imphttab','mdriztab','mlintab','npolfile','oscntab','pctetab',
                         'pfltfile','shadfile','spottab'}
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -606,7 +582,6 @@ def test_rmap_get_equivalent_mapping(default_shared_state, hst_data):
     assert i.get_equivalent_mapping("hst.pmap") is None
     assert i.get_equivalent_mapping(f"{hst_data}/hst_acs_0001.imap").name == "hst_acs.imap"
     assert i.get_equivalent_mapping(f"{hst_data}/hst_acs_biasfile_0002.rmap").name ==  "hst_acs_biasfile.rmap"
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -635,7 +610,6 @@ def test_rmap_list_mappings(default_shared_state, hst_data, jwst_data, roman_dat
     maps = sorted(rmap.list_mappings("*.imap", "roman"))
     expected = ['roman_wfi_0001.imap']
     assert maps == expected
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -645,7 +619,6 @@ def test_rmap_list_references(default_shared_state, hst_data):
     crds_config.CRDS_REF_SUBDIR_MODE = "flat"
     refs = sorted(rmap.list_references("*.r1h", "hst"))
     assert refs == ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h', 'valid.r1h']
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -654,7 +627,6 @@ def test_rmap_get_derived_from(default_shared_state, hst_data):
     os.environ["CRDS_MAPPATH_SINGLE"] = hst_data
     r = rmap.get_cached_mapping(f"{hst_data}/hst_acs_flshfile_0252.rmap")
     assert r.get_derived_from().name == 'hst_acs_flshfile_0251.rmap'
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -664,7 +636,6 @@ def test_missing_required_header_key(default_shared_state, hst_data):
         r = rmap.load_mapping(f"{hst_data}/hst_acs_darkfile_missing_key.rmap")
     except MissingHeaderKeyError:
         assert True
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -674,7 +645,6 @@ def test_load_rmap_bad_expr(default_shared_state, hst_data):
         r = rmap.get_cached_mapping(f"{hst_data}/hst_acs_darkfile_badexpr.rmap")
     except SyntaxError:
         assert True
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -685,7 +655,7 @@ def test_rmap_get_parkey_map(default_shared_state):
         i.get_rmap("foo")
     except CrdsUnknownReftypeError:
         assert True
-    default_shared_state.cleanup()
+    
 
 @mark.core
 @mark.rmap
@@ -711,7 +681,6 @@ selector = Match({
         rmap.ReferenceMapping.from_string(string)
     except ChecksumError:
         assert True
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -739,7 +708,6 @@ selector = Match({
     r = rmap.ReferenceMapping.from_string(string, ignore_checksum=True)
     assert r.schema_uri == 'http://stsci.edu/schemas/asdf/core/ndarray-1.0.0'
     r.validate()
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -769,7 +737,6 @@ selector = Match({
         r.validate()
     except FileNotFoundError:
         assert True
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -788,7 +755,6 @@ def test_rmap_get_best_references_include(default_shared_state, hst_data):
         r.get_best_references(header, include=["flatfile"])
     except CrdsUnknownReftypeError:
         assert True
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -959,7 +925,6 @@ def test_rmap_get_parkey_map(default_shared_state):
     }
     for k, v in exp.items():
         assert sorted(parkey_map[k]) == sorted(v)
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -967,7 +932,6 @@ def test_rmap_get_parkey_map(default_shared_state):
 def test_rmap_todict(default_shared_state, hst_data):
     r = rmap.get_cached_mapping(f"{hst_data}/hst_cos_bpixtab_0252.rmap")
     assert r.todict() == {'text_descr': 'Data Quality (Bad Pixel) Initialization Table', 'selections': [('FUV', '1996-10-01 00:00:00', 's7g1700dl_bpix.fits'), ('FUV', '2009-05-11 00:00:00', 'z1r1943fl_bpix.fits'), ('NUV', '1996-10-01 00:00:00', 's7g1700pl_bpix.fits'), ('NUV', '2009-05-11 00:00:00', 'uas19356l_bpix.fits')], 'header': {'sha1sum': 'd2024dade52a406af70fcdf27a81088004d67cae', 'reffile_switch': 'none', 'filekind': 'bpixtab', 'instrument': 'cos', 'derived_from': 'hst_cos_bpixtab_0251.rmap', 'reffile_format': 'table', 'observatory': 'hst', 'parkey': (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')), 'reffile_required': 'none', 'rmap_relevance': 'always', 'mapping': 'reference', 'name': 'hst_cos_bpixtab_0252.rmap'}, 'parameters': ('DETECTOR', 'USEAFTER', 'REFERENCE')}
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -975,7 +939,6 @@ def test_rmap_todict(default_shared_state, hst_data):
 def test_rmap_tojson(default_shared_state, hst_data):
     r = rmap.get_cached_mapping(f"{hst_data}/hst_cos_bpixtab_0252.rmap")
     assert json.loads(r.tojson()) == {u'header': {u'observatory': u'hst', u'name': u'hst_cos_bpixtab_0252.rmap', u'reffile_required': u'none', u'parkey': [[u'DETECTOR'], [u'DATE-OBS', u'TIME-OBS']], u'mapping': u'reference', u'filekind': u'bpixtab', u'instrument': u'cos', u'derived_from': u'hst_cos_bpixtab_0251.rmap', u'reffile_switch': u'none', u'reffile_format': u'table', u'rmap_relevance': u'always', u'sha1sum': u'd2024dade52a406af70fcdf27a81088004d67cae'}, u'text_descr': u'Data Quality (Bad Pixel) Initialization Table', u'parameters': [u'DETECTOR', u'USEAFTER', u'REFERENCE'], u'selections': [[u'FUV', u'1996-10-01 00:00:00', u's7g1700dl_bpix.fits'], [u'FUV', u'2009-05-11 00:00:00', u'z1r1943fl_bpix.fits'], [u'NUV', u'1996-10-01 00:00:00', u's7g1700pl_bpix.fits'], [u'NUV', u'2009-05-11 00:00:00', u'uas19356l_bpix.fits']]}
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -989,7 +952,6 @@ def test_rmap_match_not_applicable(default_shared_state, hst_data):
             "DATE-OBS" : "1993-01-01",
             "TIME-OBS" : "12:00:00",
             }) == "NOT FOUNT n/a"
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -1003,7 +965,6 @@ def test_rmap_match_omit(default_shared_state, hst_data):
             "DATE-OBS" : "2002-03-19",
             "TIME-OBS" : "00:34:32",
             }) is None
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -1011,7 +972,6 @@ def test_rmap_match_omit(default_shared_state, hst_data):
 def test_rmap_todict(default_shared_state):
     p = rmap.get_cached_mapping("hst.pmap")
     p.todict()
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -1021,7 +981,6 @@ def test_rmap_match_tjson(jwst_test_cache_state):
     os.environ["CRDS_PATH"] = cache_path
     p = rmap.get_cached_mapping("jwst.pmap")
     p.tojson()
-    jwst_test_cache_state.cleanup()
 
 
 def _get_rmap():
@@ -1064,6 +1023,7 @@ selector = Match({
 })
 """, ignore_checksum=True)
 
+
 @mark.core
 @mark.rmap
 def test_ref_to_dataset_ir(default_shared_state):
@@ -1082,7 +1042,6 @@ def test_ref_to_dataset_ir(default_shared_state):
     assert dheader.SAMP_SEQ == "MIF1200"
     assert dheader.SUBTYPE == "FULLIMAG"
     assert dheader.DARKCORR == "N/A"
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -1102,7 +1061,6 @@ def test_ref_to_dataset_uvis(default_shared_state):
     assert dheader.SAMP_SEQ == "N/A"
     assert dheader.SUBTYPE == "N/A"
     assert dheader.DARKCORR == "N/A"
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -1123,7 +1081,6 @@ def test_na_parkeys_ir(default_shared_state):
     assert dheader.SAMP_SEQ == "MIF1200"
     assert dheader.SUBTYPE == "FULLIMAG"
     assert dheader.DARKCORR == "PERFORM"
-    default_shared_state.cleanup()
 
 
 @mark.core
@@ -1143,4 +1100,3 @@ def test_na_parkeys_uvis(default_shared_state):
     assert dheader.SAMP_SEQ == "N/A"
     assert dheader.SUBTYPE == "N/A"
     assert dheader.DARKCORR == "PERFORM"
-    default_shared_state.cleanup()

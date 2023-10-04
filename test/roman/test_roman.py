@@ -7,25 +7,26 @@ from crds.core.exceptions import CrdsLookupError
 from metrics_logger.decorators import metrics_logger
 
 
-
 @mark.roman
 @metrics_logger("DMS16", "DMS25")
 def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
+    roman_test_cache_state.mode = 'local'
+    roman_test_cache_state.config_setup()
+
     result = heavy_client.getreferences(
         {
-            "ROMAN.META.INSTRUMENT.NAME": "WFI",
-            "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
-            "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
-            "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
+        "ROMAN.META.INSTRUMENT.NAME": "WFI",
+        "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
+        "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
+        "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
         },
         observatory="roman",
         context="roman_0005.pmap",
         reftypes=["dark"]
     )
     assert pathlib.Path(result["dark"]).name == "roman_wfi_dark_0001.asdf"
-    roman_test_cache_state.cleanup()
 
 
 @mark.roman
@@ -33,6 +34,8 @@ def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
 def test_getreferences_with_valid_header_ISO_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
+    roman_test_cache_state.mode = 'local'
+    roman_test_cache_state.config_setup()
     result = heavy_client.getreferences(
         {
             "ROMAN.META.INSTRUMENT.NAME": "WFI",
@@ -71,9 +74,7 @@ def test_getreferences_with_valid_header_ISO_fmt(roman_test_cache_state):
         context="roman_0005.pmap",
         reftypes=["distortion"]
     )
-
     assert pathlib.Path(result["distortion"]).name == "roman_wfi_distortion_0001.asdf"
-    roman_test_cache_state.cleanup()
 
 
 @mark.roman
@@ -81,6 +82,8 @@ def test_getreferences_with_valid_header_ISO_fmt(roman_test_cache_state):
 def test_getreferences_with_invalid_header(roman_test_cache_state):
     """ test_getreferences_with_invalid_header: test satisfies Roman 303.1
     """
+    roman_test_cache_state.mode = 'local'
+    roman_test_cache_state.config_setup()
     try:
         heavy_client.getreferences(
             {
@@ -95,7 +98,6 @@ def test_getreferences_with_invalid_header(roman_test_cache_state):
         )
     except CrdsLookupError:
         assert True
-    roman_test_cache_state.cleanup()
 
 
 @mark.roman
@@ -123,10 +125,8 @@ def test_list_references(roman_test_cache_state):
         list_command,
         env=env,
         stdout=subprocess.PIPE
-
     )
     results, _ = p.communicate()
     results = results.decode('ascii').split("\n")
 
     assert {item for item in results if item} == expected_result
-    roman_test_cache_state.cleanup()

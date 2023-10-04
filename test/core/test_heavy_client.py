@@ -1,12 +1,8 @@
 from pytest import mark
 import os
 import re
-import json
-from pprint import pprint as pp
-import doctest
-
-
-from crds.core import rmap, log, config, heavy_client
+from crds.core import log, heavy_client, utils
+from crds.core import config as crds_config
 from crds.core.exceptions import *
 from crds.client import api
 
@@ -14,22 +10,23 @@ from crds.client import api
 @mark.core
 @mark.heavy_client
 def test_getreferences_rmap_na(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences({
         "META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS",
         "META.INSTRUMENT.FILTER":"BOGUS2", "META.EXPOSURE.TYPE":"NIS_IMAGE"
     },
     observatory="jwst", 
-    context=f"{jwst_data}/jwst_na_omit.pmap", 
+    context=os.path.join(jwst_data, "jwst_na_omit.pmap"),
     ignore_cache=False, 
     reftypes=["flat"])
     assert refs == {'flat': 'NOT FOUND n/a'}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
 @mark.heavy_client
 def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences(
         {
@@ -39,17 +36,17 @@ def test_getreferences_rmap_omit(jwst_no_cache_state, jwst_data):
             "META.EXPOSURE.TYPE":"NIS_IMAGE"
         },
         observatory="jwst", 
-        context=f"{jwst_data}/jwst_na_omit.pmap", 
+        context=os.path.join(jwst_data, "jwst_na_omit.pmap"),
         ignore_cache=False, 
         reftypes=["flat"]
     )
     assert refs == {}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
 @mark.heavy_client
 def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences(
         {
@@ -57,17 +54,17 @@ def test_getreferences_imap_na(jwst_no_cache_state, jwst_data):
             "META.EXPOSURE.TYPE":"FGS_IMAGE"
         },
         observatory="jwst",
-        context=f"{jwst_data}/jwst_na_omit.pmap",
+        context=os.path.join(jwst_data, "jwst_na_omit.pmap"),
         ignore_cache=False,
         reftypes=["flat"]
     )
     assert refs == {'flat': 'NOT FOUND n/a'}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
 @mark.heavy_client
 def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
+    utils.clear_function_caches()
     os.environ["CRDS_MAPPATH_SINGLE"] = jwst_data
     refs = heavy_client.getreferences(
         {
@@ -75,12 +72,11 @@ def test_getreferences_imap_omit(jwst_no_cache_state, jwst_data):
             "META.EXPOSURE.TYPE":"MIR_IMAGE"
         },
         observatory="jwst",
-        context=f"{jwst_data}/jwst_na_omit.pmap",
+        context=os.path.join(jwst_data, "jwst_na_omit.pmap"),
         ignore_cache=False,
         reftypes=["flat"]
     )
     assert refs == {}
-    jwst_no_cache_state.cleanup()
 
 
 @mark.core
@@ -101,7 +97,6 @@ def test_getreferences_ignore_cache(jwst_shared_cache_state):
     )
     cache_path = jwst_shared_cache_state.cache
     assert refs == {'flat': f'{cache_path}/references/jwst/jwst_miri_flat_0001.fits'}
-    jwst_shared_cache_state.cleanup()
 
 
 @mark.core
@@ -127,38 +122,41 @@ def test_cache_references_multiple_bad_files(default_shared_state):
     except CrdsLookupError as e:
         error_message = str(e)
     assert error_message == expected
-    default_shared_state.cleanup()
 
 
 @mark.core
 @mark.heavy_client
 def test_get_context_name_literal(jwst_serverless_state):
+    jwst_serverless_state.mode = 'local'
+    jwst_serverless_state.config_setup()
     context = heavy_client.get_context_name("jwst", "jwst_0341.pmap")
     assert context == 'jwst_0341.pmap'
-    jwst_serverless_state.cleanup()
 
 
 @mark.core
 @mark.heavy_client
 def test_get_context_name_crds_context(jwst_serverless_state):
+    jwst_serverless_state.mode = 'local'
+    jwst_serverless_state.config_setup()
     os.environ["CRDS_CONTEXT"] = "jwst_0399.pmap"
     context = heavy_client.get_context_name("jwst")
-    assert context == 'jwst_0399.pmap'
     del os.environ["CRDS_CONTEXT"]
-    jwst_serverless_state.cleanup()
+    assert context == 'jwst_0399.pmap'
 
 
 @mark.core
 @mark.heavy_client
 def test_get_context_name_symbolic(jwst_serverless_state):
+    jwst_serverless_state.mode = 'local'
+    jwst_serverless_state.config_setup()
     pattern = re.compile("jwst_[0-9]{4}.pmap")
     ops_context = heavy_client.get_context_name("jwst", "jwst-operational")
     edit_context = heavy_client.get_context_name("jwst", "jwst-edit")
     ver_context = heavy_client.get_context_name("jwst", "jwst-versions")
+
     for context in [ops_context, edit_context, ver_context]:
         matches = re.match(pattern, context)
         assert matches.group() is not None
-    jwst_serverless_state.cleanup()
 
 
 @mark.core
@@ -169,7 +167,7 @@ def test_translate_date_based_context_no_observatory(jwst_serverless_state):
     except CrdsError as e:
         error = str(e)
     assert error == "Cannot determine observatory to translate mapping 'foo-edit'"
-    jwst_serverless_state.cleanup()
+
 
 @mark.core
 @mark.heavy_client
@@ -179,7 +177,7 @@ def test_translate_date_based_context_bad_date(jwst_serverless_state):
     except CrdsError as e:
         error = str(e)
     assert error == "Specified CRDS context by date 'jwst-2018-01-01T00:00:00' and CRDS server is not reachable."
-    jwst_serverless_state.cleanup()
+    
 
 
 @mark.core
@@ -192,7 +190,6 @@ def test_translate_date_based_context_bad_instrument(jwst_shared_cache_state):
     except ServiceError as e:
         error = str(e)
     assert error == "CRDS jsonrpc failure 'get_context_by_date' InvalidDateBasedContext: Bad instrument 'foo' in CRDS date based context specification."
-    jwst_shared_cache_state.cleanup()
 
 
 @mark.core
@@ -200,14 +197,13 @@ def test_translate_date_based_context_bad_instrument(jwst_shared_cache_state):
 def test_get_bad_mappings_in_context_no_instrument(jwst_serverless_state):
     mappings = heavy_client.get_bad_mappings_in_context("jwst", "jwst_0016.pmap")
     assert mappings == ['jwst_miri_flat_0002.rmap']
-    jwst_serverless_state.cleanup()
-
+    
 
 @mark.core
 @mark.heavy_client
 def test_pickled_mappings(default_shared_state):
     cache_path = default_shared_state.cache
-    pickle_file = config.locate_pickle("jwst_0016.pmap","jwst")
+    pickle_file = crds_config.locate_pickle("jwst_0016.pmap","jwst")
     assert pickle_file == f"{cache_path}/pickles/jwst/jwst_0016.pmap.pkl"
 
     _ = heavy_client.get_pickled_mapping("jwst_0016.pmap", cached=True, use_pickles=True, save_pickles=True)
@@ -226,38 +222,29 @@ def test_pickled_mappings(default_shared_state):
     os.chmod(pickle_file, 0o444)
     heavy_client.remove_pickled_mapping("jwst_0016.pmap")
     assert os.path.exists(pickle_file)
-    """
-    >>> heavy_client.remove_pickled_mapping("jwst_0016.pmap")  # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Pickle file '.../crds-cache-default-test/pickles/jwst/jwst_0016.pmap.pkl' is not writable,  skipping pickle remove.
-    """
+
     os.chmod(pickle_file, 0o666)
     heavy_client.remove_pickled_mapping("jwst_0016.pmap")
     assert not os.path.exists(pickle_file)
-    """
-    >>> heavy_client.remove_pickled_mapping("somewhere/foo.pmap")  # doctest: +ELLIPSIS
-    CRDS - DEBUG -  Pickle file 'somewhere/foo.pmap' is not writable,  skipping pickle remove.
-    """
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
 @mark.heavy_client
 def test_check_parameters(jwst_serverless_state):
-    header = { "NAME" : "VALID_VALUE",  "NAME1" : 1.0, "META.VALID.NAME3" : 1,   "NAME4" : True}
-    out = heavy_client.check_parameters(header)
-    assert out == {'NAME': 'VALID_VALUE', 'NAME1': 1.0, 'META.VALID.NAME3': 1, 'NAME4': True}
-
-    header = { (1,2,3) : "something for invalid key" }
+    header1 = { "NAME" : "VALID_VALUE",  "NAME1" : 1.0, "META.VALID.NAME3" : 1,   "NAME4" : True}
+    out1 = heavy_client.check_parameters(header1)
+    header2 = { (1,2,3) : "something for invalid key" }
     try:
-        heavy_client.check_parameters(header)
+        heavy_client.check_parameters(header2)
     except AssertionError as e:
         err = str(e)
+    header3 = { "META.BAD.VALUE" : object() }
+    out3 = heavy_client.check_parameters(header3)
+    
+    assert out1 == {'NAME': 'VALID_VALUE', 'NAME1': 1.0, 'META.VALID.NAME3': 1, 'NAME4': True}
     assert err == "Non-string key (1, 2, 3) in parameters."
-
-    header = { "META.BAD.VALUE" : object() }
-    out = heavy_client.check_parameters(header)
-    assert out == {}
-    jwst_serverless_state.cleanup()
+    assert out3 == {}
 
 
 @mark.core
@@ -282,4 +269,4 @@ def dt_get_context_parkeys(jwst_serverless_state):
 
     parkeys3 = heavy_client.get_context_parkeys("jwst_miri_flat.rmap","miri")
     assert parkeys3 == ['META.OBSERVATION.DATE', 'META.VISIT.TSOVISIT', 'META.INSTRUMENT.LAMP_STATE']
-    jwst_serverless_state.cleanup()
+    

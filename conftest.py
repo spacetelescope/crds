@@ -98,11 +98,12 @@ def roman_data(test_data):
 
 class ConfigState:
 
-    def __init__(self, cache=None, url=None, clear_existing=True, observatory=None):
+    def __init__(self, cache=None, url=None, clear_existing=True, observatory=None, mode=None):
         self.cache = cache
         self.url = url
         self.clear_existing = clear_existing
         self.observatory = observatory
+        self.mode = mode
         self.old_state = None
         self.new_state = None
 
@@ -122,6 +123,8 @@ class ConfigState:
             self.new_state["CRDS_PATH"] = self.cache
         if self.observatory is not None:
             self.new_state["CRDS_OBSERVATORY"] = self.observatory
+        if self.mode is not None:
+            self.new_state['CRDS_MODE'] = self.mode
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
 
@@ -135,29 +138,40 @@ class ConfigState:
 def default_shared_state(crds_shared_group_cache):
     cfg = ConfigState(cache=crds_shared_group_cache)
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def hst_shared_cache_state(crds_shared_group_cache):
     cfg = ConfigState(cache=crds_shared_group_cache, url="https://hst-crds.stsci.edu", observatory="hst")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def jwst_no_cache_state():
     #os.environ["CRDS_MAPPATH_SINGLE"] = test_data
-    cfg = ConfigState(cache=None, url="https://jwst-crds.stsci.edu")
+    cfg = ConfigState(
+        cache=None,
+        url="https://jwst-crds.stsci.edu",
+        observatory="jwst",
+        mode='local')
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def jwst_shared_cache_state(crds_shared_group_cache):
-    cfg = ConfigState(cache=crds_shared_group_cache, url="https://jwst-crds.stsci.edu")
+    cfg = ConfigState(
+        cache=crds_shared_group_cache,
+        url="https://jwst-crds.stsci.edu",
+        observatory="jwst")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
@@ -168,7 +182,8 @@ def jwst_serverless_state(crds_shared_group_cache):
         observatory="jwst"
     )
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
@@ -179,7 +194,19 @@ def hst_serverless_state(crds_shared_group_cache):
         observatory="hst"
     )
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
+
+@fixture()
+def hst_persistent_state(test_cache):
+    cfg = ConfigState(
+        cache=test_cache,
+        clear_existing=False,
+        observatory="hst",
+    )
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
@@ -190,85 +217,41 @@ def roman_serverless_state(crds_shared_group_cache):
         observatory="roman"
     )
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def broken_state():
     cfg = ConfigState(cache="/nowhere", url="https://server-is-out-of-town")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def default_test_cache_state(test_cache):
     cfg = ConfigState(cache=test_cache)
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture(scope='function')
 def jwst_test_cache_state(test_cache):
     cfg = ConfigState(cache=test_cache, observatory="jwst")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
+
 
 @fixture(scope='function')
 def roman_test_cache_state(test_cache):
     cfg = ConfigState(cache=test_cache, url="https://roman-serverless-mode.stsci.edu", observatory="roman")
     cfg.config_setup()
-    return cfg
+    yield cfg
+    cfg.cleanup()
  
-# ==============================================================================
-
-class CRDSTestCase:
-
-    clear_existing = False
-    server_url = None
-    cache = crds_config.get_crds_path()
-    data_dir = test_data
-    temp_dir = test_temp_dir
-    hst_mappath =  test_mappath
-    obs = "hst"
-
-    def set_data_dir(self):
-        return os.path.join(self.data_dir, self.obs)
-
-    def setUp(self):
-        self.data_dir = self.set_data_dir()
-        self.cfg = ConfigState(cache=self.cache, url=self.server_url,
-                               clear_existing=self.clear_existing)
-        self.cfg.config_setup()
-
-    def tearDown(self):
-        self.cfg.cleanup()
-
-    def run_script(self, cmd, expected_errs=0):
-        """Run SyncScript using command line `cmd` and check for `expected_errs` as return status."""
-        errs = self.script_class(cmd)()
-        if expected_errs is not None:
-            assert errs == expected_errs
-
-    def assert_crds_exists(self, filename, observatory="hst"):
-        if os.path.exists(crds_config.locate_file(filename, observatory)):
-            assert True
-
-    def assert_crds_not_exists(self, filename, observatory="hst"):
-        if not os.path.exists(crds_config.locate_file(filename, observatory)):
-            assert True
-
-    def data(self, filename):
-        return os.path.join(self.data_dir, filename)
-
-    def temp(self, filename):
-        return os.path.join(self.temp_dir, filename)
-
-
-# ==============================================================================
-
-@fixture(scope='module')
-def CrdsTestConfig():
-    return CRDSTestCase
 
 # ==============================================================================
 

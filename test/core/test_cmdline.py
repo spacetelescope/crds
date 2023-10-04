@@ -3,8 +3,8 @@ import os
 import logging
 from crds.core import cmdline, utils, log
 from crds.core import config as crds_config
-from crds.core.cmdline import Script, ContextsScript, UniqueErrorsMixin
-from crds.list import ListScript
+from crds.core.cmdline import Script, ContextsScript
+
 log.THE_LOGGER.logger.propagate=True
 
 @mark.core
@@ -19,7 +19,7 @@ def test_valid_and_invalid_dataset(default_shared_state, hst_data):
         assert True
     fpath = cmdline.dataset(f"{hst_data}/j8bt05njq_raw.fits")
     assert fpath == f"{hst_data}/j8bt05njq_raw.fits"
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -34,7 +34,7 @@ def test_valid_and_invalid_mapping(default_shared_state, hst_data):
         assert True
     mp = cmdline.mapping("hst.pmap")
     assert mp == 'hst.pmap'
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -53,7 +53,7 @@ def test_context_spec(default_shared_state):
         cmdline.context_spec("hst-acs-2040-01-29T12:00:00")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -69,7 +69,7 @@ def test_observatory_valid_and_invalid(default_shared_state):
         cmdline.observatory("foo")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -83,7 +83,7 @@ def test_process_key(default_shared_state):
         cmdline.process_key("/foo/bar")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -103,7 +103,7 @@ def test_user_name(default_shared_state):
         cmdline.user_name("/foo/bar")
     except AssertionError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -129,14 +129,14 @@ def test_observatories_obs_pkg(default_shared_state):
 @mark.cmdline
 def test_print_help(default_shared_state):
     Script("cmdline.Script").print_help()
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
 @mark.cmdline
 def test_require_server_connnection(default_shared_state):
     Script("cmdline.Script").require_server_connection()
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -146,7 +146,7 @@ def test_no_files_in_class(default_shared_state):
         Script("cmdline.Script").files
     except NotImplementedError:
         assert True
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -157,7 +157,7 @@ def test_get_files(default_shared_state, hst_data):
     assert files == [f'{hst_data}/file_list1']
     files = s.get_files(["@test/data/hst/file_list1"])
     assert files == ['hst.pmap', 'hst_0002.pmap', 'hst_0001.pmap']
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -170,7 +170,7 @@ def test_resolve_context(default_shared_state, caplog):
     assert ctx == 'hst_0379.pmap'
     expected = " Symbolic context 'hst-2016-01-01' resolves to 'hst_0379.pmap'"
     assert expected in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -184,7 +184,7 @@ def test_get_file_properties(default_shared_state, jwst_data):
     s = Script("crds.Script --jwst")
     props = s.get_file_properties(f"{jwst_data}/valid.asdf")
     assert props == ('nirspec', 'wavecorr')
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -193,7 +193,7 @@ def test_categorize_files(default_shared_state, hst_data):
     s = Script("cmdline.Script")
     cats = s.categorize_files(["hst.pmap", f"{hst_data}/hst_acs_9999.imap", f"{hst_data}/acs_new_idc.fits"])
     assert sorted(cats.items()) == [(('', ''), ['hst.pmap']), (('acs', ''), [f'{hst_data}/hst_acs_9999.imap']), (('acs', 'idctab'), [f'{hst_data}/acs_new_idc.fits'])]
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -201,7 +201,7 @@ def test_categorize_files(default_shared_state, hst_data):
 def test_dump_files(default_shared_state):
     s = Script("cmdline.Script")
     s.dump_files(files=["hst.pmap","hst_acs_biasfile_0250.rmap"])
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -209,7 +209,7 @@ def test_dump_files(default_shared_state):
 def test_sync_files(default_shared_state):
     s = Script("cmdline.Script")
     s.sync_files(["hst_acs_biasfile_0250.rmap"])
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -220,7 +220,7 @@ def test_are_all_mappings(default_shared_state):
     assert allmaps is True
     notallmaps = s.are_all_mappings(["hst_acs_biasfile_0250.rmap", "somethingelse.fits"])
     assert notallmaps is False
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -229,7 +229,7 @@ def test_file_outside_cache_pathless(default_shared_state):
     s = Script("cmdline.Script")
     path = s.locate_file_outside_cache("hst_0001.pmap")
     assert path.endswith('./hst_0001.pmap')
-    default_shared_state.cleanup()
+    
 
 
 @mark.core
@@ -239,7 +239,6 @@ def test_file_outside_cache_uri(default_test_cache_state):
     s = Script("cmdline.Script --jwst")
     path = s.locate_file_outside_cache("crds://jwst_0001.pmap")
     assert path.endswith("crds-cache-test/mappings/jwst/jwst_0001.pmap")
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -248,7 +247,6 @@ def test_file_outside_cache_mapping_spec(default_test_cache_state):
     s = Script("cmdline.Script --hst")
     path = s.locate_file_outside_cache("hst-2016-01-01")
     assert path.endswith("crds-cache-test/mappings/hst/hst_0379.pmap")
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -257,7 +255,6 @@ def test_resolve_context_operational(default_test_cache_state):
     s = Script("cmdline.Script --hst")
     context = s.resolve_context("hst-operational")
     assert context.startswith("hst_") and context.endswith(".pmap")
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -265,7 +262,6 @@ def test_resolve_context_operational(default_test_cache_state):
 def test_dump_mappings(default_test_cache_state):
     s = Script("cmdline.Script --ignore-cache")
     s.dump_mappings(["hst_acs.imap"])
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -274,7 +270,6 @@ def test_determine_contexts_all(default_test_cache_state):
     s = ContextsScript("cmdline.ContextsScript --all")
     contexts = s.determine_contexts()
     assert len(contexts) > 100
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -283,7 +278,6 @@ def test_determine_contexts_last_n(default_test_cache_state):
     s = ContextsScript("cmdline.ContextsScript --last 5")
     contexts = s.determine_contexts()
     assert len(contexts) == 5
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -292,7 +286,6 @@ def test_determine_contexts_range(default_test_cache_state):
     s = ContextsScript("cmdline.ContextsScript --range 1:7")
     contexts = s.determine_contexts()
     assert len(contexts) == 7
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -302,7 +295,6 @@ def test_determine_contexts_upto(default_test_cache_state):
     contexts = s.determine_contexts()
     assert len(contexts) == 195
     assert contexts[0] == "hst.pmap"
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -312,7 +304,6 @@ def test_determine_contexts_after(default_test_cache_state):
     contexts = s.determine_contexts()
     assert len(contexts) >= 108
     assert contexts[0] == "hst_0379.pmap"
-    default_test_cache_state.cleanup()
 
 
 @mark.core
@@ -324,4 +315,3 @@ def test_determine_contexts_direct(default_test_cache_state):
     assert contexts[0] == "hst.pmap"
     mappings = sorted(list(set(s.get_context_mappings())))
     assert len(mappings) >= 116
-    default_test_cache_state.cleanup()

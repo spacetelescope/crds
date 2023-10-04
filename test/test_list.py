@@ -127,7 +127,7 @@ hst_wfpc2_offtab.rmap
 hst_wfpc2_shadfile.rmap
 hst_wfpc2_wf4tfile.rmap"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -143,7 +143,6 @@ jwst_nircam_photom.rmap
 jwst_nirspec.imap
 jwst_nirspec_photom.rmap"""
     assert out_to_check in out
-    jwst_shared_cache_state.cleanup()
 
 
 @mark.list
@@ -156,7 +155,7 @@ def test_list_cached_mappings(capsys, default_shared_state):
     out_to_check3 = '/mappings/hst/hst_0002.pmap'
     assert out_to_check1 in out, out_to_check2 in out
     assert out_to_check3 in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -170,7 +169,7 @@ def test_list_references(capsys, default_shared_state):
     out_to_check4 = 'w2j2046ej_dkc.fits'
     assert out_to_check1 in out, out_to_check2 in out
     assert out_to_check3 in out, out_to_check4 in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -193,7 +192,6 @@ def test_list_cached_references_jwst(capsys, jwst_shared_cache_state):
     out_to_check1 = f'{cache}/references/jwst/jwst_miri_flat_0006.fits'
     out_to_check2 = f'{cache}/references/jwst/jwst_niriss_flat_0000.fits'
     assert out_to_check1 in out, out_to_check2 in out
-    jwst_shared_cache_state.cleanup()
 
 
 @mark.list
@@ -205,7 +203,7 @@ J6FY01020:J6FY01EJQ
 J6FY01020:J6FY01EOQ
 J6FY01020:J6FY01ESQ"""
     assert out_to_check_acs in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -229,7 +227,7 @@ def test_list_dataset_headers(capsys, default_shared_state):
  'TIME-OBS': '10:07:16.929999',
  'dataset_id': 'U20L0U01T:U20L0U01T'}"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -244,7 +242,7 @@ def test_list_dataset_headers_json(capsys, default_shared_state):
 "OFF", "SHADFILE": "E371355EU.R5H", "SHUTTER": "A", "WF4TFILE": "N/A", "INSTRUME": "WFPC2", "DATE-OBS": "1993-12-07", \
 "TIME-OBS": "10:07:16.929999"}}"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 # At the moment, this test prints an error as expected. Not sure how to capture it without it getting logged though.
@@ -255,7 +253,7 @@ def test_list_dataset_headers_bogus(default_shared_state, caplog):
         out = caplog.text
     out_to_check = """Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset 'BAR'"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -267,7 +265,7 @@ I9ZF01010:I9ZF01E0Q
 I9ZF01010:I9ZF01E1Q
 I9ZF01010:I9ZF01E3Q"""
    assert out_to_check in out
-   default_shared_state.cleanup()
+   
 
 
 @mark.list
@@ -282,7 +280,7 @@ stis = ['INSTRUME', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CC
 wfc3 = ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CHINJECT', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 'FILTER', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'PHOTCORR', 'REFTYPE', 'SAMP_SEQ', 'SHUTRPOS', 'SUBARRAY', 'SUBTYPE', 'TIME-OBS']
 wfpc2 = ['INSTRUME', 'ATODGAIN', 'DATE-OBS', 'FILTER1', 'FILTER2', 'FILTNAM1', 'FILTNAM2', 'IMAGETYP', 'LRFWAVE', 'MODE', 'REFTYPE', 'SERIALS', 'SHUTTER', 'TIME-OBS']"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -311,7 +309,7 @@ pfltfile: ['DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'F
 shadfile: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'SHADCORR']
 spottab: ['DETECTOR', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS']"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -320,7 +318,7 @@ def test_list_required_parkeys_rmap(capsys, default_shared_state):
     out, _ = capsys.readouterr()
     out_to_check = """hst_acs_darkfile.rmap: ['DETECTOR', 'CCDAMP', 'CCDGAIN', 'DATE-OBS', 'TIME-OBS', 'DARKCORR']"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -333,7 +331,7 @@ hst_0003.pmap
 hst_0004.pmap
 hst_0005.pmap"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -342,7 +340,7 @@ def test_list_resolve_contexts_date(capsys, default_shared_state):
     out, _ = capsys.readouterr()
     out_to_check = """hst_0297.pmap"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -351,7 +349,7 @@ def test_list_remote_context(capsys, default_shared_state):
     out, _ = capsys.readouterr()
     assert 'hst_' in out
     assert '.pmap' in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -360,7 +358,7 @@ def test_list_operational_context(capsys, default_shared_state):
     out, _ = capsys.readouterr()
     assert 'hst_' in out
     assert '.pmap' in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -370,7 +368,7 @@ def test_list_references_by_context(capsys, default_shared_state):
     out_to_check = """s7g1700gl_dead.fits
 s7g1700ql_dead.fits"""
     assert out_to_check in out
-    default_shared_state.cleanup()
+    
 
 
 @mark.list
@@ -425,7 +423,7 @@ def test_list_cat_mappings(capsys, default_shared_state):
  'type': 'mapping',
  'uploaded_as': 'hst_cos_deadtab_0250.rmap',
  'useafter_date': '2050-01-01 00:00:00'}"""
-    default_shared_state.cleanup()
+    
     assert out_to_check1 in out
     assert out_to_check2 in out
     assert out_to_check3 in out
@@ -436,7 +434,7 @@ def test_list_cat_mappings(capsys, default_shared_state):
 def test_list_status(capsys, default_shared_state):
     ListScript("crds.list --status --hst")()
     out, _ = capsys.readouterr()
-    default_shared_state.cleanup()
+    
     assert "CRDS Summary =" in out
     assert "CRDS Version = " in out
     assert "CRDS_MODE = 'auto'" in out
@@ -454,7 +452,7 @@ def test_list_status(capsys, default_shared_state):
 def test_list_config(capsys, default_shared_state):
     ListScript("crds.list --config --hst")()
     out, _ = capsys.readouterr()
-    default_shared_state.cleanup()
+    
     assert "CRDS Environment" in out
     assert "CRDS Client Config" in out
     assert "CRDS Actual Paths" in out

@@ -143,7 +143,7 @@ def test_substitutions_validate_hst(hst_serverless_state, caplog):
  Instrument 'wfpc2' has no substitutions."""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    hst_serverless_state.cleanup()
+    
 
 
 @pytest.mark.substitutions
@@ -163,7 +163,7 @@ def test_substitutions_validate_jwst(jwst_serverless_state, caplog):
  Instrument 'system' has no substitutions."""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    jwst_serverless_state.cleanup()
+    
 
 
 @pytest.mark.substitutions
@@ -175,4 +175,3 @@ def test_substitutions_validate_roman(roman_test_cache_state, caplog):
     expected_out = """ Instrument 'wfi' has no substitutions."""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    roman_test_cache_state.cleanup()

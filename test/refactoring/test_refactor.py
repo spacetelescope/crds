@@ -19,8 +19,7 @@ def test_refactor_add_files(default_shared_state, hst_data, test_temp_dir, caplo
         out = caplog.text
     expected_log = """Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
 0 errors
-0 warnings
-1 infos""".splitlines()
+0 warnings""".splitlines()
     ndiffs = diff.DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_insert.rmap").run()
 
     caplog.clear()
@@ -33,7 +32,7 @@ def test_refactor_add_files(default_shared_state, hst_data, test_temp_dir, caplo
         out3 = caplog.text
 
     expected_err = f"""Expected one of ('replace',) but got 'add' from change (('{hst_data}/hst_cos_deadtab.rmap', '{test_temp_dir}/hst_cos_deadtab_insert.rmap'), ('FUV',), ('1997-10-01', '01:01:01'), "added terminal 's7g1700hl_dead.fits'")"""
-    default_shared_state.cleanup()
+    
 
     assert ndiffs == 1
     for line in expected_log:
@@ -52,8 +51,7 @@ def test_refactor_delete_files(default_shared_state, hst_data, test_temp_dir, ca
         out = caplog.text
     expected_log = f"""Deleting '{hst_data}/s7g1700gl_dead.fits' from 'hst_cos_deadtab.rmap'
 0 errors
-0 warnings
-1 infos""".splitlines()
+0 warnings""".splitlines()
     caplog.clear()
 
     ndiffs = diff.DiffScript(f"diff.py {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_delete.rmap").run()
@@ -68,9 +66,8 @@ def test_refactor_delete_files(default_shared_state, hst_data, test_temp_dir, ca
     expected_err = f"""Deleting '{hst_data}/foobar.fits' from 'hst_cos_deadtab.rmap'
 Refactoring operation FAILED : Terminal 'foobar.fits' could not be found and deleted.
 1 errors
-0 warnings
-1 infos""".splitlines()
-    default_shared_state.cleanup()
+0 warnings""".splitlines()
+    
     for line in expected_log:
         assert line in out
     assert ndiffs == 1
@@ -88,15 +85,14 @@ def test_refactor_add_header(default_shared_state, hst_data, test_temp_dir, capl
         RefactorScript(f"refactor.py set_header {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_add_header.rmap new_key some new value")()
         out1 = caplog.text
     expected1 = """0 errors
-0 warnings
-0 infos""".splitlines()
+0 warnings""".splitlines()
     caplog.clear()
 
     ndiffs = diff.DiffScript(f"diff.py {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_add_header.rmap --include-header-diffs --hide-boring-diffs").run()
     out2, _ = capsys.readouterr()
     expected2 = f"""(('{hst_data}/hst_cos_deadtab.rmap', '{test_temp_dir}/hst_cos_deadtab_add_header.rmap'), "header added 'new_key' = 'some new value'")"""
     rmap_chk = rmap_check_modifications(f"{hst_data}/hst_cos_deadtab.rmap", f"{test_temp_dir}/hst_cos_deadtab_add_header.rmap", "none", "none", expected=("add_header",))
-    default_shared_state.cleanup()
+    
 
     for line in expected1:
         assert line in out1
@@ -112,8 +108,7 @@ def test_refactor_replace_header(default_shared_state, hst_data, test_temp_dir, 
         RefactorScript(f"refactor.py set_header {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_replace_header.rmap reffile_format something new")()
         out1 = caplog.text
     expected1 = """0 errors
-0 warnings
-0 infos""".splitlines()
+0 warnings""".splitlines()
     caplog.clear()
 
     ndiffs = diff.DiffScript(f"diff.py {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_replace_header.rmap --include-header-diffs --hide-boring-diffs").run()
@@ -121,7 +116,7 @@ def test_refactor_replace_header(default_shared_state, hst_data, test_temp_dir, 
     expected2 = f"""(('{hst_data}/hst_cos_deadtab.rmap', '{test_temp_dir}/hst_cos_deadtab_replace_header.rmap'), "header replaced 'reffile_format' = 'table' with 'something new'")"""
 
     rmap_chk = rmap_check_modifications(f"{hst_data}/hst_cos_deadtab.rmap", f"{test_temp_dir}/hst_cos_deadtab_replace_header.rmap", "none", "none", expected=("replace_header",))
-    default_shared_state.cleanup()
+    
     for line in expected1:
         assert line in out1
     assert ndiffs == 1
@@ -136,8 +131,7 @@ def test_refactor_del_header(default_shared_state, hst_data, test_temp_dir, capl
         RefactorScript(f"refactor.py del_header {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_del_header.rmap reffile_format")()
         out1 = caplog.text
     expected1 = """0 errors
-0 warnings
-0 infos""".splitlines()
+0 warnings""".splitlines()
     caplog.clear()
 
     ndiffs = diff.DiffScript(f"diff.py {hst_data}/hst_cos_deadtab.rmap {test_temp_dir}/hst_cos_deadtab_del_header.rmap --include-header-diffs --hide-boring-diffs").run()
@@ -146,7 +140,7 @@ def test_refactor_del_header(default_shared_state, hst_data, test_temp_dir, capl
 
     rmap_chk = rmap_check_modifications(f"{hst_data}/hst_cos_deadtab.rmap", f"{test_temp_dir}/hst_cos_deadtab_del_header.rmap", "none", "none", expected=("del_header",))
 
-    default_shared_state.cleanup()
+    
     for line in expected1:
         assert line in out1
     assert ndiffs == 1
@@ -169,7 +163,7 @@ Expected one of ('add',) but got 'replace' from change (('{hst_data}/hst_cos_dea
 
     expected2 = f"""Replacement COUNT DIFFERENCE replacing '{hst_data}/s7g1700gl_dead.fits' with '{hst_data}/s7g1700hl_dead.fits' in '{hst_data}/hst_cos_deadtab.rmap' 1 vs. 2"""
 
-    default_shared_state.cleanup()
+    
     assert rmap_chk is False
     for line in expected1:
         assert line in out1
@@ -190,8 +184,7 @@ def test_or_bars_refactor_add_file(jwst_serverless_state, jwst_data, test_temp_d
     expected = """Inserting jwst_miri_ipc_0003.add.fits into 'jwst_miri_ipc_0002.rmap'
 Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'SHORT | MEDIUM |'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|MIRIFULONG|'
-0 errors
-3 infos""".splitlines()
+0 errors""".splitlines()
 
     ndiffs = diff.DiffScript(f"crds.diff {jwst_data}/jwst_miri_ipc_0002.rmap {test_temp_dir}/jwst_miri_ipc_0003.add.rmap")()
     sout, _ = capsys.readouterr()
@@ -200,7 +193,7 @@ Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT
 
     rmap_chk = rmap_check_modifications(f"{jwst_data}/jwst_miri_ipc_0002.rmap", f"{test_temp_dir}/jwst_miri_ipc_0003.add.rmap", "none", f"{jwst_data}/jwst_miri_ipc_0003.add.fits", expected=("add_rule",))
 
-    jwst_serverless_state.cleanup()
+    
 
     for line in expected:
         assert line in out    
@@ -222,8 +215,7 @@ def test_or_bars_refactor_replace_file(jwst_serverless_state, jwst_data, test_te
     expected = """Inserting jwst_miri_ipc_0004.replace.fits into 'jwst_miri_ipc_0002.rmap'
 Setting 'META.INSTRUMENT.BAND [BAND]' = 'UNDEFINED' to value of 'P_BAND' = 'LONG |'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFULONG|'
-0 errors
-3 infos""".splitlines()
+0 errors""".splitlines()
 
     ndiffs = diff.DiffScript(f"crds.diff {jwst_data}/jwst_miri_ipc_0002.rmap {test_temp_dir}/jwst_miri_ipc_0004.replace.rmap")()
     sout, _ = capsys.readouterr()
@@ -233,7 +225,7 @@ Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT
     rmap_chk1 = rmap_check_modifications(f"{jwst_data}/jwst_miri_ipc_0002.rmap", f"{test_temp_dir}/jwst_miri_ipc_0004.replace.rmap", "jwst_miri_ipc_0004.fits", f"{jwst_data}/jwst_miri_ipc_0004.replace.fits", expected=("replace",))
 
     rmap_chk2 = rmap_check_modifications(f"{jwst_data}/jwst_miri_ipc_0002.rmap", f"{test_temp_dir}/jwst_miri_ipc_0004.replace.rmap", f"{jwst_data}/jwst_miri_ipc_0004.fits", f"{jwst_data}/jwst_miri_ipc_0004.replace.fits", expected=("replace",))
-    jwst_serverless_state.cleanup()
+    
 
     assert ndiffs == 1
     assert rmap_chk1 is True

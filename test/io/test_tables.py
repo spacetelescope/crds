@@ -12,7 +12,7 @@ def test_fits_table(hst_serverless_state, hst_data):
     FITS_FILE = f"{hst_data}/v8q14451j_idc.fits"
     assert tables.ntables(FITS_FILE) == 1
     tab = tables.tables(FITS_FILE)[0]
-    hst_serverless_state.cleanup()
+    
     assert tab.segment == 1
     assert tab.rows[0][:6] == (1, 'FORWARD', 'F475W', 'CLEAR2L', 4096, 2048)
     assert len(tab.rows[0]) == len(tab.colnames)
@@ -32,7 +32,7 @@ def test_csv_table(hst_serverless_state, hst_data):
     CSV_FILE = f"{hst_data}/ascii_tab.csv"
     assert tables.ntables(CSV_FILE) == 1
     tab = tables.tables(CSV_FILE)[0]
-    hst_serverless_state.cleanup()
+    
     assert tab.segment == 1
     assert tab.rows[0] == (3102, 0.32, 4167, 4085, 'Q1250+568-A')
     assert tab.colnames[0] == 'OBSID'
