@@ -12,12 +12,13 @@ from crds import log
 def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
-    kwargs = dict({
-                "ROMAN.META.INSTRUMENT.NAME": "WFI",
-                "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
-                "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
-                "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
-            },
+    params = {
+        "ROMAN.META.INSTRUMENT.NAME": "WFI",
+        "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
+        "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
+        "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
+    }
+    kwargs = dict(
             observatory="roman",
             context="roman_0005.pmap",
             reftypes=["dark"]
@@ -25,15 +26,14 @@ def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
     try:
         mode = os.environ["CRDS_MODE"]
         log.info("Attempt 1 CRDS MODE: ", mode)
-        result = heavy_client.getreferences(**kwargs)
+        result = heavy_client.getreferences(params, **kwargs)
     except CrdsError:
         utils.clear_function_caches()
         roman_test_cache_state.mode = 'local'
         roman_test_cache_state.config_setup()
         mode = os.environ["CRDS_MODE"]
         log.info("Attempt 2 CRDS MODE: ", mode)
-        result = heavy_client.getreferences(**kwargs)
-
+        result = heavy_client.getreferences(params, **kwargs)
 
     assert pathlib.Path(result["dark"]).name == "roman_wfi_dark_0001.asdf"
 
@@ -43,6 +43,7 @@ def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
 def test_getreferences_with_valid_header_ISO_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
+    log.info(os.environ)
     result = heavy_client.getreferences(
         {
             "ROMAN.META.INSTRUMENT.NAME": "WFI",
