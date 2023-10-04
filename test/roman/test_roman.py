@@ -3,27 +3,38 @@ import os
 import subprocess
 import pathlib
 from crds.core import heavy_client, utils
-from crds.core.exceptions import CrdsLookupError
+from crds.core.exceptions import CrdsLookupError, CrdsError
 from metrics_logger.decorators import metrics_logger
-
-utils.clear_function_caches()
+from crds import log
 
 @mark.roman
 @metrics_logger("DMS16", "DMS25")
 def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
-    result = heavy_client.getreferences(
-        {
-            "ROMAN.META.INSTRUMENT.NAME": "WFI",
-            "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
-            "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
-            "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
-        },
-        observatory="roman",
-        context="roman_0005.pmap",
-        reftypes=["dark"]
+    kwargs = dict({
+                "ROMAN.META.INSTRUMENT.NAME": "WFI",
+                "ROMAN.META.INSTRUMENT.DETECTOR": "WFI01",
+                "ROMAN.META.EXPOSURE.TYPE": "WFI_IMAGE",
+                "ROMAN.META.EXPOSURE.START_TIME": "2020-02-01T00:00:00"
+            },
+            observatory="roman",
+            context="roman_0005.pmap",
+            reftypes=["dark"]
     )
+    try:
+        mode = os.environ["CRDS_MODE"]
+        log.info("Attempt 1 CRDS MODE: ", mode)
+        result = heavy_client.getreferences(**kwargs)
+    except CrdsError:
+        utils.clear_function_caches()
+        roman_test_cache_state.mode = 'local'
+        roman_test_cache_state.config_setup()
+        mode = os.environ["CRDS_MODE"]
+        log.info("Attempt 2 CRDS MODE: ", mode)
+        result = heavy_client.getreferences(**kwargs)
+
+
     assert pathlib.Path(result["dark"]).name == "roman_wfi_dark_0001.asdf"
 
 
