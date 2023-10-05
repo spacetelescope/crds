@@ -83,8 +83,7 @@ jobs:
           cache-environment: true
           cache-downloads: true
       - run: |
-          pip install roman-datamodels
-          pip install git+https://github.com/spacetelescope/jwst
+          pip install roman-datamodels git+https://github.com/spacetelescope/jwst
           pip uninstall --yes crds
           ./install
           pip install .[submission,test,docs,synphot]
