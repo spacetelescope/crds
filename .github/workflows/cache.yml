@@ -36,7 +36,6 @@ jobs:
       crds_path: ${{ env.CRDS_PATH }}
       hst: ${{ steps.hst_crds_context.outputs.pmap }}
       jwst: ${{ steps.jwst_crds_context.outputs.pmap }}
-      roman: ${{ steps.roman_crds_context.outputs.pmap }}
     steps:
       - id: hst_crds_context
         env:
@@ -56,20 +55,11 @@ jobs:
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
-      - id: roman_crds_context
-        env:
-          OBSERVATORY: roman
-          CRDS_SERVER_URL: https://roman-crds.stsci.edu
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-      - run: echo "${{ steps.hst_crds_context.outputs.pmap }} ${{ steps.jwst_crds_context.outputs.pmap }} ${{ steps.roman_crds_context.outputs.pmap }}"
+      - run: echo ${{ steps.hst_crds_context.outputs.pmap }} ${{ steps.jwst_crds_context.outputs.pmap }}
   cache:
     if: (github.repository == 'spacetelescope/crds' && (github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'update CRDS cache')))
     needs: [ contexts ]
-    name: run tests to build cache of CRDS reference files
+    name: setup CRDS test cache
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -77,20 +67,16 @@ jobs:
         with:
           environment-name: crds-testing
           create-args: >-
-            python=3.11
-            fitsverify
+            python=3
           init-shell: bash
           cache-environment: true
           cache-downloads: true
       - run: |
-          pip install roman-datamodels git+https://github.com/spacetelescope/jwst
-          pip uninstall --yes crds
           ./install
           pip install .[submission,test,docs,synphot]
       - uses: actions/cache@v3
         if: always()
         with:
           path: ${{ env.CRDS_PATH }}
-          key: crds-${{ needs.data.outputs.hst }}-${{ needs.data.outputs.jwst }}-${{ needs.data.outputs.roman }}
+          key: crds-${{ needs.data.outputs.hst }}-${{ needs.data.outputs.jwst }}
       - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }}
-      - run: ./runtests
