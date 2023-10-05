@@ -150,6 +150,18 @@ def hst_shared_cache_state(crds_shared_group_cache):
     cfg.cleanup()
 
 
+@fixture()
+def hst_temp_cache_state(test_temp_dir):
+    cfg = ConfigState(
+        cache=str(test_temp_dir),
+        url="https://hst-crds.stsci.edu",
+        observatory="hst",
+    )
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
+
+
 @fixture(scope='function')
 def jwst_no_cache_state():
     #os.environ["CRDS_MAPPATH_SINGLE"] = test_data
