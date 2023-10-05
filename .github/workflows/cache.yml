@@ -72,4 +72,4 @@ jobs:
         with:
           path: ${{ env.CRDS_PATH }}
           key: ${{ steps.key.outputs.key }}
-      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }}
+      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} u

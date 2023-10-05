@@ -13,6 +13,7 @@ on:
     - pytest-migration #temp
 
 env:
+  CRDS_TEST_ROOT: /tmp
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
   LD_LIBRARY_PATH: /usr/local/lib
@@ -24,8 +25,6 @@ jobs:
     name: ${{ matrix.runs-on }} Python ${{ matrix.python-version }}
     needs: [ cache ]
     runs-on: ${{ matrix.runs-on }}
-    env:
-      CRDS_TEST_ROOT: /tmp
     strategy:
       fail-fast: false
       matrix:
@@ -66,4 +65,5 @@ jobs:
         with:
           path: ${{ needs.cache.outputs.path }}
           key: ${{ needs.cache.outputs.key }}
+      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} u
       - run: ./runtests --cover
