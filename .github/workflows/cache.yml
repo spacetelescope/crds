@@ -23,6 +23,10 @@ env:
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
   LD_LIBRARY_PATH: /usr/local/lib
 
+defaults:
+  run:
+    shell: bash -leo pipefail {0} {0}
+
 jobs:
   contexts:
     uses: ./.github/workflows/contexts.yml
@@ -40,6 +44,12 @@ jobs:
           environment-name: crds-testing
           create-args: >-
             python=3
+            asdf
+            astropy
+            filelock
+            numpy
+            parsley
+            requests
           init-shell: bash
           cache-environment: true
           cache-downloads: true
