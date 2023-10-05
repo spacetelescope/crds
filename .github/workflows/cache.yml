@@ -16,10 +16,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    shell: bash -leo pipefail {0} {0}
-
 env:
   CRDS_PATH: /tmp/crds-cache-default-test/
   CRDS_TEST_ROOT: /tmp
@@ -29,31 +25,7 @@ env:
 
 jobs:
   contexts:
-    name: retrieve latest CRDS contexts
-    runs-on: ubuntu-latest
-    outputs:
-      hst: ${{ steps.hst_crds_context.outputs.pmap }}
-      jwst: ${{ steps.jwst_crds_context.outputs.pmap }}
-    steps:
-      - id: hst_crds_context
-        env:
-          OBSERVATORY: hst
-          CRDS_SERVER_URL: https://hst-crds.stsci.edu
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-      - id: jwst_crds_context
-        env:
-          OBSERVATORY: jwst
-          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-      - run: echo ${{ steps.hst_crds_context.outputs.pmap }} ${{ steps.jwst_crds_context.outputs.pmap }}
+    uses: ./.github/workflows/contexts.yml
   cache:
     needs: [ contexts ]
     name: download and cache CRDS test files
@@ -73,7 +45,7 @@ jobs:
           cache-downloads: true
       - run: ./install && pip install .
       - id: key
-        run: echo "key=crds-${{ needs.data.outputs.hst }}-${{ needs.data.outputs.jwst }}" >> $GITHUB_OUTPUT
+        run: echo "key=crds-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
       - uses: actions/cache@v3
         if: always()
         with:
