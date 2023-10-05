@@ -69,18 +69,18 @@ jobs:
         with:
           environment-name: crds-testing
           create-args: >-
-            python=${{ matrix.python-version }}
-            fitsverify
+            python=3
+            asdf
+            astropy
+            filelock
+            numpy
+            parsley
+            requests
           init-shell: bash
           cache-environment: true
           cache-downloads: true
-      - name: Install Python dependencies
-        run: |
-          pip install roman-datamodels
-          pip install git+https://github.com/spacetelescope/jwst
-          pip uninstall --yes crds
-          ./install
-          pip install .[submission,test,docs,synphot]
+      - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
+      - run: pip uninstall --yes crds && ./install && pip install .[submission,test,docs,synphot]
       - uses: actions/cache@v3
         if: always()
         with:
