@@ -47,7 +47,6 @@ test = [
   "pytest-astropy",
   "pytest-doctestplus>=0.10.0",
   "pytest-cov",
-  "pytest-xdist",
   "pytest-profiling",
 ]
 docs = [

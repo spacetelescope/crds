@@ -25,13 +25,13 @@ os.environ["CRDS_DEFAULT_CACHE"] = os.environ["CRDS_PATH"]
 
 
 if "--cover-html" in sys.argv:
-    status = os.system("pytest -n auto --cov=crds --cov-report=html")
+    status = os.system("pytest --cov=crds --cov-report=html")
 elif "--cover" in sys.argv:
-    status = os.system("pytest -n auto --cov=crds --cov-report=term-missing --cov-report=xml")
+    status = os.system("pytest --cov=crds --cov-report=term-missing --cov-report=xml")
 elif "--profile" in sys.argv:
     status = os.system(f"pytest --profile --pstats-dir={topdir}/.profile-stats")
 else:
-    status = os.system("pytest -n auto")
+    status = os.system("pytest")
 
 os.system("python -m crds.list --status --log-time")
 
