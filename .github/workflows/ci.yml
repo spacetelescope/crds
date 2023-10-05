@@ -61,7 +61,6 @@ jobs:
           ./install
           pip install .[submission,test,docs,synphot]
       - uses: actions/cache@v3
-        if: always()
         with:
           path: ${{ needs.cache.outputs.path }}
           key: ${{ needs.cache.outputs.key }}

@@ -67,7 +67,7 @@ jobs:
           key: test-cache-${{ needs.contexts.outputs.jwst }}
       - id: key
         run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
-      - name: combine caches
+      - name: restore entire CRDS cache
         uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}
