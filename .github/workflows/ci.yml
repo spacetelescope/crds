@@ -56,7 +56,7 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
-          # - macos-latest # TEMP 
+          - macos-latest
         python-version:
           - 3.9
           - '3.10'
