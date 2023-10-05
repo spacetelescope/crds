@@ -11,10 +11,6 @@ on:
         value: ${{ jobs.contexts.outputs.roman }}
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   contexts:
     name: retrieve latest CRDS contexts
