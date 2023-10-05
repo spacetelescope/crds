@@ -1,4 +1,4 @@
-name: cache
+name: test cache
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CRDS_PATH: /tmp/crds-cache-default-test/
+  CRDS_PATH: /tmp/crds-cache-default-test
   CRDS_TEST_ROOT: /tmp
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
@@ -58,15 +58,15 @@ jobs:
       - name: restore cached HST files
         uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}/mappings/hst/
-          key: ${{ needs.contexts.outputs.hst }}
+          path: ${{ env.CRDS_PATH }}/**/hst*
+          key: test-cache-${{ needs.contexts.outputs.hst }}
       - name: restore cached JWST files
         uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}/mappings/jwst
-          key: ${{ needs.contexts.outputs.jwst }}
+          path: ${{ env.CRDS_PATH }}/**/jwst*
+          key: test-cache-${{ needs.contexts.outputs.jwst }}
       - id: key
-        run: echo "key=crds-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
+        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
       - name: combine caches
         uses: actions/cache@v3
         with:
