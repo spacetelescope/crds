@@ -53,11 +53,22 @@ jobs:
           init-shell: bash
           cache-environment: true
           cache-downloads: true
+      - run: pip install roman-datamodels stdatamodels
       - run: ./install && pip install .
+      - name: restore cached HST files
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/hst/
+          key: ${{ needs.contexts.outputs.hst }}
+      - name: restore cached JWST files
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/mappings/jwst
+          key: ${{ needs.contexts.outputs.jwst }}
       - id: key
         run: echo "key=crds-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        if: always()
+      - name: combine caches
+        uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}
           key: ${{ steps.key.outputs.key }}
