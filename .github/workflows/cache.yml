@@ -53,8 +53,8 @@ jobs:
           init-shell: bash
           cache-environment: true
           cache-downloads: true
-      - run: pip install roman-datamodels stdatamodels
-      - run: ./install && pip install .
+      - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
+      - run: pip uninstall --yes crds && ./install && pip install .
       - name: restore cached HST files
         uses: actions/cache@v3
         with:
