@@ -1,17 +1,16 @@
 name: cache
 
 on:
+  workflow_call:
+    outputs:
+      path:
+        value: ${{ jobs.cache.outputs.path }}
+      key:
+        value: ${{ jobs.cache.outputs.key }}
   workflow_dispatch:
   schedule:
     # Weekly Monday 9AM
     - cron: "0 9 * * 1"
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - labeled
-      - unlabeled
-      - synchronize
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -33,7 +32,6 @@ jobs:
     name: retrieve latest CRDS contexts
     runs-on: ubuntu-latest
     outputs:
-      crds_path: ${{ env.CRDS_PATH }}
       hst: ${{ steps.hst_crds_context.outputs.pmap }}
       jwst: ${{ steps.jwst_crds_context.outputs.pmap }}
     steps:
@@ -57,10 +55,12 @@ jobs:
           )" >> $GITHUB_OUTPUT
       - run: echo ${{ steps.hst_crds_context.outputs.pmap }} ${{ steps.jwst_crds_context.outputs.pmap }}
   cache:
-    if: (github.repository == 'spacetelescope/crds' && (github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'update CRDS cache')))
     needs: [ contexts ]
-    name: setup CRDS test cache
+    name: download and cache CRDS test files
     runs-on: ubuntu-latest
+    outputs:
+      path: ${{ env.CRDS_PATH }}
+      key: ${{ steps.key.outputs.key }}
     steps:
       - uses: actions/checkout@v3
       - uses: mamba-org/setup-micromamba@v1
@@ -71,12 +71,12 @@ jobs:
           init-shell: bash
           cache-environment: true
           cache-downloads: true
-      - run: |
-          ./install
-          pip install .[submission,test,docs,synphot]
+      - run: ./install && pip install .
+      - id: key
+        run: echo "key=crds-${{ needs.data.outputs.hst }}-${{ needs.data.outputs.jwst }}" >> $GITHUB_OUTPUT
       - uses: actions/cache@v3
         if: always()
         with:
           path: ${{ env.CRDS_PATH }}
-          key: crds-${{ needs.data.outputs.hst }}-${{ needs.data.outputs.jwst }}
+          key: ${{ steps.key.outputs.key }}
       - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }}
