@@ -60,9 +60,10 @@ jobs:
           pip uninstall --yes crds
           ./install
           pip install .[submission,test,docs,synphot]
-      - uses: actions/cache@v3
+      - id: cache
+        uses: actions/cache@v3
         with:
           path: ${{ needs.cache.outputs.path }}
           key: ${{ needs.cache.outputs.key }}
-      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} u
+      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ steps.cache.outputs.cache-hit == 'true' && 'u' || 'c' }}
       - run: ./runtests --cover
