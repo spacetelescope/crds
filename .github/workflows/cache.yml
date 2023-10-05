@@ -55,12 +55,14 @@ jobs:
           cache-downloads: true
       - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
       - run: pip uninstall --yes crds && ./install && pip install .
-      - name: restore cached HST files
+      - id: cache_hst
+        name: restore cached HST files
         uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/**/hst*
           key: test-cache-${{ needs.contexts.outputs.hst }}
-      - name: restore cached JWST files
+      - id: cache_jwst
+        name: restore cached JWST files
         uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/**/jwst*
@@ -73,4 +75,4 @@ jobs:
         with:
           path: ${{ env.CRDS_PATH }}
           key: ${{ steps.key.outputs.key }}
-      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ steps.cache.outputs.cache-hit == 'true' && 'u' || 'c' }}
+      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.cache.outputs.cache-hit == 'true' || steps.cache_hst.outputs.cache-hit == 'true' || steps.cache_jwst.outputs.cache-hit == 'true') && 'u' || 'c' }}
