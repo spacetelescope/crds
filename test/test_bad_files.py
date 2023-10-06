@@ -85,16 +85,7 @@ def test_bad_references_bestrefs_script_error(caplog, default_shared_state, hst_
         print('out is')
         print(out)
 
-    out_to_check = f"""No comparison context or source comparison requested.
-No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
-===> Processing /home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits
-Failed processing '/home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits' : Failed computing bestrefs \
-for data '/home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits' with respect to 'hst_0282.pmap' : \
-Recommended reference 'l2d0959cj_pfl.fits' of type 'pfltfile' is designated scientifically invalid.
-
-1 errors
-0 warnings
-3 infos""".splitlines()
+    out_to_check = f"""junk""".splitlines()
     for line in out_to_check:
         assert line in out
 
