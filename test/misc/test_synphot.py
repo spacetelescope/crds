@@ -110,9 +110,9 @@ def test_synphot_naming_tmttab(default_shared_state, hst_data):
 
 # TMC   reference
 @mark.synphot
-def test_synphot_certify_refs_tmc(default_shared_state, hst_data, caplog):
+def test_synphot_certify_refs_tmc(hst_shared_cache_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
-        CertifyScript(f"crds.certify  --run-fitsverify {hst_data}/43h1909cm_tmc.fits --comparison-context hst_0772.pmap")()
+        CertifyScript(f"crds.certify --run-fitsverify {hst_data}/43h1909cm_tmc.fits --comparison-context hst_0772.pmap")()
         out1 = caplog.text
     expected1 = f"""Certifying '{hst_data}/43h1909cm_tmc.fits' (1/1) as 'FITS' relative to context 'hst_0772.pmap'
     FITS file '43h1909cm_tmc.fits' conforms to FITS standards.
@@ -158,7 +158,7 @@ def test_synphot_certify_refs_tmc(default_shared_state, hst_data, caplog):
 
     caplog.clear()
     with caplog.at_level(logging.INFO, logger="CRDS"):
-        CertifyScript(f"crds.certify  --run-fitsverify {hst_data}/2381905mm_tmg.fits --comparison-context hst_0691.pmap")()
+        CertifyScript(f"crds.certify --run-fitsverify {hst_data}/2381905mm_tmg.fits --comparison-context hst_0691.pmap")()
         out2 = caplog.text
 
     expected2 = f"""Certifying '{hst_data}/2381905mm_tmg.fits' (1/1) as 'FITS' relative to context 'hst_0691.pmap'
@@ -205,7 +205,7 @@ def test_synphot_certify_refs_tmc(default_shared_state, hst_data, caplog):
 
 
 @mark.synphot
-def test_synphot_certify_refs_tmt(default_shared_state, hst_data, caplog):
+def test_synphot_certify_refs_tmt(hst_shared_cache_state, hst_data, caplog):
     # TMT   reference
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(f"crds.certify  --run-fitsverify {hst_data}/tae17277m_tmt.fits --comparison-context hst_0691.pmap")()
@@ -259,7 +259,7 @@ def test_synphot_certify_refs_tmt(default_shared_state, hst_data, caplog):
 
 
 @mark.synphot
-def test_synphot_certify_refs_thermal(default_shared_state, hst_data, caplog):
+def test_synphot_certify_refs_thermal(hst_shared_cache_state, hst_data, caplog):
     #THERMAL reference
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(f"crds.certify  --run-fitsverify {hst_data}/wfc3_ir_f098m_002_th.fits --comparison-context hst_0691.pmap")()
@@ -306,7 +306,7 @@ def test_synphot_certify_refs_thermal(default_shared_state, hst_data, caplog):
 
 
 @mark.synphot
-def test_synphot_certify_refs_thruput(default_shared_state, hst_data, caplog):
+def test_synphot_certify_refs_thruput(hst_shared_cache_state, hst_data, caplog):
     # THRUPUT reference
     caplog.clear()
     with caplog.at_level(logging.INFO, logger="CRDS"):
