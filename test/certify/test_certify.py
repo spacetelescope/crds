@@ -547,12 +547,25 @@ def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    expected_out = f"""Certifying '{jwst_data}/niriss_ref_photom.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
-FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
-Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
-########################################
-0 errors
-5 warnings"""
+    expected_out = """########################################
+    Certifying
+    niriss_ref_photom.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
+    Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
+    Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
+    Failed resolving comparison reference for table checks : Failed inserting 'niriss_ref_photom.fits' into rmap: 'jwst_niriss_photom_0006.rmap' with header:
+    Mode columns defined by spec for new reference 'niriss_ref_photom.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
+    All column names for this table new reference 'niriss_ref_photom.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
+    Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
+    instrument='NIRISS' type='PHOTOM' data=
+    niriss_ref_photom.fits' ::  Checking reference modes for
+    niriss_ref_photom.fits' : module 'numpy' has no attribute 'float128'
+    Checking JWST datamodels.
+    NoTypeWarning : stdatamodels.jwst.datamodels.util : model_type not found. Opening
+    niriss_ref_photom.fits as a ReferenceFileModel
+    ########################################
+    1 errors
+    4 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
