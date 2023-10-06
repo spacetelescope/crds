@@ -1215,22 +1215,19 @@ def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
         CertifyScript(argv)()
         out = caplog.text
         
-    expected_out = f"""Certifying '{hst_data}/acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
-FITS file 'acs_new_idc.fits' conforms to FITS standards.
-Comparing reference 'acs_new_idc.fits' against 'p7d1548qj_idc.fits'
-Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
-Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', 207.082), ('V3REF', 471.476)) :
-    (29, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
-    (35, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
-Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
-Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
-Change in row format between 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
-########################################
-0 errors
-2 warnings"""
+    expected_out = """Certifying
+    acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    FITS file 'acs_new_idc.fits' conforms to FITS standards.
+    Comparing reference 'acs_new_idc.fits' against 'p7d1548qj_idc.fits'
+    Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
+    Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    instrument='ACS' type='IDCTAB' data=
+    acs_new_idc.fits' ::  Checking tables modes in segment 0 of
+    acs_new_idc.fits' : module 'numpy' has no attribute 'float128'
+    ########################################
+    1 errors
+    0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
