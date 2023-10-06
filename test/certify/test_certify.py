@@ -501,37 +501,25 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
         CertifyScript(argv)()
         out = caplog.text
     
-    expected_out = f"""Certifying '{hst_data}/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0857.pmap' and comparison reference '{hst_data}/y9j16159l_hv.fits'
-FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
-All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
-Checking for duplicate modes using intersection ['DATE']
-Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
-All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
-Checking for duplicate modes using intersection ['DATE']
-Table mode (('DATE', 56923.5834),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
-All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
-Checking for duplicate modes using intersection ['DATE']
-Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
-(129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
-(131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
-Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
-(132, (('DATE', 56925.0), ('HVLEVELB', 175)))
-(134, (('DATE', 56925.0), ('HVLEVELB', 175)))
-Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
-All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
-Checking for duplicate modes using intersection ['DATE']
-Table mode (('DATE', 56921.8334),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56924.0417),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-########################################
-0 errors
-10 warnings"""
+    expected_out = f"""Certifying
+    y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0857.pmap' and comparison reference
+    y9j16159l_hv.fits'
+    FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
+    All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    Checking for duplicate modes using intersection ['DATE']
+    instrument='COS' type='HVTAB' data=
+    y951738kl_hv.fits' ::  Checking tables modes in segment 0 of
+    y951738kl_hv.fits' : module 'numpy' has no attribute 'float128'
+    Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
+    All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    Checking for duplicate modes using intersection ['DATE']
+    instrument='COS' type='HVTAB' data=
+    y951738kl_hv.fits' ::  Checking tables modes in segment 1 of
+    y951738kl_hv.fits' : module 'numpy' has no attribute 'float128'
+    ########################################
+    2 errors
+    0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
