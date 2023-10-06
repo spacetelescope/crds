@@ -42,7 +42,7 @@ def test_bad_references_error_cache_config(default_shared_state):
     try:
         crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'])
     except exceptions.CrdsBadReferenceError as cbre:
-        
+
         assert out_to_check in cbre.args[0]
 
 
@@ -56,7 +56,7 @@ def test_bad_References_warning_Cache_config(capsys, default_shared_state):
     _, err = capsys.readouterr()
     out_to_check = """Recommended reference 'l2d0959cj_pfl.fits' of type 'pfltfile' is designated scientifically \
 invalid."""
-    
+
     assert out_to_check in err
 
 
@@ -69,7 +69,7 @@ def test_bad_references_fast_mode(default_shared_state):
     val = crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'], fast=True)
     val_to_check = {}
     val_to_check['pfltfile'] = f'{cache}/references/hst/l2d0959cj_pfl.fits'
-    
+
     assert val == val_to_check
 
 
@@ -84,7 +84,7 @@ def test_bad_references_bestrefs_script_error(caplog, default_shared_state, hst_
         out = caplog.text
         print('out is')
         print(out)
-    
+
     out_to_check = f"""No comparison context or source comparison requested.
 No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
 ===> Processing /home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits
@@ -109,7 +109,7 @@ def test_bad_references_bestrefs_script_warning(caplog, default_shared_state, hs
         out = caplog.text
         print('out is')
         print(out)
-    
+
     out_to_check = f"""No comparison context or source comparison requested.
 No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
  ===> Processing /home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits
@@ -133,7 +133,7 @@ invalid based on: ['jwst_miri_flat_0003.rmap']"""
     try:
         crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
     except exceptions.CrdsBadRulesError as cbre:
-        
+
         assert out_to_check in cbre.args[0]
 
 
@@ -141,7 +141,7 @@ invalid based on: ['jwst_miri_flat_0003.rmap']"""
 def test_bad_rules_jwst_getreferences_warning(jwst_serverless_state):
     config.ALLOW_BAD_RULES.set("1")
     refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
-    
+
     assert list(refs.keys()) == ['flat']
     assert os.path.basename(refs['flat']) == 'jwst_miri_flat_0006.fits'
 
@@ -154,11 +154,5 @@ on: ['jwst_miri_flat_0003.rmap']"""
     try:
         crds.getrecommendations(JWST_HEADER, reftypes=["gain"], context="jwst_0017.pmap")
     except exceptions.CrdsBadRulesError as cbre:
-        
+
         assert out_to_check in cbre.args[0]
-
-
-
-
-
-
