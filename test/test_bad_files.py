@@ -76,6 +76,14 @@ def test_bad_references_fast_mode(default_shared_state):
 
 @mark.bad_files
 def test_bad_references_bestrefs_script_error(caplog, default_shared_state, hst_data):
+    """Test for error messages from the script
+
+    Notes
+    -----
+    The `config` object cannot be used for the script test. The script depends totally
+    on the option `--allow-bad-references`. The absence of this option means do not allow
+    and produce an error.
+    """
     args = f"crds.bestrefs --new-context hst_0282.pmap --files {hst_data}/j8btxxx_raw_bad.fits"
     old_verbosity = log.set_verbose(0)  # Take down the verbosity. Anything higher produces different error messages.
     try:
