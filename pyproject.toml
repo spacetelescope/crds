@@ -177,6 +177,7 @@ markers = [
   "rowdiff",
   "substitutions",
   "sync",
+  "synphot",
   "tables",
   "table_effects",
   "uniqname",
