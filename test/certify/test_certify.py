@@ -717,12 +717,22 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = [
-        f"Certifying '{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'",
-        f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"
-    ]
+    expected_out = """Certifying
+    roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
+    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
+    AsdfWarning : asdf.asdf : File
+    roman_wfi16_f158_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0' (from package roman-datamodels==0.1.dev33+ge97899e), which is not currently installed
+    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
+    AsdfWarning : asdf.asdf : File
+    roman_wfi16_f158_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0' (from package roman-datamodels==0.1.dev33+ge97899e), which is not currently installed
+    In 'roman_wfi16_f158_flat_invalid_schema.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = "This ain't no valid time"
+    In 'roman_wfi16_f158_flat_invalid_schema.asdf' : Checking 'ROMAN.META.USEAFTER' : Invalid 'Jwstdate' format "This ain't no valid time" should be '2018-12-22T00:00:00'
+    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
+    AsdfWarning : asdf.asdf : File
+    roman_wfi16_f158_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0' (from package roman-datamodels==0.1.dev33+ge97899e), which is not currently installed
+""".splitlines()
     for msg in expected_out:
-        assert msg in out
+        assert msg.strip() in out
 
 
 @mark.certify
