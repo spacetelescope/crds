@@ -781,8 +781,19 @@ def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_da
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")        
         out = caplog.text
-    expected_out =f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"""
+    expected_out = """Certifying
+    roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
+    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
+    AsdfWarning : asdf.asdf : File
+    roman_wfi16_grism_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0' (from package roman-datamodels==0.1.dev33+ge97899e), which is not currently installed
+    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
+    AsdfWarning : asdf.asdf : File
+    roman_wfi16_grism_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0' (from package roman-datamodels==0.1.dev33+ge97899e), which is not currently installed
+    In 'roman_wfi16_grism_flat_invalid_schema.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = 'yesterday'
+    In 'roman_wfi16_grism_flat_invalid_schema.asdf' : Checking 'ROMAN.META.USEAFTER' : Invalid 'Jwstdate' format 'yesterday' should be '2018-12-22T00:00:00'
+    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
+    AsdfWarning : asdf.asdf : File
+    roman_wfi16_grism_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0' (from package roman-datamodels==0.1.dev33+ge97899e), which is not currently installed"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -796,7 +807,7 @@ def test_certify_roman_invalid_spec_asdf_tpn(roman_test_cache_state, roman_data,
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
+        expected_out = f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = 'yesterday'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.USEAFTER [USEAFTER]' : Invalid 'Jwstdate' format 'yesterday' should be '2018-12-22T00:00:00'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking ASDF tag validity for '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' : 'dict' object has no attribute '_tag'"""
@@ -809,7 +820,7 @@ def test_certify_AsdfCertify_valid_with_astropy_time(jwst_serverless_state, jwst
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid_with_astropy_time.asdf", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{jwst_data}/valid_with_astropy_time.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels."""
@@ -822,7 +833,7 @@ def test_certify_FitsCertify_opaque_name(hst_serverless_state, hst_data, caplog)
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{hst_data}/opaque_fts.tmp", "hst.pmap", observatory="hst")
         out = caplog.text
-    
+        
     expected_out = f"Certifying '{hst_data}/opaque_fts.tmp' as 'FITS' relative to context 'hst.pmap'"
     assert expected_out in out
 
@@ -834,7 +845,7 @@ def test_certify_AsdfCertify_opaque_name(jwst_serverless_state, jwst_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/opaque_asd.tmp", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{jwst_data}/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels.
@@ -848,7 +859,7 @@ def test_certify_rmap_compare(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file("jwst_miri_distortion_0025.rmap", "jwst_0357.pmap")        
         out = caplog.text
-    
+        
     expected_out = "Certifying 'jwst_miri_distortion_0025.rmap' as 'MAPPING' relative to context 'jwst_0357.pmap'"
     for msg in expected_out.splitlines():
         assert msg.strip() in out
@@ -860,8 +871,8 @@ def test_certify_roman_rmap_compare(roman_test_cache_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file("roman_wfi_flat_0004.rmap", "roman_0004.pmap")
         out = caplog.text
-    expected_out = """Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'"""
-    assert expected_out in out
+        expected_out = """Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'"""
+        assert expected_out in out
 
 
 @mark.certify
@@ -869,7 +880,7 @@ def test_certify_jwst_bad_fits(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/niriss_ref_photom_bad.fits", "jwst_0541.pmap", observatory="jwst")
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{jwst_data}/niriss_ref_photom_bad.fits' as 'FITS' relative to context 'jwst_0541.pmap'
 FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
 In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
@@ -890,7 +901,7 @@ def test_certify_duplicate_rmap_case_error(hst_serverless_state, hst_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{hst_data}/hst_cos_tdstab_duplicate.rmap", "hst.pmap", observatory="hst")
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{hst_data}/hst_cos_tdstab_duplicate.rmap' as 'MAPPING' relative to context 'hst.pmap'
 Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter
 Checksum error : sha1sum mismatch in 'hst_cos_tdstab_duplicate.rmap'"""
@@ -905,7 +916,7 @@ def test_certify_roman_duplicate_rmap_case_error(roman_test_cache_state, roman_d
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_flat_0004_duplicate.rmap", "roman_0003.pmap")
         out = caplog.text
-    expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
+        expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
 Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter
 Checksum error : sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'
 {roman_data}/roman_wfi_flat_0004_duplicate.rmap Validation error : Failed to determine 'roman' instrument or reftype for '{roman_data}/roman_wfi_flat_0004_duplicate.rmap' : 'sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'"""
@@ -921,7 +932,7 @@ def test_checksum_duplicate_rmap_case_error(hst_serverless_state, hst_data, capl
         from crds.refactoring import checksum
         checksum.add_checksum(f"{hst_data}/hst_cos_tdstab_duplicate.rmap")
         out = caplog.text
-    
+        
     expected_out = f"""Adding checksum for '{hst_data}/hst_cos_tdstab_duplicate.rmap'
 Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter"""
     for msg in expected_out.splitlines():
@@ -936,7 +947,7 @@ def test_checksum_roman_duplicate_rmap_case_error(roman_serverless_state, roman_
         from crds.refactoring import checksum
         checksum.add_checksum(f"{roman_data}/roman_wfi_flat_0004_duplicate.rmap")
         out = caplog.text
-    expected_out = f"""Adding checksum for '{roman_data}/roman_wfi_flat_0004_duplicate.rmap'
+        expected_out = f"""Adding checksum for '{roman_data}/roman_wfi_flat_0004_duplicate.rmap'
 Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
@@ -949,7 +960,7 @@ def test_certify_roman_invalid_rmap_tpn(roman_test_cache_state, roman_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_flat_0004_badtpn.rmap", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
+        expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
 Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]') : ('WFI21', 'F158') :  parameter='ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]' value='WFI21' is not in ('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', '*', 'N/A')
 Mapping 'roman_wfi_flat_0004_badtpn.rmap' corresponds to 'roman_wfi_flat_0001.rmap' from context 'roman_0003.pmap' for checking mapping differences.
 Checking diffs from 'roman_wfi_flat_0001.rmap' to 'roman_wfi_flat_0004_badtpn.rmap'
@@ -1201,7 +1212,7 @@ def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{hst_data}/acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
 FITS file 'acs_new_idc.fits' conforms to FITS standards.
 Comparing reference 'acs_new_idc.fits' against 'p7d1548qj_idc.fits'
@@ -1241,7 +1252,7 @@ def test_certify_check_rmap_updates(hst_serverless_state, hst_data, caplog):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+        
     expected1 = f"Command: ['crds.certify', '{hst_data}/s7g1700gl_dead_overlap.fits', '{hst_data}/s7g1700gl_dead_dup1.fits', '{hst_data}/s7g1700gl_dead_dup2.fits', '--check-rmap-updates', '--comparison-context', 'hst_0508.pmap', '--verbose']"
     assert expected1 in out
     expected2 = f"Certifying '{hst_data}/s7g1700gl_dead_dup1.fits' (1/3) as 'FITS' relative to context 'hst_0508.pmap'"
@@ -1435,7 +1446,7 @@ def test_asdf_standard_requirement_fail(jwst_serverless_state, jwst_data, caplog
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{jwst_data}/jwst_nircam_specwcs_1_5_0.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 ASDF Standard version 1.5.0 does not fulfill context requirement of asdf_standard<1.5
 Checking JWST datamodels.
@@ -1452,7 +1463,7 @@ def test_asdf_standard_requirement_succeed(jwst_serverless_state, jwst_data, cap
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{jwst_data}/jwst_nircam_specwcs_1_4_0.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 Checking JWST datamodels.
 ########################################
@@ -1468,7 +1479,7 @@ def test_asdf_library_version_fail(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 Setting 'META.EXPOSURE.TYPE [EXP_TYPE]' = None to value of 'META.EXPOSURE.P_EXPTYPE [P_EXPTYP]' = 'FGS_IMAGE|FGS_FOCUS|FGS_INTFLAT|FGS_SKYFLAT|'
 File written with dev version of asdf library: 2.0.0.dev1213
@@ -1478,7 +1489,7 @@ Checking JWST datamodels.
 1 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    
+        
 
 @mark.certify
 def test_fits_asdf_extension_fail(jwst_serverless_state, jwst_data, caplog):
@@ -1486,7 +1497,7 @@ def test_fits_asdf_extension_fail(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+        
     expected_out = f"""Certifying '{jwst_data}/jwst_nirspec_ipc_with_asdf_extension.fits' (1/1) as 'FITS' relative to context 'jwst_0591.pmap'
 instrument='NIRSPEC' type='IPC' data='{jwst_data}/jwst_nirspec_ipc_with_asdf_extension.fits' ::  FITS files must not include an ASDF extension
 FITS file 'jwst_nirspec_ipc_with_asdf_extension.fits' conforms to FITS standards.
@@ -1532,7 +1543,7 @@ def test_character_validator_bad():
     assert isinstance(cval, validators.core.CharacterValidator)
     header = {"DETECTOR" : "WFD" }
     try:
-         cval.check("foo.fits", header)
+        cval.check("foo.fits", header)
     except ValueError:
         assert True
 
@@ -1688,7 +1699,7 @@ def test_integer_validator_range_format_bad():
         cval.check("foo.fits", header)
     except ValueError:
         assert True
-    info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("x:40",))
+        info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("x:40",))
     try:
         validators.validator(info)
     except ValueError:
@@ -1768,7 +1779,7 @@ def test_real_validator_range_format_bad():
         cval.check("foo.fits", header)
     except ValueError:
         assert True
-    info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
+        info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
     try:
         validators.validator(info)
     except ValueError:
@@ -1899,7 +1910,7 @@ def test_double_validator_range_format_bad():
         cval.check("foo.fits", header)
     except ValueError:
         assert True
-    info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
+        info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
     try:    
         validators.validator(info)
     except ValueError:
@@ -1947,7 +1958,7 @@ def test_expression_validator_fails():
         cval.check("foo.fits", header)
     except validators.core.RequiredConditionError:
         assert True
-    
+        
 
 @mark.certify
 def test_expression_validator_bad_format():
@@ -2253,7 +2264,7 @@ def test_tpn_handle_missing_conditional():
         checker.handle_missing(header={"READPATT":"FOO"})
     except exceptions.MissingKeywordError:
         assert True
-    assert checker.handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED"
+        assert checker.handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED"
 
 
 @mark.certify
@@ -2275,7 +2286,7 @@ def test_tpn_excluded_keyword():
         checker.check(f"test.fits", {"DETECTOR":"SHOULDNT_DEFINE"})
     except exceptions.IllegalKeywordError:
         assert True
-    
+        
 
 @mark.certify
 def test_tpn_not_value():
