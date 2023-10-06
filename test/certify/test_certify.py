@@ -85,46 +85,40 @@ def test_certify_good_checksum(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
-    expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
- FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
- Running fitsverify.
- >>
- >>               fitsverify 4.20 (CFITSIO V3.490)
- >>               --------------------------------
- >>
- >>
- >> File: {hst_data}/s7g1700gl_dead_good_xsum.fits
- >>
- >> 2 Header-Data Units in this file.
- >>
- >> =================== HDU 1: Primary Array ===================
- >>
- >>  23 header keywords
- >>
- >>  Null data array; NAXIS = 0
- >>
- >> =================== HDU 2: BINARY Table ====================
- >>
- >>  31 header keywords
- >>
- >>    (3 columns x 10 rows)
- >>
- >>  Col# Name (Units)       Format
- >>    1 SEGMENT              4A
- >>    2 OBS_RATE (count /s / D
- >>    3 LIVETIME             D
- >>
- >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
- >>
- >>  HDU#  Name (version)       Type             Warnings  Errors
- >>  1                          Primary Array    0         0
- >>  2                          Binary Table     0         0
- >>
- >> **** Verification found 0 warning(s) and 0 error(s). ****
- ########################################
- 0 errors
- 0 warnings"""
+
+    expected_out = """Certifying
+    s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
+    Running fitsverify.
+    >> 2 Header-Data Units in this file.
+    >>
+    >> =================== HDU 1: Primary Array ===================
+    >>
+    >>  23 header keywords
+    >>
+    >>  Null data array; NAXIS = 0
+    >>
+    >> =================== HDU 2: BINARY Table ====================
+    >>
+    >>  31 header keywords
+    >>
+    >>    (3 columns x 10 rows)
+    >>
+    >>  Col# Name (Units)       Format
+    >>    1 SEGMENT              4A
+    >>    2 OBS_RATE (count /s / D
+    >>    3 LIVETIME             D
+    >>
+    >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    >>
+    >>  HDU#  Name (version)       Type             Warnings  Errors
+    >>  1                          Primary Array    0         0
+    >>  2                          Binary Table     0         0
+    >>
+    >> **** Verification found 0 warning(s) and 0 error(s). ****
+    ########################################
+    0 errors
+    0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
