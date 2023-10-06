@@ -76,7 +76,7 @@ def test_bad_references_fast_mode(default_shared_state):
 
 @mark.bad_files
 def test_bad_references_bestrefs_script_error(caplog, default_shared_state, hst_data):
-    """Test for error messages from the script
+    """Test for error messages from the script for bad references
 
     Notes
     -----
@@ -108,27 +108,34 @@ def test_bad_references_bestrefs_script_error(caplog, default_shared_state, hst_
 
 @mark.bad_files
 def test_bad_references_bestrefs_script_warning(caplog, default_shared_state, hst_data):
-    config.ALLOW_BAD_RULES.set("1")
-    config.ALLOW_BAD_REFERENCES.set("1")
-    args = f"crds.bestrefs --new-context hst_0282.pmap --files {hst_data}/j8btxxx_raw_bad.fits"
-    with caplog.at_level(logging.INFO, logger="CRDS"):
+    """Test for warning messages from the script for bad references
+
+    Notes
+    -----
+    The `config` object cannot be used for the script test. The script depends totally
+    on the option `--allow-bad-references`. The presence of this option means allow
+    and produce a warning.
+    """
+    args = f"crds.bestrefs --new-context hst_0282.pmap --files {hst_data}/j8btxxx_raw_bad.fits --allow-bad-references"
+    old_verbosity = log.set_verbose(0)  # Take down the verbosity. Anything higher produces different error messages.
+    try:
         BestrefsScript(args)()
         out = caplog.text
         print('out is')
         print(out)
+    finally:
+        log.set_verbose(old_verbosity)
 
     out_to_check = f"""No comparison context or source comparison requested.
-No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
- ===> Processing /home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits
-Failed processing '/home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits' : Failed computing bestrefs for \
-data '/home/runner/work/crds/crds/test/data/hst/j8btxxx_raw_bad.fits' with respect to 'hst_0282.pmap' : Recommended \
-reference 'l2d0959cj_pfl.fits' of type 'pfltfile' is designated scientifically invalid.
-
-1 errors
-0 warnings
-3 infos""".splitlines()
+    No file header updates requested;  dry run.  Use --update-bestrefs to update FITS headers.
+    ===> Processing
+    j8btxxx_raw_bad.fits
+    For
+    j8btxxx_raw_bad.fits ACS pfltfile File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
+    0 errors
+    1 warnings""".splitlines()
     for line in out_to_check:
-        assert line in out
+        assert line.strip() in out
 
 
 @mark.bad_files
