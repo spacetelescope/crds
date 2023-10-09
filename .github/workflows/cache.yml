@@ -43,7 +43,7 @@ jobs:
         with:
           environment-name: crds-testing
           create-args: >-
-            python=3
+            python=3.11
             asdf
             astropy
             filelock
