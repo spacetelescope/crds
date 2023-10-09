@@ -82,4 +82,5 @@ jobs:
         with:
           path: ${{ env.CRDS_PATH }}
           key: ${{ steps.key.outputs.key }}
-      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.cache.outputs.cache-hit == 'true' || steps.cache_hst.outputs.cache-hit == 'true' || steps.cache_jwst.outputs.cache-hit == 'true' || steps.cache_roman.outputs.cache-hit == 'true') && 'u' || 'c' }}
+      - if: steps.cache.outputs.cache-hit == 'false'
+        run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.cache_hst.outputs.cache-hit == 'true' || steps.cache_jwst.outputs.cache-hit == 'true' || steps.cache_roman.outputs.cache-hit == 'true') && 'u' || 'c' }}
