@@ -73,6 +73,7 @@ jobs:
             asdf
             astropy
             filelock
+            fitsverify
             numpy
             parsley
             requests
