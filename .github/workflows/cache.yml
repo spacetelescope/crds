@@ -67,12 +67,18 @@ jobs:
         with:
           path: ${{ env.CRDS_PATH }}/**/jwst*
           key: test-cache-${{ needs.contexts.outputs.jwst }}
+      - id: cache_roman
+        name: restore cached Roman files
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/**/roman*
+          key: test-cache-${{ needs.contexts.outputs.roman }}
       - id: key
-        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
+        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.roman }}" >> $GITHUB_OUTPUT
       - id: cache
         name: restore entire CRDS cache
         uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}
           key: ${{ steps.key.outputs.key }}
-      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.cache.outputs.cache-hit == 'true' || steps.cache_hst.outputs.cache-hit == 'true' || steps.cache_jwst.outputs.cache-hit == 'true') && 'u' || 'c' }}
+      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.cache.outputs.cache-hit == 'true' || steps.cache_hst.outputs.cache-hit == 'true' || steps.cache_jwst.outputs.cache-hit == 'true' || steps.cache_roman.outputs.cache-hit == 'true') && 'u' || 'c' }}
