@@ -75,7 +75,7 @@ jobs:
           path: ${{ env.CRDS_PATH }}/**/roman*
           key: test-cache-${{ needs.contexts.outputs.roman }}
       - id: key
-        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.roman }}" >> $GITHUB_OUTPUT
+        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}-${{ needs.contexts.outputs.roman }}" >> $GITHUB_OUTPUT
       - id: cache
         name: restore entire CRDS cache
         uses: actions/cache@v3
