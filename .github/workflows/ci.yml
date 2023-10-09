@@ -65,5 +65,4 @@ jobs:
         with:
           path: ${{ needs.cache.outputs.path }}
           key: ${{ needs.cache.outputs.key }}
-      - run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ steps.cache.outputs.cache-hit == 'true' && 'u' || 'c' }}
       - run: ./runtests --cover
