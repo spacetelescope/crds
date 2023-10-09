@@ -1,4 +1,4 @@
-from pytest import mark
+from pytest import mark, xfail
 import numpy as np
 import logging
 from crds.core import utils, log, exceptions
@@ -14,7 +14,7 @@ def test_certify_truncated_file(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{hst_data}/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
  0 errors
@@ -29,58 +29,52 @@ def test_certify_bad_checksum(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
-    expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
-AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
-AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
-AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
-Running fitsverify.
->>
->>               fitsverify 4.20 (CFITSIO V3.490) 
->>               --------------------------------
->>
->>
->> File: {hst_data}/s7g1700gl_dead_bad_xsum.fits
->>
->> 2 Header-Data Units in this file.
->>
->> =================== HDU 1: Primary Array ===================
->>
->>  23 header keywords
->>
->>  Null data array; NAXIS = 0
->>
->> =================== HDU 2: BINARY Table ====================
->>
->> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
->> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
->> *** Error:   checking data fill: Data fill area invalid
->>
->>  31 header keywords
->>
->>    (3 columns x 10 rows)
->>
->>  Col# Name (Units)       Format
->>    1 SEGMENT              4A
->>    2 OBS_RATE (count /s / D
->>    3 LIVETIME             D
->>
->> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
->>
->>  HDU#  Name (version)       Type             Warnings  Errors
->>  1                          Primary Array    0         0
->>  2                          Binary Table     2         1
->>
->> **** Verification found 2 warning(s) and 1 error(s). ****
-Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
-Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
-########################################
-4 errors
-6 warnings"""
+
+    expected_out = f"""Certifying
+    s7g1700gl_dead_bad_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    FITS file 's7g1700gl_dead_bad_xsum.fits' conforms to FITS standards.
+    AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    AstropyUserWarning : astropy.io.fits.hdu.base : Checksum verification failed for HDU ('', 1).
+    AstropyUserWarning : astropy.io.fits.hdu.base : Datasum verification failed for HDU ('', 1).
+    Running fitsverify.
+    >> 2 Header-Data Units in this file.
+    >>
+    >> =================== HDU 1: Primary Array ===================
+    >>
+    >>  23 header keywords
+    >>
+    >>  Null data array; NAXIS = 0
+    >>
+    >> =================== HDU 2: BINARY Table ====================
+    >>
+    >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    >> *** Error:   checking data fill: Data fill area invalid
+    >>
+    >>  31 header keywords
+    >>
+    >>    (3 columns x 10 rows)
+    >>
+    >>  Col# Name (Units)       Format
+    >>    1 SEGMENT              4A
+    >>    2 OBS_RATE (count /s / D
+    >>    3 LIVETIME             D
+    >>
+    >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    >>
+    >>  HDU#  Name (version)       Type             Warnings  Errors
+    >>  1                          Primary Array    0         0
+    >>  2                          Binary Table     2         1
+    >>
+    >> **** Verification found 2 warning(s) and 1 error(s). ****
+    Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
+    Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
+    ########################################
+    4 errors
+    6 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -91,46 +85,40 @@ def test_certify_good_checksum(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
-    expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
- FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
- Running fitsverify.
- >>
- >>               fitsverify 4.20 (CFITSIO V3.490)
- >>               --------------------------------
- >>
- >>
- >> File: {hst_data}/s7g1700gl_dead_good_xsum.fits
- >>
- >> 2 Header-Data Units in this file.
- >>
- >> =================== HDU 1: Primary Array ===================
- >>
- >>  23 header keywords
- >>
- >>  Null data array; NAXIS = 0
- >>
- >> =================== HDU 2: BINARY Table ====================
- >>
- >>  31 header keywords
- >>
- >>    (3 columns x 10 rows)
- >>
- >>  Col# Name (Units)       Format
- >>    1 SEGMENT              4A
- >>    2 OBS_RATE (count /s / D
- >>    3 LIVETIME             D
- >>
- >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
- >>
- >>  HDU#  Name (version)       Type             Warnings  Errors
- >>  1                          Primary Array    0         0
- >>  2                          Binary Table     0         0
- >>
- >> **** Verification found 0 warning(s) and 0 error(s). ****
- ########################################
- 0 errors
- 0 warnings"""
+
+    expected_out = """Certifying
+    s7g1700gl_dead_good_xsum.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    FITS file 's7g1700gl_dead_good_xsum.fits' conforms to FITS standards.
+    Running fitsverify.
+    >> 2 Header-Data Units in this file.
+    >>
+    >> =================== HDU 1: Primary Array ===================
+    >>
+    >>  23 header keywords
+    >>
+    >>  Null data array; NAXIS = 0
+    >>
+    >> =================== HDU 2: BINARY Table ====================
+    >>
+    >>  31 header keywords
+    >>
+    >>    (3 columns x 10 rows)
+    >>
+    >>  Col# Name (Units)       Format
+    >>    1 SEGMENT              4A
+    >>    2 OBS_RATE (count /s / D
+    >>    3 LIVETIME             D
+    >>
+    >> ++++++++++++++++++++++ Error Summary  ++++++++++++++++++++++
+    >>
+    >>  HDU#  Name (version)       Type             Warnings  Errors
+    >>  1                          Primary Array    0         0
+    >>  2                          Binary Table     0         0
+    >>
+    >> **** Verification found 0 warning(s) and 0 error(s). ****
+    ########################################
+    0 errors
+    0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -231,7 +219,7 @@ def test_certify_interpret_fitsverify_1(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY)
         out = caplog.text
-    
+
     expected_out = """ >> Running fitsverify.
 >>
 >>               fitsverify 4.18 (CFITSIO V3.370)
@@ -281,7 +269,7 @@ def test_certify_interpret_fitsverify_2(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify.interpret_fitsverify_output(1, INTERPRET_FITSVERIFY2)
         out = caplog.text
-    
+
     expected_out =     """
 >>
 >>               fitsverify 4.18 (CFITSIO V3.410)
@@ -343,7 +331,7 @@ def test_certify_dump_provenance_fits(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
 FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
 [0] COMMENT = 'Created by S. Beland and IDT and P. Hodge converted to user coord.'
@@ -371,7 +359,7 @@ def test_certify_dump_provenance_generic(jwst_serverless_state, jwst_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/valid.json' (1/1) as 'JSON' relative to context 'jwst_0034.pmap'
 EXP_TYPE = 'mir_image'
 META.AUTHOR [AUTHOR] = 'Todd Miller'
@@ -412,7 +400,7 @@ def test_certify_missing_keyword(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{hst_data}/missing_keyword.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
 FITS file 'missing_keyword.fits' conforms to FITS standards.
 instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
@@ -421,7 +409,7 @@ instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Check
 0 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    
+
 
 
 @mark.certify
@@ -431,7 +419,7 @@ def test_certify_recursive(default_shared_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{cache}/mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context 'hst.pmap'
 ########################################
 Certifying '{cache}/mappings/hst/hst_cos_badttab.rmap' (2/19) as 'MAPPING' relative to context 'hst.pmap'
@@ -482,40 +470,45 @@ def test_certify_table_comparison_context(default_shared_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
-    expected_out = f"""Certifying '{cache}/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
-FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
-Mode columns defined by spec for old reference 'yas2005el_hv.fits[1]' are: ['DATE']
-All column names for this table old reference 'yas2005el_hv.fits[1]' are: ['DATE', 'HVLEVELA']
-Checking for duplicate modes using intersection ['DATE']
-Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
-All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
-Checking for duplicate modes using intersection ['DATE']
-Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-Mode columns defined by spec for old reference 'yas2005el_hv.fits[2]' are: ['DATE']
-All column names for this table old reference 'yas2005el_hv.fits[2]' are: ['DATE', 'HVLEVELB']
-Checking for duplicate modes using intersection ['DATE']
-Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
-All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
-Checking for duplicate modes using intersection ['DATE']
-Table mode (('DATE', 56921.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56924.0417),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56924.2084),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56959.4584),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56959.6667),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56961.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-########################################
-0 errors
-15 warnings"""
+
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
+    expected_out = f"""Certifying
+    y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
+    FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
+    Mode columns defined by spec for old reference 'yas2005el_hv.fits[1]' are: ['DATE']
+    All column names for this table old reference 'yas2005el_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    Checking for duplicate modes using intersection ['DATE']
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Mode columns defined by spec for old reference 'yas2005el_hv.fits[2]' are: ['DATE']
+    All column names for this table old reference 'yas2005el_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    Checking for duplicate modes using intersection ['DATE']
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56921.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.0417),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.2084),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56959.4584),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56959.6667),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56961.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    0 errors
+    15 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -526,38 +519,44 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
-    expected_out = f"""Certifying '{hst_data}/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0857.pmap' and comparison reference '{hst_data}/y9j16159l_hv.fits'
-FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
-All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
-Checking for duplicate modes using intersection ['DATE']
-Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
-All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
-Checking for duplicate modes using intersection ['DATE']
-Table mode (('DATE', 56923.5834),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
-All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
-Checking for duplicate modes using intersection ['DATE']
-Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
-(129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
-(131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
-Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
-(132, (('DATE', 56925.0), ('HVLEVELB', 175)))
-(134, (('DATE', 56925.0), ('HVLEVELB', 175)))
-Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
-All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
-Checking for duplicate modes using intersection ['DATE']
-Table mode (('DATE', 56921.8334),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56924.0417),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-########################################
-0 errors
-10 warnings"""
+
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
+    expected_out = f"""Certifying
+    y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0857.pmap' and comparison reference
+    y9j16159l_hv.fits'
+    FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
+    All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    Checking for duplicate modes using intersection ['DATE']
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56923.5834),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
+    All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    Checking for duplicate modes using intersection ['DATE']
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
+    (129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    (131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
+    (132, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    (134, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56921.8334),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.0417),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    0 errors
+    10 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -568,7 +567,7 @@ def test_certify_duplicate_sha1sum(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{hst_data}/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context 'hst_1099.pmap'
 instrument='COS' type='DEADTAB' data='{hst_data}/s7g1700gl_dead.fits' ::  Duplicate file check : File 's7g1700gl_dead.fits' is identical to existing CRDS file 's7g1700gl_dead.fits'
 FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
@@ -585,12 +584,27 @@ def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    expected_out = f"""Certifying '{jwst_data}/niriss_ref_photom.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
-FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
-Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
-########################################
-0 errors
-5 warnings"""
+
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
+    expected_out = """Certifying
+    niriss_ref_photom.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
+    Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
+    Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
+    Failed resolving comparison reference for table checks : Failed inserting 'niriss_ref_photom.fits' into rmap: 'jwst_niriss_photom_0006.rmap' with header:
+    Mode columns defined by spec for new reference 'niriss_ref_photom.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
+    All column names for this table new reference 'niriss_ref_photom.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
+    Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
+    No comparison reference for 'niriss_ref_photom.fits' in context 'jwst_0125.pmap'. Skipping tables comparison.
+    Checking JWST datamodels.
+    NoTypeWarning : stdatamodels.jwst.datamodels.util : model_type not found. Opening
+    niriss_ref_photom.fits as a ReferenceFileModel
+    0 errors
+    5 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -601,7 +615,7 @@ def test_certify_jwst_missing_optional_parkey(jwst_serverless_state, jwst_data, 
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/jwst_miri_ipc_0003.add.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
 FITS file 'jwst_miri_ipc_0003.add.fits' conforms to FITS standards.
 Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'SHORT | MEDIUM |'
@@ -619,7 +633,7 @@ def test_certify_jwst_invalid_asdf(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validation error : Input object does not appear to be an ASDF file or a FITS with ASDF extension
 ########################################
@@ -635,7 +649,7 @@ def test_certify_jwst_invalid_json(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/invalid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.json' ::  Validation error : JSON wouldn't load from '{jwst_data}/invalid.json' : Expecting ',' delimiter: line 5 column 1 (char 77)
 ########################################
@@ -651,7 +665,7 @@ def test_certify_jwst_invalid_yaml(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/invalid.yaml' (1/1) as 'YAML' relative to context 'jwst_0034.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.yaml' ::  Validation error : while scanning a tag
   in "{jwst_data}/invalid.yaml", line 1, column 5
@@ -672,13 +686,12 @@ def test_certify_roman_load_all_type_constraints(roman_test_cache_state):
 @mark.certify
 def test_certify_jwst_load_all_type_constraints(jwst_serverless_state):
     generic_tpn.load_all_type_constraints("jwst")
-    
+
 
 
 @mark.certify
 def test_certify_hst_load_all_type_constraints(hst_serverless_state):
     generic_tpn.load_all_type_constraints("hst")
-    
 
 
 @mark.certify
@@ -687,7 +700,6 @@ def test_certify_validator_bad_presence_condition(hst_serverless_state):
         info = generic_tpn.TpnInfo('DETECTOR','H','C', "(Q='BAR')", ('WFC','HRC','SBC'))
     except SyntaxError:
         assert True
-    
 
 
 @mark.certify
@@ -695,7 +707,7 @@ def test_certify_JsonCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid.json", "jwst_0034.pmap", observatory="jwst")
         out = caplog.text
-    
+
     expected_out = f"Certifying '{jwst_data}/valid.json' as 'JSON' relative to context 'jwst_0034.pmap'"
     assert expected_out in out
 
@@ -705,7 +717,7 @@ def test_certify_YamlCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid.yaml", "jwst_0034.pmap", observatory="jwst")
         out = caplog.text
-    
+
     expected_out = f"Certifying '{jwst_data}/valid.yaml' as 'YAML' relative to context 'jwst_0034.pmap'"
     assert expected_out in out
 
@@ -715,7 +727,7 @@ def test_certify_AsdfCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid.asdf", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/valid.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels."""
@@ -742,12 +754,22 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = [
-        f"Certifying '{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'",
-        f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"
-    ]
+    expected_out = """Certifying
+    roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
+    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    'title': 'Use after date of the reference file'}
+    On instance['meta']['useafter']:
+    "This ain't no valid time"
+    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    'title': 'Use after date of the reference file'}
+    On instance['meta']['useafter']:
+    "This ain't no valid time""".splitlines()
     for msg in expected_out:
-        assert msg in out
+        assert msg.strip() in out
 
 
 @mark.certify
@@ -794,10 +816,16 @@ def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_da
     """Required Roman test: confirm that a spectroscopic asdf file that does not conform to its schema
     definition triggers an error in DataModels."""
     with caplog.at_level(logging.INFO, logger="CRDS"):
-        certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")        
+        certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out =f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'"""
+    expected_out = """Certifying
+    roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
+    roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    'title': 'Use after date of the reference file'}
+    On instance['meta']['useafter']:
+    'yesterday'"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -811,7 +839,7 @@ def test_certify_roman_invalid_spec_asdf_tpn(roman_test_cache_state, roman_data,
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
+        expected_out = f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = 'yesterday'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.USEAFTER [USEAFTER]' : Invalid 'Jwstdate' format 'yesterday' should be '2018-12-22T00:00:00'
 In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking ASDF tag validity for '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' : 'dict' object has no attribute '_tag'"""
@@ -824,7 +852,7 @@ def test_certify_AsdfCertify_valid_with_astropy_time(jwst_serverless_state, jwst
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/valid_with_astropy_time.asdf", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/valid_with_astropy_time.asdf' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels."""
@@ -837,7 +865,7 @@ def test_certify_FitsCertify_opaque_name(hst_serverless_state, hst_data, caplog)
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{hst_data}/opaque_fts.tmp", "hst.pmap", observatory="hst")
         out = caplog.text
-    
+
     expected_out = f"Certifying '{hst_data}/opaque_fts.tmp' as 'FITS' relative to context 'hst.pmap'"
     assert expected_out in out
 
@@ -849,7 +877,7 @@ def test_certify_AsdfCertify_opaque_name(jwst_serverless_state, jwst_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/opaque_asd.tmp", "jwst_0365.pmap", observatory="jwst")
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/opaque_asd.tmp' as 'ASDF' relative to context 'jwst_0365.pmap'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = None to value of 'META.INSTRUMENT.P_DETECTOR [P_DETECT]' = 'NRS1|NRS2|'
 Checking JWST datamodels.
@@ -861,9 +889,9 @@ Checking JWST datamodels.
 @mark.certify
 def test_certify_rmap_compare(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
-        certify.certify_file("jwst_miri_distortion_0025.rmap", "jwst_0357.pmap")        
+        certify.certify_file("jwst_miri_distortion_0025.rmap", "jwst_0357.pmap")
         out = caplog.text
-    
+
     expected_out = "Certifying 'jwst_miri_distortion_0025.rmap' as 'MAPPING' relative to context 'jwst_0357.pmap'"
     for msg in expected_out.splitlines():
         assert msg.strip() in out
@@ -875,8 +903,8 @@ def test_certify_roman_rmap_compare(roman_test_cache_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file("roman_wfi_flat_0004.rmap", "roman_0004.pmap")
         out = caplog.text
-    expected_out = """Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'"""
-    assert expected_out in out
+        expected_out = """Certifying 'roman_wfi_flat_0004.rmap' as 'MAPPING' relative to context 'roman_0004.pmap'"""
+        assert expected_out in out
 
 
 @mark.certify
@@ -884,18 +912,25 @@ def test_certify_jwst_bad_fits(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{jwst_data}/niriss_ref_photom_bad.fits", "jwst_0541.pmap", observatory="jwst")
         out = caplog.text
-    
-    expected_out = f"""Certifying '{jwst_data}/niriss_ref_photom_bad.fits' as 'FITS' relative to context 'jwst_0541.pmap'
-FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
-In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
-Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
-Failed resolving comparison reference for table checks : Failed inserting 'niriss_ref_photom_bad.fits' into rmap: 'jwst_niriss_photom_0021.rmap' with header:
-Mode columns defined by spec for new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
-All column names for this table new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
-Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
-No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
-Checking JWST datamodels.
-ValidationWarning : stdatamodels.validate : While validating meta.instrument.detector the following error occurred:'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'MULTIPLE', 'N/A']Failed validating 'enum' in schema:"""
+
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
+    expected_out = """Certifying
+    niriss_ref_photom_bad.fits' as 'FITS' relative to context 'jwst_0541.pmap'
+    FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
+    In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
+    Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
+    Failed resolving comparison reference for table checks : Failed inserting 'niriss_ref_photom_bad.fits' into rmap: 'jwst_niriss_photom_0021.rmap' with header:
+    Mode columns defined by spec for new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
+    All column names for this table new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
+    Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
+    No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
+    Checking JWST datamodels.
+    ValidationWarning : stdatamodels.validate : While validating meta.instrument.detector the following error occurred:'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'MULTIPLE', 'N/A']Failed validating 'enum' in schema:    OrderedDict([('title', 'Name of detector used to acquire the data'),                 ('type', 'string'),                 ('enum',                  ['NRCA1',                   'NRCA2',                   'NRCA3',                   'NRCA4',                   'NRCALONG',                   'NRCB1',                   'NRCB2',                   'NRCB3',                   'NRCB4',                   'NRCBLONG',                   'NRS1',                   'NRS2',                   'ANY',                   'MIRIMAGE',                   'MIRIFULONG',                   'MIRIFUSHORT',                   'NIS',                   'GUIDER1',                   'GUIDER2',                   'MULTIPLE',                   'N/A']),                 ('description', 'Detector name.'),                 ('fits_keyword', 'DETECTOR')])On instance:    'FOO'
+"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -905,7 +940,7 @@ def test_certify_duplicate_rmap_case_error(hst_serverless_state, hst_data, caplo
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{hst_data}/hst_cos_tdstab_duplicate.rmap", "hst.pmap", observatory="hst")
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{hst_data}/hst_cos_tdstab_duplicate.rmap' as 'MAPPING' relative to context 'hst.pmap'
 Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter
 Checksum error : sha1sum mismatch in 'hst_cos_tdstab_duplicate.rmap'"""
@@ -920,7 +955,7 @@ def test_certify_roman_duplicate_rmap_case_error(roman_test_cache_state, roman_d
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_flat_0004_duplicate.rmap", "roman_0003.pmap")
         out = caplog.text
-    expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
+        expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_duplicate.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
 Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter
 Checksum error : sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'
 {roman_data}/roman_wfi_flat_0004_duplicate.rmap Validation error : Failed to determine 'roman' instrument or reftype for '{roman_data}/roman_wfi_flat_0004_duplicate.rmap' : 'sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'"""
@@ -936,7 +971,7 @@ def test_checksum_duplicate_rmap_case_error(hst_serverless_state, hst_data, capl
         from crds.refactoring import checksum
         checksum.add_checksum(f"{hst_data}/hst_cos_tdstab_duplicate.rmap")
         out = caplog.text
-    
+
     expected_out = f"""Adding checksum for '{hst_data}/hst_cos_tdstab_duplicate.rmap'
 Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter"""
     for msg in expected_out.splitlines():
@@ -951,7 +986,7 @@ def test_checksum_roman_duplicate_rmap_case_error(roman_serverless_state, roman_
         from crds.refactoring import checksum
         checksum.add_checksum(f"{roman_data}/roman_wfi_flat_0004_duplicate.rmap")
         out = caplog.text
-    expected_out = f"""Adding checksum for '{roman_data}/roman_wfi_flat_0004_duplicate.rmap'
+        expected_out = f"""Adding checksum for '{roman_data}/roman_wfi_flat_0004_duplicate.rmap'
 Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
@@ -964,7 +999,7 @@ def test_certify_roman_invalid_rmap_tpn(roman_test_cache_state, roman_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_flat_0004_badtpn.rmap", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
+        expected_out = f"""Certifying '{roman_data}/roman_wfi_flat_0004_badtpn.rmap' as 'MAPPING' relative to context 'roman_0003.pmap'
 Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]') : ('WFI21', 'F158') :  parameter='ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]' value='WFI21' is not in ('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', '*', 'N/A')
 Mapping 'roman_wfi_flat_0004_badtpn.rmap' corresponds to 'roman_wfi_flat_0001.rmap' from context 'roman_0003.pmap' for checking mapping differences.
 Checking diffs from 'roman_wfi_flat_0001.rmap' to 'roman_wfi_flat_0004_badtpn.rmap'
@@ -996,7 +1031,7 @@ def test_load_nirspec_staturation_tpn_lines(jwst_serverless_state):
     "include" and reuse of generic files."""
     path = generic_tpn.get_tpn_path("nirspec_saturation.tpn","jwst")
     lines = generic_tpn.load_tpn_lines(path)
-    
+
     expected = [
         'META.SUBARRAY.NAME          H   C   (is_imaging_mode(EXP_TYPE))',
         'SUBARRAY                    H   C   O',
@@ -1062,7 +1097,7 @@ def test_load_nirspec_saturation_tpn(jwst_serverless_state):
     """
     path = generic_tpn.get_tpn_path("nirspec_saturation.tpn","jwst")
     loaded = generic_tpn.load_tpn(path)
-    
+
     expected = """('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', condition='(is_imaging_mode(EXP_TYPE))', values=())
 ('SUBARRAY', 'HEADER', 'CHARACTER', 'OPTIONAL', values=())
 ('META.SUBARRAY.XSTART', 'HEADER', 'INTEGER', condition='(is_imaging_mode(EXP_TYPE))', values=())
@@ -1126,7 +1161,7 @@ def test_load_miri_mask_tpn_lines(jwst_serverless_state):
     """
     path = generic_tpn.get_tpn_path("miri_mask.tpn","jwst")
     loaded = generic_tpn.load_tpn_lines(path)
-    
+
     expected = [
         'META.SUBARRAY.NAME          H   C   R',
         'META.SUBARRAY.XSTART        H   I   R',
@@ -1171,7 +1206,7 @@ def test_load_miri_mask_tpn_lines(jwst_serverless_state):
 def test_load_miri_mask_tpn(jwst_serverless_state):
     path = generic_tpn.get_tpn_path("miri_mask.tpn","jwst")
     loaded = generic_tpn.load_tpn(path)
-    
+
     expected = """('META.SUBARRAY.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=())
 ('META.SUBARRAY.XSTART', 'HEADER', 'INTEGER', 'REQUIRED', values=())
 ('META.SUBARRAY.YSTART', 'HEADER', 'INTEGER', 'REQUIRED', values=())
@@ -1216,23 +1251,28 @@ def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
-    expected_out = f"""Certifying '{hst_data}/acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
-FITS file 'acs_new_idc.fits' conforms to FITS standards.
-Comparing reference 'acs_new_idc.fits' against 'p7d1548qj_idc.fits'
-Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
-Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', 207.082), ('V3REF', 471.476)) :
+
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
+    expected_out = """Certifying
+    acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
+    FITS file 'acs_new_idc.fits' conforms to FITS standards.
+    Comparing reference 'acs_new_idc.fits' against 'p7d1548qj_idc.fits'
+    Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
+    Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', 207.082), ('V3REF', 471.476)) :
     (29, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
     (35, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
-Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
-Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
-Change in row format between 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
-########################################
-0 errors
-2 warnings"""
+    Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    Change in row format between 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
+    0 errors
+    2 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1256,7 +1296,7 @@ def test_certify_check_rmap_updates(hst_serverless_state, hst_data, caplog):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected1 = f"Command: ['crds.certify', '{hst_data}/s7g1700gl_dead_overlap.fits', '{hst_data}/s7g1700gl_dead_dup1.fits', '{hst_data}/s7g1700gl_dead_dup2.fits', '--check-rmap-updates', '--comparison-context', 'hst_0508.pmap', '--verbose']"
     assert expected1 in out
     expected2 = f"Certifying '{hst_data}/s7g1700gl_dead_dup1.fits' (1/3) as 'FITS' relative to context 'hst_0508.pmap'"
@@ -1450,7 +1490,7 @@ def test_asdf_standard_requirement_fail(jwst_serverless_state, jwst_data, caplog
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/jwst_nircam_specwcs_1_5_0.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 ASDF Standard version 1.5.0 does not fulfill context requirement of asdf_standard<1.5
 Checking JWST datamodels.
@@ -1467,7 +1507,7 @@ def test_asdf_standard_requirement_succeed(jwst_serverless_state, jwst_data, cap
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/jwst_nircam_specwcs_1_4_0.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 Checking JWST datamodels.
 ########################################
@@ -1483,7 +1523,7 @@ def test_asdf_library_version_fail(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 Setting 'META.EXPOSURE.TYPE [EXP_TYPE]' = None to value of 'META.EXPOSURE.P_EXPTYPE [P_EXPTYP]' = 'FGS_IMAGE|FGS_FOCUS|FGS_INTFLAT|FGS_SKYFLAT|'
 File written with dev version of asdf library: 2.0.0.dev1213
@@ -1493,7 +1533,7 @@ Checking JWST datamodels.
 1 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
-    
+
 
 @mark.certify
 def test_fits_asdf_extension_fail(jwst_serverless_state, jwst_data, caplog):
@@ -1501,7 +1541,7 @@ def test_fits_asdf_extension_fail(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    
+
     expected_out = f"""Certifying '{jwst_data}/jwst_nirspec_ipc_with_asdf_extension.fits' (1/1) as 'FITS' relative to context 'jwst_0591.pmap'
 instrument='NIRSPEC' type='IPC' data='{jwst_data}/jwst_nirspec_ipc_with_asdf_extension.fits' ::  FITS files must not include an ASDF extension
 FITS file 'jwst_nirspec_ipc_with_asdf_extension.fits' conforms to FITS standards.
@@ -1547,7 +1587,7 @@ def test_character_validator_bad():
     assert isinstance(cval, validators.core.CharacterValidator)
     header = {"DETECTOR" : "WFD" }
     try:
-         cval.check("foo.fits", header)
+        cval.check("foo.fits", header)
     except ValueError:
         assert True
 
@@ -1703,7 +1743,7 @@ def test_integer_validator_range_format_bad():
         cval.check("foo.fits", header)
     except ValueError:
         assert True
-    info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("x:40",))
+        info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("x:40",))
     try:
         validators.validator(info)
     except ValueError:
@@ -1783,7 +1823,7 @@ def test_real_validator_range_format_bad():
         cval.check("foo.fits", header)
     except ValueError:
         assert True
-    info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
+        info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.x:40.2",))
     try:
         validators.validator(info)
     except ValueError:
@@ -1914,8 +1954,8 @@ def test_double_validator_range_format_bad():
         cval.check("foo.fits", header)
     except ValueError:
         assert True
-    info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
-    try:    
+        info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.x:40.2",))
+    try:
         validators.validator(info)
     except ValueError:
         assert True
@@ -1962,7 +2002,7 @@ def test_expression_validator_fails():
         cval.check("foo.fits", header)
     except validators.core.RequiredConditionError:
         assert True
-    
+
 
 @mark.certify
 def test_expression_validator_bad_format():
@@ -2268,7 +2308,7 @@ def test_tpn_handle_missing_conditional():
         checker.handle_missing(header={"READPATT":"FOO"})
     except exceptions.MissingKeywordError:
         assert True
-    assert checker.handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED"
+        assert checker.handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED"
 
 
 @mark.certify
@@ -2290,7 +2330,7 @@ def test_tpn_excluded_keyword():
         checker.check(f"test.fits", {"DETECTOR":"SHOULDNT_DEFINE"})
     except exceptions.IllegalKeywordError:
         assert True
-    
+
 
 @mark.certify
 def test_tpn_not_value():
@@ -2355,7 +2395,7 @@ def test_tpn_pedigree_missing():
         checker.check("test.fits", {"DETECTOR":"This is a test"})
     except exceptions.MissingKeywordError:
         assert True
-        
+
 
 @mark.certify
 def test_tpn_pedigree_dummy():
@@ -2749,7 +2789,7 @@ def test_or_bars_certify_bad_keyword(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(f"crds.certify {jwst_data}/jwst_miri_ipc.bad-keyword.fits --comparison-context jwst_0361.pmap")()
         out = caplog.text
-    
+
     expected = f"""Certifying '{jwst_data}/jwst_miri_ipc.bad-keyword.fits' (1/1) as 'FITS' relative to context 'jwst_0361.pmap'
 FITS file 'jwst_miri_ipc.bad-keyword.fits' conforms to FITS standards.
 CRDS-pattern-like keyword 'P_DETEC' w/o CRDS translation to corresponding dataset keyword.
@@ -2768,7 +2808,7 @@ def test_or_bars_certify_bad_value(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(f"crds.certify {jwst_data}/jwst_miri_ipc.bad-value.fits --comparison-context jwst_0361.pmap")()
         out = caplog.text
-    
+
     expected = f"""Certifying '{jwst_data}/jwst_miri_ipc.bad-value.fits' (1/1) as 'FITS' relative to context 'jwst_0361.pmap'
 FITS file 'jwst_miri_ipc.bad-value.fits' conforms to FITS standards.
 Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'LONG'

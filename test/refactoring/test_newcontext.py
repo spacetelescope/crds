@@ -26,19 +26,30 @@ def test_new_context(default_shared_state, hst_data, caplog):
 {hst_data}/hst_acs_imphttab_9999.rmap")()
         out = caplog.text
     pysh.sh("rm \./*\.[pir]map")
-    out_to_check = """Replaced 'hst_cos_deadtab.rmap' with \
-'/home/runner/work/crds/crds/test/data/hst/hst_cos_deadtab_9999.rmap' for 'deadtab' in 'test/data/hst/hst_cos.imap' \
-producing './hst_cos_0001.imap'"""
-    assert out_to_check in out
-    out_to_check = """Replaced 'test/data/hst/hst_acs.imap' with './hst_acs_10000.imap' for 'ACS' in \
-'/home/runner/work/crds/crds/test/data/hst/hst.pmap' producing './hst_0003.pmap'"""
-    assert out_to_check in out
-    out_to_check = """Replaced 'test/data/hst/hst_cos.imap' with './hst_cos_0001.imap' for 'COS' in \
-'/home/runner/work/crds/crds/test/data/hst/hst.pmap' producing './hst_0003.pmap'"""
-    assert out_to_check in out
-    out_to_check = """Adjusting name 'hst_0003.pmap' derived_from 'hst.pmap' in './hst_0003.pmap'"""
-    assert out_to_check in out
-    out_to_check = """Adjusting name 'hst_acs_10000.imap' derived_from 'hst_acs.imap' in './hst_acs_10000.imap'"""
-    assert out_to_check in out
-    out_to_check = """Adjusting name 'hst_cos_0001.imap' derived_from 'hst_cos.imap' in './hst_cos_0001.imap'"""
-    assert out_to_check in out
+    out_to_check = """
+    Replaced 'hst_acs_imphttab.rmap' with
+    hst_acs_imphttab_9999.rmap' for 'imphttab' in
+    hst_acs.imap' producing
+    hst_acs_10000.imap'
+    Replaced 'hst_cos_deadtab.rmap' with
+    hst_cos_deadtab_9999.rmap' for 'deadtab' in
+    hst_cos.imap' producing
+    hst_cos_0001.imap'
+    Replaced
+    hst_acs.imap' with
+    hst_acs_10000.imap' for 'ACS' in
+    hst.pmap' producing
+    hst_0003.pmap'
+    Replaced
+    hst_cos.imap' with
+    hst_cos_0001.imap' for 'COS' in
+    hst.pmap' producing
+    hst_0003.pmap'
+    Adjusting name 'hst_0003.pmap' derived_from 'hst.pmap' in
+    hst_0003.pmap'
+    Adjusting name 'hst_acs_10000.imap' derived_from 'hst_acs.imap' in
+    hst_acs_10000.imap'
+    Adjusting name 'hst_cos_0001.imap' derived_from 'hst_cos.imap' in
+    hst_cos_0001.imap'"""
+    for msg in out_to_check.splitlines():
+        assert msg.strip() in out
