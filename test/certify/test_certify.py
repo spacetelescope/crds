@@ -1,4 +1,4 @@
-from pytest import mark
+from pytest import mark, xfail
 import numpy as np
 import logging
 from crds.core import utils, log, exceptions
@@ -471,6 +471,11 @@ def test_certify_table_comparison_context(default_shared_state, caplog):
         CertifyScript(argv)()
         out = caplog.text
 
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
     expected_out = f"""Certifying
     y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
     FITS file 'y951738kl_hv.fits' conforms to FITS standards.
@@ -478,18 +483,32 @@ def test_certify_table_comparison_context(default_shared_state, caplog):
     Mode columns defined by spec for old reference 'yas2005el_hv.fits[1]' are: ['DATE']
     All column names for this table old reference 'yas2005el_hv.fits[1]' are: ['DATE', 'HVLEVELA']
     Checking for duplicate modes using intersection ['DATE']
-    instrument='COS' type='HVTAB' data='
-    y951738kl_hv.fits' ::  Checking tables modes in segment 0 of '
-    y951738kl_hv.fits' : module 'numpy' has no attribute 'float128'
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     Mode columns defined by spec for old reference 'yas2005el_hv.fits[2]' are: ['DATE']
     All column names for this table old reference 'yas2005el_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    instrument='COS' type='HVTAB' data='
-    y951738kl_hv.fits' ::  Checking tables modes in segment 1 of '
-    y951738kl_hv.fits' : module 'numpy' has no attribute 'float128'
-    ########################################
-    2 errors
-    0 warnings"""
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56921.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.0417),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.2084),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56959.4584),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56959.6667),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56961.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    0 errors
+    15 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -501,6 +520,11 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
         CertifyScript(argv)()
         out = caplog.text
 
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
     expected_out = f"""Certifying
     y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0857.pmap' and comparison reference
     y9j16159l_hv.fits'
@@ -508,18 +532,31 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
     Mode columns defined by spec for old reference 'y9j16159l_hv.fits[1]' are: ['DATE']
     All column names for this table old reference 'y9j16159l_hv.fits[1]' are: ['DATE', 'HVLEVELA']
     Checking for duplicate modes using intersection ['DATE']
-    instrument='COS' type='HVTAB' data=
-    y951738kl_hv.fits' ::  Checking tables modes in segment 0 of
-    y951738kl_hv.fits' : module 'numpy' has no attribute 'float128'
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56923.5834),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
     All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    instrument='COS' type='HVTAB' data=
-    y951738kl_hv.fits' ::  Checking tables modes in segment 1 of
-    y951738kl_hv.fits' : module 'numpy' has no attribute 'float128'
-    ########################################
-    2 errors
-    0 warnings"""
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
+    (129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    (131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
+    (132, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    (134, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
+    All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
+    Checking for duplicate modes using intersection ['DATE']
+    Table mode (('DATE', 56921.8334),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.0417),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    0 errors
+    10 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -547,8 +584,13 @@ def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-    expected_out = """########################################
-    Certifying
+
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
+    expected_out = """Certifying
     niriss_ref_photom.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
     FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
     Missing suggested keyword 'META.MODEL_TYPE [DATAMODL]'
@@ -557,15 +599,12 @@ def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
     Mode columns defined by spec for new reference 'niriss_ref_photom.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
     All column names for this table new reference 'niriss_ref_photom.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
     Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
-    instrument='NIRISS' type='PHOTOM' data=
-    niriss_ref_photom.fits' ::  Checking reference modes for
-    niriss_ref_photom.fits' : module 'numpy' has no attribute 'float128'
+    No comparison reference for 'niriss_ref_photom.fits' in context 'jwst_0125.pmap'. Skipping tables comparison.
     Checking JWST datamodels.
     NoTypeWarning : stdatamodels.jwst.datamodels.util : model_type not found. Opening
     niriss_ref_photom.fits as a ReferenceFileModel
-    ########################################
-    1 errors
-    4 warnings"""
+    0 errors
+    5 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -717,18 +756,18 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
         out = caplog.text
     expected_out = """Certifying
     roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
-    AsdfWarning : asdf.asdf : File
-    roman_wfi16_f158_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0'
-    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
-    AsdfWarning : asdf.asdf : File
-    roman_wfi16_f158_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0'
-    In 'roman_wfi16_f158_flat_invalid_schema.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = "This ain't no valid time"
-    In 'roman_wfi16_f158_flat_invalid_schema.asdf' : Checking 'ROMAN.META.USEAFTER
-    Invalid 'Jwstdate' format "This ain't no valid time" should be '2018-12-22T00:00:00'
-    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
-    AsdfWarning : asdf.asdf : File
-    roman/roman_wfi16_f158_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0'""".splitlines()
+    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    'title': 'Use after date of the reference file'}
+    On instance['meta']['useafter']:
+    "This ain't no valid time"
+    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    'title': 'Use after date of the reference file'}
+    On instance['meta']['useafter']:
+    "This ain't no valid time""".splitlines()
     for msg in expected_out:
         assert msg.strip() in out
 
@@ -781,18 +820,12 @@ def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_da
         out = caplog.text
     expected_out = """Certifying
     roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
-    AsdfWarning : asdf.asdf : File
-    roman_wfi16_grism_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0'
-    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
-    AsdfWarning : asdf.asdf : File
-    roman_wfi16_grism_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0'
-    In 'roman_wfi16_grism_flat_invalid_schema.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = 'yesterday'
-    In 'roman_wfi16_grism_flat_invalid_schema.asdf' : Checking 'ROMAN.META.USEAFTER
-    Invalid 'Jwstdate'
-    AsdfConversionWarning : asdf.yamlutil : asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0 is not recognized, converting to raw Python data structure
-    AsdfWarning : asdf.asdf : File
-    roman_wfi16_grism_flat_invalid_schema.asdf' was created with extension URI 'asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0'"""
+    roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    'title': 'Use after date of the reference file'}
+    On instance['meta']['useafter']:
+    'yesterday'"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -880,19 +913,24 @@ def test_certify_jwst_bad_fits(jwst_serverless_state, jwst_data, caplog):
         certify.certify_file(f"{jwst_data}/niriss_ref_photom_bad.fits", "jwst_0541.pmap", observatory="jwst")
         out = caplog.text
 
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
     expected_out = """Certifying
     niriss_ref_photom_bad.fits' as 'FITS' relative to context 'jwst_0541.pmap'
     FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
     In 'niriss_ref_photom_bad.fits' : Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'N/A', 'NIS']
-Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
+    Non-compliant date format 'Jan 01 2015 00:00:00' for 'META.USEAFTER [USEAFTER]' should be 'YYYY-MM-DDTHH:MM:SS'
     Failed resolving comparison reference for table checks : Failed inserting 'niriss_ref_photom_bad.fits' into rmap: 'jwst_niriss_photom_0021.rmap' with header:
     Mode columns defined by spec for new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'ORDER']
     All column names for this table new reference 'niriss_ref_photom_bad.fits[1]' are: ['FILTER', 'PUPIL', 'PHOTFLAM', 'NELEM', 'WAVELENGTH', 'RELRESPONSE']
     Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
-In 'niriss_ref_photom_bad.fits' : Checking reference modes for
-    niriss_ref_photom_bad.fits' : module 'numpy' has no attribute 'float128'
+    No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
     Checking JWST datamodels.
-    ValidationWarning : stdatamodels.validate : While validating meta.instrument.detector the following error occurred:'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'MULTIPLE', 'N/A']Failed validating 'enum' in schema:    OrderedDict([('title', 'Name of detector used to acquire the data'),                 ('type', 'string'),                 ('enum',                  ['NRCA1',                   'NRCA2',                   'NRCA3',                   'NRCA4',                   'NRCALONG',                   'NRCB1',                   'NRCB2',                   'NRCB3',                   'NRCB4',                   'NRCBLONG',                   'NRS1',                   'NRS2',                   'ANY',                   'MIRIMAGE',                   'MIRIFULONG',                   'MIRIFUSHORT',                   'NIS',                   'GUIDER1',                   'GUIDER2',                   'MULTIPLE',                   'N/A']),                 ('description', 'Detector name.'),                 ('fits_keyword', 'DETECTOR')])On instance:    'FOO'"""
+    ValidationWarning : stdatamodels.validate : While validating meta.instrument.detector the following error occurred:'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'MULTIPLE', 'N/A']Failed validating 'enum' in schema:    OrderedDict([('title', 'Name of detector used to acquire the data'),                 ('type', 'string'),                 ('enum',                  ['NRCA1',                   'NRCA2',                   'NRCA3',                   'NRCA4',                   'NRCALONG',                   'NRCB1',                   'NRCB2',                   'NRCB3',                   'NRCB4',                   'NRCBLONG',                   'NRS1',                   'NRS2',                   'ANY',                   'MIRIMAGE',                   'MIRIFULONG',                   'MIRIFUSHORT',                   'NIS',                   'GUIDER1',                   'GUIDER2',                   'MULTIPLE',                   'N/A']),                 ('description', 'Detector name.'),                 ('fits_keyword', 'DETECTOR')])On instance:    'FOO'
+"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1214,6 +1252,11 @@ def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
         CertifyScript(argv)()
         out = caplog.text
 
+    # Due to the nature of the test file, a numpy.float128 is used. However, this is not
+    # supported on many architectures. Mark xfail if this there is no support.
+    if """ module 'numpy' has no attribute""" in out:
+        xfail('Test requires numpy.float128, which current system does not support.')
+
     expected_out = """Certifying
     acs_new_idc.fits' (1/1) as 'FITS' relative to context 'hst_0508.pmap'
     FITS file 'acs_new_idc.fits' conforms to FITS standards.
@@ -1221,12 +1264,15 @@ def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
     Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
     All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
     Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-    instrument='ACS' type='IDCTAB' data=
-    acs_new_idc.fits' ::  Checking tables modes in segment 0 of
-    acs_new_idc.fits' : module 'numpy' has no attribute 'float128'
-    ########################################
-    1 errors
-    0 warnings"""
+    Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', 207.082), ('V3REF', 471.476)) :
+    (29, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
+    (35, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
+    Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
+    All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
+    Change in row format between 'p7d1548qj_idc.fits[1]' and 'acs_new_idc.fits[1]'
+    0 errors
+    2 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
