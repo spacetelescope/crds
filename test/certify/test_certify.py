@@ -50,9 +50,9 @@ def test_certify_bad_checksum(default_shared_state, hst_data, caplog):
     >>
     >> =================== HDU 2: BINARY Table ====================
     >>
-    ERROR    CRDS:log.py:190  >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
-    ERROR    CRDS:log.py:190  >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
-    ERROR    CRDS:log.py:190  >> *** Error:   checking data fill: Data fill area invalid
+    >> RECATEGORIZED *** Warning: Data checksum is not consistent with  the DATASUM keyword
+    >> RECATEGORIZED *** Warning: HDU checksum is not in agreement with CHECKSUM.
+    >> *** Error:   checking data fill: Data fill area invalid
     >>
     >>  31 header keywords
     >>
@@ -71,7 +71,7 @@ def test_certify_bad_checksum(default_shared_state, hst_data, caplog):
     >>
     >> **** Verification found 2 warning(s) and 1 error(s). ****
     Fitsverify returned a NONZERO COMMAND LINE ERROR STATUS.
-    ERROR    CRDS:log.py:190  Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
+    Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs.
     ########################################
     4 errors
     6 warnings"""
