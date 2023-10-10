@@ -64,6 +64,8 @@ jobs:
       - id: cache
         uses: actions/cache@v3
         with:
-          path: ${{ needs.cache.outputs.path }}
+          path: |
+            ${{ needs.cache.outputs.path }}
+            ${{ needs.cache.outputs.testing_cache }}
           key: ${{ needs.cache.outputs.key }}
       - run: ./runtests --cover

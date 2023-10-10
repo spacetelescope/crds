@@ -5,6 +5,8 @@ on:
     outputs:
       path:
         value: ${{ jobs.cache.outputs.path }}
+      testing_cache:
+        value: ${{ jobs.cache.outputs.testing_cache }}
       key:
         value: ${{ jobs.cache.outputs.key }}
   workflow_dispatch:
@@ -17,8 +19,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CRDS_PATH: /tmp/crds-cache-default-test
   CRDS_TEST_ROOT: /tmp
+  CRDS_PATH: /tmp/crds-cache-default-test
+  CRDS_TESTING_CACHE: /tmp/crds-cache-test
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
   LD_LIBRARY_PATH: /usr/local/lib
@@ -36,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       path: ${{ env.CRDS_PATH }}
+      testing_cache: ${{ env.CRDS_TESTING_CACHE }}
       key: ${{ steps.key.outputs.key }}
     steps:
       - uses: actions/checkout@v3
@@ -45,8 +49,15 @@ jobs:
         name: restore entire CRDS cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.CRDS_PATH }}
+          path: |
+            ${{ env.CRDS_PATH }}
+            ${{ env.CRDS_TESTING_CACHE }}
           key: ${{ steps.key.outputs.key }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        id: crds-cache-test
+        run: |
+          git clone https://github.com/spacetelescope/crds-cache-test.git
+          mv crds-cache-test ${{ env.CRDS_TEST_ROOT }}
       - if: steps.cache.outputs.cache-hit != 'true'
         id: cache_hst
         name: restore cached HST files
@@ -78,7 +89,7 @@ jobs:
           cache-environment: true
           cache-downloads: true
       - if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
+        run: pip install git+https://github.com/spacetelescope/jwst roman-datamodels
       - if: steps.cache.outputs.cache-hit != 'true'
         run: pip uninstall --yes crds && ./install && pip install .
       - if: steps.cache.outputs.cache-hit != 'true'
