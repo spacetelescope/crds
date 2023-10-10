@@ -9,8 +9,8 @@ on:
         value: ${{ jobs.cache.outputs.key }}
   workflow_dispatch:
   schedule:
-    # Weekly Monday 9AM
-    - cron: "0 9 * * 1"
+    # Weekly Monday midnight
+    - cron: "0 0 * * 1"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
