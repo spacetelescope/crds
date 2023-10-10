@@ -39,7 +39,37 @@ jobs:
       key: ${{ steps.key.outputs.key }}
     steps:
       - uses: actions/checkout@v3
-      - uses: mamba-org/setup-micromamba@v1
+      - id: key
+        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}-${{ needs.contexts.outputs.roman }}" >> $GITHUB_OUTPUT
+      - id: cache
+        name: restore entire CRDS cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}
+          key: ${{ steps.key.outputs.key }}
+      - if: steps.cache.outputs.cache-hit == 'false'
+        id: cache_hst
+        name: restore cached HST files
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/**/hst*
+          key: test-cache-${{ needs.contexts.outputs.hst }}
+      - if: steps.cache.outputs.cache-hit == 'false'
+        id: cache_jwst
+        name: restore cached JWST files
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/**/jwst*
+          key: test-cache-${{ needs.contexts.outputs.jwst }}
+      - if: steps.cache.outputs.cache-hit == 'false'
+        id: cache_roman
+        name: restore cached Roman files
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CRDS_PATH }}/**/roman*
+          key: test-cache-${{ needs.contexts.outputs.roman }}
+      - if: steps.cache.outputs.cache-hit == 'false'
+        uses: mamba-org/setup-micromamba@v1
         with:
           environment-name: crds-testing
           create-args: >-
@@ -54,33 +84,9 @@ jobs:
           init-shell: bash
           cache-environment: true
           cache-downloads: true
-      - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
-      - run: pip uninstall --yes crds && ./install && pip install .
-      - id: cache_hst
-        name: restore cached HST files
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CRDS_PATH }}/**/hst*
-          key: test-cache-${{ needs.contexts.outputs.hst }}
-      - id: cache_jwst
-        name: restore cached JWST files
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CRDS_PATH }}/**/jwst*
-          key: test-cache-${{ needs.contexts.outputs.jwst }}
-      - id: cache_roman
-        name: restore cached Roman files
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CRDS_PATH }}/**/roman*
-          key: test-cache-${{ needs.contexts.outputs.roman }}
-      - id: key
-        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}-${{ needs.contexts.outputs.roman }}" >> $GITHUB_OUTPUT
-      - id: cache
-        name: restore entire CRDS cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CRDS_PATH }}
-          key: ${{ steps.key.outputs.key }}
+      - if: steps.cache.outputs.cache-hit == 'false'
+        run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
+      - if: steps.cache.outputs.cache-hit == 'false'
+        run: pip uninstall --yes crds && ./install && pip install .
       - if: steps.cache.outputs.cache-hit == 'false'
         run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.cache_hst.outputs.cache-hit == 'true' || steps.cache_jwst.outputs.cache-hit == 'true' || steps.cache_roman.outputs.cache-hit == 'true') && 'u' || 'c' }}
