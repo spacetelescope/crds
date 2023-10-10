@@ -227,133 +227,6 @@ def test_diff_rmap_primitive_diffs(capsys, default_shared_state, hst_data, fitsd
     output = capsys.readouterr().out
     
     assert output == f"""================================================================================
-(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced {hst_data}/hst_acs_biasfile_0001.fits with {hst_data}/hst_acs_biasfile_0002.fits')
-
- fitsdiff: {fitsdiff_version}
- a: {hst_data}/hst_acs_biasfile_0001.fits
- b: {hst_data}/hst_acs_biasfile_0002.fits
- Maximum number of different data values to be reported: 10
- Relative tolerance: 0.0, Absolute tolerance: 0.0
-
-Primary HDU:
-
-   Headers contain differences:
-     Extra keyword 'ADD_1'  in a: 'added to hst_acs_biasfile_0001.fits'
-     Extra keyword 'ADD_2'  in b: 'added to hst_acs_biasfile_0002.fits'
-     Keyword DIFF_12  has different values:
-        a> value in 1
-         ?          ^
-        b> value in 2
-         ?          ^
-
-    
-================================================================================
-(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'deleted Match rule for m991609tj_bia.fits')
-================================================================================
-(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'deleted Match rule for q9e1206kj_bia.fits')
-================================================================================
-(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:42:53'), 'deleted Match rule for q9e12071j_bia.fits')
-================================================================================
-(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'added Match rule for m991609tj_bia.fits')
-================================================================================
-(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
-================================================================================
-(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
-"""
-    
-    assert status == 1
-
-@mark.diff
-def test_diff_file_reversions(capsys, default_shared_state, hst_data):
-    """
-    Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
-    """
-
-    status = DiffScript(f"crds.diff {hst_data}/hst_0002.pmap {hst_data}/hst_0001.pmap --check-diffs")()
-
-    output = capsys.readouterr().out
-
-    assert output == f"""(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('{hst_data}/hst_acs_biasfile_0002.rmap', '{hst_data}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced {hst_data}/hst_acs_biasfile_0002.fits with {hst_data}/hst_acs_biasfile_0001.fits')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('{hst_data}/hst_acs_biasfile_0002.rmap', '{hst_data}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'added Match rule for m991609tj_bia.fits')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('{hst_data}/hst_acs_biasfile_0002.rmap', '{hst_data}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('{hst_data}/hst_acs_biasfile_0002.rmap', '{hst_data}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:42:53'), 'added Match rule for q9e12071j_bia.fits')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('{hst_data}/hst_acs_biasfile_0002.rmap', '{hst_data}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'deleted Match rule for m991609tj_bia.fits')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('{hst_data}/hst_acs_biasfile_0002.rmap', '{hst_data}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'deleted Match rule for q9e1206kj_bia.fits')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('{hst_data}/hst_acs_biasfile_0002.rmap', '{hst_data}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'deleted Match rule for q9e12071j_bia.fits')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('{hst_data}/hst_acs_0002.imap', '{hst_data}/hst_acs_0001.imap'), ('biasfile',), 'replaced {hst_data}/hst_acs_biasfile_0002.rmap with {hst_data}/hst_acs_biasfile_0001.rmap')
-(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('acs',), 'replaced {hst_data}/hst_acs_0002.imap with {hst_data}/hst_acs_0001.imap')
-CRDS - WARNING - Rule change at ('{hst_data}/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00')) added Match rule for 'm991609tj_bia.fits'
-CRDS - WARNING - Rule change at ('{hst_data}/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35')) added Match rule for 'q9e1206kj_bia.fits'
-CRDS - WARNING - Rule change at ('{hst_data}/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:42:53')) added Match rule for 'q9e12071j_bia.fits'
-CRDS - WARNING - Rule change at ('{hst_data}/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00')) deleted Match rule for 'm991609tj_bia.fits'
-CRDS - WARNING - Rule change at ('{hst_data}/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35')) deleted Match rule for 'q9e1206kj_bia.fits'
-CRDS - WARNING - Rule change at ('{hst_data}/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54')) deleted Match rule for 'q9e12071j_bia.fits'
-CRDS - WARNING - Reversion at ('{hst_data}/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00')) replaced '{hst_data}/hst_acs_biasfile_0002.fits' with '{hst_data}/hst_acs_biasfile_0001.fits'
-CRDS - WARNING - Reversion at ('{hst_data}/hst_acs_0001.imap', ('biasfile',)) replaced '{hst_data}/hst_acs_biasfile_0002.rmap' with '{hst_data}/hst_acs_biasfile_0001.rmap'
-CRDS - WARNING - Reversion at ('{hst_data}/hst_0001.pmap', ('acs',)) replaced '{hst_data}/hst_acs_0002.imap' with '{hst_data}/hst_acs_0001.imap'
-"""
-    
-    assert status == 2
-
-@mark.diff
-def test_diff_row_change(capsys, default_shared_state, hst_data, fitsdiff_version):
-    """
-    Row change
-    """
-
-    status = DiffScript(f"crds.diff {hst_data}/test-source.fits {hst_data}/test-change-row1-valueLeft.fits")()  #doctest: +ELLIPSIS
-    
-    output = capsys.readouterr().out
-    
-    assert output == f"""
- fitsdiff: {fitsdiff_version}
- a: {hst_data}/test-source.fits
- b: {hst_data}/test-change-row1-valueLeft.fits
- Maximum number of different data values to be reported: 10
- Relative tolerance: 0.0, Absolute tolerance: 0.0
-
-Extension HDU 1:
-
-   Data contains differences:
-     Column valueLeft data differs in row 1:
-        a> 5748
-        b> -1
-     1 different table data element(s) found (2.22% different).
-
- Row differences for HDU extension #1
-
-    Summary:
-        a rows 1-1 differ from b rows 1-1
-
-    Row difference, unified diff format:
-        --- Table A
-
-        +++ Table B
-
-        @@ -1,5 +1,5 @@
-
-         'yes', 'yes', 2988, -2779.03..., 'coquille'
-        -'yes', 'no', 5748, 6357.97..., 'ferly'
-        +'yes', 'no', -1, 6357.97..., 'ferly'
-         'yes', 'maybe', 9735, -9132.53..., 'misreliance'
-         'no', 'yes', 425, -2689.26..., 'ogeed'
-         'no', 'no', 8989, 9870.02..., 'readmittance'
-
-"""
-    
-    assert status == 1
-
-@mark.diff
-def test_diff_rmap_primitive_diffs(capsys, default_shared_state, hst_data, fitsdiff_version):
-    """
-    Compute primitive diffs for two .rmap's:
-    """
-
-    status = DiffScript(f"crds.diff {hst_data}/hst_acs_biasfile_0001.rmap {hst_data}/hst_acs_biasfile_0002.rmap --primitive-diffs")()  #doctest: +ELLIPSIS
-
-    output = capsys.readouterr().out
-
-    assert output == f"""================================================================================
 (('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0001.fits with test/data/hst/hst_acs_biasfile_0002.fits')
 
  fitsdiff: {fitsdiff_version}
@@ -399,7 +272,7 @@ def test_diff_file_reversions(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0002.pmap {hst_data}/hst_0001.pmap --check-diffs")()
 
     output = capsys.readouterr().out
-    
+
     assert output == f"""(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0002.fits with test/data/hst/hst_acs_biasfile_0001.fits')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'added Match rule for m991609tj_bia.fits')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
@@ -420,9 +293,9 @@ def test_diff_row_change(capsys, default_shared_state, hst_data, fitsdiff_versio
     """
 
     status = DiffScript(f"crds.diff {hst_data}/test-source.fits {hst_data}/test-change-row1-valueLeft.fits")()  #doctest: +ELLIPSIS
-
+    
     output = capsys.readouterr().out
-
+    
     assert output == f"""
  fitsdiff: {fitsdiff_version}
  a: {hst_data}/test-source.fits
@@ -450,12 +323,12 @@ Extension HDU 1:
 
         @@ -1,5 +1,5 @@
 
-         'yes', 'yes', 2988, -2779.03..., 'coquille'
-        -'yes', 'no', 5748, 6357.97..., 'ferly'
-        +'yes', 'no', -1, 6357.97..., 'ferly'
-         'yes', 'maybe', 9735, -9132.53..., 'misreliance'
-         'no', 'yes', 425, -2689.26..., 'ogeed'
-         'no', 'no', 8989, 9870.02..., 'readmittance'
+         'yes', 'yes', 2988, -2779.0352, 'coquille'
+        -'yes', 'no', 5748, 6357.9727, 'ferly'
+        +'yes', 'no', -1, 6357.9727, 'ferly'
+         'yes', 'maybe', 9735, -9132.532, 'misreliance'
+         'no', 'yes', 425, -2689.2646, 'ogeed'
+         'no', 'no', 8989, 9870.025, 'readmittance'
 
 """
     
@@ -554,7 +427,7 @@ def test_diff_print_new_files(capsys, default_shared_state, hst_data):
     assert output == f"""hst_0002.pmap
 hst_acs_0002.imap
 hst_acs_biasfile_0002.rmap
-{hst_data}/hst_acs_biasfile_0002.fits
+test/data/hst/hst_acs_biasfile_0002.fits
 """
 
     assert status == 1
