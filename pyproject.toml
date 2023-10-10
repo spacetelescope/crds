@@ -155,6 +155,7 @@ markers = [
   "asdf: asdf related tests",
   "bad_files",
   "bestrefs",
+  "build6",
   "certify",
   "checksum",
   "cmdline",
