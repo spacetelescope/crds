@@ -12,41 +12,20 @@ on:
     # - master
     - pytest-migration #temp
 
+env:
+  CRDS_TEST_ROOT: /tmp
+  CRDS_SERVER_URL: https://hst-crds.stsci.edu
+  CRDS_CLIENT_RETRY_COUNT: 3
+  CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
+  LD_LIBRARY_PATH: /usr/local/lib
+
 jobs:
-  data:
-    name: retrieve current CRDS context
-    runs-on: ubuntu-latest
-    env:
-      OBSERVATORY: hst
-      CRDS_SERVER_URL: https://hst-crds.stsci.edu
-      CRDS_PATH: /tmp/crds-cache-default-test
-    outputs:
-      crds_path: ${{ steps.crds_path.outputs.path }}
-      crds_context: ${{ steps.crds_context.outputs.pmap }}
-      crds_server: ${{ steps.crds_server.outputs.url }}
-    steps:
-      - id: crds_context
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-        # Get default CRDS_CONTEXT without installing crds client
-        # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
-      - id: crds_path
-        run: echo "path=${{ env.CRDS_PATH }}" >> $GITHUB_OUTPUT
-      - id: crds_server
-        run: echo "url=${{ env.CRDS_SERVER_URL }}" >> $GITHUB_OUTPUT
+  cache:
+    uses: ./.github/workflows/cache.yml
   pytest:
     name: ${{ matrix.runs-on }} Python ${{ matrix.python-version }}
-    needs: [ data ]
+    needs: [ cache ]
     runs-on: ${{ matrix.runs-on }}
-    env:
-      CRDS_SERVER_URL: ${{ needs.data.outputs.crds_server }}
-      CRDS_TEST_ROOT: /tmp
-      CRDS_CLIENT_RETRY_COUNT: 3
-      CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
-      LD_LIBRARY_PATH: /usr/local/lib
     strategy:
       fail-fast: false
       matrix:
@@ -78,15 +57,15 @@ jobs:
           sudo cp fitsverify /usr/local/bin
       - name: Install Python dependencies
         run: |
-          pip install roman-datamodels
-          pip install git+https://github.com/spacetelescope/jwst
+          pip install roman-datamodels git+https://github.com/spacetelescope/jwst.git
           pip uninstall --yes crds
           ./install
           pip install .[submission,test,docs,synphot]
-      - uses: actions/cache@v3
-        if: always()
+      - id: cache
+        uses: actions/cache@v3
         with:
-          path: ${{ needs.data.outputs.crds_path }}
-          key: ${{ needs.data.outputs.crds_context }}
-      - run: ./setup_test_cache $CRDS_TEST_ROOT
+          path: |
+            ${{ needs.cache.outputs.path }}
+            ${{ needs.cache.outputs.testing_cache }}
+          key: ${{ needs.cache.outputs.key }}
       - run: ./runtests --cover
