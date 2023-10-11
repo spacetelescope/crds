@@ -11,6 +11,11 @@ on:
     branches:
     # - master
     - pytest-migration #temp
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   CRDS_TEST_ROOT: /tmp
