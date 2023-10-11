@@ -161,6 +161,7 @@ markers = [
   "cmdline",
   "core: tests in the crds.core module",
   "distortion: all tests related to distortion filetype",
+  "diff",
   "factory",
   "heavy_client",
   "io",
