@@ -179,6 +179,7 @@ markers = [
   "rowdiff",
   "selectors",
   "special",
+  "submit",
   "substitutions",
   "sync",
   "synphot",

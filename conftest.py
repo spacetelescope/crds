@@ -5,6 +5,8 @@ import os, os.path
 from pytest import TempPathFactory
 import cProfile
 import pstats
+import mock
+import yaml
 
 # ==============================================================================
 
@@ -95,6 +97,45 @@ def roman_data(test_data):
 
 # ==============================================================================
 
+
+@fixture(scope='function')
+def tmp_rc(test_temp_dir):
+    _tmprc = os.path.join(test_temp_dir, 'tmp_rc_submit_')
+    os.makedirs(_tmprc, exist_ok=True)
+    return _tmprc
+
+
+@fixture(scope='function')
+def submit_test_files(tmp_rc):
+    # Create empty test files in the temporary directory:
+    filenames = ['ipppssoot_ccd.fits', 'opppssoot_bia.fits']
+    tempfiles = [os.path.join(tmp_rc, x) for x in filenames]
+    for fpath in tempfiles:
+        with open(fpath, 'a'):
+            os.utime(fpath, None)
+    return tempfiles
+
+
+@fixture()
+def mock_submit_form(tmp_rc, test_data):
+    # Create a file handle to use as a mockup of the urllib.request object:
+    mockup_form = os.path.join(tmp_rc, 'mocked_redcat_description.yml')
+    form_description_yml = yaml.safe_load(os.path.join(test_data, "rc_description.yaml"))
+    with open(mockup_form, 'w') as f:
+        f.write(form_description_yml)
+    return mockup_form
+
+
+@fixture()
+@mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True)
+def urlopen(mock_submit_form):
+    # Mocked urllib.request to .../redcat_description.yml:
+    from crds.submit.rc_submit import urllib
+    mock_urlopen = mock.create_autospec(urllib.request.urlopen, return_value=open(mock_submit_form))
+    return mock_urlopen
+
+
+# ==============================================================================
 
 class ConfigState:
 
