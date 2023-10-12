@@ -14,10 +14,6 @@ on:
     # Weekly Monday midnight
     - cron: "0 0 * * 1"
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
   CRDS_TEST_ROOT: /tmp
   CRDS_PATH: /tmp/crds-cache-default-test
