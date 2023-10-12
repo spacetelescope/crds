@@ -4,14 +4,12 @@ on:
   ## uncomment before merging to master once test suite is finalized
   push:
     branches:
-    # - master
-    - pytest-migration #temp
-    # tags:
-    #   - '*'
+    - master
+    tags:
+      - '*'
   pull_request:
     branches:
-    # - master
-    - pytest-migration #temp
+    - master
   workflow_dispatch:
 
 concurrency:
