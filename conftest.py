@@ -120,14 +120,16 @@ def submit_test_files(tmp_rc):
 def mock_submit_form(tmp_rc, test_data):
     # Create a file handle to use as a mockup of the urllib.request object:
     mockup_form = os.path.join(tmp_rc, 'mocked_redcat_description.yml')
-    form_description_yml = yaml.safe_load(os.path.join(test_data, "rc_description.yaml"))
+    with open(os.path.join(test_data, "rc_description.yaml")) as yml:
+        form_description_yml = yaml.safe_load(yml)
     with open(mockup_form, 'w') as f:
-        f.write(form_description_yml)
+        #f.writelines(form_description_yml)
+        yaml.dump(form_description_yml)
     return mockup_form
 
 
+# @mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True)
 @fixture()
-@mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True)
 def urlopen(mock_submit_form):
     # Mocked urllib.request to .../redcat_description.yml:
     from crds.submit.rc_submit import urllib
