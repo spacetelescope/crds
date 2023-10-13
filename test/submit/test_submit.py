@@ -14,14 +14,14 @@ class TestSubmit:
         # Create a file handle to use as a mockup of the urllib.request object:
         self.mockup_form = mock_submit_form
 
-    # @fixture()
-    # def _urlopen(self, urlopen):
-    # "Mocked urllib.request to redcat_description.yml. "
-    #     self.urlopen = urlopen
+    @fixture()
+    def _urlopen(self, urlopen):
+        "Mocked urllib.request to redcat_description.yml. "
+        self.urlopen = urlopen
 
     @fixture(autouse=True)
-    def _set_config(self, default_shared_state, submit_test_files, tmp_rc):
-        self._config = default_shared_state
+    def _set_config(self, hst_serverless_state, submit_test_files, tmp_rc):
+        self._config = hst_serverless_state
         self.tempfiles = submit_test_files
         self.tmp_rc = tmp_rc
 
