@@ -9,15 +9,15 @@ class TestSubmit:
     # Instantiate the Submission object used in these tests:
     s = Submission('hst', 'dev', context='hst_0723.pmap')
 
-    @fixture()
-    def _mockup_form(self, mock_submit_form):
-        # Create a file handle to use as a mockup of the urllib.request object:
-        self.mockup_form = mock_submit_form
+    # @fixture()
+    # def _mockup_form(self, mock_submit_form):
+    #     # Create a file handle to use as a mockup of the urllib.request object:
+    #     self.mockup_form = mock_submit_form
 
-    @fixture()
-    def _urlopen(self, urlopen):
-        "Mocked urllib.request to redcat_description.yml. "
-        self.urlopen = urlopen
+    # @fixture()
+    # def _urlopen(self, urlopen):
+    #     "Mocked urllib.request to redcat_description.yml. "
+    #     self.urlopen = urlopen
 
     @fixture(autouse=True)
     def _set_config(self, hst_serverless_state, submit_test_files, tmp_rc):
