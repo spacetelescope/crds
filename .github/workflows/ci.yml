@@ -54,7 +54,7 @@ jobs:
         with:
           environment-name: crds-testing
           create-args: >-
-            python=3.11
+            python=${{ matrix.python-version }}
             asdf
             astropy
             filelock
