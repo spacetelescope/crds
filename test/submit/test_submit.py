@@ -20,8 +20,8 @@ class TestSubmit:
     #     self.urlopen = urlopen
 
     @fixture(autouse=True)
-    def _set_config(self, hst_serverless_state, submit_test_files, tmp_rc):
-        self._config = hst_serverless_state
+    def _set_config(self, hst_shared_cache_state, submit_test_files, tmp_rc):
+        self._config = hst_shared_cache_state
         self.tempfiles = submit_test_files
         self.tmp_rc = tmp_rc
 

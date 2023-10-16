@@ -129,12 +129,12 @@ def mock_submit_form(tmp_rc, test_data):
 
 
 # @mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True)
-@fixture()
-def urlopen(mock_submit_form):
-    # Mocked urllib.request to .../redcat_description.yml:
-    from crds.submit.rc_submit import urllib
-    mock_urlopen = mock.create_autospec(urllib.request.urlopen, return_value=open(mock_submit_form))
-    return mock_urlopen
+# @fixture()
+# def urlopen(mock_submit_form):
+#     # Mocked urllib.request to .../redcat_description.yml:
+#     from crds.submit.rc_submit import urllib
+#     mock_urlopen = mock.create_autospec(urllib.request.urlopen, return_value=open(mock_submit_form))
+#     return mock_urlopen
 
 
 # ==============================================================================
