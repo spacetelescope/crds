@@ -1,29 +1,25 @@
 from pytest import mark, fixture
 import os
 from crds.submit import Submission, NoFilesSelected
+import mock
 
 
-@mark.submit
-class TestSubmit:
-
+@fixture(autouse=True)
+def submission_obj(urlopen):
     # Instantiate the Submission object used in these tests:
     s = Submission('hst', 'dev', context='hst_0723.pmap')
+    return s
 
-    # @fixture()
-    # def _mockup_form(self, mock_submit_form):
-    #     # Create a file handle to use as a mockup of the urllib.request object:
-    #     self.mockup_form = mock_submit_form
+@mark.submit
+class TestSubmit(object):
 
-    # @fixture()
-    # def _urlopen(self, urlopen):
-    #     "Mocked urllib.request to redcat_description.yml. "
-    #     self.urlopen = urlopen
 
     @fixture(autouse=True)
-    def _set_config(self, hst_shared_cache_state, submit_test_files, tmp_rc):
+    def _set_config(self, hst_shared_cache_state, submit_test_files, tmp_rc, submission_obj):
         self._config = hst_shared_cache_state
         self.tempfiles = submit_test_files
         self.tmp_rc = tmp_rc
+        self.s = submission_obj
 
     def ValErr(func):
         def wrapper(*args, **kwargs):
@@ -173,6 +169,7 @@ class TestSubmit:
 
     @ValErr
     def test_invalid_description(self):
+        self.s.add_file(list(self.tempfiles)[0])
         some_invalid_chars = ['!', '@', '$', '%', '^', '*', '(', ')', '~', '`', '"', '?', '|', '{', '}', '[', ']', ':', ';', '<', '>']
         # Do something here to pass field validation checks:
         self.s['file_type']           = 'value'
@@ -187,6 +184,7 @@ class TestSubmit:
     
     @ValErr
     def test_multiple_invalid_chars(self):
+        self.s.add_file(list(self.tempfiles)[0])
         self.s['file_type']           = 'value'
         self.s['correctness_testing'] = 'value'
         self.s['deliverer']           = 'value'
