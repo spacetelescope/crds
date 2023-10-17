@@ -263,6 +263,15 @@ def roman_test_cache_state(test_cache):
     cfg.config_setup()
     yield cfg
     cfg.cleanup()
+
+
+@fixture(scope='function')
+def tobs_test_cache_state(test_cache):
+    cfg = ConfigState(cache=test_cache, url="https://tobs-serverless-mode.stsci.edu", clear_existing=False)
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
+
  
 
 # ==============================================================================
