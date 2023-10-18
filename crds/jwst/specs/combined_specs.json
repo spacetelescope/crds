@@ -919,14 +919,15 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.CHANNEL"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"e2255db2e45b01b85aa4686d6e1811ad77ff33b8",
+            "sha1sum":"b18a61dfb7808fae468739cdbe743da848eb443d",
             "suffix":"apcorr",
             "text_descr":"Aperture Correction",
             "tpn":"miri_apcorr.tpn",
@@ -1204,15 +1205,20 @@
             "instrument":"MIRI",
             "ld_tpn":"miri_gain_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_miri_gain_0000.rmap",
+            "name":"miri_gain.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.FILTER"
+                    "META.INSTRUMENT.FILTER",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"09f1b655e8999a1be2ef3aea286e74fc0588738c",
+            "sha1sum":"898a158c3b13c23aa4cb6b2ac6ab12178b5834b1",
             "suffix":"gain",
             "text_descr":"Gain",
             "tpn":"miri_gain.tpn",
@@ -1227,14 +1233,24 @@
             "instrument":"MIRI",
             "ld_tpn":"miri_ipc_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_miri_ipc_0000.rmap",
+            "name":"miri_ipc.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR"
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"0f07718e051396c851bbaa03a917487abec80843",
+            "sha1sum":"8c4873a3341cc3132d29b8b447535db189c6d826",
+            "substitutions":{
+                "META.DETECTOR":{
+                    "GENERIC":"N/A"
+                }
+            },
             "suffix":"ipc",
             "text_descr":"Interpixel Capacitance",
             "tpn":"miri_ipc.tpn",
@@ -5157,6 +5173,34 @@
             "tpn":"niriss_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-chargemigrationstep":{
+            "derived_from":"Derived from niriss_pars-jumpstep 2023-09-07",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-chargemigrationstep",
+            "filetype":"pars-chargemigrationstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-chargemigrationstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"niriss_pars-chargemigrationstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.EXP_TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"5b4eef86c56f5ede23d1010734b3a12cbbdf0e47",
+            "suffix":"pars-chargemigrationstep",
+            "text_descr":"Parameters to correct charge migration and the jump detection step interaction.",
+            "tpn":"niriss_pars-chargemigrationstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-darkpipeline":{
             "classes":[
                 "Match",
@@ -6782,6 +6826,35 @@
             "suffix":"pars-jumpstep",
             "text_descr":"JumpStep runtime parameters",
             "tpn":"nirspec_pars-jumpstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-outlierdetectionstep":{
+            "derived_from":"Copied from miri_pars-outlierdetectionstep.rmap 20230831",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-outlierdetectionstep",
+            "filetype":"pars-outlierdetectionstep",
+            "instrument":"NIRSpec",
+            "ld_tpn":"nirspec_pars-outlierdetectionstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pars-outlierdetectionstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.FILTER",
+                    "META.SUBARRAY.NAME",
+                    "META.VISIT.TSOVISIT"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"2d2e6bbe9ac34b7b5994aa5412652312d27e00c2",
+            "suffix":"pars-outlierdetectionstep",
+            "text_descr":"OutlierDetectionStep runtime parameters",
+            "tpn":"nirspec_pars-outlierdetectionstep.tpn",
             "unique_rowkeys":null
         },
         "pars-rampfitstep":{

@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'generated as stub rmap on 2014-03-24 15:03:30.015471',
+    'file_ext' : '.fits',
+    'filekind' : 'IPC',
+    'filetype' : 'INTERPIXEL CAPACITANCE',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'miri_ipc.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8c4873a3341cc3132d29b8b447535db189c6d826',
+    'substitutions' : {
+        'META.DETECTOR' : {
+            'GENERIC' : 'N/A',
+        },
+    },
+    'suffix' : 'ipc',
+    'text_descr' : 'Interpixel Capacitance',
+}
+
+selector = Match({
+})
