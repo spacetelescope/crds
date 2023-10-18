@@ -8,13 +8,14 @@ def mock_urlopen():
     with mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True) as urlopen:
         return urlopen
 
+
 @mark.submit
 class TestSubmit(object):
 
 
     @fixture(autouse=True)
     def _set_config(self, hst_shared_cache_state, submit_test_files, tmp_rc, mock_submit_form):
-        hst_shared_cache_state.url = 'https://hst-crds-dev.stsci.edu'
+        hst_shared_cache_state.url = 'https://hst-crds.stsci.edu'
         hst_shared_cache_state.config_setup()
         self._config = hst_shared_cache_state
         self.tempfiles = submit_test_files
@@ -22,7 +23,7 @@ class TestSubmit(object):
         # Mocked urllib.request to .../redcat_description.yml:
         urlopen = mock_urlopen()
         urlopen.return_value = mock_submit_form
-        self.s = Submission('hst', 'dev', context='hst_0723.pmap')
+        self.s = Submission('hst', 'ops', context='hst_0723.pmap')
 
     def ValErr(func):
         def wrapper(*args, **kwargs):
