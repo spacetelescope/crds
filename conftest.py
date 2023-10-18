@@ -5,6 +5,8 @@ import os, os.path
 from pytest import TempPathFactory
 import cProfile
 import pstats
+import mock
+import yaml
 
 # ==============================================================================
 
@@ -95,6 +97,38 @@ def roman_data(test_data):
 
 # ==============================================================================
 
+
+@fixture(scope='function')
+def tmp_rc(test_temp_dir):
+    _tmprc = os.path.join(test_temp_dir, 'tmp_rc_submit_')
+    os.makedirs(_tmprc, exist_ok=True)
+    return _tmprc
+
+
+@fixture(scope='function')
+def submit_test_files(tmp_rc):
+    # Create empty test files in the temporary directory:
+    filenames = ['ipppssoot_ccd.fits', 'opppssoot_bia.fits']
+    tempfiles = [os.path.join(tmp_rc, x) for x in filenames]
+    for fpath in tempfiles:
+        with open(fpath, 'a'):
+            os.utime(fpath, None)
+    return tempfiles
+
+
+@fixture(scope='function')
+def mock_submit_form(tmp_rc, test_data):
+    # Create a file handle to use as a mockup of the urllib.request object:
+    mockup_form = os.path.join(tmp_rc, 'mocked_redcat_description.yml')
+    with open(os.path.join(test_data, "rc_description.yaml")) as yml:
+        form_description_yml = yaml.safe_load(yml)
+    with open(mockup_form, 'w') as f:
+        yaml.dump(form_description_yml)
+    return mockup_form
+
+
+
+# ==============================================================================
 
 class ConfigState:
 

@@ -1,0 +1,106 @@
+- {help_text: 'Who are you?', key: deliverer, label: Name of deliverer, required: true,
+  type: CharField}
+- {help_text: Comma-delimited list (optional), key: other_email, label: Other e-mail
+    adresses to send notifications, required: false, type: CharField}
+- choices: [acs, cos, nicmos, stis, synphot, wfc3, wfpc2]
+  initial: acs
+  key: instrument
+  label: Instrument  (All submitted files should match this instrument.  This instrument
+    will be locked for your submission exclusively)
+  required: true
+  type: TypedChoiceField
+- {key: file_type, label: 'Type of files (Bias, Dark, etc.)', required: true, type: CharField}
+- choices: [false, true]
+  initial: false
+  key: history_updated
+  label: Has HISTORY section in the primary header been updated to describe in detail
+    the reason for delivery and how the files were created?
+  required: false
+  type: BooleanField
+- choices: [false, true]
+  initial: false
+  key: pedigree_updated
+  label: Has PEDIGREE keyword been checked and updated as necessary?
+  required: false
+  type: BooleanField
+- choices: [false, true]
+  initial: false
+  key: keywords_checked
+  label: Has COMMENT been checked?
+  required: false
+  type: BooleanField
+- choices: [false, true]
+  initial: false
+  key: descrip_updated
+  label: Was the DESCRIP keyword updated with a summary of why the files were updated
+    or created?
+  required: false
+  type: BooleanField
+- choices: [false, true]
+  initial: false
+  key: useafter_updated
+  label: Has the USEAFTER keyword been checked, and if necessary, updated?
+  required: false
+  type: BooleanField
+- choices: [N/A, 'No', 'Yes']
+  help_text: N/A for ETC Files Only
+  initial: N/A
+  key: useafter_matches
+  label: If the reference files are replacing previous versions, do the new USEAFTER
+    dates exactly match the old ones?
+  required: true
+  type: TypedChoiceField
+- choices: [N/A, 'No', 'Yes']
+  help_text: optional
+  initial: N/A
+  key: compliance_verified
+  label: Verification for compliance complete (fits, certify, etc. or N/A)
+  required: true
+  type: TypedChoiceField
+- choices: [false, true]
+  initial: false
+  key: ingest_files
+  label: Should the affected files be reprocessed?
+  required: false
+  type: BooleanField
+- choices: [false, true]
+  initial: false
+  key: etc_delivery
+  label: Should the files be submitted to the ETC?
+  required: false
+  type: BooleanField
+- choices: [false, true]
+  initial: false
+  key: jwst_etc
+  label: Are these JWST ETC files?
+  required: false
+  type: BooleanField
+- {key: calpipe_version, label: Files run through the current version of the calibration
+    software being used by the pipeline or PYSYNPHOT and ETC (yes/no and version number),
+  required: true, type: CharField}
+- choices: [false, true]
+  initial: false
+  key: replacement_files
+  label: Are any files replacing old reference files (deliveries can be a mix of files
+    that are or are not replacing old files) (yes/no)
+  required: false
+  type: BooleanField
+- {key: old_reference_files, label: 'If yes, list them here', required: false, type: CharField}
+- choices: [N/A, 'No', 'Yes']
+  initial: N/A
+  key: replacing_badfiles
+  label: If the files being replaced are bad, and should not be used with any data,
+    please indicate this here
+  required: true
+  type: TypedChoiceField
+- {help_text: Comma-delimited list (optional), key: jira_issue, label: Any JIRA issues
+    filed in regard to the references being delivered (e.g. "REDCAT-25"), required: false,
+  type: CharField}
+- {key: table_rows_changed, label: 'If files are tables, please indicate exactly which
+    rows have changed', required: false, type: CharField}
+- {key: modes_affected, label: 'Please indicate which modes (e.g. all the STIS, FUVMAMA,
+    E140L modes) are affected by the changes in the files', required: true, type: CharField}
+- {key: correctness_testing, label: Description of how the files were tested for correctness,
+  required: true, type: CharField}
+- {key: additional_considerations, label: Additional considerations, required: false,
+  type: CharField}
