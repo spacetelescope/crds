@@ -177,6 +177,7 @@ markers = [
   "rmap",
   "roman",
   "rowdiff",
+  "selectors",
   "special",
   "substitutions",
   "sync",
