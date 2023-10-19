@@ -6,6 +6,12 @@ General
 
 - Replaced deprecated np.product with np.prod in crds.certify.validators.core [#975]
 
+Testing
+-------
+
+- Migrated test suite from nose to pytest, running CI tests for python 3.9, 3.10, 3.11 [#998]
+
+
 
 11.17.6 (2023-09-08)
 =====================
