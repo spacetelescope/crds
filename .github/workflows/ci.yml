@@ -1,23 +1,39 @@
 name: CI
 
 on:
+  ## uncomment before merging to master once test suite is finalized
   push:
     branches:
-      - master
+    - master
     tags:
       - '*'
   pull_request:
     branches:
     - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CRDS_TEST_ROOT: /tmp
+  CRDS_SERVER_URL: https://hst-crds.stsci.edu
+  CRDS_CLIENT_RETRY_COUNT: 3
+  CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
+  LD_LIBRARY_PATH: /usr/local/lib
+
+defaults:
+  run:
+    shell: bash -leo pipefail {0} {0}
 
 jobs:
+  cache:
+    uses: ./.github/workflows/cache.yml
   pytest:
     name: ${{ matrix.runs-on }} Python ${{ matrix.python-version }}
+    needs: [ cache ]
     runs-on: ${{ matrix.runs-on }}
-    env:
-      CRDS_SERVER_URL: https://hst-crds.stsci.edu
-      CRDS_TEST_ROOT: /tmp
-      LD_LIBRARY_PATH: /usr/local/lib
     strategy:
       fail-fast: false
       matrix:
@@ -26,32 +42,34 @@ jobs:
           - macos-latest
         python-version:
           - 3.9
+          - '3.10'
+          - 3.11
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - uses: mamba-org/setup-micromamba@v1
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install fitsverify
-        run: |
-          wget --quiet --output-document - http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz | tar -xz -C $HOME
-          cd $HOME/cfitsio-3.49
-          ./configure --prefix=/usr/local --enable-reentrant --disable-curl
-          make shared
-          sudo make install
-          wget --quiet --output-document - https://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.20.tar.gz | tar -xz -C $HOME
-          cd $HOME/fitsverify-4.20
-          gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -lcfitsio
-          sudo cp fitsverify /usr/local/bin
-      - name: Install Python dependencies
-        run: |
-          pip install roman-datamodels
-          pip install git+https://github.com/spacetelescope/jwst
-          pip uninstall --yes crds
-          ./install
-          pip install .[submission,test,docs,synphot]
-          ./setup_test_cache $CRDS_TEST_ROOT
-      - name: Run tests
-        run: ./runtests --cover
+          environment-name: crds-testing
+          create-args: >-
+            python=${{ matrix.python-version }}
+            asdf
+            astropy
+            filelock
+            fitsverify
+            numpy
+            parsley
+            requests
+          init-shell: bash
+          cache-environment: true
+          cache-downloads: true
+      - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
+      - run: pip uninstall --yes crds && ./install && pip install .[submission,test,docs,synphot]
+      - id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ needs.cache.outputs.path }}
+            ${{ needs.cache.outputs.testing_cache }}
+          key: ${{ needs.cache.outputs.key }}
+      - run: ./runtests --cover

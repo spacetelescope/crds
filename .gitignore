@@ -1,5 +1,7 @@
 coverage
 .coverage
+coverage.*
+.profile-stats
 .pydevproject
 .project
 *.pyc
@@ -16,3 +18,4 @@ documentation/crds_users_guide/*.tar.gz
 __pycache__/
 crds/_version.py
 .vscode/
+.DS_Store

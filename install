@@ -83,9 +83,9 @@ st=$st$?
 # to install CRDS from source code.  To support testing the
 # setup_test_cache script should also be run to install other test files.
 if [ $dev_install = 0 ]; then
-    echo "Setup data..."
-    python setup_data.py install --force >>install.log
-    st=$st$?
+    # echo "Setup data..."
+    # python setup_data.py install --force >>install.log
+    # st=$st$?
 
     if (test -e clean)
     then

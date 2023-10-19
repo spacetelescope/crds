@@ -6,6 +6,11 @@ General
 
 - Replaced deprecated np.product with np.prod in crds.certify.validators.core [#975]
 
+Testing
+-------
+
+- Migrated test suite from nose to pytest, running CI tests for python 3.9, 3.10, 3.11 [#998]
+
 
 11.17.6 (2023-09-08)
 =====================
@@ -57,8 +62,12 @@ General
 -------
 
 - Removed python 3.8 check from ci.yml [#934]
+
 - Removed references to ICD-47 in users guide [#936]
+
 - translate 'ANY' as equal to '*' when selecting match rules in rmap changes. Prevents equal weight special case errors from occurring unnecessarily [#939]
+
+-  Refactor setup_test_cache to allow for simply updating local cache [#966]
 
 JWST
 ----

@@ -23,15 +23,16 @@ os.environ["CRDS_PATH"] = os.path.join(CRDS_TEST_ROOT, "crds-cache-default-test"
 # the normal mechanisms for defining the cache are *not* used. It is not intended to replace them.
 os.environ["CRDS_DEFAULT_CACHE"] = os.environ["CRDS_PATH"]
 
-# os.system("./install")
-# os.system("./setup_test_cache")
+
 if "--cover-html" in sys.argv:
-    status = os.system("nosetests --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-branches --cover-package=crds --cover-erase".format(topdir))
+    status = os.system("pytest --cov=crds --cov-report=html")
 elif "--cover" in sys.argv:
-    status = os.system("nosetests --with-coverage --cover-branches --cover-package=crds".format(topdir))
+    status = os.system("pytest --cov=crds --cov-report=term-missing")
 elif "--profile" in sys.argv:
-    status = os.system("nosetests --with-cprofile --cprofile-stats-file={0}/runtests.profile.stats --cprofile-stats-erase".format(topdir))
+    status = os.system(f"pytest --profile --pstats-dir={topdir}/.profile-stats")
 else:
-    status = os.system("nosetests")
+    status = os.system("pytest")
+
 os.system("python -m crds.list --status --log-time")
+
 sys.exit(os.WEXITSTATUS(status))
