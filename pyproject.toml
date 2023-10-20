@@ -34,7 +34,7 @@ homepage = "https://github.com/spacetelescope/crds"
 [project.optional-dependencies]
 jwst = ["jwst"]
 roman = ["roman_datamodels"]
-submission = ["requests", "lxml", "parsley"]
+submission = ["requests", "parsley"]
 dev = ["ipython", "jupyterlab", "ansible", "helm"]
 test = [
   "lockfile",
@@ -151,7 +151,7 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
   "smoke: critical tests required to pass for the system to work.",
-  "roman: all tests specific to the ROMAN Space Telescope mission.",
+  "roman",
   "asdf: asdf related tests",
   "bad_files",
   "bestrefs",
@@ -175,7 +175,7 @@ markers = [
   "refactoring: tests in the crds.refactoring module",
   "reftypes",
   "rmap",
-  "roman",
+  "roman: all tests specific to the ROMAN Space Telescope mission",
   "rowdiff",
   "selectors",
   "special",
