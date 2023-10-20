@@ -6,6 +6,8 @@ General
 
 - Replaced deprecated np.product with np.prod in crds.certify.validators.core [#975]
 
+- Remove "lxml" from submission optional dependencies [#999]
+
 Testing
 -------
 
