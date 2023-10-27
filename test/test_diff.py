@@ -55,9 +55,13 @@ TEST CASES
 
 import subprocess
 import os
+
+import asdf
+import pytest
 from pytest import mark, fixture
 
 from crds.diff import DiffScript
+
 
 @fixture(scope="module")
 def fitsdiff_version() -> str:
@@ -173,15 +177,33 @@ def test_diff_asdf(capsys, jwst_shared_cache_state, jwst_data):
     Compute diffs for two .asdf's:
     """
 
+    breakpoint()
+    if asdf.__version__ < "3.0.1":
+        pytest.skip()
+
     status = DiffScript(f"crds.diff {jwst_data}/jwst_nircam_specwcs_0010.asdf {jwst_data}/jwst_nircam_specwcs_0011.asdf")() # doctest: +ELLIPSIS
 
     output = capsys.readouterr().out
 
-    assert output == """        ndarrays differ by contents
-        ndarrays differ by contents
-        ndarrays differ by contents
-        ndarrays differ by contents
-tree:
+    assert output == """tree:
+  dispx:
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
+  dispy:
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
   history:
     -
       description:
@@ -190,10 +212,24 @@ tree:
       time:
 >       2017-09-08 16:57:27.004949
 <       2017-09-08 16:57:26.927451
-        ndarrays differ by contents
-        ndarrays differ by contents
-        ndarrays differ by contents
-        ndarrays differ by contents
+  invdispx:
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
+  invdispy:
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
+    -
+      coefficients:
+>       ndarrays differ by contents
+<       ndarrays differ by contents
   meta:
     date:
 >     2017-09-08T12:57:27.006
@@ -209,7 +245,6 @@ tree:
 >       GRISMR
 <       GRISMC
 """
-    
     assert status == 1
 
     status = DiffScript(f"crds.diff {jwst_data}/jwst_nircam_specwcs_0010.asdf {jwst_data}/jwst_nircam_specwcs_0010.asdf")() # doctest: +ELLIPSIS
