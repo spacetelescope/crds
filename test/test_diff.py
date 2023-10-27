@@ -56,6 +56,7 @@ TEST CASES
 import subprocess
 import os
 
+import asdf
 from pytest import mark, fixture
 
 from crds.diff import DiffScript
@@ -179,7 +180,42 @@ def test_diff_asdf(capsys, jwst_shared_cache_state, jwst_data):
 
     output = capsys.readouterr().out
 
-    assert output == """tree:
+    if asdf.__version__ < "3.0.0":
+        expected_output = """        ndarrays differ by contents
+        ndarrays differ by contents
+        ndarrays differ by contents
+        ndarrays differ by contents
+tree:
+  history:
+    -
+      description:
+>       Created from NIRCAM_modA_R.conf
+<       Created from NIRCAM_modA_C.conf
+      time:
+>       2017-09-08 16:57:27.004949
+<       2017-09-08 16:57:26.927451
+        ndarrays differ by contents
+        ndarrays differ by contents
+        ndarrays differ by contents
+        ndarrays differ by contents
+  meta:
+    date:
+>     2017-09-08T12:57:27.006
+<     2017-09-08T12:57:26.928
+    description:
+>     GRISMR dispersion models
+<     GRISMC dispersion models
+    filename:
+>     NIRCAM_modA_R.asdf
+<     NIRCAM_modA_C.asdf
+    instrument:
+      pupil:
+>       GRISMR
+<       GRISMC
+"""
+
+    else:
+        expected_output = """tree:
   dispx:
     -
       coefficients:
@@ -239,6 +275,7 @@ def test_diff_asdf(capsys, jwst_shared_cache_state, jwst_data):
 >       GRISMR
 <       GRISMC
 """
+    assert output == expected_output
     assert status == 1
 
     status = DiffScript(f"crds.diff {jwst_data}/jwst_nircam_specwcs_0010.asdf {jwst_data}/jwst_nircam_specwcs_0010.asdf")() # doctest: +ELLIPSIS
