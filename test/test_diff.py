@@ -56,8 +56,6 @@ TEST CASES
 import subprocess
 import os
 
-import asdf
-import pytest
 from pytest import mark, fixture
 
 from crds.diff import DiffScript
@@ -176,9 +174,6 @@ def test_diff_asdf(capsys, jwst_shared_cache_state, jwst_data):
     """
     Compute diffs for two .asdf's:
     """
-
-    if asdf.__version__ < "3.0.1":
-        pytest.skip()
 
     status = DiffScript(f"crds.diff {jwst_data}/jwst_nircam_specwcs_0010.asdf {jwst_data}/jwst_nircam_specwcs_0011.asdf")() # doctest: +ELLIPSIS
 
