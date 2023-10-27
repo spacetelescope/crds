@@ -177,7 +177,6 @@ def test_diff_asdf(capsys, jwst_shared_cache_state, jwst_data):
     Compute diffs for two .asdf's:
     """
 
-    breakpoint()
     if asdf.__version__ < "3.0.1":
         pytest.skip()
 
