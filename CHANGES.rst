@@ -1,3 +1,11 @@
+11.17.8 (unreleased)
+====================
+
+General
+-------
+
+- Update tests for expected output with asdf 3.0+ [#1004]
+
 11.17.7 (2023-10-20)
 ====================
 
