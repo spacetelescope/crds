@@ -1,3 +1,4 @@
+import asdf
 from pytest import mark, xfail
 import numpy as np
 import logging
@@ -634,8 +635,15 @@ def test_certify_jwst_invalid_asdf(jwst_serverless_state, jwst_data, caplog):
         CertifyScript(argv)()
         out = caplog.text
 
-    expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
+    if asdf.__version__ < "3.0.0":
+        expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validation error : Input object does not appear to be an ASDF file or a FITS with ASDF extension
+########################################
+1 errors
+0 warnings"""
+    else:
+        expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
+instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validation error : Does not appear to be a ASDF file.
 ########################################
 1 errors
 0 warnings"""
@@ -1524,14 +1532,25 @@ def test_asdf_library_version_fail(jwst_serverless_state, jwst_data, caplog):
         CertifyScript(argv)()
         out = caplog.text
 
-    expected_out = f"""Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
+    if asdf.__version__ < "3.0.0":
+        expected_out = f"""Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 Setting 'META.EXPOSURE.TYPE [EXP_TYPE]' = None to value of 'META.EXPOSURE.P_EXPTYPE [P_EXPTYP]' = 'FGS_IMAGE|FGS_FOCUS|FGS_INTFLAT|FGS_SKYFLAT|'
 File written with dev version of asdf library: 2.0.0.dev1213
 Checking JWST datamodels.
 ########################################
 0 errors
 1 warnings"""
+    else:
+        expected_out = f""" Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
+tag:stsci.edu:asdf/core/asdf-1.0.0 is not recognized, converting to raw Python data structure
+File written with dev version of asdf library: 2.0.0.dev1213
+########################################
+0 errors
+4 warnings
+5 infos"""
     for msg in expected_out.splitlines():
+        if msg.strip() not in out:
+            breakpoint()
         assert msg.strip() in out
 
 
