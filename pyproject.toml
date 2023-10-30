@@ -14,7 +14,7 @@ dependencies = [
   "astropy",
   "numpy",
   "filelock",
-  "asdf @ git+https://github.com/braingram/asdf.git@diff_regression",
+  "asdf != 3.0.0",
   "requests",
   "parsley",
 ]
