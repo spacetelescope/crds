@@ -6,6 +6,13 @@ General
 
 - Update tests for expected output with asdf 3.0+ [#1004]
 
+
+Documentation
+-------------
+
+- Added documentation on how to search for and download bestrefs by dataset ID programtically [#1001]
+
+
 11.17.7 (2023-10-20)
 ====================
 
