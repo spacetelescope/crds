@@ -1,3 +1,4 @@
 # Use Bi-weekly numpy dev build
 --extra-index-url https://pypi.anaconda.org/scientific-python-nightly-wheels/simple
 numpy>=2.0.0.dev0
+scipy>=0.0.dev0
