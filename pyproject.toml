@@ -2,7 +2,7 @@
 name = "crds"
 description = "Calibration Reference Data System,  HST/JWST/Roman reference file management"
 authors = [{ name = "STScI CRDS s/w developers" }]
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: BSD License",
@@ -18,6 +18,8 @@ dependencies = [
   "asdf != 3.0.0",
   "requests",
   "parsley",
+  {file = ["requirements-dev-numpy.txt"]},
+
 ]
 dynamic = ["version"]
 
