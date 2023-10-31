@@ -13,7 +13,7 @@ classifiers = [
 ]
 dependencies = [
   "astropy",
-  "numpy",
+  "numpy>=2.0",
   "filelock",
   "asdf",
   "requests",
