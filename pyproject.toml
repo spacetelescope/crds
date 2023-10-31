@@ -18,7 +18,7 @@ dependencies = [
   "asdf != 3.0.0",
   "requests",
   "parsley",
-  {file = ["requirements-dev-numpy.txt"]},
+  "requirements-dev-numpy.txt",
 
 ]
 dynamic = ["version"]
