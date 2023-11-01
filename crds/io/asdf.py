@@ -48,6 +48,40 @@ class AsdfFile(AbstractFile):
             if histall:
                 history = "\n".join(histall)
         return history
+    
+    def getval(self, key, **keys):
+        return super(AsdfFile, self).getval(key, **keys)
+
+    def setval(self, key, value, verbose=False):
+        """ASDF version of setval.
+
+        Parameters
+        ----------
+        key : string
+            Full tree path of the key separated by periods, e.g. "roman.meta.aperture.name" 
+        value : string, astropy.Time, int, float
+            value to set
+        """
+        import asdf
+        af = asdf.open(self.filepath)
+        keys = key.split(".")
+        tree = None
+        stop = len(keys) - 1
+        original = self.getval(key.upper())
+        for i, k in enumerate(keys):
+            if i == 0:
+                tree = af[k]
+            elif i < stop:
+                tree = tree[k]
+            else:
+                tree[k] = value
+        af.write_to(self.filename)
+
+        new = self.getval(key.upper())
+        if verbose:
+            log.info(f"KEY: {key}")
+            log.info(f"ORIGINAL VALUE: {original}")
+            log.info(f"NEW VALUE:      {new}")
 
     def get_asdf_standard_version(self):
         """

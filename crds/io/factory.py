@@ -80,7 +80,8 @@ def get_observatory(filepath, original_name=None):
             with asdf.open(filepath) as handle:
                 observatory = handle["meta"]["telescope"]
         except KeyError:
-            pass
+            if "roman" in handle.keys():
+                observatory = "roman"
     elif original_name.endswith((".yaml", ".json", ".text", ".txt")):
         return "jwst"
     return observatory.lower()
