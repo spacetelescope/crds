@@ -8,6 +8,8 @@ General
 
 - Downgrade unhandled name in crds.io.naming.newer from an error to a warning [#1008]
 
+- Add setval() and getval() methods to crds.io.asdf.AsdfFile class [#1009]
+
 
 Documentation
 -------------
