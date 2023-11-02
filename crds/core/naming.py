@@ -88,29 +88,19 @@ def newer(name1, name2):
     False
 
     >>> newer("hst_cos_deadtab_0001.fits", "16n1832tm_tmg.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Unhandled name comparison case:  ('crds', 'synphot')
+    CRDS - WARNING - Unhandled name comparison case:  ('crds', 'synphot')
 
     >>> newer("07g1700gl_dead.fits", "16n1832tm_tmg.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Unhandled name comparison case:  ('newcdbs', 'synphot')
+    CRDS - WARNING - Unhandled name comparison case:  ('newcdbs', 'synphot')
 
     >>> newer("16n1832tm_tmg.fits", "7g1700gl_dead.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Unhandled name comparison case:  ('synphot', 'oldcdbs')
+    CRDS - WARNING - Unhandled name comparison case:  ('synphot', 'oldcdbs')
 
     >>> newer("hst_cos_deadtab_0001.fits", "17g1700gl_dead.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Unhandled name comparison case:  ('crds', 'newcdbs')
+    CRDS - WARNING - Unhandled name comparison case:  ('crds', 'newcdbs')
 
     >>> newer("17g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Unhandled name comparison case:  ('newcdbs', 'crds')
+    CRDS - WARNING - Unhandled name comparison case:  ('newcdbs', 'crds')
 
     """
     cases = {
@@ -148,7 +138,7 @@ def newer(name1, name2):
     elif case in [True, False]:
         result = case
     else:
-        raise NameComparisonError("Unhandled name comparison case: ", repr((class1, class2)))
+        log.warning("Unhandled name comparison case: ", repr((class1, class2)))
     log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
     return result
 
