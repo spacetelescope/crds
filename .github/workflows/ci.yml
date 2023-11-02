@@ -77,10 +77,11 @@ jobs:
             ${{ needs.cache.outputs.path }}
             ${{ needs.cache.outputs.testing_cache }}
           key: ${{ needs.cache.outputs.key }}
-      - run: pip uninstall -y numpy astropy scipy matplotlib contourpy
-      - run: pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
-      - run: pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple scipy
+      - run: pip uninstall -y astropy matplotlib contourpy
       - run: pip install git+https://github.com/astropy/astropy.git
       - run: pip install git+https://github.com/matplotlib/matplotlib.git
       - run: pip install git+https://github.com/contourpy/contourpy.git
+      - run: pip uninstall -y numpy scipy
+      - run: pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
+      - run: pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple scipy
       - run: ./runtests --cover
