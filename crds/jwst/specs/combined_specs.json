@@ -2214,6 +2214,8 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.SUBARRAY.NAME",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -2221,7 +2223,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"ffbec8ff079750c9bb3ea68bfa92e623379571c9",
+            "sha1sum":"f6c90f2cbf64232d10f4de8238d070d5417345a6",
             "suffix":"pars-jumpstep",
             "text_descr":"JumpStep runtime parameters",
             "tpn":"miri_pars-jumpstep.tpn",

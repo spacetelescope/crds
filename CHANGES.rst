@@ -16,6 +16,10 @@ Documentation
 
 - Added documentation on how to search for and download bestrefs by dataset ID programatically [#1001]
 
+JWST
+----
+- Added Filter and Subarray to miri_pars-jumpstep.rmap [#1010]
+
 
 11.17.7 (2023-10-20)
 ====================
