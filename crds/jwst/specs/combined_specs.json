@@ -1196,34 +1196,6 @@
             "tpn":"miri_fringefreq.tpn",
             "unique_rowkeys":null
         },
-        "gain":{
-            "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
-            "extra_keys":null,
-            "file_ext":".fits",
-            "filekind":"GAIN",
-            "filetype":"GAIN",
-            "instrument":"MIRI",
-            "ld_tpn":"miri_gain_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"miri_gain.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.FILTER",
-                    "META.SUBARRAY.NAME"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
-                ]
-            ],
-            "sha1sum":"898a158c3b13c23aa4cb6b2ac6ab12178b5834b1",
-            "suffix":"gain",
-            "text_descr":"Gain",
-            "tpn":"miri_gain.tpn",
-            "unique_rowkeys":null
-        },
         "ipc":{
             "derived_from":"generated as stub rmap on 2014-03-24 15:03:30.015471",
             "extra_keys":null,
@@ -1795,6 +1767,7 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.INSTRUMENT.DETECTOR",
                     "META.VISIT.TSOVISIT"
                 ],
                 [
@@ -1802,7 +1775,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"45db150be0397c7711214562e1f5f07a84f1bac5",
+            "sha1sum":"96d195da9de4d8b4112c6031104a5b4c36fb20cb",
             "suffix":"pars-detector1pipeline",
             "text_descr":"Step parameters for Detector1Pipeline",
             "tpn":"miri_pars-detector1pipeline.tpn",
