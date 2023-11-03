@@ -19,6 +19,7 @@ Documentation
 JWST
 ----
 - Added Filter and Subarray to miri_pars-jumpstep.rmap [#1010]
+- Added BAND to miri_gain and DETECTOR to miri_pars-detector1pipeline spec files. [#1011]
 
 
 11.17.7 (2023-10-20)
