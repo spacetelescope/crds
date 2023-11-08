@@ -62,26 +62,29 @@ class AsdfFile(AbstractFile):
         value : string, astropy.Time, int, float
             value to set
         """
-        import asdf
-        af = asdf.open(self.filepath)
-        keys = key.split(".")
-        tree = None
-        stop = len(keys) - 1
-        original = self.getval(key.upper())
-        for i, k in enumerate(keys):
-            if i == 0:
-                tree = af[k]
-            elif i < stop:
-                tree = tree[k]
-            else:
-                tree[k] = value
-        af.write_to(self.filename)
+        try:
+            import asdf
+            af = asdf.open(self.filepath)
+            keys = key.split(".")
+            tree = None
+            stop = len(keys) - 1
+            original = self.getval(key.upper())
+            for i, k in enumerate(keys):
+                if i == 0:
+                    tree = af[k]
+                elif i < stop:
+                    tree = tree[k]
+                else:
+                    tree[k] = value
+            af.write_to(self.filename)
 
-        new = self.getval(key.upper())
-        if verbose:
-            log.info(f"KEY: {key}")
-            log.info(f"ORIGINAL VALUE: {original}")
-            log.info(f"NEW VALUE:      {new}")
+            new = self.getval(key.upper())
+            if verbose:
+                log.info(f"KEY: {key}")
+                log.info(f"ORIGINAL VALUE: {original}")
+                log.info(f"NEW VALUE:      {new}")
+        except Exception as e:
+            log.warning("Exception while trying to use asdf setval: ", e)
 
     def get_asdf_standard_version(self):
         """
