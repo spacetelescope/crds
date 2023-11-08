@@ -1,3 +1,11 @@
+11.17.9 (unreleased)
+====================
+
+JWST
+----
+- Added PIXAR_SR and PIXAR_A2 to miri photom tpn. [#1013]
+
+
 11.17.8 (2023-11-07)
 ====================
 
