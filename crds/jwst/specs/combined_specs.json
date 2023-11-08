@@ -1196,6 +1196,35 @@
             "tpn":"miri_fringefreq.tpn",
             "unique_rowkeys":null
         },
+        "gain":{
+            "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"GAIN",
+            "filetype":"GAIN",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_gain_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"miri_gain.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.BAND",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"39dfd6a132931f669d99443d334555677ff0c011",
+            "suffix":"gain",
+            "text_descr":"Gain",
+            "tpn":"miri_gain.tpn",
+            "unique_rowkeys":null
+        },
         "ipc":{
             "derived_from":"generated as stub rmap on 2014-03-24 15:03:30.015471",
             "extra_keys":null,
