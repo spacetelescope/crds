@@ -4,7 +4,7 @@
 General
 -------
 
-- bugfix: get observatory metadata inside asdf file handler [#1009]
+- bugfix: get observatory metadata inside asdf file handler [#1012]
 
 
 11.17.8 (2023-11-07)

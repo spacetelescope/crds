@@ -83,7 +83,6 @@ class AsdfFile(AbstractFile):
             log.info(f"ORIGINAL VALUE: {original}")
             log.info(f"NEW VALUE:      {new}")
 
-
     def get_asdf_standard_version(self):
         """
         Return the ASDF Standard version associated with this file as a string,
