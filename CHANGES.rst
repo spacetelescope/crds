@@ -1,3 +1,12 @@
+11.17.9 (unreleased)
+====================
+
+General
+-------
+
+- bugfix: get observatory metadata inside asdf file handler [#1009]
+
+
 11.17.8 (2023-11-07)
 ====================
 
