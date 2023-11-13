@@ -75,13 +75,12 @@ def get_observatory(filepath, original_name=None):
         except KeyError:
             pass
     elif original_name.endswith(".asdf"):
-        try:
-            import asdf
-            with asdf.open(filepath) as handle:
-                observatory = handle["meta"]["telescope"]
-        except KeyError:
+        import asdf
+        with asdf.open(filepath) as handle:
             if "roman" in handle.keys():
                 observatory = "roman"
+            else:
+                observatory = handle["meta"]["telescope"]
     elif original_name.endswith((".yaml", ".json", ".text", ".txt")):
         return "jwst"
     return observatory.lower()

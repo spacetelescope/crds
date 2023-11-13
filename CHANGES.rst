@@ -1,9 +1,18 @@
-11.17.9 (unreleased)
+11.17.10 (unreleased)
 ====================
 
 JWST
 ----
 - Added PIXAR_SR and PIXAR_A2 to miri photom tpn. [#1013]
+
+
+11.17.9 (2023-11-08)
+====================
+
+General
+-------
+
+- bugfix: get observatory metadata inside asdf file handler [#1012]
 
 
 11.17.8 (2023-11-07)
