@@ -4,6 +4,7 @@
 JWST
 ----
 - Added PIXAR_SR and PIXAR_A2 to miri photom tpn. [#1013]
+- Added new rmap for miri.emicorr. [#1014]
 
 
 11.17.9 (2023-11-08)
