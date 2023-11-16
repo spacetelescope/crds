@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'miri_emicorr.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.SUBARRAY.NAME', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '639649a96e211549afd0f8f9242809fe0edc63b9',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.FILTER'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'ff429b05f6b75168fcf137d765374444a143f7d2',
     'suffix' : 'emircorr',
     'text_descr' : 'EMI correction',
 }
