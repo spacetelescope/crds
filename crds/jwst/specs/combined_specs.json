@@ -1075,11 +1075,13 @@
             "name":"miri_emicorr.rmap",
             "observatory":"JWST",
             "parkey":[
+                [],
                 [
-                    "META.SUBARRAY.NAME"
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"98cb4731023619cfc91c7e06a05cff53d96dafc5",
+            "sha1sum":"859b40143a0f05dc18e4b44606adf55550e2bc41",
             "suffix":"emircorr",
             "text_descr":"EMI correction",
             "tpn":"miri_emircorr.tpn",
