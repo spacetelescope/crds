@@ -1076,16 +1076,10 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE",
-                    "META.SUBARRAY.NAME",
-                    "META.INSTRUMENT.FILTER"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
+                    "META.SUBARRAY.NAME"
                 ]
             ],
-            "sha1sum":"ff429b05f6b75168fcf137d765374444a143f7d2",
+            "sha1sum":"98cb4731023619cfc91c7e06a05cff53d96dafc5",
             "suffix":"emircorr",
             "text_descr":"EMI correction",
             "tpn":"miri_emircorr.tpn",
