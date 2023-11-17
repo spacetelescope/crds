@@ -1,0 +1,3 @@
+# Commented out until INS is ready for strict model type validation:
+# META.INSTRUMENT.DETECTOR    H   C   O   ANY
+# META.SUBARRAY.NAME          H   C   O   ANY

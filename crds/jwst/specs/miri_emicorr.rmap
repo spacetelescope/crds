@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'generated as stub rmap on 2023-11-16 11:30:00.015471',
+    'file_ext' : '.asdf',
+    'filekind' : 'EMICORR',
+    'filetype' : 'EMI correction',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'miri_emicorr.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '859b40143a0f05dc18e4b44606adf55550e2bc41',
+    'suffix' : 'emircorr',
+    'text_descr' : 'EMI correction',
+}
+
+selector = Match({
+})
