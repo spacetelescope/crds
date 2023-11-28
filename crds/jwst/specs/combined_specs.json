@@ -1068,7 +1068,7 @@
             "extra_keys":null,
             "file_ext":".asdf",
             "filekind":"EMICORR",
-            "filetype":"EMI correction",
+            "filetype":"EMICORR",
             "instrument":"MIRI",
             "ld_tpn":"miri_emircorr_ld.tpn",
             "mapping":"REFERENCE",
@@ -1081,7 +1081,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"859b40143a0f05dc18e4b44606adf55550e2bc41",
+            "sha1sum":"799dcca0f33b8d5241a6adfcbe8a592f9d1a4e29",
             "suffix":"emircorr",
             "text_descr":"EMI correction",
             "tpn":"miri_emircorr.tpn",

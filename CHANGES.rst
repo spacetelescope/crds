@@ -1,4 +1,12 @@
-11.17.10 (unreleased)
+11.17.11 (Unreleased)
+====================
+
+JWST
+----
+-Fixed value of filetype in rmap for miri_emicorr. [#1015]
+
+
+11.17.10 (2023-11-14)
 ====================
 
 JWST
