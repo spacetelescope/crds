@@ -1,3 +1,11 @@
+11.17.12 (Unreleased)
+====================
+
+JWST
+----
+-Fixed value of suffix in rmap for miri_emicorr. [#1016]
+
+
 11.17.11 (2023-11-28)
 ====================
 
