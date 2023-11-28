@@ -1063,6 +1063,30 @@
             "tpn":"miri_drizpars.tpn",
             "unique_rowkeys":null
         },
+        "emicorr":{
+            "derived_from":"generated as stub rmap on 2023-11-16 11:30:00.015471",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"EMICORR",
+            "filetype":"EMICORR",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_emircorr_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"miri_emicorr.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"799dcca0f33b8d5241a6adfcbe8a592f9d1a4e29",
+            "suffix":"emircorr",
+            "text_descr":"EMI correction",
+            "tpn":"miri_emircorr.tpn",
+            "unique_rowkeys":null
+        },
         "extract1d":{
             "derived_from":"Hand made 2015-10-17 16:00:00",
             "extra_keys":null,
