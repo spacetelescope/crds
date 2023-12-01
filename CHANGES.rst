@@ -1,3 +1,10 @@
+11.17.13 (Unreleased)
+====================
+
+JWST
+----
+-Removed vonstraints in nirspec_pathloss.tpn. [#1017]
+
 11.17.12 (2023-11-29)
 ====================
 
