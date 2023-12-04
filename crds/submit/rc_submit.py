@@ -41,14 +41,14 @@ BASE_URLS = {
         'jwst': 'https://jwst-crds.stsci.edu/',
         'roman': 'https://roman-crds.stsci.edu/',
     },
-    'pub': {
-        'jwst': 'https://jwst-crds-pub.stsci.edu/',
-    },
     'test': {
         'hst':  'https://hst-crds-test.stsci.edu/',
         'jwst': 'https://jwst-crds-test.stsci.edu/',
         'roman': 'https://roman-crds-test.stsci.edu/',
     },
+    'tvac': {
+        'roman': 'https://roman-crds-tvac.stsci.edu/',
+    }
 }
 
 URL_DESCRIPTION = 'submission_form/redcat_description.yml'
