@@ -6,6 +6,11 @@ General
 
 - Remove jwst pub and add roman tvac to submission list. [#1018]
 
+HST
+---
+
+- Add n/a to components of the cos badttab reftype [#1019]
+
 11.17.13 (2023-12-01)
 ====================
 
