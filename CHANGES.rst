@@ -5,6 +5,7 @@ General
 -------
 
 - Remove jwst pub and add roman tvac to submission list. [#1018]
+- Replaced deprecated ``ast.Str`` with ``ast.Constant`` [#1007]
 
 11.17.13 (2023-12-01)
 ====================

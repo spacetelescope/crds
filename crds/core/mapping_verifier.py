@@ -164,7 +164,7 @@ class MappingVerifier(ast.NodeVisitor):
                      "Invalid 'header' or 'selector' definition")
         self.assert_(node, node.targets[0].id in ["header","selector","comment"],
                      "Only define 'header' or 'selector' or 'comment' sections")
-        self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict, ast.Str)),
+        self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict, ast.Constant)),
                      "Section value must be a selector call or dictionary or string")
         self.generic_visit(node)
 
