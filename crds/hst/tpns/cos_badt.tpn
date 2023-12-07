@@ -9,10 +9,10 @@
 #----------------------------------------------------------
 INSTRUME            H        C         R    COS
 FILETYPE            H        C         R    "BAD TIME INTERVALS TABLE"
-DETECTOR            H        C         R    FUV
+DETECTOR            H        C         R    FUV,NUV,N/A
 OBSMODE             H        C         R    TIME-TAG
 VCALCOS             H        C         R    
 USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R    
-SEGMENT             C        C         R    FUVA,FUVB,NUVA,NUVB,NUVC
+SEGMENT             C        C         R    FUVA,FUVB,NUVA,NUVB,NUVC,N/A
