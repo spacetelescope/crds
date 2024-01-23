@@ -5,6 +5,11 @@ JWST
 ----
 - Added new rmap for miri_mask [#1020]
 
+Documentation
+-------------
+
+- Fix link to JWST datamodel schemas [#1021]
+
 11.17.14 (2023-12-14)
 =====================
 
