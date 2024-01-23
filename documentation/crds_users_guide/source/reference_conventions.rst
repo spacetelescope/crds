@@ -31,7 +31,7 @@ metadata tree.
 
    .. group-tab:: JWST
 
-      For JWST, the calibration code defines file format schema which show the correspondence between "data model path" and more primitive representations like FITS keywords: `Data Models Schema <https://github.com/STScI-JWST/jwst/tree/master/jwst/datamodels/schemas>`_. 
+      For JWST, the calibration code defines file format schema which show the correspondence between "data model path" and more primitive representations like FITS keywords: `Data Models Schema <https://github.com/spacetelescope/stdatamodels/tree/main/src/stdatamodels/jwst/datamodels/schemas>`_. 
       
       The schema also describe related facts such as parameter type and valid values.  For instance, the model path:
 
