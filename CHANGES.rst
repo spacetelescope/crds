@@ -5,6 +5,11 @@ JWST
 ----
 - Added new rmap for miri_mask [#1020]
 
+General
+-------
+
+- for the test caching CI workflow (``.github/workflows/cache.yml``), explicitly checkout CRDS to enable reuse in other repositories' CI [#1022]
+
 11.17.14 (2023-12-14)
 =====================
 

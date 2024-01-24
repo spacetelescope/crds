@@ -39,6 +39,8 @@ jobs:
       key: ${{ steps.key.outputs.key }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: spacetelescope/crds
       - id: key
         run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
       - id: cache
