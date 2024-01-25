@@ -29,7 +29,7 @@ jobs:
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
-      - run: if [[ !-z "${{ steps.hst_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.hst_crds_context.outputs.pmap }}; else exit 1; fi
+      - run: if [[ ! -z "${{ steps.hst_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.hst_crds_context.outputs.pmap }}; else exit 1; fi
       - id: jwst_crds_context
         env:
           OBSERVATORY: jwst
@@ -39,7 +39,7 @@ jobs:
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
-      - run: if [[ !-z "${{ steps.jwst_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.jwst_crds_context.outputs.pmap }}; else exit 1; fi
+      - run: if [[ ! -z "${{ steps.jwst_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.jwst_crds_context.outputs.pmap }}; else exit 1; fi
       - id: roman_crds_context
         env:
           OBSERVATORY: roman
@@ -49,4 +49,4 @@ jobs:
           curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
           python -c "import sys, json; print(json.load(sys.stdin)['result'])"
           )" >> $GITHUB_OUTPUT
-      - run: if [[ !-z "${{ steps.roman_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.roman_crds_context.outputs.pmap }}; else exit 1; fi
+      - run: if [[ ! -z "${{ steps.roman_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.roman_crds_context.outputs.pmap }}; else exit 1; fi
