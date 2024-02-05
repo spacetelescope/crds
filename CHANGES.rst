@@ -4,6 +4,7 @@
 JWST
 ----
 - Added new rmap for miri_mask [#1020]
+- Added new rmap for miri_pars-pixelreplacestep [#1025]
 
 General
 -------
