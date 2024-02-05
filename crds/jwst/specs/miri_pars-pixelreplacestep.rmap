@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'miri_pars-photomstep.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-pixelreplacestep',
+    'filetype' : 'pars-pixelreplacestep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-pixelreplacestep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8f28960f8d179bbbba015e596932ff16622151df',
+    'suffix' : 'pars-pixelreplacestep',
+    'text_descr' : 'Pixel Replacement Step runtime parameters',
+}
+
+selector = Match({
+})
