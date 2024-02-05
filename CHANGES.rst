@@ -1,10 +1,20 @@
-11.17.15 (Unreleased)
+11.17.16 (2024-02-05
+=====================
+
+JWST
+----
+- Added new rmap for miri_pars-pixelreplacestep [#1025]
+
+General
+-------
+- Fixed issue with releases and CHANGES.rst [#1026]
+
+11.17.15 (2024-01-22)
 =====================
 
 JWST
 ----
 - Added new rmap for miri_mask [#1020]
-- Added new rmap for miri_pars-pixelreplacestep [#1025]
 
 General
 -------
