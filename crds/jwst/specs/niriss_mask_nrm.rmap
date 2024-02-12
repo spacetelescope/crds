@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'niriss_mask.spec',
+    'file_ext' : '.fits',
+    'filekind' : 'NRM',
+    'filetype' : 'NRM',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_mask_nrm.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '6580001143ded5c25a97c3d10d9764a242569b16',
+    'suffix' : 'nrm',
+    'text_descr' : 'Numerical representation of the non-redundant mask in the pupil wheel of NIRISS.',
+}
+
+selector = Match({
+})
