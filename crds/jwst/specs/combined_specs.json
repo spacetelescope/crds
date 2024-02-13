@@ -5246,7 +5246,7 @@
             "derived_from":"niriss_mask.spec",
             "extra_keys":null,
             "file_ext":".fits",
-            "filekind":"NRM",
+            "filekind":"nrm",
             "filetype":"NRM",
             "instrument":"NIRISS",
             "ld_tpn":"niriss_nrm_ld.tpn",
@@ -5262,7 +5262,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"3f77a47e7e22bda3035f92876194fa121a97c31d",
+            "sha1sum":"6580001143ded5c25a97c3d10d9764a242569b16",
             "suffix":"nrm",
             "text_descr":"Numerical representation of the non-redundant mask in the pupil wheel of NIRISS.",
             "tpn":"niriss_nrm.tpn",
