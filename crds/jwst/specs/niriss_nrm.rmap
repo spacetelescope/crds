@@ -5,7 +5,7 @@ header = {
     'filetype' : 'NRM',
     'instrument' : 'NIRISS',
     'mapping' : 'REFERENCE',
-    'name' : 'jwst_niriss_mask_nrm.rmap',
+    'name' : 'jwst_niriss_nrm.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : '6580001143ded5c25a97c3d10d9764a242569b16',
