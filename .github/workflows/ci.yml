@@ -45,7 +45,7 @@ jobs:
           - '3.10'
           - 3.11
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: mamba-org/setup-micromamba@v1
@@ -66,7 +66,7 @@ jobs:
       - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
       - run: pip uninstall --yes crds && ./install && pip install .[submission,test,docs,synphot]
       - id: cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ${{ needs.cache.outputs.path }}

@@ -38,14 +38,14 @@ jobs:
       testing_cache: ${{ env.CRDS_TESTING_CACHE }}
       key: ${{ steps.key.outputs.key }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           repository: spacetelescope/crds
       - id: key
         run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
       - id: cache
         name: restore entire CRDS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ${{ env.CRDS_PATH }}
@@ -59,14 +59,14 @@ jobs:
       - if: steps.cache.outputs.cache-hit != 'true'
         id: cache_hst
         name: restore cached HST files
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/**/hst*
           key: test-cache-${{ needs.contexts.outputs.hst }}
       - if: steps.cache.outputs.cache-hit != 'true'
         id: cache_jwst
         name: restore cached JWST files
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ${{ env.CRDS_PATH }}/**/jwst*
           key: test-cache-${{ needs.contexts.outputs.jwst }}
