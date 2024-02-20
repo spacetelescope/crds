@@ -6364,6 +6364,30 @@
             "tpn":"nirspec_distortion.tpn",
             "unique_rowkeys":null
         },
+        "drizpars":{
+            "derived_from":"nirspec_drizpars.spec",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DRIZPARS",
+            "filetype":"DRIZPARS",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_drizpars_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_drizpars_0000.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"2a4e3b479f7e01b9d527deb2989c0a9e875b165f",
+            "suffix":"drizpars",
+            "text_descr":"Drizzle Parameters used in Image Distortion Correction and Combination",
+            "tpn":"nirspec_drizpars.tpn",
+            "unique_rowkeys":null
+        },
         "extract1d":{
             "derived_from":"Hand made 2015-10-17 16:00:00",
             "extra_keys":null,
