@@ -6406,7 +6406,7 @@
             "unique_rowkeys":null
         },
         "drizpars":{
-            "derived_from":"generated as stub rmap on 2014-08-29 15:33:54.199062",
+            "derived_from":"nirspec_drizpars.spec",
             "extra_keys":null,
             "file_ext":".fits",
             "filekind":"DRIZPARS",
@@ -6417,8 +6417,13 @@
             "name":"jwst_nirspec_drizpars_0000.rmap",
             "observatory":"JWST",
             "parkey":[
-                []
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
             ],
+            "sha1sum":"2a4e3b479f7e01b9d527deb2989c0a9e875b165f",
             "suffix":"drizpars",
             "text_descr":"Drizzle Parameters used in Image Distortion Correction and Combination",
             "tpn":"nirspec_drizpars.tpn",
