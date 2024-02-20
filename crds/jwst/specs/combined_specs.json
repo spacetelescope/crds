@@ -1329,7 +1329,11 @@
             "unique_rowkeys":null
         },
         "mask":{
-            "derived_from":"jwst_miri_mask_0002.rmap",
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"jwst_miri_mask_new.rmap",
             "extra_keys":null,
             "file_ext":".fits",
             "filekind":"MASK",
@@ -1337,15 +1341,26 @@
             "instrument":"MIRI",
             "ld_tpn":"miri_mask_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_miri_mask_0003.rmap",
+            "name":"miri_mask.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.FILTER"
+                    "META.SUBARRAY.NAME",
+                    "META.EXPOSURE.READPATT",
+                    "META.EXPOSURE.NGROUPS"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"14e365f2d096081fb0d05ac2657f724e63253e31",
+            "sha1sum":"1366d1d6206db422c4acf9f82090165d172c42ed",
+            "substitutions":{
+                "META.SUBARRAY.NAME":{
+                    "GENERIC":"N/A"
+                }
+            },
             "suffix":"mask",
             "text_descr":"Bad Pixel Mask",
             "tpn":"miri_mask.tpn",
@@ -5225,6 +5240,32 @@
             "suffix":"mask",
             "text_descr":"Bad Pixel Mask",
             "tpn":"niriss_mask.tpn",
+            "unique_rowkeys":null
+        },
+        "mask-nrm":{
+            "derived_from":"niriss_mask.spec",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"nrm",
+            "filetype":"NRM",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_nrm_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_mask_nrm.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"6580001143ded5c25a97c3d10d9764a242569b16",
+            "suffix":"nrm",
+            "text_descr":"Numerical representation of the non-redundant mask in the pupil wheel of NIRISS.",
+            "tpn":"niriss_nrm.tpn",
             "unique_rowkeys":null
         },
         "pars-chargemigrationstep":{
