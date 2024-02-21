@@ -8,7 +8,7 @@ header = {
     'name' : 'jwst_niriss_nrm.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '6580001143ded5c25a97c3d10d9764a242569b16',
+    'sha1sum' : 'a4df41c5aee41cd4db28ec22569119c6d80055b2',
     'suffix' : 'nrm',
     'text_descr' : 'Numerical representation of the non-redundant mask in the pupil wheel of NIRISS.',
 }

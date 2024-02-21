@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'niriss_pars-rampfitstep.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-whitelightstep',
+    'filetype' : 'pars-whitelightstep',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pars-whitelightstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'dafd2da83aea4084896de15081040abd0eebd19f',
+    'suffix' : 'pars-whitelightstep',
+    'text_descr' : 'WhiteLightStep runtime parameters',
+}
+
+selector = Match({
+})

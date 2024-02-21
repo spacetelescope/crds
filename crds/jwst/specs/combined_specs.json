@@ -5242,7 +5242,7 @@
             "tpn":"niriss_mask.tpn",
             "unique_rowkeys":null
         },
-        "mask-nrm":{
+        "nrm":{
             "derived_from":"niriss_mask.spec",
             "extra_keys":null,
             "file_ext":".fits",
@@ -5251,7 +5251,7 @@
             "instrument":"NIRISS",
             "ld_tpn":"niriss_nrm_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_niriss_mask_nrm.rmap",
+            "name":"jwst_niriss_nrm.rmap",
             "observatory":"JWST",
             "parkey":[
                 [
@@ -5262,7 +5262,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"6580001143ded5c25a97c3d10d9764a242569b16",
+            "sha1sum":"a4df41c5aee41cd4db28ec22569119c6d80055b2",
             "suffix":"nrm",
             "text_descr":"Numerical representation of the non-redundant mask in the pupil wheel of NIRISS.",
             "tpn":"niriss_nrm.tpn",
@@ -5576,6 +5576,30 @@
             "suffix":"pars-undersamplecorrectionstep",
             "text_descr":"UndersampleCorrectionStep runtime parameters",
             "tpn":"niriss_pars-undersamplecorrectionstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-whitelightstep":{
+            "derived_from":"niriss_pars-rampfitstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-whitelightstep",
+            "filetype":"pars-whitelightstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-whitelightstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-whitelightstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"dafd2da83aea4084896de15081040abd0eebd19f",
+            "suffix":"pars-whitelightstep",
+            "text_descr":"WhiteLightStep runtime parameters",
+            "tpn":"niriss_pars-whitelightstep.tpn",
             "unique_rowkeys":null
         },
         "pathloss":{

@@ -1,10 +1,11 @@
-11.17.17 (Unreleased)
+11.17.17 (2024-02-20)
 =====================
 
 JWST
 ----
 -Added new rmap for NIRISS nrm. [#1027]
 -Added new rmap for NIRSPEC drizpars. [#1028]
+-Added new rmap for NIRISS pars-whitelightstep. [#1029]
 
 
 11.17.16 (2024-02-05)
