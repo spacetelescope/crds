@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'miri_pars-flatfieldstep.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-emicorrstep',
+    'filetype' : 'pars-emicorrstep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-emicorrstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '8dcca6525d107fa294090febcc9102563e41c1dd',
+    'suffix' : 'pars-emicorrstep',
+    'text_descr' : 'Emicorrstep runtime parameters',
+}
+
+selector = Match({
+})
