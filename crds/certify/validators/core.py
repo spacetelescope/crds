@@ -517,9 +517,9 @@ class PedigreeValidator(PedigreeBaseValidator):
 class JwstpedigreeValidator(PedigreeBaseValidator):
     """Validates &JWSTPEDIGREE fields."""
 
-    _values = ["INFLIGHT", "GROUND", "DUMMY", "SIMULATION"]
-    _values_wo_date = ["GROUND", "DUMMY", "SIMULATION"]
-    _values_w_date = ["INFLIGHT"]
+    _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
+    _values_wo_date = ["GROUND", "MODEL", "DUMMY", "SIMULATION"]
+    _values_w_date = ["INFLIGHT", "MODEL"]
     _dated_format = "INFLIGHT YYYY-MM-DD YYYY-MM-DD"
 
     def validate_date(self, date):

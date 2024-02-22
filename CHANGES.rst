@@ -1,9 +1,16 @@
+11.17.19 (2024-02-22)
+=====================
+
+JWST
+----
+-Added MODEL to be a PEDIGREE option for JWST. [#1032]
+
 11.17.18 (2024-02-21)
 =====================
 
 JWST
 ----
--Added ner rmap for MIRI pars-emicorrstep. [#1030]
+-Added new rmap for MIRI pars-emicorrstep. [#1030]
 
 11.17.17 (2024-02-20)
 =====================
