@@ -1,24 +1,29 @@
 [project]
 name = "crds"
 description = "Calibration Reference Data System,  HST/JWST/Roman reference file management"
-authors = [{ name = "STScI CRDS s/w developers" }]
+authors = [
+    { name = "STScI CRDS s/w developers" },
+]
 classifiers = [
-  "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: BSD License",
-  "Operating System :: POSIX :: Linux",
-  "Operating System :: MacOS :: MacOS X",
-  "Programming Language :: Python :: 3",
-  "Topic :: Scientific/Engineering :: Astronomy",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Astronomy",
 ]
 dependencies = [
-  "astropy",
-  "numpy",
-  "filelock",
-  "asdf != 3.0.0",
-  "requests",
-  "parsley",
+    "astropy",
+    "numpy",
+    "filelock",
+    "asdf != 3.0.0",
+    "requests",
+    "parsley",
 ]
-dynamic = ["version"]
+dynamic = [
+    "version",
+]
+requires-python = "3.10"
 
 [project.readme]
 file = "README.rst"
@@ -32,56 +37,81 @@ content-type = "text/plain"
 homepage = "https://github.com/spacetelescope/crds"
 
 [project.optional-dependencies]
-jwst = ["jwst"]
-roman = ["roman_datamodels"]
-submission = ["requests", "parsley"]
-dev = ["ipython", "jupyterlab", "ansible", "helm"]
+jwst = [
+    "jwst",
+]
+roman = [
+    "roman_datamodels",
+]
+submission = [
+    "requests",
+    "parsley",
+]
+dev = [
+    "ipython",
+    "jupyterlab",
+    "ansible",
+    "helm",
+]
 test = [
-  "lockfile",
-  "mock",
-  "pylint",
-  "flake8",
-  "bandit",
-  "metrics-logger",
-  "pytest >= 6.0",
-  "pytest-astropy",
-  "pytest-doctestplus>=0.10.0",
-  "pytest-cov",
-  "pytest-profiling",
+    "lockfile",
+    "mock",
+    "pylint",
+    "flake8",
+    "bandit",
+    "metrics-logger",
+    "pytest >= 6.0",
+    "pytest-astropy",
+    "pytest-doctestplus>=0.10.0",
+    "pytest-cov",
+    "pytest-profiling",
 ]
 docs = [
-  "sphinx",
-  "sphinx_rtd_theme",
-  "docutils",
-  "sphinx_automodapi",
-  "sphinx-tabs",
+    "sphinx",
+    "sphinx_rtd_theme",
+    "docutils",
+    "sphinx_automodapi",
+    "sphinx-tabs",
 ]
-aws = ["boto3", "awscli"]
-synphot = ["stsynphot", "pysynphot"]
+aws = [
+    "boto3",
+    "awscli",
+]
+synphot = [
+    "stsynphot",
+    "pysynphot",
+]
 
 [build-system]
-requires = ["setuptools>=61.2", "setuptools_scm[toml]>=3.4", "wheel"]
+requires = [
+    "setuptools>=61.2",
+    "setuptools_scm[toml]>=3.4",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-platforms = ["Linux", "OS-X"]
+platforms = [
+    "Linux",
+    "OS-X",
+]
 zip-safe = false
 packages = [
-  "crds",
-  "crds.bestrefs",
-  "crds.certify",
-  "crds.certify.validators",
-  "crds.client",
-  "crds.core",
-  "crds.io",
-  "crds.submit",
-  "crds.misc",
-  "crds.misc.synphot",
-  "crds.refactoring",
-  "crds.hst",
-  "crds.jwst",
-  "crds.tobs",
-  "crds.roman",
+    "crds",
+    "crds.bestrefs",
+    "crds.certify",
+    "crds.certify.validators",
+    "crds.client",
+    "crds.core",
+    "crds.io",
+    "crds.submit",
+    "crds.misc",
+    "crds.misc.synphot",
+    "crds.refactoring",
+    "crds.hst",
+    "crds.jwst",
+    "crds.tobs",
+    "crds.roman",
 ]
 include-package-data = false
 
@@ -102,91 +132,96 @@ crds = "crds"
 "crds.roman" = "crds/roman"
 "crds.tobs" = "crds/tobs"
 
-
 [tool.setuptools.package-data]
 "crds.hst" = [
-  "*.dat",
-  "*.yaml",
-  "*.json",
-  "tpns/*.tpn",
-  "tpns/includes/*.tpn",
-  "specs/*.spec",
-  "specs/*.rmap",
-  "specs/*.json",
+    "*.dat",
+    "*.yaml",
+    "*.json",
+    "tpns/*.tpn",
+    "tpns/includes/*.tpn",
+    "specs/*.spec",
+    "specs/*.rmap",
+    "specs/*.json",
 ]
 "crds.jwst" = [
-  "*.dat",
-  "*.yaml",
-  "*.json",
-  "tpns/*.tpn",
-  "tpns/includes/*.tpn",
-  "specs/*.spec",
-  "specs/*.rmap",
-  "specs/*.json",
+    "*.dat",
+    "*.yaml",
+    "*.json",
+    "tpns/*.tpn",
+    "tpns/includes/*.tpn",
+    "specs/*.spec",
+    "specs/*.rmap",
+    "specs/*.json",
 ]
 "crds.roman" = [
-  "*.dat",
-  "*.yaml",
-  "*.json",
-  "tpns/*.tpn",
-  "tpns/includes/*.tpn",
-  "specs/*.spec",
-  "specs/*.rmap",
-  "specs/*.json",
+    "*.dat",
+    "*.yaml",
+    "*.json",
+    "tpns/*.tpn",
+    "tpns/includes/*.tpn",
+    "specs/*.spec",
+    "specs/*.rmap",
+    "specs/*.json",
 ]
 "crds.tobs" = [
-  "*.dat",
-  "*.yaml",
-  "*.json",
-  "tpns/*.tpn",
-  "tpns/includes/*.tpn",
-  "specs/*.spec",
-  "specs/*.rmap",
-  "specs/*.json",
+    "*.dat",
+    "*.yaml",
+    "*.json",
+    "tpns/*.tpn",
+    "tpns/includes/*.tpn",
+    "specs/*.spec",
+    "specs/*.rmap",
+    "specs/*.json",
 ]
 
 [tool.pytest.ini_options]
-python_files = ["test_*"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
+python_files = [
+    "test_*",
+]
+python_classes = [
+    "Test*",
+]
+python_functions = [
+    "test_*",
+]
 markers = [
-  "smoke: critical tests required to pass for the system to work.",
-  "roman",
-  "asdf: asdf related tests",
-  "bad_files",
-  "bestrefs",
-  "build6",
-  "certify",
-  "checksum",
-  "cmdline",
-  "core: tests in the crds.core module",
-  "distortion: all tests related to distortion filetype",
-  "diff",
-  "factory",
-  "heavy_client",
-  "io",
-  "list",
-  "locking",
-  "matches",
-  "misc",
-  "newcontext",
-  "or_bars",
-  "refactor",
-  "refactoring: tests in the crds.refactoring module",
-  "reftypes",
-  "rmap",
-  "roman: all tests specific to the ROMAN Space Telescope mission",
-  "rowdiff",
-  "selectors",
-  "special",
-  "submit",
-  "substitutions",
-  "sync",
-  "synphot",
-  "tables",
-  "table_effects",
-  "uniqname",
-  "uses",
+    "smoke: critical tests required to pass for the system to work.",
+    "roman",
+    "asdf: asdf related tests",
+    "bad_files",
+    "bestrefs",
+    "build6",
+    "certify",
+    "checksum",
+    "cmdline",
+    "core: tests in the crds.core module",
+    "distortion: all tests related to distortion filetype",
+    "diff",
+    "factory",
+    "heavy_client",
+    "io",
+    "list",
+    "locking",
+    "matches",
+    "misc",
+    "newcontext",
+    "or_bars",
+    "refactor",
+    "refactoring: tests in the crds.refactoring module",
+    "reftypes",
+    "rmap",
+    "roman: all tests specific to the ROMAN Space Telescope mission",
+    "rowdiff",
+    "selectors",
+    "special",
+    "submit",
+    "substitutions",
+    "sync",
+    "synphot",
+    "tables",
+    "table_effects",
+    "uniqname",
+    "uses",
 ]
 
 [tool.setuptools_scm]
