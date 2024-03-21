@@ -41,9 +41,10 @@ jobs:
           - ubuntu-latest
           - macos-latest
         python-version:
-          - 3.9
+          - '3.9'
           - '3.10'
-          - 3.11
+          - '3.11'
+          - '3.12'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,7 +60,10 @@ jobs:
             fitsverify
             numpy
             parsley
+            pillow
             requests
+            scipy
+            six
           init-shell: bash
           cache-environment: true
           cache-downloads: true
