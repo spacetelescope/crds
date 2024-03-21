@@ -59,7 +59,10 @@ jobs:
             fitsverify
             numpy
             parsley
+            pillow
             requests
+            scipy
+            six
           init-shell: bash
           cache-environment: true
           cache-downloads: true
