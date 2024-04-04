@@ -1,3 +1,11 @@
+11.17.20 (unreleased)
+=====================
+
+ROMAN
+-----
+- Added metrics_logger decorator to Roman tests delivered with older builds [#1033]
+
+
 11.17.19 (2024-02-22)
 =====================
 
