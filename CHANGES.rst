@@ -3,7 +3,7 @@
 
 ROMAN
 -----
-- Added metrics_logger decorator to Roman tests delivered with older builds [#1033]
+- Added metrics_logger decorator to Roman tests delivered with older builds [#1034]
 
 
 11.17.19 (2024-02-22)
