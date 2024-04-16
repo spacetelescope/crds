@@ -756,7 +756,7 @@ def test_certify_roman_valid_asdf(roman_test_cache_state, roman_data, caplog):
     expected_out = f"Certifying '{roman_data}/roman_wfi16_f158_flat_small.asdf' as 'ASDF' relative to context 'roman_0003.pmap'"
     assert expected_out in out
 
-
+@mark.smoke
 @mark.certify
 @mark.roman
 @metrics_logger("DMS4")
@@ -769,15 +769,15 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
         out = caplog.text
     expected_out = """Certifying
     roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.*', got 'tag:yaml.org,2002:str'
     Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
-    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.*',
     'title': 'Use after date of the reference file'}
     On instance['meta']['useafter']:
     "This ain't no valid time"
-    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.*', got 'tag:yaml.org,2002:str'
     Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
-    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.*',
     'title': 'Use after date of the reference file'}
     On instance['meta']['useafter']:
     "This ain't no valid time""".splitlines()
@@ -839,9 +839,9 @@ def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_da
         out = caplog.text
     expected_out = """Certifying
     roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
+    roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.*', got 'tag:yaml.org,2002:str'
     Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
-    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
+    {'tag': 'tag:stsci.edu:asdf/time/time-1.*',
     'title': 'Use after date of the reference file'}
     On instance['meta']['useafter']:
     'yesterday'"""

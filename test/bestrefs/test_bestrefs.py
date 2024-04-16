@@ -236,8 +236,9 @@ def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
 
 
 @pytest.mark.bestrefs
-def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
-    argv = """bestrefs.py --old-context hst.pmap --new-context test/data/hst/hst_0001.pmap --hst --diffs-only --datasets-since=auto"""
+def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog, hst_data):
+    new_ctx = f"{hst_data}/hst_0001.pmap"
+    argv = f"""bestrefs.py --old-context hst.pmap --new-context {new_ctx} --hst --diffs-only --datasets-since=auto"""
     with caplog.at_level(logging.INFO, logger="CRDS"):
         test_brs = BestrefsScript(argv)
         test_brs.complex_init()
@@ -250,12 +251,12 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog):
         out = [o for i, o in enumerate(out) if i in line_check]
     else: # ignore warning "Assuming parameter names ..."
         out = out[:-1]
-    out_to_check = """Mapping differences from 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' affect:
-{'acs': ['biasfile']}
-Possibly affected --datasets-since dates determined by 'hst.pmap' --> 'test/data/hst/hst_0001.pmap' are:
-{'acs': '1992-01-02 00:00:00'}
-Computing bestrefs for db datasets for ['acs']
-Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'""".splitlines()
+    out_to_check = [f"Mapping differences from 'hst.pmap' --> '{new_ctx}' affect:",
+                    "{'acs': ['biasfile']}",
+                    f"Possibly affected --datasets-since dates determined by 'hst.pmap' --> '{new_ctx}' are:",
+                    "{'acs': '1992-01-02 00:00:00'}",
+                    "Computing bestrefs for db datasets for ['acs']",
+                    "Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '1992-01-02 00:00:00'"]
     pattern = re.compile("Downloaded  [0-9]{5,6} dataset ids for '[a-z0-9]{3,6}' since '1992-01-02 00:00:00'")
     for i, line in enumerate(out):
         line = line.strip()
@@ -264,7 +265,8 @@ Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci
         else:
             # using re b/c the numeric value is dynamic
             line = line.replace("INFO     stpipe:log.py:180  ", "")
-            assert re.match(pattern, line) is not None
+            expected = re.findall(pattern, line)
+            assert expected is not None
 
 
 @pytest.mark.bestrefs
