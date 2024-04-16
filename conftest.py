@@ -243,6 +243,7 @@ def hst_serverless_state(crds_shared_group_cache):
     yield cfg
     cfg.cleanup()
 
+
 @fixture()
 def hst_persistent_state(test_cache):
     cfg = ConfigState(
