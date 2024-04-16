@@ -42,9 +42,7 @@ def test_bad_references_error_cache_config(default_shared_state):
     try:
         crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'])
     except exceptions.CrdsBadReferenceError as cbre:
-
         assert out_to_check in cbre.args[0]
-
 
 
 @mark.bad_files
@@ -56,9 +54,7 @@ def test_bad_References_warning_Cache_config(capsys, default_shared_state):
     _, err = capsys.readouterr()
     out_to_check = """Recommended reference 'l2d0959cj_pfl.fits' of type 'pfltfile' is designated scientifically \
 invalid."""
-
     assert out_to_check in err
-
 
 
 @mark.bad_files
@@ -69,9 +65,7 @@ def test_bad_references_fast_mode(default_shared_state):
     val = crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'], fast=True)
     val_to_check = {}
     val_to_check['pfltfile'] = f'{cache}/references/hst/l2d0959cj_pfl.fits'
-
     assert val == val_to_check
-
 
 
 @mark.bad_files
@@ -147,7 +141,6 @@ invalid based on: ['jwst_miri_flat_0003.rmap']"""
     try:
         crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
     except exceptions.CrdsBadRulesError as cbre:
-
         assert out_to_check in cbre.args[0]
 
 
@@ -155,7 +148,6 @@ invalid based on: ['jwst_miri_flat_0003.rmap']"""
 def test_bad_rules_jwst_getreferences_warning(jwst_serverless_state):
     config.ALLOW_BAD_RULES.set("1")
     refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
-
     assert list(refs.keys()) == ['flat']
     assert os.path.basename(refs['flat']) == 'jwst_miri_flat_0006.fits'
 
@@ -168,5 +160,4 @@ on: ['jwst_miri_flat_0003.rmap']"""
     try:
         crds.getrecommendations(JWST_HEADER, reftypes=["gain"], context="jwst_0017.pmap")
     except exceptions.CrdsBadRulesError as cbre:
-
         assert out_to_check in cbre.args[0]
