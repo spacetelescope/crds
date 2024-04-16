@@ -334,11 +334,8 @@ def test_diff_file_reversions(capsys, default_shared_state, hst_data):
     """
     Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
     """
-
     status = DiffScript(f"crds.diff {hst_data}/hst_0002.pmap {hst_data}/hst_0001.pmap --check-diffs")()
-
     output = capsys.readouterr().out
-
     assert output == f"""(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0002.fits with test/data/hst/hst_acs_biasfile_0001.fits')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'added Match rule for m991609tj_bia.fits')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
@@ -349,7 +346,6 @@ def test_diff_file_reversions(capsys, default_shared_state, hst_data):
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('biasfile',), 'replaced test/data/hst/hst_acs_biasfile_0002.rmap with test/data/hst/hst_acs_biasfile_0001.rmap')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('acs',), 'replaced test/data/hst/hst_acs_0002.imap with test/data/hst/hst_acs_0001.imap')
 """
-    
     assert status == 2
 
 @mark.diff
@@ -357,11 +353,8 @@ def test_diff_row_change(capsys, default_shared_state, hst_data, fitsdiff_versio
     """
     Row change
     """
-
     status = DiffScript(f"crds.diff {hst_data}/test-source.fits {hst_data}/test-change-row1-valueLeft.fits")()  #doctest: +ELLIPSIS
-    
     output = capsys.readouterr().out
-    
     assert output == f"""
  fitsdiff: {fitsdiff_version}
  a: {hst_data}/test-source.fits
@@ -397,27 +390,23 @@ Extension HDU 1:
          'no', 'no', 8989, 9870.025, 'readmittance'
 
 """
-    
     assert status == 1
+
 
 @mark.diff
 def test_diff_print_affected_modes(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-modes")()
-
     output = capsys.readouterr().out
-    
     assert output == """INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='FUV' DIFF_COUNT='1'
 INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='NUV' DIFF_COUNT='1'
 """
-
     assert status == 1
+
 
 @mark.diff
 def test_diff_print_all_new_files(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0008.pmap --print-all-new-files --sync-files --include-header-diffs --hide-boring")()
-
     output = capsys.readouterr().out
-    
     assert output == f"""hst_0002.pmap  
 hst_0003.pmap  
 hst_0004.pmap  
@@ -481,91 +470,77 @@ x9c18021o_drk.fits stis darkfile
 x9c18022o_drk.fits stis darkfile
 x9c18023o_drk.fits stis darkfile
 """
-    
     assert status == 1
+
 
 @mark.diff
 def test_diff_print_new_files(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0002.pmap --print-new-files")()
-
     output = capsys.readouterr().out
-
     assert output == f"""hst_0002.pmap
 hst_acs_0002.imap
 hst_acs_biasfile_0002.rmap
 test/data/hst/hst_acs_biasfile_0002.fits
 """
-
     assert status == 1
+
 
 @mark.diff
 def test_diff_print_affected_types(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-types")()
-
     output = capsys.readouterr().out
-    
     assert output == "cos        deadtab   \n"
-    
     assert status == 1
+
 
 @mark.diff
 def test_diff_print_affected_instruments(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-instruments")()
-    
     output = capsys.readouterr().out
-    
     assert output == "cos\n"
-
     assert status == 1
+
 
 @mark.diff
 def test_diff_recurse_added_deleted_na(capsys, default_shared_state, hst_data):
     """
-    For this test,  checking recursive terminal adds/deletes and N/A + OMIT at all levels:
-
-    Changed hst_wfpc2.imap to N/A
-    Replaced hst_cos.imap with {hst_data}/hst_cos.imap results in recursive COS changes
-    Deleted hst_cos_fluxtab.rmap,  results in deleted terminals, rmap
-    Added hst_cos_twozxtab_0262.rmap,  results in added terminals, rmap
-    Added COS TRACETAB as N/A
-    Replaced COS XTRACTAB with OMIT
-    Changed two COS FLATFILE references to OMIT and N/A
+    For this test, checking recursive terminal adds/deletes and N/A + OMIT at all levels
     """
-
-    status = DiffScript(f"crds.diff crds://hst.pmap {hst_data}/hst.pmap --recurse-added-deleted")()  # doctest: +ELLIPSIS
-
+    crds_path = default_shared_state.new_state['CRDS_PATH']
+    test_cache_pmap = f"{crds_path}/mappings/hst/hst.pmap"
+    hst_pmap = f"{hst_data}/hst.pmap"
+    hst_rel = os.path.relpath(hst_data)
+    status = DiffScript(f"crds.diff crds://hst.pmap {hst_pmap} --recurse-added-deleted")()
     output = capsys.readouterr().out
-
-    crds_path = os.environ.get("CRDS_TEST_ROOT", None)
-
-    assert output == f"""(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_acs.imap', 'test/data/hst/hst_acs.imap'), ('hst_acs_biasfile.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'added terminal test/data/hst/hst_acs_biasfile_0001.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700kl_phot.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:00'), 'deleted terminal u8k1433ql_phot.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:01'), 'deleted terminal x1v17416l_phot.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:02'), 'deleted terminal x6q17587l_phot.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('NUV', 'SPECTROSCOPIC'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g17011l_phot.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('NUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:00'), 'deleted terminal t9h1220sl_phot.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-1|1'), ('2009-05-11', '00:00:01'), 'deleted terminal x1v17414l_1dx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-2147483648'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g17006l_1dx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-2147483648'), ('2006-10-01', '00:00:00'), 'deleted terminal s7g17007l_1dx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '2'), ('2009-05-11', '00:00:02'), 'deleted terminal x6q17586l_1dx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-1|1'), ('2009-05-11', '00:00:00'), 'deleted terminal w5g1439sl_1dx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700nl_1dx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('2006-10-01', '00:00:00'), 'deleted terminal s7g1700ol_1dx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap',), 'test/data/hst/hst_cos_twozxtab_0262.rmap', ('FUV', 'SPECTROSCOPIC', '3.0'), ('2009-05-11', '00:00:00'), 'added terminal z2d1925ql_2zx.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'test/data/hst/hst_cos_flatfile.rmap'), ('FUV', 'G130M|G140L|G160M'), ('1996-10-01', '00:00:00'), 'replaced n9n20182l_flat.fits with OMIT')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'test/data/hst/hst_cos_flatfile.rmap'), ('FUV', 'G160M'), ('1996-10-01', '00:00:00'), 'deleted Match rule for v4s17227l_flat.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'test/data/hst/hst_cos_flatfile.rmap'), ('NUV', 'G160M'), ('1996-10-01', '00:00:00'), 'added Match rule for v4s17227l_flat.fits')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'test/data/hst/hst_cos_flatfile.rmap'), ('NUV', 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'), ('1996-10-01', '00:00:00'), 'replaced s7g1700tl_flat.fits with N/A')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_acs.imap', 'test/data/hst/hst_acs.imap'), ('biasfile',), 'replaced hst_acs_biasfile.rmap with test/data/hst/hst_acs_biasfile_0001.rmap')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('flatfile',), 'replaced hst_cos_flatfile.rmap with test/data/hst/hst_cos_flatfile.rmap')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('fluxtab',), 'deleted hst_cos_fluxtab.rmap')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('tracetab',), 'added N/A')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('twozxtab',), 'added test/data/hst/hst_cos_twozxtab_0262.rmap')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('hst_cos.imap', 'test/data/hst/hst_cos.imap'), ('xtractab',), 'replaced hst_cos_xtractab.rmap with OMIT')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('acs',), 'replaced hst_acs.imap with test/data/hst/hst_acs.imap')
-(('{crds_path}/crds-cache-default-test/mappings/hst/hst.pmap', '{hst_data}/hst.pmap'), ('cos',), 'replaced hst_cos.imap with test/data/hst/hst_cos.imap')
-"""
-
     assert status == 1
-
+    expected_output = [
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_acs.imap', '{hst_rel}/hst_acs.imap'), ('hst_acs_biasfile.rmap', '{hst_rel}/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'added terminal {hst_rel}/hst_acs_biasfile_0001.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700kl_phot.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:00'), 'deleted terminal u8k1433ql_phot.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:01'), 'deleted terminal x1v17416l_phot.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:02'), 'deleted terminal x6q17587l_phot.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('NUV', 'SPECTROSCOPIC'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g17011l_phot.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('NUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:00'), 'deleted terminal t9h1220sl_phot.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-1|1'), ('2009-05-11', '00:00:01'), 'deleted terminal x1v17414l_1dx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-2147483648'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g17006l_1dx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-2147483648'), ('2006-10-01', '00:00:00'), 'deleted terminal s7g17007l_1dx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '2'), ('2009-05-11', '00:00:02'), 'deleted terminal x6q17586l_1dx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-1|1'), ('2009-05-11', '00:00:00'), 'deleted terminal w5g1439sl_1dx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700nl_1dx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('2006-10-01', '00:00:00'), 'deleted terminal s7g1700ol_1dx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap',), '{hst_rel}/hst_cos_twozxtab_0262.rmap', ('FUV', 'SPECTROSCOPIC', '3.0'), ('2009-05-11', '00:00:00'), 'added terminal z2d1925ql_2zx.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('hst_cos_flatfile.rmap', '{hst_rel}/hst_cos_flatfile.rmap'), ('FUV', 'G130M|G140L|G160M'), ('1996-10-01', '00:00:00'), 'replaced n9n20182l_flat.fits with OMIT')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('hst_cos_flatfile.rmap', '{hst_rel}/hst_cos_flatfile.rmap'), ('FUV', 'G160M'), ('1996-10-01', '00:00:00'), 'deleted Match rule for v4s17227l_flat.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('hst_cos_flatfile.rmap', '{hst_rel}/hst_cos_flatfile.rmap'), ('NUV', 'G160M'), ('1996-10-01', '00:00:00'), 'added Match rule for v4s17227l_flat.fits')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('hst_cos_flatfile.rmap', '{hst_rel}/hst_cos_flatfile.rmap'), ('NUV', 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'), ('1996-10-01', '00:00:00'), 'replaced s7g1700tl_flat.fits with N/A')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_acs.imap', '{hst_rel}/hst_acs.imap'), ('biasfile',), 'replaced hst_acs_biasfile.rmap with {hst_rel}/hst_acs_biasfile_0001.rmap')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('flatfile',), 'replaced hst_cos_flatfile.rmap with {hst_rel}/hst_cos_flatfile.rmap')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('fluxtab',), 'deleted hst_cos_fluxtab.rmap')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('tracetab',), 'added N/A')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('twozxtab',), 'added {hst_rel}/hst_cos_twozxtab_0262.rmap')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('hst_cos.imap', '{hst_rel}/hst_cos.imap'), ('xtractab',), 'replaced hst_cos_xtractab.rmap with OMIT')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('acs',), 'replaced hst_acs.imap with {hst_rel}/hst_acs.imap')",
+        f"(('{test_cache_pmap}', '{hst_pmap}'), ('cos',), 'replaced hst_cos.imap with {hst_rel}/hst_cos.imap')",
+    ]
+    for line in expected_output:
+        assert line in output.splitlines()
