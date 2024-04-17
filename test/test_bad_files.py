@@ -1,4 +1,3 @@
-import logging
 import os
 import crds
 from crds.core import log, config, exceptions
@@ -34,6 +33,7 @@ JWST_HEADER = {
     }
 
 
+@mark.hst
 @mark.bad_files
 def test_bad_references_error_cache_config(default_shared_state):
     config.ALLOW_BAD_RULES.reset()
@@ -45,6 +45,7 @@ def test_bad_references_error_cache_config(default_shared_state):
         assert out_to_check in cbre.args[0]
 
 
+@mark.hst
 @mark.bad_files
 def test_bad_References_warning_Cache_config(capsys, default_shared_state):
     cache = default_shared_state.cache
@@ -57,6 +58,7 @@ invalid."""
     assert out_to_check in err
 
 
+@mark.hst
 @mark.bad_files
 def test_bad_references_fast_mode(default_shared_state):
     cache = default_shared_state.cache
@@ -68,6 +70,7 @@ def test_bad_references_fast_mode(default_shared_state):
     assert val == val_to_check
 
 
+@mark.hst
 @mark.bad_files
 def test_bad_references_bestrefs_script_error(caplog, default_shared_state, hst_data):
     """Test for error messages from the script for bad references
@@ -100,6 +103,7 @@ def test_bad_references_bestrefs_script_error(caplog, default_shared_state, hst_
         assert line.strip() in out
 
 
+@mark.hst
 @mark.bad_files
 def test_bad_references_bestrefs_script_warning(caplog, default_shared_state, hst_data):
     """Test for warning messages from the script for bad references
@@ -132,10 +136,13 @@ def test_bad_references_bestrefs_script_warning(caplog, default_shared_state, hs
         assert line.strip() in out
 
 
+@mark.jwst
 @mark.bad_files
 def test_bad_rules_jwst_getreferences_error(jwst_serverless_state):
-    config.ALLOW_BAD_RULES.reset()
-    config.ALLOW_BAD_REFERENCES.reset()
+    extra_params = dict(CRDS_MODE='auto', CRDS_ALLOW_BAD_RULES='false', CRDS_ALLOW_BAD_REFERENCES='false')
+    jwst_serverless_state.set_parameters(**extra_params)
+    # config.ALLOW_BAD_RULES.reset()
+    # config.ALLOW_BAD_REFERENCES.reset()
     out_to_check = """Final context 'jwst_0017.pmap' is marked as scientifically \
 invalid based on: ['jwst_miri_flat_0003.rmap']"""
     try:
@@ -143,18 +150,23 @@ invalid based on: ['jwst_miri_flat_0003.rmap']"""
     except exceptions.CrdsBadRulesError as cbre:
         assert out_to_check in cbre.args[0]
 
-
+@mark.jwst
 @mark.bad_files
 def test_bad_rules_jwst_getreferences_warning(jwst_serverless_state):
-    config.ALLOW_BAD_RULES.set("1")
+    extra_params = dict(CRDS_MODE='auto', CRDS_ALLOW_BAD_RULES='true')
+    jwst_serverless_state.set_parameters(**extra_params)
+    # config.ALLOW_BAD_RULES.set("1")
     refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
     assert list(refs.keys()) == ['flat']
     assert os.path.basename(refs['flat']) == 'jwst_miri_flat_0006.fits'
 
 
+@mark.jwst
 @mark.bad_files
 def test_bad_rules_jwst_bestrefs_script_error(jwst_serverless_state):
-    config.ALLOW_BAD_RULES.reset()
+    # config.ALLOW_BAD_RULES.reset()
+    extra_params = dict(CRDS_MODE='auto', CRDS_ALLOW_BAD_RULES='false', CRDS_ALLOW_BAD_REFERENCES='false')
+    jwst_serverless_state.set_parameters(**extra_params)
     out_to_check = """Final context 'jwst_0017.pmap' is marked as scientifically invalid based \
 on: ['jwst_miri_flat_0003.rmap']"""
     try:

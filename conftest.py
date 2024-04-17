@@ -39,7 +39,8 @@ def pytest_addoption(parser):
         "--default_cache",
         action="store",
         dest="default_cache",
-        default=os.environ.get("CRDS_PATH", os.path.join(os.environ.get("CRDS_TEST_ROOT", "/tmp"), "crds-cache-default-test"))
+        #default=os.environ.get("CRDS_PATH", os.path.join(os.environ.get("CRDS_TEST_ROOT", "/tmp"), "crds-cache-default-test"))
+        default="/tmp/crds-cache-default-test" # temporary for github actions (replace with above commented out line)
     )
 
 
@@ -171,6 +172,11 @@ class ConfigState:
             self.new_state['CRDS_MODE'] = self.mode
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
+    
+    def set_parameters(self, **kwargs):
+        if self.new_state is not None:
+            self.new_state.update(**kwargs)
+            crds_config.set_crds_state(self.new_state)
 
     def cleanup(self):
         """Strictly speaking test cleanup is more than restoring CRDS state."""
@@ -183,15 +189,15 @@ class ConfigState:
         This reset is 'softer' than the crds built-in crds.config.clear_crds_state()."""
         self.default_config = dict(
             CRDS_PATH=os.environ.get("CRDS_PATH", "tmp/crds-cache-default-test"),
-            CRDS_CONTEXT=os.environ.get("CRDS_CONTEXT"),
-            CRDS_TEST_ROOT=os.environ.get("CRDS_TEST_ROOT"),
-            CRDS_TESTING_CACHE=os.environ.get("CRDS_TESTING_CACHE"),
+            # CRDS_CONTEXT=os.environ.get("CRDS_CONTEXT"),
+            # CRDS_TEST_ROOT=os.environ.get("CRDS_TEST_ROOT"),
+            # CRDS_TESTING_CACHE=os.environ.get("CRDS_TESTING_CACHE"),
             CRDS_CONFIG_OFFSITE='1',
             CRDS_READONLY_CACHE='0',
             CRDS_REF_SUBDIR_MODE='None',
-            _CRDS_CACHE_READONLY=False,
-            PASS_INVALID_VALUES=False,
-            CRDS_VERBOSITY=0,
+            _CRDS_CACHE_READONLY='false',
+            PASS_INVALID_VALUES='false',
+            CRDS_VERBOSITY='0',
             CRDS_MODE='auto',
             CRDS_CLIENT_RETRY_COUNT='3',
             CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
@@ -213,6 +219,15 @@ def hst_shared_cache_state(crds_shared_group_cache):
     cfg.config_setup()
     yield cfg
     cfg.cleanup()
+
+
+@fixture(scope='function')
+def default_cache_state(default_cache):
+    cfg = ConfigState()
+    cfg.reset_defaults()
+    cfg.cache = default_cache
+    cfg.mode = 'auto'
+    cfg.config_setup()
 
 
 @fixture()

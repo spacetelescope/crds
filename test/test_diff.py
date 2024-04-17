@@ -52,13 +52,10 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
 TEST CASES
 ----------
 """
-
 import subprocess
 import os
-
 import asdf
 from pytest import mark, fixture
-
 from crds.diff import DiffScript
 
 
@@ -66,16 +63,16 @@ from crds.diff import DiffScript
 def fitsdiff_version() -> str:
     return subprocess.check_output("fitsdiff --version", shell=True).decode().split()[1]
 
+
+@mark.hst
 @mark.diff
 def test_diff_pmap_diffs(capsys, default_shared_state, hst_data):
     """
     Compute diffs for two .pmap's:
     """
-
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0002.pmap")()
-
     output = capsys.readouterr().out
-
+    assert status == 1
     assert output == f"""(('{hst_data}/hst_0001.pmap', '{hst_data}/hst_0002.pmap'), ('test/data/hst/hst_acs_0001.imap', 'test/data/hst/hst_acs_0002.imap'), ('test/data/hst/hst_acs_biasfile_0001.rmap', 'test/data/hst/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0001.fits with test/data/hst/hst_acs_biasfile_0002.fits')
 (('{hst_data}/hst_0001.pmap', '{hst_data}/hst_0002.pmap'), ('test/data/hst/hst_acs_0001.imap', 'test/data/hst/hst_acs_0002.imap'), ('test/data/hst/hst_acs_biasfile_0001.rmap', 'test/data/hst/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'deleted Match rule for m991609tj_bia.fits')
 (('{hst_data}/hst_0001.pmap', '{hst_data}/hst_0002.pmap'), ('test/data/hst/hst_acs_0001.imap', 'test/data/hst/hst_acs_0002.imap'), ('test/data/hst/hst_acs_biasfile_0001.rmap', 'test/data/hst/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'deleted Match rule for q9e1206kj_bia.fits')
@@ -87,18 +84,16 @@ def test_diff_pmap_diffs(capsys, default_shared_state, hst_data):
 (('{hst_data}/hst_0001.pmap', '{hst_data}/hst_0002.pmap'), ('acs',), 'replaced test/data/hst/hst_acs_0001.imap with test/data/hst/hst_acs_0002.imap')
 """
 
-    assert status == 1
 
+@mark.hst
 @mark.diff
 def test_diff_imap_diffs(capsys, default_shared_state, hst_data):
     """
     Compute diffs for two .imap's:
     """
-    
     status = DiffScript(f"crds.diff {hst_data}/hst_acs_0001.imap {hst_data}/hst_acs_0002.imap")()
-
     output = capsys.readouterr().out
-
+    assert status == 1
     assert output == f"""(('{hst_data}/hst_acs_0001.imap', '{hst_data}/hst_acs_0002.imap'), ('test/data/hst/hst_acs_biasfile_0001.rmap', 'test/data/hst/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0001.fits with test/data/hst/hst_acs_biasfile_0002.fits')
 (('{hst_data}/hst_acs_0001.imap', '{hst_data}/hst_acs_0002.imap'), ('test/data/hst/hst_acs_biasfile_0001.rmap', 'test/data/hst/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'deleted Match rule for m991609tj_bia.fits')
 (('{hst_data}/hst_acs_0001.imap', '{hst_data}/hst_acs_0002.imap'), ('test/data/hst/hst_acs_biasfile_0001.rmap', 'test/data/hst/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'deleted Match rule for q9e1206kj_bia.fits')
@@ -109,18 +104,16 @@ def test_diff_imap_diffs(capsys, default_shared_state, hst_data):
 (('{hst_data}/hst_acs_0001.imap', '{hst_data}/hst_acs_0002.imap'), ('biasfile',), 'replaced test/data/hst/hst_acs_biasfile_0001.rmap with test/data/hst/hst_acs_biasfile_0002.rmap')
 """
 
-    assert status == 1
 
+@mark.hst
 @mark.diff
 def test_diff_rmap_diffs(capsys, default_shared_state, hst_data):
     """
     Compute diffs for two .rmap's:
     """
-
     status = DiffScript(f"crds.diff {hst_data}/hst_acs_biasfile_0001.rmap {hst_data}/hst_acs_biasfile_0002.rmap --include-header-diffs")()
-
     output = capsys.readouterr().out
-    
+    assert status == 1
     assert output == f"""(('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0001.fits with test/data/hst/hst_acs_biasfile_0002.fits')
 (('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'deleted Match rule for m991609tj_bia.fits')
 (('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'deleted Match rule for q9e1206kj_bia.fits')
@@ -134,19 +127,17 @@ def test_diff_rmap_diffs(capsys, default_shared_state, hst_data):
 (('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), "header replaced 'reffile_required' = 'yes' with 'no'")
 (('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), "header replaced 'sha1sum' = 'ac75f7fb502e1be56588207a06bc19330846e9f7' with 'c3bc544b6daaef797f3dc6025d0288e658d50016'")
 """
-    
-    assert status == 1
 
+
+@mark.hst
 @mark.diff
 def test_diff_fits_diff(capsys, default_shared_state, hst_data, fitsdiff_version):
     """
     Compute diffs for two .fits's:
     """
-    
     status = DiffScript(f"crds.diff {hst_data}/hst_acs_biasfile_0001.fits {hst_data}/hst_acs_biasfile_0002.fits")() # doctest: +ELLIPSIS
-
     output = capsys.readouterr().out
-
+    assert status == 1
     assert output == f"""
  fitsdiff: {fitsdiff_version}
  a: {hst_data}/hst_acs_biasfile_0001.fits
@@ -168,16 +159,14 @@ Primary HDU:
  
 """
 
-    assert status == 1
 
+@mark.jwst
 @mark.diff
 def test_diff_asdf(capsys, jwst_shared_cache_state, jwst_data):
     """
     Compute diffs for two .asdf's:
     """
-
     status = DiffScript(f"crds.diff {jwst_data}/jwst_nircam_specwcs_0010.asdf {jwst_data}/jwst_nircam_specwcs_0011.asdf")() # doctest: +ELLIPSIS
-
     output = capsys.readouterr().out
 
     if asdf.__version__ < "3.0.0":
@@ -277,21 +266,19 @@ tree:
 """
     assert output == expected_output
     assert status == 1
-
     status = DiffScript(f"crds.diff {jwst_data}/jwst_nircam_specwcs_0010.asdf {jwst_data}/jwst_nircam_specwcs_0010.asdf")() # doctest: +ELLIPSIS
-    
     assert status == 0
 
+
+@mark.hst
 @mark.diff
 def test_diff_rmap_primitive_diffs(capsys, default_shared_state, hst_data, fitsdiff_version):
     """
     Compute primitive diffs for two .rmap's:
     """
-
     status = DiffScript(f"crds.diff {hst_data}/hst_acs_biasfile_0001.rmap {hst_data}/hst_acs_biasfile_0002.rmap --primitive-diffs")()  #doctest: +ELLIPSIS
-
     output = capsys.readouterr().out
-    
+    assert status == 1
     assert output == f"""================================================================================
 (('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0001.fits with test/data/hst/hst_acs_biasfile_0002.fits')
 
@@ -326,9 +313,9 @@ Primary HDU:
 ================================================================================
 (('{hst_data}/hst_acs_biasfile_0001.rmap', '{hst_data}/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
 """
-    
-    assert status == 1
 
+
+@mark.hst
 @mark.diff
 def test_diff_file_reversions(capsys, default_shared_state, hst_data):
     """
@@ -336,6 +323,7 @@ def test_diff_file_reversions(capsys, default_shared_state, hst_data):
     """
     status = DiffScript(f"crds.diff {hst_data}/hst_0002.pmap {hst_data}/hst_0001.pmap --check-diffs")()
     output = capsys.readouterr().out
+    assert status == 2
     assert output == f"""(('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced test/data/hst/hst_acs_biasfile_0002.fits with test/data/hst/hst_acs_biasfile_0001.fits')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('1992-01-01', '00:00:00'), 'added Match rule for m991609tj_bia.fits')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('test/data/hst/hst_acs_biasfile_0002.rmap', 'test/data/hst/hst_acs_biasfile_0001.rmap'), ('HRC', 'A', '4.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
@@ -346,8 +334,9 @@ def test_diff_file_reversions(capsys, default_shared_state, hst_data):
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('test/data/hst/hst_acs_0002.imap', 'test/data/hst/hst_acs_0001.imap'), ('biasfile',), 'replaced test/data/hst/hst_acs_biasfile_0002.rmap with test/data/hst/hst_acs_biasfile_0001.rmap')
 (('{hst_data}/hst_0002.pmap', '{hst_data}/hst_0001.pmap'), ('acs',), 'replaced test/data/hst/hst_acs_0002.imap with test/data/hst/hst_acs_0001.imap')
 """
-    assert status == 2
 
+
+@mark.hst
 @mark.diff
 def test_diff_row_change(capsys, default_shared_state, hst_data, fitsdiff_version):
     """
@@ -355,6 +344,7 @@ def test_diff_row_change(capsys, default_shared_state, hst_data, fitsdiff_versio
     """
     status = DiffScript(f"crds.diff {hst_data}/test-source.fits {hst_data}/test-change-row1-valueLeft.fits")()  #doctest: +ELLIPSIS
     output = capsys.readouterr().out
+    assert status == 1
     assert output == f"""
  fitsdiff: {fitsdiff_version}
  a: {hst_data}/test-source.fits
@@ -390,21 +380,22 @@ Extension HDU 1:
          'no', 'no', 8989, 9870.025, 'readmittance'
 
 """
-    assert status == 1
 
 
+@mark.hst
 @mark.diff
 def test_diff_print_affected_modes(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-modes")()
     output = capsys.readouterr().out
+    assert status == 1
     assert output == """INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='FUV' DIFF_COUNT='1'
 INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='NUV' DIFF_COUNT='1'
 """
-    assert status == 1
 
 
+@mark.hst
 @mark.diff
-def test_diff_print_all_new_files(capsys, default_shared_state, hst_data):
+def test_diff_print_all_new_files(capsys, default_cache_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0008.pmap --print-all-new-files --sync-files --include-header-diffs --hide-boring")()
     output = capsys.readouterr().out
     assert output == f"""hst_0002.pmap  
@@ -473,6 +464,7 @@ x9c18023o_drk.fits stis darkfile
     assert status == 1
 
 
+@mark.hst
 @mark.diff
 def test_diff_print_new_files(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0002.pmap --print-new-files")()
@@ -485,6 +477,7 @@ test/data/hst/hst_acs_biasfile_0002.fits
     assert status == 1
 
 
+@mark.hst
 @mark.diff
 def test_diff_print_affected_types(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-types")()
@@ -493,6 +486,7 @@ def test_diff_print_affected_types(capsys, default_shared_state, hst_data):
     assert status == 1
 
 
+@mark.hst
 @mark.diff
 def test_diff_print_affected_instruments(capsys, default_shared_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_cos_deadtab.rmap {hst_data}/hst_cos_deadtab_9998.rmap --print-affected-instruments")()
@@ -501,15 +495,16 @@ def test_diff_print_affected_instruments(capsys, default_shared_state, hst_data)
     assert status == 1
 
 
+@mark.hst
 @mark.diff
-def test_diff_recurse_added_deleted_na(capsys, default_shared_state, hst_data):
+def test_diff_recurse_added_deleted_na(capsys, default_cache_state, hst_data):
     """
     For this test, checking recursive terminal adds/deletes and N/A + OMIT at all levels
     """
-    crds_path = default_shared_state.new_state['CRDS_PATH']
+    crds_path = default_cache_state.cache
     test_cache_pmap = f"{crds_path}/mappings/hst/hst.pmap"
     hst_pmap = f"{hst_data}/hst.pmap"
-    hst_rel = os.path.relpath(hst_data)
+    hst_rel = "test/data/hst"
     status = DiffScript(f"crds.diff crds://hst.pmap {hst_pmap} --recurse-added-deleted")()
     output = capsys.readouterr().out
     assert status == 1
