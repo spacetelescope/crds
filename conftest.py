@@ -188,7 +188,7 @@ class ConfigState:
         Any kwargs passed into a ConfigState object will override these default values.
         This reset is 'softer' than the crds built-in crds.config.clear_crds_state()."""
         self.default_config = dict(
-            CRDS_PATH=os.environ.get("CRDS_PATH", "tmp/crds-cache-default-test"),
+            CRDS_PATH=os.environ.get("CRDS_PATH", "/tmp/crds-cache-default-test"),
             # CRDS_CONTEXT=os.environ.get("CRDS_CONTEXT"),
             # CRDS_TEST_ROOT=os.environ.get("CRDS_TEST_ROOT"),
             # CRDS_TESTING_CACHE=os.environ.get("CRDS_TESTING_CACHE"),
@@ -223,10 +223,7 @@ def hst_shared_cache_state(crds_shared_group_cache):
 
 @fixture(scope='function')
 def default_cache_state(default_cache):
-    cfg = ConfigState()
-    cfg.reset_defaults()
-    cfg.cache = default_cache
-    cfg.mode = 'auto'
+    cfg = ConfigState(cache=default_cache, mode='auto')
     cfg.config_setup()
 
 
