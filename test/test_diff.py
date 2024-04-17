@@ -395,7 +395,7 @@ INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='NUV' DIFF_COUNT='1'
 
 @mark.hst
 @mark.diff
-def test_diff_print_all_new_files(capsys, default_cache_state, hst_data):
+def test_diff_print_all_new_files(capsys, hst_default_cache_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0008.pmap --print-all-new-files --sync-files --include-header-diffs --hide-boring")()
     output = capsys.readouterr().out
     assert output == f"""hst_0002.pmap  
@@ -466,7 +466,7 @@ x9c18023o_drk.fits stis darkfile
 
 @mark.hst
 @mark.diff
-def test_diff_print_new_files(capsys, default_cache_state, hst_data):
+def test_diff_print_new_files(capsys, hst_default_cache_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0002.pmap --print-new-files")()
     output = capsys.readouterr().out
     assert output == f"""hst_0002.pmap
@@ -497,11 +497,11 @@ def test_diff_print_affected_instruments(capsys, default_shared_state, hst_data)
 
 @mark.hst
 @mark.diff
-def test_diff_recurse_added_deleted_na(capsys, default_cache_state, hst_data):
+def test_diff_recurse_added_deleted_na(capsys, hst_default_cache_state, hst_data):
     """
     For this test, checking recursive terminal adds/deletes and N/A + OMIT at all levels
     """
-    crds_path = default_cache_state.cache
+    crds_path = hst_default_cache_state.cache
     test_cache_pmap = f"{crds_path}/mappings/hst/hst.pmap"
     hst_pmap = f"{hst_data}/hst.pmap"
     hst_rel = "test/data/hst"

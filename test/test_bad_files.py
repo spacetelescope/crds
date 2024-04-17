@@ -154,7 +154,10 @@ invalid based on: ['jwst_miri_flat_0003.rmap']"""
 
 @mark.jwst
 @mark.bad_files
-def test_bad_rules_jwst_getreferences_warning(jwst_serverless_state):
+def test_bad_rules_jwst_getreferences_warning(jwst_serverless_state, default_cache):
+    jwst_serverless_state.cache = default_cache
+    jwst_serverless_state.mode = 'auto'
+    jwst_serverless_state.config_setup()
     crds_config.ALLOW_BAD_RULES.set("1")
     refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
     assert list(refs.keys()) == ['flat']
@@ -163,7 +166,10 @@ def test_bad_rules_jwst_getreferences_warning(jwst_serverless_state):
 
 @mark.jwst
 @mark.bad_files
-def test_bad_rules_jwst_bestrefs_script_error(jwst_serverless_state):
+def test_bad_rules_jwst_bestrefs_script_error(jwst_serverless_state, default_cache):
+    jwst_serverless_state.cache = default_cache
+    jwst_serverless_state.mode = 'auto'
+    jwst_serverless_state.config_setup()
     crds_config.ALLOW_BAD_RULES.reset()
     out_to_check = """Final context 'jwst_0017.pmap' is marked as scientifically invalid based \
 on: ['jwst_miri_flat_0003.rmap']"""

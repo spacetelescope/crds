@@ -19,6 +19,7 @@ HERE = os.path.abspath(os.path.dirname(__file__) or ".")
 CRDS_DIR = os.path.abspath(os.path.dirname(crds.__file__))
 RETENTION_COUNT=1
 RETENTION_POLICY='none'
+DEFAULT_STATE = crds_config.get_crds_state()
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -150,14 +151,13 @@ class ConfigState:
         self.clear_existing = clear_existing
         self.observatory = observatory
         self.mode = mode
-        self.old_state = None
+        self.old_state = DEFAULT_STATE
+        self.old_state["CRDS_CWD"] = os.getcwd()
         self.new_state = None
 
     def config_setup(self):
         """Reset the CRDS configuration state to support testing given the supplied parameters."""
         log.set_test_mode()
-        self.old_state = crds_config.get_crds_state()
-        self.old_state["CRDS_CWD"] = os.getcwd()
         if self.clear_existing:
             crds_config.clear_crds_state()
         self.new_state = dict(self.old_state)
@@ -172,33 +172,28 @@ class ConfigState:
             self.new_state['CRDS_MODE'] = self.mode
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
-    
-    # def set_parameters(self, **kwargs):
-    #     if self.new_state is not None:
-    #         self.new_state.update(**kwargs)
-    #         crds_config.set_crds_state(self.new_state)
 
     def cleanup(self):
         """Strictly speaking test cleanup is more than restoring CRDS state."""
         crds_config.set_crds_state(self.old_state)
         utils.clear_function_caches()
 
-    # def reset_defaults(self):
-    #     """Generic CRDS environment variables consistent across observatories. 
-    #     Any kwargs passed into a ConfigState object will override these default values.
-    #     This reset is 'softer' than the crds built-in crds.config.clear_crds_state()."""
-    #     self.default_config = dict(
-    #         CRDS_PATH=os.environ.get("CRDS_PATH", "/tmp/crds-cache-default-test"),
-    #         CRDS_CONFIG_OFFSITE='1',
-    #         CRDS_READONLY_CACHE='0',
-    #         CRDS_REF_SUBDIR_MODE='None',
-    #         PASS_INVALID_VALUES='false',
-    #         CRDS_VERBOSITY='0',
-    #         CRDS_MODE='auto',
-    #         CRDS_CLIENT_RETRY_COUNT='3',
-    #         CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
-    #     )
-    #     crds_config.set_crds_state(self.default_config)
+    def reset_defaults(self):
+        """Generic CRDS environment variables consistent across observatories. 
+        Any kwargs passed into a ConfigState object will override these default values.
+        This reset is 'softer' than the crds built-in crds.config.clear_crds_state()."""
+        self.default_config = dict(
+            CRDS_PATH=os.environ.get("CRDS_PATH", "/tmp/crds-cache-default-test"),
+            CRDS_CONFIG_OFFSITE='1',
+            CRDS_READONLY_CACHE='0',
+            CRDS_REF_SUBDIR_MODE='None',
+            PASS_INVALID_VALUES='false',
+            CRDS_VERBOSITY='0',
+            CRDS_MODE='auto',
+            CRDS_CLIENT_RETRY_COUNT='3',
+            CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
+        )
+        crds_config.set_crds_state(self.default_config)
 
 
 @fixture(scope='function')
@@ -218,8 +213,15 @@ def hst_shared_cache_state(crds_shared_group_cache):
 
 
 @fixture(scope='function')
-def default_cache_state(default_cache):
-    cfg = ConfigState(cache=default_cache, mode='auto')
+def hst_default_cache_state(default_cache):
+    cfg = ConfigState(cache=default_cache, mode='auto', url="https://hst-crds.stsci.edu", observatory="hst")
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
+
+@fixture(scope='function')
+def jwst_default_cache_state(default_cache):
+    cfg = ConfigState(cache=default_cache, mode='auto', url="https://jwst-crds.stsci.edu", observatory="jwst")
     cfg.config_setup()
     yield cfg
     cfg.cleanup()
