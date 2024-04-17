@@ -189,13 +189,9 @@ class ConfigState:
         This reset is 'softer' than the crds built-in crds.config.clear_crds_state()."""
         self.default_config = dict(
             CRDS_PATH=os.environ.get("CRDS_PATH", "/tmp/crds-cache-default-test"),
-            # CRDS_CONTEXT=os.environ.get("CRDS_CONTEXT"),
-            # CRDS_TEST_ROOT=os.environ.get("CRDS_TEST_ROOT"),
-            # CRDS_TESTING_CACHE=os.environ.get("CRDS_TESTING_CACHE"),
             CRDS_CONFIG_OFFSITE='1',
             CRDS_READONLY_CACHE='0',
             CRDS_REF_SUBDIR_MODE='None',
-            _CRDS_CACHE_READONLY='false',
             PASS_INVALID_VALUES='false',
             CRDS_VERBOSITY='0',
             CRDS_MODE='auto',
@@ -225,6 +221,8 @@ def hst_shared_cache_state(crds_shared_group_cache):
 def default_cache_state(default_cache):
     cfg = ConfigState(cache=default_cache, mode='auto')
     cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
 
 
 @fixture()
