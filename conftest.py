@@ -35,6 +35,12 @@ def pytest_addoption(parser):
         default=os.environ.get("CRDS_TESTING_CACHE", "no-test-cache-defined-see-TESTING"),
         help="Default CRDS Test Cache",
     )
+    parser.addoption(
+        "--default_cache",
+        action="store",
+        dest="default_cache",
+        default=os.environ.get("CRDS_PATH", os.path.join(os.environ.get("CRDS_TEST_ROOT", "/tmp"), "crds-cache-default-test"))
+    )
 
 
 @fixture(scope='session')
@@ -45,6 +51,11 @@ def test_data(request):
 @fixture(scope='session')
 def test_cache(request):
     return request.config.getoption("test_cache")
+
+
+@fixture(scope='session')
+def default_cache(request):
+    return request.config.getoption("default_cache")
 
 
 @fixture(scope='session')
@@ -143,12 +154,11 @@ class ConfigState:
 
     def config_setup(self):
         """Reset the CRDS configuration state to support testing given the supplied parameters."""
-        # cache=crds_shared_group_cache, url=None, observatory=None, clear_existing=False
         log.set_test_mode()
+        if self.clear_existing:
+            self.reset_defaults()
         self.old_state = crds_config.get_crds_state()
         self.old_state["CRDS_CWD"] = os.getcwd()
-        if self.clear_existing:
-            crds_config.clear_crds_state()
         self.new_state = dict(self.old_state)
         self.new_state["CRDS_CWD"] = HERE
         if self.url is not None:
@@ -167,6 +177,29 @@ class ConfigState:
         crds_config.set_crds_state(self.old_state)
         utils.clear_function_caches()
 
+    def reset_defaults(self):
+        """Generic CRDS environment variables consistent across observatories. 
+        Any kwargs passed into a ConfigState object will override these default values.
+        Most configuration fixtures use the default `clear_existing=True` kwarg, which invokes
+        this function to initialize default values into the 'old_state' attribute. When cleanup
+        is run, this 'old_state' is re-instantiated as the configuration."""
+        self.default_config = dict(
+            CRDS_PATH=os.environ.get("CRDS_PATH", "tmp/crds-cache-default-test"),
+            CRDS_CONTEXT=os.environ.get("CRDS_CONTEXT"),
+            CRDS_TEST_ROOT=os.environ.get("CRDS_TEST_ROOT"),
+            CRDS_TESTING_CACHE=os.environ.get("CRDS_TESTING_CACHE"),
+            CRDS_CONFIG_OFFSITE='1',
+            CRDS_READONLY_CACHE='0',
+            CRDS_REF_SUBDIR_MODE='None',
+            _CRDS_CACHE_READONLY=False,
+            PASS_INVALID_VALUES=False,
+            CRDS_VERBOSITY=0,
+            CRDS_MODE='auto',
+            CRDS_CLIENT_RETRY_COUNT='3',
+            CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
+        )
+        crds_config.set_crds_state(self.default_config)
+
 
 @fixture(scope='function')
 def default_shared_state(crds_shared_group_cache):
@@ -177,8 +210,8 @@ def default_shared_state(crds_shared_group_cache):
 
 
 @fixture(scope='function')
-def hst_shared_cache_state(crds_shared_group_cache):
-    cfg = ConfigState(cache=crds_shared_group_cache, url="https://hst-crds.stsci.edu", observatory="hst")
+def hst_shared_cache_state(default_cache):
+    cfg = ConfigState(cache=default_cache, url="https://hst-crds.stsci.edu", observatory="hst")
     cfg.config_setup()
     yield cfg
     cfg.cleanup()
@@ -198,7 +231,6 @@ def hst_temp_cache_state(test_temp_dir):
 
 @fixture(scope='function')
 def jwst_no_cache_state():
-    #os.environ["CRDS_MAPPATH_SINGLE"] = test_data
     cfg = ConfigState(
         cache=None,
         url="https://jwst-crds.stsci.edu",
@@ -210,9 +242,9 @@ def jwst_no_cache_state():
 
 
 @fixture(scope='function')
-def jwst_shared_cache_state(crds_shared_group_cache):
+def jwst_shared_cache_state(default_cache):
     cfg = ConfigState(
-        cache=crds_shared_group_cache,
+        cache=default_cache,
         url="https://jwst-crds.stsci.edu",
         observatory="jwst")
     cfg.config_setup()
@@ -221,9 +253,9 @@ def jwst_shared_cache_state(crds_shared_group_cache):
 
 
 @fixture(scope='function')
-def jwst_serverless_state(crds_shared_group_cache):
+def jwst_serverless_state(default_cache):
     cfg = ConfigState(
-        cache=crds_shared_group_cache,
+        cache=default_cache,
         url="https://jwst-crds-serverless.stsci.edu",
         observatory="jwst"
     )
@@ -233,9 +265,9 @@ def jwst_serverless_state(crds_shared_group_cache):
 
 
 @fixture(scope='function')
-def hst_serverless_state(crds_shared_group_cache):
+def hst_serverless_state(default_cache):
     cfg = ConfigState(
-        cache=crds_shared_group_cache,
+        cache=default_cache,
         url="https://hst-serverless-mode.stsci.edu",
         observatory="hst"
     )
@@ -257,9 +289,9 @@ def hst_persistent_state(test_cache):
 
 
 @fixture(scope='function')
-def roman_serverless_state(crds_shared_group_cache):
+def roman_serverless_state(default_cache):
     cfg = ConfigState(
-        cache=crds_shared_group_cache,
+        cache=default_cache,
         url="https://roman-crds-serverless.stsci.edu",
         observatory="roman"
     )
