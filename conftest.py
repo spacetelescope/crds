@@ -161,6 +161,7 @@ class ConfigState:
         if self.clear_existing:
             crds_config.clear_crds_state()
         self.new_state = dict(self.old_state)
+        self.new_state.pop('_CRDS_CACHE_READONLY')
         self.new_state["CRDS_CWD"] = HERE
         if self.url is not None:
             self.new_state["CRDS_SERVER_URL"] = self.url
