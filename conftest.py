@@ -173,32 +173,32 @@ class ConfigState:
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
     
-    def set_parameters(self, **kwargs):
-        if self.new_state is not None:
-            self.new_state.update(**kwargs)
-            crds_config.set_crds_state(self.new_state)
+    # def set_parameters(self, **kwargs):
+    #     if self.new_state is not None:
+    #         self.new_state.update(**kwargs)
+    #         crds_config.set_crds_state(self.new_state)
 
     def cleanup(self):
         """Strictly speaking test cleanup is more than restoring CRDS state."""
         crds_config.set_crds_state(self.old_state)
         utils.clear_function_caches()
 
-    def reset_defaults(self):
-        """Generic CRDS environment variables consistent across observatories. 
-        Any kwargs passed into a ConfigState object will override these default values.
-        This reset is 'softer' than the crds built-in crds.config.clear_crds_state()."""
-        self.default_config = dict(
-            CRDS_PATH=os.environ.get("CRDS_PATH", "/tmp/crds-cache-default-test"),
-            CRDS_CONFIG_OFFSITE='1',
-            CRDS_READONLY_CACHE='0',
-            CRDS_REF_SUBDIR_MODE='None',
-            PASS_INVALID_VALUES='false',
-            CRDS_VERBOSITY='0',
-            CRDS_MODE='auto',
-            CRDS_CLIENT_RETRY_COUNT='3',
-            CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
-        )
-        crds_config.set_crds_state(self.default_config)
+    # def reset_defaults(self):
+    #     """Generic CRDS environment variables consistent across observatories. 
+    #     Any kwargs passed into a ConfigState object will override these default values.
+    #     This reset is 'softer' than the crds built-in crds.config.clear_crds_state()."""
+    #     self.default_config = dict(
+    #         CRDS_PATH=os.environ.get("CRDS_PATH", "/tmp/crds-cache-default-test"),
+    #         CRDS_CONFIG_OFFSITE='1',
+    #         CRDS_READONLY_CACHE='0',
+    #         CRDS_REF_SUBDIR_MODE='None',
+    #         PASS_INVALID_VALUES='false',
+    #         CRDS_VERBOSITY='0',
+    #         CRDS_MODE='auto',
+    #         CRDS_CLIENT_RETRY_COUNT='3',
+    #         CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
+    #     )
+    #     crds_config.set_crds_state(self.default_config)
 
 
 @fixture(scope='function')

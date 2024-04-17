@@ -4,7 +4,7 @@ from pytest import mark
 
 @mark.hst
 @mark.matches
-def test_matches_files(capsys, hst_shared_cache_state):
+def test_matches_files(capsys, default_cache_state):
     MatchesScript("crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits")()
     out, _ = capsys.readouterr()
     out_to_check = """lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' \
@@ -15,7 +15,7 @@ DATE-OBS='1997-01-01' TIME-OBS='00:00:00'"""
 
 @mark.hst
 @mark.matches
-def test_matches_files_omit_parameters_brief(capsys, hst_shared_cache_state):
+def test_matches_files_omit_parameters_brief(capsys, default_cache_state):
     MatchesScript(
         "crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths")()
     out, _ = capsys.readouterr()
@@ -26,7 +26,7 @@ def test_matches_files_omit_parameters_brief(capsys, hst_shared_cache_state):
 
 @mark.hst
 @mark.matches
-def test_matches_tuple_format(capsys, hst_shared_cache_state):
+def test_matches_tuple_format(capsys, default_cache_state):
     MatchesScript("crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format")()
     out, _ = capsys.readouterr()
     out_to_check = """lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), \

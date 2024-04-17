@@ -170,8 +170,8 @@ def test_list_references(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_cached_references_hst(capsys, hst_shared_cache_state):
-   base_path = f'{hst_shared_cache_state.cache}/references/hst'
+def test_list_cached_references_hst(capsys, default_cache_state):
+   base_path = f'{default_cache_state.cache}/references/hst'
    ListScript("crds.list --cached-references --full-path")()
    out, _ = capsys.readouterr()
    expected_files = ['41g16069m_tmg.fits', 'y951738kl_hv.fits', 'yas2005el_hv.fits']
@@ -181,8 +181,8 @@ def test_list_cached_references_hst(capsys, hst_shared_cache_state):
 
 @mark.jwst
 @mark.list
-def test_list_cached_references_jwst(capsys, jwst_shared_cache_state):
-    base_path = f'{jwst_shared_cache_state.cache}/references/jwst'
+def test_list_cached_references_jwst(capsys, default_cache_state):
+    base_path = f'{default_cache_state.cache}/references/jwst'
     ListScript("crds.list --cached-references --full-path")()
     out, _ = capsys.readouterr()
     expected_files = ['jwst_miri_flat_0006.fits', 'jwst_niriss_flat_0000.fits']
@@ -192,7 +192,7 @@ def test_list_cached_references_jwst(capsys, jwst_shared_cache_state):
 
 @mark.hst
 @mark.list
-def test_list_dataset_ids(capsys, hst_data, default_shared_state):
+def test_list_dataset_ids(capsys, default_shared_state):
     ListScript("crds.list --dataset-ids acs --hst")()
     out, _ = capsys.readouterr()
     out_to_check_acs = """J6FY01020:J6FY01EEQ
@@ -204,7 +204,7 @@ J6FY01020:J6FY01ESQ"""
 
 @mark.hst
 @mark.list
-def test_list_dataset_headers(capsys, hst_shared_cache_state):
+def test_list_dataset_headers(capsys, default_cache_state):
     ListScript("crds.list --dataset-headers U20L0U01T:U20L0U01T --minimize-header --contexts hst.pmap --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """Dataset pars for 'U20L0U01T:U20L0U01T' with respect to 'hst.pmap':
@@ -265,7 +265,7 @@ I9ZF01010:I9ZF01E3Q"""
 
 @mark.hst
 @mark.list
-def test_list_required_parkeys_pmap(capsys, hst_shared_cache_state):
+def test_list_required_parkeys_pmap(capsys, default_cache_state):
     ListScript("crds.list --required-parkeys --contexts hst.pmap --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """--------------------- Parkeys required for 'hst.pmap' ---------------------
@@ -427,7 +427,7 @@ def test_list_cat_mappings(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_status(capsys, default_shared_state):
+def test_list_status(capsys, default_cache_state):
     ListScript("crds.list --status --hst")()
     out, _ = capsys.readouterr()
     assert "CRDS Summary =" in out

@@ -466,7 +466,7 @@ x9c18023o_drk.fits stis darkfile
 
 @mark.hst
 @mark.diff
-def test_diff_print_new_files(capsys, default_shared_state, hst_data):
+def test_diff_print_new_files(capsys, default_cache_state, hst_data):
     status = DiffScript(f"crds.diff {hst_data}/hst_0001.pmap {hst_data}/hst_0002.pmap --print-new-files")()
     output = capsys.readouterr().out
     assert output == f"""hst_0002.pmap
