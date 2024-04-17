@@ -45,6 +45,7 @@ def check_logs(expected, out):
     for line in expected.splitlines():
         assert line.strip() in out
 
+@mark.hst
 @mark.special
 def test_bestrefs_na_undefined_single_ctx_defaults(hst_shared_cache_state, hst_data, caplog):
     # Instantiate a BestrefsScript with default settings and dummy parameters, simulating pipeline bestrefs defaults
@@ -88,6 +89,7 @@ def test_bestrefs_na_undefined_single_ctx_defaults(hst_shared_cache_state, hst_d
     assert """instrument='COS' type='TRACETAB' data='LA9K03C3Q' ::  New: Bestref FAILED:  some other error""" in out
 
 
+@mark.hst
 @mark.special
 def test_bestrefs_na_undefined_single_ctx_undefined_matters(hst_shared_cache_state, hst_data, caplog):
     # Instantiate a BestrefsScript with default settings and dummy parameters, simulating pipeline bestrefs defaults
@@ -140,6 +142,7 @@ def test_bestrefs_na_undefined_single_ctx_undefined_matters(hst_shared_cache_sta
         assert err in msg
 
 
+@mark.hst
 @mark.special
 def test_bestrefs_na_undefined_single_ctx_na_matters(hst_shared_cache_state, hst_data, caplog):
     script = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --na-differences-matter --new-context hst_0315.pmap")
@@ -179,6 +182,7 @@ def test_bestrefs_na_undefined_single_ctx_na_matters(hst_shared_cache_state, hst
     assert err in out
 
 # SCRIPT_UNDEFMATTERS_NAMATTERS
+@mark.hst
 @fixture()
 def undefmatters_namatters(hst_shared_cache_state, hst_data):
     script  = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter --na-differences-matter")
@@ -186,6 +190,7 @@ def undefmatters_namatters(hst_shared_cache_state, hst_data):
     return script
 
 # SCRIPT_UNDEFOK_NAMATTERS
+@mark.hst
 @fixture()
 def undefok_namatters(hst_shared_cache_state, hst_data):
     script = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap --na-differences-matter")
@@ -193,6 +198,7 @@ def undefok_namatters(hst_shared_cache_state, hst_data):
     return script
 
 # SCRIPT_UNDEFOK_NAOK
+@mark.hst
 @fixture()
 def undefok_naok(hst_shared_cache_state, hst_data):
     script = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap")
@@ -200,6 +206,7 @@ def undefok_naok(hst_shared_cache_state, hst_data):
     return script
 
 # SCRIPT_UNDEFMATTERS_NAOK
+@mark.hst
 @fixture()
 def undefmatters_naok(hst_shared_cache_state, hst_data):
     script = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter")
@@ -342,7 +349,7 @@ EXPECTED_BRS = dict(
     )
 )
 
-
+@mark.multimission
 @mark.special
 @mark.parametrize('undef_matters, na_matters', 
                   [
@@ -367,6 +374,7 @@ def test_generate_comparisons(undef_matters, na_matters, br_scripts):
 # ==================================================================================
 
 
+@mark.hst
 @mark.special
 def test_compare_bestrefs_defined_defined2_undefok_namatters(hst_shared_cache_state, undefok_namatters):
     brs = undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'y5v1944hl_flat.fits'})

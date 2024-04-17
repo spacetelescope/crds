@@ -23,6 +23,7 @@ def check_logs(expected, out):
         assert line.strip() in out
 
 #THERMAL
+@mark.hst
 @mark.synphot
 def test_synphot_naming_thermal(default_shared_state, hst_data):
     # THERMAL
@@ -41,6 +42,7 @@ def test_synphot_naming_thermal(default_shared_state, hst_data):
 
 
 # THRUPUT
+@mark.hst
 @mark.synphot
 def test_synphot_naming_thruput(default_shared_state, hst_data):
     assert crds_config.is_crds_name("wfc3_uvis_f469nf2_003_syn.fits") is False
@@ -58,6 +60,7 @@ def test_synphot_naming_thruput(default_shared_state, hst_data):
 
 
 # TMGTAB
+@mark.hst
 @mark.synphot
 def test_synphot_naming_tmgtab(default_shared_state, hst_data):
     assert crds_config.is_crds_name("2381905mm_tmg.fits") is False
@@ -75,6 +78,7 @@ def test_synphot_naming_tmgtab(default_shared_state, hst_data):
 
 
 # TMCTAB
+@mark.hst
 @mark.synphot
 def test_synphot_naming_tmctab(default_shared_state, hst_data):
     assert crds_config.is_crds_name("43h1909cm_tmc.fits") is False
@@ -92,6 +96,7 @@ def test_synphot_naming_tmctab(default_shared_state, hst_data):
 
 
 # TMTTAB
+@mark.hst
 @mark.synphot
 def test_synphot_naming_tmttab(default_shared_state, hst_data):
     assert crds_config.is_crds_name("tae17277m_tmt.fits") is False
@@ -109,6 +114,7 @@ def test_synphot_naming_tmttab(default_shared_state, hst_data):
 
 
 # TMC   reference
+@mark.hst
 @mark.synphot
 def test_synphot_certify_refs_tmc(hst_shared_cache_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -204,6 +210,7 @@ def test_synphot_certify_refs_tmc(hst_shared_cache_state, hst_data, caplog):
     check_logs(expected2, out2)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_refs_tmt(hst_shared_cache_state, hst_data, caplog):
     # TMT   reference
@@ -258,6 +265,7 @@ def test_synphot_certify_refs_tmt(hst_shared_cache_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_refs_thermal(hst_shared_cache_state, hst_data, caplog):
     #THERMAL reference
@@ -305,6 +313,7 @@ def test_synphot_certify_refs_thermal(hst_shared_cache_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_refs_thruput(hst_shared_cache_state, hst_data, caplog):
     # THRUPUT reference
@@ -354,6 +363,7 @@ def test_synphot_certify_refs_thruput(hst_shared_cache_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_rmaps_tmc(default_shared_state, hst_data, caplog):
     # TMC   rmap
@@ -368,6 +378,7 @@ def test_synphot_certify_rmaps_tmc(default_shared_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_rmaps_tmg(default_shared_state, hst_data, caplog):
     # TMG   rmap
@@ -381,6 +392,7 @@ def test_synphot_certify_rmaps_tmg(default_shared_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_rmaps_tmt(default_shared_state, hst_data, caplog):
     #TMT   rmap
@@ -394,6 +406,7 @@ def test_synphot_certify_rmaps_tmt(default_shared_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_rmaps_thermal(default_shared_state, hst_data, caplog):
     # THERMAL rmap
@@ -407,6 +420,7 @@ def test_synphot_certify_rmaps_thermal(default_shared_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_certify_rmaps_thruput(default_shared_state, hst_data, caplog):
     #THRUPUT rmap
@@ -420,6 +434,7 @@ def test_synphot_certify_rmaps_thruput(default_shared_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_refactor_irrelevant_parkeys(default_shared_state, hst_data, caplog):
     log.set_verbose(55)
@@ -443,6 +458,7 @@ def test_synphot_refactor_irrelevant_parkeys(default_shared_state, hst_data, cap
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_refactor_comment_keywords(default_shared_state, hst_data, caplog):
     #For rmap updates which add comment keywords to the match tuples for web display
@@ -462,6 +478,7 @@ def test_synphot_refactor_comment_keywords(default_shared_state, hst_data, caplo
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_refactor_tmc(default_shared_state, hst_data, test_temp_dir, caplog, capsys):
     #TMC   rmap
@@ -480,6 +497,7 @@ def test_synphot_refactor_tmc(default_shared_state, hst_data, test_temp_dir, cap
     assert exp_out in sout
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_refactor_tmg(default_shared_state, hst_data, test_temp_dir, caplog, capsys):
     #TMG   rmap
@@ -499,6 +517,7 @@ def test_synphot_refactor_tmg(default_shared_state, hst_data, test_temp_dir, cap
     assert exp_out in out
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_refactor_tmt(default_shared_state, hst_data, test_temp_dir, caplog, capsys):
     #TMT   rmap
@@ -518,6 +537,7 @@ def test_synphot_refactor_tmt(default_shared_state, hst_data, test_temp_dir, cap
     assert exp_out in sout
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_refactor_thermal(default_shared_state, hst_data, test_temp_dir, caplog, capsys):
     #THERMAL rmap
@@ -538,6 +558,7 @@ def test_synphot_refactor_thermal(default_shared_state, hst_data, test_temp_dir,
     assert [exp in str(sout) for exp in [exp_out1, exp_out2]]
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_refactor_thruput(default_shared_state, hst_data, test_temp_dir, caplog, capsys):
     #THRUPUT rmap
@@ -558,6 +579,7 @@ def test_synphot_refactor_thruput(default_shared_state, hst_data, test_temp_dir,
     assert [exp in str(sout) for exp in [exp_out1, exp_out2]]
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_bestrefs_thermal(default_shared_state, hst_data, caplog):
     r = get_cached_mapping(f"{hst_data}/synphot_thermal.rmap")
@@ -570,6 +592,7 @@ def test_synphot_bestrefs_thermal(default_shared_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_bestrefs_thruput(default_shared_state, hst_data, caplog):
     r = get_cached_mapping(f"{hst_data}/synphot_thruput.rmap")
@@ -582,6 +605,7 @@ def test_synphot_bestrefs_thruput(default_shared_state, hst_data, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_diff(default_shared_state, hst_data, capsys):
     #TMC   reference
@@ -629,6 +653,7 @@ Extension HDU 1:
     assert expected in out
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_core_integration_passing(default_shared_state, caplog):
     # Passing tests
@@ -650,6 +675,7 @@ def test_synphot_core_integration_passing(default_shared_state, caplog):
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_core_integration_missing_from_files(default_shared_state, hst_data, caplog):
     """Components present in graph but missing from lookup/component files"""
@@ -678,6 +704,7 @@ def test_synphot_core_integration_missing_from_files(default_shared_state, hst_d
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_core_integration_missing_from_graph(default_shared_state, hst_data, caplog):
     """Components missing from graph but present in lookup/component files"""
@@ -704,6 +731,7 @@ def test_synphot_core_integration_missing_from_graph(default_shared_state, hst_d
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_core_integration_invalid_fname_thruput(default_shared_state, hst_data, caplog):
     """Invalid filename in throughput lookup table"""
@@ -729,6 +757,7 @@ def test_synphot_core_integration_invalid_fname_thruput(default_shared_state, hs
     check_logs(expected, out)
     
 
+@mark.hst
 @mark.synphot
 def test_synphot_core_integration_invalid_fname_thermal(default_shared_state, hst_data, caplog):
     """Invalid filename in thermal lookup table"""
@@ -754,6 +783,7 @@ def test_synphot_core_integration_invalid_fname_thermal(default_shared_state, hs
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_obsmodes_integration_test(default_shared_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -770,6 +800,7 @@ def test_synphot_obsmodes_integration_test(default_shared_state, hst_data, caplo
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_obsmodes_integration_test_multiproc(default_shared_state, hst_data, caplog):
     """Passing tests in multiprocessing mode"""
@@ -788,6 +819,7 @@ def test_synphot_obsmodes_integration_test_multiproc(default_shared_state, hst_d
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_obsmodes_integration_test_missing_files(default_shared_state, hst_data, caplog):
     """Failure due to missing component files"""
@@ -806,6 +838,7 @@ def test_synphot_obsmodes_integration_test_missing_files(default_shared_state, h
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 def test_synphot_obsmodes_integration_multiproc_fail(default_shared_state, hst_data, caplog):
     """Failure in multiprocessing mode"""
@@ -825,6 +858,7 @@ def test_synphot_obsmodes_integration_multiproc_fail(default_shared_state, hst_d
     check_logs(expected, out)
 
 
+@mark.hst
 @mark.synphot
 class TestSynphotLookupGenerator:
 

@@ -8,7 +8,7 @@ def mock_urlopen():
     with mock.patch('crds.submit.rc_submit.urllib.request.urlopen', autospec=True) as urlopen:
         return urlopen
 
-
+@mark.hst
 @mark.submit
 class TestSubmit(object):
 

@@ -17,12 +17,14 @@ log.THE_LOGGER.logger.propagate = True
 # prevent pytest args from being passed to CheckArchive script
 [sys.argv.remove(a) for a in sys.argv]
 
+@mark.hst
 @mark.misc
 def test_check_archive_file_api_true(hst_shared_cache_state):
     chk = check_archive.file_available("hst.pmap")
     assert chk is True
 
 
+@mark.hst
 @mark.misc
 def test_check_archive_file_api_false(hst_shared_cache_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -32,6 +34,7 @@ def test_check_archive_file_api_false(hst_shared_cache_state, caplog):
     assert "File 'foo.pmap' failed HTTP HEAD with code = 404 from 'https://hst-crds.stsci.edu/unchecked_get/mappings/hst/foo.pmap'" in out
 
 
+@mark.hst
 @mark.misc
 def test_check_archive_script(hst_shared_cache_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):

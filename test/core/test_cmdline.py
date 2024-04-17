@@ -7,6 +7,7 @@ from crds.core.cmdline import Script, ContextsScript
 
 log.THE_LOGGER.logger.propagate=True
 
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_valid_and_invalid_dataset(default_shared_state, hst_data):
@@ -21,7 +22,7 @@ def test_valid_and_invalid_dataset(default_shared_state, hst_data):
     assert fpath == f"{hst_data}/j8bt05njq_raw.fits"
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_valid_and_invalid_mapping(default_shared_state, hst_data):
@@ -36,42 +37,37 @@ def test_valid_and_invalid_mapping(default_shared_state, hst_data):
     assert mp == 'hst.pmap'
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_context_spec(default_shared_state):
     ctx1 = cmdline.context_spec("hst_0042.pmap")
     assert ctx1 == 'hst_0042.pmap'
-
     ctx2 = cmdline.context_spec("hst.pmap")
     assert ctx2 == 'hst.pmap'
-
     ctx3 = cmdline.context_spec("hst-2040-01-29T12:00:00")
     assert ctx3 == 'hst-2040-01-29T12:00:00'
-
     try:
         cmdline.context_spec("hst-acs-2040-01-29T12:00:00")
     except AssertionError:
         assert True
     
 
-
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_observatory_valid_and_invalid(default_shared_state):
     obs = cmdline.observatory("hst")
     assert obs == 'hst'
-
     obs = cmdline.observatory("jwst")
     assert obs == 'jwst'
-
     try:
         cmdline.observatory("foo")
     except AssertionError:
         assert True
     
 
-
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_process_key(default_shared_state):
@@ -85,7 +81,7 @@ def test_process_key(default_shared_state):
         assert True
     
 
-
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_user_name(default_shared_state):
@@ -105,7 +101,7 @@ def test_user_name(default_shared_state):
         assert True
     
 
-
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_observatories_obs_pkg(default_shared_state):
@@ -131,14 +127,14 @@ def test_print_help(default_shared_state):
     Script("cmdline.Script").print_help()
     
 
-
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_require_server_connnection(default_shared_state):
     Script("cmdline.Script").require_server_connection()
     
 
-
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_no_files_in_class(default_shared_state):
@@ -148,7 +144,7 @@ def test_no_files_in_class(default_shared_state):
         assert True
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_get_files(default_shared_state, hst_data):
@@ -159,7 +155,7 @@ def test_get_files(default_shared_state, hst_data):
     assert files == ['hst.pmap', 'hst_0002.pmap', 'hst_0001.pmap']
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_resolve_context(default_shared_state, caplog):
@@ -172,7 +168,7 @@ def test_resolve_context(default_shared_state, caplog):
     assert expected in out
     
 
-
+@mark.jwst
 @mark.core
 @mark.cmdline
 def test_get_file_properties(default_shared_state, jwst_data):
@@ -186,7 +182,7 @@ def test_get_file_properties(default_shared_state, jwst_data):
     assert props == ('nirspec', 'wavecorr')
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_categorize_files(default_shared_state, hst_data):
@@ -195,7 +191,7 @@ def test_categorize_files(default_shared_state, hst_data):
     assert sorted(cats.items()) == [(('', ''), ['hst.pmap']), (('acs', ''), [f'{hst_data}/hst_acs_9999.imap']), (('acs', 'idctab'), [f'{hst_data}/acs_new_idc.fits'])]
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_dump_files(default_shared_state):
@@ -203,7 +199,7 @@ def test_dump_files(default_shared_state):
     s.dump_files(files=["hst.pmap","hst_acs_biasfile_0250.rmap"])
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_sync_files(default_shared_state):
@@ -211,7 +207,7 @@ def test_sync_files(default_shared_state):
     s.sync_files(["hst_acs_biasfile_0250.rmap"])
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_are_all_mappings(default_shared_state):
@@ -222,7 +218,7 @@ def test_are_all_mappings(default_shared_state):
     assert notallmaps is False
     
 
-
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_file_outside_cache_pathless(default_shared_state):
@@ -231,7 +227,7 @@ def test_file_outside_cache_pathless(default_shared_state):
     assert path.endswith('./hst_0001.pmap')
     
 
-
+@mark.jwst
 @mark.core
 @mark.cmdline
 def test_file_outside_cache_uri(default_test_cache_state):
@@ -241,6 +237,7 @@ def test_file_outside_cache_uri(default_test_cache_state):
     assert path.endswith("crds-cache-test/mappings/jwst/jwst_0001.pmap")
 
 
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_file_outside_cache_mapping_spec(default_test_cache_state):
@@ -249,6 +246,7 @@ def test_file_outside_cache_mapping_spec(default_test_cache_state):
     assert path.endswith("crds-cache-test/mappings/hst/hst_0379.pmap")
 
 
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_resolve_context_operational(default_test_cache_state):
@@ -257,6 +255,7 @@ def test_resolve_context_operational(default_test_cache_state):
     assert context.startswith("hst_") and context.endswith(".pmap")
 
 
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_dump_mappings(default_test_cache_state):
@@ -264,6 +263,7 @@ def test_dump_mappings(default_test_cache_state):
     s.dump_mappings(["hst_acs.imap"])
 
 
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_determine_contexts_all(default_test_cache_state):
@@ -272,6 +272,7 @@ def test_determine_contexts_all(default_test_cache_state):
     assert len(contexts) > 100
 
 
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_determine_contexts_last_n(default_test_cache_state):
@@ -280,6 +281,7 @@ def test_determine_contexts_last_n(default_test_cache_state):
     assert len(contexts) == 5
 
 
+@mark.multimission
 @mark.core
 @mark.cmdline
 def test_determine_contexts_range(default_test_cache_state):
@@ -288,6 +290,7 @@ def test_determine_contexts_range(default_test_cache_state):
     assert len(contexts) == 7
 
 
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_determine_contexts_upto(default_test_cache_state):
@@ -297,6 +300,7 @@ def test_determine_contexts_upto(default_test_cache_state):
     assert contexts[0] == "hst.pmap"
 
 
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_determine_contexts_after(default_test_cache_state):
@@ -306,6 +310,7 @@ def test_determine_contexts_after(default_test_cache_state):
     assert contexts[0] == "hst_0379.pmap"
 
 
+@mark.hst
 @mark.core
 @mark.cmdline
 def test_determine_contexts_direct(default_test_cache_state):

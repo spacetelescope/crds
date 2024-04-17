@@ -170,6 +170,7 @@ markers = [
   "locking",
   "matches",
   "misc",
+  "multimission",
   "newcontext",
   "or_bars",
   "refactor",

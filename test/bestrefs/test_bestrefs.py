@@ -58,6 +58,7 @@ def test_warn_bad_reference(capsys):
     assert check_msg in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_3_files(default_shared_state, caplog, hst_data):
     """Test computes simple bestefs for 3 files."""
@@ -78,6 +79,7 @@ def test_bestrefs_3_files(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_compare_source_files(default_shared_state, caplog, hst_data):
     """Test prints files with at least one reference change."""
@@ -115,6 +117,7 @@ def test_bestrefs_compare_source_files(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_3_files_default_context_from_server(default_shared_state, caplog, hst_data):
     """Test computes simple bestrefs for 3 files using the default context from the server."""
@@ -135,6 +138,7 @@ def test_bestrefs_3_files_default_context_from_server(default_shared_state, capl
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_broken_dataset_file(default_shared_state, caplog, hst_data):
     """Test tests error status when one broken file is included."""
@@ -157,6 +161,7 @@ def test_bestrefs_broken_dataset_file(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_broken_cache_and_server(broken_state, caplog, hst_data):
     """Test """
@@ -173,6 +178,7 @@ def test_bestrefs_broken_cache_and_server(broken_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_catalog_dataset(default_shared_state, caplog):
     argv = """bestrefs.py --new-context hst.pmap --hst --datasets LB6M01030"""
@@ -190,7 +196,7 @@ def test_bestrefs_catalog_dataset(default_shared_state, caplog):
         assert msg.strip() in out
 
 
-
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context hst_0001.pmap  --old-context hst.pmap --files {hst_data}/j8bt05njq_raw.fits
@@ -209,6 +215,7 @@ def test_bestrefs_context_to_context(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap --hst --old-context hst.pmap --all-instruments"""
@@ -235,6 +242,7 @@ def test_bestrefs_all_instruments_hst(default_shared_state, caplog, hst_data):
             assert re.match(odd_pattern, line) is not None
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog, hst_data):
     new_ctx = f"{hst_data}/hst_0001.pmap"
@@ -269,6 +277,7 @@ def test_bestrefs_datasets_since_auto_hst(default_shared_state, caplog, hst_data
             assert expected is not None
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_dataset_drop_ids(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap  --old-context hst.pmap --load-pickle {hst_data}/test_cos.json --drop-ids LCE31SW6Q:LCE31SW6Q"""
@@ -283,6 +292,7 @@ def test_bestrefs_dataset_drop_ids(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_dataset_only_ids(default_shared_state, caplog, hst_data):
     argv = f"""bestrefs.py --new-context {hst_data}/hst_0001.pmap  --old-context hst.pmap --load-pickle {hst_data}/test_cos.json --only-ids LPPPPPP6Q:LCE31SW6Q"""
@@ -297,6 +307,7 @@ def test_bestrefs_dataset_only_ids(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_compare_source_canary(default_shared_state, caplog, hst_data):
     argv = f"""crds.bestrefs --new-context hst_0551.pmap --compare-source --load-pickles {hst_data}/canary.json --differences-are-errors --hst"""
@@ -314,6 +325,7 @@ def test_bestrefs_compare_source_canary(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_donotreprocess_datasets(default_shared_state, caplog):
     argv = """crds.bestrefs --old-context hst_0628.pmap --new-context hst_0633.pmap --hst --datasets JA9553LVQ JBBGRCGFQ"""
@@ -330,6 +342,7 @@ def test_bestrefs_donotreprocess_datasets(default_shared_state, caplog):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_donotreprocess_fix(default_shared_state, caplog, hst_data):
     argv = f"""crds.bestrefs --hst --old-context hst_0628.pmap --new-context hst_0633.pmap --print-affected --load-pickle {hst_data}/bestrefs_dnr_fix.json --verbosity=30"""
@@ -374,6 +387,7 @@ def test_bestrefs_donotreprocess_fix(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_bestrefs_multiple_updates_with_error(default_shared_state, caplog, hst_data):
     argv = f"""crds.bestrefs --hst --old-context hst_0628.pmap --new-context hst_0633.pmap --print-affected --load-pickle {hst_data}/bestrefs_new_error.json --verbosity=30"""
@@ -420,6 +434,7 @@ def test_bestrefs_multiple_updates_with_error(default_shared_state, caplog, hst_
         assert msg.strip() in out
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_cleanpath():
     """Test removes prefixes added to reference files prior to writing into FITS headers."""
@@ -429,6 +444,7 @@ def test_cleanpath():
     assert br.cleanpath('something/foo.fits') == 'something/foo.fits'
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_hst_tobs_header_to_reftypes(capsys):
     """Test demonstrates header_to_reftypes will get reftypes to list form."""
@@ -448,6 +464,7 @@ def test_hst_tobs_header_to_reftypes(capsys):
     assert jwst_header_to_reftypes({"EXP_TYPE":"MIR_IMAGE", "CAL_VER": "0.7.0"}, "jwst_0301.pmap") == ref_to_c
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 class TestBestrefs:
 
@@ -538,6 +555,7 @@ class TestBestrefs:
 
 
 # # New tests
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
@@ -557,6 +575,7 @@ def test_reformat_date_or_auto(line, expected):
     assert br.reformat_date_or_auto(line) == expected
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
@@ -568,6 +587,7 @@ def test_sreprlow(line, expected):
 
 
 @pytest.mark.bestrefs
+@pytest.mark.multimission
 @pytest.mark.parametrize('line, expected',
                          [
                              ('jref$n4e12510j_crr.fits', 'n4e12510j_crr.fits'),
@@ -578,6 +598,7 @@ def test_cleanpath(line, expected):
     assert br.cleanpath(line) == expected
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_init_func():
     test_brs = BestrefsScript("crds.bestrefs")
@@ -659,6 +680,7 @@ def test_init_func():
     assert test_brs2.args.unique_errors_file == 'unique_errors.ids'
 
 
+@pytest.mark.hst
 @pytest.mark.bestrefs
 def test_complex_init(hst_data):
     """Test should initiate complex init and show each argument working."""
@@ -757,6 +779,7 @@ def test_complex_init(hst_data):
     assert test_brs.args.files == [f'{hst_data}/j8bt05njq_raw.fits']
 
 
+@pytest.mark.jwst
 @pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                         [
@@ -770,6 +793,7 @@ def test_normalize_id(line, expected):
     assert test_brs.normalize_id(line) == expected
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_only_ids():
     """Test should demonstrate only_ids is set to None."""
@@ -777,6 +801,7 @@ def test_only_ids():
     assert test_brs.only_ids is None
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_drop_ids():
     """Test should demonstrate drop_ids is set to []."""
@@ -785,6 +810,7 @@ def test_drop_ids():
     assert len(test_brs.drop_ids) == 0
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
@@ -797,6 +823,7 @@ def test_normalized(line, expected):
     assert test_brs._normalized(line) == expected
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 @pytest.mark.parametrize('line, expected',
                          [
@@ -808,6 +835,7 @@ def test_locate_file(line, expected):
     assert test_brs.locate_file(line) == expected
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_auto_datasets_since(hst_data):
     """Test makes a call to the server to identify datasets affected by incrementing pmap."""
@@ -823,6 +851,7 @@ def test_auto_datasets_since(hst_data):
     assert test_val == test_dict
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_setup_contexts(hst_data):
     """Test sets up crds contexts by checking if either old or new are defined."""
@@ -843,6 +872,7 @@ def test_setup_contexts(hst_data):
     assert new == f'{hst_data}/hst_0001.pmap'
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_update_promise(hst_data):
     """Test outputs a message if the bestrefs would be updated or it updating has started."""
@@ -858,6 +888,7 @@ def test_update_promise(hst_data):
     assert test_brs.update_promise == ":: Updating."
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_get_bestrefs(hst_data):
     """Test gets bestrefs for supplied header."""
@@ -898,6 +929,7 @@ def test_get_bestrefs(hst_data):
     assert value_to_test == dict_to_verify
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_verbose_with_prefix(caplog, hst_data):
     """Test checks that verbose log message has had a prefix format made."""
@@ -911,6 +943,7 @@ def test_verbose_with_prefix(caplog, hst_data):
         assert msg.strip() in out
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_screen_bestrefs(hst_data, caplog):
     """Test checks for references that are atypical or known to be avoided."""
@@ -933,6 +966,7 @@ def test_screen_bestrefs(hst_data, caplog):
         assert tuple2[i] == j
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_handle_na_and_not_found(capsys, hst_data):
     """Test obtains bestref if available and handles matched N/A or NOT FOUND references."""
@@ -980,6 +1014,8 @@ def test_handle_na_and_not_found(capsys, hst_data):
     assert ref_ok is True
     assert ref == 'N4E12510J_CRR.FITS'
 
+
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_unkilled_updates():
     """Test confirms that unkilled_updates returns a dict minus items found in kill_list."""
@@ -994,6 +1030,7 @@ def test_unkilled_updates():
     assert test_brs.unkilled_updates == od_dict3
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_dataset_to_product_id():
     """Test confirms that product ID is returned by function."""
@@ -1004,6 +1041,7 @@ def test_dataset_to_product_id():
     assert test_brs.dataset_to_product_id(dataset_to_test) == product_id
 
 
+@pytest.mark.multimission
 @pytest.mark.bestrefs
 def test_print_affected(capsys):
     """Test demonstrates that print_affected prints the product ids found in unkilled updates."""

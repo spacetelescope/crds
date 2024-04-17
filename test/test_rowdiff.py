@@ -11,6 +11,8 @@ from crds.rowdiff import RowDiffScript
 # logger propagates its events.
 log.THE_LOGGER.logger.propagate = True
 
+
+@mark.hst
 @mark.rowdiff
 def test_withtableexts(hst_data, capsys):
     """Only should work with Table extensions"""
@@ -23,6 +25,7 @@ def test_withtableexts(hst_data, capsys):
     assert '\n' == capsys.readouterr().out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_nodiff(test_data, capsys):
     """Basic functionality: No differences"""
@@ -33,6 +36,7 @@ def test_nodiff(test_data, capsys):
     assert 'HDU extension #1 contains no differences' in capsys.readouterr().out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_rowchange(test_data, capsys):
     """Row change"""
@@ -60,6 +64,7 @@ def test_rowchange(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_rowremoval(test_data, capsys):
     """Test Row removal"""
@@ -91,6 +96,7 @@ def test_rowremoval(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_rowaddition(test_data, capsys):
     """Test Row addition"""
@@ -122,6 +128,7 @@ def test_rowaddition(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_ignorefields(test_data, capsys):
     """Test of switch ignore-fields"""
@@ -136,6 +143,7 @@ def test_ignorefields(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_ignorefields_specific(test_data, capsys):
     """Test ignoring specific fields"""
@@ -163,6 +171,7 @@ def test_ignorefields_specific(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_switchfields_nodiff(test_data, capsys):
     """Test of switching fields that have no differences"""
@@ -177,6 +186,7 @@ def test_switchfields_nodiff(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_switchfields_withdiff(test_data, capsys):
     """Test of switching fields that do have differences"""
@@ -203,6 +213,7 @@ def test_switchfields_withdiff(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_nodiff(test_data, capsys):
     """Mode test: no differences"""
@@ -220,6 +231,7 @@ def test_nodiff(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_nodiff_diffrows(test_data, capsys):
     """Mode test: No mode changes, but change in rows selected"""
@@ -247,6 +259,7 @@ def test_nodiff_diffrows(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_removedmodes(test_data, capsys):
     """Mode test: removed modes"""
@@ -276,6 +289,7 @@ def test_removedmodes(test_data, capsys):
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.rowdiff
 def test_duplicatemodes(test_data, capsys):
     """Mode test: duplicate modes"""

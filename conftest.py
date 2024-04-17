@@ -19,7 +19,7 @@ HERE = os.path.abspath(os.path.dirname(__file__) or ".")
 CRDS_DIR = os.path.abspath(os.path.dirname(crds.__file__))
 RETENTION_COUNT=1
 RETENTION_POLICY='none'
-DEFAULT_STATE = crds_config.get_crds_state()
+
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -40,8 +40,7 @@ def pytest_addoption(parser):
         "--default_cache",
         action="store",
         dest="default_cache",
-        #default=os.environ.get("CRDS_PATH", os.path.join(os.environ.get("CRDS_TEST_ROOT", "/tmp"), "crds-cache-default-test"))
-        default="/tmp/crds-cache-default-test" # temporary for github actions (replace with above commented out line)
+        default=os.environ.get("CRDS_PATH", "/tmp/crds-cache-default-test")
     )
 
 
@@ -151,17 +150,18 @@ class ConfigState:
         self.clear_existing = clear_existing
         self.observatory = observatory
         self.mode = mode
-        self.old_state = DEFAULT_STATE
-        self.old_state["CRDS_CWD"] = os.getcwd()
+        self.old_state = None
         self.new_state = None
 
     def config_setup(self):
         """Reset the CRDS configuration state to support testing given the supplied parameters."""
         log.set_test_mode()
+        self.old_state = crds_config.get_crds_state()
+        self.old_state["CRDS_CWD"] = os.getcwd()
         if self.clear_existing:
             crds_config.clear_crds_state()
         self.new_state = dict(self.old_state)
-        self.new_state["_CRDS_CACHE_READONLY"] = crds_config.get_cache_readonly()
+        # self.new_state["_CRDS_CACHE_READONLY"] = crds_config.get_cache_readonly()
         self.new_state["CRDS_CWD"] = HERE
         if self.url is not None:
             self.new_state["CRDS_SERVER_URL"] = self.url

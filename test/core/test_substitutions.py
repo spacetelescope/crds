@@ -1,4 +1,4 @@
-import pytest
+from pytest import mark
 import logging
 
 # ==================================================================================
@@ -11,8 +11,10 @@ from crds.core import substitutions
 log.THE_LOGGER.logger.propagate=True
 log.set_verbose(50)
 
-@pytest.mark.substitutions
-@pytest.mark.core
+
+@mark.hst
+@mark.substitutions
+@mark.core
 def test_substitutions_validate_hst(hst_serverless_state, caplog):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         substitutions.validate_substitutions("hst-operational")
@@ -145,9 +147,9 @@ def test_substitutions_validate_hst(hst_serverless_state, caplog):
         assert msg.strip() in out
     
 
-
-@pytest.mark.substitutions
-@pytest.mark.core
+@mark.jwst
+@mark.substitutions
+@mark.core
 def test_substitutions_validate_jwst(jwst_serverless_state, caplog):
     jwst_serverless_state.cache = None
     jwst_serverless_state.obs = None
@@ -165,9 +167,9 @@ def test_substitutions_validate_jwst(jwst_serverless_state, caplog):
         assert msg.strip() in out
     
 
-
-@pytest.mark.substitutions
-@pytest.mark.core
+@mark.roman
+@mark.substitutions
+@mark.core
 def test_substitutions_validate_roman(roman_test_cache_state, caplog):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         substitutions.validate_substitutions("roman-operational")

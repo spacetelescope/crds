@@ -11,7 +11,9 @@ from crds.bestrefs import BestrefsScript
 # logger propagates its events.
 log.THE_LOGGER.logger.propagate = True
 
-
+@mark.multimission
+@mark.bestrefs
+@mark.table_effects
 def test_table_effects_default_always_reprocess(default_shared_state, caplog):
     """Test: Default rule: always reprocess, based on STIS PCTAB.
     Test: STIS APERTAB: No reprocess
@@ -48,6 +50,9 @@ def test_table_effects_default_always_reprocess(default_shared_state, caplog):
         assert msg.strip() in out
 
 
+@mark.multimission
+@mark.bestrefs
+@mark.table_effects
 def test_table_effects_reprocess_test(default_shared_state, caplog):
     """Test: COS WCPTAB, reprocess yes"""
     argv="""bestrefs.py -z  --verbosity 25
@@ -75,6 +80,9 @@ def test_table_effects_reprocess_test(default_shared_state, caplog):
         assert msg.strip() in out
 
 
+@mark.multimission
+@mark.bestrefs
+@mark.table_effects
 def test_table_effects_reprocess_no(default_shared_state, caplog):
     """Test: COS WCPTAB, reprocess no"""
     argv="""bestrefs.py -z  --verbosity 25
