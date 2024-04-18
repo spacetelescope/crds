@@ -3,7 +3,11 @@
 
 ROMAN
 -----
-- Added metrics_logger decorator to Roman tests delivered with older builds [#1034]
+- Added `metrics_logger` decorator to Roman tests delivered with older builds [#1034]
+
+TESTING / AUTOMATION
+--------------------
+- Pytest configuration changes to address ongoing test suite failures, marked individual tests with their respective observatory [#1034]
 
 
 11.17.19 (2024-02-22)
