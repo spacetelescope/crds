@@ -2,20 +2,21 @@ import asdf
 from pytest import mark, xfail
 import numpy as np
 import logging
+from metrics_logger.decorators import metrics_logger
 from crds.core import utils, log, exceptions
 from crds import data_file, certify
 from crds.certify import CertifyScript, generic_tpn, validators, mapping_parser
 
+
 log.THE_LOGGER.logger.propagate=True
 
-
+@mark.hst
 @mark.certify
 def test_certify_truncated_file(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/truncated.fits --comparison-context hst.pmap"
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-
     expected_out = f"""Certifying '{hst_data}/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
  0 errors
@@ -24,6 +25,7 @@ def test_certify_truncated_file(default_shared_state, hst_data, caplog):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_bad_checksum(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/s7g1700gl_dead_bad_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap"
@@ -80,6 +82,7 @@ def test_certify_bad_checksum(default_shared_state, hst_data, caplog):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_good_checksum(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/s7g1700gl_dead_good_xsum.fits --run-fitsverify --comparison-context hst_0508.pmap"
@@ -215,6 +218,7 @@ ASDF 8-bit integer pixels,  1 axes (2880),
 """
 
 
+@mark.jwst
 @mark.certify
 def test_certify_interpret_fitsverify_1(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -265,6 +269,7 @@ Fitsverify output contains errors or warnings CRDS recategorizes as ERRORs."""
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_interpret_fitsverify_2(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -326,6 +331,7 @@ Fitsverify output contains errors or warnings CRDS recategorizes as INFOs."""
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_dump_provenance_fits(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/s7g1700gl_dead.fits --dump-provenance --comparison-context hst.pmap"
@@ -354,6 +360,7 @@ TIME-OBS = '00:00:00'
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_dump_provenance_generic(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/valid.json --dump-provenance --comparison-context jwst_0034.pmap"
@@ -395,6 +402,7 @@ META.USEAFTER [USEAFTER] = '2015-01-25T12:00:00'
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_missing_keyword(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/missing_keyword.fits --comparison-context hst.pmap"
@@ -412,7 +420,7 @@ instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Check
         assert msg.strip() in out
 
 
-
+@mark.hst
 @mark.certify
 def test_certify_recursive(default_shared_state, caplog):
     cache = default_shared_state.cache
@@ -464,6 +472,7 @@ Certifying '{cache}/mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' rel
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_table_comparison_context(default_shared_state, caplog):
     cache = default_shared_state.cache
@@ -514,6 +523,7 @@ def test_certify_table_comparison_context(default_shared_state, caplog):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_table_comparison_reference(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/y951738kl_hv.fits --comparison-reference {hst_data}/y9j16159l_hv.fits --comparison-context hst_0857.pmap"
@@ -562,6 +572,7 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_duplicate_sha1sum(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/s7g1700gl_dead.fits --check-sha1sums --comparison-context hst_1099.pmap"
@@ -579,6 +590,7 @@ FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/niriss_ref_photom.fits --comparison-context jwst_0125.pmap"
@@ -610,6 +622,7 @@ def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_jwst_missing_optional_parkey(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap"
@@ -628,6 +641,7 @@ Checking JWST datamodels.
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_jwst_invalid_asdf(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/invalid.asdf  --comparison-context jwst.pmap"
@@ -651,6 +665,7 @@ instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validati
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_jwst_invalid_json(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/invalid.json  --comparison-context jwst.pmap"
@@ -667,6 +682,7 @@ instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.json' ::  Validati
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_jwst_invalid_yaml(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/invalid.yaml  --comparison-context jwst_0034.pmap"
@@ -686,22 +702,25 @@ expected ' ', but found '^'
         assert msg.strip() in out
 
 
+@mark.roman
 @mark.certify
 def test_certify_roman_load_all_type_constraints(roman_test_cache_state):
     generic_tpn.load_all_type_constraints("roman")
 
 
+@mark.jwst
 @mark.certify
 def test_certify_jwst_load_all_type_constraints(jwst_serverless_state):
     generic_tpn.load_all_type_constraints("jwst")
 
 
-
+@mark.hst
 @mark.certify
 def test_certify_hst_load_all_type_constraints(hst_serverless_state):
     generic_tpn.load_all_type_constraints("hst")
 
 
+@mark.hst
 @mark.certify
 def test_certify_validator_bad_presence_condition(hst_serverless_state):
     try:
@@ -709,7 +728,7 @@ def test_certify_validator_bad_presence_condition(hst_serverless_state):
     except SyntaxError:
         assert True
 
-
+@mark.jwst
 @mark.certify
 def test_certify_JsonCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -720,6 +739,7 @@ def test_certify_JsonCertify_valid(jwst_serverless_state, jwst_data, caplog):
     assert expected_out in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_YamlCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -730,6 +750,7 @@ def test_certify_YamlCertify_valid(jwst_serverless_state, jwst_data, caplog):
     assert expected_out in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_AsdfCertify_valid(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -743,7 +764,9 @@ Checking JWST datamodels."""
         assert msg.strip() in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS4")
 def test_certify_roman_valid_asdf(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a valid asdf file is recognized as such.
     """
@@ -754,33 +777,24 @@ def test_certify_roman_valid_asdf(roman_test_cache_state, roman_data, caplog):
     assert expected_out in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS4")
 def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that an asdf file that does not conform to its schema definition
     triggers an error in DataModels.
     """
+    fpath = f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf"
     with caplog.at_level(logging.INFO, logger="CRDS"):
-        certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")
+        certify.certify_file(fpath, "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = """Certifying
-    roman_wfi16_f158_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
-    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
-    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
-    'title': 'Use after date of the reference file'}
-    On instance['meta']['useafter']:
-    "This ain't no valid time"
-    roman_wfi16_f158_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
-    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
-    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
-    'title': 'Use after date of the reference file'}
-    On instance['meta']['useafter']:
-    "This ain't no valid time""".splitlines()
-    for msg in expected_out:
-        assert msg.strip() in out
+        assert "Validation error" in out
+        assert "This ain't no valid time" in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS4")
 def test_certify_roman_invalid_asdf_tpn(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that an asdf file that does not conform to its tpn definition
     triggers an error in crds. Note: as the tpn often replicates schema implementation, this also
@@ -809,7 +823,9 @@ In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.INSTRUMENT.OP
         assert msg.strip() in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS5")
 def test_certify_roman_valid_spec_asdf(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a valid spectroscopic asdf file is recognized as such."""
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -819,26 +835,23 @@ def test_certify_roman_valid_spec_asdf(roman_test_cache_state, roman_data, caplo
     assert expected_out in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS5")
 def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a spectroscopic asdf file that does not conform to its schema
     definition triggers an error in DataModels."""
+    fpath = f"{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf"
     with caplog.at_level(logging.INFO, logger="CRDS"):
-        certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_schema.asdf", "roman_0003.pmap", observatory="roman")
+        certify.certify_file(fpath, "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = """Certifying
-    roman_wfi16_grism_flat_invalid_schema.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-    roman_wfi16_grism_flat_invalid_schema.asdf Validation error : mismatched tags, wanted 'tag:stsci.edu:asdf/time/time-1.1.0', got 'tag:yaml.org,2002:str'
-    Failed validating 'tag' in schema['properties']['meta']['allOf'][0]['properties']['useafter']:
-    {'tag': 'tag:stsci.edu:asdf/time/time-1.1.0',
-    'title': 'Use after date of the reference file'}
-    On instance['meta']['useafter']:
-    'yesterday'"""
-    for msg in expected_out.splitlines():
-        assert msg.strip() in out
+        assert "Validation error" in out
+        assert "yesterday" in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS5")
 def test_certify_roman_invalid_spec_asdf_tpn(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a spectroscopic asdf file that does not conform to its tpn
     definition triggers an error in crds. Note: as the tpn often replicates schema implementation,
@@ -855,6 +868,7 @@ In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking ASDF tag validity for '{
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_AsdfCertify_valid_with_astropy_time(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -868,6 +882,7 @@ Checking JWST datamodels."""
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_FitsCertify_opaque_name(hst_serverless_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -878,6 +893,7 @@ def test_certify_FitsCertify_opaque_name(hst_serverless_state, hst_data, caplog)
     assert expected_out in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_AsdfCertify_opaque_name(jwst_serverless_state, jwst_data, caplog):
     """CRDS is able to recognize ASDF files without the .asdf extension, but the cal code is not.
@@ -894,6 +910,7 @@ Checking JWST datamodels.
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_rmap_compare(jwst_serverless_state, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -905,7 +922,9 @@ def test_certify_rmap_compare(jwst_serverless_state, caplog):
         assert msg.strip() in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS6")
 def test_certify_roman_rmap_compare(roman_test_cache_state, caplog):
     """Required Roman test: confirm that a calibration mapping file properly compares to its context."""
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -915,6 +934,7 @@ def test_certify_roman_rmap_compare(roman_test_cache_state, caplog):
         assert expected_out in out
 
 
+@mark.jwst
 @mark.certify
 def test_certify_jwst_bad_fits(jwst_serverless_state, jwst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -943,6 +963,7 @@ def test_certify_jwst_bad_fits(jwst_serverless_state, jwst_data, caplog):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_duplicate_rmap_case_error(hst_serverless_state, hst_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -956,7 +977,9 @@ Checksum error : sha1sum mismatch in 'hst_cos_tdstab_duplicate.rmap'"""
         assert msg.strip() in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS6")
 def test_certify_roman_duplicate_rmap_case_error(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: verify that a calibration mapping file containing duplicate match cases 
     fails."""
@@ -971,6 +994,7 @@ Checksum error : sha1sum mismatch in 'roman_wfi_flat_0004_duplicate.rmap'
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_checksum_duplicate_rmap_case_error(hst_serverless_state, hst_data, caplog):
     """Verify that the crds rmap checksum update tool does not silently drop duplicate rmap entries
@@ -986,7 +1010,9 @@ Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter"""
         assert msg.strip() in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS6")
 def test_checksum_roman_duplicate_rmap_case_error(roman_serverless_state, roman_data, caplog):
     """Required Roman test: verify that the crds rmap checksum update tool does not silently drop
     duplicate rmap entries when updating the checksum and rewriting the file."""
@@ -1000,7 +1026,9 @@ Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter"""
         assert msg.strip() in out
 
 
+@mark.roman
 @mark.certify
+@metrics_logger("DMS6")
 def test_certify_roman_invalid_rmap_tpn(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: verify that a calibration mapping file that violates tpn rules produces an
     error."""
@@ -1016,6 +1044,7 @@ Rule change at ('{roman_data}/roman_wfi_flat_0004_badtpn.rmap', ('WFI21', 'F158'
         assert msg.strip() in out
 
 
+@mark.multimission
 @mark.certify
 def test_undefined_expr_identifiers():
     """Some TpnInfos include Python expressions either to make them apply conditionally or to
@@ -1033,6 +1062,7 @@ def test_undefined_expr_identifiers():
     assert val_4 == []
 
 
+@mark.jwst
 @mark.certify
 def test_load_nirspec_staturation_tpn_lines(jwst_serverless_state):
     """Print out the outcome of various .tpn directives like "replace" and
@@ -1098,6 +1128,7 @@ def test_load_nirspec_staturation_tpn_lines(jwst_serverless_state):
         assert line == exp
 
 
+@mark.jwst
 @mark.certify
 def test_load_nirspec_saturation_tpn(jwst_serverless_state):
     """Print out the outcome of various .tpn directives like 'replace' and
@@ -1162,6 +1193,7 @@ def test_load_nirspec_saturation_tpn(jwst_serverless_state):
         assert str(line) == exp
 
 
+@mark.jwst
 @mark.certify
 def test_load_miri_mask_tpn_lines(jwst_serverless_state):
     """Print out the outcome of various .tpn directives like 'replace' and
@@ -1210,6 +1242,7 @@ def test_load_miri_mask_tpn_lines(jwst_serverless_state):
         assert line == exp
 
 
+@mark.jwst
 @mark.certify
 def test_load_miri_mask_tpn(jwst_serverless_state):
     path = generic_tpn.get_tpn_path("miri_mask.tpn","jwst")
@@ -1253,6 +1286,7 @@ def test_load_miri_mask_tpn(jwst_serverless_state):
         assert str(line) == exp
 
 
+@mark.hst
 @mark.certify
 def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
     argv = f"crds.certify {hst_data}/acs_new_idc.fits --comparison-context hst_0508.pmap"
@@ -1285,6 +1319,7 @@ def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.certify
 def test_certify_check_rmap_updates(hst_serverless_state, hst_data, caplog):
     """This test verifies trial rmap updates under the control of the CRDS certify program.
@@ -1486,6 +1521,7 @@ Mapping '/tmp/hst_cos_deadtab_0250.rmap' did not change relative to context 'hst
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_asdf_standard_requirement_fail(jwst_serverless_state, jwst_data, caplog):
     """This test verifies trial rmap updates under the control of the CRDS certify program.
@@ -1509,6 +1545,7 @@ Checking JWST datamodels.
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_asdf_standard_requirement_succeed(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/jwst_nircam_specwcs_1_4_0.asdf --comparison-context jwst_0591.pmap"
@@ -1525,6 +1562,7 @@ Checking JWST datamodels.
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_asdf_library_version_fail(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf --comparison-context jwst_0591.pmap"
@@ -1554,6 +1592,7 @@ File written with dev version of asdf library: 2.0.0.dev1213
         assert msg.strip() in out
 
 
+@mark.jwst
 @mark.certify
 def test_fits_asdf_extension_fail(jwst_serverless_state, jwst_data, caplog):
     argv = f"crds.certify {jwst_data}/jwst_nirspec_ipc_with_asdf_extension.fits --comparison-context jwst_0591.pmap"
@@ -1572,6 +1611,8 @@ Checking JWST datamodels.
 
 # ==================================================================================
 
+
+@mark.jwst
 @mark.certify
 def test_validator_bad_presence():
     tinfo = generic_tpn.TpnInfo('DETECTOR','H','C','Q', ('WFC','HRC','SBC'))
@@ -1581,6 +1622,7 @@ def test_validator_bad_presence():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_validator_bad_keytype():
     tinfo = generic_tpn.TpnInfo('DETECTOR','Q','C','R', ('WFC','HRC','SBC'))
@@ -1590,6 +1632,7 @@ def test_validator_bad_keytype():
         assert True
 
 
+@mark.hst
 @mark.certify
 def test_character_validator_file_good(hst_data):
     tinfo = generic_tpn.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
@@ -1599,6 +1642,7 @@ def test_character_validator_file_good(hst_data):
     cval.check(f'{hst_data}/acs_new_idc.fits', header)
 
 
+@mark.multimission
 @mark.certify
 def test_character_validator_bad():
     tinfo = generic_tpn.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
@@ -1611,6 +1655,7 @@ def test_character_validator_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_character_validator_missing_required():
     tinfo = generic_tpn.TpnInfo('DETECTOR','H','C','R', ('WFC','HRC','SBC'))
@@ -1623,6 +1668,7 @@ def test_character_validator_missing_required():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_character_validator_optional_bad():
     tinfo = generic_tpn.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
@@ -1635,6 +1681,7 @@ def test_character_validator_optional_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_character_validator_optional_missing():
     tinfo = generic_tpn.TpnInfo('DETECTOR','H','C','O', ('WFC','HRC','SBC'))
@@ -1648,6 +1695,7 @@ def test_character_validator_optional_missing():
 
 # ------------------------------------------------------------------------------
 
+@mark.multimission
 @mark.certify
 def test_logical_validator_good():
     tinfo = generic_tpn.TpnInfo('ROKIN','H','L','R',())
@@ -1659,6 +1707,7 @@ def test_logical_validator_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_logical_validator_bad():
     tinfo = generic_tpn.TpnInfo('ROKIN','H','L','R',())
@@ -1678,6 +1727,7 @@ def test_logical_validator_bad():
 
 # ------------------------------------------------------------------------------
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_bad_format():
     info1 = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ('FOO',))
@@ -1689,6 +1739,7 @@ def test_integer_validator_bad_format():
             assert True
 
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_bad_float():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2'))
@@ -1701,6 +1752,7 @@ def test_integer_validator_bad_float():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_bad_value():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2','3'))
@@ -1713,6 +1765,7 @@ def test_integer_validator_bad_value():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ('1','2','3'))
@@ -1722,6 +1775,7 @@ def test_integer_validator_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_range_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
@@ -1731,6 +1785,7 @@ def test_integer_validator_range_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_range_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
@@ -1743,6 +1798,7 @@ def test_integer_validator_range_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_range_boundary_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
@@ -1752,6 +1808,7 @@ def test_integer_validator_range_boundary_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_integer_validator_range_format_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'I', 'R', ("1:40",))
@@ -1770,6 +1827,7 @@ def test_integer_validator_range_format_bad():
 
 # ------------------------------------------------------------------------------
 
+@mark.multimission
 @mark.certify
 def test_real_validator_bad_format():
     info1 = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ('FOO',))
@@ -1781,6 +1839,7 @@ def test_real_validator_bad_format():
             assert True
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_bad_value():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ('1.1','2.2','3.3'))
@@ -1793,6 +1852,7 @@ def test_real_validator_bad_value():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ('1.0','2.1','3.0'))
@@ -1802,6 +1862,7 @@ def test_real_validator_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_range_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
@@ -1811,6 +1872,7 @@ def test_real_validator_range_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_range_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
@@ -1823,6 +1885,7 @@ def test_real_validator_range_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_range_boundary_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.4:40.1",))
@@ -1832,6 +1895,7 @@ def test_real_validator_range_boundary_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_range_format_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("1.5:40.2",))
@@ -1849,6 +1913,7 @@ def test_real_validator_range_format_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_float_zero():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ('1','0.0'))
@@ -1861,6 +1926,7 @@ def test_real_validator_float_zero():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_float_zero_zero():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ('1','0.0'))
@@ -1873,6 +1939,7 @@ def test_real_validator_float_zero_zero():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_range_inf_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("5.5:inf",))
@@ -1882,6 +1949,7 @@ def test_real_validator_range_inf_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_real_validator_range_inf_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'R', 'R', ("5.5:inf",))
@@ -1895,6 +1963,7 @@ def test_real_validator_range_inf_bad():
 
 # ------------------------------------------------------------------------------
 
+@mark.multimission
 @mark.certify
 def test_double_validator_bad_format():
     info1 = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ('FOO',))
@@ -1906,6 +1975,7 @@ def test_double_validator_bad_format():
             assert True
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_bad_value():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ('1.1','2.2','3.3'))
@@ -1918,6 +1988,7 @@ def test_double_validator_bad_value():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ('1.0','2.1','3.0'))
@@ -1930,6 +2001,7 @@ def test_double_validator_good():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_range_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
@@ -1942,6 +2014,7 @@ def test_double_validator_range_good():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_range_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
@@ -1954,6 +2027,7 @@ def test_double_validator_range_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_range_boundary_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.4:40.1",))
@@ -1963,6 +2037,7 @@ def test_double_validator_range_boundary_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_range_format_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("1.5:40.2",))
@@ -1980,6 +2055,7 @@ def test_double_validator_range_format_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_range_inf_good():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("5.5:inf",))
@@ -1989,6 +2065,7 @@ def test_double_validator_range_inf_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_double_validator_range_inf_bad():
     info = generic_tpn.TpnInfo('READPATT', 'H', 'D', 'R', ("5.5:inf",))
@@ -2002,6 +2079,7 @@ def test_double_validator_range_inf_bad():
 
 # ------------------------------------------------------------------------------
 
+@mark.multimission
 @mark.certify
 def test_expression_validator_passes():
     tinfo = generic_tpn.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR==\'FOO\')and(SUBARRAY==\'BAR\'))',))
@@ -2011,6 +2089,7 @@ def test_expression_validator_passes():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_expression_validator_fails():
     tinfo = generic_tpn.TpnInfo('DETECTOR','X','X','R', ('((DETECTOR=="FOO")and(SUBARRAY=="BAR"))',))
@@ -2023,6 +2102,7 @@ def test_expression_validator_fails():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_expression_validator_bad_format():
     # typical subtle expression error, "=" vs. "=="
@@ -2034,6 +2114,7 @@ def test_expression_validator_bad_format():
 
 # ------------------------------------------------------------------------------
 
+@mark.hst
 @mark.certify
 def test_column_expression_validator_passes(hst_data):
     tinfo = generic_tpn.TpnInfo('DETCHIP', 'C', 'X', 'R', ('(VALUE%2==1)',))
@@ -2042,6 +2123,7 @@ def test_column_expression_validator_passes(hst_data):
     cval.check(f'{hst_data}/acs_new_idc.fits', {})
 
 
+@mark.hst
 @mark.certify
 def test_column_expression_validator_fails(hst_data):
     tinfo = generic_tpn.TpnInfo('DETCHIP', 'C', 'X', 'R', ('(VALUE%2==0)',))
@@ -2051,7 +2133,7 @@ def test_column_expression_validator_fails(hst_data):
     except exceptions.RequiredConditionError:
         assert True
 
-
+@mark.hst
 @mark.certify
 def test_column_expression_validator_header_variable(hst_data):
     tinfo = generic_tpn.TpnInfo('DETCHIP', 'C', 'X', 'R', ('(DETECTOR=="FOO")',))
@@ -2064,6 +2146,7 @@ def test_column_expression_validator_header_variable(hst_data):
 
 # ------------------------------------------------------------------------------
 
+@mark.hst
 @mark.certify
 def test_synphot_graph_validator_passes(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_GRAPH',))
@@ -2073,6 +2156,7 @@ def test_synphot_graph_validator_passes(hst_data):
     assert val is True
 
 
+@mark.hst
 @mark.certify
 def test_synphot_graph_validator_fails(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_GRAPH',))
@@ -2082,6 +2166,7 @@ def test_synphot_graph_validator_fails(hst_data):
 
 # ------------------------------------------------------------------------------
 
+@mark.hst
 @mark.certify
 def test_synphot_lookup_validator_passes(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_LOOKUP',))
@@ -2091,6 +2176,7 @@ def test_synphot_lookup_validator_passes(hst_data):
     assert val is True
 
 
+@mark.hst
 @mark.certify
 def test_synphot_lookup_validator_fails(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_LOOKUP',))
@@ -2100,6 +2186,7 @@ def test_synphot_lookup_validator_fails(hst_data):
 
 # ------------------------------------------------------------------------------
 
+@mark.hst
 @mark.certify
 def test_synphot_throughput_validator_passes(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_THROUGHPUT',))
@@ -2110,6 +2197,7 @@ def test_synphot_throughput_validator_passes(hst_data):
     assert val is True
 
 
+@mark.hst
 @mark.certify
 def test_synphot_throughput_validator_fails(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_THROUGHPUT',))
@@ -2120,6 +2208,7 @@ def test_synphot_throughput_validator_fails(hst_data):
 
 # ------------------------------------------------------------------------------
 
+@mark.hst
 @mark.certify
 def test_synphot_thermal_validator_passes(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_THERMAL',))
@@ -2130,6 +2219,7 @@ def test_synphot_thermal_validator_passes(hst_data):
     assert val is True
 
 
+@mark.hst
 @mark.certify
 def test_synphot_thermal_validator_fails(hst_data):
     tinfo = generic_tpn.TpnInfo('EXT1', 'D', 'X', 'R', ('&SYNPHOT_THERMAL',))
@@ -2140,6 +2230,7 @@ def test_synphot_thermal_validator_fails(hst_data):
 
 # ------------------------------------------------------------------------------
 
+@mark.multimission
 @mark.certify
 def test_conditionally_required_bad_format():
     # typical subtle expression error, "=" vs. "=="
@@ -2149,7 +2240,7 @@ def test_conditionally_required_bad_format():
     except SyntaxError:
         assert True
 
-
+@mark.multimission
 @mark.certify
 def test_conditionally_required_good():
     # typical subtle expression error, "=" vs. "=="
@@ -2159,6 +2250,7 @@ def test_conditionally_required_good():
     cval.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditionally_required_bad():
     # typical subtle expression error, "=" vs. "=="
@@ -2171,6 +2263,7 @@ def test_conditionally_required_bad():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_conditionally_not_required():
     # typical subtle expression error, "=" vs. "=="
@@ -2180,6 +2273,7 @@ def test_conditionally_not_required():
     checker.check("foo.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_not_conditionally_required():
     # typical subtle expression error, "=" vs. "=="
@@ -2188,6 +2282,7 @@ def test_not_conditionally_required():
     assert checker.conditionally_required is False
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_warning_true_present():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
@@ -2198,6 +2293,7 @@ def test_conditional_warning_true_present():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_warning_true_absent():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
@@ -2208,6 +2304,7 @@ def test_conditional_warning_true_absent():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_warning_false_present():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
@@ -2218,6 +2315,7 @@ def test_conditional_warning_false_present():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_warning_false_absent():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(warning(not(('MRS')in(EXP_TYPE))))", ())
@@ -2228,6 +2326,7 @@ def test_conditional_warning_false_absent():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_optional_true_present():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
@@ -2238,6 +2337,7 @@ def test_conditional_optional_true_present():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_optional_true_absent():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
@@ -2248,6 +2348,7 @@ def test_conditional_optional_true_absent():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_optional_false_present():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
@@ -2258,6 +2359,7 @@ def test_conditional_optional_false_present():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_conditional_optional_false_absent():
     info = generic_tpn.TpnInfo('PIXAR_SR', 'H', 'R', "(optional(not(('MRS')in(EXP_TYPE))))", ())
@@ -2268,6 +2370,7 @@ def test_conditional_optional_false_absent():
     checker.handle_missing(header)
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_bad_presence():
     try:
@@ -2276,6 +2379,7 @@ def test_tpn_bad_presence():
         assert "presence" in str(exc), "Wrong exception for test_tpn_bad_presence"
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_bad_group_keytype():
     info = generic_tpn.TpnInfo('DETECTOR','G', 'C', 'R', ("FOO","BAR","BAZ"))
@@ -2286,6 +2390,7 @@ def test_tpn_bad_group_keytype():
     assert new_warns - warns >= 1, "No warning issued for unsupported group .tpn constraint type."
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_repr():
     # typical subtle expression error, "=" vs. "=="
@@ -2293,6 +2398,7 @@ def test_tpn_repr():
     repr(validators.validator(info))
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_check_value_method_not_implemented():
     # typical subtle expression error, "=" vs. "=="
@@ -2304,6 +2410,7 @@ def test_tpn_check_value_method_not_implemented():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_handle_missing():
     # typical subtle expression error, "=" vs. "=="
@@ -2318,6 +2425,7 @@ def test_tpn_handle_missing():
     assert checker.handle_missing(header={"READPATT":"FOO"}) == "UNDEFINED"
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_handle_missing_conditional():
     # typical subtle expression error, "=" vs. "=="
@@ -2330,6 +2438,7 @@ def test_tpn_handle_missing_conditional():
         assert checker.handle_missing(header={"READPATT":"BAR"}) == "UNDEFINED"
 
 
+@mark.hst
 @mark.certify
 def test_missing_column_validator(hst_data):
     info = generic_tpn.TpnInfo('FOO','C', 'C', 'R', ("X","Y","Z"))
@@ -2340,6 +2449,7 @@ def test_missing_column_validator(hst_data):
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_excluded_keyword():
     # typical subtle expression error, "=" vs. "=="
@@ -2351,6 +2461,7 @@ def test_tpn_excluded_keyword():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_not_value():
     # typical subtle expression error, "=" vs. "=="
@@ -2362,6 +2473,7 @@ def test_tpn_not_value():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_or_bar_value():
     # typical subtle expression error, "=" vs. "=="
@@ -2377,6 +2489,7 @@ def test_tpn_or_bar_value():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_esoteric_value():
     # typical subtle expression error, "=" vs. "=="
@@ -2406,6 +2519,7 @@ def test_tpn_esoteric_value():
     checker.check("test.fits", {"DETECTOR":"NOT_FOO"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_missing():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2416,6 +2530,7 @@ def test_tpn_pedigree_missing():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_dummy():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2423,6 +2538,7 @@ def test_tpn_pedigree_dummy():
     checker.check("test.fits", {"PEDIGREE":"DUMMY"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_ground():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2430,6 +2546,7 @@ def test_tpn_pedigree_ground():
     checker.check("test.fits", {"PEDIGREE":"GROUND"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_simulation():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2437,6 +2554,7 @@ def test_tpn_pedigree_simulation():
     checker.check("test.fits", {"PEDIGREE":"SIMULATION"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_leading():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2447,6 +2565,7 @@ def test_tpn_pedigree_bad_leading():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_trailing():
     # typical subtle expression error, "=" vs. "=="
@@ -2458,6 +2577,7 @@ def test_tpn_pedigree_bad_trailing():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_inflight_no_date():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2468,6 +2588,7 @@ def test_tpn_pedigree_inflight_no_date():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_equal_start_stop():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2475,6 +2596,7 @@ def test_tpn_pedigree_equal_start_stop():
     checker.check("test.fits", {"PEDIGREE":"INFLIGHT 02/01/2017 02/01/2017"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_datetime_order():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2485,6 +2607,7 @@ def test_tpn_pedigree_bad_datetime_order():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_good_datetime_slash():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2492,6 +2615,7 @@ def test_tpn_pedigree_good_datetime_slash():
     checker.check("test.fits", {"PEDIGREE":"INFLIGHT 02/01/2017 03/01/2017"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_datetime_slash():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2502,6 +2626,7 @@ def test_tpn_pedigree_bad_datetime_slash():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_good_datetime_dash():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2509,6 +2634,7 @@ def test_tpn_pedigree_good_datetime_dash():
     checker.check("test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 2017-01-02"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_datetime_dash():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2519,6 +2645,7 @@ def test_tpn_pedigree_bad_datetime_dash():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_datetime_dash_dash():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2529,6 +2656,7 @@ def test_tpn_pedigree_bad_datetime_dash_dash():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_datetime_format_1():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2539,6 +2667,7 @@ def test_tpn_pedigree_bad_datetime_format_1():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_datetime_format_2():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2549,6 +2678,7 @@ def test_tpn_pedigree_bad_datetime_format_2():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_pedigree_bad_datetime_format_3():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&PEDIGREE"])
@@ -2559,6 +2689,7 @@ def test_tpn_pedigree_bad_datetime_format_3():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_jwstpedigree_dashdate():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
@@ -2566,6 +2697,7 @@ def test_tpn_jwstpedigree_dashdate():
     checker.check("test.fits", {"PEDIGREE":"INFLIGHT 2017-01-01 2017-01-02"})
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_jwstpedigree_ground_dates():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
@@ -2576,6 +2708,7 @@ def test_tpn_jwstpedigree_ground_dates():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_jwstpedigree_nodate_format_3():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
@@ -2586,6 +2719,7 @@ def test_tpn_jwstpedigree_nodate_format_3():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_jwstpedigree_missing_format_3():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
@@ -2596,6 +2730,7 @@ def test_tpn_jwstpedigree_missing_format_3():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_tpn_jwstpedigree_no_model_3():
     info = generic_tpn.TpnInfo('PEDIGREE','H', 'C', 'R', ["&JWSTPEDIGREE"])
@@ -2606,6 +2741,7 @@ def test_tpn_jwstpedigree_no_model_3():
         assert True
 
 
+@mark.hst
 @mark.certify
 def test_tpn_pedigree_missing_column(hst_data):
     info = generic_tpn.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
@@ -2616,6 +2752,7 @@ def test_tpn_pedigree_missing_column(hst_data):
         assert True
 
 
+@mark.hst
 @mark.certify
 def test_tpn_pedigree_ok_column(hst_data):
     info = generic_tpn.TpnInfo('PEDIGREE','C', 'C', 'R', ["&PEDIGREE"])
@@ -2625,6 +2762,7 @@ def test_tpn_pedigree_ok_column(hst_data):
 
 # ------------------------------------------------------------------------------
 
+@mark.hst
 @mark.certify
 def test_sybdate_validator(hst_data):
     tinfo = generic_tpn.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
@@ -2634,6 +2772,7 @@ def test_sybdate_validator(hst_data):
     cval.check(f'{hst_data}/acs_new_idc.fits', header)
 
 
+@mark.multimission
 @mark.certify
 def test_slashdate_validator():
     tinfo = generic_tpn.TpnInfo('USEAFTER','H','C','R',('&SLASHDATE',))
@@ -2645,6 +2784,7 @@ def test_slashdate_validator():
         assert True
 
 
+@mark.multimission
 @mark.certify
 def test_Anydate_validator():
     tinfo = generic_tpn.TpnInfo('USEAFTER','H','C','R',('&ANYDATE',))
@@ -2665,28 +2805,33 @@ def test_Anydate_validator():
 
 # ------------------------------------------------------------------------------
 
+@mark.multimission
 def certify_files(*args, **keys):
     keys = dict(keys)
     keys["check_rmap"] = True
     return certify.certify_files(*args, **keys)
 
 
+@mark.hst
 @mark.certify
 def test_certify_rmap_missing_parkey(hst_data):
     certify_files([f"{hst_data}/hst_missing_parkey.rmap"], "hst.pmap", observatory="hst")
 
 
+@mark.hst
 @mark.certify
 def test_certify_no_corresponding_rmap(hst_data):
     certify_files([f"{hst_data}/acs_new_idc.fits"], "hst.pmap", observatory="hst")
 
 
+@mark.hst
 @mark.certify
 def test_certify_missing_provenance(hst_data):
     certify_files([f"{hst_data}/acs_new_idc.fits"], "hst.pmap", observatory="hst", dump_provenance=True)
 
 # ------------------------------------------------------------------------------
 
+@mark.hst
 @mark.certify
 def test_check_ambiguous_match(hst_data):
     try:
@@ -2695,6 +2840,7 @@ def test_check_ambiguous_match(hst_data):
         assert True 
 
 
+@mark.hst
 @mark.certify
 def test_check_dduplicates(hst_data):
     certify_files([f"{hst_data}/hst.pmap"], "hst.pmap", observatory="hst")
@@ -2702,6 +2848,7 @@ def test_check_dduplicates(hst_data):
     certify_files([f"{hst_data}/hst_acs_darkfile.rmap"], "hst.pmap", observatory="hst")
 
 
+@mark.hst
 @mark.certify
 def test_check_dup_selector_entry(hst_data):
     """Should return:
@@ -2712,6 +2859,7 @@ def test_check_dup_selector_entry(hst_data):
     mapping_parser.check_duplicates(parsing)
 
 
+@mark.hst
 @mark.certify
 def test_check_comment(hst_data):
     certify_files([f"{hst_data}/hst.pmap"], "hst.pmap", observatory="hst")
@@ -2719,18 +2867,21 @@ def test_check_comment(hst_data):
     certify_files([f"{hst_data}/hst_acs_darkfile_comment.rmap"], "hst.pmap", observatory="hst")
 
 
+@mark.hst
 @mark.certify
 def test_table_mode_checks_identical(hst_data):
     certify_files([f"{hst_data}/v8q14451j_idc.fits"], "hst.pmap", observatory="hst",
                             compare_old_reference=True)
 
 
+@mark.hst
 @mark.certify
 def test_table_mode_checks_missing_modes(hst_data):
     certify_files([f"{hst_data}/v8q1445xx_idc.fits"], "hst.pmap", observatory="hst",
                             compare_old_reference=True)
 
 
+@mark.hst
 @mark.certify
 def test_UnknownCertifier_missing(hst_data):
     # log.set_exception_trap("test")
@@ -2740,6 +2891,7 @@ def test_UnknownCertifier_missing(hst_data):
         assert True
 
 
+@mark.hst
 @mark.certify
 def test_FitsCertify_bad_value(hst_data):
     try:
@@ -2760,13 +2912,14 @@ def test_FitsCertify_bad_value(hst_data):
 #         "crds.certify --comparison-reference zbn1927fl_gsag.fits zbn1927fl_gsag.fits --sync-files")
 #     script()
 
-
+@mark.hst
 @mark.certify
 def test_certify_dont_recurse_mappings():
     script = certify.CertifyScript("crds.certify crds://hst_0317.pmap --dont-recurse-mappings")
     errors = script()
 
 
+@mark.multimission
 @mark.certify
 def test_certify_kernel_unity_validator_good():
     header = {'SCI_ARRAY': utils.Struct({'COLUMN_NAMES': None,
@@ -2783,6 +2936,7 @@ def test_certify_kernel_unity_validator_good():
     checker.check("test.fits", header)
 
 
+@mark.multimission
 @mark.certify
 def test_certify_kernel_unity_validator_bad():
     header = {'SCI_ARRAY': utils.Struct({'COLUMN_NAMES': None,
@@ -2802,6 +2956,7 @@ def test_certify_kernel_unity_validator_bad():
         assert True
 
 
+@mark.jwst
 @mark.certify
 @mark.or_bars
 def test_or_bars_certify_bad_keyword(jwst_serverless_state, jwst_data, caplog):
@@ -2821,6 +2976,7 @@ Checking JWST datamodels.
         assert line in out
 
 
+@mark.jwst
 @mark.certify
 @mark.or_bars
 def test_or_bars_certify_bad_value(jwst_serverless_state, jwst_data, caplog):

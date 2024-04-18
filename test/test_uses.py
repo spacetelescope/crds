@@ -12,6 +12,7 @@ from crds.uses import UsesScript
 log.THE_LOGGER.logger.propagate = True
 
 
+@mark.hst
 @mark.uses
 @mark.slow
 def test_uses_findall_mappings_using_reference(hst_shared_cache_state, capsys):
@@ -38,6 +39,7 @@ def test_uses_findall_mappings_using_reference(hst_shared_cache_state, capsys):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.uses
 @mark.slow
 def test_uses_rmaps(hst_shared_cache_state, capsys):
@@ -74,6 +76,7 @@ def test_uses_rmaps(hst_shared_cache_state, capsys):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.uses
 @mark.slow
 def test_uses_imap(hst_shared_cache_state, capsys):

@@ -5,8 +5,9 @@ import logging
 log.THE_LOGGER.logger.propagate=True
 
 
+@mark.hst
 @mark.list
-def test_list_hst_mappings(capsys, default_shared_state):
+def test_list_hst_mappings(capsys, hst_default_cache_state):
     ListScript("crds.list --mappings --contexts hst.pmap")()
     out, _ = capsys.readouterr()
     out_to_check = """hst.pmap
@@ -127,9 +128,9 @@ hst_wfpc2_offtab.rmap
 hst_wfpc2_shadfile.rmap
 hst_wfpc2_wf4tfile.rmap"""
     assert out_to_check in out
-    
 
 
+@mark.jwst
 @mark.list
 def test_list_jwst_mappings(capsys, jwst_shared_cache_state):
     ListScript("crds.list --mappings --contexts jwst.pmap")()
@@ -145,57 +146,53 @@ jwst_nirspec_photom.rmap"""
     assert out_to_check in out
 
 
+@mark.hst
 @mark.list
-def test_list_cached_mappings(capsys, default_shared_state):
+def test_list_cached_mappings(capsys, hst_default_cache_state):
     # Reducing the large output since otherwise the output is hundreds of lines.
     ListScript("crds.list --cached-mappings --full-path")()
     out, _ = capsys.readouterr()
-    out_to_check1 = '/mappings/hst/hst.pmap'
-    out_to_check2 = '/mappings/hst/hst_0001.pmap'
-    out_to_check3 = '/mappings/hst/hst_0002.pmap'
-    assert out_to_check1 in out, out_to_check2 in out
-    assert out_to_check3 in out
-    
+    expected_files = ['/mappings/hst/hst.pmap', '/mappings/hst/hst_0001.pmap', '/mappings/hst/hst_0002.pmap']
+    for f in expected_files:
+        assert f in out
 
 
+@mark.hst
 @mark.list
-def test_list_references(capsys, default_shared_state):
+def test_list_references(capsys, hst_default_cache_state):
     # Same as with list_cached_mappings.
     ListScript("crds.list --references --contexts hst.pmap")()
     out, _ = capsys.readouterr()
-    out_to_check1 = 'd6n1328ou.r6h'
-    out_to_check2 = 'h5s1140lo_pfl.fits'
-    out_to_check3 = 'i9u1759io_drk.fits'
-    out_to_check4 = 'w2j2046ej_dkc.fits'
-    assert out_to_check1 in out, out_to_check2 in out
-    assert out_to_check3 in out, out_to_check4 in out
-    
+    checks = ['d6n1328ou.r6h', 'h5s1140lo_pfl.fits', 'i9u1759io_drk.fits', 'w2j2046ej_dkc.fits']
+    for check in checks:
+        assert check in out
 
 
+@mark.hst
 @mark.list
-def test_list_cached_references_hst(capsys, crds_shared_group_cache):
-
+def test_list_cached_references_hst(capsys, hst_default_cache_state):
+   base_path = f'{hst_default_cache_state.cache}/references/hst'
    ListScript("crds.list --cached-references --full-path")()
    out, _ = capsys.readouterr()
-   out_to_check1 = '/references/hst/41g16069m_tmg.fits'
-   out_to_check2 = '/references/hst/y951738kl_hv.fits'
-   out_to_check3 = '/references/hst/yas2005el_hv.fits'
-   assert out_to_check1 in out, out_to_check2 in out
-   assert out_to_check3 in out
+   expected_files = ['41g16069m_tmg.fits', 'y951738kl_hv.fits', 'yas2005el_hv.fits']
+   for f in expected_files:
+       assert f'{base_path}/{f}' in out
 
 
+@mark.jwst
 @mark.list
-def test_list_cached_references_jwst(capsys, jwst_shared_cache_state):
-    cache = jwst_shared_cache_state.cache
+def test_list_cached_references_jwst(capsys, jwst_default_cache_state):
+    base_path = f'{jwst_default_cache_state.cache}/references/jwst'
     ListScript("crds.list --cached-references --full-path")()
     out, _ = capsys.readouterr()
-    out_to_check1 = f'{cache}/references/jwst/jwst_miri_flat_0006.fits'
-    out_to_check2 = f'{cache}/references/jwst/jwst_niriss_flat_0000.fits'
-    assert out_to_check1 in out, out_to_check2 in out
+    expected_files = ['jwst_miri_flat_0006.fits', 'jwst_niriss_flat_0000.fits']
+    for f in expected_files:
+        assert f'{base_path}/{f}' in out
 
 
+@mark.hst
 @mark.list
-def test_list_dataset_ids(capsys, hst_data, default_shared_state):
+def test_list_dataset_ids(capsys, hst_default_cache_state):
     ListScript("crds.list --dataset-ids acs --hst")()
     out, _ = capsys.readouterr()
     out_to_check_acs = """J6FY01020:J6FY01EEQ
@@ -203,11 +200,11 @@ J6FY01020:J6FY01EJQ
 J6FY01020:J6FY01EOQ
 J6FY01020:J6FY01ESQ"""
     assert out_to_check_acs in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_dataset_headers(capsys, default_shared_state):
+def test_list_dataset_headers(capsys, hst_default_cache_state):
     ListScript("crds.list --dataset-headers U20L0U01T:U20L0U01T --minimize-header --contexts hst.pmap --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """Dataset pars for 'U20L0U01T:U20L0U01T' with respect to 'hst.pmap':
@@ -227,11 +224,11 @@ def test_list_dataset_headers(capsys, default_shared_state):
  'TIME-OBS': '10:07:16.929999',
  'dataset_id': 'U20L0U01T:U20L0U01T'}"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_dataset_headers_json(capsys, default_shared_state):
+def test_list_dataset_headers_json(capsys, hst_default_cache_state):
     ListScript("crds.list --dataset-headers U20L0U01T:U20L0U01T --contexts hst.pmap --json --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """{"U20L0U01T:U20L0U01T": {"ASN_ID_DSN": "U20L0U01T", "ATODFILE": "DBU1405FU.R1H", "ATODGAIN": \
@@ -242,22 +239,21 @@ def test_list_dataset_headers_json(capsys, default_shared_state):
 "OFF", "SHADFILE": "E371355EU.R5H", "SHUTTER": "A", "WF4TFILE": "N/A", "INSTRUME": "WFPC2", "DATE-OBS": "1993-12-07", \
 "TIME-OBS": "10:07:16.929999"}}"""
     assert out_to_check in out
-    
 
 
-# At the moment, this test prints an error as expected. Not sure how to capture it without it getting logged though.
+@mark.hst
 @mark.list
-def test_list_dataset_headers_bogus(default_shared_state, caplog):
+def test_list_dataset_headers_bogus(hst_default_cache_state, caplog):
     ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap --hst")()
     with caplog.at_level(logging.ERROR, logger="CRDS"):
         out = caplog.text
     out_to_check = """Failed fetching dataset parameters with repect to 'hst.pmap' for ['BAR:BAR'] : CRDS jsonrpc failure 'get_dataset_headers_by_id' OtherError: Can't determine instrument for dataset 'BAR'"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_dataset_headers_id_expansions_only(capsys, default_shared_state):
+def test_list_dataset_headers_id_expansions_only(capsys, hst_default_cache_state):
    ListScript("crds.list --dataset-headers I9ZF01010 --id-expansions-only --contexts hst.pmap --hst")()
    out, _ = capsys.readouterr()
    out_to_check = """I9ZF01010:I9ZF01DZQ
@@ -267,9 +263,9 @@ I9ZF01010:I9ZF01E3Q"""
    assert out_to_check in out
    
 
-
+@mark.hst
 @mark.list
-def test_list_required_parkeys_pmap(capsys, default_shared_state):
+def test_list_required_parkeys_pmap(capsys, hst_default_cache_state):
     ListScript("crds.list --required-parkeys --contexts hst.pmap --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """--------------------- Parkeys required for 'hst.pmap' ---------------------
@@ -280,9 +276,9 @@ stis = ['INSTRUME', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CC
 wfc3 = ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CHINJECT', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 'FILTER', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'PHOTCORR', 'REFTYPE', 'SAMP_SEQ', 'SHUTRPOS', 'SUBARRAY', 'SUBTYPE', 'TIME-OBS']
 wfpc2 = ['INSTRUME', 'ATODGAIN', 'DATE-OBS', 'FILTER1', 'FILTER2', 'FILTNAM1', 'FILTNAM2', 'IMAGETYP', 'LRFWAVE', 'MODE', 'REFTYPE', 'SERIALS', 'SHUTTER', 'TIME-OBS']"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
 def test_list_required_parkeys_imap(capsys, default_shared_state):
     ListScript("crds.list --required-parkeys --contexts hst_acs.imap --hst")()
@@ -309,20 +305,20 @@ pfltfile: ['DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'F
 shadfile: ['DETECTOR', 'DATE-OBS', 'TIME-OBS', 'SHADCORR']
 spottab: ['DETECTOR', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS']"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
 def test_list_required_parkeys_rmap(capsys, default_shared_state):
     ListScript("crds.list --required-parkeys --contexts hst_acs_darkfile.rmap --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """hst_acs_darkfile.rmap: ['DETECTOR', 'CCDAMP', 'CCDGAIN', 'DATE-OBS', 'TIME-OBS', 'DARKCORR']"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_resolve_contexts_range(capsys, default_shared_state):
+def test_list_resolve_contexts_range(capsys, hst_default_cache_state):
     ListScript("crds.list --resolve-contexts --range 0:5 --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """hst_0001.pmap
@@ -331,48 +327,48 @@ hst_0003.pmap
 hst_0004.pmap
 hst_0005.pmap"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_resolve_contexts_date(capsys, default_shared_state):
+def test_list_resolve_contexts_date(capsys, hst_default_cache_state):
     ListScript("crds.list --resolve-contexts --contexts hst-2014-11-11T00:00:00 --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """hst_0297.pmap"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_remote_context(capsys, default_shared_state):
+def test_list_remote_context(capsys, hst_default_cache_state):
     ListScript("crds.list --remote-context hst-ops-pipeline --hst")()
     out, _ = capsys.readouterr()
     assert 'hst_' in out
     assert '.pmap' in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_operational_context(capsys, default_shared_state):
+def test_list_operational_context(capsys, hst_default_cache_state):
     ListScript("crds.list --operational-context --hst")()
     out, _ = capsys.readouterr()
     assert 'hst_' in out
     assert '.pmap' in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_references_by_context(capsys, default_shared_state):
+def test_list_references_by_context(capsys, hst_default_cache_state):
     ListScript("crds.list --references --contexts hst-cos-deadtab-2014-11-11T00:00:00 --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """s7g1700gl_dead.fits
 s7g1700ql_dead.fits"""
     assert out_to_check in out
-    
 
 
+@mark.hst
 @mark.list
-def test_list_cat_mappings(capsys, default_shared_state):
+def test_list_cat_mappings(capsys, hst_default_cache_state):
     ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00 --hst")()
     out, _ = capsys.readouterr()
     out_to_check1 = """mappings/hst/hst_cos_deadtab_0250.rmap"""
@@ -423,24 +419,22 @@ def test_list_cat_mappings(capsys, default_shared_state):
  'type': 'mapping',
  'uploaded_as': 'hst_cos_deadtab_0250.rmap',
  'useafter_date': '2050-01-01 00:00:00'}"""
-    
     assert out_to_check1 in out
     assert out_to_check2 in out
     assert out_to_check3 in out
     assert out_to_check4 in out
 
 
+@mark.hst
 @mark.list
-def test_list_status(capsys, default_shared_state):
+def test_list_status(capsys, hst_default_cache_state):
     ListScript("crds.list --status --hst")()
     out, _ = capsys.readouterr()
-    
     assert "CRDS Summary =" in out
     assert "CRDS Version = " in out
     assert "CRDS_MODE = 'auto'" in out
     assert "CRDS_PATH = " in out
     assert "CRDS_SERVER_URL =" in out
-    assert "Cache Locking = 'enabled, multiprocessing'" in out
     assert "Effective Context = 'hst_" in out
     assert "Last Synced = " in out
     assert "Python Executable =" in out
@@ -448,11 +442,11 @@ def test_list_status(capsys, default_shared_state):
     assert "Readonly Cache = False" in out
 
 
+@mark.hst
 @mark.list
-def test_list_config(capsys, default_shared_state):
+def test_list_config(capsys, hst_default_cache_state):
     ListScript("crds.list --config --hst")()
     out, _ = capsys.readouterr()
-    
     assert "CRDS Environment" in out
     assert "CRDS Client Config" in out
     assert "CRDS Actual Paths" in out

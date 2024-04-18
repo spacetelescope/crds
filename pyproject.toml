@@ -151,7 +151,6 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
   "smoke: critical tests required to pass for the system to work.",
-  "roman",
   "asdf: asdf related tests",
   "bad_files",
   "bestrefs",
@@ -164,11 +163,14 @@ markers = [
   "diff",
   "factory",
   "heavy_client",
+  "hst",
   "io",
+  "jwst",
   "list",
   "locking",
   "matches",
   "misc",
+  "multimission",
   "newcontext",
   "or_bars",
   "refactor",

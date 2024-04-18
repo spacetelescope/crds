@@ -28,6 +28,7 @@ EXPECTED_MAPPINGS = [
 ]
 
 
+@mark.hst
 @mark.sync
 class TestSync:
 

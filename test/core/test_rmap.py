@@ -4,14 +4,11 @@ from pytest import mark, fixture
 import os
 import json
 import pickle
-
 import sys
 import crds
-
 from crds import rmap, log, utils
 from crds import config as crds_config
 from crds.core.exceptions import *
-
 import logging
 log.THE_LOGGER.logger.propagate=True
 log.set_verbose(50)
@@ -19,6 +16,7 @@ log.set_verbose(50)
 
 # ==================================================================================
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_get_derived_from_created(default_shared_state, caplog):
@@ -31,6 +29,7 @@ def test_get_derived_from_created(default_shared_state, caplog):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_get_derived_from_phony(default_shared_state, caplog, hst_data):
@@ -43,6 +42,7 @@ def test_get_derived_from_phony(default_shared_state, caplog, hst_data):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_missing_references(default_shared_state, hst_data):
@@ -68,6 +68,7 @@ def test_rmap_missing_references(default_shared_state, hst_data):
         assert i in missing
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_minimum_header(default_shared_state, hst_data):
@@ -89,6 +90,7 @@ def test_rmap_minimum_header(default_shared_state, hst_data):
         assert header[k] == v
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_str(default_shared_state, hst_data):
@@ -98,6 +100,7 @@ def test_rmap_str(default_shared_state, hst_data):
     assert expected == header
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_obs_package(default_shared_state, hst_data):
@@ -105,6 +108,7 @@ def test_rmap_obs_package(default_shared_state, hst_data):
     assert p.obs_package.__name__ == 'crds.hst'
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_format_with_comment(default_shared_state, hst_data):
@@ -117,6 +121,7 @@ def test_rmap_format_with_comment(default_shared_state, hst_data):
     assert header == expected
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 def test_rmap_warn_checksum(default_shared_state, caplog):
@@ -141,6 +146,7 @@ selector = Match({
     assert expected in out
 
 
+@mark.jwst
 @mark.core
 @mark.rmap
 def test_rmap_get_reference_parkeys(default_shared_state, jwst_data):
@@ -149,6 +155,7 @@ def test_rmap_get_reference_parkeys(default_shared_state, jwst_data):
     assert r.get_reference_parkeys() == ('BAND', 'CHANNEL', 'DETECTOR', 'META.EXPOSURE.TYPE', 'META.INSTRUMENT.BAND', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.LAMP_STATE', 'META.SUBARRAY.NAME', 'META.VISIT.TSOVISIT', 'SUBARRAY')
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_valid_values_map(default_shared_state):
@@ -302,6 +309,7 @@ def test_rmap_get_valid_values_map(default_shared_state):
     assert fw1map == ['-1.0', '0.0', '1.0', '2.0']
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_valid_values_map_range(default_shared_state, hst_data):
@@ -310,6 +318,7 @@ def test_rmap_get_valid_values_map_range(default_shared_state, hst_data):
     assert vvmap == {'FILTER1': ('0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0', '11.0', '12.0', '13.0', '14.0', '15.0', '16.0', '17.0', '18.0', '19.0', '20.0', '21.0', '22.0', '23.0', '24.0', '25.0', '26.0', '27.0', '28.0', '29.0', '30.0', '31.0', '32.0', '33.0', '34.0', '35.0', '36.0', '37.0', '38.0', '39.0', '40.0', '41.0', '42.0', '43.0', '44.0', '45.0', '46.0', '47.0', '48.0', '49.0', '50.0', '51.0', '52.0', '53.0', '54.0', '55.0', '56.0', '57.0', '58.0', '59.0', '60.0', '61.0', '62.0', '63.0', '64.0', '65.0', '66.0', '67.0', '68.0', '69.0', '70.0', '71.0'), 'FILTER2': ('0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0', '11.0', '12.0', '13.0', '14.0', '15.0', '16.0', '17.0', '18.0', '19.0', '20.0', '21.0', '22.0', '23.0', '24.0', '25.0', '26.0', '27.0', '28.0', '29.0', '30.0', '31.0', '32.0', '33.0', '34.0', '35.0', '36.0', '37.0', '38.0', '39.0', '40.0', '41.0', '42.0', '43.0', '44.0', '45.0', '46.0', '47.0', '48.0', '49.0', '50.0', '51.0', '52.0', '53.0', '54.0', '55.0', '56.0', '57.0', '58.0', '59.0', '60.0', '61.0', '62.0', '63.0', '64.0', '65.0', '66.0', '67.0', '68.0', '69.0', '70.0', '71.0'), 'MODE': ('FULL', 'AREA')}
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_best_references_fail(default_shared_state):   
@@ -325,6 +334,7 @@ def test_rmap_get_best_references_fail(default_shared_state):
     assert out == {'darkfile': 'NOT FOUND No match found.'}
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_validate_mapping_valid(default_shared_state, hst_data):
@@ -332,6 +342,7 @@ def test_validate_mapping_valid(default_shared_state, hst_data):
     r.validate_mapping()
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_validate_mapping_ambiguous(default_shared_state, hst_data, caplog):
@@ -430,6 +441,7 @@ https://hst-crds.stsci.edu/static/users_guide/index.html
         assert line.strip() in out
 
 
+@mark.roman
 @mark.core
 @mark.rmap
 def test_validate_mapping_ambiguous_roman(roman_serverless_state, roman_data, caplog):
@@ -456,6 +468,7 @@ https://roman-crds.stsci.edu/static/users_guide/index.html
         assert line.strip() in out
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_validate_mapping_invalid1(default_shared_state, hst_data, caplog):
@@ -468,6 +481,7 @@ def test_validate_mapping_invalid1(default_shared_state, hst_data, caplog):
         assert line.strip() in out
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_validate_mapping_invalid2(default_shared_state, hst_data, caplog):
@@ -480,12 +494,14 @@ def test_validate_mapping_invalid2(default_shared_state, hst_data, caplog):
         assert line.strip() in out
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_asmapping_readonly(default_shared_state, hst_data):
     r = rmap.asmapping(f"{hst_data}/hst_acs_darkfile.rmap", cached="readonly")
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_equivalent_mapping_missing(default_shared_state, caplog):
@@ -498,6 +514,7 @@ def test_rmap_get_equivalent_mapping_missing(default_shared_state, caplog):
         assert line.strip() in out
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_imap_match_not_applicable(default_shared_state, hst_data):
@@ -518,6 +535,7 @@ def test_imap_match_not_applicable(default_shared_state, hst_data):
     assert na == 'NOT FOUND n/a'
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_imap_match_omit(default_shared_state, hst_data):
@@ -537,6 +555,7 @@ def test_imap_match_omit(default_shared_state, hst_data):
     })
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_pickling(default_shared_state, hst_data):
@@ -558,6 +577,7 @@ def test_pickling(default_shared_state, hst_data):
 # ==================================================================================
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_imap_except(default_shared_state):
@@ -568,6 +588,7 @@ def test_rmap_get_imap_except(default_shared_state):
         assert True
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_filekind(default_shared_state, hst_data):
@@ -579,6 +600,7 @@ def test_rmap_get_filekind(default_shared_state, hst_data):
                         'pfltfile','shadfile','spottab'}
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_equivalent_mapping(default_shared_state, hst_data):
@@ -588,6 +610,7 @@ def test_rmap_get_equivalent_mapping(default_shared_state, hst_data):
     assert i.get_equivalent_mapping(f"{hst_data}/hst_acs_biasfile_0002.rmap").name ==  "hst_acs_biasfile.rmap"
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 def test_rmap_list_mappings(default_shared_state, hst_data, jwst_data, roman_data):
@@ -616,6 +639,7 @@ def test_rmap_list_mappings(default_shared_state, hst_data, jwst_data, roman_dat
     assert maps == expected
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_list_references(default_shared_state, hst_data):
@@ -625,6 +649,7 @@ def test_rmap_list_references(default_shared_state, hst_data):
     assert refs == ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h', 'valid.r1h']
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_derived_from(default_shared_state, hst_data):
@@ -633,6 +658,7 @@ def test_rmap_get_derived_from(default_shared_state, hst_data):
     assert r.get_derived_from().name == 'hst_acs_flshfile_0251.rmap'
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_missing_required_header_key(default_shared_state, hst_data):
@@ -642,6 +668,7 @@ def test_missing_required_header_key(default_shared_state, hst_data):
         assert True
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_load_rmap_bad_expr(default_shared_state, hst_data):
@@ -651,6 +678,7 @@ def test_load_rmap_bad_expr(default_shared_state, hst_data):
         assert True
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_parkey_map(default_shared_state):
@@ -661,6 +689,7 @@ def test_rmap_get_parkey_map(default_shared_state):
         assert True
     
 
+@mark.multimission
 @mark.core
 @mark.rmap
 def test_rmap_missing_checksum(default_shared_state):
@@ -687,6 +716,7 @@ selector = Match({
         assert True
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 def test_rmap_schema_uri(default_shared_state):
@@ -714,6 +744,7 @@ selector = Match({
     r.validate()
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 def test_rmap_schema_uri_missing(default_shared_state):
@@ -743,6 +774,7 @@ selector = Match({
         assert True
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_best_references_include(default_shared_state, hst_data):
@@ -761,6 +793,7 @@ def test_rmap_get_best_references_include(default_shared_state, hst_data):
         assert True
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_get_parkey_map(default_shared_state):
@@ -931,6 +964,7 @@ def test_rmap_get_parkey_map(default_shared_state):
         assert sorted(parkey_map[k]) == sorted(v)
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_todict(default_shared_state, hst_data):
@@ -938,6 +972,7 @@ def test_rmap_todict(default_shared_state, hst_data):
     assert r.todict() == {'text_descr': 'Data Quality (Bad Pixel) Initialization Table', 'selections': [('FUV', '1996-10-01 00:00:00', 's7g1700dl_bpix.fits'), ('FUV', '2009-05-11 00:00:00', 'z1r1943fl_bpix.fits'), ('NUV', '1996-10-01 00:00:00', 's7g1700pl_bpix.fits'), ('NUV', '2009-05-11 00:00:00', 'uas19356l_bpix.fits')], 'header': {'sha1sum': 'd2024dade52a406af70fcdf27a81088004d67cae', 'reffile_switch': 'none', 'filekind': 'bpixtab', 'instrument': 'cos', 'derived_from': 'hst_cos_bpixtab_0251.rmap', 'reffile_format': 'table', 'observatory': 'hst', 'parkey': (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')), 'reffile_required': 'none', 'rmap_relevance': 'always', 'mapping': 'reference', 'name': 'hst_cos_bpixtab_0252.rmap'}, 'parameters': ('DETECTOR', 'USEAFTER', 'REFERENCE')}
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_tojson(default_shared_state, hst_data):
@@ -945,6 +980,7 @@ def test_rmap_tojson(default_shared_state, hst_data):
     assert json.loads(r.tojson()) == {u'header': {u'observatory': u'hst', u'name': u'hst_cos_bpixtab_0252.rmap', u'reffile_required': u'none', u'parkey': [[u'DETECTOR'], [u'DATE-OBS', u'TIME-OBS']], u'mapping': u'reference', u'filekind': u'bpixtab', u'instrument': u'cos', u'derived_from': u'hst_cos_bpixtab_0251.rmap', u'reffile_switch': u'none', u'reffile_format': u'table', u'rmap_relevance': u'always', u'sha1sum': u'd2024dade52a406af70fcdf27a81088004d67cae'}, u'text_descr': u'Data Quality (Bad Pixel) Initialization Table', u'parameters': [u'DETECTOR', u'USEAFTER', u'REFERENCE'], u'selections': [[u'FUV', u'1996-10-01 00:00:00', u's7g1700dl_bpix.fits'], [u'FUV', u'2009-05-11 00:00:00', u'z1r1943fl_bpix.fits'], [u'NUV', u'1996-10-01 00:00:00', u's7g1700pl_bpix.fits'], [u'NUV', u'2009-05-11 00:00:00', u'uas19356l_bpix.fits']]}
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_match_not_applicable(default_shared_state, hst_data):
@@ -958,6 +994,7 @@ def test_rmap_match_not_applicable(default_shared_state, hst_data):
             }) == "NOT FOUNT n/a"
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_match_omit(default_shared_state, hst_data):
@@ -971,6 +1008,7 @@ def test_rmap_match_omit(default_shared_state, hst_data):
             }) is None
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_rmap_todict(default_shared_state):
@@ -978,6 +1016,7 @@ def test_rmap_todict(default_shared_state):
     p.todict()
 
 
+@mark.jwst
 @mark.core
 @mark.rmap
 def test_rmap_match_tjson(jwst_test_cache_state):
@@ -1028,6 +1067,7 @@ selector = Match({
 """, ignore_checksum=True)
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_ref_to_dataset_ir(default_shared_state):
@@ -1048,6 +1088,7 @@ def test_ref_to_dataset_ir(default_shared_state):
     assert dheader.DARKCORR == "N/A"
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_ref_to_dataset_uvis(default_shared_state):
@@ -1067,6 +1108,7 @@ def test_ref_to_dataset_uvis(default_shared_state):
     assert dheader.DARKCORR == "N/A"
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_na_parkeys_ir(default_shared_state):
@@ -1087,6 +1129,7 @@ def test_na_parkeys_ir(default_shared_state):
     assert dheader.DARKCORR == "PERFORM"
 
 
+@mark.hst
 @mark.core
 @mark.rmap
 def test_na_parkeys_uvis(default_shared_state):
@@ -1109,6 +1152,7 @@ def test_na_parkeys_uvis(default_shared_state):
 
 # ===== Higher level mapping based tests for selectors not covered by HST  =====
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1224,7 +1268,7 @@ class TestSelectors:
 
 # =============================================================================
 
-
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1477,6 +1521,7 @@ selector = GeometricallyNearest({
 })
 '''
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1516,6 +1561,7 @@ class TestDeepRecursiveModify:
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1574,6 +1620,7 @@ selector = UseAfter({
     def test_recursive_useafter_teardown(self):
         recursive_tear_down(self.result_filename)
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1632,6 +1679,7 @@ selector = ClosestTime({
     def test_recursive_closesttime_teardown(self):
         recursive_tear_down(self.result_filename)
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1664,6 +1712,7 @@ class TestRecursiveSelectVersion:
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1700,6 +1749,7 @@ class TestRecursiveSelectVersion_MatchingVersion:
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1732,6 +1782,7 @@ class TestRecursiveSelectVersion_DefaultVersion:
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1764,6 +1815,7 @@ class TestRecursiveGeometricallyNearest:
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1817,6 +1869,7 @@ selector = GeometricallyNearest({
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1872,6 +1925,7 @@ selector = Bracket({
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1927,6 +1981,7 @@ selector = Bracket({
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
@@ -1987,6 +2042,7 @@ selector = Bracket({
         recursive_tear_down(self.result_filename)
 
 
+@mark.multimission
 @mark.core
 @mark.rmap
 @mark.selectors
