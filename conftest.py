@@ -33,7 +33,7 @@ def pytest_addoption(parser):
         "--test_cache",
         action="store",
         dest="test_cache",
-        default=os.environ.get("CRDS_TESTING_CACHE", "no-test-cache-defined-see-TESTING"),
+        default=os.environ.get("CRDS_TESTING_CACHE", "/tmp/crds-cache-test"),
         help="Default CRDS Test Cache",
     )
     parser.addoption(

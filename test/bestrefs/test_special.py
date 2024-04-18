@@ -182,7 +182,6 @@ def test_bestrefs_na_undefined_single_ctx_na_matters(hst_shared_cache_state, hst
     assert err in out
 
 # SCRIPT_UNDEFMATTERS_NAMATTERS
-@mark.hst
 @fixture()
 def undefmatters_namatters(hst_shared_cache_state, hst_data):
     script  = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter --na-differences-matter")
@@ -190,7 +189,6 @@ def undefmatters_namatters(hst_shared_cache_state, hst_data):
     return script
 
 # SCRIPT_UNDEFOK_NAMATTERS
-@mark.hst
 @fixture()
 def undefok_namatters(hst_shared_cache_state, hst_data):
     script = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap --na-differences-matter")
@@ -198,7 +196,6 @@ def undefok_namatters(hst_shared_cache_state, hst_data):
     return script
 
 # SCRIPT_UNDEFOK_NAOK
-@mark.hst
 @fixture()
 def undefok_naok(hst_shared_cache_state, hst_data):
     script = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap")
@@ -206,7 +203,6 @@ def undefok_naok(hst_shared_cache_state, hst_data):
     return script
 
 # SCRIPT_UNDEFMATTERS_NAOK
-@mark.hst
 @fixture()
 def undefmatters_naok(hst_shared_cache_state, hst_data):
     script = BestrefsScript(argv=f"crds.bestrefs --load-pickles {hst_data}/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter")
