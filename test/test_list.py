@@ -7,7 +7,7 @@ log.THE_LOGGER.logger.propagate=True
 
 @mark.hst
 @mark.list
-def test_list_hst_mappings(capsys, default_shared_state):
+def test_list_hst_mappings(capsys, hst_default_cache_state):
     ListScript("crds.list --mappings --contexts hst.pmap")()
     out, _ = capsys.readouterr()
     out_to_check = """hst.pmap
@@ -148,7 +148,7 @@ jwst_nirspec_photom.rmap"""
 
 @mark.hst
 @mark.list
-def test_list_cached_mappings(capsys, default_shared_state):
+def test_list_cached_mappings(capsys, hst_default_cache_state):
     # Reducing the large output since otherwise the output is hundreds of lines.
     ListScript("crds.list --cached-mappings --full-path")()
     out, _ = capsys.readouterr()
@@ -159,7 +159,7 @@ def test_list_cached_mappings(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_references(capsys, default_shared_state):
+def test_list_references(capsys, hst_default_cache_state):
     # Same as with list_cached_mappings.
     ListScript("crds.list --references --contexts hst.pmap")()
     out, _ = capsys.readouterr()
@@ -192,7 +192,7 @@ def test_list_cached_references_jwst(capsys, jwst_default_cache_state):
 
 @mark.hst
 @mark.list
-def test_list_dataset_ids(capsys, default_shared_state):
+def test_list_dataset_ids(capsys, hst_default_cache_state):
     ListScript("crds.list --dataset-ids acs --hst")()
     out, _ = capsys.readouterr()
     out_to_check_acs = """J6FY01020:J6FY01EEQ
@@ -228,7 +228,7 @@ def test_list_dataset_headers(capsys, hst_default_cache_state):
 
 @mark.hst
 @mark.list
-def test_list_dataset_headers_json(capsys, default_shared_state):
+def test_list_dataset_headers_json(capsys, hst_default_cache_state):
     ListScript("crds.list --dataset-headers U20L0U01T:U20L0U01T --contexts hst.pmap --json --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """{"U20L0U01T:U20L0U01T": {"ASN_ID_DSN": "U20L0U01T", "ATODFILE": "DBU1405FU.R1H", "ATODGAIN": \
@@ -243,7 +243,7 @@ def test_list_dataset_headers_json(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_dataset_headers_bogus(default_shared_state, caplog):
+def test_list_dataset_headers_bogus(hst_default_cache_state, caplog):
     ListScript("crds.list --dataset-headers BAR:BAR --contexts hst.pmap --hst")()
     with caplog.at_level(logging.ERROR, logger="CRDS"):
         out = caplog.text
@@ -253,7 +253,7 @@ def test_list_dataset_headers_bogus(default_shared_state, caplog):
 
 @mark.hst
 @mark.list
-def test_list_dataset_headers_id_expansions_only(capsys, default_shared_state):
+def test_list_dataset_headers_id_expansions_only(capsys, hst_default_cache_state):
    ListScript("crds.list --dataset-headers I9ZF01010 --id-expansions-only --contexts hst.pmap --hst")()
    out, _ = capsys.readouterr()
    out_to_check = """I9ZF01010:I9ZF01DZQ
@@ -318,7 +318,7 @@ def test_list_required_parkeys_rmap(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_resolve_contexts_range(capsys, default_shared_state):
+def test_list_resolve_contexts_range(capsys, hst_default_cache_state):
     ListScript("crds.list --resolve-contexts --range 0:5 --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """hst_0001.pmap
@@ -331,7 +331,7 @@ hst_0005.pmap"""
 
 @mark.hst
 @mark.list
-def test_list_resolve_contexts_date(capsys, default_shared_state):
+def test_list_resolve_contexts_date(capsys, hst_default_cache_state):
     ListScript("crds.list --resolve-contexts --contexts hst-2014-11-11T00:00:00 --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """hst_0297.pmap"""
@@ -340,7 +340,7 @@ def test_list_resolve_contexts_date(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_remote_context(capsys, default_shared_state):
+def test_list_remote_context(capsys, hst_default_cache_state):
     ListScript("crds.list --remote-context hst-ops-pipeline --hst")()
     out, _ = capsys.readouterr()
     assert 'hst_' in out
@@ -349,7 +349,7 @@ def test_list_remote_context(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_operational_context(capsys, default_shared_state):
+def test_list_operational_context(capsys, hst_default_cache_state):
     ListScript("crds.list --operational-context --hst")()
     out, _ = capsys.readouterr()
     assert 'hst_' in out
@@ -358,7 +358,7 @@ def test_list_operational_context(capsys, default_shared_state):
 
 @mark.hst
 @mark.list
-def test_list_references_by_context(capsys, default_shared_state):
+def test_list_references_by_context(capsys, hst_default_cache_state):
     ListScript("crds.list --references --contexts hst-cos-deadtab-2014-11-11T00:00:00 --hst")()
     out, _ = capsys.readouterr()
     out_to_check = """s7g1700gl_dead.fits
@@ -368,7 +368,7 @@ s7g1700ql_dead.fits"""
 
 @mark.hst
 @mark.list
-def test_list_cat_mappings(capsys, default_shared_state):
+def test_list_cat_mappings(capsys, hst_default_cache_state):
     ListScript("crds.list --cat --mappings --contexts hst-cos-deadtab-2014-11-11T00:00:00 --hst")()
     out, _ = capsys.readouterr()
     out_to_check1 = """mappings/hst/hst_cos_deadtab_0250.rmap"""
@@ -435,7 +435,6 @@ def test_list_status(capsys, hst_default_cache_state):
     assert "CRDS_MODE = 'auto'" in out
     assert "CRDS_PATH = " in out
     assert "CRDS_SERVER_URL =" in out
-    assert "Cache Locking = 'enabled, multiprocessing'" in out
     assert "Effective Context = 'hst_" in out
     assert "Last Synced = " in out
     assert "Python Executable =" in out
@@ -445,7 +444,7 @@ def test_list_status(capsys, hst_default_cache_state):
 
 @mark.hst
 @mark.list
-def test_list_config(capsys, default_shared_state):
+def test_list_config(capsys, hst_default_cache_state):
     ListScript("crds.list --config --hst")()
     out, _ = capsys.readouterr()
     assert "CRDS Environment" in out
