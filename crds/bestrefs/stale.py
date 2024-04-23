@@ -421,7 +421,7 @@ class StaleByContext:
                     '\n\tTotal datasets examined: %d'
                     '\n\tTotal uncalibrated datasets: %d'
                     '\n\tStale contexts: %s'
-                    '\n\tTotal state datasets: %d',
+                    '\n\tTotal stale datasets: %d',
                     len(self.exposures), len(self.datasets), len(self.uncalibrated_datasets), self.stale_contexts, len(self.is_affected)
                     )
 
