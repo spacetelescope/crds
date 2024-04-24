@@ -17,6 +17,7 @@ import re
 
 from numpy.ma.core import MaskedConstant
 
+import asdf
 from astropy.table import Table, vstack
 from astropy.time import Time, TimeDelta
 import crds.client.api as crds_api
@@ -181,6 +182,26 @@ class AffectedDatasets(dict):
                     self[from_context] = set(data['affected_ids'])
             current_idx += 1
             from_context = self.context_history[current_idx]
+
+    def to_asdf(self):
+        """Serialize to an ASDF structure
+
+        Returns
+        -------
+        asdf_file : asdf.AsdfFile
+        """
+        tree = {'context_history': self.context_history}
+        asdf_file = asdf.AsdfFile(tree)
+        return asdf_file
+
+    def from_asdf(self, asdf_file):
+        """Restore from an AsdfFile object
+
+        Parameters
+        ----------
+        asdf_file : asdf.AsdfFile
+        """
+        self._context_history = asdf_file['context_history']
 
 
 class MastCrdsCtx:
