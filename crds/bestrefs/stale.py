@@ -599,7 +599,7 @@ class StaleByContext:
 
         Returns
         -------
-        exposures : `astropy.table.Table`
+        exposures : Time-like object
             Table of exposures and all archived parameters
         """
         update_cache = self.update_cache
@@ -627,18 +627,30 @@ class StaleByContext:
         instrument : str
             The instrument being searched for.
 
-        start_time, end_time : astropy.time.Time
+        start_time, end_time : Time-like objects
             The time range being searched.
 
         Returns
         -------
         exposures : `astropy.table.Table`
             Table of exposures and all archived parameters
+
+        Raises
+        ------
+        IOError
+            Usually due to missing cache file. Will also be raised if the cache,
+            after filtering for the specified time range, produces zero results.
         """
+        start_time = make_time(start_time)
+        end_time = make_time(end_time)
         name = cache_name('exposure_pars', instrument, format='ecsv')
         path = self.cache / name
-        exposure_pars = Table.read(path)
-        return exposure_pars
+        pars = Table.read(path)
+        mask = (pars['date_obs_mjd'] >= start_time.mjd) & (pars['date_obs_mjd'] <= end_time.mjd)
+        filtered = pars[mask]
+        if not len(filtered):
+            raise IOError('Cache filtered on time range produces zero results')
+        return filtered
 
     def reset(self):
         """Reset the result attributes
@@ -772,6 +784,24 @@ def filename_to_datasetid(name):
     msg = f'Name base "{base}" does not match a Level2 or Level3 name pattern'
     logger.debug(msg)
     return ValueError(msg)
+
+def make_time(obj=None):
+    """Coerce object to an astropy.time.Time object
+
+    Parameters
+    ----------
+    obj : object
+        The object to coerce.
+
+    Returns
+    -------
+    time : astropy.time.Time
+        The object as a Time object
+    """
+    if obj is None:
+        return Time.now()
+    if not isinstance(obj, Time):
+        return Time(obj)
 
 
 def set_mjd_range(min, max):
