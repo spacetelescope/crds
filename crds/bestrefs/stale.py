@@ -48,6 +48,9 @@ class AffectedDatasets(dict):
     `crds.client.api.get_affected_datasets`. The data is then simply
     re-arranged to make the dataset search easier.
 
+    Parameters
+    ----------
+
     Attributes
     ----------
     self : dict
@@ -61,8 +64,17 @@ class AffectedDatasets(dict):
         that have been rolled back removed.
     """
     def __init__(self, *args, **kwargs):
+        self._cache_path = kwargs.pop('cache_path', None)
+
         super().__init__(*args, **kwargs)
         self._context_history = None
+
+        if self._cache_path:
+            try:
+                with asdf.open(self._cache_path) as af:
+                    self.from_asdf(af)
+            except IOError as exception:
+                logger.debug('Cannot access cache file %s because %s', self._cache_path, exception)
 
     @property
     def contexts(self):
@@ -101,6 +113,8 @@ class AffectedDatasets(dict):
                 rolled_back.append(last_entry)  # Re-add the last good context
                 rolled_back.append(context)
             self._context_history = rolled_back
+            self.update_cache()
+
         return self._context_history
 
     def is_affected(self, datasets, start_context, end_context=None):
@@ -166,6 +180,7 @@ class AffectedDatasets(dict):
         >>> len(ad['jwst_1040.pmap'])  # doctest: +SKIP
         1735
         """
+        update_cache = False
         if end_context is None:
             end_context = crds_api.get_default_context()
         current_idx = self.context_history.index(from_context)
@@ -180,8 +195,11 @@ class AffectedDatasets(dict):
                 else:
                     logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
                     self[from_context] = set(data['affected_ids'])
+                    update_cache = True
             current_idx += 1
             from_context = self.context_history[current_idx]
+        if update_cache:
+            self.update_cache()
 
     def to_asdf(self):
         """Serialize to an ASDF structure
@@ -190,7 +208,8 @@ class AffectedDatasets(dict):
         -------
         asdf_file : asdf.AsdfFile
         """
-        tree = {'context_history': self.context_history}
+        tree = {'context_history': self.context_history,
+                'data': dict(self)}
         asdf_file = asdf.AsdfFile(tree)
         return asdf_file
 
@@ -202,6 +221,13 @@ class AffectedDatasets(dict):
         asdf_file : asdf.AsdfFile
         """
         self._context_history = asdf_file['context_history']
+        self.update(asdf_file['data'])
+
+    def update_cache(self):
+        """If a cache is defined, update it"""
+        if self._cache_path:
+            af = self.to_asdf()
+            af.write_to(self._cache_path)
 
 
 class MastCrdsCtx:
