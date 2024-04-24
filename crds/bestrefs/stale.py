@@ -602,12 +602,20 @@ class StaleByContext:
         exposures : `astropy.table.Table`
             Table of exposures and all archived parameters
         """
-
-        if self.cache and not self.update_cache:
-            return self.get_exposure_pars_cache(instrument, start_time=start_time, end_time=end_time)
+        update_cache = self.update_cache
+        if self.cache:
+            if not self.update_cache:
+                try:
+                    exposures = self.get_exposure_pars_cache(instrument, start_time=start_time, end_time=end_time)
+                except OSError as exception:
+                    logger.debug('Cannot read from cache: %s', exception)
+                    logger.debug('Forcing cache updating.')
+                    update_cache = True
+                else:
+                    return exposures
 
         exposures = MastCrdsCtx.retrieve(instrument, start_time, end_time)
-        if self.cache and self.update_cache:
+        if self.cache and update_cache:
             self.cache_table("exposure_pars", instrument, table=exposures)
         return exposures
 
