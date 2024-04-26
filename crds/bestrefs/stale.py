@@ -36,6 +36,9 @@ logger.addHandler(logging.NullHandler())
 # Default start search time is essentially start-of-mission
 DEFAULT_START_TIME = '2022-01-01'
 
+# First context active for the actual mission
+FIRST_CONTEXT = 'jwst_0780.pmap'
+
 
 class AffectedDatasets(dict):
     """Collecting and managing the affected dataset lists
@@ -100,12 +103,19 @@ class AffectedDatasets(dict):
         >>> ad = AffectedDatasets()  # doctest: +SKIP
         >>> ad.context_history[90:100]  # doctest: +SKIP
         ['jwst_0348.pmap', 'jwst_0352.pmap', 'jwst_0361.pmap', 'jwst_0391.pmap', 'jwst_0401.pmap', 'jwst_0406.pmap', 'jwst_0410.pmap', 'jwst_0414.pmap', 'jwst_0419.pmap', 'jwst_0422.pmap']
+
+        Notes
+        -----
+        The context history is limited to contexts that have been active only during the
+        mission. The initial context for JWST was jwst_0780.pmap
         """
         if self._context_history is None:
             history = crds_api.get_context_history('jwst')
             rolled_back = []
             for entry in history:
                 context = entry[1]
+                if context < FIRST_CONTEXT:
+                    continue
                 try:
                     last_entry = rolled_back.pop()
                 except IndexError:
@@ -165,7 +175,7 @@ class AffectedDatasets(dict):
     def retrieve(self, from_context, end_context=None):
         """Read in all the affected dataset info from the CRDS service.
 
-        start_context : str or None
+        from_context : str or None
             CRDS context to start with of the form "jwst_XXXX.pmap".
 
         end_context : str or None
@@ -709,9 +719,34 @@ class StaleByContext:
         report : str
             A Markup-based report found in the summary of a report
         """
+
+        # Do some math before reporting.
+        stale_dataset_percentage = len(self.is_affected) / len(self.datasets) * 100.
+        oldest_stale_context = sorted(self.stale_contexts)[0]
+        stale_context_percentage = len(self.stale_contexts) / len(self.affected_datasets.contexts) * 100.
+        all_programs = set(filename[2:7]
+                           for filename in self.exposures['filename'])
+        stale_programs = set(filename[2:7]
+                             for filename, context in self.is_affected)
+        stale_program_percentage = len(stale_programs) / len(all_programs) * 100.
+
+        # Generate report.
         text = (
             f'This report covers all exposures taken during the period of {self.start_time} through'
             f'\nto {self.end_time}. The end context is {self.end_context}. The results are as follows:'
+            '\n'
+            f'\n- Total exposures examined: {len(self.exposures)}'
+            f'\n- Total datasets examined: {len(self.datasets)}'
+            f'\n- Total stale datasets: {len(self.is_affected)}'
+            f'\n- Percentage stale datasets: {stale_dataset_percentage:.0f}%'
+            '\n'
+            f'\nA "stale" dataset is a dataset that has a context before {self.end_context} and appears in one'
+            f'\nor more affected dataset lists between the dataset\'s context and {self.end_context}.'
+            '\n'
+            f'\nThe oldest stale context found is {oldest_stale_context}. About {stale_context_percentage:.0f} of all operational contexts'
+            '\nhave stale datasets.'
+            '\n'
+            f'\n{len(stale_programs)}, or {stale_program_percentage:.0f}% of all programs, have stale datasets.'
         )
 
         return text
