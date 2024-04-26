@@ -70,6 +70,7 @@ class AffectedDatasets(dict):
 
         super().__init__(*args, **kwargs)
         self._context_history = None
+        self._bad_contexts = []
 
         if self._cache_path:
             try:
@@ -187,13 +188,15 @@ class AffectedDatasets(dict):
             end_context = crds_api.get_default_context()
         current_idx = self.context_history.index(from_context)
         while from_context < end_context:
-            if from_context not in self.contexts:
+            if (from_context not in self.contexts) and (from_context not in self._bad_contexts):
                 try:
                     data = crds_api.get_affected_datasets('jwst', from_context)
                 except ServiceError as exception:
                     logger.warning('No affected dataset information for context %s', from_context)
                     logger.warning('Affected dataset information will be incomplete.')
                     logger.debug('Reason: ', exc_info=exception)
+                    self._bad_contexts.append(from_context)
+                    update_cache = True
                 else:
                     logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
                     self[from_context] = set(data['affected_ids'])
@@ -211,7 +214,8 @@ class AffectedDatasets(dict):
         asdf_file : asdf.AsdfFile
         """
         tree = {'context_history': self.context_history,
-                'data': dict(self)}
+                'data': dict(self),
+                'bad_contexts': self._bad_contexts}
         asdf_file = asdf.AsdfFile(tree)
         return asdf_file
 
@@ -224,6 +228,7 @@ class AffectedDatasets(dict):
         """
         self._context_history = asdf_file['context_history']
         self.update(asdf_file['data'])
+        self._bad_contexts = getattr(asdf_file, 'bad_contexts', list())
 
     def update_cache(self):
         """If a cache is defined, update it"""
@@ -706,7 +711,7 @@ class StaleByContext:
         """
         text = (
             f'This report covers all exposures taken during the period of {self.start_time} through'
-            f' to {self.end_time}. The end context is {self.end_context}. The results are as follows:'
+            f'\nto {self.end_time}. The end context is {self.end_context}. The results are as follows:'
         )
 
         return text
