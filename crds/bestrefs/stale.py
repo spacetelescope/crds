@@ -50,6 +50,8 @@ class AffectedDatasets(dict):
 
     Parameters
     ----------
+    cache_path : File-like or None
+        Name of the ASDF file store cache all information locally.
 
     Attributes
     ----------
@@ -283,14 +285,10 @@ class MastCrdsCtx:
 
     def __init__(self, instrument, start_time=DEFAULT_START_TIME, end_time=None, time_chunk=TimeDelta(30, format='jd')):
         self.instrument = instrument.lower()
-        if not isinstance(start_time, Time):
-            start_time = Time(start_time)
+        self.start_time = make_time(start_time)
         if end_time is None:
             end_time = Time.now()
-        if not isinstance(end_time, Time):
-            end_time = Time(end_time)
-        self.start_time = start_time
-        self.end_time = end_time
+        self.end_time = make_time(end_time)
         self.time_chunck = time_chunk
 
         self.service = self.SERVICE[instrument.lower()]
@@ -469,7 +467,7 @@ class StaleByContext:
             - niriss
             - nirspec
 
-        start_time, end_time : str, astropy.Time, or None
+        start_time, end_time : Time-like, or None
             Time period to examine. `start_time` cannot be None.
             `end_time`, if None, will be the current date.
 
@@ -518,7 +516,7 @@ class StaleByContext:
             - niriss
             - nirspec
 
-        start_time, end_time : astropy.Time
+        start_time, end_time : Time-like
             Time period to examine. `start_time` cannot be None.
             `end_time`, if None, will be the current date.
 
@@ -641,7 +639,7 @@ class StaleByContext:
         instrument : str
             The instrument being searched for.
 
-        start_time, end_time : astropy.time.Time
+        start_time, end_time : Time-like objects
             The time range being searched.
 
         Returns
@@ -649,11 +647,13 @@ class StaleByContext:
         exposures : Time-like object
             Table of exposures and all archived parameters
         """
+        self.start_time = make_time(start_time)
+        self.end_time = make_time(end_time)
         update_cache = self.update_cache
         if self.cache:
             if not self.update_cache:
                 try:
-                    exposures = self.get_exposure_pars_cache(instrument, start_time=start_time, end_time=end_time)
+                    exposures = self.get_exposure_pars_cache(instrument, start_time=self.start_time, end_time=self.end_time)
                 except OSError as exception:
                     logger.debug('Cannot read from cache: %s', exception)
                     logger.debug('Forcing cache updating.')
@@ -661,7 +661,7 @@ class StaleByContext:
                 else:
                     return exposures
 
-        exposures = MastCrdsCtx.retrieve(instrument, start_time, end_time)
+        exposures = MastCrdsCtx.retrieve(instrument, self.start_time, self.end_time)
         if self.cache and update_cache:
             self.cache_table("exposure_pars", instrument, table=exposures)
         return exposures
@@ -688,8 +688,6 @@ class StaleByContext:
             Usually due to missing cache file. Will also be raised if the cache,
             after filtering for the specified time range, produces zero results.
         """
-        start_time = make_time(start_time)
-        end_time = make_time(end_time)
         name = cache_name('exposure_pars', instrument, format='ecsv')
         path = self.cache / name
         pars = Table.read(path)
@@ -698,6 +696,20 @@ class StaleByContext:
         if not len(filtered):
             raise IOError('Cache filtered on time range produces zero results')
         return filtered
+
+    def report(self):
+        """Generate Report
+
+        Returns
+        report : str
+            A Markup-based report found in the summary of a report
+        """
+        text = (
+            f'This report covers all exposures taken during the period of {self.start_time} through'
+            f' to {self.end_time}. The end context is {self.end_context}. The results are as follows:'
+        )
+
+        return text
 
     def reset(self):
         """Reset the result attributes
@@ -727,6 +739,8 @@ class StaleByContext:
         self.is_affected = set()
         self.stale_contexts = set()
         self.uncalibrated_datasets = set()
+        self.start_time = None
+        self.end_time = None
 
 
 # #########
