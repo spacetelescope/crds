@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-tweakregstep',
+    'filetype' : 'pars-tweakregstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-tweakregstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '422cecde85ba2d852f63c96108e990418ca51df8',
+    'suffix' : 'pars-tweakregstep',
+    'text_descr' : 'TweakRegStep runtime parameters',
+}
+
+selector = Match({
+})

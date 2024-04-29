@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-linearitystep',
+    'filetype' : 'pars-linearitystep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-linearitystep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'c88ea40348060277a00a098c169706a43ccff15f',
+    'suffix' : 'pars-linearitystep',
+    'text_descr' : 'LinearityStep runtime parameters',
+}
+
+selector = Match({
+})

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-resamplestep',
+    'filetype' : 'pars-resamplestep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-resamplestep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '873e56616b3291f9efc613f467bc92902820e236',
+    'suffix' : 'pars-resamplestep',
+    'text_descr' : 'ResampleStep runtime parameters',
+}
+
+selector = Match({
+})

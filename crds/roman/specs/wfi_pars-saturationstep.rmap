@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-saturationstep',
+    'filetype' : 'pars-saturationstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-saturationstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '39a0355ed18fa062b217bb404912580a13f82056',
+    'suffix' : 'pars-saturationstep',
+    'text_descr' : 'SaturationStep runtime parameters',
+}
+
+selector = Match({
+})
