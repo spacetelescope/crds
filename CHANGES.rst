@@ -6,6 +6,11 @@ ROMAN
 
 - Added support for pars- reference files [#1036]
 
+General
+-------
+
+- Use try/except for np.float128 import [#1037]
+
 
 11.17.20 (2024-04-18)
 =====================
