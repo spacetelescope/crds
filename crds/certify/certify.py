@@ -564,7 +564,12 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
 
 def handle_nan(var):
     """Map nan values to 'nan' so that 'nan' == 'nan'."""
-    if isinstance(var, (np.float32, np.float64, np.float128)) and np.isnan(var):
+    try:
+        from numpy import float128
+        floats = (np.float32, np.float64, np.float128)
+    except ImportError:
+        floats = (np.float32, np.float64)
+    if isinstance(var, floats) and np.isnan(var):
         return 'nan'
     elif isinstance(var, np.ndarray) and var.shape == () and np.any(np.isnan(var)):
         return 'nan'
