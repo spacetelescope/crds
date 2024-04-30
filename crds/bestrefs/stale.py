@@ -11,9 +11,11 @@ lines are commented out.
 """
 import os
 
+from dataclasses import dataclass
 import logging
 from pathlib import Path
 import re
+from typing import Any
 
 from numpy.ma.core import MaskedConstant
 
@@ -38,6 +40,16 @@ DEFAULT_START_TIME = '2022-01-01'
 
 # First context active for the actual mission
 FIRST_CONTEXT = 'jwst_0780.pmap'
+
+
+@dataclass
+class AffectedData:
+    """Affected data for a given set of exposures"""
+    exposures : Any
+    datasets : set
+    uncalibrated_datasets : set
+    stale_contexts : set
+    is_affected : set
 
 
 class AffectedDatasets(dict):
@@ -553,7 +565,7 @@ class StaleByContext:
         exposures = self.get_exposure_pars(instrument, start_time, end_time)
         self.archive_state_exposures(exposures, reset=reset)
 
-    def archive_state_exposures(self, exposures, reset=True):
+    def archive_state_exposures(self, exposures):
         """Determine staleness by instrument
 
         Parameters
@@ -561,28 +573,12 @@ class StaleByContext:
         exposures : astropy.table.Table
             Table of exposures to examine.
 
-        reset : bool
-            Reset the result attributes.
-
-        Attributes Modified
-        -------------------
-        is_affected : set(str(,...))
-            Set of datasets that are in the affected dataset lists.
-
-        stale_contexts : set(str(,...))
-            Set of stale contexts found.
-
-        uncalibrated_datasets : set(str(,...))
-            List of datasets that have no CRDS context.
+        Returns
+        -------
+        affected_data : AffectedData
+            Information about stale contexts and affected data.
         """
         logger.info('# exposures to be examined: %d', len(exposures))
-        if reset:
-            self.reset()
-
-        if self.exposures is None:
-            self.exposures = exposures
-        else:
-            self.exposures = vstack([self.exposures, exposures])
 
         # First result: List of uncalibrated exposures.
         uncalibrated_datasets = {filename_to_datasetid(exposure)
@@ -599,28 +595,34 @@ class StaleByContext:
         # Determine whether any stale exposures are in an affected dataset report. If so,
         # mark as truly stale.
         is_affected = set()
+        datasets = set()
         for context in stale_contexts:
             context_mask = old_exposures['crds_ctx'] == context
             current_exposures = old_exposures[context_mask]
 
             # Create list of formal dataset ids.
-            datasets = {filename_to_datasetid(filename) for filename in current_exposures['filename']}
-            self.datasets.update(datasets)
+            new_datasets = {filename_to_datasetid(filename) for filename in current_exposures['filename']}
+            datasets.update(new_datasets)
 
             # Check against affected datasets
             try:
-                affected = self.affected_datasets.is_affected(datasets, context, self.end_context)
+                affected = self.affected_datasets.is_affected(new_datasets, context, self.end_context)
                 is_affected.update((dataset, context) for dataset in affected)
             except ValueError as exception:
                 logger.warning('Context range %s-%s is not available in the affected datasets archive', context, self.end_context)
                 logger.debug('Reason: ', exc_info=exception)
                 continue
 
-        # Update results
-        self.uncalibrated_datasets.update(uncalibrated_datasets)
-        self.stale_contexts.update(stale_contexts)
-        self.is_affected.update(is_affected)
-        logger.info('\tStale datasets %d out of %d total datasets', len(self.is_affected), len(self.datasets))
+        # That's all folks.
+        affected_data = AffectedData(
+            exposures=exposures,
+            datasets=datasets,
+            uncalibrated_datasets=uncalibrated_datasets,
+            stale_contexts=stale_contexts,
+            is_affected=is_affected
+        )
+        logger.info('\tStale datasets %d out of %d total datasets', len(is_affected), len(datasets))
+        return affected_data
 
     def cache_table(self, *args, table=None, format='ecsv'):
         """Write out an astropy table to the cache
@@ -743,10 +745,20 @@ class StaleByContext:
             f'\nA "stale" dataset is a dataset that has a context before {self.end_context} and appears in one'
             f'\nor more affected dataset lists between the dataset\'s context and {self.end_context}.'
             '\n'
-            f'\nThe oldest stale context found is {oldest_stale_context}. About {stale_context_percentage:.0f} of all operational contexts'
+            f'\nThe oldest stale context found is {oldest_stale_context}. About {stale_context_percentage:.0f}% of all operational contexts'
             '\nhave stale datasets.'
             '\n'
             f'\n{len(stale_programs)}, or {stale_program_percentage:.0f}% of all programs, have stale datasets.'
+            '\n'
+            '\nStale programs:'
+            f'\n{stale_programs}'
+            '\n'
+            '\nStale datasets per instrument:'
+            '\n- fgs: N/A'
+            '\n- miri: N/A'
+            '\n- nircam: N/A'
+            '\n- niriss: N/A'
+            '\n- nirspec: N/A'
         )
 
         return text
