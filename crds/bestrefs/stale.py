@@ -415,7 +415,23 @@ class StaleByContext:
 
     Attributes
     ----------
-    TBD
+    affected_datasets : AffectedDatasets
+        As documented under Parameters.
+
+    end_context : str or None
+        As documented under Parameters.
+
+    cache : file-like path or None
+        As documented under Parameters.
+
+    stale_info : {str: StaleInfo[,...]}
+        Dictionary, by instrument, of the stale dataset information
+
+    stale_info_accumulated : StaleInfo
+        Combined stale info for all instruments.
+
+    update_cache : boolean
+        As documented under Parameters.
     """
 
     def __init__(self, affected_datasets=None, end_context=None, cache=None, update_cache=False):
@@ -431,7 +447,10 @@ class StaleByContext:
             logger.info('Cache folder %s does not exist. Attempting to create...', self.cache)
             self.cache.mkdir(parents=True, exist_ok=True)
 
-        self.reset()
+        self.stale_info = dict()
+        self.stale_info_accumulated = None
+        self.start_time = None
+        self.end_time = None
 
     @property
     def affected_datasets(self):
@@ -453,7 +472,35 @@ class StaleByContext:
     def end_context(self, end_context):
         self._endctx = end_context
 
-    def archive_state(self, instruments=None, start_time=DEFAULT_START_TIME, end_time=None, reset=True):
+    def accumulate(self):
+        """Accumulate the individual instrument data into a single set of data.
+
+        Attributes
+        ----------
+        stale_info_all : StaleInfo
+           Updated to have the combined stale info for all instruments.
+        """
+        exposures = list()
+        datasets = set()
+        uncalibrated_datasets = set()
+        stale_contexts = set()
+        stale_datasets = set()
+        for stale_info in self.stale_info.values():
+            exposures.append(stale_info.exposures)
+            datasets.update(stale_info.datasets)
+            uncalibrated_datasets.update(stale_info.uncalibrated_datasets)
+            stale_contexts.update(stale_info.stale_contexts)
+            stale_datasets.update(stale_info.stale_datasets)
+        exposures = vstack(exposures)
+        self.stale_info_accumulated = StaleInfo(
+            exposures=exposures,
+            datasets=datasets,
+            uncalibrated_datasets=uncalibrated_datasets,
+            stale_contexts=stale_contexts,
+            stale_datasets=stale_datasets
+        )
+
+    def archive_state(self, instruments=None, start_time=DEFAULT_START_TIME, end_time=None):
         """Determine state of archive
 
         Given a list of instruments and time range to examine, determine
@@ -488,23 +535,19 @@ class StaleByContext:
         uncalibrated_datasets : set(str(,...))
             List of datasets that have no CRDS context.
         """
-        if reset:
-            self.reset()
+        self.start_time = make_time(start_time)
+        self.end_time = make_time(end_time)
 
         if instruments is None:
             instruments = ['fgs', 'miri', 'nircam', 'niriss', 'nirspec']
 
         for instrument in instruments:
-            self.affected_datasets = self.archive_state_instrument(instrument, start_time, end_time)
+            self.stale_info.update({instrument: self.archive_state_instrument(instrument, start_time, end_time)})
 
-        logger.info('Final results:'
-                    '\n\tTotal exposures examined: %d'
-                    '\n\tTotal datasets examined: %d'
-                    '\n\tTotal uncalibrated datasets: %d'
-                    '\n\tStale contexts: %s'
-                    '\n\tTotal stale datasets: %d',
-                    len(self.exposures), len(self.datasets), len(self.uncalibrated_datasets), self.stale_contexts, len(self.is_affected)
-                    )
+        self.accumulate()
+        # report = self.report()
+
+        # logger.info(report)
 
     def archive_state_instrument(self, instrument, start_time, end_time):
         """Determine staleness by instrument
@@ -730,37 +773,6 @@ class StaleByContext:
         )
 
         return text
-
-    def reset(self):
-        """Reset the result attributes
-
-        Attributes Modified
-        -------------------
-        datasets : set(str(,...))
-            Total set of datasets examined.
-
-        exposures : astropy.table.Table
-            Table of exposure keywords of all exposures examined.
-
-        is_affected : set(str(,...))
-            Set of datasets that are in the affected dataset lists.
-            Populated by methods `archive_state` and `archive_state_instrument`.
-
-        stale_contexts : set(str(,...))
-            Set of stale contexts found.
-            Populated by methods `archive_state` and `archive_state_instrument`.
-
-        uncalibrated_datasets : set(str(,...))
-            List of datasets that have no CRDS context.
-            Populated by methods `archive_state` and `archive_state_instrument`.
-        """
-        self.datasets = set()
-        self.exposures = None
-        self.is_affected = set()
-        self.stale_contexts = set()
-        self.uncalibrated_datasets = set()
-        self.start_time = None
-        self.end_time = None
 
 
 # #########
