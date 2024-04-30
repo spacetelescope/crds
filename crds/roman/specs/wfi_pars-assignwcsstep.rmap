@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-assignwcsstep',
+    'filetype' : 'pars-assignwcsstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-assignwcsstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '006b320c237efedf59afc98275582f6bf0ed619b',
+    'suffix' : 'pars-assignwcsstep',
+    'text_descr' : 'AssignWcsStep runtime parameters',
+}
+
+selector = Match({
+})

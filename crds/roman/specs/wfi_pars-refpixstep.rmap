@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-refpixstep',
+    'filetype' : 'pars-refpixstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-refpixstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'b9fe9fba7c184531656180ac2ba8ed318c34e98d',
+    'suffix' : 'pars-refpixstep',
+    'text_descr' : 'RefPixStep runtime parameters',
+}
+
+selector = Match({
+})
