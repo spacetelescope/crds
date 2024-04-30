@@ -9,6 +9,7 @@ in CCD-1257.
 A side effect of this is that, as noted, all the potential doctest
 lines are commented out.
 """
+from itertools import accumulate
 import os
 
 from dataclasses import dataclass
@@ -734,13 +735,14 @@ class StaleByContext:
         """
 
         # Do some math before reporting.
-        stale_dataset_percentage = len(self.is_affected) / len(self.datasets) * 100.
-        oldest_stale_context = sorted(self.stale_contexts)[0]
-        stale_context_percentage = len(self.stale_contexts) / len(self.affected_datasets.contexts) * 100.
+        accumulated = self.stale_info_accumulated
+        stale_dataset_percentage = len(accumulated.stale_datasets) / len(accumulated.datasets) * 100.
+        oldest_stale_context = sorted(accumulated.stale_contexts)[0]
+        stale_context_percentage = len(accumulated.stale_contexts) / len(self.affected_datasets.contexts) * 100.
         all_programs = set(filename[2:7]
-                           for filename in self.exposures['filename'])
+                           for filename in accumulated.exposures['filename'])
         stale_programs = set(filename[2:7]
-                             for filename, context in self.is_affected)
+                             for filename, context in accumulated.stale_datasets)
         stale_program_percentage = len(stale_programs) / len(all_programs) * 100.
 
         # Generate report.
@@ -748,9 +750,9 @@ class StaleByContext:
             f'This report covers all exposures taken during the period of {self.start_time} through'
             f'\nto {self.end_time}. The end context is {self.end_context}. The results are as follows:'
             '\n'
-            f'\n- Total exposures examined: {len(self.exposures)}'
-            f'\n- Total datasets examined: {len(self.datasets)}'
-            f'\n- Total stale datasets: {len(self.is_affected)}'
+            f'\n- Total exposures examined: {len(accumulated.exposures)}'
+            f'\n- Total datasets examined: {len(accumulated.datasets)}'
+            f'\n- Total stale datasets: {len(accumulated.stale_datasets)}'
             f'\n- Percentage stale datasets: {stale_dataset_percentage:.0f}%'
             '\n'
             f'\nA "stale" dataset is a dataset that has a context before {self.end_context} and appears in one'
