@@ -21,6 +21,7 @@ from typing import Any
 from numpy.ma.core import MaskedConstant
 
 import asdf
+import astropy
 from astropy.table import Table, vstack
 from astropy.time import Time, TimeDelta
 
@@ -68,11 +69,45 @@ Caching
     def __init__(self, *args, **argv):
         super().__init__(*args, **argv)
 
+        ad_cache_path = None
+        if self.args.cache_path:
+            ad_cache_path =self.args.cache_path / 'affected_datasets_cache.asdf'
+        self.ad = AffectedDatasets(cache_path=ad_cache_path)
+
+        self.stale = StaleByContext(affected_datasets=self.ad, end_context=self.args.end_context,
+                                    cache=self.args.cache_path, update_cache=self.args.update_cache)
+
+        self.instruments = self.args.instruments
+        self.start_time = self.args.start_time
+        self.end_time = self.args.end_time
+
     def add_args(self):
         """Add command line arguments/options"""
+        self.add_argument('--instruments', metavar='INSTRUMENTS',
+                          help='Instruments to work on. If unspecified, all instruments are considered.',
+                          nargs='+', default=None)
+        self.add_argument('--end-context',
+                          help='Final context to check.',
+                          default=None)
+        self.add_argument('--start-time',
+                          help='Time of first exposure.',
+                          default=DEFAULT_START_TIME, type=astropy.time.Time)
+        self.add_argument('--end-time',
+                          help='Time of last exposure.',
+                          default=None, type=astropy.time.Time)
+        self.add_argument('--cache-path',
+                          help='Path to a folder to cache affected data and exposure information',
+                          default=None, type=Path)
+        self.add_argument('-update-cache',
+                          help='Force updating of an existing cache',
+                          action='store_true')
 
     def main(self):
         """Execute StaleByContext"""
+        self.stale.archive_state(instruments=self.instruments,
+                                 start_time=self.start_time, end_time=self.end_time)
+        log.info(self.stale.report())
+
         return log.errors()
 
 
@@ -127,6 +162,7 @@ class AffectedDatasets(dict):
                     self.from_asdf(af)
             except IOError as exception:
                 log.debug('Cannot access cache file', self._cache_path, 'because', exception)
+                log.debug('Creating', self._cache_path)
 
     @property
     def contexts(self):
