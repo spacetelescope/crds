@@ -9,8 +9,8 @@ in CCD-1257.
 A side effect of this is that, as noted, all the potential doctest
 lines are commented out.
 """
-from itertools import accumulate
 import os
+import sys
 
 from dataclasses import dataclass
 import logging
@@ -23,9 +23,12 @@ from numpy.ma.core import MaskedConstant
 import asdf
 from astropy.table import Table, vstack
 from astropy.time import Time, TimeDelta
-import crds.client.api as crds_api
-from crds.core.exceptions import ServiceError
+
 from jwst.lib.suffix import remove_suffix
+
+import crds.client.api as crds_api
+from crds.core import cmdline, log
+from crds.core.exceptions import ServiceError
 
 try:
     from astroquery.mast import Mast
@@ -41,6 +44,37 @@ DEFAULT_START_TIME = '2022-01-01'
 
 # First context active for the actual mission
 FIRST_CONTEXT = 'jwst_0780.pmap'
+
+
+class StaleByClassScript(cmdline.Script, cmdline.UniqueErrorsMixin):
+    """Command line script to determine stale datasets according to their context"""
+
+    description = """
+    This is the initial attempt at determining how current the calibration is for
+    products in the JWST archive. For this report, "staleness" is defined as those
+    dataset ids whose context is not current yet appear in affected dataset reports
+    for all operational context changes between the exposure's context and the
+    current context.
+    """
+
+    eplilog = """
+    .............................
+    crds.stalebycontext use cases
+    .............................
+
+    .......
+    Caching
+    .......
+    """
+    def __init__(self, *args, **argv):
+        super().__init__(*args, **argv)
+
+    def add_args(self):
+        """Add command line arguments/options"""
+
+    def main(self):
+        """Execute StaleByContext"""
+        return log.errors()
 
 
 @dataclass
@@ -917,3 +951,17 @@ def set_mjd_range(min, max):
 
 def set_params(parameters):
     return [{"paramName" : p, "values" : v} for p, v in parameters.items()]
+
+
+# #######################
+# Command-line executable
+# #######################
+def main():
+    """Construct and run the script,  return 1 if errors occurred, 0 otherwise."""
+    errors = StaleByClassScript()()
+    exit_status = int(errors > 0)  # no errors = 0,  errors = 1
+    return exit_status
+
+
+if __name__ == "__main__":
+    sys.exit(main())
