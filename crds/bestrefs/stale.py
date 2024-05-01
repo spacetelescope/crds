@@ -767,12 +767,13 @@ class StaleByContext:
             f'\n{stale_programs}'
             '\n'
             '\nStale datasets per instrument:'
-            '\n- fgs: N/A'
-            '\n- miri: N/A'
-            '\n- nircam: N/A'
-            '\n- niriss: N/A'
-            '\n- nirspec: N/A'
         )
+
+        for instrument, stale_info in self.stale_info.items():
+            n_stale_datasets = len(stale_info.stale_datasets)
+            n_datasets = len(stale_info.datasets)
+            percentage = n_stale_datasets / n_datasets * 100.
+            text += f'\n- {instrument}: {n_stale_datasets} stale datasets out of {n_datasets} ({percentage:.0f}%)'
 
         return text
 
@@ -897,6 +898,7 @@ def make_time(obj=None):
         return Time.now()
     if not isinstance(obj, Time):
         return Time(obj)
+    return obj
 
 
 def set_mjd_range(min, max):
