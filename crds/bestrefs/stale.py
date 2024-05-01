@@ -250,7 +250,7 @@ class AffectedDatasets(dict):
                 except ServiceError as exception:
                     log.warning('No affected dataset information for context', from_context)
                     log.warning('Affected dataset information will be incomplete.')
-                    log.debug('Reason: ', exc_info=exception)
+                    log.debug('Reason: ', exception)
                     self._bad_contexts.append(from_context)
                     update_cache = True
                 else:
@@ -655,7 +655,7 @@ class StaleByContext:
                 is_affected.update((dataset, context) for dataset in affected)
             except ValueError as exception:
                 log.warning('Context range', context, '-', self.end_context,'is not available in the affected datasets archive')
-                log.debug('Reason: ', exc_info=exception)
+                log.debug('Reason: ', exception)
                 continue
 
         # That's all folks.
