@@ -30,14 +30,13 @@ import crds.client.api as crds_api
 from crds.core import cmdline, log
 from crds.core.exceptions import ServiceError
 
+# Configure logging
+LOGGER = logging.getLogger(__name__)
+
 try:
     from astroquery.mast import Mast
 except ModuleNotFoundError:
-    logging.error('Module `astroquery` does not exist. This module will not function without it.')
-
-# Configure logging
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
+    log.error('Module `astroquery` does not exist. This module will not function without it.')
 
 # Default start search time is essentially start-of-mission
 DEFAULT_START_TIME = '2022-01-01'
@@ -127,7 +126,7 @@ class AffectedDatasets(dict):
                 with asdf.open(self._cache_path) as af:
                     self.from_asdf(af)
             except IOError as exception:
-                logger.debug('Cannot access cache file %s because %s', self._cache_path, exception)
+                log.debug('Cannot access cache file', self._cache_path, 'because', exception)
 
     @property
     def contexts(self):
@@ -212,7 +211,7 @@ class AffectedDatasets(dict):
         except ValueError:
             end_idx = len(self)
 
-        logger.debug('Searching contexts %s[%d]:%s[%d]', start_context, start_idx, end_context, end_idx)
+        log.debug('Searching contexts', start_context, '[', start_idx, ']:', end_context, '[', end_idx, ']')
         affected = set()
         for context in self.contexts[start_idx:end_idx]:
             affected.update(self[context] & set(datasets))
@@ -249,13 +248,13 @@ class AffectedDatasets(dict):
                 try:
                     data = crds_api.get_affected_datasets('jwst', from_context)
                 except ServiceError as exception:
-                    logger.warning('No affected dataset information for context %s', from_context)
-                    logger.warning('Affected dataset information will be incomplete.')
-                    logger.debug('Reason: ', exc_info=exception)
+                    log.warning('No affected dataset information for context', from_context)
+                    log.warning('Affected dataset information will be incomplete.')
+                    log.debug('Reason: ', exc_info=exception)
                     self._bad_contexts.append(from_context)
                     update_cache = True
                 else:
-                    logger.debug('Data read for %s to %s', data['old_context'], data['new_context'])
+                    log.debug('Data read for', data['old_context'], 'to', data['new_context'])
                     self[from_context] = set(data['affected_ids'])
                     update_cache = True
             current_idx += 1
@@ -379,11 +378,11 @@ class MastCrdsCtx:
         >>> len(nircam_ctxs)  # doctest: +SKIP
         13212
         """
-        logger.info('Retrieving keywords from MAST for instrument %s over period %s -> %s',
-                    instrument, start_time, end_time)
+        log.info('Retrieving keywords from MAST for instrument',
+                 instrument, 'over period', start_time, '->', end_time)
         mcc = MastCrdsCtx(instrument, start_time=start_time, end_time=end_time)
         mcc.retrieve_by_chunk()
-        logger.info('\t# exposures retrieved: %d', len(mcc.contexts))
+        log.info('\t# exposures retrieved:', len(mcc.contexts))
         return mcc.contexts
 
     def retrieve_by_chunk(self):
@@ -403,7 +402,7 @@ class MastCrdsCtx:
             period_end = period + self.time_chunck
             if period_end > self.end_time:
                 period_end = self.end_time
-            logger.debug('MAST query %s %s-%s', self.service, period, period_end)
+            log.debug('MAST query', self.service, period, '-', period_end)
             date_filter['date_obs_mjd'] = [set_mjd_range(period, period_end)]
             params['filters'] = set_params(date_filter)
             results.append(Mast.service_request(self.service, params))
@@ -479,7 +478,7 @@ class StaleByContext:
         self.update_cache = update_cache
 
         if self.cache and not self.cache.exists():
-            logger.info('Cache folder %s does not exist. Attempting to create...', self.cache)
+            log.info('Cache folder', self.cache ,'does not exist. Attempting to create...')
             self.cache.mkdir(parents=True, exist_ok=True)
 
         self.stale_info = dict()
@@ -582,7 +581,7 @@ class StaleByContext:
         self.accumulate()
         # report = self.report()
 
-        # logger.info(report)
+        # log.info(report)
 
     def archive_state_instrument(self, instrument, start_time, end_time):
         """Determine staleness by instrument
@@ -606,7 +605,7 @@ class StaleByContext:
         stale_info : StaleInfo
             Information about stale datasets and the related contexts.
         """
-        logger.info('Working instrument %s over period of %s -> %s', instrument, start_time, end_time)
+        log.info('Working instrument', instrument ,'over period of', start_time ,'->', end_time)
         exposures = self.get_exposure_pars(instrument, start_time, end_time)
         stale_info = self.archive_state_exposures(exposures)
         return stale_info
@@ -624,19 +623,19 @@ class StaleByContext:
         stale_info : StaleInfo
             Information about stale datasets and the related contexts.
         """
-        logger.info('# exposures to be examined: %d', len(exposures))
+        log.info('# exposures to be examined:', len(exposures))
 
         # First result: List of uncalibrated exposures.
         uncalibrated_datasets = {filename_to_datasetid(exposure)
                                  for exposure, context in exposures['filename', 'crds_ctx']
                                  if isinstance(context, MaskedConstant)}
-        logger.info('\t# uncalibrated datasets: %d', len(uncalibrated_datasets))
+        log.info('\t# uncalibrated datasets:', len(uncalibrated_datasets))
 
         # Start filtering down to find the stale exposures.
         old_exposures_mask = exposures['crds_ctx'] < self.end_context
         old_exposures = exposures[old_exposures_mask]
         stale_contexts = {context for context in old_exposures['crds_ctx'] if not isinstance(context, MaskedConstant)}
-        logger.info('\tStale contexts: %s', stale_contexts)
+        log.info('\tStale contexts:', stale_contexts)
 
         # Determine whether any stale exposures are in an affected dataset report. If so,
         # mark as truly stale.
@@ -655,8 +654,8 @@ class StaleByContext:
                 affected = self.affected_datasets.is_affected(new_datasets, context, self.end_context)
                 is_affected.update((dataset, context) for dataset in affected)
             except ValueError as exception:
-                logger.warning('Context range %s-%s is not available in the affected datasets archive', context, self.end_context)
-                logger.debug('Reason: ', exc_info=exception)
+                log.warning('Context range', context, '-', self.end_context,'is not available in the affected datasets archive')
+                log.debug('Reason: ', exc_info=exception)
                 continue
 
         # That's all folks.
@@ -667,7 +666,7 @@ class StaleByContext:
             stale_contexts=stale_contexts,
             stale_datasets=is_affected
         )
-        logger.info('\tStale datasets %d out of %d total datasets', len(is_affected), len(datasets))
+        log.info('\tStale datasets', len(is_affected), 'out of', len(datasets), 'total datasets')
         return stale_info
 
     def cache_table(self, *args, table=None, format='ecsv'):
@@ -718,8 +717,8 @@ class StaleByContext:
                 try:
                     exposures = self.get_exposure_pars_cache(instrument, start_time=self.start_time, end_time=self.end_time)
                 except OSError as exception:
-                    logger.debug('Cannot read from cache: %s', exception)
-                    logger.debug('Forcing cache updating.')
+                    log.debug('Cannot read from cache:', exception)
+                    log.debug('Forcing cache updating.')
                     update_cache = True
                 else:
                     return exposures
@@ -776,7 +775,7 @@ class StaleByContext:
         all_programs = set(filename[2:7]
                            for filename in accumulated.exposures['filename'])
         stale_programs = set(filename[2:7]
-                             for filename, context in accumulated.stale_datasets)
+                             for filename, _ in accumulated.stale_datasets)
         stale_program_percentage = len(stale_programs) / len(all_programs) * 100.
 
         # Generate report.
@@ -912,7 +911,7 @@ def filename_to_datasetid(name):
     if match:
         return match.group(1)
     msg = f'Name base "{base}" does not match a Level2 or Level3 name pattern'
-    logger.debug(msg)
+    log.debug(msg)
     return ValueError(msg)
 
 def make_time(obj=None):
