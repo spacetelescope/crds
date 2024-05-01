@@ -50,21 +50,21 @@ class StaleByClassScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """Command line script to determine stale datasets according to their context"""
 
     description = """
-    This is the initial attempt at determining how current the calibration is for
-    products in the JWST archive. For this report, "staleness" is defined as those
-    dataset ids whose context is not current yet appear in affected dataset reports
-    for all operational context changes between the exposure's context and the
-    current context.
+`stale` is the initial attempt at determining how current the calibration is for
+products in the JWST archive. For this report, "staleness" is defined as those
+dataset ids whose context is not current yet appear in affected dataset reports
+for all operational context changes between the exposure's context and the
+current context.
     """
 
     eplilog = """
-    .............................
-    crds.stalebycontext use cases
-    .............................
+.............................
+crds.stalebycontext use cases
+.............................
 
-    .......
-    Caching
-    .......
+.......
+Caching
+.......
     """
     def __init__(self, *args, **argv):
         super().__init__(*args, **argv)
