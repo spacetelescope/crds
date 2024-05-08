@@ -1,0 +1,45 @@
+Methodology
+-------------
+
+The basic algorithm makes use of the pre-computed affected dataset lists. These
+lists are created for every change in operational context. These lists contain
+the datasets that would have their reference file selections change due to the
+changes in rmaps and references represented by the new operational context.
+Accuracy of these lists are discussed in the Verification section.
+
+The list of exposures and their associated keyword values are retrieved from
+MAST using the `astroquery` package. The `Mast.Jwst.Filtered.*` services are
+used, filtering only on the `DATE-OBS-MJD` keyword. The list of exposures are
+converted to the archive's datasetid form.
+
+The process is as follows: For each dataset, the dataset's keyword CRDS_CTX is
+compared against a target context, in this case context 1041. If the context is
+older, then the affected dataset lists for each intervening context change is
+searched for the dataset. If present in any of these lists, the dataset has been
+reported as affected, yet still has an old context. The implication is that this
+dataset is stale.
+
+This initial list does include both Level2 and Level3 products.
+
+The predominance of NIRCam is due to the fact that the NIRCam WFSS mode produces
+many thousands of individual Level3 "source" products, each of which are
+identified as an individual dataset id. For the purposes of reprocessing, the
+actual number of associations that need to be re-executed is much smaller.
+
+Verification
+--------------
+
+The report hinges on the accuracy of the affected dataset reports. To test the
+false positive and negative rates, each dataset was queried specifically for
+what references changes there would be between the necessary contexts.
+
+When such an analysis is done, there were no "false positives" found: Every dataset
+identified as being affected would truly update references.
+
+However, there is a small rate of "false negatives": Of all datasets that were not
+found in the affected dataset reports, about 0.5% should have appeared. The vast
+majority of these datasets are the NIRCam long wavelength detectors. These
+detectors do appear in the affected dataset reports, so they are not ignored.
+Immediate inspection does not reveal any obvious patterns and more time will be
+needed to explore. Regardless, the rate is negligible and will have little
+impact on reprocessing.

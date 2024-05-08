@@ -45,6 +45,9 @@ DEFAULT_START_TIME = '2022-01-01'
 # First context active for the actual mission
 FIRST_CONTEXT = 'jwst_0780.pmap'
 
+# Default epilog text
+EPILOG_PATH = Path(__file__).parent / 'stale_epilog.txt'
+
 
 class StaleByClassScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """Command line script to determine stale datasets according to their context"""
@@ -101,12 +104,15 @@ Caching
         self.add_argument('-update-cache',
                           help='Force updating of an existing cache',
                           action='store_true')
+        self.add_argument('--epilog',
+                          help='Epilog text to add to report (in markdown format)',
+                          default=str(EPILOG_PATH), type=Path)
 
     def main(self):
         """Execute StaleByContext"""
         self.stale.archive_state(instruments=self.instruments,
                                  start_time=self.start_time, end_time=self.end_time)
-        log.info(self.stale.report())
+        log.info(self.stale.report(epilog=self.args.epilog))
 
         return log.errors()
 
@@ -795,10 +801,16 @@ class StaleByContext:
             raise IOError('Cache filtered on time range produces zero results')
         return filtered
 
-    def report(self):
+    def report(self, epilog=EPILOG_PATH):
         """Generate Report
 
+        Parameters
+        ----------
+        epilog : Path-like or None
+            File containing markdown text to add to the end of the report.
+
         Returns
+        -------
         report : str
             A Markup-based report found in the summary of a report
         """
@@ -816,6 +828,24 @@ class StaleByContext:
 
         # Generate report.
         text = (
+            f'Stale Report: Up to context {self.end_context}'
+            '\n=========================================='
+            f'\nGenerated: {Time.now}'
+            '\n'
+            '\nAbstract'
+            '\n---------\n'
+            '\nAn updated stale report has been generated during the process of finalizing the'
+            '\nstale tool for operations. The original abstract is as follows:'
+            '\n'
+            '\n> This is the initial attempt at determining how current the calibration is for'
+            '\n> products in the JWST archive. For this report, "staleness" is defined as those'
+            '\n> dataset ids whose context is not current yet appear in affected dataset reports'
+            '\n> for all operational context changes between the exposure\'s context and the'
+            '\n> current context. Issues will be discussed and other measures of staleness will'
+            '\n> be presented, though not explored.'
+            '\n'
+            '\nSummary'
+            '\n--------\n'
             f'This report covers all exposures taken during the period of {self.start_time} through'
             f'\nto {self.end_time}. The end context is {self.end_context}. The results are as follows:'
             '\n'
@@ -843,6 +873,11 @@ class StaleByContext:
             n_datasets = len(stale_info.datasets)
             percentage = n_stale_datasets / n_datasets * 100.
             text += f'\n- {instrument}: {n_stale_datasets} stale datasets out of {n_datasets} ({percentage:.0f}%)'
+
+        if epilog:
+            with open(epilog, 'r') as fh:
+                text +='\n\n'
+                text += fh.read()
 
         return text
 
