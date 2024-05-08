@@ -5,6 +5,8 @@ JWST
 ----
 -Added MODEL to be a PEDIGREE option for JWST. [#1032]
 
+- Formalize the stale-by-context report tool [#1039]
+
 11.17.18 (2024-02-21)
 =====================
 
