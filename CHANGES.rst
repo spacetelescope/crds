@@ -1,3 +1,11 @@
+11.17.22 (Unreleased)
+=====================
+
+JWST
+----
+- Added several RMAPS for pars-resamplestep/specstep [#1038]
+
+
 11.17.21 (2024-04-30)
 =====================
 
