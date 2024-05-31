@@ -1,0 +1,23 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    COS
+FILETYPE            H        C         R    "HV SENSITIVITY TABLE TO CORRECT EPSILON BASED ON EXPOSURE HV"
+DETECTOR            H        C         R    FUV
+OBSTYPE             H        C         R    SPECTROSCOPIC
+VCALCOS             H        C         R
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+SEGMENT             C        C         R    FUVA,FUVB
+OPT_ELEM            C        C         R    G130M,G160M,G140L
+CENWAVE             C        I         R    800,1222,1291,1300,1309,1318,1327,\
+          1533,1577,1589,1600,1611,1623,\
+          1055,1096,1105,1230,1280
