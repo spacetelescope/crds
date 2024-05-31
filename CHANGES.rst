@@ -3,7 +3,7 @@
 
 JWST
 ----
-- Added several RMAPS and updated selections [#1042]
+- Added several RMAPS and updated selections [#1043]
 
 11.17.22 (2024-05-09)
 =====================
