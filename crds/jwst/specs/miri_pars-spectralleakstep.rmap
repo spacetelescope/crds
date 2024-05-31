@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade by Hunter Brown for CRDS-804 05/31/24',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-spectralleakstep',
+    'filetype' : 'pars-spectralleakstep',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_pars-spectralleakstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'b0eda8400fe9afea59e525c305442e6275b050e7',
+    'suffix' : 'pars-spectralleakstep',
+    'text_descr' : 'New reference type for pars-spectralleakstep',
+}
+
+selector = Match({
+})

@@ -1,4 +1,11 @@
-11.17.22 (Unreleased)
+11.17.23 (2024-06-03)
+=====================
+
+JWST
+----
+- Added several RMAPS and updated selections [#1042]
+
+11.17.22 (2024-05-09)
 =====================
 
 JWST

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Hand made by Hunter Brown for CRDS-806 on 05/31/24',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-nscleanstep',
+    'filetype' : 'PARS-NSCLEANSTEP',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pars-nscleanstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '792695bea70d11b63721fb9a54bf9d46a06deaef',
+    'suffix' : 'pars-nscleanstep',
+    'text_descr' : 'New reference type for pars-nscleanstep',
+}
+
+selector = Match({
+})
