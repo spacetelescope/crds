@@ -1,0 +1,25 @@
+header = {
+    'derived_from' : 'Initial hand made version 2024-04-25. Jira CRDS-783.',
+    'extra_keys' : (),
+    'file_ext' : '.fits',
+    'filekind' : 'HVDSTAB',
+    'filetype' : 'HV SENSITIVITY TABLE TO CORRECT EPSILON BASED ON EXPOSURE HV',
+    'instrument' : 'COS',
+    'ld_tpn' : 'cos_hvds_ld.tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_hvdstab_0000.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'HVDSCORR',
+    'rmap_relevance' : '((DETECTOR == "FUV") and (OBSMODE=="TIME-TAG") and (HVDSCORR != "OMIT"))',
+    'sha1sum' : 'cb20e16e7981a51570b3c2de16e046fe5179b9ba',
+    'suffix' : 'hvds',
+    'text_descr' : 'Reference file that contains the slopes, y intercepts, and zero points of a high voltage-dependent sensitivity correction for COS FUV',
+    'tpn' : 'cos_hvds.tpn',
+    'unique_rowkeys' : None,
+}
+
+selector = Match({
+})

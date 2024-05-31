@@ -1,6 +1,11 @@
 11.17.22 (Unreleased)
 =====================
 
+HST
+---
+
+- Added RMAP and TPN files for new COS HVDSTAB reference file [#1042]
+
 JWST
 ----
 - Added several RMAPS for pars-resamplestep/specstep [#1038]
