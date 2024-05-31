@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-jumpstep',
+    'filetype' : 'pars-jumpstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-jumpstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '2476df99dd9bd0854a2545cf70d69f0c8707ba81',
+    'suffix' : 'pars-jumpstep',
+    'text_descr' : 'JumpStep runtime parameters',
+}
+
+selector = Match({
+})

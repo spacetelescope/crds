@@ -1,3 +1,25 @@
+11.17.22 (Unreleased)
+=====================
+
+JWST
+----
+- Added several RMAPS for pars-resamplestep/specstep [#1038]
+
+
+11.17.21 (2024-04-30)
+=====================
+
+ROMAN
+-----
+
+- Added support for pars- reference files [#1036]
+
+General
+-------
+
+- Use try/except for np.float128 import [#1037]
+
+
 11.17.20 (2024-04-18)
 =====================
 
@@ -16,6 +38,8 @@ TESTING / AUTOMATION
 JWST
 ----
 -Added MODEL to be a PEDIGREE option for JWST. [#1032]
+
+- Formalize the stale-by-context report tool [#1039]
 
 11.17.18 (2024-02-21)
 =====================

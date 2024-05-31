@@ -69,7 +69,7 @@ def get_cross_strapped_pairs(header):
 
 # =======================================================================
 
-REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
+REF_EXT_RE = re.compile(r"\.(fits|r\dh)$")
 
 def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which

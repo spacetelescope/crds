@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-skymatchstep',
+    'filetype' : 'pars-skymatchstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-skymatchstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'b490dcd7b81ce0c3933d0c63bd82f9c16fea942c',
+    'suffix' : 'pars-skymatchstep',
+    'text_descr' : 'SkyMatchStep runtime parameters',
+}
+
+selector = Match({
+})
