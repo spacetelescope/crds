@@ -5,6 +5,7 @@ HST
 ---
 
 - Added RMAP and TPN files for new COS HVDSTAB reference file [#1042]
+- Fix for acs imphttab ref file submission failures [#1044]
 
 JWST
 ----
