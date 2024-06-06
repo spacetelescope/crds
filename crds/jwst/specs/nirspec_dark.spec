@@ -7,7 +7,7 @@
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_dark_0002.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.SUBARRAY.NAME'),),
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.GRATING'),),
     'sha1sum' : '345cc330e534b04b8a06672b19be997f1b1a572d',
     'suffix' : 'dark',
     'text_descr' : 'Dark Frame',

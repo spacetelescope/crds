@@ -1,4 +1,12 @@
-11.17.22 (Unreleased)
+11.17.23 (2024-06-03)
+=====================
+
+JWST
+----
+- Added RMAPS for miri_pars-spectralleakstep and nirspec_pars-nsleanstep
+- Added GRATING as selection for nirspec_dark.spec and nirspec_pars-nscleanstep.rmap [#1043]
+
+11.17.22 (2024-05-09)
 =====================
 
 HST
