@@ -3,7 +3,8 @@
 
 JWST
 ----
-- Added several RMAPS and updated selections [#1043]
+- Added RMAPS for miri_pars-spectralleakstep and nirspec_pars-nsleanstep
+- Added GRATING as selection for nirspec_dark.spec and nirspec_pars-nscleanstep.rmap [#1043]
 
 11.17.22 (2024-05-09)
 =====================
