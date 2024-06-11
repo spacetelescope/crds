@@ -4285,6 +4285,32 @@
             "tpn":"nircam_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-darkcurrentstep":{
+            "derived_from":"Created by Hunter Brown 2024-06-10",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-darkcurrentstep",
+            "filetype":"pars-darkcurrentstep",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_pars-darkcurrentstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_pars-darkcurrentstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"d9fe7ab309b949ea4db0662e8e4df8b0bf5a9ef8",
+            "suffix":"pars-darkcurrentstep",
+            "text_descr":"DarkCurrentStep runtime parameters for nircam",
+            "tpn":"nircam_pars-darkcurrentstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-darkpipeline":{
             "classes":[
                 "Match",
@@ -5366,6 +5392,32 @@
             "suffix":"pars-chargemigrationstep",
             "text_descr":"Parameters to correct charge migration and the jump detection step interaction.",
             "tpn":"niriss_pars-chargemigrationstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-darkcurrentstep":{
+            "derived_from":"Created by Hunter Brown 2024-06-10",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-darkcurrentstep",
+            "filetype":"pars-darkcurrentstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-darkcurrentstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-darkcurrentstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"4f3c8d6c8bc1dca3ce2a73c8913f9df85ec23a42",
+            "suffix":"pars-darkcurrentstep",
+            "text_descr":"DarkCurrentStep runtime parameters for niriss",
+            "tpn":"niriss_pars-darkcurrentstep.tpn",
             "unique_rowkeys":null
         },
         "pars-darkpipeline":{
@@ -6937,6 +6989,32 @@
             "suffix":"ote",
             "text_descr":"Transform through the Optical Telescope Element",
             "tpn":"nirspec_ote.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-darkcurrentstep":{
+            "derived_from":"Created by Hunter Brown 2024-06-10",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-darkcurrentstep",
+            "filetype":"pars-darkcurrentstep",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pars-darkcurrentstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pars-darkcurrentstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"041b2b67e68467067eef9728adbc8266648fdd2c",
+            "suffix":"pars-darkcurrentstep",
+            "text_descr":"DarkCurrentStep runtime parameters for nirspec",
+            "tpn":"nirspec_pars-darkcurrentstep.tpn",
             "unique_rowkeys":null
         },
         "pars-darkpipeline":{

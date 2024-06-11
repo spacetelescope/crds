@@ -1,3 +1,10 @@
+11.17.24 (20204-06-10)
+=====================
+
+JWST
+----
+- Added pars-darkcurrentstep rmaps for NIRISS, NIRCAM and NIRSPEC [#1045]
+
 11.17.23 (2024-06-03)
 =====================
 
