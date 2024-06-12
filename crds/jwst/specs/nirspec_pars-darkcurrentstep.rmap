@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_pars-darkcurrentstep.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '041b2b67e68467067eef9728adbc8266648fdd2c',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '3a462c01fd2f004b20e24bd954adf9523e81b8f3',
     'suffix' : 'pars-darkcurrentstep',
     'text_descr' : 'DarkCurrentStep runtime parameters for nirspec',
 }

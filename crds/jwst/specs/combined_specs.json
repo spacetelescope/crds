@@ -4298,14 +4298,14 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.INSTRUMENT.DETECTOR"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"d9fe7ab309b949ea4db0662e8e4df8b0bf5a9ef8",
+            "sha1sum":"f343e6f6c7f6386fccbeaa3eca45f0a57295c205",
             "suffix":"pars-darkcurrentstep",
             "text_descr":"DarkCurrentStep runtime parameters for nircam",
             "tpn":"nircam_pars-darkcurrentstep.tpn",
@@ -5406,15 +5406,13 @@
             "name":"jwst_niriss_pars-darkcurrentstep.rmap",
             "observatory":"JWST",
             "parkey":[
-                [
-                    "META.EXPOSURE.TYPE"
-                ],
+                [],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"4f3c8d6c8bc1dca3ce2a73c8913f9df85ec23a42",
+            "sha1sum":"3c05f3d4c7c39fd2845de2552b89235fb2191a96",
             "suffix":"pars-darkcurrentstep",
             "text_descr":"DarkCurrentStep runtime parameters for niriss",
             "tpn":"niriss_pars-darkcurrentstep.tpn",
@@ -7004,14 +7002,14 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.INSTRUMENT.DETECTOR"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"041b2b67e68467067eef9728adbc8266648fdd2c",
+            "sha1sum":"3a462c01fd2f004b20e24bd954adf9523e81b8f3",
             "suffix":"pars-darkcurrentstep",
             "text_descr":"DarkCurrentStep runtime parameters for nirspec",
             "tpn":"nirspec_pars-darkcurrentstep.tpn",
