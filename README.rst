@@ -49,7 +49,7 @@ File Submission Installation
 For performing the file submission role,  CRDS includes additional dependencies
 and can be trickier to install.
 
-Addding CRDS to an Existing Environment
+Adding CRDS to an Existing Environment
 +++++++++++++++++++++++++++++++++++++++
 
 You can install/upgrade CRDS and it's dependencies in your current environment
@@ -92,8 +92,8 @@ install.    These can serve as an alternative to cloning the CRDS repo and
 running the install script(s).  If you already have a python environment
 supporting pip,
 
-1. Installing Conda / Astroconda
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1. Installing Conda
+^^^^^^^^^^^^^^^^^^^
 
 Alternate / definitive installation instructions for installing a baseline conda
 can be found here::
@@ -114,7 +114,7 @@ You can substitute the environment name of your choice, e.g. *redcatconda* vs. *
 3. Add JWST CAL S/W and Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Installing the JWST CAL S/W will also automatically install many dendencies of
+Installing the JWST CAL S/W will also automatically install many dependencies of
 a numerical computing environment::
 
   pip install --upgrade numpy
