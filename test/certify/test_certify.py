@@ -1587,8 +1587,6 @@ File written with dev version of asdf library: 2.0.0.dev1213
 4 warnings
 5 infos"""
     for msg in expected_out.splitlines():
-        if msg.strip() not in out:
-            breakpoint()
         assert msg.strip() in out
 
 
