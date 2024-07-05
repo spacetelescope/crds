@@ -7,10 +7,10 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_pars-resamplestep.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'a4495c33ceca44576adc8f515bea4f02f812a97b',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'aff536ad269300413ae1fca106b62e8ac48cb1f6',
     'suffix' : 'pars-resamplestep',
-    'text_descr' : 'ResampleStep runtime parameters',
+    'text_descr' : 'MIRI default parameters for the resample step.',
 }
 
 selector = Match({

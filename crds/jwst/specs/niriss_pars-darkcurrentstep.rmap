@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Created by Hunter Brown 2024-06-10',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-darkcurrentstep',
+    'filetype' : 'pars-darkcurrentstep',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pars-darkcurrentstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '3c05f3d4c7c39fd2845de2552b89235fb2191a96',
+    'suffix' : 'pars-darkcurrentstep',
+    'text_descr' : 'DarkCurrentStep runtime parameters for niriss',
+}
+
+selector = Match({
+})

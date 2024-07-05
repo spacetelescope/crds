@@ -3,6 +3,8 @@ from pytest import mark
 from crds.client import api
 from crds.misc.query_affected import QueryAffectedDatasetsScript
 
+
+@mark.jwst
 @mark.build6
 def test_get_context_history(jwst_no_cache_state):
     """
@@ -20,6 +22,7 @@ def test_get_context_history(jwst_no_cache_state):
     assert history[32] == ('2015-11-18 12:58:13', 'jwst_0105.pmap', 'Declared various EXP_TYPE as N/A for 15 WCS types for MIRI, NIRCAM, NIRSPEC. Replacement MIRI distortion references for CRDS #238.')
 
 
+@mark.jwst
 @mark.build6
 def test_query_affected_datasets_list(jwst_no_cache_state, capsys):
     """

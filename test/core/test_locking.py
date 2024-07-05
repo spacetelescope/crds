@@ -12,7 +12,6 @@ log.set_verbose(10)
 def multiprocessing_instance(output_file_name):
     """Pretend to do something generic."""
     output_file = open(output_file_name, "a")
-
     with crds_cache_locking.get_cache_lock():
         for char in "testing":
             output_file.write(char)
@@ -37,6 +36,7 @@ def try_multiprocessing():
         print(reader.read())
 
 
+@mark.multimission
 @mark.locking
 def test_default_locking(default_shared_state, capsys):
     crds_cache_locking.init_locks()
@@ -54,7 +54,7 @@ testing
     assert status == "enabled, multiprocessing"
     
 
-
+@mark.multimission
 @mark.locking
 def test_multiprocessing_locking(default_shared_state, capsys):
     config.LOCKING_MODE.set("multiprocessing")
@@ -73,7 +73,7 @@ testing
     assert status == "enabled, multiprocessing"
     
 
-
+@mark.multimission
 @mark.locking
 def test_filelock_locking(default_shared_state, capsys):
     config.LOCKING_MODE.set("filelock")
@@ -94,7 +94,7 @@ testing
     assert cache == crds_cache_locking.get_lock("crds.cache")
     
 
-
+@mark.multimission
 @mark.locking
 def test_default_disabled(default_shared_state, capsys, caplog):
     config.USE_LOCKING.set(False)
@@ -112,7 +112,7 @@ def test_default_disabled(default_shared_state, capsys, caplog):
     assert out_to_check in out
     
 
-
+@mark.multimission
 @mark.locking
 def test_default_readonly(default_shared_state, capsys):
     config.set_cache_readonly()

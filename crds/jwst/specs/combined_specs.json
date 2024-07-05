@@ -2781,17 +2781,15 @@
             "name":"jwst_miri_pars-resamplespecstep.rmap",
             "observatory":"JWST",
             "parkey":[
-                [
-                    "META.EXPOSURE.TYPE"
-                ],
+                [],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"5063d08df063bac56a34f7b2afe1a3852a2f7888",
+            "sha1sum":"5f3c9217c940f9e32dc3e660d55fd9dd2c46007b",
             "suffix":"pars-resamplespecstep",
-            "text_descr":"ResampleSpecStep runtime parameters",
+            "text_descr":"MIRI default parameters for the resample spec step.",
             "tpn":"miri_pars-resamplespecstep.tpn",
             "unique_rowkeys":null
         },
@@ -2807,17 +2805,15 @@
             "name":"jwst_miri_pars-resamplestep.rmap",
             "observatory":"JWST",
             "parkey":[
-                [
-                    "META.EXPOSURE.TYPE"
-                ],
+                [],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"a4495c33ceca44576adc8f515bea4f02f812a97b",
+            "sha1sum":"aff536ad269300413ae1fca106b62e8ac48cb1f6",
             "suffix":"pars-resamplestep",
-            "text_descr":"ResampleStep runtime parameters",
+            "text_descr":"MIRI default parameters for the resample step.",
             "tpn":"miri_pars-resamplestep.tpn",
             "unique_rowkeys":null
         },
@@ -3055,6 +3051,32 @@
             "suffix":"pars-spec3pipeline",
             "text_descr":"Spec3Pipeline runtime parameters",
             "tpn":"miri_pars-spec3pipeline.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-spectralleakstep":{
+            "derived_from":"Handmade by Hunter Brown for CRDS-804 05/31/24",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-spectralleakstep",
+            "filetype":"pars-spectralleakstep",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_pars-spectralleakstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_pars-spectralleakstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"b0eda8400fe9afea59e525c305442e6275b050e7",
+            "suffix":"pars-spectralleakstep",
+            "text_descr":"New reference type for pars-spectralleakstep",
+            "tpn":"miri_pars-spectralleakstep.tpn",
             "unique_rowkeys":null
         },
         "pars-stackrefsstep":{
@@ -4263,6 +4285,32 @@
             "tpn":"nircam_mask.tpn",
             "unique_rowkeys":null
         },
+        "pars-darkcurrentstep":{
+            "derived_from":"Created by Hunter Brown 2024-06-10",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-darkcurrentstep",
+            "filetype":"pars-darkcurrentstep",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_pars-darkcurrentstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_pars-darkcurrentstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"f343e6f6c7f6386fccbeaa3eca45f0a57295c205",
+            "suffix":"pars-darkcurrentstep",
+            "text_descr":"DarkCurrentStep runtime parameters for nircam",
+            "tpn":"nircam_pars-darkcurrentstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-darkpipeline":{
             "classes":[
                 "Match",
@@ -4428,6 +4476,30 @@
             "suffix":"pars-rampfitstep",
             "text_descr":"RampFitStep runtime parameters",
             "tpn":"nircam_pars-rampfitstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-resamplestep":{
+            "derived_from":"nircam_pars-jumpstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-resamplestep",
+            "filetype":"pars-resamplestep",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_pars-resamplestep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_pars-resamplestep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"b028106d043ef8319186b466ce64562f3a6e475f",
+            "suffix":"pars-resamplestep",
+            "text_descr":"NIRCam default parameters for the resample step.",
+            "tpn":"nircam_pars-resamplestep.tpn",
             "unique_rowkeys":null
         },
         "pars-sourcecatalogstep":{
@@ -5322,6 +5394,30 @@
             "tpn":"niriss_pars-chargemigrationstep.tpn",
             "unique_rowkeys":null
         },
+        "pars-darkcurrentstep":{
+            "derived_from":"Created by Hunter Brown 2024-06-10",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-darkcurrentstep",
+            "filetype":"pars-darkcurrentstep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-darkcurrentstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-darkcurrentstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"3c05f3d4c7c39fd2845de2552b89235fb2191a96",
+            "suffix":"pars-darkcurrentstep",
+            "text_descr":"DarkCurrentStep runtime parameters for niriss",
+            "tpn":"niriss_pars-darkcurrentstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-darkpipeline":{
             "classes":[
                 "Match",
@@ -5490,6 +5586,30 @@
             "suffix":"pars-rampfitstep",
             "text_descr":"RampFitStep runtime parameters",
             "tpn":"niriss_pars-rampfitstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-resamplestep":{
+            "derived_from":"Derived from niriss_pars-rampfitstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-resamplestep",
+            "filetype":"pars-resamplestep",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pars-resamplestep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-resamplestep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"00413102bbf24e8540b68543ba060d4b17d0059a",
+            "suffix":"pars-resamplestep",
+            "text_descr":"NIRISS default parameters for the resample step.",
+            "tpn":"niriss_pars-resamplestep.tpn",
             "unique_rowkeys":null
         },
         "pars-sourcecatalogstep":{
@@ -6364,7 +6484,8 @@
                 [
                     "META.INSTRUMENT.DETECTOR",
                     "META.INSTRUMENT.FILTER",
-                    "META.SUBARRAY.NAME"
+                    "META.SUBARRAY.NAME",
+                    "META.INSTRUMENT.GRATING"
                 ]
             ],
             "sha1sum":"345cc330e534b04b8a06672b19be997f1b1a572d",
@@ -6868,6 +6989,32 @@
             "tpn":"nirspec_ote.tpn",
             "unique_rowkeys":null
         },
+        "pars-darkcurrentstep":{
+            "derived_from":"Created by Hunter Brown 2024-06-10",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-darkcurrentstep",
+            "filetype":"pars-darkcurrentstep",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pars-darkcurrentstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pars-darkcurrentstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"3a462c01fd2f004b20e24bd954adf9523e81b8f3",
+            "suffix":"pars-darkcurrentstep",
+            "text_descr":"DarkCurrentStep runtime parameters for nirspec",
+            "tpn":"nirspec_pars-darkcurrentstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-darkpipeline":{
             "classes":[
                 "Match",
@@ -6978,6 +7125,30 @@
             "tpn":"nirspec_pars-jumpstep.tpn",
             "unique_rowkeys":null
         },
+        "pars-nscleanstep":{
+            "derived_from":"Hand made by Hunter Brown for CRDS-806 on 05/31/24",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-nscleanstep",
+            "filetype":"PARS-NSCLEANSTEP",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pars-nscleanstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pars-nscleanstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"792695bea70d11b63721fb9a54bf9d46a06deaef",
+            "suffix":"pars-nscleanstep",
+            "text_descr":"New reference type for pars-nscleanstep",
+            "tpn":"nirspec_pars-nscleanstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-outlierdetectionstep":{
             "derived_from":"Copied from miri_pars-outlierdetectionstep.rmap 20230831",
             "extra_keys":null,
@@ -7033,6 +7204,30 @@
             "suffix":"pars-rampfitstep",
             "text_descr":"RampFitStep runtime parameters",
             "tpn":"nirspec_pars-rampfitstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-resamplespecstep":{
+            "derived_from":"nirspec-pars-jumpstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-resamplespecstep",
+            "filetype":"pars-resamplespecstep",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pars-resamplespecstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pars-resamplespecstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"7be1c2c08f86d134e3136840c00a9f3268c78417",
+            "suffix":"pars-resamplespecstep",
+            "text_descr":"NIRSpec Baseline parameters for resampling",
+            "tpn":"nirspec_pars-resamplespecstep.tpn",
             "unique_rowkeys":null
         },
         "pars-spec2pipeline":{
@@ -7354,10 +7549,11 @@
                 [
                     "META.INSTRUMENT.DETECTOR",
                     "META.EXPOSURE.READPATT",
-                    "META.SUBARRAY.NAME"
+                    "META.SUBARRAY.NAME",
+                    "META.INSTRUMENT.GRATING"
                 ]
             ],
-            "sha1sum":"4fffd429805063af03840bc13a3ae18ee9a6fc9c",
+            "sha1sum":"f57c2646cdd20f4cbf2b8a7b7e12d631c35554b0",
             "suffix":"superbias",
             "text_descr":"Super Bias",
             "tpn":"nirspec_superbias.tpn",

@@ -201,6 +201,7 @@ class ReferenceCertifier(Certifier):
                 "Checking reference modes for", repr(self.filename)):
             if self.mode_columns:
                 self.certify_reference_modes()
+
         with self.error_on_exception(
                 "Dumping provenance for", repr(self.filename)):
             if self._dump_provenance_flag:
@@ -471,7 +472,11 @@ class ReferenceCertifier(Certifier):
                 different += 1
             old_value = handle_nan(old_value)
             new_value = handle_nan(new_value)
-            if np.any(old_value != new_value):
+            try:
+                if np.any(old_value != new_value):
+                    different += 1
+            except ValueError:
+                log.warning(f"Cannot compare arrays in column {old_key} for mode {mode}")
                 different += 1
         return different
 
@@ -564,7 +569,12 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
 
 def handle_nan(var):
     """Map nan values to 'nan' so that 'nan' == 'nan'."""
-    if isinstance(var, (np.float32, np.float64, np.float128)) and np.isnan(var):
+    try:
+        from numpy import float128
+        floats = (np.float32, np.float64, np.float128)
+    except ImportError:
+        floats = (np.float32, np.float64)
+    if isinstance(var, floats) and np.isnan(var):
         return 'nan'
     elif isinstance(var, np.ndarray) and var.shape == () and np.any(np.isnan(var)):
         return 'nan'

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-dqinitstep',
+    'filetype' : 'pars-dqinitstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-dqinitstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'dd6cf0cdeacf634a860c39cdf438a06bc27097f3',
+    'suffix' : 'pars-dqinitstep',
+    'text_descr' : 'DQInitStep runtime parameters',
+}
+
+selector = Match({
+})

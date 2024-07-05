@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-fluxstep',
+    'filetype' : 'pars-fluxstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-fluxstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '6f243a719f87ea2f36a7cf7b6a128ec096eae71d',
+    'suffix' : 'pars-fluxstep',
+    'text_descr' : 'FluxStep runtime parameters',
+}
+
+selector = Match({
+})

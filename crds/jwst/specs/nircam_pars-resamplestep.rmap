@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'nircam_pars-jumpstep.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-resamplestep',
+    'filetype' : 'pars-resamplestep',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_pars-resamplestep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'b028106d043ef8319186b466ce64562f3a6e475f',
+    'suffix' : 'pars-resamplestep',
+    'text_descr' : 'NIRCam default parameters for the resample step.',
+}
+
+selector = Match({
+})

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-sourcedetectionstep',
+    'filetype' : 'pars-sourcedetectionstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-sourcedetectionstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE', 'ROMAN.META.INSTRUMENT.DETECTOR'), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'd9ffff31a570b9007751d9f02ce55d837c7f4759',
+    'suffix' : 'pars-sourcedetectionstep',
+    'text_descr' : 'SourceDetectionStep runtime parameters',
+}
+
+selector = Match({
+})

@@ -1,9 +1,66 @@
+11.17.24 (20204-06-10)
+=====================
+
+JWST
+----
+- Added pars-darkcurrentstep rmaps for NIRISS, NIRCAM and NIRSPEC [#1045]
+
+11.17.23 (2024-06-03)
+=====================
+
+JWST
+----
+- Added RMAPS for miri_pars-spectralleakstep and nirspec_pars-nsleanstep
+- Added GRATING as selection for nirspec_dark.spec and nirspec_pars-nscleanstep.rmap [#1043]
+
+11.17.22 (2024-05-09)
+=====================
+
+HST
+---
+
+- Added RMAP and TPN files for new COS HVDSTAB reference file [#1042]
+- Fix for acs imphttab ref file submission failures [#1044]
+
+JWST
+----
+- Added several RMAPS for pars-resamplestep/specstep [#1038]
+
+
+11.17.21 (2024-04-30)
+=====================
+
+ROMAN
+-----
+
+- Added support for pars- reference files [#1036]
+
+General
+-------
+
+- Use try/except for np.float128 import [#1037]
+
+
+11.17.20 (2024-04-18)
+=====================
+
+ROMAN
+-----
+- Added `metrics_logger` decorator to Roman tests delivered with older builds [#1034]
+
+TESTING / AUTOMATION
+--------------------
+- Pytest configuration changes to address ongoing test suite failures, marked individual tests with their respective observatory [#1034]
+
+
 11.17.19 (2024-02-22)
 =====================
 
 JWST
 ----
 -Added MODEL to be a PEDIGREE option for JWST. [#1032]
+
+- Formalize the stale-by-context report tool [#1039]
 
 11.17.18 (2024-02-21)
 =====================

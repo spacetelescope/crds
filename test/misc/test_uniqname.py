@@ -13,7 +13,7 @@ from crds.misc.uniqname import UniqnameScript
 # logger propagates its events.
 log.THE_LOGGER.logger.propagate = True
 
-
+@mark.hst
 @mark.misc
 @mark.uniqname
 def test_synphot_uniqname(hst_shared_cache_state, caplog):
@@ -29,6 +29,7 @@ def test_synphot_uniqname(hst_shared_cache_state, caplog):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.misc
 @mark.uniqname
 def test_cdbs_uniqname(hst_shared_cache_state, hst_data, caplog, tmpdir):
@@ -50,6 +51,7 @@ def test_cdbs_uniqname(hst_shared_cache_state, hst_data, caplog, tmpdir):
         assert msg.strip() in out
 
 
+@mark.hst
 @mark.misc
 @mark.uniqname
 def test_has_checksum(hst_shared_cache_state, hst_data, caplog):

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Derived from niriss_pars-rampfitstep.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-resamplestep',
+    'filetype' : 'pars-resamplestep',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_pars-resamplestep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '00413102bbf24e8540b68543ba060d4b17d0059a',
+    'suffix' : 'pars-resamplestep',
+    'text_descr' : 'NIRISS default parameters for the resample step.',
+}
+
+selector = Match({
+})

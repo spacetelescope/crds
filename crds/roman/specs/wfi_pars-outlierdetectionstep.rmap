@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-outlierdetectionstep',
+    'filetype' : 'pars-outlierdetectionstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-outlierdetectionstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE', 'ROMAN.META.INSTRUMENT.DETECTOR'), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'af4b3c2a128f8c2017286e8722e6917cfdacc0bb',
+    'suffix' : 'pars-outlierdetectionstep',
+    'text_descr' : 'OutlierDetectionStep runtime parameters',
+}
+
+selector = Match({
+})

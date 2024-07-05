@@ -99,7 +99,7 @@ def match_context_key(key):
 
 # =======================================================================
 
-REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
+REF_EXT_RE = re.compile(r"\.(fits|r\dh)$")
 
 @utils.cached
 def get_file_properties(filename):
