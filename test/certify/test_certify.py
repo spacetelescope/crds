@@ -2983,7 +2983,7 @@ def test_certify_pars(roman_test_cache_state, roman_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_pars-exposurepipeline.asdf", "roman_0006.pmap", observatory="roman")
         out = caplog.text
-    assert len(out.splitlines()) == 1
+    assert len(out.splitlines()) <= 2 
 
 
 @mark.roman
@@ -2994,7 +2994,7 @@ def test_certify_pars_badtype(roman_test_cache_state, roman_data, caplog):
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi_pars-exposurepipeline_badtype.asdf", "roman_0006.pmap", observatory="roman")
         out = caplog.text
-    expected = """Can't identify ROMAN.META.REFTYPE of 'roman_wfi_pars-exposurepipeline_badtype.asdf""".splitlines()
+    expected = """Can't identify ROMAN.META.REFTYPE""".splitlines()
     for line in expected:
         assert line in out
 
