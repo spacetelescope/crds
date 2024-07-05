@@ -15,9 +15,6 @@ on:
     - cron: "0 0 * * 1"
 
 env:
-  CRDS_TEST_ROOT: /tmp
-  CRDS_PATH: /tmp/crds-cache-default-test
-  CRDS_TESTING_CACHE: /tmp/crds-cache-test
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
   LD_LIBRARY_PATH: /usr/local/lib
@@ -33,11 +30,11 @@ jobs:
     needs: [ contexts ]
     name: download and cache CRDS test files
     runs-on: ubuntu-latest
-    outputs:
-      path: ${{ env.CRDS_PATH }}
-      testing_cache: ${{ env.CRDS_TESTING_CACHE }}
-      key: ${{ steps.key.outputs.key }}
     steps:
+      - run: echo CRDS_TEST_ROOT=${{ runner.temp }}/crds >> $GITHUB_ENV
+      - run: |
+          echo CRDS_PATH=${{ env.CRDS_TEST_ROOT }}/crds-cache-default-test >> $GITHUB_ENV
+          echo CRDS_TESTING_CACHE=${{ env.CRDS_TEST_ROOT }}/crds-cache-test >> $GITHUB_ENV
       - uses: actions/checkout@v4
         with:
           repository: spacetelescope/crds
@@ -97,4 +94,7 @@ jobs:
             ${{ env.CRDS_PATH }}
             ${{ env.CRDS_TESTING_CACHE }}
           key: ${{ steps.key.outputs.key }}
-        
+    outputs:
+      path: ${{ env.CRDS_PATH }}
+      testing_cache: ${{ env.CRDS_TESTING_CACHE }}
+      key: ${{ steps.key.outputs.key }}
