@@ -5,7 +5,7 @@ import os
 import re
 
 from . import config, log, utils
-from .exceptions import NameComparisonError
+# from .exceptions import NameComparisonError
 from .constants import ALL_OBSERVATORIES
 
 # =============================================================================================================

@@ -8,7 +8,7 @@ are restricted to pigeon-Python that does not allow spaces.  See the JWST .tpn f
 (particularly *array*.tpn) for examples of presence or constraint expressions,  grep
 those files for these functions.
 """
-from crds.core import utils, exceptions
+from crds.core import exceptions
 
 # ----------------------------------------------------------------------------
 

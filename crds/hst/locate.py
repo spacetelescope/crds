@@ -14,13 +14,12 @@ be implemented for JWST.
 import os.path
 import datetime
 import time
-import warnings
 
 # =======================================================================
 
 from crds.core import log, rmap, config, utils, timestamp
 from crds import data_file
-from crds.core.exceptions import CrdsError, CrdsNamingError
+from crds.core.exceptions import CrdsNamingError
 from crds.hst import siname
 from crds.io import abstract
 

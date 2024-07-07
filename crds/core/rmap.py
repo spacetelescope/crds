@@ -64,8 +64,8 @@ from packaging.requirements import Requirement
 from . import log, utils, config, selectors, substitutions
 
 # XXX For backward compatability until refactored away.
-from .config import locate_file, locate_mapping, locate_reference
-from .config import mapping_exists, is_mapping
+from .config import locate_file, locate_mapping #, locate_reference
+# from .config import mapping_exists, is_mapping
 
 from . import exceptions as crexc
 from .custom_dict import LazyFileDict
