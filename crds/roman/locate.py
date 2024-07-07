@@ -17,17 +17,17 @@ log annotation, i.e.  AKA keyword cross-strapping.
 """
 import os.path
 import re
-import warnings
+# import warnings
 from collections import namedtuple
 
-from asdf.tags.core import NDArrayType
+# from asdf.tags.core import NDArrayType
 
 # =======================================================================
 
 from crds.core import rmap, config, utils, timestamp, log, exceptions
-from crds.certify import generic_tpn
+# from crds.certify import generic_tpn
 from crds import data_file
-from crds.io import abstract
+# from crds.io import abstract
 
 # =======================================================================
 

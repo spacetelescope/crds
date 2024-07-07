@@ -5,7 +5,7 @@ import os, os.path
 from pytest import TempPathFactory
 import cProfile
 import pstats
-import mock
+# import mock
 import yaml
 
 # ==============================================================================

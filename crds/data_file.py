@@ -5,10 +5,10 @@ from crds.core  import utils, log
 
 # =============================================================================
 
-from crds.io.abstract import hijack_warnings, convert_to_eval_header, ensure_keys_defined
-from crds.io.factory import file_factory, get_observatory, get_filetype, is_dataset
-from crds.io.geis import is_geis, is_geis_data, is_geis_header, get_conjugate
-from crds.io.fits import fits_open, fits_open_trapped, get_fits_header_union
+from crds.io.abstract import hijack_warnings  #, convert_to_eval_header, ensure_keys_defined
+from crds.io.factory import file_factory  #, get_observatory, get_filetype, is_dataset
+# from crds.io.geis import is_geis, is_geis_data, is_geis_header, get_conjugate
+# from crds.io.fits import fits_open, fits_open_trapped, get_fits_header_union
 
 # import asdf
 # import yaml
