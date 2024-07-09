@@ -1,0 +1,29 @@
+#
+# Constraints defined in this file apply to every reference file
+#
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
+#----------------------------------------------------------
+META.TELESCOPE                     H   C   R   ROMAN
+META.INSTRUMENT.NAME               H   C   R   WFI
+META.REFTYPE                       H   C   R
+META.USEAFTER                      H   C   R   &JWSTDATE
+META.PEDIGREE                      H   C   R   &JWSTPEDIGREE
+META.AUTHOR                        H   C   R
+META.DESCRIPTION                   H   C   R
+META.ORIGIN                        H   C   R
+META.INSTRUMENT.DETECTOR           H   C   O   WFI01,WFI02,WFI03,WFI04,WFI05,WFI06,WFI07,WFI08,WFI09,\
+                                               WFI10,WFI11,WFI12,WFI13,WFI14,WFI15,WFI16,WFI17,WFI18,\
+                                               ANY,N/A
+META.INSTRUMENT.OPTICAL_ELEMENT    H   C   O   F062,F087,F106,F129,F146,F158,F184,F213,GRISM,\
+                                               PRISM,CLEAR,DARK,N/A,ANY,UNKNOWN
+META.EXPOSURE.TYPE                 H   C   O   WFI_IMAGE,WFI_GRISM,WFI_PRISM,WFI_DARK,WFI_WSM_ACQ1,WFI_WSM_ACQ2,\
+                                               WFI_WSM_TRACK,WFI_WFSC,DEFOCUS_MODERATE,DEFOCUS_LARGE,\
+                                               WFI_WIM_ACQ,WFI_WIM_TRACK,WFI_PARALLEL,\
+                                               WFI_FLAT_EXTERNAL,WFI_FLAT_INTERNAL,WFI_RCS
