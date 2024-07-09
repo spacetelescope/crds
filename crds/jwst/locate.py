@@ -20,7 +20,7 @@ from crds.io import abstract
 # These two functions decouple the generic reference file certifier program
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS #, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
+from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS
 
 from . import schema
 
