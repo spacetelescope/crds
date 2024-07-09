@@ -24,7 +24,6 @@ from crds import data_file, diff
 from crds.io import tables
 from crds.client import api
 from crds.refactoring import refactor
-# from crds.io import abstract
 
 from . import mapping_parser
 from . import validators

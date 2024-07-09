@@ -1,8 +1,5 @@
 """Common imports and defs across all versions of ACS hooks.
 """
-# import sys
-# from collections import defaultdict
-
 from crds.core import timestamp
 
 # ===========================================================================

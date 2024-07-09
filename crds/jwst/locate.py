@@ -8,15 +8,10 @@ in the certification of reference files.
 """
 import os.path
 import re
-# import warnings
-
-# from asdf.tags.core import NDArrayType
-# from stdatamodels.validate import ValidationWarning
 
 # =======================================================================
 
 from crds.core import rmap, config, utils, timestamp, log, exceptions
-# from crds.certify import generic_tpn
 from crds import data_file
 from crds.io import abstract
 
@@ -30,15 +25,12 @@ from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS #, EXTENSIONS, INSTRUMENT_FI
 from . import schema
 
 # definitively lists possible exp_types by instrument, or all instruments
-# from .schema import get_exptypes
 
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
 suffix_to_filekind = TYPES.suffix_to_filekind
 filekind_to_suffix = TYPES.filekind_to_suffix
 get_all_tpninfos = TYPES.get_all_tpninfos
-
-# from crds.jwst.pipeline import header_to_reftypes, header_to_pipelines
 
 # =======================================================================
 
