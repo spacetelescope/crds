@@ -1,3 +1,11 @@
+11.18.0 (unreleased)
+====================
+
+ROMAN
+-----
+
+- Removed all redundant tpn files for roman datamodel-represented references. Certify parameter reference files [#1050]
+
 11.17.24 (20204-06-10)
 =====================
 

@@ -1,0 +1,260 @@
+#ASDF 1.0.0
+#ASDF_STANDARD 1.5.0
+%YAML 1.1
+%TAG ! tag:stsci.edu:asdf/
+--- !core/asdf-1.1.0
+asdf_library: !core/software-1.0.0 {author: The ASDF Developers, homepage: 'http://github.com/asdf-format/asdf',
+  name: asdf, version: 3.2.0}
+history:
+  extensions:
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://asdf-format.org/core/extensions/core-1.5.0
+    software: !core/software-1.0.0 {name: asdf, version: 3.2.0}
+class: romancal.pipeline.exposure_pipeline.ExposurePipeline
+meta:
+  author: rcal developer
+  date: '2024-06-07T15:46:47'
+  description: Parameters for calibration step romancal.pipeline.exposure_pipeline.ExposurePipeline
+  instrument: {name: BAD}
+  origin: <SPECIFY>
+  pedigree: GROUND
+  reftype: PARS-EXPOSUREPIPELINE
+  telescope: ROMAN
+  useafter: 2022-02-02T00:00:00
+name: ExposurePipeline
+parameters:
+  input_dir: ''
+  output_dir: null
+  output_ext: .asdf
+  output_file: null
+  output_use_index: true
+  output_use_model: false
+  post_hooks: []
+  pre_hooks: []
+  save_calibrated_ramp: false
+  save_results: false
+  search_output_file: true
+  skip: false
+  suffix: null
+steps:
+- class: romancal.dq_init.dq_init_step.DQInitStep
+  name: dq_init
+  parameters:
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.saturation.saturation_step.SaturationStep
+  name: saturation
+  parameters:
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.refpix.refpix_step.RefPixStep
+  name: refpix
+  parameters:
+    cosine_interpolate: true
+    fft_interpolate: true
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    remove_offset: true
+    remove_trends: true
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.linearity.linearity_step.LinearityStep
+  name: linearity
+  parameters:
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.dark_current.dark_current_step.DarkCurrentStep
+  name: dark_current
+  parameters:
+    dark_output: null
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.ramp_fitting.ramp_fit_step.RampFitStep
+  name: rampfit
+  parameters:
+    algorithm: ols_cas22
+    input_dir: ''
+    maximum_cores: none
+    opt_name: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_opt: false
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: rampfit
+    threshold_constant: null
+    threshold_intercept: null
+    use_ramp_jump_detection: true
+- class: romancal.assign_wcs.assign_wcs_step.AssignWcsStep
+  name: assign_wcs
+  parameters:
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.flatfield.flat_field_step.FlatFieldStep
+  name: flatfield
+  parameters:
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.photom.photom_step.PhotomStep
+  name: photom
+  parameters:
+    input_dir: ''
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    post_hooks: []
+    pre_hooks: []
+    save_results: false
+    search_output_file: true
+    skip: false
+    suffix: null
+- class: romancal.source_detection.source_detection_step.SourceDetectionStep
+  name: source_detection
+  parameters:
+    bkg_boxsize: 9
+    bkg_estimator: median
+    bkg_filter_size: 3
+    bkg_sigma: 2.0
+    calc_threshold: true
+    fit_psf: true
+    input_dir: ''
+    kernel_fwhm: null
+    max_sources: null
+    min_separation: 11
+    output_cat_filetype: asdf
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: false
+    peakmax: 100000.0
+    post_hooks: []
+    pre_hooks: []
+    roundhi: 1.0
+    roundlo: -1.0
+    save_catalogs: false
+    save_results: false
+    scalar_threshold: null
+    search_output_file: true
+    sharphi: 1.0
+    sharplo: 0.0
+    skip: false
+    snr_threshold: 3.0
+    suffix: null
+- class: romancal.tweakreg.tweakreg_step.TweakRegStep
+  name: tweakreg
+  parameters:
+    abs_fitgeometry: rshift
+    abs_minobj: 15
+    abs_nclip: 3
+    abs_refcat: GAIADR3
+    abs_searchrad: 6.0
+    abs_separation: 0.1
+    abs_sigma: 3.0
+    abs_tolerance: 0.7
+    abs_use2dhist: true
+    catalog_format: ascii.ecsv
+    catalog_path: ''
+    catfile: ''
+    enforce_user_order: false
+    expand_refcat: false
+    fitgeometry: rshift
+    input_dir: ''
+    minobj: 15
+    nclip: 3
+    output_dir: null
+    output_ext: .asdf
+    output_file: null
+    output_use_index: true
+    output_use_model: true
+    post_hooks: []
+    pre_hooks: []
+    save_abs_catalog: false
+    save_results: false
+    search_output_file: true
+    searchrad: 2.0
+    separation: 1.0
+    sigma: 3.0
+    skip: false
+    suffix: null
+    tolerance: 0.7
+    use2dhist: true
+    use_custom_catalogs: false
+...

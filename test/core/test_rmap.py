@@ -449,7 +449,7 @@ def test_validate_mapping_ambiguous_roman(roman_serverless_state, roman_data, ca
     with caplog.at_level(logging.INFO, logger="CRDS"):
         r.validate_mapping()
         out = caplog.text
-    expected = """ Match('ROMAN.META.INSTRUMENT.DETECTOR [DETECTOR]', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]') : ('WFI01', 'F158') : 
+    expected = """Match('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT') : ('WFI01', 'F158') :
 ----------------------------------------
 Match case
 ('WFI01', 'F158') : UseAfter({

@@ -260,7 +260,6 @@ class TypeParameters:
         is nominally a .tpn filename and can vary by observatory, instrument, and type as well
         as by functions on the header of `filename`.
         """
-        results = []
         def append_tpn_level(results, instrument, filekind):
             """Append the validator key for one level of the `instrument`
             and `filekind` mutating list `results`.
@@ -273,9 +272,32 @@ class TypeParameters:
                 log.verbose_warning("Can't find TPN key for",
                     (instrument, filekind, field), ":", str(exc),
                                     verbosity=75)
+
+        def subkinds(filekind, sep='-'):
+            """Generate list of subkinds
+
+            A subkind is defined as the parts of a filekind separated by a dash `-`.
+
+            This is initially implemented to support the parameter references files
+            where, conceptually, all "pars" files are a common filekind, yet practically
+            there is a separate filekind for each step. This allows applying common criteria
+            to all filekinds sharing the same prefix, such as "pars-".
+
+            The returned generator produces a list that goes from the specific to more general,
+            matching the overall philosophy of the calls to `append_tpn_levels`.
+
+            Examples
+            --------
+            >>> subkinds('pars-detector1')
+            ['pars', 'pars-detector1']
+            """
+            return reversed([filekind[:i] for i, ltr in enumerate(filekind) if ltr == sep] + [filekind])
+
+        results = []
         append_tpn_level(results, instrument, filekind)
         append_tpn_level(results, instrument, "all")
-        append_tpn_level(results, "all", filekind)
+        for subkind in subkinds(filekind):
+            append_tpn_level(results, "all", subkind)
         append_tpn_level(results, "all", "all")
         return results
 

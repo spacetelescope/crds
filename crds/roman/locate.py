@@ -345,6 +345,9 @@ def ref_properties_from_header(filename):
             "Can't identify instrument of", repr(name), ":", str(exc)) from exc
     try:
         filekind = header.get('ROMAN.META.REFTYPE', 'UNDEFINED').lower()
+        # Not all headers are roman datamodels.
+        if filekind == 'undefined':
+            filekind = header.get('META.REFTYPE', 'UNDEFINED').lower()
         assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
     except Exception as exc:
         raise exceptions.CrdsNamingError("Can't identify ROMAN.META.REFTYPE of", repr(name))

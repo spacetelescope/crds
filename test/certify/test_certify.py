@@ -789,7 +789,7 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
         certify.certify_file(fpath, "roman_0003.pmap", observatory="roman")
         out = caplog.text
         assert "Validation error" in out
-        assert "This ain't no valid time" in out
+        assert "yesterday" in out
 
 
 @mark.roman
@@ -803,22 +803,7 @@ def test_certify_roman_invalid_asdf_tpn(roman_test_cache_state, roman_data, capl
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_f158_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-    expected_out = f"""Certifying '{roman_data}/roman_wfi16_f158_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-In 'roman_wfi16_f158_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT [FITS unknown]' : Value 'BAD' is not one of ['ANY',
-'CLEAR',
-'DARK',
-'F062',
-'F087',
-'F106',
-'F129',
-'F146',
-'F158',
-'F184',
-'F213',
-'GRISM',
-'N/A',
-'PRISM',
-'UNKNOWN']"""
+    expected_out = """Validation error : 'BAD' is not one of ['F062', 'F087', 'F106', 'F129', 'F146', 'F158', 'F184', 'F213', 'GRISM', 'PRISM', 'DARK']"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -860,10 +845,7 @@ def test_certify_roman_invalid_spec_asdf_tpn(roman_test_cache_state, roman_data,
     with caplog.at_level(logging.INFO, logger="CRDS"):
         certify.certify_file(f"{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf", "roman_0003.pmap", observatory="roman")
         out = caplog.text
-        expected_out = f"""Certifying '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' as 'ASDF' relative to context 'roman_0003.pmap'
-In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Error mapping reference names and values to dataset names and values : Bad USEAFTER time format = 'yesterday'
-In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking 'ROMAN.META.USEAFTER [USEAFTER]' : Invalid 'Jwstdate' format 'yesterday' should be '2018-12-22T00:00:00'
-In 'roman_wfi16_grism_flat_invalid_tpn.asdf' : Checking ASDF tag validity for '{roman_data}/roman_wfi16_grism_flat_invalid_tpn.asdf' : 'dict' object has no attribute '_tag'"""
+        expected_out = """'BAD' is not one of ['F062', 'F087', 'F106', 'F129', 'F146', 'F158', 'F184', 'F213', 'GRISM', 'PRISM', 'DARK']"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -2989,5 +2971,42 @@ Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT
 instrument='MIRI' type='IPC' data='{jwst_data}/jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
 Checking JWST datamodels.
 1 errors""".splitlines()
+    for line in expected:
+        assert line in out
+
+
+@mark.roman
+@mark.certify
+def test_certify_pars(roman_test_cache_state, roman_data, caplog):
+    """Test that parameter references certify positive.
+    """
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        certify.certify_file(f"{roman_data}/roman_wfi_pars-exposurepipeline.asdf", "roman_0006.pmap", observatory="roman")
+        out = caplog.text
+    assert len(out.splitlines()) <= 2 
+
+
+@mark.roman
+@mark.certify
+def test_certify_pars_badtype(roman_test_cache_state, roman_data, caplog):
+    """Test parameter references check reftype.
+    """
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        certify.certify_file(f"{roman_data}/roman_wfi_pars-exposurepipeline_badtype.asdf", "roman_0006.pmap", observatory="roman")
+        out = caplog.text
+    expected = """Can't identify ROMAN.META.REFTYPE""".splitlines()
+    for line in expected:
+        assert line in out
+
+
+@mark.roman
+@mark.certify
+def test_certify_pars_badschema(roman_test_cache_state, roman_data, caplog):
+    """Test parameter references check general schema validation failures.
+    """
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        certify.certify_file(f"{roman_data}/roman_wfi_pars-exposurepipeline_invalid_schema.asdf", "roman_0006.pmap", observatory="roman")
+        out = caplog.text
+    expected = """Invalid instrument 'bad'""".splitlines()
     for line in expected:
         assert line in out

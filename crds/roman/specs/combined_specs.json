@@ -10,6 +10,17 @@
             "text_descr":"All instruments and reference file types.",
             "tpn":"all_all.tpn",
             "unique_rowkeys":null
+        },
+        "pars":{
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filetype":"pars",
+            "instrument":"all",
+            "ld_tpn":"all_pars_ld.tpn",
+            "suffix":"pars",
+            "text_descr":"All parameters reference file types.",
+            "tpn":"all_pars.tpn",
+            "unique_rowkeys":null
         }
     },
     "wfi":{
