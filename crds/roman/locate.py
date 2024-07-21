@@ -479,14 +479,15 @@ def reference_keys_to_dataset_keys(rmapping, header):
     crds.core.exceptions.InvalidUseAfterFormat: Bad USEAFTER time format = 'bad user after'
     """
     header = dict(header)
-
+    # parameter reference files and data models have dropped the "ROMAN" prefix
+    paramfile = True if len(str(os.path.basename(rmapping)).split("-")) > 1 else False
+    prefix = "META" if paramfile is True else "ROMAN.META"
     # Basic common pattern translations
     translations = {
-        "ROMAN.META.EXPOSURE.P_EXPTYPE" : "ROMAN.META.EXPOSURE.TYPE",
-        "ROMAN.META.INSTRUMENT.P_DETECTOR"  : "ROMAN.META.INSTRUMENT.DETECTOR",
-        "ROMAN.META.INSTRUMENT.P_OPTICAL_ELEMENT": "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT",
+        f"{prefix}.EXPOSURE.P_EXPTYPE": f"{prefix}.EXPOSURE.TYPE",
+        f"{prefix}.INSTRUMENT.P_DETECTOR"  : f"{prefix}.INSTRUMENT.DETECTOR",
+        f"{prefix}.INSTRUMENT.P_OPTICAL_ELEMENT": f"{prefix}.INSTRUMENT.OPTICAL_ELEMENT",
     }
-
     # Rmap header reference_to_dataset field tranlations,  can override basic!
     try:
         translations.update(rmapping.reference_to_dataset)
@@ -522,22 +523,21 @@ def reference_keys_to_dataset_keys(rmapping, header):
                          "to value of", repr(rkey), "=", repr(rval))
                 header[dkey] = rval
 
-    if "ROMAN.META.SUBARRAY.NAME" not in header:
-        header["ROMAN.META.SUBARRAY.NAME"] = "UNDEFINED"
-
-    if "ROMAN.META.EXPOSURE.TYPE" not in header:
-        header["ROMAN.META.EXPOSURE.TYPE"] = "UNDEFINED"
+    if f"{prefix}.SUBARRAY.NAME" not in header:
+        header[f"{prefix}.SUBARRAY.NAME"] = "UNDEFINED"
+    if f"{prefix}.EXPOSURE.TYPE" not in header:
+        header[f"{prefix}.EXPOSURE.TYPE"] = "UNDEFINED"
 
     # If USEAFTER is defined,  or we're configured to fake it...
     #   don't invent one if its missing and we're not faking it.
-    if "ROMAN.META.USEAFTER" in header or config.ALLOW_BAD_USEAFTER:
+    if f"{prefix}.USEAFTER" in header or config.ALLOW_BAD_USEAFTER:
 
         # Identify this as best as possible,
-        filename = header.get("ROMAN.META.FILENAME", None) or rmapping.filename
+        filename = header.get(f"{prefix}.FILENAME", None) or rmapping.filename
 
         reformatted = timestamp.reformat_useafter(filename, header).split()
         dt_string = f"{reformatted[0]} {reformatted[1]}"
-        header["ROMAN.META.EXPOSURE.START_TIME"] = dt_string
+        header[f"{prefix}.EXPOSURE.START_TIME"] = dt_string
 
     log.verbose("reference_to_dataset output header:\n", log.PP(header), verbosity=80)
 
