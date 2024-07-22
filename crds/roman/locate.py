@@ -479,8 +479,8 @@ def reference_keys_to_dataset_keys(rmapping, header):
     crds.core.exceptions.InvalidUseAfterFormat: Bad USEAFTER time format = 'bad user after'
     """
     header = dict(header)
-    # parameter reference files and data models have dropped the "ROMAN" prefix
-    paramfile = True if len(str(os.path.basename(rmapping)).split("-")) > 1 else False
+    # if parameter reference file (contains "-"), there is no "ROMAN" prefix
+    paramfile = True if len(rmapping.name.split("-")) > 1 else False
     prefix = "META" if paramfile is True else "ROMAN.META"
     # Basic common pattern translations
     translations = {
