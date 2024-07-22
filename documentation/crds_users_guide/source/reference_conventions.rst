@@ -142,7 +142,7 @@ Each mission defines a small set of required keywords for reference file provena
         ROMAN_DATAMODELS             VALUES
         ==========================   =====================
         ROMAN.META.TELESCOPE         ROMAN
-        ROMAN.META.INSTRUMENT.NAME   MIRI
+        ROMAN.META.INSTRUMENT.NAME   WFI
         ROMAN.META.REFERENCE.TYPE    DARK
         ROMAN.META.USEAFTER          2017-10-01T00:00:00
         ROMAN.META.AUTHOR            Homer Simpson
