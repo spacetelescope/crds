@@ -8,7 +8,11 @@ header = {
     'name' : 'roman_wfi_pars-fluxstep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '6f243a719f87ea2f36a7cf7b6a128ec096eae71d',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '437697f4b39b3b3b02428c237da2d63e235662fb',
     'suffix' : 'pars-fluxstep',
     'text_descr' : 'FluxStep runtime parameters',
 }

@@ -8,7 +8,11 @@ header = {
     'name' : 'roman_wfi_pars-darkcurrentstep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '45f4c04f38701c5ce6da2ed234a61c9f1ae36d00',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '3cde31e615ef4b38911578908c4dfd6649601f03',
     'suffix' : 'pars-darkcurrentstep',
     'text_descr' : 'DarkCurrentStep runtime parameters',
 }

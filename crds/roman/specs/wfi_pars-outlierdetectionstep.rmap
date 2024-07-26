@@ -8,7 +8,12 @@ header = {
     'name' : 'roman_wfi_pars-outlierdetectionstep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE', 'ROMAN.META.INSTRUMENT.DETECTOR'), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : 'af4b3c2a128f8c2017286e8722e6917cfdacc0bb',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+        'META.INSTRUMENT.DETECTOR' : 'ROMAN.META.INSTRUMENT.DETECTOR',
+    },
+    'sha1sum' : 'b80e2be97322108a798b291a24a5de5a78804b3e',
     'suffix' : 'pars-outlierdetectionstep',
     'text_descr' : 'OutlierDetectionStep runtime parameters',
 }
