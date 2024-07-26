@@ -9,7 +9,10 @@ header = {
     'name' : 'roman_wfi_pars-rampfitstep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : ((), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '1bbb7976ffd4c8695c8fd27d57cd6375eab73347',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+    },
+    'sha1sum' : '517e9e9a09d86f38710398684afd0105924e15d0',
     'suffix' : 'pars-rampfitstep',
     'text_descr' : 'RampFitStep runtime parameters',
 }

@@ -3010,3 +3010,14 @@ def test_certify_pars_badschema(roman_test_cache_state, roman_data, caplog):
     expected = """Invalid instrument 'bad'""".splitlines()
     for line in expected:
         assert line in out
+
+# Uncomment once crds-cache-test repo has been updated
+# @mark.roman
+# @mark.certify
+# def test_certify_roman_pars_jumpstep(roman_test_cache_state, roman_data):
+#     """Test certify for jumpstep parameter reference file.
+#     TODO: once it becomes possible to do so, this file should be created on the fly using 
+#     roman_datamodels.maker_utils in order to test validation against the most current schema.
+#     The function for doing so should be added to test/data/roman/mkdata.py
+#     """
+#     certify.certify_file(f"{roman_data}/roman_wfi_pars-jumpstep_0001.asdf", "roman_0006.pmap", observatory="roman")

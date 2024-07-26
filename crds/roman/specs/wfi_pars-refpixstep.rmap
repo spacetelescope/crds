@@ -8,7 +8,11 @@ header = {
     'name' : 'roman_wfi_pars-refpixstep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : 'b9fe9fba7c184531656180ac2ba8ed318c34e98d',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '0b4506700cb11e419cf2f56e0146aec9ca6e6ece',
     'suffix' : 'pars-refpixstep',
     'text_descr' : 'RefPixStep runtime parameters',
 }

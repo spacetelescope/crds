@@ -537,7 +537,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
         reformatted = timestamp.reformat_useafter(filename, header).split()
         dt_string = f"{reformatted[0]} {reformatted[1]}"
-        header[f"{prefix}.EXPOSURE.START_TIME"] = dt_string
+        header["ROMAN.META.EXPOSURE.START_TIME"] = dt_string
 
     log.verbose("reference_to_dataset output header:\n", log.PP(header), verbosity=80)
 

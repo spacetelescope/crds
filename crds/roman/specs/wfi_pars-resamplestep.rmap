@@ -8,7 +8,11 @@ header = {
     'name' : 'roman_wfi_pars-resamplestep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '873e56616b3291f9efc613f467bc92902820e236',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '40a68a66c53deb1aa73cd5843db80b41dc07c94e',
     'suffix' : 'pars-resamplestep',
     'text_descr' : 'ResampleStep runtime parameters',
 }

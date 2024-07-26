@@ -1,0 +1,56 @@
+#ASDF 1.0.0
+#ASDF_STANDARD 1.5.0
+%YAML 1.1
+%TAG ! tag:stsci.edu:asdf/
+--- !core/asdf-1.1.0
+asdf_library: !core/software-1.0.0 {author: The ASDF Developers, homepage: 'http://github.com/asdf-format/asdf',
+  name: asdf, version: 3.2.0}
+history:
+  extensions:
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://asdf-format.org/core/extensions/core-1.5.0
+    software: !core/software-1.0.0 {name: asdf, version: 3.2.0}
+class: romancal.jump.jump_step.JumpStep
+meta:
+  author: William Schultz
+  date: '2024-06-05T00:00:00.710077'
+  description: Parameter File for WFI Romancal Jump Step
+  exposure: {p_exptype: WFI_IMAGE|WFI_GRISM|WFI_PRISM|, type: WFI_IMAGE}
+  instrument: {detector: WFI01, name: WFI, optical_element: F062, p_detector: WFI01|WFI02|WFI03|WFI04|WFI05|WFI06|WFI07|WFI08|WFI09|WFI10|WFI11|WFI12|WFI13|WFI14|WFI14|WFI16|WFI17|WFI18|,
+    p_optical_element: F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK|}
+  origin: STSCI
+  pedigree: DUMMY
+  reftype: pars-jumpstep
+  telescope: ROMAN
+  title: Jump Parameters
+  useafter: '2020-01-01T00:00:00'
+name: JumpStep
+parameters:
+  expand_factor: 2.0
+  expand_large_events: false
+  flag_4_neighbors: true
+  four_group_rejection_threshold: 190.0
+  input_dir: ''
+  max_jump_to_flag_neighbors: 1000.0
+  maximum_cores: none
+  min_jump_area: 5.0
+  min_jump_to_flag_neighbors: 10.0
+  min_sat_area: 1.0
+  output_dir: null
+  output_ext: .asdf
+  output_file: null
+  output_use_index: true
+  output_use_model: false
+  post_hooks: []
+  pre_hooks: []
+  rejection_threshold: 500.0
+  sat_required_snowball: true
+  save_results: false
+  search_output_file: true
+  skip: false
+  suffix: null
+  three_group_rejection_threshold: 200.0
+  use_ellipses: false
+  use_ramp_jump_detection: true
+...

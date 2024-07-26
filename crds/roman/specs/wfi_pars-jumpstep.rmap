@@ -8,7 +8,11 @@ header = {
     'name' : 'roman_wfi_pars-jumpstep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '2476df99dd9bd0854a2545cf70d69f0c8707ba81',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '379be600ed1097bd929fe298b46b5ed25106852a',
     'suffix' : 'pars-jumpstep',
     'text_descr' : 'JumpStep runtime parameters',
 }
