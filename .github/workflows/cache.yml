@@ -2,13 +2,21 @@ name: download CRDS test cache
 
 on:
   workflow_call:
-    outputs:
+    inputs:
       path:
-        value: ${{ jobs.cache.outputs.path }}
+        description: path to download files to and cache
+        type: string
+        required: false
+        default: ''
+    outputs:
+      cache_path:
+        value: ${{ jobs.cache.outputs.cache_path }}
+      key:
+        value: ${{ jobs.cache.outputs.cache_key }}
+      path:
+        value: ${{ jobs.cache.outputs.crds_path }}
       testing_cache:
         value: ${{ jobs.cache.outputs.testing_cache }}
-      key:
-        value: ${{ jobs.cache.outputs.key }}
   workflow_dispatch:
   schedule:
     # Weekly Monday midnight
@@ -31,7 +39,7 @@ jobs:
     name: download and cache CRDS test files
     runs-on: ubuntu-latest
     steps:
-      - run: echo CRDS_TEST_ROOT=${{ runner.temp }}/crds >> $GITHUB_ENV
+      - run: echo CRDS_TEST_ROOT=${{ inputs.path != '' && inputs.path || runner.temp }} >> $GITHUB_ENV
       - run: |
           echo CRDS_PATH=${{ env.CRDS_TEST_ROOT }}/crds-cache-default-test >> $GITHUB_ENV
           echo CRDS_TESTING_CACHE=${{ env.CRDS_TEST_ROOT }}/crds-cache-test >> $GITHUB_ENV
@@ -95,6 +103,7 @@ jobs:
             ${{ env.CRDS_TESTING_CACHE }}
           key: ${{ steps.key.outputs.key }}
     outputs:
-      path: ${{ env.CRDS_PATH }}
-      testing_cache: ${{ env.CRDS_TESTING_CACHE }}
-      key: ${{ steps.key.outputs.key }}
+      cache_path: ${{ env.CRDS_TEST_ROOT }}
+      cache_key: ${{ steps.key.outputs.key }}
+      crds_path: ${{ env.CRDS_PATH }}
+      crds_testing_cache: ${{ env.CRDS_TESTING_CACHE }}
