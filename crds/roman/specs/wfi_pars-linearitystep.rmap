@@ -8,7 +8,11 @@ header = {
     'name' : 'roman_wfi_pars-linearitystep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : 'c88ea40348060277a00a098c169706a43ccff15f',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '9a70026939ad0626c4326a28b3f897d7559131af',
     'suffix' : 'pars-linearitystep',
     'text_descr' : 'LinearityStep runtime parameters',
 }

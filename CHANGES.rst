@@ -1,17 +1,35 @@
-11.18.0 (unreleased)
+11.18.1 (2024-07-26)
 ====================
+
+ROMAN
+-----
+
+- Added reference_to_dataset keypairs for all roman parameter rmaps. Translate useafter to include 'ROMAN' prefix for all reference types (parameter refs included). Added jumpstep test file and new certify test (commented out until crds-cache-test is updated to include this). [#1055]
+
+11.18.0 (2024-07-26)
+====================
+
+ROMAN
+-----
+- Resolves CCD-1482, github issue 1053. Running certify on a Roman reference file now checks the correct set of header keywords depending on whether the file is a parameter reference type (prefix "META") or regular reference type (prefix "ROMAN.META"). [#1054]
+
+
+11.17.26 (2024-07-09)
+=====================
 
 ROMAN
 -----
 
 - Removed all redundant tpn files for roman datamodel-represented references. Certify parameter reference files [#1050]
 
-11.17.24 (20204-06-10)
+11.17.25 (2024-06-12)
 =====================
 
 JWST
 ----
-- Added pars-darkcurrentstep rmaps for NIRISS, NIRCAM and NIRSPEC [#1045]
+
+- Fixed some issues with rmap file parkey selections for NIRISS, NIRCAM and NIRSPEC. [#1046]
+
 
 11.17.23 (2024-06-03)
 =====================

@@ -8,7 +8,12 @@ header = {
     'name' : 'roman_wfi_pars-sourcedetectionstep.rmap',
     'observatory' : 'ROMAN',
     'parkey' : (('ROMAN.META.EXPOSURE.TYPE', 'ROMAN.META.INSTRUMENT.DETECTOR'), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : 'd9ffff31a570b9007751d9f02ce55d837c7f4759',
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+        'META.INSTRUMENT.DETECTOR' : 'ROMAN.META.INSTRUMENT.DETECTOR',
+    },
+    'sha1sum' : 'b75d3cf65fd36d719062bafc72053afe1aa1472e',
     'suffix' : 'pars-sourcedetectionstep',
     'text_descr' : 'SourceDetectionStep runtime parameters',
 }

@@ -321,7 +321,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"006b320c237efedf59afc98275582f6bf0ed619b",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"248deffa52bc0de6d8a44139fbd561467eb8cfb6",
             "suffix":"pars-assignwcsstep",
             "text_descr":"AssignWcsStep runtime parameters",
             "tpn":"wfi_pars-assignwcsstep.tpn",
@@ -346,7 +350,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"45f4c04f38701c5ce6da2ed234a61c9f1ae36d00",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"3cde31e615ef4b38911578908c4dfd6649601f03",
             "suffix":"pars-darkcurrentstep",
             "text_descr":"DarkCurrentStep runtime parameters",
             "tpn":"wfi_pars-darkcurrentstep.tpn",
@@ -371,7 +379,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"dd6cf0cdeacf634a860c39cdf438a06bc27097f3",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"0d25601ddf2b43f51ed54e1660db6e2c0f6c8dd4",
             "suffix":"pars-dqinitstep",
             "text_descr":"DQInitStep runtime parameters",
             "tpn":"wfi_pars-dqinitstep.tpn",
@@ -400,7 +412,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"07a8c2f7fe898212e56cc4854d4ff8c350b1c049",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"8a30602dce0211e962dac8988a35b3621287b564",
             "suffix":"pars-exposurepipeline",
             "text_descr":"Step parameters for ExposurePipeline",
             "tpn":"wfi_pars-exposurepipeline.tpn",
@@ -425,7 +441,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"690afb5354f33be070cb5805053de4879a483fc1",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"fcdce6a7535888352a820f06a509bc2a28f2545c",
             "suffix":"pars-flatfieldstep",
             "text_descr":"FlatFieldStep runtime parameters",
             "tpn":"wfi_pars-flatfieldstep.tpn",
@@ -450,7 +470,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"6f243a719f87ea2f36a7cf7b6a128ec096eae71d",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"437697f4b39b3b3b02428c237da2d63e235662fb",
             "suffix":"pars-fluxstep",
             "text_descr":"FluxStep runtime parameters",
             "tpn":"wfi_pars-fluxstep.tpn",
@@ -479,7 +503,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"a7c65100f35a11b668721a3c6853d7ad2ed6d597",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"3658f4741e2ca45ae61dc938f096d015477f821b",
             "suffix":"pars-highlevelpipeline",
             "text_descr":"Step parameters for HighLevelPipeline",
             "tpn":"wfi_pars-highlevelpipeline.tpn",
@@ -504,7 +532,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"2476df99dd9bd0854a2545cf70d69f0c8707ba81",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"379be600ed1097bd929fe298b46b5ed25106852a",
             "suffix":"pars-jumpstep",
             "text_descr":"JumpStep runtime parameters",
             "tpn":"wfi_pars-jumpstep.tpn",
@@ -529,7 +561,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"c88ea40348060277a00a098c169706a43ccff15f",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"9a70026939ad0626c4326a28b3f897d7559131af",
             "suffix":"pars-linearitystep",
             "text_descr":"LinearityStep runtime parameters",
             "tpn":"wfi_pars-linearitystep.tpn",
@@ -555,7 +591,12 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"af4b3c2a128f8c2017286e8722e6917cfdacc0bb",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE",
+                "META.INSTRUMENT.DETECTOR":"ROMAN.META.INSTRUMENT.DETECTOR"
+            },
+            "sha1sum":"b80e2be97322108a798b291a24a5de5a78804b3e",
             "suffix":"pars-outlierdetectionstep",
             "text_descr":"OutlierDetectionStep runtime parameters",
             "tpn":"wfi_pars-outlierdetectionstep.tpn",
@@ -580,7 +621,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"15643a08ae7456d3cdee7cf0dd7c00b9a00cb601",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"1de85960b6993e63d6b11d70b36d74a985588ca6",
             "suffix":"pars-photomstep",
             "text_descr":"PhotomStep runtime parameters",
             "tpn":"wfi_pars-photomstep.tpn",
@@ -607,7 +652,10 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"1bbb7976ffd4c8695c8fd27d57cd6375eab73347",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME"
+            },
+            "sha1sum":"517e9e9a09d86f38710398684afd0105924e15d0",
             "suffix":"pars-rampfitstep",
             "text_descr":"RampFitStep runtime parameters",
             "tpn":"wfi_pars-rampfitstep.tpn",
@@ -632,7 +680,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"b9fe9fba7c184531656180ac2ba8ed318c34e98d",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"0b4506700cb11e419cf2f56e0146aec9ca6e6ece",
             "suffix":"pars-refpixstep",
             "text_descr":"RefPixStep runtime parameters",
             "tpn":"wfi_pars-refpixstep.tpn",
@@ -657,7 +709,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"873e56616b3291f9efc613f467bc92902820e236",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"40a68a66c53deb1aa73cd5843db80b41dc07c94e",
             "suffix":"pars-resamplestep",
             "text_descr":"ResampleStep runtime parameters",
             "tpn":"wfi_pars-resamplestep.tpn",
@@ -682,7 +738,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"39a0355ed18fa062b217bb404912580a13f82056",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"9a9b0145737842dcc78279103c5b3ff0b0b12e5c",
             "suffix":"pars-saturationstep",
             "text_descr":"SaturationStep runtime parameters",
             "tpn":"wfi_pars-saturationstep.tpn",
@@ -707,7 +767,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"b490dcd7b81ce0c3933d0c63bd82f9c16fea942c",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"8b41475be16a1db03d703419103168f86c699b35",
             "suffix":"pars-skymatchstep",
             "text_descr":"SkyMatchStep runtime parameters",
             "tpn":"wfi_pars-skymatchstep.tpn",
@@ -733,7 +797,12 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"d9ffff31a570b9007751d9f02ce55d837c7f4759",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE",
+                "META.INSTRUMENT.DETECTOR":"ROMAN.META.INSTRUMENT.DETECTOR"
+            },
+            "sha1sum":"b75d3cf65fd36d719062bafc72053afe1aa1472e",
             "suffix":"pars-sourcedetectionstep",
             "text_descr":"SourceDetectionStep runtime parameters",
             "tpn":"wfi_pars-sourcedetectionstep.tpn",
@@ -758,7 +827,11 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"422cecde85ba2d852f63c96108e990418ca51df8",
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"73d54f6101ec8a8032651d564602f2214c7470f5",
             "suffix":"pars-tweakregstep",
             "text_descr":"TweakRegStep runtime parameters",
             "tpn":"wfi_pars-tweakregstep.tpn",

@@ -82,7 +82,7 @@ import re
 
 # import yaml     DEFERRED
 
-from pkg_resources import parse_version
+from packaging.version import Version
 
 # --------------------------------------------------------------------------------------
 
@@ -330,7 +330,7 @@ def _reduce_ver(ver):
     >>> _reduce_ver("1.2.3.4")
     (1, 2, 3)
     """
-    ver = parse_version(ver).base_version
+    ver = Version(ver).base_version
     parts = ver.split(".")
     while len(parts) < 3:
         parts.append("0")
