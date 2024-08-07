@@ -1,9 +1,9 @@
 """This tests, through the use of bestrefs, the functioning of table effects."""
-from pathlib import Path
+# from pathlib import Path
 from pytest import mark
 
-from crds.core import log, utils
-from crds import data_file
+from crds.core import log  #, utils
+# from crds import data_file
 
 from crds.bestrefs import BestrefsScript
 

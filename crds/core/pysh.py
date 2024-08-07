@@ -47,8 +47,6 @@ import os.path
 import inspect
 import shlex
 
-from io import StringIO
-
 from subprocess import PIPE, STDOUT, Popen
 
 # =========================================================================

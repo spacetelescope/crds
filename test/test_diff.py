@@ -53,7 +53,7 @@ TEST CASES
 ----------
 """
 import subprocess
-import os
+# import os
 import asdf
 from pytest import mark, fixture
 from crds.diff import DiffScript

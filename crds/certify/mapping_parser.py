@@ -9,7 +9,7 @@ errors in hand edited rmaps.
 """
 from collections import namedtuple
 
-from crds.core import rmap, selectors, log, exceptions, config
+from crds.core import selectors, log, exceptions, config
 
 # NOTE:  #-comments are treated as white space and currently dropped when an rmap is rewritten
 # as a new version.

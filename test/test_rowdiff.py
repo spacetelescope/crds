@@ -3,7 +3,7 @@
 from pathlib import Path
 from pytest import mark
 
-from crds.core import log, utils
+from crds.core import log  #, utils
 
 from crds.rowdiff import RowDiffScript
 

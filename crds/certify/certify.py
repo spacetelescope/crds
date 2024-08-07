@@ -7,7 +7,6 @@ consistent with outside systems.
 import os
 from collections import defaultdict
 import gc
-import uuid
 import re
 
 import asdf
@@ -18,14 +17,13 @@ import numpy as np
 import crds
 
 from crds.core import pysh, log, config, utils, rmap, cmdline
-from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKeywordError, MappingInsertionError
+from crds.core.exceptions import InvalidFormatError, ValidationError, MissingKeywordError
 from crds.core import reftypes
 
 from crds import data_file, diff
 from crds.io import tables
 from crds.client import api
 from crds.refactoring import refactor
-# from crds.io import abstract
 
 from . import mapping_parser
 from . import validators

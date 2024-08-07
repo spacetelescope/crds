@@ -6,7 +6,7 @@ import os.path
 
 # ============================================================================
 
-from crds.core import exceptions, rmap, log, cmdline, utils
+from crds.core import rmap, log, cmdline, utils
 from crds.core.log import srepr
 from crds import diff
 
