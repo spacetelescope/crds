@@ -1,3 +1,11 @@
+11.18.1 (2024-07-26)
+====================
+
+ROMAN
+-----
+
+- Added reference_to_dataset keypairs for all roman parameter rmaps. Translate useafter to include 'ROMAN' prefix for all reference types (parameter refs included). Added jumpstep test file and new certify test (commented out until crds-cache-test is updated to include this). [#1055]
+
 11.18.0 (2024-07-26)
 ====================
 
