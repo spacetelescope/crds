@@ -4,7 +4,7 @@
 Documentation
 -------------
 
-- Added info on using "--after-context" flag in the crds.sync command line help output. The web user guide (command line tools page) has been updated as well to include this information. [#1059]
+- Added info on using "--after-context" flag in the crds.sync command line help output. The web user guide (command line tools page) has been updated as well to include this information. [#1060]
 
 
 11.18.1 (2024-07-26)
