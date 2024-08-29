@@ -377,6 +377,16 @@ cache which organizes and can locate files in a standard way.
     
     this will also recursively download all the mappings referred to by .pmaps
     0001, 002, 0003.
+
+
+    After Context: Specify a Minimum Context to Sync:
+
+      .. code-block:: bash
+    
+          $ crds sync --after-context roman_0062.pmap
+    
+    will recursively download all contexts after and including the specified context.
+
     
     Synced contexts can be specified as `--all` contexts:
 

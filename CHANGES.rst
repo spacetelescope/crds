@@ -1,10 +1,16 @@
-11.18.2 (2024-08-29)
+11.18.2 (unreleased)
 ====================
 
 JWST
 -----
 
-- Resolves CCD-1501 by adding a new reference file niriss_pastasoss.rmap. [#1059]
+- Resolves CCD-1501 by adding a new reference file niriss_pastasoss.rmap. [#1061]
+
+Documentation
+-------------
+
+- Added info on using "--after-context" flag in the crds.sync command line help output. The web user guide (command line tools page) has been updated as well to include this information. [#1060]
+
 
 
 11.18.1 (2024-07-26)
