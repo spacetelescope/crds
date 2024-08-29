@@ -422,11 +422,17 @@ def get_final_context(info, context):
     """
     env_context = config.get_crds_env_context()
     if context:  # context parameter trumps all, <observatory>-operational is default
-        input_context = context
+        if context == 'latest':
+            input_context = str(info.operational_context)
+        else:
+            input_context = context
         log.verbose("Using reference file selection rules", srepr(input_context), "defined by caller.")
         info.status = "context parameter"
     elif env_context:
-        input_context = env_context
+        if env_context == 'latest':
+            input_context = str(info.operational_context)
+        else:
+            input_context = env_context
         log.verbose("Using reference file selection rules", srepr(input_context),
                     "defined by environment CRDS_CONTEXT.")
         info.status = "env var CRDS_CONTEXT"
@@ -453,7 +459,7 @@ def translate_date_based_context(context, observatory=None):
 
     info = get_config_info(observatory)
 
-    if context == info.observatory + "-operational":
+    if context == info.observatory + "-operational" or context == "latest":
         return info["operational_context"]
     elif context == info.observatory + "-edit":
         return info["edit_context"]
