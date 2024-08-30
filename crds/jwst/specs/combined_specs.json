@@ -5748,30 +5748,6 @@
             "tpn":"niriss_pars-whitelightstep.tpn",
             "unique_rowkeys":null
         },
-        "pastasoss":{
-            "derived_from":"handmade spec 08-29-2024",
-            "extra_keys":null,
-            "file_ext":".asdf",
-            "filekind":"pastasoss",
-            "filetype":"PASTASOSS",
-            "instrument":"NIRISS",
-            "ld_tpn":"niriss_pastasoss_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"niriss_pastasoss.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.INSTRUMENT.DETECTOR",
-                    "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.EXP_TYPE"
-                ]
-            ],
-            "sha1sum":"a31671af1e7395da3a01a10f7af0d05ffc274de0",
-            "suffix":"pastasoss",
-            "text_descr":"NIRISS SOSS trace location reference file",
-            "tpn":"niriss_pastasoss.tpn",
-            "unique_rowkeys":null
-        },
         "pathloss":{
             "classes":[
                 "Match",
