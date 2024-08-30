@@ -543,7 +543,7 @@ class TestBestrefs:
         with open(f"{self._tmp}/test_cos_combined.json") as pfile:
             header = json.load(pfile)
         header = header["LCE31SW6Q:LCE31SW6Q"]
-        assert header["BADTTAB"] == "N/A"
+        assert header["BADTTAB"] == "S7O1739KL_BADT.FITS"
         assert header["GSAGTAB"] == "X6L1439EL_GSAG.FITS"
         assert header["FLATFILE"] == "N/A"
 
