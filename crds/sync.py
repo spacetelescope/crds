@@ -90,6 +90,12 @@ class SyncScript(cmdline.ContextsScript):
 
         this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
 
+        AFTER CONTEXT: Sync all contexts after and including the specified context.
+
+            % crds sync --after-context roman_0061.pmap
+        
+        will recursively download all the mappings starting from the minimum context specified.
+
         Synced contexts can be specified as --all contexts::
 
             % crds sync --all
