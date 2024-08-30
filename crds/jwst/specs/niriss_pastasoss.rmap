@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'handmade spec 08-29-2024',
+    'file_ext' : '.asdf',
+    'filekind' : 'pastasoss',
+    'filetype' : 'PASTASOSS',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'niriss_pastasoss.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.EXP_TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '34bcbcff310a9524f0c855c82f4c16b3568edff0',
+    'suffix' : 'pastasoss',
+    'text_descr' : 'NIRISS SOSS trace location reference file',
+}
+
+selector = Match({
+})
