@@ -4,7 +4,7 @@
 JWST
 -----
 
-- Added TPN for niriss_pastasoss.rmap. [#1062]
+- Added TPN for niriss_pastasoss.rmap. [#1063]
 
 
 11.18.2 (2024-08-31)
