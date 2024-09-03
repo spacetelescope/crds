@@ -1,3 +1,11 @@
+11.18.4 (unreleased)
+====================
+
+General
+-------
+
+- Setting environment variable `CRDS_CONTEXT=latest` automatically sets the effective context to the latest operational context found on the CRDS Server. [#1062]
+
 11.18.3 (2024-09-03)
 ====================
 
