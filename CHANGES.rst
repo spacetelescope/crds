@@ -1,3 +1,13 @@
+12.0.0 (unreleased)
+====================
+
+General
+-------
+
+- Default context changed from "operational" to "latest". For JWST, the default context is the "build" context as determined by locally installed calibration software version. This can be overridden if CRDS_CONTEXT environment variable is explicitly set by user. 
+
+- Setting environment variable `CRDS_CONTEXT=latest` automatically sets the effective context to the latest operational context found on the CRDS Server. [#1062]
+
 11.18.4 (2024-09-10)
 ====================
 

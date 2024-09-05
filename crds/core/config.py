@@ -1250,7 +1250,7 @@ MAPPING_RE = re.compile(complete_re(MAPPING_RE_STR))
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
-    return isinstance(mapping, str) and mapping.endswith((".pmap", ".imap", ".rmap"))
+    return isinstance(mapping, str) and (mapping.endswith((".pmap", ".imap", ".rmap")) or mapping.lower() in ["latest", "build"])
 
 def is_simple_crds_mapping(mapping):
     """Return True IFF `mapping` implicitly or explicitly exists in the CRDS cache.
@@ -1361,7 +1361,7 @@ def is_mapping_spec(mapping):
 
 def is_context(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS CONTEXT, i.e. .pmap."""
-    return isinstance(mapping, str) and mapping.endswith((".pmap",))
+    return isinstance(mapping, str) and (mapping.endswith((".pmap",)) or mapping in ["latest", "build"])
 
 def is_context_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
