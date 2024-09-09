@@ -28,7 +28,7 @@ def _get_crds_ini_parser():
     """Load and return the environment from the CRDS rc file."""
     global CRDS_INI_PARSER
     if CRDS_INI_PARSER is None:
-        parser = configparser.SafeConfigParser()
+        parser = configparser.ConfigParser()
         with log.warn_on_exception("Failed reading CRDS rc file"):
             ini_path = _get_crds_ini_path()
             if os.path.exists(ini_path):
