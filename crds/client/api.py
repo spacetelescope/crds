@@ -308,11 +308,11 @@ def get_aui_best_references(date, dataset_ids):
     return bestrefs_map
 
 @utils.cached
-def get_default_context(observatory=None):
+def get_default_context(observatory=None, state="operational"):
     """Return the name of the latest pipeline mapping in use for processing
     files for `observatory`.
     """
-    return str(S.get_default_context(observatory))
+    return str(S.get_default_context(observatory, state))
 
 @utils.cached
 def get_context_by_date(date, observatory=None):
