@@ -292,7 +292,10 @@ def load_all_type_constraints(observatory):
     to customize the more generalized constraints loaded later.
     """
     from crds.core import rmap, heavy_client
-    pmap_name = heavy_client.load_server_info(observatory).operational_context
+    try:
+        pmap_name = heavy_client.load_server_info(observatory).latest_context
+    except AttributeError:
+        pmap_name = heavy_client.load_server_info(observatory).operational_context
     pmap = rmap.get_cached_mapping(pmap_name)
     locator = utils.get_locator_module(observatory)
     for instr in pmap.selections:

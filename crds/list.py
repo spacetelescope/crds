@@ -385,9 +385,7 @@ jwst_niriss_superbias_0005.rmap
             print(self.remote_context)
             return
         if self.args.build_context:
-            #TODO
-            #self.check_build_context()
-            print("This feature is coming soon")
+            self.check_build_context()
             return
 
         if self.args.resolve_contexts:
@@ -435,6 +433,12 @@ jwst_niriss_superbias_0005.rmap
         self.require_server_connection()
         with log.error_on_exception("Failed resolving remote context"):
             return api.get_remote_context(self.observatory, self.args.remote_context)
+
+    @property
+    def build_context(self):
+        self.require_server_connection()
+        with log.error_on_exception("Failed resolving build context"):
+            return api.get_build_context(self.observatory)
 
     @property
     def implied_files(self):

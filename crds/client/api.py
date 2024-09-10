@@ -34,6 +34,7 @@ from .proxy import CheckingProxy
 __all__ = [
     "get_default_observatory",
     "get_default_context",
+    "get_build_context",
     "get_context_by_date",
     "get_server_info",
     "get_cached_server_info",  # deprecated
@@ -337,16 +338,37 @@ def get_aui_best_references(date, dataset_ids):
 
 
 @utils.cached
-def get_default_context(observatory=None, state="operational"):
+def get_default_context(observatory=None, state="latest"):
     """Return the name of the latest pipeline mapping in use for processing
     files for `observatory`.
     """
     return str(S.get_default_context(observatory, state))
 
 
+def get_build_context(observatory=None):
+    """If available, return the name of the build context pipeline mapping in use for processing
+    files for `observatory`. Initially only planned use is for jwst but other mission
+    calibration pipeline sw is included as a template. If no match found, returns latest 
+    (formerly operational) context.
+    """
+    if observatory == 'jwst':
+        calver = get_jwst_cal()
+    else:
+        cal = dict(roman='romancal', hst='caldp')
+        try:
+            calver = importlib.metadata.version(cal.get(observatory,''))
+        except importlib.metadata.PackageNotFoundError:
+            calver = ''
+    if calver:
+        calver = config.simplify_version(calver)
+        return str(S.get_build_context(observatory, calver))
+    else:
+        return get_default_context(observatory=observatory, state='latest')
+
+
 @utils.cached
 def get_context_by_date(date, observatory=None):
-    """Return the name of the first operational context which precedes `date`."""
+    """Return the name of the first latest context which precedes `date`."""
     return str(S.get_context_by_date(date, observatory))
 
 
@@ -354,7 +376,7 @@ def get_context_by_date(date, observatory=None):
 def get_server_info():
     """Return a dictionary of critical parameters about the server such as:
 
-    operational_context  - the context in use in the operational pipeline
+    latest_context  - the latest context in use on the server
 
     edit_context         - the context which was last edited, not
                            necessarily archived or operational yet.
@@ -496,22 +518,29 @@ def get_context_history(observatory):
 
 
 def push_remote_context(observatory, kind, key, context):
-    """Upload the specified `context` of type `kind` (e.g. "operational") to the
-    server,  informing the server of the actual configuration of the local cache
-    for critical systems like pipelines,  not average users.   This lets the server
-    display actual versus commanded (Set Context) operational contexts for a pipeline.
+    """Upload the specified `context` of type `kind` (e.g. "latest") to the
+    server,  informing the server of the actual configuration of the local cache.   
+    This lets the server display actual versus commanded (Set Context) latest/operational contexts.
     """
     try:
         return S.push_remote_context(observatory, kind, key, context)
     except Exception as exc:
-        raise CrdsRemoteContextError(
-            "Server error setting pipeline context",
-            (observatory, kind, key, context)) from exc
+        if kind == 'operational':
+            try:
+                return S.push_remote_context(observatory, 'latest', key, context)
+            except Exception as exc:
+                raise CrdsRemoteContextError(
+                    "Server error setting latest context",
+                    (observatory, 'latest', key, context)) from exc
+        else:
+            raise CrdsRemoteContextError(
+                "Server error setting operational context",
+                (observatory, kind, key, context)) from exc
 
 
 def get_remote_context(observatory, pipeline_name):
     """Get the name of the default context last pushed from `pipeline_name` and
-    presumed to be operational.
+    presumed to be latest.
     """
     try:
         return S.get_remote_context(observatory, pipeline_name)

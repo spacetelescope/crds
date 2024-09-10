@@ -342,7 +342,7 @@ class Script:
 
     @property
     def default_context(self):
-        """Return the default operational .pmap defined by the CRDS server or cache."""
+        """Return the default latest .pmap defined by the CRDS server or cache."""
         default = self.server_info.get("latest_context", "operational_context")
         return self.server_info[default]
 
