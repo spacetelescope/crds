@@ -1,3 +1,12 @@
+11.18.4 (unreleased)
+====================
+
+General
+-------
+
+- Replaced deprecated SafeConfigParser with ConfigParser in crds.core.config [#1065]
+
+
 11.18.3 (2024-09-03)
 ====================
 
