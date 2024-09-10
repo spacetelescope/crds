@@ -348,7 +348,10 @@ jwst_niriss_superbias_0005.rmap
 
         self.add_argument("--tpns", nargs="*", dest="tpns", metavar="FILES", default=None,
             help="print the certify constraints (.tpn's) associated with the specified or implied files.")
-
+        self.add_argument("--latest-context", action="store_true", dest="latest_context",
+            help="print the name of the latest context on the central CRDS server.")
+        self.add_argument("--build-context", action="store_true", dest="build_context",
+            help="print the name of the build context on the central CRDS server.")
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
             help="print the name of the operational context on the central CRDS server.")
         self.add_argument("--remote-context", type=str, metavar="PIPELINE",
@@ -375,11 +378,16 @@ jwst_niriss_superbias_0005.rmap
         if self.args.file_properties is not None: # including []
             return self.list_file_properties()
 
-        if self.args.operational_context:
+        if self.args.operational_context or self.args.latest_context:
             print(self.default_context)
             return
         if self.args.remote_context:
             print(self.remote_context)
+            return
+        if self.args.build_context:
+            #TODO
+            #self.check_build_context()
+            print("This feature is coming soon")
             return
 
         if self.args.resolve_contexts:
@@ -410,7 +418,7 @@ jwst_niriss_superbias_0005.rmap
             self.list_required_parkeys()
 
         return log.errors()
-
+        
     def list_resolved_contexts(self):
         """Print out the literal interpretation of the contexts implied by the script's
         context specifiers.
@@ -656,9 +664,14 @@ jwst_niriss_superbias_0005.rmap
                 "version": heavy_client.version_info()
                 })
         _print_dict("CRDS Actual Paths", real_paths)
-        _print_dict("CRDS Server Info", server,
-                    ["observatory", "status", "connected", "operational_context", "last_synced",
-                     "reference_url", "mapping_url", "effective_mode"])
+        try:
+            _print_dict("CRDS Server Info", server,
+                        ["observatory", "status", "connected", "latest_context", "last_synced",
+                        "reference_url", "mapping_url", "effective_mode"])
+        except Exception:
+            _print_dict("CRDS Server Info", server,
+                        ["observatory", "status", "connected", "operational_context", "last_synced",
+                        "reference_url", "mapping_url", "effective_mode"])
         download_uris = dict(
             config_uri = os.path.dirname(api.get_flex_uri("server_config")),
             pickle_uri = os.path.dirname(api.get_flex_uri("xyz.pmap.pkl")),

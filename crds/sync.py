@@ -410,7 +410,10 @@ class SyncScript(cmdline.ContextsScript):
         """
         if not log.errors() or self.args.force_config_update:
             if self.args.verify_context_change:
-                old_context = heavy_client.load_server_info(self.observatory).operational_context
+                try:
+                    old_context = heavy_client.load_server_info(self.observatory).latest_context
+                except AttributeError:
+                    old_context = heavy_client.load_server_info(self.observatory).operational_context
             heavy_client.update_config_info(self.observatory)
             if self.args.verify_context_change:
                 self.verify_context_change(old_context)
@@ -444,7 +447,10 @@ class SyncScript(cmdline.ContextsScript):
 
     def verify_context_change(self, old_context):
         """Verify that the starting and post-sync contexts are different,  or issue an error."""
-        new_context = heavy_client.load_server_info(self.observatory).operational_context
+        try:
+            new_context = heavy_client.load_server_info(self.observatory).latest_context
+        except AttributeError:
+            new_context = heavy_client.load_server_info(self.observatory).operational_context
         if old_context == new_context:
             log.error("Expected operational context switch but starting and post-sync contexts are both", repr(old_context))
         else:
