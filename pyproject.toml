@@ -193,3 +193,26 @@ markers = [
 
 [tool.setuptools_scm]
 write_to = "crds/_version.py"
+
+[tool.towncrier]
+filename = "CHANGES.rst"
+directory = "changes"
+package = "crds"
+title_format = "{version} ({project_date})"
+ignore = [".gitkeep"]
+wrap = true
+issue_format = "`#{issue} <https://github.com/spacetelescope/crds/issues/{issue}>`_"
+
+[tool.towncrier.fragment.hst]
+name = "HST"
+
+[tool.towncrier.fragment.jwst]
+name = "JWST"
+
+[tool.towncrier.fragment.roman]
+name = "ROMAN"
+
+[tool.towncrier.fragment.doc]
+name = "Documentation"
+
+[tool.towncrier.fragment.general]
