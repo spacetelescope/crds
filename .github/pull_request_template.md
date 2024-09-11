@@ -21,6 +21,7 @@ This PR addresses ...
 - ``changes/<PR#>.jwst.rst``: JWST reference files
 - ``changes/<PR#>.roman.rst``: Roman reference files
 - ``changes/<PR#>.doc.rst``: documentation change
+- ``changes/<PR#>.testing.rst``: change to tests or test automation
 - ``changes/<PR#>.general.rst``: infrastructure or miscellaneous change
 </details>
 

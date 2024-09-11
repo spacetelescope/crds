@@ -215,4 +215,7 @@ name = "ROMAN"
 [tool.towncrier.fragment.doc]
 name = "Documentation"
 
+[tool.towncrier.fragment.testing]
+name = "Testing / Automation"
+
 [tool.towncrier.fragment.general]
