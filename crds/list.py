@@ -385,7 +385,7 @@ jwst_niriss_superbias_0005.rmap
             print(self.remote_context)
             return
         if self.args.build_context:
-            self.check_build_context()
+            print(self.build_context)
             return
 
         if self.args.resolve_contexts:
