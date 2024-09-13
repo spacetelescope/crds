@@ -447,7 +447,7 @@ def get_final_context(info, context):
     else:
         # Default for JWST if no env context and no explicit context is BUILD CONTEXT for installed jwst version
         if info.observatory == 'jwst':
-            input_context - api.get_build_context('jwst')
+            input_context = api.get_build_context('jwst')
         # For other missions, default is latest (formerly operational) context
         else:
             input_context = latest_context
