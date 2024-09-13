@@ -468,7 +468,7 @@ class Script:
 
     def resolve_context(self, context):
         """Resolve context spec `context` into a .pmap, .imap, or .rmap filename,  interpreting
-        date based specifications against the CRDS server operational context history.
+        date based specifications against the CRDS server latest context history.
         """
         if isinstance(context, str) and context.lower() == "none":
             return None
