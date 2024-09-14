@@ -106,7 +106,8 @@ this command line interface must be members of the CRDS operators group
             locked_instrument=self.instrument, username=self.username, password=password, base_url=self.base_url)
         if self.args.derive_from_context is None:
             self.args.derive_from_context = self.observatory + "-edit"
-        if self.args.derive_from_context.endswith(("-edit", "-operational")):
+        self.args.derive_from_context.replace("-operational", "-latest")
+        if self.args.derive_from_context.endswith(("-edit", "-latest")):
             # this actually floats for concurrent deliveries
             self.pmap_mode = "pmap_" + self.args.derive_from_context.split("-")[-1]
         else:
