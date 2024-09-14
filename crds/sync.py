@@ -401,7 +401,7 @@ class SyncScript(cmdline.ContextsScript):
         return active_references
 
     def update_context(self):
-        """Update the CRDS operational context in the cache.  Handle pipeline-specific
+        """Update the CRDS latest context in the cache.  Handle pipeline-specific
         targeted features of (a) verifying a context switch as actually recorded in
         the local CRDS cache and (b) echoing/pushing the pipeline context back up to the
         CRDS server for tracking using an id/authorization key.
@@ -410,7 +410,10 @@ class SyncScript(cmdline.ContextsScript):
         """
         if not log.errors() or self.args.force_config_update:
             if self.args.verify_context_change:
-                old_context = heavy_client.load_server_info(self.observatory).operational_context
+                try:
+                    old_context = heavy_client.load_server_info(self.observatory).latest_context
+                except AttributeError:
+                    old_context = heavy_client.load_server_info(self.observatory).operational_context
             heavy_client.update_config_info(self.observatory)
             if self.args.verify_context_change:
                 self.verify_context_change(old_context)
@@ -444,7 +447,10 @@ class SyncScript(cmdline.ContextsScript):
 
     def verify_context_change(self, old_context):
         """Verify that the starting and post-sync contexts are different,  or issue an error."""
-        new_context = heavy_client.load_server_info(self.observatory).operational_context
+        try:
+            new_context = heavy_client.load_server_info(self.observatory).latest_context
+        except AttributeError:
+            new_context = heavy_client.load_server_info(self.observatory).operational_context
         if old_context == new_context:
             log.error("Expected operational context switch but starting and post-sync contexts are both", repr(old_context))
         else:
@@ -452,12 +458,18 @@ class SyncScript(cmdline.ContextsScript):
 
     def push_context(self):
         """Push the final context recorded in the local cache to the CRDS server so it can be displayed
-        as the operational state of a pipeline.
+        as the latest state of a pipeline.
         """
         info = heavy_client.load_server_info(self.observatory)
-        with log.error_on_exception("Failed pushing cached operational context name to CRDS server"):
-            api.push_remote_context(self.observatory, "operational", self.args.push_context, info.operational_context)
-            log.info("Pushed cached operational context name", repr(info.operational_context), "to CRDS server")
+        try:
+            ctx = 'latest'
+            latest_context = info.latest_context
+        except AttributeError:
+            ctx = 'operational'
+            latest_context = info.operational_context
+        with log.error_on_exception(f"Failed pushing cached {ctx} context name to CRDS server"):
+            api.push_remote_context(self.observatory, ctx, self.args.push_context, latest_context)
+            log.info(f"Pushed cached {ctx} context name", repr(latest_context), "to CRDS server")
 
     # ------------------------------------------------------------------------------------------
 
