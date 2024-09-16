@@ -351,18 +351,20 @@ def get_build_context(observatory=None):
     calibration pipeline sw is included as a template. If no match found, returns latest 
     (formerly operational) context.
     """
-    if observatory == 'jwst':
-        calver = get_jwst_cal()
-    else:
-        cal = dict(roman='romancal', hst='caldp')
-        try:
+    try:
+        if observatory == 'jwst':
+            calver = get_jwst_cal()
+        else:
+            cal = dict(roman='romancal', hst='caldp')
             calver = importlib.metadata.version(cal.get(observatory,''))
-        except importlib.metadata.PackageNotFoundError:
-            calver = ''
+    except importlib.metadata.PackageNotFoundError:
+        calver = ''
+        log.warning("Cal SW not found, defaulting to latest.")
     if calver:
         calver = config.simplify_version(calver)
         return str(S.get_build_context(observatory, calver))
     else:
+        
         return get_default_context(observatory=observatory, state='latest')
 
 
