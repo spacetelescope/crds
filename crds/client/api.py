@@ -247,8 +247,8 @@ def get_cal_version(observatory):
         cal = dict(jwst='jwst', roman='romancal', hst='caldp')[observatory]
         try:
             cal_version = importlib.metadata.version(cal)
-            calver = config.simplify_version(calver)
-            log.info(f"Calibration SW Found: {cal} {calver}")
+            cal_version = config.simplify_version(cal_version)
+            log.info(f"Calibration SW Found: {cal} {cal_version}")
         except importlib.metadata.PackageNotFoundError:
             log.warning("Calibration SW not found, defaulting to latest.")
     return cal_version
