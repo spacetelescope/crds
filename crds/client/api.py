@@ -240,9 +240,17 @@ def _get_file_info_map(observatory, files, fields):
     return infos
 
 
-def get_jwst_cal():
-    """Return the version of jwst code."""
-    cal_version = importlib.metadata.version('jwst')
+def get_cal_version(observatory):
+    """Return the version of observatory calibration software."""
+    cal_version = ''
+    if observatory:
+        cal = dict(jwst='jwst', roman='romancal', hst='caldp')[observatory]
+        try:
+            cal_version = importlib.metadata.version(cal)
+            calver = config.simplify_version(calver)
+            log.info(f"Calibration SW Found: {cal} {calver}")
+        except importlib.metadata.PackageNotFoundError:
+            log.warning("Calibration SW not found, defaulting to latest.")
     return cal_version
 
 
@@ -342,6 +350,8 @@ def get_default_context(observatory=None, state="latest"):
     """Return the name of the latest pipeline mapping in use for processing
     files for `observatory`.
     """
+    if state == "build":
+        return get_build_context(observatory=observatory)
     return str(S.get_default_context(observatory, state))
 
 
@@ -351,20 +361,15 @@ def get_build_context(observatory=None):
     calibration pipeline sw is included as a template. If no match found, returns latest 
     (formerly operational) context.
     """
-    try:
-        if observatory == 'jwst':
-            calver = get_jwst_cal()
-        else:
-            cal = dict(roman='romancal', hst='caldp')
-            calver = importlib.metadata.version(cal.get(observatory,''))
-    except importlib.metadata.PackageNotFoundError:
-        calver = ''
-        log.warning("Cal SW not found, defaulting to latest.")
+    if observatory is None:
+        try:
+            observatory = str(S).split("=")[1].split("-")[0].split("/")[-1]
+        except ServiceError:
+            observatory = os.environ.get('CRDS_SERVER_URL', '').split("-")[0].split("/")[-1]
+    calver = get_cal_version(observatory)
     if calver:
-        calver = config.simplify_version(calver)
         return str(S.get_build_context(observatory, calver))
     else:
-        
         return get_default_context(observatory=observatory, state='latest')
 
 
