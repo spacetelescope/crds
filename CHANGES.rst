@@ -6,6 +6,8 @@ General
 
 - Setting environment variable `CRDS_CONTEXT=latest` automatically sets the effective context to the latest operational context found on the CRDS Server. [#1062]
 
+- `client.api.get_default_context` by default returns build context for jwst, else latest. This can still be overridden by explicitly passing a value into optional arg `state`. [#1069]
+
 11.18.3 (2024-09-03)
 ====================
 

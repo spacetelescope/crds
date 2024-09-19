@@ -346,11 +346,12 @@ def get_aui_best_references(date, dataset_ids):
 
 
 @utils.cached
-def get_default_context(observatory=None, state="latest"):
+def get_default_context(observatory=None, state=None):
     """Return the name of the latest pipeline mapping in use for processing
     files for `observatory`.
     """
-    if state == "build":
+    observatory = get_default_observatory() if observatory is None else observatory
+    if state == "build" or (observatory == "jwst" and state not in ["edit", "latest"]):
         return get_build_context(observatory=observatory)
     return str(S.get_default_context(observatory, state))
 
@@ -358,19 +359,18 @@ def get_default_context(observatory=None, state="latest"):
 def get_build_context(observatory=None):
     """If available, return the name of the build context pipeline mapping in use for processing
     files for `observatory`. Initially only planned use is for jwst but other mission
-    calibration pipeline sw is included as a template. If no match found, returns latest 
-    (formerly operational) context.
+    calibration pipeline sw is included as a template. If exact match is not found, an attempt to
+    find next closest (previous) patch version is made. Ultimate fallback is to the latest
+    (formerly 'operational') context.
     """
-    if observatory is None:
-        try:
-            observatory = str(S).split("=")[1].split("-")[0].split("/")[-1]
-        except ServiceError:
-            observatory = os.environ.get('CRDS_SERVER_URL', '').split("-")[0].split("/")[-1]
+    observatory = get_default_observatory() if observatory is None else observatory
     calver = get_cal_version(observatory)
     if calver:
-        return str(S.get_build_context(observatory, calver))
-    else:
-        return get_default_context(observatory=observatory, state='latest')
+        try:
+            return str(S.get_build_context(observatory, calver))
+        except ServiceError:
+            log.warning("Server build context could not be identified. Using 'latest' instead.")
+    return get_default_context(observatory, "latest")
 
 
 @utils.cached
@@ -615,7 +615,7 @@ def get_default_observatory():
     4. jwst
     """
     obs = config.OBSERVATORY.get()
-    if obs != "none":
+    if obs not in ["none", "", None]:
         return obs
     return observatory_from_string(get_crds_server()) or \
         get_server_observatory() or \

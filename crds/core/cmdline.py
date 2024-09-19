@@ -222,7 +222,7 @@ class Script:
             return self.set_server("roman")
 
         obs = config.OBSERVATORY.get()
-        if obs != "none":
+        if obs not in ["none", "", None]:
             return self.set_server(obs.lower())
 
         url = os.environ.get("CRDS_SERVER_URL", None)
