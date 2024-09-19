@@ -27,14 +27,21 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "<>"
 
-      - name: Set changelog release date
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3
+
+      - name: create new change log entry for release
         run: |
-          release_scripts/set_release_date ${{ github.event.inputs.version }}
+          pip install towncrier
+          pip install .
+          towncrier check
+          towncrier build --yes --version ${{ inputs.version }}
 
       - name: Commit changelog and tag release
         run: |
           git add CHANGES.rst
-          git commit -m "Set ${{ github.event.inputs.version }} release date"
+          git commit -m "created change log for ${{ inputs.version }}"
           git push origin HEAD
           git tag -a ${{ github.event.inputs.version }} -m "${{ github.event.inputs.description }}"
           git push origin ${{ github.event.inputs.version }}
