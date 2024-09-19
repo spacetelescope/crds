@@ -356,7 +356,7 @@ def get_default_context(observatory=None, state=None):
     return str(S.get_default_context(observatory, state))
 
 
-def get_build_context(observatory=None):
+def get_build_context(observatory=None, calver=None):
     """If available, return the name of the build context pipeline mapping in use for processing
     files for `observatory`. Initially only planned use is for jwst but other mission
     calibration pipeline sw is included as a template. If exact match is not found, an attempt to
@@ -364,7 +364,7 @@ def get_build_context(observatory=None):
     (formerly 'operational') context.
     """
     observatory = get_default_observatory() if observatory is None else observatory
-    calver = get_cal_version(observatory)
+    calver = get_cal_version(observatory) if calver is None else calver
     if calver:
         try:
             return str(S.get_build_context(observatory, calver))
