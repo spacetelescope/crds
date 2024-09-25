@@ -20,6 +20,7 @@ General
 - Replaced deprecated SafeConfigParser with ConfigParser in crds.core.config [#1065]
 - moved DMS requirement correlations with tests from ``@metrics_logger`` test decorators to ``test/dms_requirement_tests.json`` [#1064]
 
+
 11.18.3 (2024-09-03)
 ====================
 
