@@ -222,7 +222,7 @@ class Script:
             return self.set_server("roman")
 
         obs = config.OBSERVATORY.get()
-        if obs != "none":
+        if obs not in ["none", "", None]:
             return self.set_server(obs.lower())
 
         url = os.environ.get("CRDS_SERVER_URL", None)
@@ -342,8 +342,9 @@ class Script:
 
     @property
     def default_context(self):
-        """Return the default operational .pmap defined by the CRDS server or cache."""
-        return self.server_info["operational_context"]
+        """Return the default latest .pmap defined by the CRDS server or cache."""
+        default = self.server_info.get("latest_context", "operational_context")
+        return self.server_info[default]
 
     def get_words(self, word_list):
         """Process a file list,  expanding @-files into corresponding lists of
@@ -467,7 +468,7 @@ class Script:
 
     def resolve_context(self, context):
         """Resolve context spec `context` into a .pmap, .imap, or .rmap filename,  interpreting
-        date based specifications against the CRDS server operational context history.
+        date based specifications against the CRDS server latest context history.
         """
         if isinstance(context, str) and context.lower() == "none":
             return None

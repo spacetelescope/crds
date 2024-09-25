@@ -404,7 +404,7 @@ def get_context_name(observatory, context=None):
     """Return the .pmap name of the default context based on:
 
     1. literal definitiion in `context` (jwst_0001.pmap)
-    2. symbolic definition in `context` (jwst-operational or jwst-edit)
+    2. symbolic definition in `context` (latest or jwst-edit)
     3. date-based definition in `context` (jwst-2017-01-15T00:05:00)
     4. CRDS_CONTEXT env var override
 
@@ -415,23 +415,42 @@ def get_context_name(observatory, context=None):
 
 def get_final_context(info, context):
     """Based on env CRDS_CONTEXT, the `context` parameter, and the server's reported,
-    cached, or defaulted `operational_context`,  choose the pipeline mapping which
+    cached, or defaulted `latest_context`,  choose the pipeline mapping which
     defines the reference selection rules.
 
     Returns   a .pmap name
     """
     env_context = config.get_crds_env_context()
-    if context:  # context parameter trumps all, <observatory>-operational is default
-        input_context = context
+    try:
+        latest_context = str(info.latest_context)
+    except AttributeError:
+        latest_context = str(info.operational_context)
+    if context:  # context parameter trumps all, <observatory>-latest is default
+        if context == 'latest':
+            input_context = latest_context
+        elif context == 'build':
+            input_context = api.get_build_context(info.observatory)
+        else:
+            input_context = context
         log.verbose("Using reference file selection rules", srepr(input_context), "defined by caller.")
         info.status = "context parameter"
     elif env_context:
-        input_context = env_context
+        if env_context in ['latest', f"{info.observatory}-operational", f"{info.observatory}-latest"]:
+            input_context = latest_context
+        elif env_context in ['build', f"{info.observatory}-build"]:
+            input_context = api.get_build_context(info.observatory)
+        else:
+            input_context = env_context
         log.verbose("Using reference file selection rules", srepr(input_context),
                     "defined by environment CRDS_CONTEXT.")
         info.status = "env var CRDS_CONTEXT"
     else:
-        input_context = str(info.operational_context)
+        # Default for JWST if no env context and no explicit context is BUILD CONTEXT for installed jwst version
+        if info.observatory == 'jwst':
+            input_context = api.get_build_context('jwst')
+        # For other missions, default is latest (formerly operational) context
+        else:
+            input_context = latest_context
         log.verbose("Using reference file selection rules", srepr(input_context), "defined by", info.status + ".")
     final_context = translate_date_based_context(input_context, info.observatory)
     return final_context
@@ -453,8 +472,10 @@ def translate_date_based_context(context, observatory=None):
 
     info = get_config_info(observatory)
 
-    if context == info.observatory + "-operational":
-        return info["operational_context"]
+    latest_context_names = [info.observatory + "-operational", info.observatory + "-latest", "latest"]
+
+    if context in latest_context_names:
+        return info.get('latest_context', info['operational_context'])
     elif context == info.observatory + "-edit":
         return info["edit_context"]
     elif context == info.observatory + "-versions":

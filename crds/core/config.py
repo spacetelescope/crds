@@ -1211,7 +1211,7 @@ CONTEXT_RE_STR = (
                 r"(?P<date>" +
                     r"(" + CONTEXT_DATETIME_RE_STR + r")" +
                         r"|" +
-                    r"(" + "edit|operational|versions" + r")" +
+                    r"(" + "edit|operational|latest|build|versions" + r")" +
                 r")" +
             r")" +
         r")" +
@@ -1231,7 +1231,7 @@ PIPELINE_CONTEXT_RE_STR = (
                 r"(" +
                     r"(?P<date>" + CONTEXT_DATETIME_RE_STR + r")" +
                         "|" +
-                    r"(?P<context_tag>" + "edit|operational|versions" + r")" +
+                    r"(?P<context_tag>" + "edit|operational|latest|build|versions" + r")" +
                 r")" +
             r")" +
         r")"
@@ -1348,7 +1348,16 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst-cos-deadtab-edit")
     True
 
-    >>> is_mapping_spec("jwst-operational")
+    >>> is_mapping_spec("jwst-latest")
+    True
+
+    >>> is_mapping_spec("latest")
+    True
+
+    >>> is_mapping_spec("jwst-build")
+    True
+
+    >>> is_mapping_spec("build")
     True
 
     >>> is_mapping_spec("hst-foo")
@@ -1357,7 +1366,7 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst_wfc3_0001.imap")
     True
     """
-    return is_mapping(mapping) or (isinstance(mapping, str) and bool(CONTEXT_RE.match(mapping)))
+    return is_mapping(mapping) or (isinstance(mapping, str) and bool(CONTEXT_RE.match(mapping))) or mapping in ["latest", "build"]
 
 def is_context(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS CONTEXT, i.e. .pmap."""
