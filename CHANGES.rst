@@ -1,3 +1,13 @@
+12.0.0 (2024-09-25)
+===================
+
+Documentation
+-------------
+
+- use ``towncrier`` to handle change log entries (`#1068
+  <https://github.com/spacetelescope/crds/issues/1068>`_)
+
+
 12.0.0 (unreleased)
 ====================
 
