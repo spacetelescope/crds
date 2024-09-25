@@ -1,0 +1,35 @@
+{
+  "DMS4": [
+    "test.certify.test_certify.test_certify_roman_invalid_asdf_schema",
+    "test.certify.test_certify.test_certify_roman_invalid_asdf_tpn",
+    "test.certify.test_certify.test_certify_roman_valid_asdf"
+  ],
+  "DMS5": [
+    "test.certify.test_certify.test_certify_roman_invalid_spec_asdf_schema",
+    "test.certify.test_certify.test_certify_roman_invalid_spec_asdf_tpn",
+    "test.certify.test_certify.test_certify_roman_valid_spec_asdf"
+  ],
+  "DMS6": [
+    "test.certify.test_certify.test_certify_roman_duplicate_rmap_case_error",
+    "test.certify.test_certify.test_certify_roman_invalid_rmap_tpn",
+    "test.certify.test_certify.test_certify_roman_rmap_compare",
+    "test.certify.test_certify.test_checksum_roman_duplicate_rmap_case_error"
+  ],
+  "DMS16": [
+    "test.roman.test_roman.test_getreferences_with_invalid_header",
+    "test.roman.test_roman.test_getreferences_with_valid_header_ISOT_fmt",
+    "test.roman.test_roman.test_getreferences_with_valid_header_ISO_fmt"
+  ],
+  "DMS25": [
+    "test.roman.test_roman.test_getreferences_with_valid_header_ISOT_fmt",
+    "test.roman.test_roman.test_getreferences_with_valid_header_ISO_fmt",
+    "test.roman.test_roman.test_list_references"
+  ],
+  "DMS26": [
+    "test.roman.test_roman.test_getreferences_with_valid_header_ISO_fmt",
+    "test.roman.test_roman.test_list_references"
+  ],
+  "DMS114": [
+    "test.roman.test_roman.test_list_references"
+  ]
+}

@@ -2,7 +2,6 @@ import asdf
 from pytest import mark, xfail
 import numpy as np
 import logging
-from metrics_logger.decorators import metrics_logger
 from crds.core import utils, log, exceptions
 from crds import data_file, certify
 from crds.certify import CertifyScript, generic_tpn, validators, mapping_parser
@@ -766,7 +765,6 @@ Checking JWST datamodels."""
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS4")
 def test_certify_roman_valid_asdf(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a valid asdf file is recognized as such.
     """
@@ -779,7 +777,6 @@ def test_certify_roman_valid_asdf(roman_test_cache_state, roman_data, caplog):
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS4")
 def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that an asdf file that does not conform to its schema definition
     triggers an error in DataModels.
@@ -794,7 +791,6 @@ def test_certify_roman_invalid_asdf_schema(roman_test_cache_state, roman_data, c
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS4")
 def test_certify_roman_invalid_asdf_tpn(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that an asdf file that does not conform to its tpn definition
     triggers an error in crds. Note: as the tpn often replicates schema implementation, this also
@@ -810,7 +806,6 @@ def test_certify_roman_invalid_asdf_tpn(roman_test_cache_state, roman_data, capl
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS5")
 def test_certify_roman_valid_spec_asdf(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a valid spectroscopic asdf file is recognized as such."""
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -822,7 +817,6 @@ def test_certify_roman_valid_spec_asdf(roman_test_cache_state, roman_data, caplo
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS5")
 def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a spectroscopic asdf file that does not conform to its schema
     definition triggers an error in DataModels."""
@@ -836,7 +830,6 @@ def test_certify_roman_invalid_spec_asdf_schema(roman_test_cache_state, roman_da
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS5")
 def test_certify_roman_invalid_spec_asdf_tpn(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: confirm that a spectroscopic asdf file that does not conform to its tpn
     definition triggers an error in crds. Note: as the tpn often replicates schema implementation,
@@ -906,7 +899,6 @@ def test_certify_rmap_compare(jwst_serverless_state, caplog):
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS6")
 def test_certify_roman_rmap_compare(roman_test_cache_state, caplog):
     """Required Roman test: confirm that a calibration mapping file properly compares to its context."""
     with caplog.at_level(logging.INFO, logger="CRDS"):
@@ -961,7 +953,6 @@ Checksum error : sha1sum mismatch in 'hst_cos_tdstab_duplicate.rmap'"""
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS6")
 def test_certify_roman_duplicate_rmap_case_error(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: verify that a calibration mapping file containing duplicate match cases 
     fails."""
@@ -994,7 +985,6 @@ Duplicate entry at selector ('FUV', 'SPECTROSCOPIC') = UseAfter vs. UseAfter"""
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS6")
 def test_checksum_roman_duplicate_rmap_case_error(roman_serverless_state, roman_data, caplog):
     """Required Roman test: verify that the crds rmap checksum update tool does not silently drop
     duplicate rmap entries when updating the checksum and rewriting the file."""
@@ -1010,7 +1000,6 @@ Duplicate entry at selector ('WFI01', 'F158') = UseAfter vs. UseAfter"""
 
 @mark.roman
 @mark.certify
-@metrics_logger("DMS6")
 def test_certify_roman_invalid_rmap_tpn(roman_test_cache_state, roman_data, caplog):
     """Required Roman test: verify that a calibration mapping file that violates tpn rules produces an
     error."""

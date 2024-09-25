@@ -1,12 +1,25 @@
-11.18.4 (unreleased)
+12.0.0 (unreleased)
 ====================
 
 General
 -------
 
+- Default context changed from "operational" to "latest". For JWST, the default context is the "build" context as determined by locally installed calibration software version. This can be overridden if CRDS_CONTEXT environment variable is explicitly set by user. [#1076]
+
 - Setting environment variable `CRDS_CONTEXT=latest` automatically sets the effective context to the latest operational context found on the CRDS Server. [#1062]
 
 - `client.api.get_default_context` by default returns build context for jwst, else latest. This can still be overridden by explicitly passing a value into optional arg `state`. [#1069]
+
+
+11.18.4 (2024-09-10)
+====================
+
+General
+-------
+
+- Replaced deprecated SafeConfigParser with ConfigParser in crds.core.config [#1065]
+- moved DMS requirement correlations with tests from ``@metrics_logger`` test decorators to ``test/dms_requirement_tests.json`` [#1064]
+
 
 11.18.3 (2024-09-03)
 ====================
