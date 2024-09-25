@@ -4,11 +4,9 @@ import subprocess
 import pathlib
 from crds.core import heavy_client
 from crds.core.exceptions import CrdsLookupError
-from metrics_logger.decorators import metrics_logger
 
 
 @mark.roman
-@metrics_logger("DMS16", "DMS25")
 def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
@@ -30,7 +28,6 @@ def test_getreferences_with_valid_header_ISOT_fmt(roman_test_cache_state):
 
 
 @mark.roman
-@metrics_logger("DMS16", "DMS25", "DMS26")
 def test_getreferences_with_valid_header_ISO_fmt(roman_test_cache_state):
     """ test_getreferences_with_valid_header: test satisfies Roman 303.1 and 628.1
     """
@@ -78,7 +75,6 @@ def test_getreferences_with_valid_header_ISO_fmt(roman_test_cache_state):
 
 
 @mark.roman
-@metrics_logger("DMS16")
 def test_getreferences_with_invalid_header(roman_test_cache_state):
     """ test_getreferences_with_invalid_header: test satisfies Roman 303.1
     """
@@ -101,7 +97,6 @@ def test_getreferences_with_invalid_header(roman_test_cache_state):
 
 
 @mark.roman
-@metrics_logger("DMS114", "DMS25", "DMS26")
 def test_list_references(roman_test_cache_state):
     """ test_list_references: test satisfies Roman 303.2 and 628.2
     """
