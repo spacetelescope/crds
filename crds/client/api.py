@@ -353,7 +353,10 @@ def get_default_context(observatory=None, state=None):
     observatory = get_default_observatory() if observatory is None else observatory
     if state == "build" or (observatory == "jwst" and state not in ["edit", "latest"]):
         return get_build_context(observatory=observatory)
-    return str(S.get_default_context(observatory, state))
+    try:
+        return str(S.get_default_context(observatory, state))
+    except ServiceError: # backwards-compatibility for crds_server < 13.0.0
+        return str(S.get_default_context(observatory))
 
 
 def get_build_context(observatory=None):
@@ -369,8 +372,8 @@ def get_build_context(observatory=None):
         try:
             return str(S.get_build_context(observatory, calver))
         except ServiceError:
-            log.warning("Server build context could not be identified. Using 'latest' instead.")
-    return get_default_context(observatory, "latest")
+            log.debug("Server build context could not be identified. Using 'latest' instead.")
+    return get_default_context(observatory=observatory, state="latest")
 
 
 @utils.cached
