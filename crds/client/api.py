@@ -372,7 +372,7 @@ def get_build_context(observatory=None):
         try:
             return str(S.get_build_context(observatory, calver))
         except ServiceError:
-            log.debug("Server build context could not be identified. Using 'latest' instead.")
+            log.info("Server build context could not be identified. Using 'latest' instead.")
     return get_default_context(observatory=observatory, state="latest")
 
 
