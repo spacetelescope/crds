@@ -240,6 +240,13 @@ def _get_file_info_map(observatory, files, fields):
     return infos
 
 
+def get_cal_dist_path(cal):
+    try:
+        return f' ({str(importlib.metadata.distribution(cal)._path)})'
+    except Exception:
+        return ''
+
+
 def get_cal_version(observatory):
     """Return the version of observatory calibration software."""
     cal_version = ''
@@ -248,7 +255,8 @@ def get_cal_version(observatory):
         try:
             cal_version = importlib.metadata.version(cal)
             cal_version = config.simplify_version(cal_version)
-            log.info(f"Calibration SW Found: {cal} {cal_version}")
+            dist_path = get_cal_dist_path(cal)
+            log.info(f"Calibration SW Found: {cal} {cal_version}{dist_path}")
         except importlib.metadata.PackageNotFoundError:
             log.warning("Calibration SW not found, defaulting to latest.")
     return cal_version
