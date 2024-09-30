@@ -355,8 +355,22 @@ def get_aui_best_references(date, dataset_ids):
 
 @utils.cached
 def get_default_context(observatory=None, state=None):
-    """Return the name of the latest pipeline mapping in use for processing
-    files for `observatory`.
+    """Return the name of the pipeline mapping ('.pmap') in use for processing
+    files for `observatory`. If `state` is None, for JWST this defaults to the build context
+    associated with the locally installed calibration software (cal_ver). For other missions
+    this defaults to `latest` (formerly `operational`).
+
+    Parameters
+    ----------
+    observatory : str, optional
+        observatory being used by current configuration, by default None
+    state : str, optional
+        context state ("latest", "build", "edit"), by default None
+
+    Returns
+    -------
+    str
+        name of the pipeline mapping ('.pmap') used to process files for `observatory`
     """
     observatory = get_default_observatory() if observatory is None else observatory
     if state == "build" or (observatory == "jwst" and state not in ["edit", "latest"]):
@@ -373,6 +387,17 @@ def get_build_context(observatory=None):
     calibration pipeline sw is included as a template. If exact match is not found, an attempt to
     find next closest (previous) patch version is made. Ultimate fallback is to the latest
     (formerly 'operational') context.
+
+    Parameters
+    ----------
+    observatory : str, optional
+        observatory being used by current configuration, by default None
+
+    Returns
+    -------
+    str
+        name of the pipeline mapping ('.pmap') used to process files for `observatory` according to 
+        locally installed calibration software version.
     """
     observatory = get_default_observatory() if observatory is None else observatory
     calver = get_cal_version(observatory)
