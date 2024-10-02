@@ -11,12 +11,24 @@ authentication or *private* functions which require a CRDS login account.
 .. _jwst-crds.stsci.edu: http://jwst-crds.stsci.edu/
 .. _roman-crds.stsci.edu: http://roman-crds.stsci.edu/
 
-.. figure:: images/web_index.png
+For JWST
+
+.. figure:: images/jwst_web_index.png
    :scale: 50 %
-   :alt: home page of CRDS website
+   :alt: jwst home page of CRDS website
 
 Functions annotated with the word `alpha` are partially completed components of
 a future build which may prove useful now.
+
+For HST
+
+.. figure:: images/hst_web_index.png
+   :scale: 50 %
+   :alt: hst home page of CRDS website
+
+
+Build Context Banner
+----------------------
 
 Latest References
 ----------------------
@@ -68,10 +80,26 @@ Clicking on the `all contexts` link will bring up every context that has ever be
    :scale: 50 %
    :alt: All CRDS contexts
 
+<--Applicable only to JWST and RST
 
-Clicking on any `context` link (the .pmap name) in the history table opens a
-page containing the Historical References for some point in the past, similar
-to the Operational References display:
+Clicking on the `build contexts` link will bring up a table that displays the JWST Calibration Code Version that was
+available when a particular context was delivered.
+
+.. figure:: images/web_context_build_table.png
+   :scale: 50 %
+   :alt: Build CRDS contexts
+
+Clicking a `Cal Ver` link will take you to the github release of that JWST Calibration version:
+
+.. figure:: images/web_context_cal_ver.png
+   :scale: 50 %
+   :alt: Cal Ver CRDS contexts
+
+
+-->
+
+Clicking on any `context` link (the .pmap name) in the history, all contexts, or build contexts tables opens a
+page containing the References for some point in the past, similar to the Latest References display:
 
 .. figure:: images/web_context_table.png
    :scale: 50 %
