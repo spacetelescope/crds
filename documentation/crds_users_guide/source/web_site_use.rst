@@ -18,10 +18,10 @@ authentication or *private* functions which require a CRDS login account.
 Functions annotated with the word `alpha` are partially completed components of
 a future build which may prove useful now.
 
-Operational References
+Latest References
 ----------------------
 
-The *Operational References* table displays the references which are currently in use
+The *Latest References* table displays the references which are currently in use
 by the pipeline associated with this web site.   
 
 Each instrument accordion opens into reference type accordions for that instrument.
@@ -34,8 +34,7 @@ file or to a context display for a different .pmap.
 Context History (more)
 ----------------------
 
-The *Context History* displays the last 4 CRDS contexts which were in
-operational use by the pipeline. Clicking on the `more history` link will bring up
+The *Context History* displays the last 4 CRDS contexts which were the latest to be used by the pipeline. Clicking on the `more history` link will bring up
 the entire context history as a separate page as shown below:
 
 .. figure:: images/web_context_history.png
@@ -49,7 +48,7 @@ the diff button at the top of the diff column:
    :scale: 50 %
    :alt: CRDS context diff request
 
-This will display a difference page with an accorion panel for each file which
+This will display a difference page with an accordion panel for each file which
 differed between the two contexts:
     
 .. figure:: images/web_context_diff_2.png
@@ -62,6 +61,13 @@ and simple textual differences.
 The logical differences display a table of matching parameters and files which
 were added, deleted, or replaced.  The textual differences show raw UNIX diffs
 of the two rules files.
+
+Clicking on the `all contexts` link will bring up every context that has ever been delivered:
+
+.. figure:: images/web_context_all.png
+   :scale: 50 %
+   :alt: All CRDS contexts
+
 
 Clicking on any `context` link (the .pmap name) in the history table opens a
 page containing the Historical References for some point in the past, similar
