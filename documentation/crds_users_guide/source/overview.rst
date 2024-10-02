@@ -125,7 +125,7 @@ A number of additional servers exist to support development and I&T for JWST and
 The CRDS web servers provide these functions:
 
 	1. Cataloging and display of information about CRDS files.
-	2. Tabular display of the current operational rules in the archive pipeline.
+	2. Tabular display of the current latest rules in the archive pipeline.
 	3. Maintains and displays history of contexts used by the archive pipelines.
 	4. Supports the CRDS client library.
 	5. File submissions and archiving.

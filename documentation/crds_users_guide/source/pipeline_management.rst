@@ -35,7 +35,7 @@ Set (Default CRDS) Context
 
 When an instrument team is satisfied that new references are working as
 intended within CRDS, they request a DMS operator to update the default /
-"operational" CRDS context by using the CRDS server *Set Context* page
+"latest" CRDS context by using the CRDS server *Set Context* page
 described below.  This step establishes the specified context as the default
 used by the pipeline as well as by other end-users who sync to the CRDS server
 and do not explicitly override it.
@@ -46,27 +46,38 @@ Set Context
 This section describes the website page used by operators to update the default
 CRDS context.
 
-*Set Context* enables setting the operational, edit, and versions contexts.  
+*Set Context* enables setting the latest, edit, and versions contexts.
 
 .. figure:: images/web_set_context.png
    :scale: 50 %
    :alt: set context inputs
 
 CRDS enables contexts to be distributed before their adoption as the pipeline
-default.  Set Context is used to select the default pipeline (operational)
+default.  Set Context is used to select the default pipeline (latest)
 context.
-   
-Setting the operational context changes state on the CRDS server which must be
-subsequently sync'ed to remote pipelines and users.
-
-Setting the *operational* context creates a new entry at the top of the Context
-History.
 
 Setting the *edit* context sets the default starting point for future file
 submissions.
 
 Setting the *versions* context defines the context used to locate the SYSTEM
 CALVER reference file used to define calibration software component versions.
+
+Setting the latest context changes state on the CRDS server which must be
+subsequently sync'ed to remote pipelines and users.
+
+Setting the *latest* context creates a new entry at the top of the Context
+History.
+
+Setting the *build* context allows the selection of a previous or custom CAL Ver.
+
+When the *Update Home Page Banner/ Pipeline Build Context* checkbox is checked, and the *CAL_VER* chosen is a newer
+version than one that exists currently in the build context table, the table will be updated, and the banner will
+display that value.
+
+.. figure:: images/web_set_build_context.png
+   :scale: 50 %
+   :alt: set build context inputs
+
 
 Sync Pipeline CRDS Cache
 ++++++++++++++++++++++++

@@ -76,7 +76,7 @@ the entire context history as a separate page as shown below:
 
 .. figure:: images/web_context_history.png
    :scale: 50 %
-   :alt: History of CRDS operational contexts
+   :alt: History of CRDS latest contexts
    
 Click the `diff` check box for any two contexts in the history and then click
 the diff button at the top of the diff column:
@@ -147,7 +147,7 @@ Context
 
 The context defines the set of CRDS rules used to select best references.
 *Edit* is the default context from which most newly created contexts are derived.  
-*Operational* is the context currently in use by the pipeline.   *Recent* shows
+*latest* is the context currently in use by the pipeline.   *Recent* shows
 the most recently created contexts.   *User Specified* enables the submitter to 
 type in the name of any other known context.
 
@@ -269,7 +269,7 @@ value of `*`.   The result of the activity search is a table of matching actions
    :alt: database browse details page
    
 The default filter of `*.pmap` previews contexts that have been submitted but
-not yet selected for operational use in the pipeline.
+not yet selected for latest use in the pipeline.
 
 Authenticated Services
 ----------------------
