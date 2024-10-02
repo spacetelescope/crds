@@ -11,24 +11,49 @@ authentication or *private* functions which require a CRDS login account.
 .. _jwst-crds.stsci.edu: http://jwst-crds.stsci.edu/
 .. _roman-crds.stsci.edu: http://roman-crds.stsci.edu/
 
+For HST
+
+.. figure:: images/web_index_hst.png
+   :scale: 50 %
+   :alt: hst home page of CRDS website
+
+<- Applicable for JWST and RST only
+
 For JWST
 
-.. figure:: images/jwst_web_index.png
+.. figure:: images/web_index_jwst.png
    :scale: 50 %
    :alt: jwst home page of CRDS website
 
 Functions annotated with the word `alpha` are partially completed components of
 a future build which may prove useful now.
 
-For HST
-
-.. figure:: images/hst_web_index.png
-   :scale: 50 %
-   :alt: hst home page of CRDS website
-
 
 Build Context Banner
 ----------------------
+The Build Context Banner displays the context that is currently in use by operations, based
+on the CAL version that is installed.
+
+Clicking the context (.pmap) will take you to page of references pertaining to that context.
+
+.. figure:: images/web_references.png
+   :scale: 50 %
+   :alt: jwst references for context
+
+Clicking the `Cal Ver` version number link will take you to the github release of that JWST Calibration version:
+
+.. figure:: images/web_context_cal_ver.png
+   :scale: 50 %
+   :alt: Cal Ver CRDS contexts
+
+Finally, clicking the `build contexts` link will bring up a table that displays the JWST Calibration Code Version that was
+available when a particular context was delivered.
+
+.. figure:: images/web_context_build_table.png
+   :scale: 50 %
+   :alt: Build CRDS contexts
+
+->
 
 Latest References
 ----------------------
@@ -82,19 +107,11 @@ Clicking on the `all contexts` link will bring up every context that has ever be
 
 <--Applicable only to JWST and RST
 
-Clicking on the `build contexts` link will bring up a table that displays the JWST Calibration Code Version that was
-available when a particular context was delivered.
+Clicking on the `build contexts` link will bring up the table that displays the JWST Calibration Code Version that was
+available when a particular context was delivered, just as it did in the banner.
 
-.. figure:: images/web_context_build_table.png
-   :scale: 50 %
-   :alt: Build CRDS contexts
-
-Clicking a `Cal Ver` link will take you to the github release of that JWST Calibration version:
-
-.. figure:: images/web_context_cal_ver.png
-   :scale: 50 %
-   :alt: Cal Ver CRDS contexts
-
+Clicking a `Cal Ver` link will take you to the github release of that JWST Calibration version, just as it did in the
+banner.
 
 -->
 
