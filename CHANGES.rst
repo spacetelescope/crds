@@ -1,3 +1,14 @@
+11.18.3.dev0+g46fc854b.d20240903 (2024-10-02)
+=============================================
+
+General
+-------
+
+- client.api.get_default_context falls back to observatory as only argument to
+  maintain compatibility with crds_server < 13.0.0 (`#1078
+  <https://github.com/spacetelescope/crds/issues/1078>`_)
+
+
 12.0.0 (2024-09-25)
 ===================
 
@@ -7,9 +18,6 @@ Documentation
 - use ``towncrier`` to handle change log entries (`#1068
   <https://github.com/spacetelescope/crds/issues/1068>`_)
 
-
-12.0.0 (unreleased)
-====================
 
 General
 -------

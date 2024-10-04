@@ -1,0 +1,1 @@
+Updated various doc files and images pertaining to the switch from 'operational' to 'latest' in CRDS code.
