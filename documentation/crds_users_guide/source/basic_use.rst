@@ -109,7 +109,7 @@ care about:
 Overriding the Default Context
 ------------------------------
 
-It's possible to use past or future/experimental CRDS contexts rather than the pipeline's default operational context as follows:
+It's possible to use past or future/experimental CRDS contexts rather than the pipeline's default latest context as follows:
 
 .. tabs::
 

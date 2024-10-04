@@ -106,7 +106,7 @@ reference file paths:
                       
           context :   The name of the pipeline context mapping which should be
                   used to define best reference lookup rules,  or None.  If 
-                  `context` is None,  use the latest operational pipeline mapping.
+                  `context` is None,  use the latest pipeline mapping.
                   
                   str
                   
@@ -147,7 +147,7 @@ reference type:
         filling in appropriate reference type keywords.
     
         Define best references using either .pmap `context` or the default
-        CRDS operational context if context=None.
+        CRDS latest context if context=None.
     
         If `reftypes` is defined, assign bestrefs to only the listed
         reftypes, otherwise assign all reftypes.
@@ -181,7 +181,15 @@ crds.get_default_context()
 ..........................
 
 `get_default_context()` returns the name of the pipeline mapping which is 
-currently in operational use.
+currently the Latest Context
+!!!!!!!!!!!!!!!!!!!
+
+*Latest Context* is the .pmap which is nominally in use by the pipeline.
+While it's common to make new files the latest as each context is added, it's
+possible for the *Latest Context* to lag behind the *Edit Context* when
+new files are being added but need additional testing in OPS. Deriving
+from the *Latest Context* is a crude kind of reversion since CRDS
+effectively branches around any existing subsequent contexts. use.
 
 The default context defines the matching rules used to determine best 
 reference files for a given set of parameters:
