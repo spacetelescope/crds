@@ -1,1 +1,0 @@
-client.api.get_default_context falls back to observatory as only argument to maintain compatibility with crds_server < 13.0.0

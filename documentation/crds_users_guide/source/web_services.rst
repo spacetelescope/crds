@@ -74,7 +74,7 @@ the value stored in a pipeline's CRDS cache and echoed back to the CRDS server
 when the cache is synchronized.  Since this value is inapplicable if a pipeline
 is run in "remote" mode computing best references on the CRDS Server, the
 generally preferred value is from `get_default_context()` since it always
-reflects the intended operational context regardless of the pipeline's CRDS
+reflects the intended latest context regardless of the pipeline's CRDS
 mode.   
 
 The actual default context for a pipeline can be obtained as follows:
@@ -90,7 +90,7 @@ Context History
 +++++++++++++++
 
 CRDS makes the history of contexts which have been activated in the pipeline as
-the operational context via the `get_context_history()` web service:
+the latest context via the `get_context_history()` web service:
 
   .. code-block:: python
 
@@ -163,7 +163,7 @@ Return a dictionary of CRDS catalog information about `filename`.  For instance:
        'replaced_by_filename': '',
        'sha1sum': '3f0c92aae539cb67f8e8823cc6815130018948f7',
        'size': '10592640',
-       'state': 'operational',
+       'state': 'latest',
        'type': 'reference',
        'uploaded_as': 'jwst_miri_flat_0016.fits',
        'useafter_date': '2050-01-01 00:00:00'}
@@ -397,7 +397,7 @@ To obtain current best references, specify the context using a date:
            'R0000201001001001003_01101_0001_WFI01':'R0000201001001001003_01101_0001_WFI01']
 
 
-Alternately, the abstract default context can be specified as "<project>-operational", as in:
+Alternately, the abstract default context can be specified as "<project>-latest", as in:
 
 .. tabs::
 
@@ -405,7 +405,7 @@ Alternately, the abstract default context can be specified as "<project>-operati
 
        .. code-block:: python
 
-           >>> get_dataset_ids("jwst-operational", "miri")
+           >>> get_dataset_ids("jwst-latest", "miri")
            ['JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT',
            'J80500020001_02101_00001.MIRIFUSHORT:JW80500020001_02101_00001.MIRIFUSHORT',
            'JW80500018001_02101_00001.MIRIFUSHORT:JW80500018001_02101_00001.MIRIFUSHORT',
@@ -476,7 +476,7 @@ CRDS fetches best reference matching parameters indirectly from the archive data
 The `get_dataset_headers_by_id()` function can be used to return the parameters required
 to compute best references associated with the specified dataset ids:
 
-*context_specifier* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-operational
+*context_specifier* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-latest
 
 *ids* is a list of archive dataset id strings as shown above.   A maximum of 200 IDs should be requested per call.
 
@@ -534,7 +534,7 @@ during the course of development; use `get_dataset_ids()` documented above to
 obtain up-to-date example IDs.
 
 *date* is a date-based CRDS context specifier, e.g.: jwst_0192.pmap,
-2015-05-25T00:00:27, jwst-operational
+2015-05-25T00:00:27, jwst-latest
 
 *ids* is a list of valid archive dataset ids.  For JWST it's currently natural
 and supported to use either half (currently identical) of the dataset IDs as
@@ -709,7 +709,7 @@ the CRDS server whenever a new master version is defined.
 
 The intended purpose of the "jwst-versions" tag is to name the most capable
 context for use in translating calibration master versions.  Unlike the
-abstract name "jwst-operational" that describes the default context used to
+abstract name "jwst-latest" that describes the default context used to
 define calibration references, it is anticipated that "jwst-versions" will
 never or rarely ever revert to older versions of CRDS rules.  This is because
 "version facts" should not in general change once they're defined, 0.6.0 should

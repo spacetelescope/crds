@@ -514,7 +514,7 @@ new hook functions can only be added with a new release of CRDS code.   hook fun
 never be modified after use in operations since that would change the meaning of historical .rmaps.  Instead,  a new
 hook function should be added and the .rmap header modified to assign it.
 
-hook functions can be 'unplugged' in an operational .rmap by setting the value of the hook to 'none'.  Removing the
+hook functions can be 'unplugged' in the latest .rmap by setting the value of the hook to 'none'.  Removing the
 'hooks' section of the .rmap header, or removing individual hook names, currently results in reversion to <100 series
 .rmap behavior and the original implicit hook functions.
 

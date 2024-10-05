@@ -44,7 +44,7 @@ or mapping file from the specified observatory:
              'rejected': 'false',
              'sha1sum': 'b684c9123da94ff5b9efb72c15316af050ecca62',
              'size': '42390720',
-             'state': 'operational',
+             'state': 'latest',
              'type': 'reference',
              'uploaded_as': '20151022_g2.0_wfc2-orampq_d_bia.fits',
              'useafter_date': '2015-10-22 23:30:54'}
@@ -105,7 +105,7 @@ or mapping file from the specified observatory:
              'rejected': 'false',
              'sha1sum': 'adc1e6cdf2491a393e439b8f820f29056b41e2ff',
              'size': '872417289',
-             'state': 'operational',
+             'state': 'latest',
              'type': 'reference',
              'uploaded_as': 'roman_dark_wfi01_wfi_image_highlatitudespecsurvey_vold.asdf',
              'useafter_date': '1900-01-01 00:00:00'}
@@ -143,12 +143,12 @@ If `fields` are specified as *None*,  info on all available fields is returned.
            {'lcb12060j_drk.fits': {
                'sha1sum': '56cfd1107bda5d82cb49a301a50edb45cb64ded6',
                'size': '10549440',
-               'state': 'operational'
+               'state': 'latest'
                },
             'n3o1022fj_drk.fits': {
                 'sha1sum': 'cecf11300015df8f39913b638138d8c67de77a02',
                 'size': '10526400',
-                'state': 'operational'
+                'state': 'latest'
                 }
            }
 
@@ -165,12 +165,12 @@ If `fields` are specified as *None*,  info on all available fields is returned.
            {'jwst_miri_dark_0072.fits': {
                'sha1sum': '34c432f1204618f46ed6591e0cb0f959981ba702',
                'size': '10549440',
-               'state': 'operational'
+               'state': 'latest'
                },
             'jwst_miri_dark_0073.fits': {
                 'sha1sum': 'ed6591e0cb0f959981ba70234c432f1204618f46',
                 'size': '10526400',
-                'state': 'operational'
+                'state': 'latest'
                 }
            }
 
@@ -187,12 +187,12 @@ If `fields` are specified as *None*,  info on all available fields is returned.
            {'roman_wfi_dark_0295.asdf': {
                'sha1sum': '2432e01bd0058a485d83e35e74d2701611a191f0',
                'size': '1006635000',
-               'state': 'operational'
+               'state': 'latest'
                },
             'roman_wfi_flat_0227.asdf': {
                 'sha1sum': '527f54ed8b8e53ff2e92425d506a23233deae044',
                 'size': '200542817',
-                'state': 'operational'
+                'state': 'latest'
                 }
             }
 
@@ -201,7 +201,7 @@ Download CRDS catalog for SQLite queries
 ----------------------------------------
 
 The CRDS catalog stores metadata about references not captured in the .rmap files. It also contains
-the history of CRDS context use, the effective dates at which particular contexts where operational in
+the history of CRDS context use, the effective dates at which particular contexts where the latest in
 the pipeline.
 
 You can download a SQLite-3 snapshot of the CRDS catalog like this:
@@ -236,9 +236,9 @@ SQLite3 database file.  The SQLite database can typically be accessed like this:
     
     sqlite> .mode tabs
     sqlite> .headers on
-    sqlite> select * from crds_hst_context_history where state="operational" limit 1;
+    sqlite> select * from crds_hst_context_history where state="latest" limit 1;
     id    name    start_date        context     state          description
-    2        2013-07-02 15:44:53    hst.pmap    operational    set by system
+    2        2013-07-02 15:44:53    hst.pmap    latest    set by system
     \.\.\.
     
 The CRDS catalog contains the following meta-data: 
