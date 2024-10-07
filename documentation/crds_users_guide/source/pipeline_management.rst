@@ -81,6 +81,10 @@ that a user inputs.
    :scale: 50 %
    :alt: drop for build context inputs
 
+Selecting the checkbox for Update Home Page Banner / Pipeline Build Context will update the
+build context displayed in the front page banner if the context being set is newer then the
+existing banner context.
+
 Sync Pipeline CRDS Cache
 ++++++++++++++++++++++++
 
