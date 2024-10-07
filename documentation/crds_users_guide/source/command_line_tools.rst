@@ -211,7 +211,7 @@ New Context
 
 crds.bestrefs always computes best references with respect to a context which
 can be explicitly specified with the `--new-context` parameter.  If `--new-context`
-is not specified, the default latest context is determined by consulting
+is not specified, the default build context is determined by consulting
 the CRDS server or looking in the local cache.
 
 ...........
@@ -809,7 +809,7 @@ explained above:
   .. code-block:: bash
 
       $ crds list --cat jwst_nirspec_dark_0036.fits
-      CRDS - INFO - Symbolic context 'jwst-latest' resolves to 'jwst_0167.pmap'
+      CRDS - INFO - Symbolic context 'jwst-build' resolves to 'jwst_0167.pmap'
       File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
       {'A1_COL_C': '8.9600000e+002',
       'A1_CONF1': '2.1846000e+004',
@@ -930,7 +930,7 @@ Sometimes it's desirable to know the individual exposures CRDS associates with a
 
   .. code-block:: bash
 
-      $ python m crds.list --latest-context
+      $ python m crds.list --build-context
       jwst_0204.pmap 
 
 lists the context which has been *commanded* as default on the CRDS server.
@@ -974,7 +974,7 @@ contexts:
       jwst_0208.pmap
       jwst_0209.pmap
       
-      $ crds list --resolve-contexts  --contexts jwst-miri-dark-latest
+      $ crds list --resolve-contexts  --contexts jwst-miri-dark-build
       jwst_miri_dark_0012.rmap
       
       $ crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
