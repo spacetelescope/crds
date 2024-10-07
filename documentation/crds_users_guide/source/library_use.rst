@@ -181,15 +181,15 @@ crds.get_default_context()
 ..........................
 
 `get_default_context()` returns the name of the pipeline mapping which is 
-currently the Latest Context
+currently the Build Context
 !!!!!!!!!!!!!!!!!!!
 
-*Latest Context* is the .pmap which is nominally in use by the pipeline.
-While it's common to make new files the latest as each context is added, it's
-possible for the *Latest Context* to lag behind the *Edit Context* when
-new files are being added but need additional testing in OPS. Deriving
-from the *Latest Context* is a crude kind of reversion since CRDS
-effectively branches around any existing subsequent contexts. use.
+*Build Context* is the .pmap which is nominally in use by the pipeline.
+While it's common to make new files become the *Latest* as each context is added, it's
+possible for the *Build Context* to lag behind the *Edit Context* when
+new files are being added but need additional testing in OPS, and the *Latest Context* when the
+new files are confirmed. Deriving from the *Build Context* is a crude kind of reversion since CRDS
+effectively branches around any existing subsequent contexts.
 
 The default context defines the matching rules used to determine best 
 reference files for a given set of parameters:
