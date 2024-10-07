@@ -1,1 +1,0 @@
-Doc updates for user guide to switch from Operational to Latest
