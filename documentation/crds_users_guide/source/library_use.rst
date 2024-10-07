@@ -181,15 +181,20 @@ crds.get_default_context()
 ..........................
 
 `get_default_context()` returns the name of the pipeline mapping which is 
-currently the Build Context
+currently the Build Context in the case of JWST based on the version of the locally installed
+Calibration code, while it returns the Latest Context for HST and Roman from the Crds Server or the local cache.
 !!!!!!!!!!!!!!!!!!!
 
-*Build Context* is the .pmap which is nominally in use by the pipeline.
+For HST and Roman, *Latest Context* is the .pmap which is nominally in use by the pipeline. For JWST, see below.
 While it's common to make new files become the *Latest* as each context is added, it's
-possible for the *Build Context* to lag behind the *Edit Context* when
+possible for the *Latest Context* to lag behind the *Edit Context* when
 new files are being added but need additional testing in OPS, and the *Latest Context* when the
-new files are confirmed. Deriving from the *Build Context* is a crude kind of reversion since CRDS
+new files are confirmed. Deriving from the *Latest Context* is a crude kind of reversion since CRDS
 effectively branches around any existing subsequent contexts.
+
+*Build Context* applies to JWST, and is the .pmap which corresponds to the most recently installed
+JWST DMS Install and JWST Calibration code. It is guaranteed to work with that delivered code, and stays consistent
+after new reference files are delivered.
 
 The default context defines the matching rules used to determine best 
 reference files for a given set of parameters:

@@ -210,8 +210,10 @@ New Context
 ...........
 
 crds.bestrefs always computes best references with respect to a context which
-can be explicitly specified with the `--new-context` parameter.  If `--new-context`
-is not specified, the default build context is determined by consulting
+can be explicitly specified with the `--new-context` parameter.  For JWST, if `--new-context`
+is not specified, the default build context is determined by checking the CRDS Server to find the
+appropriate context for the Calibration Software that a user has locally installed.
+In the case of HST or Roman, the default latest context is determined by consulting
 the CRDS server or looking in the local cache.
 
 ...........
