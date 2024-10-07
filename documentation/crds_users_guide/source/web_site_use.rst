@@ -13,7 +13,7 @@ authentication or *private* functions which require a CRDS login account.
 
 For JWST
 
-.. figure:: images/jwst_web_index.png
+.. figure:: images/web_index_jwst.png
    :scale: 50 %
    :alt: jwst home page of CRDS website
 
@@ -22,7 +22,7 @@ a future build which may prove useful now.
 
 For HST
 
-.. figure:: images/hst_web_index.png
+.. figure:: images/web_index_hst.png
    :scale: 50 %
    :alt: hst home page of CRDS website
 
