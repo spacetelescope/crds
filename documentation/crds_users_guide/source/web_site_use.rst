@@ -27,8 +27,23 @@ For HST
    :alt: hst home page of CRDS website
 
 
+
+<--Applicable only to JWST and RST
+
 Build Context Banner
 ----------------------
+The Build Context Banner displays the CRDS Context that was delivered with a DMS build, and
+is guaranteed to work with that build. It will be the latest context when a DMS build is installed,
+but will not be the most current after references get delivered and the latest context is updated.
+
+Clicking on the `build contexts` link will bring up a table that displays the JWST Calibration Code Version that was
+available when a particular context was delivered.
+
+.. figure:: images/web_context_build_table.png
+   :scale: 50 %
+   :alt: Build CRDS contexts
+
+-->
 
 Latest References
 ----------------------
@@ -83,11 +98,7 @@ Clicking on the `all contexts` link will bring up every context that has ever be
 <--Applicable only to JWST and RST
 
 Clicking on the `build contexts` link will bring up a table that displays the JWST Calibration Code Version that was
-available when a particular context was delivered.
-
-.. figure:: images/web_context_build_table.png
-   :scale: 50 %
-   :alt: Build CRDS contexts
+available when a particular context was delivered, just as it did in the banner.
 
 Clicking a `Cal Ver` link will take you to the github release of that JWST Calibration version:
 

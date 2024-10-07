@@ -75,7 +75,10 @@ when the cache is synchronized.  Since this value is inapplicable if a pipeline
 is run in "remote" mode computing best references on the CRDS Server, the
 generally preferred value is from `get_default_context()` since it always
 reflects the intended latest context regardless of the pipeline's CRDS
-mode.   
+mode. For JWST, get_default_context() retrieves the "build" context associated
+with the version of JWST pipeline calibration software installed locally,
+which may or may not differ from the "latest" context.
+This ensures compatibility between reference files and calibration software.
 
 The actual default context for a pipeline can be obtained as follows:
 
