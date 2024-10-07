@@ -106,7 +106,8 @@ reference file paths:
                       
           context :   The name of the pipeline context mapping which should be
                   used to define best reference lookup rules,  or None.  If 
-                  `context` is None,  use the latest pipeline mapping.
+                  `context` is None,  use the latest pipeline mapping. For JWST,
+                  this is the build context mapping.
                   
                   str
                   
@@ -147,7 +148,7 @@ reference type:
         filling in appropriate reference type keywords.
     
         Define best references using either .pmap `context` or the default
-        CRDS latest context if context=None.
+        CRDS context if context=None.
     
         If `reftypes` is defined, assign bestrefs to only the listed
         reftypes, otherwise assign all reftypes.
