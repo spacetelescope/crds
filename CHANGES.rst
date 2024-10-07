@@ -1,5 +1,11 @@
-11.18.3.dev0+g46fc854b.d20240903 (2024-10-02)
-=============================================
+12.0.1 (unreleased)
+===================
+
+Documentation
+-------------
+
+- Doc updates for user guide to switch from Operational to Latest (`#1080
+  <https://github.com/spacetelescope/crds/issues/1080>`_)
 
 General
 -------
