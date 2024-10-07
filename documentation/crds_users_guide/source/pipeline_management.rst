@@ -46,7 +46,7 @@ Set Context
 This section describes the website page used by operators to update the default
 CRDS context.
 
-*Set Context* enables setting the latest, edit, and versions contexts.
+*Set Context* enables setting the build, latest, edit, and versions contexts.
 
 .. figure:: images/web_set_context.png
    :scale: 50 %
@@ -55,7 +55,7 @@ CRDS context.
 CRDS enables contexts to be distributed before their adoption as the pipeline
 default.  Set Context is used to select the default pipeline (latest)
 context.
-   
+
 Setting the latest context changes state on the CRDS server which must be
 subsequently sync'ed to remote pipelines and users.
 
@@ -67,6 +67,23 @@ submissions.
 
 Setting the *versions* context defines the context used to locate the SYSTEM
 CALVER reference file used to define calibration software component versions.
+
+Selecting the *build* context for the Context Type changes the menu that you can use:
+
+.. figure:: images/web_set_build_context.png
+   :scale: 50 %
+   :alt: set build context inputs
+
+It adds a CAL_VER option that allows the user to set a pre-existing Cal Version, or a custom one
+that a user inputs.
+
+.. figure:: images/web_set_build_drop.png
+   :scale: 50 %
+   :alt: drop for build context inputs
+
+Selecting the checkbox for Update Home Page Banner / Pipeline Build Context will update the
+build context displayed in the front page banner if the context being set is newer then the
+existing banner context.
 
 Sync Pipeline CRDS Cache
 ++++++++++++++++++++++++
