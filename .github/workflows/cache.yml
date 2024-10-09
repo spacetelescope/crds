@@ -38,14 +38,14 @@ jobs:
       testing_cache: ${{ env.CRDS_TESTING_CACHE }}
       key: ${{ steps.key.outputs.key }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
         with:
           repository: spacetelescope/crds
       - id: key
         run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
       - id: lookup-combined-cache
         name: check for existence of combined CRDS cache (`${{ steps.key.outputs.key }}`)
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
         with:
           path: |
             ${{ env.CRDS_PATH }}
@@ -60,19 +60,19 @@ jobs:
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
         id: retrieve-hst-cache
         name: retrieve HST CRDS cache (`test-cache-${{ needs.contexts.outputs.hst }}`)
-        uses: actions/cache@v4
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
         with:
           path: ${{ env.CRDS_PATH }}/**/hst*
           key: test-cache-${{ needs.contexts.outputs.hst }}
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
         id: retrieve-jwst-cache
         name: retrieve JWST CRDS cache (`test-cache-${{ needs.contexts.outputs.jwst }}`)
-        uses: actions/cache@v4
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
         with:
           path: ${{ env.CRDS_PATH }}/**/jwst*
           key: test-cache-${{ needs.contexts.outputs.jwst }}
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@f8b8a1e23a26f60a44c853292711bacfd3eac822  # v1.9.0
         with:
           environment-name: crds-testing
           create-args: >-
@@ -95,7 +95,7 @@ jobs:
         run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.retrieve-hst-cache.outputs.cache-hit == 'true' || steps.retrieve-jwst-cache.outputs.cache-hit == 'true') && 'u' || 'c' }}
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
         name: save combined CRDS cache (`${{ steps.key.outputs.key }}`)
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
         with:
           path: |
             ${{ env.CRDS_PATH }}
