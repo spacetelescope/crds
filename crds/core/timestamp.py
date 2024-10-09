@@ -291,7 +291,7 @@ def parse_numerical_date(dstr):
 class DateParser:
     """Abstract baseclass for defining date parsers."""
 
-    format = re.compile("^$")
+    format = re.compile(r"^$")
     should_be = "DATE FORMAT NOT DEFINED"
 
     @classmethod

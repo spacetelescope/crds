@@ -360,7 +360,7 @@ this command line interface must be members of the CRDS operators group
         return rnew
     
     def get_renamed_rmaps(self, soup, fmap):
-        diffs = soup.find_all(string=re.compile("Logical Diff"))
+        diffs = soup.find_all(string=re.compile(r"Logical Diff"))
         if len(diffs) > 0:
             for diff in diffs:
                 d = diff.split('(')[-1].split(')')[0]
