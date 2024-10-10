@@ -661,7 +661,7 @@ def get_crds_env_context():
     context = os.environ.get("CRDS_CONTEXT", None)
     if context:
         assert is_context_spec(context), \
-            "Only set CRDS_CONTEXT to a literal or symbolic context (.pmap), e.g. jwst_0042.pmap,  jwst-2014-10-15T00:15:21, jwst-operational,  not " + repr(context)
+            "Only set CRDS_CONTEXT to a literal or symbolic context (.pmap), e.g. jwst_0042.pmap,  jwst-2014-10-15T00:15:21, jwst-latest,  not " + repr(context)
     return context
 
 CRDS_IGNORE_MAPPING_CHECKSUM = BooleanConfigItem("CRDS_IGNORE_MAPPING_CHECKSUM", False,
@@ -1400,6 +1400,8 @@ def is_context_spec(mapping):
     >>> is_context_spec("hst-acs-2040-01-29T12:00:00")
     False
     """
+    if mapping in ["latest", "build"]:
+        return True
     return is_context(mapping) or (isinstance(mapping, str) and bool(PIPELINE_CONTEXT_RE.match(mapping)))
 
 def is_date_based_mapping_spec(mapping):

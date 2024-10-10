@@ -1,4 +1,15 @@
-12.0.1 (unreleased)
+12.0.2 (2024-10-07)
+===================
+
+Documentation
+-------------
+
+- Fixed changelog version [#1083]
+
+- Updated image names [#1084]
+
+
+12.0.1 (2024-10-07)
 ===================
 
 Documentation
