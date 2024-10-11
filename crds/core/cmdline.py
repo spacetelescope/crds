@@ -343,8 +343,7 @@ class Script:
     @property
     def default_context(self):
         """Return the default latest .pmap defined by the CRDS server or cache."""
-        default = self.server_info.get("latest_context", "operational_context")
-        return self.server_info[default]
+        return self.server_info.get("latest_context", self.server_info["operational_context"])
 
     def get_words(self, word_list):
         """Process a file list,  expanding @-files into corresponding lists of
