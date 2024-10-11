@@ -1,1 +1,0 @@
-latest is a valid file state, context spec includes build and latest

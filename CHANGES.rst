@@ -1,3 +1,13 @@
+12.0.3 (2024-10-11)
+===================
+
+General
+-------
+
+- latest is a valid file state, context spec includes build and latest (`#1088
+  <https://github.com/spacetelescope/crds/issues/1088>`_)
+
+
 12.0.2 (2024-10-07)
 ===================
 
