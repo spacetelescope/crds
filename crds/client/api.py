@@ -254,6 +254,9 @@ def get_cal_version(observatory):
         cal = dict(jwst='jwst', roman='romancal', hst='caldp')[observatory]
         try:
             cal_version = importlib.metadata.version(cal)
+            if 'dev' in cal_version:
+                log.info("DEV calibration SW identified. Defaulting to Edit Context.")
+                return 'dev'
             cal_version = config.simplify_version(cal_version)
             dist_path = get_cal_dist_path(cal)
             log.info(f"Calibration SW Found: {cal} {cal_version}{dist_path}")
@@ -402,10 +405,13 @@ def get_build_context(observatory=None):
     observatory = get_default_observatory() if observatory is None else observatory
     calver = get_cal_version(observatory)
     if calver:
-        try:
-            return str(S.get_build_context(observatory, calver))
-        except ServiceError:
-            log.info("Server build context could not be identified. Using 'latest' instead.")
+        if calver == 'dev':
+            return get_default_context(observatory=observatory, state='edit')
+        else:
+            try:
+                return str(S.get_build_context(observatory, calver))
+            except ServiceError:
+                log.info("Server build context could not be identified. Using 'latest' instead.")
     return get_default_context(observatory=observatory, state="latest")
 
 
