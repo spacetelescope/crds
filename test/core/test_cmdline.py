@@ -333,6 +333,9 @@ def test_determine_contexts_no_args(jwst_default_cache_state, jwst_pmap_pattern)
     assert matches.group() is not None
 
 
+@mark.jwst
+@mark.core
+@mark.cmdline
 def test_determine_jwst_build_context(jwst_default_cache_state, jwst_pmap_pattern):
     s = ContextsScript("cmdline.ContextsScript --contexts jwst-build")
     s.contexts = contexts = s.determine_contexts()
