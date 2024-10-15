@@ -138,8 +138,9 @@ class TestSync:
 def test_sync_jwst_latest(jwst_default_cache_state):
     with warns() as record:
         errors = SyncScript("crds.sync --contexts jwst-latest")()
-    assert errors is 0
-    assert len(record) is 0, record.pop().message
+    assert errors == 0
+    assert len(record) == 0
+    record.pop().message
 
 
 @mark.jwst
@@ -147,5 +148,6 @@ def test_sync_jwst_latest(jwst_default_cache_state):
 def test_sync_jwst_latest(jwst_default_cache_state):
     with warns() as record:
         errors = SyncScript("crds.sync --contexts jwst-build")()
-    assert errors is 0
-    assert len(record) is 0, record.pop().message
+    assert errors == 0
+    assert len(record) == 0 
+    record.pop().message
