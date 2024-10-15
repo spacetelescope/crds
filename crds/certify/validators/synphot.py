@@ -179,7 +179,7 @@ def _check_component_filename(context, reftype, suffix, filename, header):
         log.error("Header missing COMPNAME, unable to certify filename")
         return False
 
-    pattern = re.compile(".*_([0-9]{3})_" + suffix + ".fits")
+    pattern = re.compile(r".*_([0-9]{3})_" + suffix + r".fits")
 
     match = pattern.match(os.path.basename(filename))
     if not match:

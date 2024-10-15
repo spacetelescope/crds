@@ -687,7 +687,7 @@ class UnknownCertifier(Certifier):
 class AsdfCertifier(ReferenceCertifier):
     """Certifier for ADSF type,  invoke data models checks."""
 
-    _VERSION_RE = re.compile(f"^[0-9]+\.[0-9]+\.[0-9]+$")
+    _VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 
     def certify(self):
         """Certify an unknown format file."""
