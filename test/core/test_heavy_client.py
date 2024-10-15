@@ -107,6 +107,15 @@ def test_getreferences_ignore_cache(jwst_shared_cache_state):
 @mark.jwst
 @mark.core
 @mark.heavy_client
+def test_get_symbolic_build_context_name(jwst_shared_cache_state, jwst_pmap_pattern):
+    build_context = heavy_client.get_context_name("jwst", "jwst-build")
+    matches = re.match(jwst_pmap_pattern, build_context)
+    assert matches.group() is not None
+
+
+@mark.jwst
+@mark.core
+@mark.heavy_client
 def test_cache_references_multiple_bad_files(default_shared_state):
     """
     Define bestrefs with multiple errors which should all be reported
@@ -159,11 +168,10 @@ def test_get_context_name_symbolic(jwst_serverless_state):
     jwst_serverless_state.mode = 'local'
     jwst_serverless_state.config_setup()
     pattern = re.compile("jwst_[0-9]{4}.pmap")
-    ops_context = heavy_client.get_context_name("jwst", "jwst-operational")
+    latest_context = heavy_client.get_context_name("jwst", "jwst-latest")
     edit_context = heavy_client.get_context_name("jwst", "jwst-edit")
     ver_context = heavy_client.get_context_name("jwst", "jwst-versions")
-
-    for context in [ops_context, edit_context, ver_context]:
+    for context in [latest_context, edit_context, ver_context]:
         matches = re.match(pattern, context)
         assert matches.group() is not None
 
