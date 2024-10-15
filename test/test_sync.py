@@ -3,7 +3,10 @@ import os
 import crds
 from crds.core import config, rmap
 from crds.sync import SyncScript
-
+from crds import log
+import logging
+log.THE_LOGGER.logger.propagate=True
+log.set_verbose(50)
 
 EXPECTED_MAPPINGS = [
     'hst_cos.imap',
@@ -135,19 +138,29 @@ class TestSync:
 
 @mark.jwst
 @mark.sync
-def test_sync_jwst_latest(jwst_default_cache_state):
-    with warns() as record:
+def test_sync_jwst_latest(jwst_default_cache_state, caplog):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
         errors = SyncScript("crds.sync --contexts jwst-latest")()
+        out = caplog.text
     assert errors == 0
-    assert len(record) == 0
-    record.pop().message
+    assert "Symbolic context 'jwst-latest' resolves to" in out
 
 
 @mark.jwst
 @mark.sync
-def test_sync_jwst_latest(jwst_default_cache_state):
-    with warns() as record:
+def test_sync_jwst_build(jwst_default_cache_state, caplog):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
         errors = SyncScript("crds.sync --contexts jwst-build")()
+        out = caplog.text
     assert errors == 0
-    assert len(record) == 0 
-    record.pop().message
+    assert "Symbolic context 'jwst-build' resolves to" in out
+
+
+@mark.jwst
+@mark.sync
+def test_sync_latest(jwst_default_cache_state, caplog):
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        errors = SyncScript("crds.sync --contexts latest")()
+        out = caplog.text
+    assert errors == 0
+    assert "Symbolic context 'latest' resolves to" in out
