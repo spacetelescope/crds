@@ -1,4 +1,4 @@
-from pytest import mark, fixture
+from pytest import mark, fixture, warns
 import os
 import crds
 from crds.core import config, rmap
@@ -131,3 +131,21 @@ class TestSync:
 
     def test_sync_dataset_ids(self):
         self.run_script("crds.sync --contexts hst.pmap --dataset-ids LA9K03CBQ:LA9K03CBQ --fetch-references")
+
+
+@mark.jwst
+@mark.sync
+def test_sync_jwst_latest(jwst_default_cache_state):
+    with warns() as record:
+        errors = SyncScript("crds.sync --contexts jwst-latest")()
+    assert errors is 0
+    assert len(record) is 0, record.pop().message
+
+
+@mark.jwst
+@mark.sync
+def test_sync_jwst_latest(jwst_default_cache_state):
+    with warns() as record:
+        errors = SyncScript("crds.sync --contexts jwst-build")()
+    assert errors is 0
+    assert len(record) is 0, record.pop().message

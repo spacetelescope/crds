@@ -7,6 +7,7 @@ import cProfile
 import pstats
 import mock
 import yaml
+import re
 
 # ==============================================================================
 
@@ -379,3 +380,8 @@ def run_and_profile(name, case, globs={}, locs={}):
 def combined_spec(scope='session'):
     return json.load(
         open(Path(__file__).parent.parent / "crds" / "roman" / "specs" / "combined_specs.json", 'r'))
+
+
+@fixture(scope='function')
+def jwst_pmap_pattern():
+    return re.compile("jwst_[0-9]{4}.pmap")
