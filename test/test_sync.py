@@ -1,4 +1,4 @@
-from pytest import mark, fixture, warns
+from pytest import mark, fixture
 import os
 import crds
 from crds.core import config, rmap
@@ -164,3 +164,15 @@ def test_sync_latest(jwst_default_cache_state, caplog):
         out = caplog.text
     assert errors == 0
     assert "Symbolic context 'latest' resolves to" in out
+
+
+@mark.jwst
+@mark.sync
+def test_sync_latest_miri_ipc_reference(jwst_default_cache_state):
+    latest = crds.get_default_context(observatory='jwst', state='latest')
+    context = rmap.load_mapping(latest)
+    miri_imap = context.get_imap('miri')
+    ipc_rmap = miri_imap.get_rmap('ipc')
+    rmap_name = ipc_rmap.name
+    errors = SyncScript(f"crds.sync --contexts {rmap_name} --fetch-references --ignore-cache")()
+    assert errors == 0
