@@ -1,3 +1,22 @@
+12.0.4 (2024-10-17)
+===================
+
+General
+-------
+
+- replaces deprecated string literals with raw strings in regex pattern
+  matching (`#1077 <https://github.com/spacetelescope/crds/issues/1077>`_)
+- dev cal versions default to edit context (`#1089
+  <https://github.com/spacetelescope/crds/issues/1089>`_)
+
+
+Testing / Automation
+--------------------
+
+- tests for sync using symbolic context names (`#1091
+  <https://github.com/spacetelescope/crds/issues/1091>`_)
+
+
 12.0.3 (2024-10-11)
 ===================
 

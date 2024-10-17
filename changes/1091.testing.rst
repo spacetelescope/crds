@@ -1,1 +1,0 @@
-tests for sync using symbolic context names
