@@ -1,5 +1,6 @@
 from pytest import mark
 import os
+import re
 import logging
 from crds.core import cmdline, utils, log
 from crds.core import config as crds_config
@@ -320,3 +321,25 @@ def test_determine_contexts_direct(default_test_cache_state):
     assert contexts[0] == "hst.pmap"
     mappings = sorted(list(set(s.get_context_mappings())))
     assert len(mappings) >= 116
+
+@mark.jwst
+@mark.core
+@mark.cmdline
+def test_determine_contexts_no_args(jwst_default_cache_state, jwst_pmap_pattern):
+    s = ContextsScript("cmdline.ContextsScript --jwst")
+    s.contexts = contexts = s.determine_contexts()
+    assert len(contexts) == 1
+    matches = re.match(jwst_pmap_pattern, contexts[0])
+    assert matches.group() is not None
+
+
+@mark.jwst
+@mark.core
+@mark.cmdline
+def test_determine_jwst_build_context(jwst_default_cache_state, jwst_pmap_pattern):
+    s = ContextsScript("cmdline.ContextsScript --contexts jwst-build")
+    s.contexts = contexts = s.determine_contexts()
+    matches = re.match(jwst_pmap_pattern, contexts[0])
+    assert matches.group() is not None
+    mapping_closure = sorted(list(set(s.get_context_mappings())))
+    assert len(mapping_closure) >= 199
