@@ -5,7 +5,8 @@ import os.path
 import crds
 from crds import config, log
 
-os.chdir(os.path.dirname(sys.argv[0]) or ".")
+# os.chdir(os.path.dirname(sys.argv[0]) or ".")
+os.chdir(".")
 topdir = os.getcwd()
 
 CRDS_TEST_ROOT = os.environ.get("CRDS_TEST_ROOT", os.environ["HOME"])
