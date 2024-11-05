@@ -1,3 +1,14 @@
+12.0.5 (2024-11-05)
+===================
+
+ROMAN
+-----
+
+- Adds new reference mapping templates for Aperture Correction (apcorr) and
+  AB-Vega Offset (aboffset) (`#1097
+  <https://github.com/spacetelescope/crds/issues/1097>`_)
+
+
 12.0.4 (2024-10-17)
 ===================
 
