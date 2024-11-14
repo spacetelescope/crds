@@ -38,7 +38,7 @@ META.SUBARRAY.NAME          H   C   O   SUB128,\
                                         SUB400P,SUB400X256ALWB,\
                                         SUB640,SUB640A210R,SUB640ASWB,SUB640B210R,SUB640BSWB,\
                                         SUB64FP1A,SUB64FP1B,SUB64P,\
-                                        SUB8FP1A,SUB8FP1B,\
+                                        SUB8FP1A,SUB8FP1B,SUB8FP6A, \
                                         SUB96DHSPILA,SUB96DHSPILB,\
                                         SUBFSA210R,SUBFSA335R,SUBFSA430R,SUBFSALWB,SUBFSASWB,\
                                         SUBGRISM128,SUBGRISM256,SUBGRISM64,\
