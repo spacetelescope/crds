@@ -1,3 +1,13 @@
+12.0.6 (2024-11-14)
+===================
+
+JWST
+----
+
+- Added SUB8FP6A to nircam_all.tpn. (`#1098
+  <https://github.com/spacetelescope/crds/issues/1098>`_)
+
+
 12.0.5 (2024-11-05)
 ===================
 
