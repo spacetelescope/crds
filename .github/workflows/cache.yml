@@ -88,7 +88,7 @@ jobs:
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
         run: pip install git+https://github.com/spacetelescope/jwst roman-datamodels
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
-        run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ steps.retrieve-previous-cache.outputs.cache-matched-key != '' && 'u' || 'c' }}
+        run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} u
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
         name: save combined CRDS cache (`${{ steps.key.outputs.key }}`)
         uses: actions/cache/save@v4
