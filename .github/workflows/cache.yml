@@ -63,7 +63,7 @@ jobs:
           key: ${{ steps.key.outputs.key }}
           restore-keys: |
             test-cache-
-      - if: steps.lookup-cache.outputs.cache-hit != 'true'
+      - if: steps.retrieve-previous-cache.outputs.cache-matched-key == ''
         run: |
           git clone https://github.com/spacetelescope/crds-cache-test.git
           mv crds-cache-test ${{ env.CRDS_TEST_ROOT }}
