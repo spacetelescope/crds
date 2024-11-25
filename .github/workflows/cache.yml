@@ -84,9 +84,9 @@ jobs:
           cache-environment: true
           cache-downloads: true
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
-        run: pip install git+https://github.com/spacetelescope/jwst roman-datamodels
+        run: ./install
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
-        run: pip uninstall --yes crds && ./install && pip install .
+        run: pip install git+https://github.com/spacetelescope/jwst roman-datamodels
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
         run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ steps.retrieve-previous-cache.outputs.cache-matched-key != '' && 'u' || 'c' }}
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
