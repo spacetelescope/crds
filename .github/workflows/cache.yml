@@ -1,4 +1,4 @@
-name: test cache
+name: download CRDS test cache
 
 on:
   workflow_call:
@@ -43,7 +43,7 @@ jobs:
           repository: spacetelescope/crds
       - id: key
         run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
-      - id: lookup-combined-cache
+      - id: lookup-cache
         name: check for existence of combined CRDS cache (`${{ steps.key.outputs.key }}`)
         uses: actions/cache/restore@v4
         with:
@@ -52,26 +52,22 @@ jobs:
             ${{ env.CRDS_TESTING_CACHE }}
           key: ${{ steps.key.outputs.key }}
           lookup-only: true
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
-        id: crds-cache-test
+      - if: steps.lookup-cache.outputs.cache-hit != 'true'
+        id: retrieve-previous-cache
+        name: retrieve a previous combined CRDS cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ env.CRDS_PATH }}
+            ${{ env.CRDS_TESTING_CACHE }}
+          key: ${{ steps.key.outputs.key }}
+          restore-keys: |
+            test-cache-
+      - if: steps.lookup-cache.outputs.cache-hit != 'true'
         run: |
           git clone https://github.com/spacetelescope/crds-cache-test.git
           mv crds-cache-test ${{ env.CRDS_TEST_ROOT }}
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
-        id: retrieve-hst-cache
-        name: retrieve HST CRDS cache (`test-cache-${{ needs.contexts.outputs.hst }}`)
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.CRDS_PATH }}/**/hst*
-          key: test-cache-${{ needs.contexts.outputs.hst }}
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
-        id: retrieve-jwst-cache
-        name: retrieve JWST CRDS cache (`test-cache-${{ needs.contexts.outputs.jwst }}`)
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.CRDS_PATH }}/**/jwst*
-          key: test-cache-${{ needs.contexts.outputs.jwst }}
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
+      - if: steps.lookup-cache.outputs.cache-hit != 'true'
         uses: mamba-org/setup-micromamba@v2
         with:
           environment-name: crds-testing
@@ -87,13 +83,13 @@ jobs:
           init-shell: bash
           cache-environment: true
           cache-downloads: true
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
+      - if: steps.lookup-cache.outputs.cache-hit != 'true'
         run: pip install git+https://github.com/spacetelescope/jwst roman-datamodels
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
+      - if: steps.lookup-cache.outputs.cache-hit != 'true'
         run: pip uninstall --yes crds && ./install && pip install .
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
-        run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ (steps.retrieve-hst-cache.outputs.cache-hit == 'true' || steps.retrieve-jwst-cache.outputs.cache-hit == 'true') && 'u' || 'c' }}
-      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
+      - if: steps.lookup-cache.outputs.cache-hit != 'true'
+        run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} ${{ steps.retrieve-previous-cache.outputs.cache-matched-key != '' && 'u' || 'c' }}
+      - if: steps.lookup-cache.outputs.cache-hit != 'true'
         name: save combined CRDS cache (`${{ steps.key.outputs.key }}`)
         uses: actions/cache/save@v4
         with:
