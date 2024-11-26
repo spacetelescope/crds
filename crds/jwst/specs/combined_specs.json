@@ -3474,6 +3474,38 @@
                 "BAND"
             ]
         },
+        "psf":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"miri_psfmask.rmap",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PSF",
+            "filetype":"PSF",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_psf_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_psf.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.EXP_TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"0b775db9977c34845445b989b9597d04cc8bfd2b",
+            "suffix":"psf",
+            "text_descr":"A wavelength array to be used for spectral extraction",
+            "tpn":"miri_psf.tpn",
+            "unique_rowkeys":null
+        },
         "psfmask":{
             "classes":[
                 "Match",
@@ -7015,6 +7047,30 @@
             "suffix":"ote",
             "text_descr":"Transform through the Optical Telescope Element",
             "tpn":"nirspec_ote.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-badpixselfcalstep":{
+            "derived_from":"Created by Hunter Brown 2024-10-10",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-badpixselfcalstep",
+            "filetype":"pars-badpixselfcalstep",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pars-badpixselfcalstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pars-badpixselfcalstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"41bc0a03d084c3b31fae801972a8222e1ace36f1",
+            "suffix":"pars-badpixselfcalstep",
+            "text_descr":"Base rmap for nirspec-badpixselfcalstep",
+            "tpn":"nirspec_pars-badpixselfcalstep.tpn",
             "unique_rowkeys":null
         },
         "pars-darkcurrentstep":{

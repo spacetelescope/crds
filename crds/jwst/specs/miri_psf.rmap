@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'miri_psfmask.rmap',
+    'file_ext' : '.fits',
+    'filekind' : 'PSF',
+    'filetype' : 'PSF',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_psf.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.EXP_TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '0b775db9977c34845445b989b9597d04cc8bfd2b',
+    'suffix' : 'psf',
+    'text_descr' : 'A wavelength array to be used for spectral extraction',
+}
+
+selector = Match({
+})
