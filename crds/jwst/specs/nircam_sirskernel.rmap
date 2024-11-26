@@ -8,7 +8,7 @@ header = {
     'name' : 'nircam_sirskernel.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '7e68052cef44f94d28aa2f602369325c6c76995c',
+    'sha1sum' : '179a0f57a882ef5d8fbbeafc03a96f0280c1ce02',
     'suffix' : 'sirskernel',
     'text_descr' : 'Convolution kernel for the Simple Improved Reference Subtraction approach.',
 }
