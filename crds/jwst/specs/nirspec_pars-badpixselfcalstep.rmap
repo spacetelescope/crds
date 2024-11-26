@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Created by Hunter Brown 2024-10-10',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-badpixselfcalstep',
+    'filetype' : 'pars-badpixselfcalstep',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pars-badpixselfcalstep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '41bc0a03d084c3b31fae801972a8222e1ace36f1',
+    'suffix' : 'pars-badpixselfcalstep',
+    'text_descr' : 'Base rmap for nirspec-badpixselfcalstep',
+}
+
+selector = Match({
+})

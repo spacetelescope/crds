@@ -1,0 +1,1 @@
+Added miri_psf.rmap, nircam_convkernel.rmap, and nirspec_pars-badpixselfcalstep.rmap.

@@ -1,1 +1,0 @@
-Added SUB8FP6A to nircam_all.tpn.

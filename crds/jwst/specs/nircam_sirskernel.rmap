@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Handmade on 11/26/24 by Hunter Brown',
+    'file_ext' : '.asdf',
+    'filekind' : 'sirskernel',
+    'filetype' : 'SIRSKERNEL',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'nircam_sirskernel.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '179a0f57a882ef5d8fbbeafc03a96f0280c1ce02',
+    'suffix' : 'sirskernel',
+    'text_descr' : 'Convolution kernel for the Simple Improved Reference Subtraction approach.',
+}
+
+selector = Match({
+})
