@@ -1,3 +1,22 @@
+12.0.7 (2024-11-26)
+============================================
+
+JWST
+----
+
+- Added miri_psf.rmap, nircam_convkernel.rmap, and nirspec_pars-badpixselfcalstep.rmap. (`#1099
+  <https://github.com/spacetelescope/crds/issues/1099>`_)
+
+12.0.6 (2024-11-19)
+============================================
+
+JWST
+----
+
+- Added SUB8FP6A to nircam_all.tpn. (`#1098
+  <https://github.com/spacetelescope/crds/issues/1098>`_)
+
+
 12.0.5 (2024-11-05)
 ===================
 
