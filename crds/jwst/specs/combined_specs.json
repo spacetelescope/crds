@@ -4055,6 +4055,32 @@
             "tpn":"nircam_area.tpn",
             "unique_rowkeys":null
         },
+        "convkernel":{
+            "derived_from":"Handmade on 11/26/24 by Hunter Brown",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"convkernel",
+            "filetype":"CONVKERNEL",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_convkernel_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nircam_convkernel.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"b10673bfc82d37e3564c5b9014e225c0ba90313a",
+            "suffix":"convkernel",
+            "text_descr":"Convolution kernels for NIRCam.",
+            "tpn":"nircam_convkernel.tpn",
+            "unique_rowkeys":null
+        },
         "dark":{
             "classes":[
                 "Match",
