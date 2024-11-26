@@ -3493,14 +3493,14 @@
                 [
                     "META.INSTRUMENT.DETECTOR",
                     "META.INSTRUMENT.FILTER",
-                    "META.INSTRUMENT.EXP_TYPE"
+                    "META.EXPOSURE.TYPE"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"0b775db9977c34845445b989b9597d04cc8bfd2b",
+            "sha1sum":"080c984cf3255235de5e2309ef0ef6b20a6b39e9",
             "suffix":"psf",
             "text_descr":"A wavelength array to be used for spectral extraction",
             "tpn":"miri_psf.tpn",
@@ -4075,9 +4075,9 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"b10673bfc82d37e3564c5b9014e225c0ba90313a",
+            "sha1sum":"7e68052cef44f94d28aa2f602369325c6c76995c",
             "suffix":"convkernel",
-            "text_descr":"Convolution kernels for NIRCam.",
+            "text_descr":"Convolution kernels for the reference pixel subtraction step.",
             "tpn":"nircam_convkernel.tpn",
             "unique_rowkeys":null
         },

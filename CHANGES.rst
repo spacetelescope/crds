@@ -4,8 +4,8 @@
 JWST
 ----
 
-- Added miri_psf.rmap, nircam_convkernel.rmap, and nirspec_pars-badpixselfcalstep.rmap. (`#1099
-  <https://github.com/spacetelescope/crds/issues/1099>`_)
+- Added miri_psf.rmap, nircam_convkernel.rmap, and nirspec_pars-badpixselfcalstep.rmap. (`#1100
+  <https://github.com/spacetelescope/crds/issues/1100>`_)
 
 12.0.6 (2024-11-19)
 ============================================

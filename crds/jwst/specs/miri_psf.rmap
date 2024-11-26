@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_psf.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.EXP_TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '0b775db9977c34845445b989b9597d04cc8bfd2b',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '080c984cf3255235de5e2309ef0ef6b20a6b39e9',
     'suffix' : 'psf',
     'text_descr' : 'A wavelength array to be used for spectral extraction',
 }
