@@ -3,7 +3,7 @@ name: download CRDS test cache
 on:
   workflow_call:
     inputs:
-      path:
+      cache_path:
         description: path to download files to and cache
         type: string
         required: false
@@ -39,7 +39,7 @@ jobs:
     name: download and cache CRDS test files
     runs-on: ubuntu-latest
     steps:
-      - run: echo CRDS_TEST_ROOT=${{ inputs.path != '' && inputs.path || '/tmp/crds' }} >> $GITHUB_ENV
+      - run: echo CRDS_TEST_ROOT=${{ inputs.cache_path != '' && inputs.cache_path || '/tmp/crds' }} >> $GITHUB_ENV
       - run: |
           echo CRDS_PATH=${{ env.CRDS_TEST_ROOT }}/crds-cache-default-test >> $GITHUB_ENV
           echo CRDS_TESTING_CACHE=${{ env.CRDS_TEST_ROOT }}/crds-cache-test >> $GITHUB_ENV
