@@ -4,10 +4,10 @@ on:
   workflow_call:
     inputs:
       cache_path:
-        description: path to download files to and cache
+        description: path to test cache on runner
         type: string
         required: false
-        default: ''
+        default: '/tmp/crds'
     outputs:
       cache_path:
         value: ${{ jobs.cache.outputs.cache_path }}
@@ -18,6 +18,12 @@ on:
       testing_cache:
         value: ${{ jobs.cache.outputs.testing_cache }}
   workflow_dispatch:
+    inputs:
+      cache_path:
+        description: path to test cache on runner
+        type: string
+        required: false
+        default: '/tmp/crds'
   schedule:
     # Weekly Monday midnight
     - cron: "0 0 * * 1"
