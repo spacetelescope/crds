@@ -34,20 +34,15 @@ homepage = "https://github.com/spacetelescope/crds"
 [project.optional-dependencies]
 jwst = ["jwst"]
 roman = ["roman_datamodels"]
-submission = ["requests", "parsley", "bs4"]
+submission = ["bs4"]
 dev = ["ipython", "jupyterlab", "ansible", "helm"]
 test = [
-  "lockfile",
   "mock",
-  "pylint",
-  "flake8",
-  "bandit",
-  "metrics-logger",
   "pytest >= 6.0",
   "pytest-astropy",
   "pytest-doctestplus>=0.10.0",
-  "pytest-cov",
-  "pytest-profiling",
+  "stsynphot",
+  "stdatamodels",
 ]
 docs = [
   "sphinx",
