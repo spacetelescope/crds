@@ -2,22 +2,33 @@ name: download CRDS test cache
 
 on:
   workflow_call:
+    inputs:
+      cache_path:
+        description: path to test cache on runner
+        type: string
+        required: false
+        default: '/tmp/crds'
     outputs:
+      cache_path:
+        value: ${{ jobs.cache.outputs.cache_path }}
+      key:
+        value: ${{ jobs.cache.outputs.cache_key }}
       path:
-        value: ${{ jobs.cache.outputs.path }}
+        value: ${{ jobs.cache.outputs.crds_path }}
       testing_cache:
         value: ${{ jobs.cache.outputs.testing_cache }}
-      key:
-        value: ${{ jobs.cache.outputs.key }}
   workflow_dispatch:
+    inputs:
+      cache_path:
+        description: path to test cache on runner
+        type: string
+        required: false
+        default: '/tmp/crds'
   schedule:
     # Weekly Monday midnight
     - cron: "0 0 * * 1"
 
 env:
-  CRDS_TEST_ROOT: /tmp
-  CRDS_PATH: /tmp/crds-cache-default-test
-  CRDS_TESTING_CACHE: /tmp/crds-cache-test
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
   LD_LIBRARY_PATH: /usr/local/lib
@@ -33,11 +44,11 @@ jobs:
     needs: [ contexts ]
     name: download and cache CRDS test files
     runs-on: ubuntu-latest
-    outputs:
-      path: ${{ env.CRDS_PATH }}
-      testing_cache: ${{ env.CRDS_TESTING_CACHE }}
-      key: ${{ steps.key.outputs.key }}
     steps:
+      - run: echo CRDS_TEST_ROOT=${{ inputs.cache_path != '' && inputs.cache_path || '/tmp/crds' }} >> $GITHUB_ENV
+      - run: |
+          echo CRDS_PATH=${{ env.CRDS_TEST_ROOT }}/crds-cache-default-test >> $GITHUB_ENV
+          echo CRDS_TESTING_CACHE=${{ env.CRDS_TEST_ROOT }}/crds-cache-test >> $GITHUB_ENV
       - uses: actions/checkout@v4
         with:
           repository: spacetelescope/crds
@@ -97,4 +108,8 @@ jobs:
             ${{ env.CRDS_PATH }}
             ${{ env.CRDS_TESTING_CACHE }}
           key: ${{ steps.key.outputs.key }}
-        
+    outputs:
+      cache_path: ${{ env.CRDS_TEST_ROOT }}
+      cache_key: ${{ steps.key.outputs.key }}
+      crds_path: ${{ env.CRDS_PATH }}
+      crds_testing_cache: ${{ env.CRDS_TESTING_CACHE }}
