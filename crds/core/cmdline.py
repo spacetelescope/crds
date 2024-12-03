@@ -343,8 +343,7 @@ class Script:
     @property
     def default_context(self):
         """Return the default latest .pmap defined by the CRDS server or cache."""
-        default = self.server_info.get("latest_context", "operational_context")
-        return self.server_info[default]
+        return self.server_info.get("latest_context", self.server_info["operational_context"])
 
     def get_words(self, word_list):
         """Process a file list,  expanding @-files into corresponding lists of
@@ -742,7 +741,7 @@ class ContextsScript(Script):
         elif config.get_crds_env_context():
             contexts = [self.resolve_context(config.get_crds_env_context())]
         else:
-            contexts = [self.resolve_context(self.observatory + "-operational")]
+            contexts = [self.resolve_context(self.observatory + "-latest")]
         log.verbose("Determined contexts: ", contexts, verbosity=55)
         return sorted(contexts)
 
@@ -856,11 +855,11 @@ class ContextsScript(Script):
 
 def expand_all_instruments(observatory, context):
     """Expand symbolic context specifiers for rmaps with "all" for instrument
-    into the list of rmaps for every instrument in the related context (e.g. edit or operational).
+    into the list of rmaps for every instrument in the related context (e.g. edit or latest).
 
-    e.g.  jwst-all-photom-operational -->  [jwst-miri-photom-operational, jwst-nircam-photom-operational, ...]
+    e.g.  jwst-all-photom-operational -->  [jwst-miri-photom-latest, jwst-nircam-photom-latest, ...]
 
-    Expansion of "all" is determined by instruments in e.g. jwst-operational
+    Expansion of "all" is determined by instruments in e.g. jwst-latest
     """
     mtch = config.CONTEXT_RE.match(context)
     if mtch and mtch.group("instrument") == "all":

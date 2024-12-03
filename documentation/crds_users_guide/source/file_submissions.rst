@@ -246,19 +246,19 @@ Edit Context
 .pmaps are derived by default.
 
 In this way CRDS deliveries normally chain from one context to the next in a
-linear flow which can advance ahead of the *Operational Context* indefinitely
+linear flow which can advance ahead of the *Latest Context* indefinitely
 to support last minute testing prior to being used for real calibrations.  In
 almost all cases, eventually the current *Edit Context* is adopted for use in
-the archive pipeline and effectively becomes the *Operational Context*.
+the archive pipeline and effectively becomes the *Latest Context*.
 
-Operational Context
+Latest Context
 !!!!!!!!!!!!!!!!!!!
 
-*Operational Context* is the .pmap which is nominally in use by the pipeline.
-While it's common to make new files operational as each context is added, it's
-possible for the *Operational Context* to lag behind the *Edit Context* when
-new files are being added but need additional testing in OPS.   Deriving
-from the *Operational Context* is a crude kind of reversion since CRDS
+*Latest Context* is the .pmap which is nominally in use by the pipeline.
+While it's common to make new files the latest as each context is added, it's
+possible for the *Latest Context* to lag behind the *Edit Context* when
+new files are being added but need additional testing in OPS. Deriving
+from the *Latest Context* is a crude kind of reversion since CRDS
 effectively branches around any existing subsequent contexts.
 
 Recent
@@ -550,7 +550,7 @@ Manual .pmap update
 
 5. From here onward,  this should be a normal file submission,  with
 corresponding processes to archive the files,  Set Context the default
-OPERATIONAL context,  and sync the pipeline's CRDS cache.
+LATEST context,  and sync the pipeline's CRDS cache.
 
 6. Use Set Context to update the **EDIT context** to this .pmap
 as the default starting point for subsequent file submissions.
@@ -568,7 +568,7 @@ When Generate Contexts is OFF and a .pmap is manually updated, the Set Context
 page should generally be used to update the Editing Context so that future
 submissions will derive from the new .pmap by default.
 
-The Set Context page can be used to update either the Operational or Editing
+The Set Context page can be used to update either the Latest or Editing
 Context.  When updating the Editing Context, you may need to open the context
 selection accordion and type in the name of the new .pmap in User Specified.
 Verify that the correct .pmap is being set.
@@ -598,10 +598,10 @@ also supports reversing the decision and marking it good once more.
 The CRDS procedure for marking files bad requires three steps:
 
 1. Create a clean context which does not contain any prospective bad files.
-2. Make the clean context operational using Set Context.
+2. Make the clean context latest using Set Context.
 3. Mark the prospective bad files actually bad using Mark Bad Files.
 
-This procedure maintains the invariant that the operational pipeline context
+This procedure maintains the invariant that the latest pipeline context
 contains no known bad files.  The designation as bad files does not take effect
 until the pipeline CRDS cache is synchronized with the server.
 
@@ -671,7 +671,7 @@ files to CRDS.
 Add references can be used to undo the effects of Delete References in a
 perhaps distant descendant context containing other changes.  Add references
 can also be used to add tested references from a branched context into the
-current operational context.
+current latest context.
 
 Files are specified for Add References by listing their names in the Added
 Files field of the input form, separated by spaces, commas, and/or newlines.

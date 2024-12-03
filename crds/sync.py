@@ -452,9 +452,9 @@ class SyncScript(cmdline.ContextsScript):
         except AttributeError:
             new_context = heavy_client.load_server_info(self.observatory).operational_context
         if old_context == new_context:
-            log.error("Expected operational context switch but starting and post-sync contexts are both", repr(old_context))
+            log.error("Expected latest context switch but starting and post-sync contexts are both", repr(old_context))
         else:
-            log.info("Operational context updated from", repr(old_context), "to",  repr(new_context))
+            log.info("Latest context updated from", repr(old_context), "to",  repr(new_context))
 
     def push_context(self):
         """Push the final context recorded in the local cache to the CRDS server so it can be displayed
@@ -633,7 +633,7 @@ class SyncScript(cmdline.ContextsScript):
                 self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]),
                                       "LOCAL=" + repr(sha1sum))
 
-        if info["state"] not in ["archived", "operational", "delivered"]:
+        if info["state"] not in ["archived", "operational", "delivered", "latest"]:
             log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
 
         if info["rejected"] != "false":

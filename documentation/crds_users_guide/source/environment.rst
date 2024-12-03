@@ -255,9 +255,9 @@ CRDS Context
 
 The CRDS context file defines a version of CRDS rules used to assign best references.
 
-The CRDS context used to evaluate CRDS best references defaults to `{observatory}`-operational, e.g. `jwst-operational`.  This is an indirect name for the context in use or soon-to-be in use in the archive pipeline.
+The CRDS context used to evaluate CRDS best references defaults to `{observatory}`-latest, e.g. `jwst-latest`.  This is an indirect name for the context in use or soon-to-be in use in the archive pipeline.
 
-During development `-operational` corresponds to the latest context which is sufficiently mature for broad use and is automatic.
+During development `-latest` corresponds to the latest context which is sufficiently mature for broad use and is automatic.
 
 The context used can be overridden to some specific historical or experimental context by setting
 the **CRDS_CONTEXT** environment variable:
@@ -434,7 +434,7 @@ contains project specific sub-directories::
 
 - *references* contains reference files themselves
 
-- *config* contains system configuration information like operational context and bad files
+- *config* contains system configuration information like latest context and bad files
 
 Inidivdual branches of a cache can be overriden to locate that branch outside the directory
 tree specified by `CRDS_PATH`. The remaining directories can be overriden as well or derived

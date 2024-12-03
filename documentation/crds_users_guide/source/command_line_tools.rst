@@ -210,8 +210,10 @@ New Context
 ...........
 
 crds.bestrefs always computes best references with respect to a context which
-can be explicitly specified with the `--new-context` parameter.  If `--new-context`
-is not specified, the default operational context is determined by consulting
+can be explicitly specified with the `--new-context` parameter.  For JWST, if `--new-context`
+is not specified, the default build context is determined by checking the CRDS Server to find the
+appropriate context for the Calibration Software that a user has locally installed.
+In the case of HST or Roman, the default latest context is determined by consulting
 the CRDS server or looking in the local cache.
 
 ...........
@@ -604,7 +606,7 @@ file against the file it replaces looking for new or missing table rows.
   -a, --dont-parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
   -e, --exist           Certify reference files referred to by mappings exist.
   -p, --dump-provenance  Dump provenance keywords.
-  -x COMPARISON_CONTEXT, --comparison-context COMPARISON_CONTEXT   Pipeline context defining comparison files.  Defaults to operational context,  use 'none' to suppress.
+  -x COMPARISON_CONTEXT, --comparison-context COMPARISON_CONTEXT   Pipeline context defining comparison files.  Defaults to latest context,  use 'none' to suppress.
   -y COMPARISON_REFERENCE, --comparison-reference COMPARISON_REFERENCE  Comparison reference for tables certification.
   -s, --sync-files      Fetch any missing files needed for the requested difference from the CRDS server.
   -v, --verbose         Set log verbosity to True,  nominal debug level.
@@ -809,7 +811,7 @@ explained above:
   .. code-block:: bash
 
       $ crds list --cat jwst_nirspec_dark_0036.fits
-      CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
+      CRDS - INFO - Symbolic context 'jwst-build' resolves to 'jwst_0167.pmap'
       File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
       {'A1_COL_C': '8.9600000e+002',
       'A1_CONF1': '2.1846000e+004',
@@ -870,7 +872,7 @@ and regressions can be printed or stored.
    .. code-block:: bash
 
        $ crds list --dataset-headers jcl403010 --first-id --minimize-header
-       CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+       CRDS - INFO - Symbolic context 'hst-latest' resolves to 'hst_0462.pmap'
        CRDS - INFO - Dataset pars for 'JCL403010:JCL403ECQ' with respect to 'hst_0462.pmap'
        {'APERTURE': 'WFC1',
         'ATODCORR': 'OMIT',
@@ -914,7 +916,7 @@ Sometimes it's desirable to know the individual exposures CRDS associates with a
   .. code-block:: bash
 
       $ crds list --dataset-headers jcl403010 --id-expansions-only
-      CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+      CRDS - INFO - Symbolic context 'hst-latest' resolves to 'hst_0462.pmap'
       JCL403010:JCL403ECQ
       JCL403010:JCL403EEQ
       JCL403010:JCL403EGQ
@@ -930,7 +932,7 @@ Sometimes it's desirable to know the individual exposures CRDS associates with a
 
   .. code-block:: bash
 
-      $ python m crds.list --operational-context
+      $ python m crds.list --build-context
       jwst_0204.pmap 
 
 lists the context which has been *commanded* as default on the CRDS server.
@@ -974,7 +976,7 @@ contexts:
       jwst_0208.pmap
       jwst_0209.pmap
       
-      $ crds list --resolve-contexts  --contexts jwst-miri-dark-operational 
+      $ crds list --resolve-contexts  --contexts jwst-miri-dark-build
       jwst_miri_dark_0012.rmap
       
       $ crds list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00

@@ -56,7 +56,7 @@ class StaleByClassScript(cmdline.Script, cmdline.UniqueErrorsMixin):
 `stale` is the initial attempt at determining how current the calibration is for
 products in the JWST archive. For this report, "staleness" is defined as those
 dataset ids whose context is not current yet appear in affected dataset reports
-for all operational context changes between the exposure's context and the
+for all latest context changes between the exposure's context and the
 current context.
     """
 

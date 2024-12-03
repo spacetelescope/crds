@@ -36,7 +36,7 @@ class UnknownCDBSPrefix(Exception):
   pass
 
 # global compiled regex for splitting filenames
-filesplit = re.compile("[_\.]")
+filesplit = re.compile(r"[_\.]")
 
 # post-SM2 instruments supported by CDBS
 CDBS_supports = ("ACS","STIS","NICMOS","WFPC2","WFC3","COS")

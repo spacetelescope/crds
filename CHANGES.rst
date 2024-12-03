@@ -1,3 +1,90 @@
+12.0.7 (2024-11-26)
+============================================
+
+JWST
+----
+
+- Added miri_psf.rmap, nircam_convkernel.rmap, and nirspec_pars-badpixselfcalstep.rmap. (`#1100
+  <https://github.com/spacetelescope/crds/issues/1100>`_)
+
+12.0.6 (2024-11-19)
+============================================
+
+JWST
+----
+
+- Added SUB8FP6A to nircam_all.tpn. (`#1098
+  <https://github.com/spacetelescope/crds/issues/1098>`_)
+
+
+12.0.5 (2024-11-05)
+===================
+
+ROMAN
+-----
+
+- Adds new reference mapping templates for Aperture Correction (apcorr) and
+  AB-Vega Offset (aboffset) (`#1097
+  <https://github.com/spacetelescope/crds/issues/1097>`_)
+
+
+12.0.4 (2024-10-17)
+===================
+
+General
+-------
+
+- replaces deprecated string literals with raw strings in regex pattern
+  matching (`#1077 <https://github.com/spacetelescope/crds/issues/1077>`_)
+- dev cal versions default to edit context (`#1089
+  <https://github.com/spacetelescope/crds/issues/1089>`_)
+
+
+Testing / Automation
+--------------------
+
+- tests for sync using symbolic context names (`#1091
+  <https://github.com/spacetelescope/crds/issues/1091>`_)
+
+
+12.0.3 (2024-10-11)
+===================
+
+General
+-------
+
+- latest is a valid file state, context spec includes build and latest (`#1088
+  <https://github.com/spacetelescope/crds/issues/1088>`_)
+
+
+12.0.2 (2024-10-07)
+===================
+
+Documentation
+-------------
+
+- Fixed changelog version [#1083]
+
+- Updated image names [#1084]
+
+
+12.0.1 (2024-10-07)
+===================
+
+Documentation
+-------------
+
+- Doc updates for user guide to switch from Operational to Latest (`#1080
+  <https://github.com/spacetelescope/crds/issues/1080>`_)
+
+General
+-------
+
+- client.api.get_default_context falls back to observatory as only argument to
+  maintain compatibility with crds_server < 13.0.0 (`#1078
+  <https://github.com/spacetelescope/crds/issues/1078>`_)
+
+
 12.0.0 (2024-09-25)
 ===================
 
@@ -7,9 +94,6 @@ Documentation
 - use ``towncrier`` to handle change log entries (`#1068
   <https://github.com/spacetelescope/crds/issues/1068>`_)
 
-
-12.0.0 (unreleased)
-====================
 
 General
 -------

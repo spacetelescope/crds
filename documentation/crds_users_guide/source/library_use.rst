@@ -106,7 +106,8 @@ reference file paths:
                       
           context :   The name of the pipeline context mapping which should be
                   used to define best reference lookup rules,  or None.  If 
-                  `context` is None,  use the latest operational pipeline mapping.
+                  `context` is None,  use the latest pipeline mapping. For JWST,
+                  this is the build context mapping.
                   
                   str
                   
@@ -147,7 +148,7 @@ reference type:
         filling in appropriate reference type keywords.
     
         Define best references using either .pmap `context` or the default
-        CRDS operational context if context=None.
+        CRDS context if context=None.
     
         If `reftypes` is defined, assign bestrefs to only the listed
         reftypes, otherwise assign all reftypes.
@@ -181,7 +182,20 @@ crds.get_default_context()
 ..........................
 
 `get_default_context()` returns the name of the pipeline mapping which is 
-currently in operational use.
+currently the Build Context in the case of JWST based on the version of the locally installed
+Calibration code, while it returns the Latest Context for HST and Roman from the Crds Server or the local cache.
+!!!!!!!!!!!!!!!!!!!
+
+For HST and Roman, *Latest Context* is the .pmap which is nominally in use by the pipeline. For JWST, see below.
+While it's common to make new files become the *Latest* as each context is added, it's
+possible for the *Latest Context* to lag behind the *Edit Context* when
+new files are being added but need additional testing in OPS, and the *Latest Context* when the
+new files are confirmed. Deriving from the *Latest Context* is a crude kind of reversion since CRDS
+effectively branches around any existing subsequent contexts.
+
+*Build Context* applies to JWST, and is the .pmap which corresponds to the most recently installed
+JWST DMS Install and JWST Calibration code. It is guaranteed to work with that delivered code, and stays consistent
+after new reference files are delivered.
 
 The default context defines the matching rules used to determine best 
 reference files for a given set of parameters:
