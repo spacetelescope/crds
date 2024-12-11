@@ -54,6 +54,9 @@ docs = [
 aws = ["boto3", "awscli"]
 synphot = ["stsynphot", "pysynphot"]
 
+[project.entry-points.pytest11]
+report_crds_context = "crds.pytest_crds.plugin"
+
 [build-system]
 requires = ["setuptools>=61.2", "setuptools_scm[toml]>=3.4", "wheel"]
 build-backend = "setuptools.build_meta"
