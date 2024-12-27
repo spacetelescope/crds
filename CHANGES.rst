@@ -1,3 +1,25 @@
+12.0.9 (2024-12-27)
+===================
+
+JWST
+----
+
+- Added miri_psf.rmap, nircam_convkernel.rmap, and
+  nirspec_pars-badpixselfcalstep.rmap. (`#1099
+  <https://github.com/spacetelescope/crds/issues/1099>`_)
+- Updated EXPTYPE parkey in miri psf and description in Nircam convkernel
+  (`#1100 <https://github.com/spacetelescope/crds/issues/1100>`_)
+- Added reftype for pars-cleanflickernoisestep. (`#1102
+  <https://github.com/spacetelescope/crds/issues/1102>`_)
+
+
+ROMAN
+-----
+
+- added new epsf rmap for roman (`#1104
+  <https://github.com/spacetelescope/crds/issues/1104>`_)
+
+
 12.0.7 (2024-11-26)
 ============================================
 

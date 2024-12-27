@@ -1,1 +1,0 @@
-Updated EXPTYPE parkey in miri psf and description in Nircam convkernel
