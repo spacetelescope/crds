@@ -351,6 +351,13 @@ def tobs_test_cache_state(test_cache):
     yield cfg
     cfg.cleanup()
 
+
+@fixture(scope='function')
+def jwst_local_ro_cache_state():
+    cfg = ConfigState(observatory='jwst')
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
  
 
 # ==============================================================================

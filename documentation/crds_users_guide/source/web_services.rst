@@ -28,8 +28,8 @@ Centralized Default
 `get_default_context()` returns the name of the context which is
 currently in use by default in the archive pipeline, e.g. 'jwst_0001.pmap'.
 This value is set and maintained on the CRDS Server. The actual pipeline context 
-differs from this commanded valuer until the pipeline is synchronized with the CRDS
-server using cron_sync.   
+differs from this commanded value until the pipeline is synchronized with the CRDS
+server using cron_sync.
 
 The commanded default can be obtained using the CRDS client library as follows:
 
@@ -50,6 +50,15 @@ The commanded default can be obtained using the CRDS client library as follows:
            >>> from crds import client
            >>> client.get_default_context('jwst')
            'jwst_0101.pmap'
+        
+       .. note::
+
+        If using a local, read-only CRDS configuration on the internal STScI network - and in particular if you
+        do not have any CRDS environment variables set - the context used to retrieve references will default to
+        the "latest" context no matter what. This behavior is due to the fact that the build context is retrieved
+        via API from the server according to the version of JWST pipeline calibration code you have installed locally.
+        With no environment variables set, CRDS assumes a local configuration and falls back to the latest cached context.
+
 
    .. group-tab:: ROMAN
 

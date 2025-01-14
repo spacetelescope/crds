@@ -60,7 +60,7 @@ import pickle
 from . import rmap, log, utils, config
 from .constants import ALL_OBSERVATORIES
 from .log import srepr
-from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsConfigError, CrdsDownloadError
+from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsConfigError, CrdsDownloadError, ServiceError
 from crds.client import api
 
 # import crds  # forward
@@ -429,7 +429,11 @@ def get_final_context(info, context):
         if context == 'latest':
             input_context = latest_context
         elif context == 'build':
-            input_context = api.get_build_context(info.observatory)
+            try:
+                input_context = api.get_build_context(info.observatory)
+            except ServiceError:
+                log.verbose_warning("JSON RPC Service Error while checking build context - defaulting to cached Latest context.")
+                input_context = latest_context
         else:
             input_context = context
         log.verbose("Using reference file selection rules", srepr(input_context), "defined by caller.")
@@ -445,12 +449,14 @@ def get_final_context(info, context):
                     "defined by environment CRDS_CONTEXT.")
         info.status = "env var CRDS_CONTEXT"
     else:
+        # For non-JWST missions or JWST in local mode, default is latest (formerly operational) context
+        input_context = latest_context
         # Default for JWST if no env context and no explicit context is BUILD CONTEXT for installed jwst version
-        if info.observatory == 'jwst':
-            input_context = api.get_build_context('jwst')
-        # For other missions, default is latest (formerly operational) context
-        else:
-            input_context = latest_context
+        if info.observatory == 'jwst' and info.effective_mode != 'local':
+            try:
+                input_context = api.get_build_context('jwst')
+            except ServiceError:
+                log.verbose_warning("JSON RPC Service Error while checking build context - defaulting to cached Latest context.")
         log.verbose("Using reference file selection rules", srepr(input_context), "defined by", info.status + ".")
     final_context = translate_date_based_context(input_context, info.observatory)
     return final_context
@@ -569,7 +575,7 @@ def update_config_info(observatory):
     if config.writable_cache_or_verbose("skipping config update."):
         info = get_config_info(observatory)
         if info.connected and info.effective_mode == "local":
-            log.verbose("Connected to server and computing locally, updating CRDS cache config and operational context.")
+            log.verbose("Connected to server and computing locally, updating CRDS cache config and latest context.")
             cache_server_info(info, observatory)  # save locally
         else:
             log.verbose("Not connected to CRDS server or operating in 'remote' mode,  skipping cache config update.", verbosity=65)

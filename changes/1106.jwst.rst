@@ -1,0 +1,1 @@
+Default to latest context if no env variables set for internal local users
