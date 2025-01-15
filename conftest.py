@@ -154,8 +154,10 @@ class ConfigState:
         self.old_state = None
         self.new_state = None
 
-    def config_setup(self):
-        """Reset the CRDS configuration state to support testing given the supplied parameters."""
+    def config_setup(self, **kwargs):
+        """Reset the CRDS configuration state to support testing given the supplied parameters.
+        Optional argument `kwargs` accepts a dict of key-value pairs to allow further customization if needed.
+        """
         log.set_test_mode()
         self.old_state = crds_config.get_crds_state()
         self.old_state["CRDS_CWD"] = os.getcwd()
@@ -172,6 +174,7 @@ class ConfigState:
             self.new_state["CRDS_OBSERVATORY"] = self.observatory
         if self.mode is not None:
             self.new_state['CRDS_MODE'] = self.mode
+        self.new_state.update(**kwargs)
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
 
@@ -353,9 +356,10 @@ def tobs_test_cache_state(test_cache):
 
 
 @fixture(scope='function')
-def jwst_local_ro_cache_state():
-    cfg = ConfigState(observatory='jwst')
-    cfg.config_setup()
+def jwst_local_cache_state(crds_shared_group_cache):
+    cfg = ConfigState(cache=crds_shared_group_cache, observatory='jwst', mode='local')
+    extra_kwargs = dict(CRDS_CONFIG_OFFSITE='0', CRDS_VERBOSITY=1)
+    cfg.config_setup(**extra_kwargs)
     yield cfg
     cfg.cleanup()
  

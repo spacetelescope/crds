@@ -289,8 +289,8 @@ def dt_get_context_parkeys(jwst_serverless_state):
 @mark.jwst
 @mark.core
 @mark.heavy_client
-def test_jwst_default_context_local_mode(jwst_local_ro_cache_state):
-    info = heavy_client.get_config_info(jwst_local_ro_cache_state.observatory)
+def test_jwst_default_context_local_mode(jwst_local_cache_state):
+    info = heavy_client.get_config_info(jwst_local_cache_state.observatory)
     assert info.effective_mode == 'local'
     context = heavy_client.get_final_context(info, None)
     assert context.startswith("jwst_")
