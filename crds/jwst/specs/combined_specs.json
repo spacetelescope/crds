@@ -6036,38 +6036,6 @@
             "tpn":"niriss_specprofile.tpn",
             "unique_rowkeys":null
         },
-        "spectrace":{
-            "classes":[
-                "Match",
-                "UseAfter"
-            ],
-            "derived_from":"Hand made 2021-05",
-            "extra_keys":null,
-            "file_ext":".fits",
-            "filekind":"SPECTRACE",
-            "filetype":"SPECTRACE",
-            "instrument":"NIRISS",
-            "ld_tpn":"niriss_spectrace_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"jwst_niriss_spectrace.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.EXPOSURE.TYPE",
-                    "META.SUBARRAY.NAME",
-                    "META.INSTRUMENT.FILTER"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
-                ]
-            ],
-            "sha1sum":"d9a513975f964d0eb9f2705f0a35c5a8eb929a64",
-            "suffix":"spectrace",
-            "text_descr":"GR700XD Grism Trace Centre Table",
-            "tpn":"niriss_spectrace.tpn",
-            "unique_rowkeys":null
-        },
         "specwcs":{
             "classes":[
                 "Match",
@@ -6228,38 +6196,6 @@
             "suffix":"wavelengthrange",
             "text_descr":"Spectral Configurations",
             "tpn":"niriss_wavelengthrange.tpn",
-            "unique_rowkeys":null
-        },
-        "wavemap":{
-            "classes":[
-                "Match",
-                "UseAfter"
-            ],
-            "derived_from":"Hand made 2021-05",
-            "extra_keys":null,
-            "file_ext":".fits",
-            "filekind":"WAVEMAP",
-            "filetype":"WAVEMAP",
-            "instrument":"NIRISS",
-            "ld_tpn":"niriss_wavemap_ld.tpn",
-            "mapping":"REFERENCE",
-            "name":"jwst_niriss_wavemap.rmap",
-            "observatory":"JWST",
-            "parkey":[
-                [
-                    "META.EXPOSURE.TYPE",
-                    "META.SUBARRAY.NAME",
-                    "META.INSTRUMENT.FILTER"
-                ],
-                [
-                    "META.OBSERVATION.DATE",
-                    "META.OBSERVATION.TIME"
-                ]
-            ],
-            "sha1sum":"99ffae2aabb2282601bdec51c05b3916a6fe4dbe",
-            "suffix":"wavemap",
-            "text_descr":"GR700XD Grism Wavelength Mapping File",
-            "tpn":"niriss_wavemap.tpn",
             "unique_rowkeys":null
         },
         "wcsregions":{
