@@ -1,0 +1,1 @@
+Removed wavemap and spectrace reftypes for NIRISS.
