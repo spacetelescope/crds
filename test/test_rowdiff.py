@@ -52,12 +52,12 @@ def test_rowchange(test_data, capsys):
     --- Table A\n\n
     +++ Table B\n\n
     @@ -1,5 +1,5 @@\n\n
-    'yes', 'yes', 2988, -2779.0352, 'coquille'\n
-    -'yes', 'no', 5748, 6357.9727, 'ferly'\n
-    +'yes', 'no', -1, 6357.9727, 'ferly'\n
-    'yes', 'maybe', 9735, -9132.532, 'misreliance'\n
-    'no', 'yes', 425, -2689.2646, 'ogeed'\n
-    'no', 'no', 8989, 9870.025, 'readmittance'
+    np.str_('yes'), np.str_('yes'), np.int16(2988), np.float32(-2779.0352), np.str_('coquille')\n
+    -np.str_('yes'), np.str_('no'), np.int16(5748), np.float32(6357.9727), np.str_('ferly')\n
+    +np.str_('yes'), np.str_('no'), np.int16(-1), np.float32(6357.9727), np.str_('ferly')\n
+    np.str_('yes'), np.str_('maybe'), np.int16(9735), np.float32(-9132.532), np.str_('misreliance')\n
+    np.str_('no'), np.str_('yes'), np.int16(425), np.float32(-2689.2646), np.str_('ogeed')\n
+    np.str_('no'), np.str_('no'), np.int16(8989), np.float32(9870.025), np.str_('readmittance')
     """
     out = capsys.readouterr().out
     for msg in expected.splitlines():
@@ -81,15 +81,15 @@ def test_rowremoval(test_data, capsys):
     --- Table A\n\n
     +++ Table B\n\n
     @@ -1,9 +1,3 @@\n\n
-    'yes', 'yes', 2988, -2779.0352, 'coquille'\n
-    -'yes', 'no', 5748, 6357.9727, 'ferly'\n
-    -'yes', 'maybe', 9735, -9132.532, 'misreliance'\n
-    -'no', 'yes', 425, -2689.2646, 'ogeed'\n
-    'no', 'no', 8989, 9870.025, 'readmittance'\n
-    -'no', 'maybe', 3537, -8615.033, 'anacatadidymus'\n
-    -'maybe', 'yes', 1763, -2442.9683, 'monochromat'\n
-    -'maybe', 'no', 8023, 4665.564, 'ranarium'\n
-    'maybe', 'maybe', 7347, 1705.5876, 'Dode'
+    np.str_('yes'), np.str_('yes'), np.int16(2988), np.float32(-2779.0352), np.str_('coquille')\n
+    -np.str_('yes'), np.str_('no'), np.int16(5748), np.float32(6357.9727), np.str_('ferly')'\n
+    -np.str_('yes'), np.str_('maybe'), np.int16(9735), np.float32(-9132.532), np.str_('misreliance')\n
+    -np.str_('no'), np.str_('yes'), np.int16(425), np.float32(-2689.2646), np.str_('ogeed')\n
+    np.str_('no'), np.str_('no'), np.int16(8989), np.float32(9870.025), np.str_('readmittance')\n
+    -np.str_('no'), np.str_('maybe'), np.int16(3537), np.float32(-8615.033), np.str_('anacatadidymus')\n
+    -np.str_('maybe'), np.str_('yes'), np.int16(1763), np.float32(-2442.9683), np.str_('monochromat')\n
+    -np.str_('maybe'), np.str_('no'), np.int16(8023), np.float32(4665.564), np.str_('ranarium')\n
+    np.str_('maybe'), np.str_('maybe'), np.int16(7347), np.float32(1705.5876), np.str_('Dode')\n
     """
     out = capsys.readouterr().out
     for msg in expected.splitlines():
@@ -122,6 +122,16 @@ def test_rowaddition(test_data, capsys):
     +'maybe', 'yes', 1763, -2442.9683, 'monochromat'\n
     +'maybe', 'no', 8023, 4665.564, 'ranarium'\n
     'maybe', 'maybe', 7347, 1705.5876, 'Dode
+
+    np.str_('yes'), np.str_('yes'), np.int16(2988), np.float32(-2779.0352), np.str_('coquille')\n
+    +np.str_('yes'), np.str_('no'), np.int16(5748), np.float32(6357.9727), np.str_('ferly')'\n
+    +np.str_('yes'), np.str_('maybe'), np.int16(9735), np.float32(-9132.532), np.str_('misreliance')\n
+    +np.str_('no'), np.str_('yes'), np.int16(425), np.float32(-2689.2646), np.str_('ogeed')\n
+    np.str_('no'), np.str_('no'), np.int16(8989), np.float32(9870.025), np.str_('readmittance')\n
+    +np.str_('no'), np.str_('maybe'), np.int16(3537), np.float32(-8615.033), np.str_('anacatadidymus')\n
+    +np.str_('maybe'), np.str_('yes'), np.int16(1763), np.float32(-2442.9683), np.str_('monochromat')\n
+    +np.str_('maybe'), np.str_('no'), np.int16(8023), np.float32(4665.564), np.str_('ranarium')\n
+    np.str_('maybe'), np.str_('maybe'), np.int16(7347), np.float32(1705.5876), np.str_('Dode')\n
     """
     out = capsys.readouterr().out
     for msg in expected.splitlines():
@@ -159,12 +169,12 @@ def test_ignorefields_specific(test_data, capsys):
     --- Table A\n\n
     +++ Table B\n\n
     @@ -1,5 +1,5 @@\n\n
-    2988, -2779.0352, 'coquille'\n
-    -5748, 6357.9727, 'ferly'\n
-    +-1, 6357.9727, 'ferly'\n
-    9735, -9132.532, 'misreliance'\n
-    425, -2689.2646, 'ogeed'\n
-    8989, 9870.025, 'readmittance'
+    np.int16(2988), np.float32(-2779.0352), np.str_('coquille')\n
+    -np.int16(5748), np.float32(6357.9727), np.str_('ferly')'\n
+    +np.int16(-1), np.float32(6357.9727), np.str_('ferly')'\n
+    np.int16(9735), np.float32(-9132.532), np.str_('misreliance')\n
+    np.int16(425), np.float32(-2689.2646), np.str_('ogeed')\n
+    np.int16(8989), np.float32(9870.025), np.str_('readmittance')
     """
     out = capsys.readouterr().out
     for msg in expected.splitlines():
@@ -202,12 +212,12 @@ def test_switchfields_withdiff(test_data, capsys):
     --- Table A\n\n
     +++ Table B\n\n
     @@ -1,5 +1,5 @@\n\n
-    2988\n
-    -5748\n
-    +-1\n
-    9735\n
-    425\n
-    8989"""
+    np.int16(2988)\n
+    np.int16(-5748)\n
+    +np.int16(-1)\n
+    np.int16(9735)\n
+    np.int16(425)\n
+    np.int16(8989)"""
     out = capsys.readouterr().out
     for msg in expected.splitlines():
         assert msg.strip() in out
