@@ -104,16 +104,16 @@ def _configured_stsynphot(synphot_root):
 
 
 @contextmanager
-def _configured_pysynphot(synphot_root):
+def _configured_synphot(synphot_root):
     original_pysyn_cdbs = os.environ.get("PYSYN_CDBS")
     try:
         os.environ["PYSYN_CDBS"] = synphot_root
         try:
-            import pysynphot
+            import synphot
         except ImportError:
-            raise ImportError("Missing pysynphot package.  Install the 'synphot' extras and try again.")
+            raise ImportError("Missing synphot package.  Install the 'synphot' extras and try again.")
 
-        yield pysynphot
+        yield synphot
     finally:
         if original_pysyn_cdbs is None:
             os.environ.pop("PYSYN_CDBS")
@@ -136,15 +136,15 @@ def _test_synphot_mode(synphot_root, obsmode):
             result = False
 
     with warnings.catch_warnings(record=True) as warning_list:
-        with _configured_pysynphot(synphot_root) as pys:
+        with _configured_synphot(synphot_root) as pys:
             try:
                 pys.ObsBandpass(obsmode)
             except Exception as e:
-                errors.append("Exception from pysynphot with obsmode '{}': {}".format(obsmode, repr(e)))
+                errors.append("Exception from synphot with obsmode '{}': {}".format(obsmode, repr(e)))
                 result = False
         for warning in warning_list:
             if not str(warning.message).startswith("Extinction files not found in"):
-                warns.append("Warning from pysynphot with obsmode '{}': {}".format(obsmode, warning.message))
+                warns.append("Warning from synphot with obsmode '{}': {}".format(obsmode, warning.message))
 
     return result, errors, warns
 

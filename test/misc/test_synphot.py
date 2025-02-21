@@ -833,7 +833,7 @@ def test_synphot_obsmodes_integration_test_missing_files(default_shared_state, h
         out = caplog.text
     assert result is False
     expected = """Creating bandpass objects from 1 observation modes
-    Exception from pysynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
+    Exception from synphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
     1 / 1 observation modes failed"""
     check_logs(expected, out)
 
@@ -853,7 +853,7 @@ def test_synphot_obsmodes_integration_multiproc_fail(default_shared_state, hst_d
         out = caplog.text
     assert result is False
     expected = """Creating bandpass objects from 1 observation modes
-    Exception from pysynphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
+    Exception from synphot with obsmode 'acs,hrc,coron': FileNotFoundError(2, 'No such file or directory')
     1 / 1 observation modes failed"""
     check_logs(expected, out)
 

@@ -504,18 +504,18 @@ def test_certify_table_comparison_context(default_shared_state, caplog):
     Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
     All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    Table mode (('DATE', np.float(56921.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56922.0)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56921.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56922.0)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     Table mode (('DATE', np.float64(56923.5834)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56923.625)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56924.0417)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56924.2084)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56924.3125)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56925.0)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56959.4584)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56959.6667)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56961.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56962.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56923.625)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.0417)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.2084)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.3125)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56925.0)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56959.4584)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56959.6667)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56961.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56962.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     0 errors
     15 warnings"""
     for msg in expected_out.splitlines():
@@ -549,25 +549,25 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
     All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
     Checking for duplicate modes using intersection ['DATE']
     Table mode (('DATE', np.float64(56923.5834)),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    Table mode (('DATE', np.float(56923.625)),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', np.float64(56923.625)),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
     All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
     Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
-    (129, (('DATE', np.float(56924.0417)), ('HVLEVELB', 169)))
-    (131, (('DATE', np.float(56924.0417)), ('HVLEVELB', 169)))
+    (129, (('DATE', np.float64(56924.0417)), ('HVLEVELB', 169)))
+    (131, (('DATE', np.float64(56924.0417)), ('HVLEVELB', 169)))
     Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
-    (132, (('DATE', np.float(56925.0)), ('HVLEVELB', 175)))
-    (134, (('DATE', np.float(56925.0)), ('HVLEVELB', 175)))
+    (132, (('DATE', np.float64(56925.0)), ('HVLEVELB', 175)))
+    (134, (('DATE', np.float64(56925.0)), ('HVLEVELB', 175)))
     Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
     All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    Table mode (('DATE', np.float(56921.8334)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56922.0)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56923.625)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56924.0417)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56924.3125)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', np.float(56925.0)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56921.8334)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56922.0)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56923.625)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.0417)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.3125)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56925.0)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     0 errors
     10 warnings"""
     for msg in expected_out.splitlines():

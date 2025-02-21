@@ -113,16 +113,6 @@ def test_rowaddition(test_data, capsys):
     --- Table A\n\n
     +++ Table B\n\n
     @@ -1,3 +1,9 @@\n\n
-    'yes', 'yes', 2988, -2779.0352, 'coquille'\n
-    +'yes', 'no', 5748, 6357.9727, 'ferly'\n
-    +'yes', 'maybe', 9735, -9132.532, 'misreliance'\n
-    +'no', 'yes', 425, -2689.2646, 'ogeed'\n
-    'no', 'no', 8989, 9870.025, 'readmittance'\n
-    +'no', 'maybe', 3537, -8615.033, 'anacatadidymus'\n
-    +'maybe', 'yes', 1763, -2442.9683, 'monochromat'\n
-    +'maybe', 'no', 8023, 4665.564, 'ranarium'\n
-    'maybe', 'maybe', 7347, 1705.5876, 'Dode
-
     np.str_('yes'), np.str_('yes'), np.int16(2988), np.float32(-2779.0352), np.str_('coquille')\n
     +np.str_('yes'), np.str_('no'), np.int16(5748), np.float32(6357.9727), np.str_('ferly')'\n
     +np.str_('yes'), np.str_('maybe'), np.int16(9735), np.float32(-9132.532), np.str_('misreliance')\n
