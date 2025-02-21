@@ -89,7 +89,7 @@ def test_rowremoval(test_data, capsys):
     -np.str_('no'), np.str_('maybe'), np.int16(3537), np.float32(-8615.033), np.str_('anacatadidymus')\n
     -np.str_('maybe'), np.str_('yes'), np.int16(1763), np.float32(-2442.9683), np.str_('monochromat')\n
     -np.str_('maybe'), np.str_('no'), np.int16(8023), np.float32(4665.564), np.str_('ranarium')\n
-    np.str_('maybe'), np.str_('maybe'), np.int16(7347), np.float32(1705.5876), np.str_('Dode')\n
+    np.str_('maybe'), np.str_('maybe'), np.int16(7347), np.float32(1705.5876), np.str_('Dode')
     """
     out = capsys.readouterr().out
     for msg in expected.splitlines():
@@ -121,7 +121,7 @@ def test_rowaddition(test_data, capsys):
     +np.str_('no'), np.str_('maybe'), np.int16(3537), np.float32(-8615.033), np.str_('anacatadidymus')\n
     +np.str_('maybe'), np.str_('yes'), np.int16(1763), np.float32(-2442.9683), np.str_('monochromat')\n
     +np.str_('maybe'), np.str_('no'), np.int16(8023), np.float32(4665.564), np.str_('ranarium')\n
-    np.str_('maybe'), np.str_('maybe'), np.int16(7347), np.float32(1705.5876), np.str_('Dode')\n
+    np.str_('maybe'), np.str_('maybe'), np.int16(7347), np.float32(1705.5876), np.str_('Dode')
     """
     out = capsys.readouterr().out
     for msg in expected.splitlines():

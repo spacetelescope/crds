@@ -138,7 +138,7 @@ def _test_synphot_mode(synphot_root, obsmode):
     with warnings.catch_warnings(record=True) as warning_list:
         with _configured_synphot(synphot_root) as pys:
             try:
-                pys.ObsBandpass(obsmode)
+                pys.SpectralElement.from_filter(obsmode)
             except Exception as e:
                 errors.append("Exception from synphot with obsmode '{}': {}".format(obsmode, repr(e)))
                 result = False

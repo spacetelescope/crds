@@ -553,12 +553,12 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
     Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
     All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
-    (129, (('DATE', np.float64(56924.0417)), ('HVLEVELB', 169)))
-    (131, (('DATE', np.float64(56924.0417)), ('HVLEVELB', 169)))
-    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
-    (132, (('DATE', np.float64(56925.0)), ('HVLEVELB', 175)))
-    (134, (('DATE', np.float64(56925.0)), ('HVLEVELB', 175)))
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', np.float64(56924.0417)),) :
+    (129, (('DATE', np.float64(56924.0417)), ('HVLEVELB', np.int16(169))))
+    (131, (('DATE', np.float64(56924.0417)), ('HVLEVELB', np.int16(169))))
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', np.float64(56925.0)),) :
+    (132, (('DATE', np.float64(56925.0)), ('HVLEVELB', np.int16(175))))
+    (134, (('DATE', np.float64(56925.0)), ('HVLEVELB', np.int16(175))))
     Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
     All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
