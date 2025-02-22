@@ -164,8 +164,7 @@ def test_ignorefields_specific(test_data, capsys):
     +np.int16(-1), np.float32(6357.9727), np.str_('ferly')'\n
     np.int16(9735), np.float32(-9132.532), np.str_('misreliance')\n
     np.int16(425), np.float32(-2689.2646), np.str_('ogeed')\n
-    np.int16(8989), np.float32(9870.025), np.str_('readmittance')
-    """
+    np.int16(8989), np.float32(9870.025), np.str_('readmittance')"""
     out = capsys.readouterr().out
     for msg in expected.splitlines():
         assert msg.strip() in out
@@ -203,7 +202,7 @@ def test_switchfields_withdiff(test_data, capsys):
     +++ Table B\n\n
     @@ -1,5 +1,5 @@\n\n
     np.int16(2988)\n
-    np.int16(-5748)\n
+    -np.int16(5748)\n
     +np.int16(-1)\n
     np.int16(9735)\n
     np.int16(425)\n
