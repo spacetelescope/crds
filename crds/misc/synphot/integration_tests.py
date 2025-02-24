@@ -104,16 +104,16 @@ def _configured_stsynphot(synphot_root):
 
 
 @contextmanager
-def _configured_pysynphot(synphot_root):
+def _configured_synphot(synphot_root):
     original_pysyn_cdbs = os.environ.get("PYSYN_CDBS")
     try:
         os.environ["PYSYN_CDBS"] = synphot_root
         try:
-            import pysynphot
+            import synphot
         except ImportError:
             raise ImportError("Missing synphot package.  Install the 'synphot' extras and try again.")
 
-        yield pysynphot
+        yield synphot
     finally:
         if original_pysyn_cdbs is None:
             os.environ.pop("PYSYN_CDBS")
@@ -125,26 +125,29 @@ def _test_synphot_mode(synphot_root, obsmode):
     result = True
     errors = []
     warns = []
+    bp = None
+
     with _configured_stsynphot(synphot_root) as sts:
         try:
             with warnings.catch_warnings(record=True) as warning_list:
-                sts.band(obsmode)
+                bp = sts.band(obsmode)
                 for warning in warning_list:
                     warns.append("Warning from stsynphot with obsmode '{}': {}".format(obsmode, warning.message))
         except Exception as e:
             errors.append("Exception from stsynphot with obsmode '{}': {}".format(obsmode, repr(e)))
             result = False
 
-    with warnings.catch_warnings(record=True) as warning_list:
-        with _configured_pysynphot(synphot_root) as pys:
-            try:
-                pys.ObsBandpass(obsmode)
-            except Exception as e:
-                errors.append("Exception from synphot with obsmode '{}': {}".format(obsmode, repr(e)))
-                result = False
-        for warning in warning_list:
-            if not str(warning.message).startswith("Extinction files not found in"):
-                warns.append("Warning from synphot with obsmode '{}': {}".format(obsmode, warning.message))
+    if bp is not None:
+        with warnings.catch_warnings(record=True) as warning_list:
+            with _configured_synphot(synphot_root) as syn:
+                try:
+                    syn.spectrum.SpectralElement(bp.model)
+                except Exception as e:
+                    errors.append("Exception from synphot with obsmode '{}': {}".format(obsmode, repr(e)))
+                    result = False
+            for warning in warning_list:
+                if not str(warning.message).startswith("Extinction files not found in"):
+                    warns.append("Warning from synphot with obsmode '{}': {}".format(obsmode, warning.message))
 
     return result, errors, warns
 

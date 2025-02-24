@@ -52,7 +52,7 @@ docs = [
   "sphinx-tabs",
 ]
 aws = ["boto3", "awscli"]
-synphot = ["stsynphot"]
+synphot = ["stsynphot", "synphot"]
 
 [build-system]
 requires = ["setuptools>=61.2", "setuptools_scm[toml]>=3.4", "wheel"]
