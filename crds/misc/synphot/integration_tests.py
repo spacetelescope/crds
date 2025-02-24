@@ -104,16 +104,16 @@ def _configured_stsynphot(synphot_root):
 
 
 @contextmanager
-def _configured_synphot(synphot_root):
+def _configured_pysynphot(synphot_root):
     original_pysyn_cdbs = os.environ.get("PYSYN_CDBS")
     try:
         os.environ["PYSYN_CDBS"] = synphot_root
         try:
-            import synphot
+            import pysynphot
         except ImportError:
             raise ImportError("Missing synphot package.  Install the 'synphot' extras and try again.")
 
-        yield synphot
+        yield pysynphot
     finally:
         if original_pysyn_cdbs is None:
             os.environ.pop("PYSYN_CDBS")
@@ -136,9 +136,9 @@ def _test_synphot_mode(synphot_root, obsmode):
             result = False
 
     with warnings.catch_warnings(record=True) as warning_list:
-        with _configured_synphot(synphot_root) as pys:
+        with _configured_pysynphot(synphot_root) as pys:
             try:
-                pys.SpectralElement.from_filter(obsmode)
+                pys.ObsBandpass(obsmode)
             except Exception as e:
                 errors.append("Exception from synphot with obsmode '{}': {}".format(obsmode, repr(e)))
                 result = False
