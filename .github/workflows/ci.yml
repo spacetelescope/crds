@@ -70,7 +70,6 @@ jobs:
           cache-downloads: true
       - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
       - run: pip uninstall --yes crds && ./install && pip install .[submission,test,docs,synphot]
-      - run: pip install git+https://github.com/spacetelescope/pysynphot_etc
       - id: cache
         uses: actions/cache@v4
         with:
