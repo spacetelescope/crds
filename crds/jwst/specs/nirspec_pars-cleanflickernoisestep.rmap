@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Created by Hunter Brown 2024-12-06',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-cleanflickernoisestep',
+    'filetype' : 'pars-cleanflickernoisestep',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pars-cleanflickernoisestep.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'e92736107f6141b25b154484e47d72dad36290c3',
+    'suffix' : 'pars-cleanflickernoisestep',
+    'text_descr' : 'Base rmap for nirspec_pars-cleanflickernoisestep',
+}
+
+selector = Match({
+})

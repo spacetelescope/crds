@@ -10,7 +10,7 @@
     'reffile_switch': 'none',
     'rmap_relevance': '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
     'suffix': 'hal',
-    'text_descr': 'Detectore Halo Table',
+    'text_descr': 'Detector Halo Table',
     'tpn': 'stis_hal.tpn',
     'unique_rowkeys': ('OPT_ELEM', 'HALOWAVE'),
 }

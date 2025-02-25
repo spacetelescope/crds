@@ -415,7 +415,7 @@ def test_list_cat_mappings(capsys, hst_default_cache_state):
  'replaced_by_filename': '',
  'sha1sum': '41cbdf620d41586fbc3de3e26d14d14eb42cc244',
  'size': '711',
- 'state': 'operational',
+ 'state': 'latest',
  'type': 'mapping',
  'uploaded_as': 'hst_cos_deadtab_0250.rmap',
  'useafter_date': '2050-01-01 00:00:00'}"""
