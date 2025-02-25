@@ -1,3 +1,27 @@
+12.1.0 (2025-02-25)
+===================
+
+HST
+---
+
+- Fixed typo in STIS HALOTAB spec (`#1105
+  <https://github.com/spacetelescope/crds/issues/1105>`_)
+
+
+ROMAN
+-----
+
+- Adds new rmap template for roman skycells reftype (`#1108
+  <https://github.com/spacetelescope/crds/issues/1108>`_)
+
+
+Testing / Automation
+--------------------
+
+- Declare conflicting optional dependencies for uv builds (`#1110
+  <https://github.com/spacetelescope/crds/issues/1110>`_)
+
+
 12.0.9 (2024-12-27)
 ===================
 

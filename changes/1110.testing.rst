@@ -1,1 +1,0 @@
-Declare conflicting optional dependencies for uv builds
