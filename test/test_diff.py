@@ -372,12 +372,12 @@ Extension HDU 1:
 
         @@ -1,5 +1,5 @@
 
-         'yes', 'yes', 2988, -2779.0352, 'coquille'
-        -'yes', 'no', 5748, 6357.9727, 'ferly'
-        +'yes', 'no', -1, 6357.9727, 'ferly'
-         'yes', 'maybe', 9735, -9132.532, 'misreliance'
-         'no', 'yes', 425, -2689.2646, 'ogeed'
-         'no', 'no', 8989, 9870.025, 'readmittance'
+         np.str_('yes'), np.str_('yes'), np.int16(2988), np.float32(-2779.0352), np.str_('coquille')
+        -np.str_('yes'), np.str_('no'), np.int16(5748), np.float32(6357.9727), np.str_('ferly')
+        +np.str_('yes'), np.str_('no'), np.int16(-1), np.float32(6357.9727), np.str_('ferly')
+         np.str_('yes'), np.str_('maybe'), np.int16(9735), np.float32(-9132.532), np.str_('misreliance')
+         np.str_('no'), np.str_('yes'), np.int16(425), np.float32(-2689.2646), np.str_('ogeed')
+         np.str_('no'), np.str_('no'), np.int16(8989), np.float32(9870.025), np.str_('readmittance')
 
 """
 

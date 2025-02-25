@@ -16,8 +16,6 @@ import warnings
 
 # =============================================================================
 
-# from pysynphot import locations
-
 SYNPHOT_IGNORE = [
     "Extinction files not found",
     "No graph or component tables found",
@@ -111,7 +109,7 @@ Example get_synophot runs:
 
     def main(self):
         """Perform the high level sequence of tasks needed to download and
-        organize a version of pysynphot files under the specified directory.
+        organize a version of synphot files under the specified directory.
         """
         self.deferred_init()
 
@@ -141,7 +139,7 @@ Example get_synophot runs:
     # -------------------------------------------------------------------------
 
     def deferred_init(self):
-        """Initialize CRDS and PySYNPHOT after module import and basic script
+        """Initialize CRDS and synphot after module import and basic script
         object construction.
         """
         self.crds_cache = os.path.abspath(os.path.join(
@@ -187,7 +185,7 @@ Example get_synophot runs:
 
     def get_comptab_info(self, synname):
         """Dump the FILENAME column of the component table implied by `synname`
-        (e.g. "tmc" --> something_tmc.fits) and use pysynphot to interpret the
+        (e.g. "tmc" --> something_tmc.fits) and use synphot to interpret the
         embedded iraf$-style path env var into a normal filepath.  This is used
         to locate files within appropriate sub-directories of
         <synphot_dir>/comp.
@@ -199,7 +197,7 @@ Example get_synophot runs:
         """
         for msg in SYNPHOT_IGNORE:
             warnings.filterwarnings("ignore",msg)
-        from pysynphot import locations
+        from stsynphot.stio import irafconvert
 
         filekind = synname + "tab"
         rmap  = self.imap.get_rmap(filekind)
@@ -224,9 +222,9 @@ Example get_synophot runs:
 
             dollar_syn_name = syn_name.split("[")[0]
 
-            # Use pysynphot to interpret iraf_path
+            # Use synphot to interpret iraf_path
             cdbs_filepath = os.path.abspath(
-                locations.irafconvert(dollar_syn_name))
+                irafconvert(dollar_syn_name))
 
             fileinfo[name] = cdbs_filepath
 

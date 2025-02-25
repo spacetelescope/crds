@@ -400,6 +400,9 @@ future submissions.
 SYNPHOT Particulars
 +++++++++++++++++++
 
+**NOTE:** CRDS has dropped support for the `pysynphot` library as it is no longer being maintained. 
+Please use `stsynphot`` instead.
+
 SYNPHOT file submissions differ from other instruments in the following
 ways:
 
@@ -414,8 +417,7 @@ ways:
     "integration tests" on the full ensemble of SYNPHOT files.  The first
     integration test confirms consistency of component names between the files.
     The second test iterates through a list of valid observation mode strings
-    and confirms that both the stsynphot and pysynphot libraries are able to
-    instantiate each mode without error.
+    and confirms that the stsynphot library is able to instantiate each mode without error.
 
 The SYNPHOT integration test results are displayed on the Results page in
 an additional accordion panel:
@@ -426,6 +428,7 @@ an additional accordion panel:
 
 Before confirming a SYNPHOT submission, be sure to also check the integration
 test results for warnings.
+
 
 Submit Mappings
 ...............

@@ -495,31 +495,34 @@ def test_certify_table_comparison_context(default_shared_state, caplog):
     Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
     All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
     Checking for duplicate modes using intersection ['DATE']
-    Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', np.float64(56923.5834)),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', np.float64(56923.625)),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', np.float64(56964.0)),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     Mode columns defined by spec for old reference 'yas2005el_hv.fits[2]' are: ['DATE']
     All column names for this table old reference 'yas2005el_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
     Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
     All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    Table mode (('DATE', 56921.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56923.5834),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56924.0417),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56924.2084),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56959.4584),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56959.6667),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56961.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56962.8334),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56921.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56922.0)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56923.5834)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56923.625)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.0417)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.2084)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.3125)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56925.0)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56959.4584)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56959.6667)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56961.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56962.8334)),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     0 errors
     15 warnings"""
     for msg in expected_out.splitlines():
+
         assert msg.strip() in out
+
+
 
 
 @mark.hst
@@ -545,26 +548,26 @@ def test_certify_table_comparison_reference(default_shared_state, hst_data, capl
     Mode columns defined by spec for new reference 'y951738kl_hv.fits[1]' are: ['DATE']
     All column names for this table new reference 'y951738kl_hv.fits[1]' are: ['DATE', 'HVLEVELA']
     Checking for duplicate modes using intersection ['DATE']
-    Table mode (('DATE', 56923.5834),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
-    Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', np.float64(56923.5834)),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    Table mode (('DATE', np.float64(56923.625)),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     Mode columns defined by spec for old reference 'y9j16159l_hv.fits[2]' are: ['DATE']
     All column names for this table old reference 'y9j16159l_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.0417),) :
-    (129, (('DATE', 56924.0417), ('HVLEVELB', 169)))
-    (131, (('DATE', 56924.0417), ('HVLEVELB', 169)))
-    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
-    (132, (('DATE', 56925.0), ('HVLEVELB', 175)))
-    (134, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', np.float64(56924.0417)),) :
+    (129, (('DATE', np.float64(56924.0417)), ('HVLEVELB', np.int16(169))))
+    (131, (('DATE', np.float64(56924.0417)), ('HVLEVELB', np.int16(169))))
+    Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', np.float64(56925.0)),) :
+    (132, (('DATE', np.float64(56925.0)), ('HVLEVELB', np.int16(175))))
+    (134, (('DATE', np.float64(56925.0)), ('HVLEVELB', np.int16(175))))
     Mode columns defined by spec for new reference 'y951738kl_hv.fits[2]' are: ['DATE']
     All column names for this table new reference 'y951738kl_hv.fits[2]' are: ['DATE', 'HVLEVELB']
     Checking for duplicate modes using intersection ['DATE']
-    Table mode (('DATE', 56921.8334),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56924.0417),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
-    Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56921.8334)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56922.0)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56923.625)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.0417)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56924.3125)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    Table mode (('DATE', np.float64(56925.0)),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     0 errors
     10 warnings"""
     for msg in expected_out.splitlines():
@@ -931,7 +934,7 @@ def test_certify_jwst_bad_fits(jwst_serverless_state, jwst_data, caplog):
     Checking for duplicate modes using intersection ['FILTER', 'PUPIL']
     No comparison reference for 'niriss_ref_photom_bad.fits' in context 'jwst_0541.pmap'. Skipping tables comparison.
     Checking JWST datamodels.
-    ValidationWarning : stdatamodels.validate : While validating meta.instrument.detector the following error occurred:'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'MULTIPLE', 'N/A']Failed validating 'enum' in schema:    {'description': 'Detector name.',     'enum': ['NRCA1',              'NRCA2',              'NRCA3',              'NRCA4',              'NRCALONG',              'NRCB1',              'NRCB2',              'NRCB3',              'NRCB4',              'NRCBLONG',              'NRS1',              'NRS2',              'ANY',              'MIRIMAGE',              'MIRIFULONG',              'MIRIFUSHORT',              'NIS',              'GUIDER1',              'GUIDER2',              'MULTIPLE',              'N/A'],     'fits_keyword': 'DETECTOR',     'title': 'Name of detector used to acquire the data',     'type': 'string'}On instance:    'FOO'
+    ValidationWarning : stdatamodels.fits_support : While validating meta.instrument.detector the following error occurred:'FOO' is not one of ['NRCA1', 'NRCA2', 'NRCA3', 'NRCA4', 'NRCALONG', 'NRCB1', 'NRCB2', 'NRCB3', 'NRCB4', 'NRCBLONG', 'NRS1', 'NRS2', 'ANY', 'MIRIMAGE', 'MIRIFULONG', 'MIRIFUSHORT', 'NIS', 'GUIDER1', 'GUIDER2', 'MULTIPLE', 'N/A']Failed validating 'enum' in schema:    {'description': 'Detector name.',     'enum': ['NRCA1',              'NRCA2',              'NRCA3',              'NRCA4',              'NRCALONG',              'NRCB1',              'NRCB2',              'NRCB3',              'NRCB4',              'NRCBLONG',              'NRS1',              'NRS2',              'ANY',              'MIRIMAGE',              'MIRIFULONG',              'MIRIFUSHORT',              'NIS',              'GUIDER1',              'GUIDER2',              'MULTIPLE',              'N/A'],     'fits_keyword': 'DETECTOR',     'title': 'Name of detector used to acquire the data',     'type': 'string'}On instance:    'FOO'
 """
     for msg in expected_out.splitlines():
         assert msg.strip() in out
@@ -1277,9 +1280,9 @@ def test_acs_idctab_char_plus_column(default_shared_state, hst_data, caplog):
     Mode columns defined by spec for old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
     All column names for this table old reference 'p7d1548qj_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44']
     Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
-    Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', 207.082), ('V3REF', 471.476)) :
-    (29, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
-    (35, (('DETCHIP', 1), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', 1024), ('YSIZE', 1024), ('XREF', 512.0), ('YREF', 512.0), ('V2REF', 207.082), ('V3REF', 471.476), ('SCALE', 0.025), ('CX10', -9.479088e-08), ('CX11', 0.028289594), ('CX20', -1.9904244e-08), ('CX21', 2.5261727e-07), ('CX22', -9.322343e-08), ('CX30', -2.4618475e-13), ('CX31', 1.0903676e-11), ('CX32', 5.9885034e-13), ('CX33', 3.2860548e-12), ('CX40', 1.1240284e-15), ('CX41', 3.591716e-15), ('CX42', -4.085765e-14), ('CX43', -5.2304664e-14), ('CX44', 6.967954e-15), ('CY10', 0.02483979), ('CY11', 0.0028646854), ('CY20', 2.8243642e-07), ('CY21', -4.0260268e-08), ('CY22', 3.9303682e-08), ('CY30', 1.2405402e-11), ('CY31', -1.6079407e-11), ('CY32', 8.246831e-12), ('CY33', 1.1388372e-11), ('CY40', -2.7262569e-14), ('CY41', -1.3812129e-14), ('CY42', 2.0695324e-14), ('CY43', -4.071885e-14), ('CY44', 1.0464957e-14)))
+    Duplicate definitions in old reference 'p7d1548qj_idc.fits[1]' for mode: (('DETCHIP', np.int16(1)), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('V2REF', np.float32(207.082)), ('V3REF', np.float32(471.476))) :
+    (29, (('DETCHIP', np.int16(1)), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', np.int32(1024)), ('YSIZE', np.int32(1024)), ('XREF', np.float32(512.0)), ('YREF', np.float32(512.0)), ('V2REF', np.float32(207.082)), ('V3REF', np.float32(471.476)), ('SCALE', np.float32(0.025)), ('CX10', np.float32(-9.479088e-08)), ('CX11', np.float32(0.028289594)), ('CX20', np.float32(-1.9904244e-08)), ('CX21', np.float32(2.5261727e-07)), ('CX22', np.float32(-9.322343e-08)), ('CX30', np.float32(-2.4618475e-13)), ('CX31', np.float32(1.0903676e-11)), ('CX32', np.float32(5.9885034e-13)), ('CX33', np.float32(3.2860548e-12)), ('CX40', np.float32(1.1240284e-15)), ('CX41', np.float32(3.591716e-15)), ('CX42', np.float32(-4.085765e-14)), ('CX43', np.float32(-5.2304664e-14)), ('CX44', np.float32(6.967954e-15)), ('CY10', np.float32(0.02483979)), ('CY11', np.float32(0.0028646854)), ('CY20', np.float32(2.8243642e-07)), ('CY21', np.float32(-4.0260268e-08)), ('CY22', np.float32(3.9303682e-08)), ('CY30', np.float32(1.2405402e-11)), ('CY31', np.float32(-1.6079407e-11)), ('CY32', np.float32(8.246831e-12)), ('CY33', np.float32(1.1388372e-11)), ('CY40', np.float32(-2.7262569e-14)), ('CY41', np.float32(-1.3812129e-14)), ('CY42', np.float32(2.0695324e-14)), ('CY43', np.float32(-4.071885e-14)), ('CY44', np.float32(1.0464957e-14))))
+    (35, (('DETCHIP', np.int16(1)), ('DIRECTION', 'FORWARD'), ('FILTER1', 'F550M'), ('FILTER2', 'F220W'), ('XSIZE', np.int32(1024)), ('YSIZE', np.int32(1024)), ('XREF', np.float32(512.0)), ('YREF', np.float32(512.0)), ('V2REF', np.float32(207.082)), ('V3REF', np.float32(471.476)), ('SCALE', np.float32(0.025)), ('CX10', np.float32(-9.479088e-08)), ('CX11', np.float32(0.028289594)), ('CX20', np.float32(-1.9904244e-08)), ('CX21', np.float32(2.5261727e-07)), ('CX22', np.float32(-9.322343e-08)), ('CX30', np.float32(-2.4618475e-13)), ('CX31', np.float32(1.0903676e-11)), ('CX32', np.float32(5.9885034e-13)), ('CX33', np.float32(3.2860548e-12)), ('CX40', np.float32(1.1240284e-15)), ('CX41', np.float32(3.591716e-15)), ('CX42', np.float32(-4.085765e-14)), ('CX43', np.float32(-5.2304664e-14)), ('CX44', np.float32(6.967954e-15)), ('CY10', np.float32(0.02483979)), ('CY11', np.float32(0.0028646854)), ('CY20', np.float32(2.8243642e-07)), ('CY21', np.float32(-4.0260268e-08)), ('CY22', np.float32(3.9303682e-08)), ('CY30', np.float32(1.2405402e-11)), ('CY31', np.float32(-1.6079407e-11)), ('CY32', np.float32(8.246831e-12)), ('CY33', np.float32(1.1388372e-11)), ('CY40', np.float32(-2.7262569e-14)), ('CY41', np.float32(-1.3812129e-14)), ('CY42', np.float32(2.0695324e-14)), ('CY43', np.float32(-4.071885e-14)), ('CY44', np.float32(1.0464957e-14))))
     Mode columns defined by spec for new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'WAVELENGTH', 'DIRECTION', 'FILTER1', 'FILTER2', 'V2REF', 'V3REF']
     All column names for this table new reference 'acs_new_idc.fits[1]' are: ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
     Checking for duplicate modes using intersection ['DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2']
