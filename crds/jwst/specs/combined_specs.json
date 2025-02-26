@@ -7529,6 +7529,36 @@
                 "SLIT"
             ]
         },
+        "pictureframe":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"handmade on Feb 26 2025 by HBrown",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PICTUREFRAME",
+            "filetype":"PICTUREFRAME",
+            "instrument":"NIRSpec",
+            "ld_tpn":"nirspec_pictureframe_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pictureframe.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"51597a25801019302690736b5b12952cf4b5d037",
+            "suffix":"pictureframe",
+            "text_descr":"NIRSpec picture frame reference images",
+            "tpn":"nirspec_pictureframe.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
             "extra_keys":null,
