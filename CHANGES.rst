@@ -1,3 +1,13 @@
+12.1.1.dev0+gd7ce865e.d20250226 (2025-02-26)
+============================================
+
+JWST
+-----
+
+- Added sirskernel reftypes for NIRISS and NIRSPEC ('#1113
+  <https://github.com/spacetelescope/crds/issues/1113>`_)
+
+
 12.1.0 (2025-02-26)
 ===================
 
