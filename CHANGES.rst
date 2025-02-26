@@ -4,7 +4,7 @@
 JWST
 -----
 
-- Added sirskernel reftypes for NIRISS and NIRSPEC ('#1113
+- Added sirskernel reftypes for NIRISS and NIRSPEC, and updated nirspec_pars-darkcurrentstep ('#1113
   <https://github.com/spacetelescope/crds/issues/1113>`_)
 
 
