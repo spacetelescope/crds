@@ -7150,6 +7150,10 @@
             "unique_rowkeys":null
         },
         "pars-darkcurrentstep":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
             "derived_from":"Created by Hunter Brown 2024-06-10",
             "extra_keys":null,
             "file_ext":".asdf",
@@ -7162,14 +7166,16 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR"
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.EXPOSURE.READPATT",
+                    "META.SUBARRAY.NAME"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"3a462c01fd2f004b20e24bd954adf9523e81b8f3",
+            "sha1sum":"465e9be9552050b740b35f58408d26f91594dec9",
             "suffix":"pars-darkcurrentstep",
             "text_descr":"DarkCurrentStep runtime parameters for nirspec",
             "tpn":"nirspec_pars-darkcurrentstep.tpn",
