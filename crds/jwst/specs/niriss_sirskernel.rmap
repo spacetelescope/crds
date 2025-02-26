@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Derived from niriss_speckernel.rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'SIRSKERNEL',
+    'filetype' : 'SIRSKERNEL',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_sirskernel.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'd75198f5b01b42ff3f90a4c7dc401f21f7f01386',
+    'suffix' : 'sirskernel',
+    'text_descr' : 'Initial refpix convolution kernel for niriss',
+}
+
+selector = Match({
+})
