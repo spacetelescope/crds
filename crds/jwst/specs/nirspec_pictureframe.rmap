@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'handmade on Feb 26 2025 by HBrown',
+    'file_ext' : '.fits',
+    'filekind' : 'PICTUREFRAME',
+    'filetype' : 'PICTUREFRAME',
+    'instrument' : 'NIRSpec',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_pictureframe.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '51597a25801019302690736b5b12952cf4b5d037',
+    'suffix' : 'pictureframe',
+    'text_descr' : 'NIRSpec picture frame reference images',
+}
+
+selector = Match({
+})
