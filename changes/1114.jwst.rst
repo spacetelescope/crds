@@ -1,0 +1,1 @@
+Created new reftype for niriss_bkg based on niriss_wfssbkg
