@@ -1,3 +1,13 @@
+12.1.2 (2025-03-03)
+===================
+
+ROMAN
+-----
+
+- Revised skycells rmap for roman (`#1119
+  <https://github.com/spacetelescope/crds/issues/1119>`_)
+
+
 12.1.1 (2025-02-26)
 ===================
 
