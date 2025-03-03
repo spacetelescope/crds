@@ -71,7 +71,7 @@ jobs:
       - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
       - run: pip uninstall --yes crds && ./install && pip install .[submission,test,docs,synphot]
       - id: cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        uses: actions/cache@v4  # v4.0.2
         with:
           path: |
             ${{ needs.cache.outputs.path }}

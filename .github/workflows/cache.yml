@@ -45,7 +45,7 @@ jobs:
         run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
       - id: lookup-cache
         name: check for existence of combined CRDS cache (`${{ steps.key.outputs.key }}`)
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        uses: actions/cache/restore@v4  # v4.0.2
         with:
           path: |
             ${{ env.CRDS_PATH }}
@@ -70,14 +70,14 @@ jobs:
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
         id: retrieve-hst-cache
         name: retrieve HST CRDS cache (`test-cache-${{ needs.contexts.outputs.hst }}`)
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        uses: actions/cache@v4  # v4.0.2
         with:
           path: ${{ env.CRDS_PATH }}/**/hst*
           key: test-cache-${{ needs.contexts.outputs.hst }}
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
         id: retrieve-jwst-cache
         name: retrieve JWST CRDS cache (`test-cache-${{ needs.contexts.outputs.jwst }}`)
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        uses: actions/cache@v4  # v4.0.2
         with:
           path: ${{ env.CRDS_PATH }}/**/jwst*
           key: test-cache-${{ needs.contexts.outputs.jwst }}
@@ -105,7 +105,7 @@ jobs:
         run: ./setup_test_cache ${{ env.CRDS_TEST_ROOT }} u
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
         name: save combined CRDS cache (`${{ steps.key.outputs.key }}`)
-        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        uses: actions/cache/save@v4  # v4.0.2
         with:
           path: |
             ${{ env.CRDS_PATH }}
