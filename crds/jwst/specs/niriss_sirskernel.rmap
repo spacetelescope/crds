@@ -9,9 +9,9 @@ header = {
     'name' : 'jwst_niriss_sirskernel.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'd75198f5b01b42ff3f90a4c7dc401f21f7f01386',
+    'sha1sum' : 'f0f503717a67756a38edc4e01f7ed1ec5ac38ba1',
     'suffix' : 'sirskernel',
-    'text_descr' : 'Initial refpix convolution kernel for niriss',
+    'text_descr' : 'Refpix Convolution Kernel',
 }
 
 selector = Match({

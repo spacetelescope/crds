@@ -9,9 +9,9 @@ header = {
     'name' : 'jwst_niriss_bkg.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '83e633f2b5dc74ee8694cb3e6a7e403af9cea192',
+    'sha1sum' : '27efe29787676d381b0e396fc9e9efef35f8411f',
     'suffix' : 'bkg',
-    'text_descr' : 'WFSS master background reference images',
+    'text_descr' : 'Background reference images',
 }
 
 selector = Match({
