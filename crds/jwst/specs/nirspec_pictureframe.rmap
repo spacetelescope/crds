@@ -9,9 +9,9 @@ header = {
     'name' : 'jwst_nirspec_pictureframe.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '51597a25801019302690736b5b12952cf4b5d037',
+    'sha1sum' : 'b095d42b2706da8864b2915385d2992de4eb6504',
     'suffix' : 'pictureframe',
-    'text_descr' : 'NIRSpec picture frame reference images',
+    'text_descr' : 'Picture frame reference images',
 }
 
 selector = Match({
