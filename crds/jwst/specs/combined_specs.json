@@ -5154,6 +5154,39 @@
             "tpn":"niriss_area.tpn",
             "unique_rowkeys":null
         },
+        "bkg":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"niriss_wfssbkg.rmap",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"BKG",
+            "filetype":"BKG",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_bkg_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_bkg.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"27efe29787676d381b0e396fc9e9efef35f8411f",
+            "suffix":"bkg",
+            "text_descr":"Background reference images",
+            "tpn":"niriss_bkg.tpn",
+            "unique_rowkeys":null
+        },
         "dark":{
             "derived_from":"jwst_niriss_dark_0002.rmap",
             "extra_keys":null,
@@ -5972,6 +6005,34 @@
             "suffix":"saturation",
             "text_descr":"Saturation",
             "tpn":"niriss_saturation.tpn",
+            "unique_rowkeys":null
+        },
+        "sirskernel":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Derived from niriss_speckernel.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"SIRSKERNEL",
+            "filetype":"SIRSKERNEL",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_sirskernel_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_sirskernel.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"f0f503717a67756a38edc4e01f7ed1ec5ac38ba1",
+            "suffix":"sirskernel",
+            "text_descr":"Refpix Convolution Kernel",
+            "tpn":"niriss_sirskernel.tpn",
             "unique_rowkeys":null
         },
         "speckernel":{
@@ -7501,6 +7562,36 @@
                 "SLIT"
             ]
         },
+        "pictureframe":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"handmade on Feb 26 2025 by HBrown",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PICTUREFRAME",
+            "filetype":"PICTUREFRAME",
+            "instrument":"NIRSpec",
+            "ld_tpn":"nirspec_pictureframe_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pictureframe.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"b095d42b2706da8864b2915385d2992de4eb6504",
+            "suffix":"pictureframe",
+            "text_descr":"Picture frame reference images",
+            "tpn":"nirspec_pictureframe.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
             "extra_keys":null,
@@ -7642,6 +7733,34 @@
             "suffix":"sflat",
             "text_descr":"Spectrograph Flat Field",
             "tpn":"nirspec_sflat.tpn",
+            "unique_rowkeys":null
+        },
+        "sirskernel":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Derived from niriss_sirskernel.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"SIRSKERNEL",
+            "filetype":"SIRSKERNEL",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_sirskernel_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_sirskernel.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"6e98a3735cb3222306681984ea2e3fec148683ff",
+            "suffix":"sirskernel",
+            "text_descr":"Refpix Convolution Kernel",
+            "tpn":"nirspec_sirskernel.tpn",
             "unique_rowkeys":null
         },
         "specwcs":{
