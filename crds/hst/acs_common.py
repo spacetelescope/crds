@@ -21,4 +21,4 @@ SM4 = timestamp.reformat_date("2009-05-14 00:00:00.000000")
 
 # Date after which subarray references were added to the
 # BIASFILE rmap so header preconditioning is no longer needed.
-PRE_SM4_SUBARRAY = timestamp.reformat_date("2002-08-01 00:00:00.000000")
+PRE_SM4_SUBARRAY = timestamp.reformat_date("2002-03-30 00:00:00.000000")
