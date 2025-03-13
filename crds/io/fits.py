@@ -226,8 +226,7 @@ class FitsFile(AbstractFile):
             for hdu in hdus:
                 hdu.header.pop("CHECKSUM",None)
                 hdu.header.pop("DATASUM", None)
-                data = hdu.data if hdu.data is not None else np.array([])
-                fits.append(output, data, hdu.header, checksum=False)
+                fits.append(output, hdu.data, hdu.header, checksum=False)
         os.remove(self.filepath)
         os.rename(output, self.filepath)
 
