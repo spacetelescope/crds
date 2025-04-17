@@ -1,1 +1,0 @@
-pass hdu.data as is for checksum funcs

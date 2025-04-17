@@ -1,3 +1,22 @@
+12.1.5 (2025-04-17)
+===================
+
+HST
+---
+
+- Push back the date for using subarray specific bias reference files for ACS
+  (`#1121 <https://github.com/spacetelescope/crds/issues/1121>`_)
+
+
+ROMAN
+-----
+
+- pass hdu.data as is for checksum funcs (`#1124
+  <https://github.com/spacetelescope/crds/issues/1124>`_)
+- adds new reference mapping matable for roman (`#1128
+  <https://github.com/spacetelescope/crds/issues/1128>`_)
+
+
 12.1.4 (2025-03-06)
 ===================
 
