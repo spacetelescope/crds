@@ -4,7 +4,6 @@ description = "Calibration Reference Data System,  HST/JWST/Roman reference file
 authors = [{ name = "STScI CRDS s/w developers" }]
 classifiers = [
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: BSD License",
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS :: MacOS X",
   "Programming Language :: Python :: 3",
@@ -18,15 +17,12 @@ dependencies = [
   "requests",
   "parsley",
 ]
+license-files = ["LICENSE"]
 dynamic = ["version"]
 
 [project.readme]
 file = "README.rst"
 content-type = "text/x-rst"
-
-[project.license]
-file = "LICENSE"
-content-type = "text/plain"
 
 [project.urls]
 homepage = "https://github.com/spacetelescope/crds"
