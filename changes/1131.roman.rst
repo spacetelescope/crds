@@ -1,0 +1,1 @@
+added WFI_SPECTRAL to list of valid exp_types in roman tpn
