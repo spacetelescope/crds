@@ -1,3 +1,13 @@
+12.1.6 (2025-05-21)
+===================
+
+ROMAN
+-----
+
+- added WFI_SPECTRAL to list of valid exp_types in roman tpn (`#1131
+  <https://github.com/spacetelescope/crds/issues/1131>`_)
+
+
 12.1.5 (2025-04-17)
 ===================
 
