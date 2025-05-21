@@ -1,0 +1,1 @@
+Added base rmap for nircam_bkg
