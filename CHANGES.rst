@@ -1,3 +1,20 @@
+12.1.7 (2025-05-23)
+===================
+
+JWST
+----
+
+- Added base rmap for nircam_bkg (`#1132
+  <https://github.com/spacetelescope/crds/issues/1132>`_)
+
+
+ROMAN
+-----
+
+- adds WFI_LOLO to list of valid Roman EXP_TYPE values (`#1133
+  <https://github.com/spacetelescope/crds/issues/1133>`_)
+
+
 12.1.6 (2025-05-21)
 ===================
 

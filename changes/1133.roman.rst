@@ -1,1 +1,0 @@
-adds WFI_LOLO to list of valid Roman EXP_TYPE values
