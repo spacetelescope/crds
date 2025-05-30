@@ -1,3 +1,13 @@
+12.1.8 (2025-05-30)
+===================
+
+JWST
+----
+
+- CCD-1602 new pars-pixrefstep.rmap for nircam. (`#1134
+  <https://github.com/spacetelescope/crds/issues/1134>`_)
+
+
 12.1.7 (2025-05-23)
 ===================
 
