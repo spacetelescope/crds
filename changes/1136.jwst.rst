@@ -1,0 +1,1 @@
+Added MIR_WFSS to accepted EXP_TYPE for MIRI
