@@ -1,3 +1,15 @@
+12.1.9 (2025-06-06)
+===================
+
+JWST
+----
+
+- Added READPATT and SUBARRAY to selectors for nirspec_pars-refpixstep.rmap
+  (`#1135 <https://github.com/spacetelescope/crds/issues/1135>`_)
+- Added MIR_WFSS to accepted EXP_TYPE for MIRI (`#1136
+  <https://github.com/spacetelescope/crds/issues/1136>`_)
+
+
 12.1.8 (2025-05-30)
 ===================
 

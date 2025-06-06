@@ -1,1 +1,0 @@
-Added READPATT and SUBARRAY to selectors for nirspec_pars-refpixstep.rmap
