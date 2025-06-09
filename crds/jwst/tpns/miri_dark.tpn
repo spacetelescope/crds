@@ -10,7 +10,7 @@ include includes/miri_dq_def_array.tpn
 # Commenting out ERR for CCD-1606 to make array optional.
 
 SCI   A   X   O   (ndim(SCI_ARRAY,4))
-#ERR   A   X   O   (ndim(ERR_ARRAY,4))
+ERR   A   X   O   (ndim(ERR_ARRAY,4))
 DQ    A   X   O   (ndim(DQ_ARRAY,4))
 
 
