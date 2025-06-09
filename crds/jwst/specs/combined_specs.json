@@ -7438,6 +7438,37 @@
             "tpn":"nirspec_pars-rampfitstep.tpn",
             "unique_rowkeys":null
         },
+        "pars-refpixstep":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Derived from nirspec_pars-rampfitstep.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-refpixstep",
+            "filetype":"pars-refpixstep",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pars-refpixstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pars-refpixstep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.READPATT",
+                    "META.SUBARRAY.NAME"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"ca2ea7711861247cd71703c2399cb2a4cc17dec5",
+            "suffix":"pars-refpixstep",
+            "text_descr":"NIRSpec NRS FULL reference pixel correction step parameters.",
+            "tpn":"nirspec_pars-refpixstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-resamplespecstep":{
             "derived_from":"nirspec-pars-jumpstep.rmap",
             "extra_keys":null,
