@@ -1,0 +1,1 @@
+Commented ERR lines to make array optional for MIRI Dark.
