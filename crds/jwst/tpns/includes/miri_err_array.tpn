@@ -1,6 +1,7 @@
 # This .tpn defines constraints related to array objects vs. header keywords.
 # Required relationships between subarray keywords are defined in a subarray .tpn
 # This file pertains to array properties and their relationships to header keywords.
+# Commenting out ERR rows for CCD-1606 to make array optional.
 
 #ERR       A           X         R             (is_image(ERR_ARRAY))
 #ERR       A           X         R             (has_type(ERR_ARRAY,'FLOAT'))
