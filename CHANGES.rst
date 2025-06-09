@@ -1,3 +1,13 @@
+12.1.10 (2025-06-09)
+====================
+
+JWST
+----
+
+- Commented ERR lines to make array optional for MIRI Dark. (`#1139
+  <https://github.com/spacetelescope/crds/issues/1139>`_)
+
+
 12.1.9 (2025-06-06)
 ===================
 
