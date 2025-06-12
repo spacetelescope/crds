@@ -60,7 +60,7 @@ import pickle
 from . import rmap, log, utils, config
 from .constants import ALL_OBSERVATORIES
 from .log import srepr
-from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsConfigError, CrdsDownloadError
+from .exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsConfigError, CrdsDownloadError, CrdsNetworkError, ServiceError
 from crds.client import api
 
 # import crds  # forward
@@ -447,7 +447,10 @@ def get_final_context(info, context):
     else:
         # Default for JWST if no env context and no explicit context is BUILD CONTEXT for installed jwst version
         if info.observatory == 'jwst':
-            input_context = api.get_build_context('jwst')
+            try:
+                input_context = api.get_build_context('jwst')
+            except (ServiceError, AttributeError):
+                input_context = latest_context
         # For other missions, default is latest (formerly operational) context
         else:
             input_context = latest_context
@@ -528,7 +531,7 @@ class ConfigInfo(utils.Struct):
 
 @utils.cached
 def get_config_info(observatory):
-    """Get the operational context and server s/w version from (in order of priority):
+    """Get the latest context and server s/w version from (in order of priority):
 
     1. The server.
     2. The cache from a prior server access.
@@ -544,8 +547,8 @@ def get_config_info(observatory):
                 info.status = "cache"
                 info.connected = True
                 log.verbose("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
-    except CrdsError as exc:
-        if "serverless" not in api.get_crds_server():
+    except (CrdsError,NameError,CrdsNetworkError) as exc:
+        if "serverless" not in api.get_crds_server(obs=observatory):
             log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()), ":", str(exc))
         info = load_server_info(observatory)
         info.status = "cache"
