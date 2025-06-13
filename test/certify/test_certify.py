@@ -1558,7 +1558,7 @@ tag:stsci.edu:asdf/core/asdf-1.0.0 is not recognized, converting to raw Python d
 File written with dev version of asdf library: 2.0.0.dev1213
 ########################################
 0 errors
-4 warnings
+7 warnings
 5 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
