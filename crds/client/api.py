@@ -104,13 +104,19 @@ def set_crds_server(url):
     S = CheckingProxy(URL, version="1.0")
 
 
-def get_crds_server():
+def get_crds_server(obs=None):
     """Return the base URL for the CRDS JSON RPC server.
     """
-    url = URL[:-len(URL_SUFFIX)]
-    if not url.startswith("https://") and "localhost" not in url:
-        log.warning("CRDS_SERVER_URL does not start with https://  ::", url)
+    try:
+        url = URL[:-len(URL_SUFFIX)]
+        if not url.startswith("https://") and "localhost" not in url:
+            log.warning("CRDS_SERVER_URL does not start with https://  ::", url)
+    except NameError:
+        if obs is None:
+            obs = "jwst"
+        url = os.environ.get("CRDS_SERVER_URL", f"https://{obs}-serverless.stsci.edu")
     return url
+
 
 
 # =============================================================================
@@ -255,7 +261,7 @@ def get_cal_version(observatory):
         try:
             cal_version = importlib.metadata.version(cal)
             if 'dev' in cal_version:
-                log.info("DEV calibration SW identified. Defaulting to Edit Context.")
+                log.debug("DEV calibration SW identified. Defaulting to Edit Context.")
                 return 'dev'
             cal_version = config.simplify_version(cal_version)
             dist_path = get_cal_dist_path(cal)
