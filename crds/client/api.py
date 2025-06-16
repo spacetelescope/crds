@@ -665,7 +665,7 @@ def get_default_observatory():
     obs = config.OBSERVATORY.get()
     if obs not in ["none", "", None]:
         return obs
-    return observatory_from_string(get_crds_server()) or"jwst"
+    return observatory_from_string(get_crds_server()) or "jwst"
 
 
 def observatory_from_string(string):
