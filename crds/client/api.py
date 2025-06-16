@@ -261,7 +261,7 @@ def get_cal_version(observatory):
         try:
             cal_version = importlib.metadata.version(cal)
             if 'dev' in cal_version:
-                log.debug("DEV calibration SW identified. Defaulting to Edit Context.")
+                log.info("DEV calibration SW identified. Defaulting to Edit Context.")
                 return 'dev'
             cal_version = config.simplify_version(cal_version)
             dist_path = get_cal_dist_path(cal)
@@ -665,9 +665,7 @@ def get_default_observatory():
     obs = config.OBSERVATORY.get()
     if obs not in ["none", "", None]:
         return obs
-    return observatory_from_string(get_crds_server()) or \
-        get_server_observatory() or \
-        "jwst"
+    return observatory_from_string(get_crds_server()) or"jwst"
 
 
 def observatory_from_string(string):
