@@ -104,13 +104,19 @@ def set_crds_server(url):
     S = CheckingProxy(URL, version="1.0")
 
 
-def get_crds_server():
+def get_crds_server(obs=None):
     """Return the base URL for the CRDS JSON RPC server.
     """
-    url = URL[:-len(URL_SUFFIX)]
-    if not url.startswith("https://") and "localhost" not in url:
-        log.warning("CRDS_SERVER_URL does not start with https://  ::", url)
+    try:
+        url = URL[:-len(URL_SUFFIX)]
+        if not url.startswith("https://") and "localhost" not in url:
+            log.warning("CRDS_SERVER_URL does not start with https://  ::", url)
+    except NameError:
+        if obs is None:
+            obs = "jwst"
+        url = os.environ.get("CRDS_SERVER_URL", f"https://{obs}-serverless.stsci.edu")
     return url
+
 
 
 # =============================================================================
@@ -659,9 +665,7 @@ def get_default_observatory():
     obs = config.OBSERVATORY.get()
     if obs not in ["none", "", None]:
         return obs
-    return observatory_from_string(get_crds_server()) or \
-        get_server_observatory() or \
-        "jwst"
+    return observatory_from_string(get_crds_server()) or "jwst"
 
 
 def observatory_from_string(string):
