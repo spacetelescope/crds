@@ -51,7 +51,7 @@ HERE = os.path.dirname(__file__) or "."
 
 # Stub like HST for now
 
-def header_to_reftypes(header, context="roman-operational"):
+def header_to_reftypes(header, context="roman-latest"):
     """Based on `header` return the default list of appropriate reference type names.
 
     >>> ref_types = header_to_reftypes(None)
@@ -61,7 +61,7 @@ def header_to_reftypes(header, context="roman-operational"):
     """
     return []  # translates to "all types" for instrument defined by header.
 
-def header_to_pipelines(header, context="roman-operational"):
+def header_to_pipelines(header, context="roman-latest"):
     """Based on `header` return the default list of appropriate reference type names.
 
     >>> header_to_pipelines(None)
