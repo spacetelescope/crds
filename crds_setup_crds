@@ -1,6 +1,6 @@
 #! /bin/bash
 
-pip install --upgrade numpy
+pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
 pip install --upgrade git+https://github.com/spacetelescope/jwst
 pip uninstall --yes crds
 
