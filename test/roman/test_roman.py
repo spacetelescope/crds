@@ -96,14 +96,13 @@ def test_getreferences_with_invalid_header(roman_test_cache_state):
         assert True
 
 
-def test_wfi_epsf_precondition_hook(roman_test_cache_state):
+def test_wfi_epsf_level3_header_conversions(roman_test_cache_state):
     """Tests retrieving Useafter-relevant keyword from L3 dataset headers and converting to ISOT via precondition hook in the empirical point spread function rmap."""
     roman_test_cache_state.mode = 'local'
     roman_test_cache_state.config_setup()
     header_dict = {
-            "ROMAN.META.INSTRUMENT.NAME": "WFI",
-            "ROMAN.META.INSTRUMENT.DETECTOR": "WFI02",
-            "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT": "F158",
+            "ROMAN.META.BASIC.INSTRUMENT": "WFI",
+            "ROMAN.META.BASIC.OPTICAL_ELEMENT": "F158",
     }
     test_keys = ['BASIC.TIME_FIRST_MJD', 'BASIC.TIME_MEAN_MJD', 'COADD_INFO.TIME_MEAN']
     for t in test_keys:
@@ -114,9 +113,8 @@ def test_wfi_epsf_precondition_hook(roman_test_cache_state):
             context="roman_0007.pmap",
             reftypes=["epsf"]
         )
-        del header_dict[t]
-    # test from file
-
+        assert os.path.basename(result['epsf']) == 'roman_wfi_epsf_0001.asdf'
+        del header_dict['ROMAN.META.'+t]
 
 
 @mark.roman

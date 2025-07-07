@@ -1,8 +1,4 @@
-"""The epsf reftype will be used for both Level 2 (ImageModel, RampModel) and Level 3 (MosaicModel) data. For level 2, the keyword for the time specification is META.EXPOSURE.START_TIME. For Level 3 the keyword is META.BASIC.TIME_MEAN_MJD.
-
-There is no apparent way in the rmaps themselves to equivalence two different source keywords to the same parkey matching parameter. Assuming there is not, a different method will need to be used.
-
-An option is to use the "precondition_header" feature. This allows arbitrary modifications of the input header prior to any selections. At this point, if META.EXPOSURE.START_TIME does not exist and META.BASIC.TIME_MEAN_MJD does, META.EXPOSURE.START_TIME can be created and assigned the value of META.BASIC.TIME_MEAN_MJD.
+"""Precondition hooks are called after the parameters have already been reduced to required parkeys by minimize_header function. Therefore hooks are only useful for mutating the header *values* of required parkeys. By the time the hook is called, any header keys that are not part of the required parkey list have been excluded, and any req'd parkeys that were missing values have been set to "Undefined". This hook is being kept purely for documentation purposes - the L3-L2 conversions instead happen inside roman.locate.dataset_level_conversions()
 """
 from crds.core import log
 from astropy.time import Time 
@@ -11,9 +7,9 @@ def precondition_header_wfi_epsf_v1(rmap, header_in):
     """Preconditions Level 3 EPSF data model header time specification by replacing MJD Mean Time keyword with standard META.EXPOSURE.START_TIME used by Level 2 files."""
     header = dict(header_in)
     l2_key = 'ROMAN.META.EXPOSURE.START_TIME'
-    l3_keys = ['ROMAN.META.BASIC.TIME_FIRST_MJD', 'ROMAN.META.BASIC.TIME_MEAN_MJD', 'ROMAN.META.COADD_INFO.TIME_MEAN']
     dtstring = header.get(l2_key)
     if not dtstring:
+        l3_keys = ['ROMAN.META.BASIC.TIME_FIRST_MJD', 'ROMAN.META.BASIC.TIME_MEAN_MJD', 'ROMAN.META.COADD_INFO.TIME_MEAN']
         mjd = header.get(l3_keys[0], header.get(l3_keys[1], header.get(l3_keys[2])))
         if mjd:
             dtstring = Time(mjd, format="mjd").isot
@@ -21,10 +17,16 @@ def precondition_header_wfi_epsf_v1(rmap, header_in):
             log.verbose(f"Replaced MJD L3 header keyword with CRDS equivalent {l2_key}")
         else:
             log.error("No available Useafter (time-based) relevant keywords found in header")
-    instr_params = header.get('ROMAN.META.INSTRUMENT')
-    if not instr_params:
-        instr_params = dict(name=header.get('ROMAN.META.BASIC.INSTRUMENT'), detector='WFI02', optical_element=header.get('ROMAN.META.BASIC.OPTICAL_ELEMENT'))
-        header['ROMAN.META.INSTRUMENT'] = instr_params
+        # Additional conversions
+        l2_l3_conversions = {
+            'ROMAN.META.INSTRUMENT.NAME': 'ROMAN.META.BASIC.INSTRUMENT',
+            'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT': 'ROMAN.META.BASIC.OPTICAL_ELEMENT',
+            'ROMAN.META.INSTRUMENT.DETECTOR': 'ROMAN.META.INSTRUMENT.DETECTOR' # force default to N/A
+        }
+        for k, v in l2_l3_conversions.items():
+            if not header.get(k):
+                header[k] = header.get(v, 'N/A')
+        log.verbose(f"Preconditioned header: {header}")
     return header
 
 def wfi_epsf_filter(rmap):
