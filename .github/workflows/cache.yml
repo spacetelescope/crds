@@ -82,7 +82,7 @@ jobs:
           path: ${{ env.CRDS_PATH }}/**/jwst*
           key: test-cache-${{ needs.contexts.outputs.jwst }}
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
-        uses: mamba-org/setup-micromamba@06375d89d211a1232ef63355742e9e2e564bc7f7  # v2.0.2
+        uses: mamba-org/setup-micromamba@b09ef9b599704322748535812ca03efb2625677b  # v2.0.5
         with:
           environment-name: crds-testing
           create-args: >-
