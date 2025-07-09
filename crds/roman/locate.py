@@ -558,29 +558,18 @@ def condition_matching_header(rmapping, header):
 
 
 def dataset_level_conversions(header):
-    """Converts Level 3 data model header time specification by replacing MJD keyword with ISOT formatted META.EXPOSURE.START_TIME used by Level 2 files."""
+    """Checks for Level 3 data model header time specification and stores in ROMAN.META.EXPOSURE.START_TIME parkey used by CRDS for UseAfter match selections. If the detector parkey is not found (because L3 datasets do not include it), this is automatically set to N/A by default"""
     parkeys = dict(header)
-    l2_key = 'ROMAN.META.EXPOSURE.START_TIME'
-    dtstring = parkeys.get(l2_key)
-    if not dtstring:
-        l3_keys = ['ROMAN.META.BASIC.TIME_FIRST_MJD', 'ROMAN.META.BASIC.TIME_MEAN_MJD', 'ROMAN.META.COADD_INFO.TIME_MEAN']
-        mjd = parkeys.get(l3_keys[0], parkeys.get(l3_keys[1], parkeys.get(l3_keys[2])))
-        if mjd:
-            dtstring = Time(mjd, format="mjd").isot
-            parkeys['ROMAN.META.EXPOSURE.START_TIME'] = dtstring
-            log.verbose(f"Replaced MJD L3 header keyword with CRDS equivalent {l2_key}")
-        else:
-            log.error("No available Useafter (time-based) relevant keywords found in header")
-        # Additional conversions
-        l2_l3_conversions = {
-            'ROMAN.META.INSTRUMENT.NAME': 'ROMAN.META.BASIC.INSTRUMENT',
-            'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT': 'ROMAN.META.BASIC.OPTICAL_ELEMENT',
-            'ROMAN.META.INSTRUMENT.DETECTOR': 'ROMAN.META.INSTRUMENT.DETECTOR' # force default to N/A
-        }
-        for k, v in l2_l3_conversions.items():
-            if not parkeys.get(k):
-                parkeys[k] = parkeys.get(v, 'N/A')
-        log.verbose(f"L3 header conversions: {log.PP(parkeys)}")
+    # { l2 parkey : [l3_parkey: default] }
+    parkey_conversions = {
+        'ROMAN.META.EXPOSURE.START_TIME': ['ROMAN.META.COADD_INFO.TIME_MEAN', 'UNDEFINED'],
+        'ROMAN.META.INSTRUMENT.DETECTOR': ['ROMAN.META.INSTRUMENT.DETECTOR', 'N/A']
+    }
+    for l2, l3 in parkey_conversions.items():
+        if not parkeys.get(l2):
+            parkeys[l2] = parkeys.get(l3[0], l3[1])
+            log.verbose(f"Using {l3[0]}={parkeys[l2]} for {l2}")
+    log.verbose(f"Dataset level conversions: {log.PP(parkeys)}")
     return parkeys
 
 

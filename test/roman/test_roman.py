@@ -101,20 +101,17 @@ def test_wfi_epsf_level3_header_conversions(roman_test_cache_state):
     roman_test_cache_state.mode = 'local'
     roman_test_cache_state.config_setup()
     header_dict = {
-            "ROMAN.META.BASIC.INSTRUMENT": "WFI",
-            "ROMAN.META.BASIC.OPTICAL_ELEMENT": "F158",
+            "ROMAN.META.INSTRUMENT.NAME": "WFI",
+            "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT": "F158",
+            "ROMAN.META.COADD_INFO.TIME_MEAN": "2020-02-01T00:00:00"
     }
-    test_keys = ['BASIC.TIME_FIRST_MJD', 'BASIC.TIME_MEAN_MJD', 'COADD_INFO.TIME_MEAN']
-    for t in test_keys:
-        header_dict.update({'ROMAN.META.'+t:60857})
-        result = heavy_client.getreferences(
-            header_dict,
-            observatory="roman",
-            context="roman_0007.pmap",
-            reftypes=["epsf"]
-        )
-        assert os.path.basename(result['epsf']) == 'roman_wfi_epsf_0001.asdf'
-        del header_dict['ROMAN.META.'+t]
+    result = heavy_client.getreferences(
+        header_dict,
+        observatory="roman",
+        context="roman_0007.pmap",
+        reftypes=["epsf"]
+    )
+    assert os.path.basename(result['epsf']) == 'roman_wfi_epsf_0001.asdf'
 
 
 @mark.roman
