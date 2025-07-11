@@ -17,5 +17,5 @@ PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R
 OPT_ELEM            C        C         R    G130M,G160M,G140L,\
           G185M,G225M,G285M,G230L
-LIFE_ADJ            H        I         R    -1,0,1,-11,2,3,4,5,6
+LIFE_ADJ            H        I         R
 N_SIGMA             C        R         O
