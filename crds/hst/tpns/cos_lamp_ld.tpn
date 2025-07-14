@@ -17,7 +17,7 @@ COMPARISON_FILE     H        C         R
 COMMENT             H        C         R
 INSTRUMENT      H        C         R    COS
 REFERENCE_FILE_TYPE H        C         R    LAMP
-LIFE_ADJ            H        I         R    0,1,-1,-11,2,-2,3,4,5,6
+LIFE_ADJ            H        I         R
 DETECTOR            C        C         R    FUV,NUV
 OBSTYPE             C        C         R    SPECTROSCOPIC
 PEDIGREE        C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
