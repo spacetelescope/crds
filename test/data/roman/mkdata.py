@@ -10,18 +10,15 @@ Execute with
 import os
 
 import roman_datamodels as rdm
-import roman_datamodels.maker_utils as mu
 
 
 def mkdata():
     """Create FlatRefModels with various bad settings"""
 
     # Good model
-    flatref = mu.mk_datamodel(rdm.datamodels.FlatRefModel, shape=(2, 2),
-                              meta={'instrument': {'name': 'WFI', 'detector': 'WFI16', 'optical_element': 'F158'}})
+    flatref = rdm.datamodels.FlatRefModel.create_fake_data(shape=(2, 2), defaults={'meta': {'instrument': {'name': 'WFI', 'detector': 'WFI16', 'optical_element': 'F158'}}})
     flatref.save('roman_wfi16_f158_flat_small.asdf')
-    flatrefgrism = mu.mk_datamodel(rdm.datamodels.FlatRefModel, shape=(2, 2),
-                              meta={'instrument': {'name': 'WFI', 'detector': 'WFI16', 'optical_element': 'GRISM'}})
+    flatrefgrism = rdm.datamodels.FlatRefModel.create_fake_data(shape=(2, 2), defaults={'meta': {'instrument': {'name': 'WFI', 'detector': 'WFI16', 'optical_element': 'GRISM'}}})
     flatrefgrism.save('roman_wfi16_grism_flat_small.asdf')
 
     # Turn off validations so we can make bad decisions
