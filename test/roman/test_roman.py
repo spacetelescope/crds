@@ -96,6 +96,24 @@ def test_getreferences_with_invalid_header(roman_test_cache_state):
         assert True
 
 
+def test_wfi_epsf_level3_header_conversions(roman_test_cache_state):
+    """Tests retrieving Useafter-relevant keyword from L3 dataset headers and converting to ISOT via precondition hook in the empirical point spread function rmap."""
+    roman_test_cache_state.mode = 'local'
+    roman_test_cache_state.config_setup()
+    header_dict = {
+            "ROMAN.META.INSTRUMENT.NAME": "WFI",
+            "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT": "F158",
+            "ROMAN.META.COADD_INFO.TIME_MEAN": "2020-02-01T00:00:00"
+    }
+    result = heavy_client.getreferences(
+        header_dict,
+        observatory="roman",
+        context="roman_0007.pmap",
+        reftypes=["epsf"]
+    )
+    assert os.path.basename(result['epsf']) == 'roman_wfi_epsf_0001.asdf'
+
+
 @mark.roman
 def test_list_references(roman_test_cache_state):
     """ test_list_references: test satisfies Roman 303.2 and 628.2
@@ -125,3 +143,4 @@ def test_list_references(roman_test_cache_state):
     results = results.decode('ascii').split("\n")
 
     assert {item for item in results if item} == expected_result
+    

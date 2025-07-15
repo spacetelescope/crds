@@ -21,7 +21,7 @@ import warnings
 from collections import namedtuple
 
 from asdf.tags.core import NDArrayType
-
+from astropy.time import Time 
 # =======================================================================
 
 from crds.core import rmap, config, utils, timestamp, log, exceptions
@@ -51,7 +51,7 @@ HERE = os.path.dirname(__file__) or "."
 
 # Stub like HST for now
 
-def header_to_reftypes(header, context="roman-operational"):
+def header_to_reftypes(header, context="roman-latest"):
     """Based on `header` return the default list of appropriate reference type names.
 
     >>> ref_types = header_to_reftypes(None)
@@ -61,7 +61,7 @@ def header_to_reftypes(header, context="roman-operational"):
     """
     return []  # translates to "all types" for instrument defined by header.
 
-def header_to_pipelines(header, context="roman-operational"):
+def header_to_pipelines(header, context="roman-latest"):
     """Based on `header` return the default list of appropriate reference type names.
 
     >>> header_to_pipelines(None)
@@ -556,14 +556,26 @@ def condition_matching_header(rmapping, header):
 
 # ============================================================================
 
-def fits_to_parkeys(fits_header):
-    """
-    >>> condition_matching_header(None, {1:2, 3:4, 5:6})
-    {1: 2, 3: 4, 5: 6}
 
-    """
+def dataset_level_conversions(header):
+    """Checks for Level 3 data model header time specification and stores in ROMAN.META.EXPOSURE.START_TIME parkey used by CRDS for UseAfter match selections. If the detector parkey is not found (because L3 datasets do not include it), this is automatically set to N/A by default"""
+    parkeys = dict(header)
+    # { l2 parkey : [l3_parkey: default] }
+    parkey_conversions = {
+        'ROMAN.META.EXPOSURE.START_TIME': ['ROMAN.META.COADD_INFO.TIME_MEAN', 'UNDEFINED'],
+        'ROMAN.META.INSTRUMENT.DETECTOR': ['ROMAN.META.INSTRUMENT.DETECTOR', 'N/A']
+    }
+    for l2, l3 in parkey_conversions.items():
+        if not parkeys.get(l2):
+            parkeys[l2] = parkeys.get(l3[0], l3[1])
+            log.verbose(f"Using {l3[0]}={parkeys[l2]} for {l2}")
+    log.verbose(f"Dataset level conversions: {log.PP(parkeys)}")
+    return parkeys
 
-    return dict(fits_header)
+
+def fits_to_parkeys(header):
+    return dict(header)
+
 
 # ============================================================================
 
@@ -689,7 +701,7 @@ def get_cross_strapped_pairs(header):
 
 
 def dataset_to_ref_header(parameters):
-    """Temporary workaround (hopefully) for prepending archive dataset header keys that start with 'META' to start with 'ROMAN.META' instead."""
+    """Prepend "ROMAN" archive dataset header keys that start with 'META'. Convert any L3 specific params into parkey equivalents"""
     ref_headers = dict()
     for key, val in parameters.items():
         parts = key.split('.')
@@ -697,8 +709,8 @@ def dataset_to_ref_header(parameters):
             param = "ROMAN." + '.'.join(parts[:])
         else:
             param = key
-        ref_headers[param] = val
-    return ref_headers
+        ref_headers[param] = val 
+    return dataset_level_conversions(ref_headers)
 
 # ============================================================================
 
