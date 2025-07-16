@@ -26,7 +26,7 @@ OPT_ELEM            C        C         R    G130M,G160M,G140L
 CENWAVE             C        I         R    800,1222,1223,1291,1300,1309,1318,1327,\
                                             1533,1577,1589,1600,1611,1623,\
                                             1105,1230,1280,1055,1096
-LIFE_ADJ            H        I         R    -1,0,1,-11,2,3,4,5,6
+LIFE_ADJ            H        I         R
 APERTURE            C        C         R    PSA,BOA,ANY
 OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
 OBSERVATION_END_DATE    C    C         O    &SYBDATE
