@@ -17,10 +17,10 @@ Usage examples:
   # Find .rmap files with any specified parkey
   crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --parkeys META.INSTRUMENT.GRATING,META.EXPOSURE.TYPE --parkey-mode any
 
-  # Find parkeys corresponding to all specific column names
+  # Find .rmap files and parkey names corresponding to all specific column names
   crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --column GRATING,TYPE --column-mode all
 
-  # Find parkeys corresponding to any specific column names
+  # Find .rmap files and parkey names corresponding to any specific column names
   crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --column GRATING,TYPE --column-mode any
 
 Requirements:
@@ -377,9 +377,7 @@ def main():
     if not os.path.exists(os.path.join(crds_path, args.pmap_file)):
         print(
             f"Error: .pmap file not found at "
-            f"{os.path.join(crds_path,args.pmap_file)} using CRDS_PATH="
-            f" {os.environ.get("CRDS_PATH")} and CRDS_SERVER_URL="
-            f" {os.environ.get("CRDS_SERVER_URL")}."
+            f"{os.path.join(crds_path,args.pmap_file)}"
         )
         sys.exit(1)
 
@@ -393,7 +391,7 @@ def main():
         print("Error: Can only use one of --parkeys or --column at a time.")
         sys.exit(1)
 
-    # Case 1: Find parkeys by column name
+    # Case 1: Find .rmap files by column name
     if args.columns:
         if "," in args.columns:
             target_columns = args.columns.split(",")
