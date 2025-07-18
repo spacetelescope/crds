@@ -275,7 +275,9 @@ def find_parkeys_by_column(pmap_file, column_names, mission='jwst', instrument=N
 def main():
     parser = argparse.ArgumentParser(
         description="Extract parkeys from JWST CRDS .rmap files, find .rmap files with specific parkeys, or find parkeys by column name.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
+
   Extract parkeys for all .rmap files:
   rmap_parkeys_tool jwst_1234.pmap
 
@@ -291,13 +293,13 @@ def main():
   Find .rmap files with any specified parkey:
   rmaps_parkeys_tool jwst_1234.pmap --parkeys META.INSTRUMENT.GRATING,META.EXPOSURE.TYPE --parkey-mode any
 
-  Find parkeys for all specified column names:
+  Find .rmap files and parkeys for all specified column names:
   rmap_parkeys_tool /path/mappings/jwst/jwst_1234.pmap  --column GRATING,TYPE --column-mode all
 
-  Find parkeys corresponding to any specified column name:
+  Find .rmap files and parkeys corresponding to any specified column name:
   rmap_parkeys_tool /path/mappings/jwst/jwst_1234.pmap  --column GRATING,TYPE  --column-mode any
 
-"""
+""",
     )
 
     parser.add_argument(
