@@ -1469,4 +1469,27 @@ the environment settings and required Python stack and eliminate all parameters:
 
 Operators typically execute *crds_sync_wrapper.csh* rather than *cron_sync*.    
 
+crds_parkey_tool
+----------------
 
+The `crds_parkey_tool` script is a command-line tool to extract parkeys from 
+JWST and HST CRDS .rmap files, find .rmap files with specific parkeys, 
+or find .rmap files and corresponding parkeys by column name (e.g., as shown on jwst-crds.stsci.edu).
+
+      # Extract parkeys for all .rmap files in a .pmap
+      crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap
+
+      # Extract parkeys for NIRCam .rmap files
+      crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --instrument nircam
+
+      # Find .rmap files with all specified parkeys
+      crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --parkeys META.INSTRUMENT.GRATING,META.EXPOSURE.TYPE --parkey-mode all
+
+      # Find .rmap files with any specified parkey
+      crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --parkeys META.INSTRUMENT.GRATING,META.EXPOSURE.TYPE --parkey-mode any
+
+      # Find .rmap files and parkey names corresponding to all specific column names
+      crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --column GRATING,TYPE --column-mode all
+
+      # Find .rmap files and parkey names corresponding to any specific column names
+      crds_parkey_tool /path/mappings/jwst/jwst_1234.pmap --mission jwst --column GRATING,TYPE --column-mode any
