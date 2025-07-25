@@ -11,7 +11,7 @@ import re
 import warnings
 
 from asdf.tags.core import NDArrayType
-from stdatamodels.validate import ValidationWarning
+from stdatamodels.exceptions import ValidationWarning
 
 # =======================================================================
 
