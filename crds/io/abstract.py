@@ -46,7 +46,7 @@ def hijack_warnings(func):
             warnings.showwarning = hijacked_showwarning
             warnings.simplefilter("always", AstropyUserWarning)
             try:
-                from stdatamodels.validate import ValidationWarning
+                from stdatamodels.exceptions import ValidationWarning
             except:
                 log.verbose_warning(
                     "stdatamodels ValidationWarning import failed.  "
