@@ -42,6 +42,7 @@ def parse_args():
     parser.add_argument("destination", help="Destination path on local filesystem")
     parser.add_argument("--file-size", help="Expected file size in bytes", type=int, default=None)
     parser.add_argument("--file-sha1sum", help="Expected file SHA-1 checksum", default=None)
+    parser.add_argument("--max-retries", help="Maximum number of retries on download failure", type=int, default=3)
 
     return parser.parse_args()
 
