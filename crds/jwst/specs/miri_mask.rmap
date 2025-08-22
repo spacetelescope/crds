@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'miri_mask.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME', 'META.EXPOSURE.READPATT', 'META.EXPOSURE.NGROUPS'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '1366d1d6206db422c4acf9f82090165d172c42ed',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.SUBARRAY.NAME', 'META.EXPOSURE.READPATT', 'META.EXPOSURE.NGROUPS'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '371ddfa56f4cc4f53d86f8735bb4e6592ad227a7',
     'substitutions' : {
         'META.SUBARRAY.NAME' : {
             'GENERIC' : 'N/A',

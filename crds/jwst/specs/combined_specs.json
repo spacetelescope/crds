@@ -1346,6 +1346,7 @@
             "parkey":[
                 [
                     "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
                     "META.SUBARRAY.NAME",
                     "META.EXPOSURE.READPATT",
                     "META.EXPOSURE.NGROUPS"
@@ -1355,7 +1356,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"1366d1d6206db422c4acf9f82090165d172c42ed",
+            "sha1sum":"371ddfa56f4cc4f53d86f8735bb4e6592ad227a7",
             "substitutions":{
                 "META.SUBARRAY.NAME":{
                     "GENERIC":"N/A"
@@ -3222,14 +3223,15 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.EXPOSURE.TYPE"
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TSOVISIT"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"1c19aedfdb6a31de258d669bff692b4501bbe0b5",
+            "sha1sum":"a7f44cd1a42641e46a97b2fbceefc73cc09705e2",
             "suffix":"pars-tsophotometrystep",
             "text_descr":"TSOPhotometryStep runtime parameters",
             "tpn":"miri_pars-tsophotometrystep.tpn",
@@ -4621,6 +4623,38 @@
             "suffix":"pars-spec2pipeline",
             "text_descr":"Spec2Pipeline runtime parameters",
             "tpn":"nircam_pars-spec2pipeline.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-tsophotometrystep":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"nircam_tsophot.rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-tsophotometrystep",
+            "filetype":"pars-tsophotometrystep",
+            "instrument":"NIRCAM",
+            "ld_tpn":"nircam_pars-tsophotometrystep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nircam_pars-tsophotometrystep.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.VISIT.TSOVISIT",
+                    "META.INSTRUMENT.PUPIL"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"4c01811782957de5c859ae902892ccc4e70274fa",
+            "suffix":"pars-tsophotometrystep",
+            "text_descr":"TSO Photometry Step Runtime Parameters",
+            "tpn":"nircam_pars-tsophotometrystep.tpn",
             "unique_rowkeys":null
         },
         "pars-tweakregstep":{
