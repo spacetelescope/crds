@@ -7754,6 +7754,37 @@
             "tpn":"nirspec_pictureframe.tpn",
             "unique_rowkeys":null
         },
+        "psf":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"miri_psf.rmap",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PSF",
+            "filetype":"PSF",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_psf_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_psf.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.GRATING",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"48dc78290da34ac4703ede832b1c3078a1dd32a3",
+            "suffix":"psf",
+            "text_descr":"A wavelength array to be used for spectral extraction",
+            "tpn":"nirspec_psf.tpn",
+            "unique_rowkeys":null
+        },
         "readnoise":{
             "derived_from":"cloning tool 0.05b (2013-04-12) used on 2013-10-04",
             "extra_keys":null,
