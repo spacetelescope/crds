@@ -20,7 +20,8 @@ import time
 import sys
 
 from crds.core.utils import checksum
-
+from crds.client.api import get_default_observatory
+from crds.core import config 
 
 BAD_SIZE_STATUS = 10
 BAD_CHECKSUM_STATUS = 11
@@ -35,15 +36,47 @@ except ImportError:
 def check_aws_imports():
     return boto3 is not None
 
+
+def create_s3_path(s3_prefix : str, kind : str, fname : str, obs: str) -> str:
+    """Creates an s3 object uri string starting with s3_prefix and following standard crds cache directory structure.
+    """
+    kind = f"/{kind}" if s3_prefix else kind
+    return f"{s3_prefix.rstrip('/')}{kind}/{obs}/{fname}"
+
+
+def format_uris(**kwargs):
+    source, destination = kwargs.pop("source"), kwargs.pop("destination")
+    fname = source.split("/")[-1]
+    kind = "mappings" if fname.endswith("map") else "references" # assumes only refs and mappings, not config files
+    if not source.startswith("s3"):
+        s3_bucket = os.environ.get("CRDS_S3_BUCKET")
+        if not s3_bucket:
+            print("Please set the CRDS_S3_BUCKET environment variable or pass the full S3 URI into `source` arg")
+            sys.exit(1)
+        obs = get_default_observatory()
+        s3_pfx = "/roman/crds" if obs == "roman" else ""
+        s3_key = create_s3_path(s3_pfx, kind, fname, obs)
+        s3_uri = f"s3://{s3_bucket}/{s3_key.lstrip('/')}"
+    else:
+        s3_uri = source
+
+    crds_path = os.environ.get("CRDS_PATH", config.get_crds_path())
+    if os.path.isdir(destination):
+        if config.get_crds_ref_subdir_mode(obs) != "flat":
+            config.set_crds_ref_subdir_mode("flat", obs)
+        dest = f"{crds_path}/{kind}/{obs}/{fname}" if destination == crds_path else f"{destination.rstrip('/')}/{fname}"
+    else:
+        dest = destination
+   
+    return s3_uri, dest
+
+
 def parse_args():
     parser = argparse.ArgumentParser("crds_s3_get", description="S3 download plugin for CRDS")
-
-    parser.add_argument("source", help="Source S3 URI")
-    parser.add_argument("destination", help="Destination path on local filesystem")
-    parser.add_argument("--file-size", help="Expected file size in bytes", type=int, default=None)
-    parser.add_argument("--file-sha1sum", help="Expected file SHA-1 checksum", default=None)
-    parser.add_argument("--max-retries", help="Maximum number of retries on download failure", type=int, default=3)
-
+    parser.add_argument("source", help="filename to download or full S3 URI to the file")
+    parser.add_argument("-d", "--destination", help="Destination path on local filesystem", default=os.environ.get("CRDS_PATH"))
+    parser.add_argument("-s", "--file-size", help="Expected file size in bytes", type=int, default=None)
+    parser.add_argument("-c", "--file-sha1sum", help="Expected file SHA-1 checksum", default=None)
     return parser.parse_args()
 
 
@@ -53,12 +86,15 @@ def main():
             "You must install awscli and boto3 for the crds_s3_get script to work. "
             "AWS dependencies for CRDS can be installed via `pip install crds[aws]`"
         )
+
     args = parse_args()
+    kwargs = {**vars(args)}
+    src, dest = format_uris(**kwargs)
 
     result = subprocess.run([
         "aws", "s3", "cp", "--no-progress",
-        args.source,
-        args.destination,
+        src,
+        dest,
     ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
 
     if result.returncode != 0:
