@@ -25,6 +25,15 @@ from crds.core.utils import checksum
 BAD_SIZE_STATUS = 10
 BAD_CHECKSUM_STATUS = 11
 
+try:
+    import boto3
+    import awscli
+except ImportError:
+    boto3 = None
+    awscli = None
+
+def check_aws_imports():
+    return boto3 is not None
 
 def parse_args():
     parser = argparse.ArgumentParser("crds_s3_get", description="S3 download plugin for CRDS")
@@ -38,6 +47,11 @@ def parse_args():
 
 
 def main():
+    if not check_aws_imports():
+        raise ImportError(
+            "You must install awscli and boto3 for the crds_s3_get script to work. "
+            "AWS dependencies for CRDS can be installed via `pip install crds[aws]`"
+        )
     args = parse_args()
 
     result = subprocess.run([
