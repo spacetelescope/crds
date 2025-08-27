@@ -1573,6 +1573,8 @@ OBSERVATORY = StrConfigItem("CRDS_OBSERVATORY", None,
     lower=True
 )
 
+S3_BUCKET = StrConfigItem("CRDS_S3_BUCKET", None, "S3 bucket from which to download CRDS references and mappings.", lower=True)
+
 # -------------------------------------------------------------------------------------
 def get_uri(filename):
     """Return an appropriate s3:// or https:// URI for the specified filename based
