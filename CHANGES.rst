@@ -1,3 +1,38 @@
+13.0.0 (2025-08-27)
+===================
+
+General
+-------
+
+- build and test with latest version of Python (`#1109
+  <https://github.com/spacetelescope/crds/issues/1109>`_)
+- Raise import error if aws deps not installed (`#1152
+  <https://github.com/spacetelescope/crds/issues/1152>`_)
+
+
+HST
+---
+
+- Remove list of allowed values for COS tpns (`#1146
+  <https://github.com/spacetelescope/crds/issues/1146>`_)
+
+
+JWST
+----
+
+- catch exceptions for serverless mode and fallback to latest (`#1140
+  <https://github.com/spacetelescope/crds/issues/1140>`_)
+- Add crds_parkey_tool command line tool (`#1145
+  <https://github.com/spacetelescope/crds/issues/1145>`_)
+
+
+ROMAN
+-----
+
+- improved crds_s3_get script for roman pipeline (`#1154
+  <https://github.com/spacetelescope/crds/issues/1154>`_)
+
+
 12.1.10 (2025-06-09)
 ====================
 

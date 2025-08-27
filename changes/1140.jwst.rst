@@ -1,1 +1,0 @@
-catch exceptions for serverless mode and fallback to latest

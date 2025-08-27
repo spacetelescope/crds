@@ -1,1 +1,0 @@
-Remove list of allowed values for COS tpns
