@@ -1,46 +1,13 @@
-#!/bin/bash
-observatory=${1:-"roman"}
-crds_cache=${2:-"${HOME}/crds_cache"}
-test=${3:-""}
-pickles=${4:-0}
-
-export CRDS_PATH=$crds_cache
-if [[ -z $CRDS_OBSERVATORY ]]; then
-    export CRDS_OBSERVATORY=$observatory
-fi
-export CRDS_SERVER_URL="https://${CRDS_OBSERVATORY}-crds-serverless.stsci.edu"
+export CRDS_SERVER_URL="https://roman-crds-serverless.stsci.edu"
+export CRDS_PATH=${HOME}/crds_cache
 export CRDS_S3_ENABLED=1
 export CRDS_S3_RETURN_URI=0
-
-if [[ "${CRDS_OBSERVATORY}" == "roman" ]]; then
-    export CRDS_S3_PREFIX=/roman/crds
-    s3_bucket=stpubdata
-    tsfx="-tst"
-    sfx=""
-else
-    export CRDS_S3_PREFIX=""
-    s3_bucket=hst-crds-cache
-    tsfx="-test"
-    sfx="-ops"
-fi
-
-if [[ -z $test ]]; then
-    export CRDS_S3_BUCKET="${s3_bucket}${sfx}"
-else
-    export CRDS_S3_BUCKET="${s3_bucket}${tsfx}"
-fi
-
-export CRDS_MAPPING_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/mappings/${CRDS_OBSERVATORY}
-export CRDS_REFERENCE_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/references/${CRDS_OBSERVATORY}
-export CRDS_CONFIG_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/config/${CRDS_OBSERVATORY}
-
-# To use pickled contexts,  set CRDS_S3_ENABLED=0 and CRDS_USE_PICKLED_CONTEXTS=1
-if [[ $pickles -lt 0 ]]; then
-    export CRDS_USE_PICKLED_CONTEXTS=0
-    export CRDS_PICKLE_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/pickles/${CRDS_OBSERVATORY}
-
-fi
-
+export CRDS_S3_BUCKET=stpubdata
+export CRDS_S3_PREFIX=/roman/crds
+export CRDS_MAPPING_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/mappings/roman
+export CRDS_REFERENCE_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/references/roman
+export CRDS_CONFIG_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/config/roman
+export CRDS_USE_PICKLED_CONTEXTS=0
+export CRDS_PICKLE_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/pickles/${CRDS_OBSERVATORY}
 export CRDS_DOWNLOAD_MODE=plugin
-# export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} --file-size ${FILE_SIZE} --file-sha1sum ${FILE_SHA1SUM}'
 export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}'
