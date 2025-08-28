@@ -1,3 +1,20 @@
+13.0.1 (2025-08-28)
+===================
+
+General
+-------
+
+- Needed to swap to main in release.yml instead of master. (`#1155
+  <https://github.com/spacetelescope/crds/issues/1155>`_)
+
+
+JWST
+----
+
+- Added handful of 12.1 rmaps. (`#1153
+  <https://github.com/spacetelescope/crds/issues/1153>`_)
+
+
 13.0.0 (2025-08-27)
 ===================
 
