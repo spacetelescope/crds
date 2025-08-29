@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_pars-tsophotometrystep.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'a7f44cd1a42641e46a97b2fbceefc73cc09705e2',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.FILTER', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '25ad5ef0c20562bab7e2dd0a81a4208022932d67',
     'suffix' : 'pars-tsophotometrystep',
     'text_descr' : 'TSOPhotometryStep runtime parameters',
 }
