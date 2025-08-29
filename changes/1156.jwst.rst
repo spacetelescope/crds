@@ -1,3 +1,0 @@
-Added subarrays for NIRISS multistrpe readout modes
-Added rmap for miri_bkg
-Added rmap for nircam_backgrounds

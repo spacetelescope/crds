@@ -1,3 +1,15 @@
+13.0.2 (2025-08-29)
+===================
+
+JWST
+----
+
+- Added subarrays for NIRISS multistrpe readout modes
+  Added rmap for miri_bkg
+  Added rmap for nircam_backgrounds (`#1156
+  <https://github.com/spacetelescope/crds/issues/1156>`_)
+
+
 13.0.1 (2025-08-28)
 ===================
 
