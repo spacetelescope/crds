@@ -1,0 +1,1 @@
+Added subarrays for NIRISS multistrpe readout modes
