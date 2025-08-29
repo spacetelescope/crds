@@ -956,6 +956,36 @@
             "tpn":"miri_area.tpn",
             "unique_rowkeys":null
         },
+        "bkg":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2025-08-29",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"BKG",
+            "filetype":"BKG",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_bkg_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_bkg.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"ab42eab142f8712af742392ecf166a6d2801eb25",
+            "suffix":"bkg",
+            "text_descr":"Background Reference Images",
+            "tpn":"miri_bkg.tpn",
+            "unique_rowkeys":null
+        },
         "cubepar":{
             "classes":[
                 "Match",
@@ -4853,19 +4883,34 @@
             "unique_rowkeys":null
         },
         "regions":{
-            "derived_from":"Handmade spec",
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2025-08-20",
             "extra_keys":null,
-            "file_ext":".fits",
+            "file_ext":".asdf",
             "filekind":"REGIONS",
             "filetype":"REGIONS",
             "instrument":"NIRCAM",
             "ld_tpn":"nircam_regions_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_nircam_regions_0000.rmap",
+            "name":"jwst_nircam_regions.rmap",
             "observatory":"JWST",
-            "parkey":[],
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE",
+                    "META.SUBARRAY.NAME",
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"2d77b9ba503dd562076f479146d54c4afd0a6dd6",
             "suffix":"regions",
-            "text_descr":"Regions",
+            "text_descr":"Reftype in support of DHS level 2 processing",
             "tpn":"nircam_regions.tpn",
             "unique_rowkeys":null
         },
