@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2025-08-29',
+    'file_ext' : '.asdf',
+    'filekind' : 'BKG',
+    'filetype' : 'BKG',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_bkg.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'ab42eab142f8712af742392ecf166a6d2801eb25',
+    'suffix' : 'bkg',
+    'text_descr' : 'Background Reference Images',
+}
+
+selector = Match({
+})

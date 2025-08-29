@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2025-08-20',
+    'file_ext' : '.asdf',
+    'filekind' : 'REGIONS',
+    'filetype' : 'REGIONS',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_regions.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.INSTRUMENT.DETECTOR'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '2d77b9ba503dd562076f479146d54c4afd0a6dd6',
+    'suffix' : 'regions',
+    'text_descr' : 'Reftype in support of DHS level 2 processing',
+}
+
+selector = Match({
+})

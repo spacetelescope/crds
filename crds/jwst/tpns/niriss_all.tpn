@@ -24,6 +24,8 @@ include includes/nir_subarray_baseline.tpn
 #                                         F200W,GR700XD,NRM,ANY,N/A
 
 META.SUBARRAY.NAME          H   C   O     SUB128,SUB256,SUB64,SUB80,SUBAMPCAL,\
+                                          SUB17STRIPE_SOSS,SUB60STRIPE_SOSS,\
+                                          SUB204STRIPE_SOSS,SUB680STRIPE_SOSS,\
                                           SUBSTRIP256,SUBSTRIP96,SUBTAAMI,SUBTASOSS,\
                                           WFSS128C,WFSS128R,WFSS64C,WFSS64R,\
                                           FULL,GENERIC,ANY,N/A
