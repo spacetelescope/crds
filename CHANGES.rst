@@ -1,3 +1,13 @@
+13.0.3 (2025-09-02)
+===================
+
+JWST
+----
+
+- Fixed miri_pars useafter reference (`#1157
+  <https://github.com/spacetelescope/crds/issues/1157>`_)
+
+
 13.0.2 (2025-08-29)
 ===================
 
