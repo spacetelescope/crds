@@ -38,6 +38,7 @@ foc_*.fits		crfoccomp$
 foc_*.tab		crfoccomp$
 fos_*.fits		crfoscomp$
 fos_*.tab		crfoscomp$
+gaia_*.fits crnonhstcomp$
 galex_*.fits		crnonhstcomp$
 hrs_*.fits		crhrscomp$
 hrs_*.tab		crhrscomp$
@@ -66,6 +67,8 @@ stis_*.fits		crstiscomp$
 stis_*.tab		crstiscomp$
 stromgren_*.fits        crnonhstcomp$
 stromgren_*.tab		crnonhstcomp$
+uvit_*.fits crnonhstcomp$
+vista_*.fits crnonhstcomp$
 walraven_*.fits		crnonhstcomp$
 walraven_*.tab		crnonhstcomp$
 wfc3_*.tab		crwfc3comp$
