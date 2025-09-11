@@ -1017,7 +1017,18 @@ def instrument_to_observatory(instrument):
     Traceback (most recent call last):
     ...
     ValueError: Unknown instrument 'foo'
+    >>> instrument_to_observatory("NONHST")
+    'hst'
+
+    Notes
+    -----
+    For instrument "NONHST", some funny business happens. This occurs for synphot throughput
+    reference ingestion. When doing synphot, the observatory can be anything. At this point, if the
+    reference is not directly related to a known observatory/instrument, and the reference meta
+    indicates "NONHST" for instrument, just use "hst".
     """
+    if "nonhst" in instrument.lower():
+        return "hst"
     instrument = fix_instrument(instrument.lower())
     for (obs, instr) in observatory_instrument_tuples():
         if instrument == instr:
