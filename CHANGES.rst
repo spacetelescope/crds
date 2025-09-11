@@ -1,5 +1,9 @@
 13.0.3 (2025-09-02)
 ===================
+SYNPHOT
+-------
+
+-  Add gaia, uvit, and vista based throughputs and handle NONHST instrument specification for synphot (`#1158 <https://github.com/spacetelescope/crds/pull/1158>`_)
 
 JWST
 ----
