@@ -1,3 +1,14 @@
+version (2025-09-12)
+====================
+
+synphot
+-------
+
+- Add gaia, uvit, and vista based throughputs and handle NONHST instrument
+  specification for synphot (`#1158
+  <https://github.com/spacetelescope/crds/issues/1158>`_)
+
+
 13.0.3 (2025-09-02)
 ===================
 

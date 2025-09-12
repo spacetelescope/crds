@@ -1,1 +1,0 @@
-Add gaia, uvit, and vista based throughputs and handle NONHST instrument specification for synphot
