@@ -37,46 +37,13 @@ except ImportError:
 def check_aws_imports():
     return boto3 is not None
 
-def create_s3_path(s3_prefix : str, kind : str, fname : str, obs: str) -> str:
-    """Creates an s3 object uri string starting with s3_prefix and following standard crds cache directory structure.
-    """
-    kind = f"/{kind}" if s3_prefix else kind
-    return f"{s3_prefix.rstrip('/')}{kind}/{obs}/{fname}"
-
-
-def get_file_attrs(fname):
-    pfx = fname.split("_")[0]
-    if fname.endswith("map"):
-        kind = "mappings"
-        obs = config.mapping_to_observatory(fname)
-        instr = ""
-    elif fname.split(".")[-1] in ["asdf", "fits"]:
-        kind = "references" # assumes only refs and mappings, not config files
-        obs = pfx if pfx in ["roman", "jwst"] else "hst"
-        instr = str(os.path.basename(os.path.dirname(config.locate_reference(fname, obs))))
-    else:
-        print(f"Unrecognized file type for `source`: {fname} - valid types are mappings (.pmap, .imap, .rmap) and references (.asdf, .fits)")
-        sys.exit(1)
-    return obs, instr, kind
-
 
 def format_uris(**kwargs):
     source, destination = kwargs.pop("source"), kwargs.pop("destination")
     fname = source.split("/")[-1]
-    obs, instr, kind = get_file_attrs(fname)
-    
-    if not source.startswith("s3"):
-        s3_bucket = os.environ.get("CRDS_S3_BUCKET")
-        if not s3_bucket:
-            print("Please set the CRDS_S3_BUCKET environment variable or pass the full S3 URI into `source` arg")
-            sys.exit(1)
-        
-        s3_pfx = "/roman/crds" if obs == "roman" else ""
-        s3_key = create_s3_path(s3_pfx, kind, fname, obs)
-        s3_uri = f"s3://{s3_bucket}/{s3_key.lstrip('/')}"
-    else:
-        s3_uri = source
-
+    s3_uri = source if source.startswith("s3") else config.get_uri(fname)
+    obs, kind = s3_uri.split('/')[-2], s3_uri.split('/')[-3]
+    instr = "" if kind != "references" else str(os.path.basename(os.path.dirname(config.locate_reference(fname, obs))))
     crds_path = os.environ.get("CRDS_PATH", config.get_crds_path())
     if os.path.isdir(destination):
         if instr and config.get_crds_ref_subdir_mode(obs) == "instrument":
@@ -86,7 +53,6 @@ def format_uris(**kwargs):
         dest = f"{crds_path}/{kind}/{obs}/{instr}{fname}" if destination == crds_path else f"{destination.rstrip('/')}/{fname}"
     else:
         dest = destination
-    
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     return s3_uri, dest
 
