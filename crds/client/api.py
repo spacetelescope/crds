@@ -486,7 +486,13 @@ def _get_server_info():
     """
     config_uri = config.get_uri("server_config")
     try:
-        if config_uri != "none":
+        if config_uri.startswith("s3://"):
+            log.verbose(f"Loading config from URI '{config_uri}'.")
+            content = utils.get_uri_content(config_uri)
+            info = ast.literal_eval(content)
+            info["status"] = "s3"
+            info["connected"] = True
+        elif config_uri != "none":
             log.verbose(f"Loading config from URI '{config_uri}'.")
             content = utils.get_uri_content(config_uri)
             info = ast.literal_eval(content)

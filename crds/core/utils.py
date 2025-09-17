@@ -699,6 +699,12 @@ def _get_s3_uri_content(s3_uri, mode):
     s3 = boto3.resource("s3")
     obj = s3.Object(bucket_name, key)
     binary = obj.get()["Body"].read()
+    if config.get_cache_readonly() is False:
+        try:
+            import subprocess
+            p = subprocess.run(["crds_s3_get", s3_uri], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
+        except Exception as e:
+            print(p.stderr)
     if mode == "text":
         text = binary.decode("utf-8")
         return text
