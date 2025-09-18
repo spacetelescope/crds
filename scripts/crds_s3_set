@@ -1,57 +1,50 @@
 #!/bin/bash
-###### examples: 
-# $source crds_s3_set roman path/to/local/cache
-# $source crds_s3_set $CRDS_PATH
-# use test bucket: $ source crds_s3_set roman $CRDS_PATH 1
-
+#####
+# Sets environment variables required for configuring CRDS to use S3
+# NOTE: Setting CRDS_PATH prior to sourcing this script is recommended: $ export CRDS_PATH=path/to/my/cache
+# Usage: $ source crds_s3_set [observatory] [ops|int|test|dev]
+# Examples:
+# Roman ops (public) bucket: $ source crds_s3_set
+# Roman test bucket: $ source crds_s3_set roman [dev|test|int]
+# HST: $ source crds_s3_set hst [ops (default)|test]
+#####
+# Accepted args with default values
 observatory=${1:-"roman"}
-crds_cache=${2:-"$HOME/crds_cache"}
-test=${3:-""}
-pickles=${4:-0}
+env_pfx=${2:-"ops"}
 
-if [[ -z ${CRDS_PATH} ]]; then
-    export CRDS_PATH=$crds_cache
-fi
-if [[ ! -d $CRDS_PATH ]]; then
-    mkdir -p $CRDS_PATH
-fi
+# Set CRDS_PATH only if not already set
+: "${CRDS_PATH:=$HOME/crds_cache}"
+# Create directory if it doesn't exist
+[ ! -d "$CRDS_PATH" ] && mkdir -p "$CRDS_PATH"
 
-if [[ -z $CRDS_OBSERVATORY ]]; then
-    export CRDS_OBSERVATORY=$observatory
-fi
+# Set common environment variables
+export CRDS_OBSERVATORY=$observatory
 export CRDS_SERVER_URL="https://${CRDS_OBSERVATORY}-crds-serverless.stsci.edu"
 export CRDS_S3_ENABLED=1
 export CRDS_S3_RETURN_URI=0
+export CRDS_MODE="s3"
 
-if [[ "${CRDS_OBSERVATORY}" == "roman" ]]; then
-    export CRDS_S3_PREFIX=/roman/crds
-    s3_bucket=stpubdata
-    tsfx="-tst"
-    sfx=""
-else
-    export CRDS_S3_PREFIX=""
-    s3_bucket=hst-crds-cache
-    tsfx="-test"
-    sfx="-ops"
+# Determine bucket and prefix based on observatory and environment prefix
+if [[ "$CRDS_OBSERVATORY" == "roman" ]]; then
+    bucket="stpubdata"
+    pfx="/roman/crds"
+    if [[ "$env_pfx" != "ops" ]]; then
+        bucket+="-tst"
+        pfx+="/${env_pfx}"
+    fi
+else  # hst
+    pfx=""
+    bucket="hst-crds-cache-${env_pfx}"
 fi
 
-if [[ -z $test ]]; then
-    export CRDS_S3_BUCKET="${s3_bucket}${sfx}"
-else
-    export CRDS_S3_BUCKET="${s3_bucket}${tsfx}"
-fi
-
-export CRDS_MAPPING_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/mappings/${CRDS_OBSERVATORY}
-export CRDS_REFERENCE_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/references/${CRDS_OBSERVATORY}
-export CRDS_CONFIG_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/config/${CRDS_OBSERVATORY}
-
-# To use pickled contexts,  set CRDS_S3_ENABLED=0 and CRDS_USE_PICKLED_CONTEXTS=1
-if [[ $pickles -lt 0 ]]; then
-    export CRDS_USE_PICKLED_CONTEXTS=0
-    export CRDS_PICKLE_URI=s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/pickles/${CRDS_OBSERVATORY}
-
-fi
-
+# Export the values
+export CRDS_PATH
+export CRDS_S3_BUCKET="$bucket"
+export CRDS_S3_PREFIX="$pfx"
+export CRDS_MAPPING_URI="s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/mappings/${CRDS_OBSERVATORY}"
+export CRDS_REFERENCE_URI="s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/references/${CRDS_OBSERVATORY}"
+export CRDS_CONFIG_URI="s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/config/${CRDS_OBSERVATORY}"
 export CRDS_DOWNLOAD_MODE=plugin
-# export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} --file-size ${FILE_SIZE} --file-sha1sum ${FILE_SHA1SUM}'
-export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}'
+export CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}"
+
+printenv | grep "^CRDS_"
