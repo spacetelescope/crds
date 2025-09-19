@@ -518,7 +518,7 @@ class ConfigInfo(utils.Struct):
 
         returns 'local' or 'remote'
         """
-        mode = config.get_crds_processing_mode()  # local, remote, auto
+        mode = config.get_crds_processing_mode()  # local, remote, auto, s3
         if mode == "auto":
             eff_mode = "remote" if (self.connected and hasattr(self, "force_remote_mode") and self.force_remote_mode) else "local"
         else:
@@ -572,7 +572,7 @@ def update_config_info(observatory):
     if config.writable_cache_or_verbose("skipping config update."):
         info = get_config_info(observatory)
         if info.connected and info.effective_mode == "local":
-            log.verbose("Connected to server and computing locally, updating CRDS cache config and operational context.")
+            log.verbose("Connected to server and computing locally, updating CRDS cache config and latest context.")
             cache_server_info(info, observatory)  # save locally
         else:
             log.verbose("Not connected to CRDS server or operating in 'remote' mode,  skipping cache config update.", verbosity=65)

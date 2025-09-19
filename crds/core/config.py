@@ -625,7 +625,7 @@ def check_crds_ref_subdir_mode(mode):
 CRDS_MODE = StrConfigItem("CRDS_MODE", default="auto",
     comment="""Selects where bestrefs are performed, locally, remotely (on the CRDS server),
     or automatically chosen by comparing client version to server version.""",
-    valid_values=["local", "remote", "auto"])
+    valid_values=["local", "remote", "auto", "s3"])
 
 def get_crds_processing_mode():
     """Return the preferred location for computing best references when
