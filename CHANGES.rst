@@ -1,3 +1,13 @@
+13.0.5 (2025-09-22)
+===================
+
+ROMAN
+-----
+
+- Updated prefixes and simplified cfg setup (`#1159
+  <https://github.com/spacetelescope/crds/issues/1159>`_)
+
+
 version (2025-09-12)
 ====================
 
