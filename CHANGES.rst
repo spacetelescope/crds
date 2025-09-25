@@ -1,3 +1,13 @@
+13.0.6 (2025-09-25)
+===================
+
+ROMAN
+-----
+
+- bugfixes for s3 mode (`#1160
+  <https://github.com/spacetelescope/crds/issues/1160>`_)
+
+
 13.0.5 (2025-09-22)
 ===================
 
