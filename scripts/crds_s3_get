@@ -23,6 +23,7 @@ import sys
 from crds.core.utils import checksum
 from crds.client.api import get_default_observatory
 from crds.core import config 
+from crds.core import log
 
 BAD_SIZE_STATUS = 10
 BAD_CHECKSUM_STATUS = 11
@@ -45,15 +46,24 @@ def format_uris(**kwargs):
     obs, kind = s3_uri.split('/')[-2], s3_uri.split('/')[-3]
     instr = "" if kind != "references" else str(os.path.basename(os.path.dirname(config.locate_reference(fname, obs))))
     crds_path = os.environ.get("CRDS_PATH", config.get_crds_path())
-    if os.path.isdir(destination):
-        if instr and config.get_crds_ref_subdir_mode(obs) == "instrument":
+    log.debug(f"s3_uri={s3_uri}")
+    if destination == crds_path:
+        refmode = os.environ.get('CRDS_REF_SUBDIR_MODE', config.get_crds_ref_subdir_mode(obs))
+        if instr and refmode == "instrument":
             instr += "/"
         else:
+            config.set_crds_ref_subdir_mode(observatory=obs, mode="flat")
             instr = ""
-        dest = f"{crds_path}/{kind}/{obs}/{instr}{fname}" if destination == crds_path else f"{destination.rstrip('/')}/{fname}"
+        dest = f"{crds_path}/{kind}/{obs}/{instr}{fname}"
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+    # destination is a directory that may or may not already exist
+    elif not destination.endswith(fname):
+        os.makedirs(destination, exist_ok=True)
+        dest = f"{destination.rstrip('/')}/{fname}"
     else:
+        # destination is already a filename path
         dest = destination
-    os.makedirs(os.path.dirname(dest), exist_ok=True)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
     return s3_uri, dest
 
 
@@ -64,6 +74,7 @@ def parse_args():
     parser.add_argument("-s", "--file-size", help="Expected file size in bytes", type=int, default=None)
     parser.add_argument("-c", "--file-sha1sum", help="Expected file SHA-1 checksum", default=None)
     parser.add_argument("-r", "--max-retries", help="Maximum number of retries on download failure", type=int, default=3)
+    parser.add_argument("--loglevel", default="INFO", help="set loglevel", type=str)
     return parser.parse_args()
 
 
@@ -74,6 +85,7 @@ def main():
             "AWS dependencies for CRDS can be installed via `pip install crds[aws]`"
         )
     args = parse_args()
+    log.THE_LOGGER.handlers[0].setLevel(args.loglevel)
     if args.destination is None:
         print("Destination path defaults to CRDS_PATH but no value was set. \n" \
         "Please set the CRDS_PATH variable e.g. `export CRDS_PATH=path/to/local/cache` \n" \
@@ -92,21 +104,21 @@ def main():
 
     if result.returncode != 0:
         output = "\\n".join(result.stdout.strip().splitlines())
-        print(f"crds_s3_get: Failed to download '{args.source}' with return code {result.returncode}: {output}", file=sys.stderr)
+        print(f"crds_s3_get: Failed to download '{src}' with return code {result.returncode}: {output}", file=sys.stderr)
         sys.exit(result.returncode)
 
-    if args.file_size is not None:
-        downloaded_size = os.path.getsize(args.destination)
+    if args.file_size not in [None, ""]:
+        downloaded_size = os.path.getsize(dest)
         if downloaded_size != args.file_size:
-            print(f"crds_s3_get: '{args.source}' failed file size check.  Expected: {args.file_size} Received: {downloaded_size}")
-            os.unlink(args.destination)
+            print(f"crds_s3_get: '{src}' failed file size check.  Expected: {args.file_size} Received: {downloaded_size}")
+            os.unlink(dest)
             sys.exit(BAD_SIZE_STATUS)
 
-    if args.file_sha1sum is not None:
-        downloaded_sha1sum = checksum(args.destination)
+    if args.file_sha1sum not in [None, ""]:
+        downloaded_sha1sum = checksum(dest)
         if downloaded_sha1sum != args.file_sha1sum:
-            print(f"crds_s3_get: '{args.source}' failed checksum.  Expected: {args.file_sha1sum} Received: {downloaded_sha1sum}")
-            os.unlink(args.destination)
+            print(f"crds_s3_get: '{src}' failed checksum.  Expected: {args.file_sha1sum} Received: {downloaded_sha1sum}")
+            os.unlink(dest)
             sys.exit(BAD_CHECKSUM_STATUS)
 
 
