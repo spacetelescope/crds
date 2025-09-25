@@ -1,15 +1,14 @@
 name: CI
 
 on:
-  ## uncomment before merging to master once test suite is finalized
   push:
     branches:
-    - master
+    - main
     tags:
       - '*'
   pull_request:
     branches:
-    - master
+    - main
   workflow_dispatch:
 
 concurrency:
