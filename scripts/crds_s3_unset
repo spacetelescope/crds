@@ -1,0 +1,10 @@
+#!/bin/bash
+# Unsets *ALL* CRDS environment vars (anything starting with "CRDS_")
+# Usage: $ source crds_s3_unset
+unset CRDS_DOWNLOAD_PLUGIN
+crds_vals=`env | grep "^CRDS_*"`
+for v in ${crds_vals[@]}
+do
+    k=`echo $v | cut -f1 -d'='`
+    unset $k
+done

@@ -838,7 +838,8 @@ class FileCacher:
         """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath."""
         url = self.get_url(filename)
         plugin_cmd = config.get_download_plugin()
-        plugin_cmd = plugin_cmd.replace("${SOURCE_URL}", url)
+        source_arg = "${FILENAME}" if "${FILENAME}" in plugin_cmd else "${SOURCE_URL}"
+        plugin_cmd = plugin_cmd.replace(source_arg, url)
         plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
         plugin_cmd = plugin_cmd.replace("${FILE_SIZE}", self.info_map[filename]["size"])
         plugin_cmd = plugin_cmd.replace("${FILE_SHA1SUM}", self.info_map[filename]["sha1sum"])

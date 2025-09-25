@@ -712,7 +712,7 @@ def get_download_mode():
 
 def get_download_plugin():
     """Fetch a command template from the environment to use a as a substitute for CRDS
-    built-in downloaders.   This can be used to apply "wget" or "curl", etc, to perform
+    built-in downloaders.   This can be used to apply "s3", "wget" or "curl", etc, to perform
     downloads as sub-processes rather than as a direct Python http implementation.
     """
     if "CRDS_DOWNLOAD_MODE" in os.environ and os.environ["CRDS_DOWNLOAD_MODE"].lower() != "plugin":

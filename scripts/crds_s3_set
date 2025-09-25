@@ -11,9 +11,9 @@
 # Accepted args with default values
 observatory=${1:-"roman"}
 env_pfx=${2:-"ops"}
-
+refmode=${3:-"${CRDS_REF_SUBDIR_MODE:=flat}"}
 # Set CRDS_PATH only if not already set
-: "${CRDS_PATH:=$HOME/crds_cache}"
+: "${CRDS_PATH:=/tmp/crds_cache}"
 # Create directory if it doesn't exist
 [ ! -d "$CRDS_PATH" ] && mkdir -p "$CRDS_PATH"
 
@@ -47,4 +47,8 @@ export CRDS_CONFIG_URI="s3://${CRDS_S3_BUCKET}${CRDS_S3_PREFIX}/config/${CRDS_OB
 export CRDS_DOWNLOAD_MODE=plugin
 export CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}"
 
-printenv | grep "^CRDS_"
+# OPTIONAL:
+# flat directory structure in local cache (no instrument folder) matches s3 directory structure
+# Override this by setting CRDS_REF_SUBDIR_MODE='instrument'
+export CRDS_REF_SUBDIR_MODE=$refmode
+printenv | grep "^CRDS_*"

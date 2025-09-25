@@ -210,7 +210,7 @@ def _initial_recommendations(
 
     log.verbose("Final effective context is", repr(final_context))
 
-    if mode == "local":
+    if mode in ["local", "s3"]:
         log.verbose("Computing best references locally.")
         bestrefs = local_bestrefs(
             parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
