@@ -841,19 +841,8 @@ class FileCacher:
         source_arg = "${FILENAME}" if "${FILENAME}" in plugin_cmd else "${SOURCE_URL}"
         plugin_cmd = plugin_cmd.replace(source_arg, url)
         plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
-        # try:
-        #     size, sha1sum = self.info_map[filename]["size"], self.info_map[filename]["sha1sum"]
-        # except KeyError:
-        #     size, sha1sum = "", ""
-        # if size:
         plugin_cmd = plugin_cmd.replace("${FILE_SIZE}", self.info_map[filename]["size"])
-        # else:
-        #     plugin_cmd = plugin_cmd.replace("-s ${FILE_SIZE}","")
-        # if sha1sum:
         plugin_cmd = plugin_cmd.replace("${FILE_SHA1SUM}", self.info_map[filename]["sha1sum"])
-        # else:
-        #     plugin_cmd = plugin_cmd.replace("-c ${FILE_SHA1SUM}","")
-        #plugin_cmd = plugin_cmd.strip(" ")
         log.verbose("Running download plugin:", repr(plugin_cmd))
         status = os.WEXITSTATUS(os.system(plugin_cmd))
         if status != 0:
