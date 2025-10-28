@@ -45,7 +45,11 @@ Prerequisites
 
     2. The compute environment must be configured with AWS credentials that have been granted access to the appropriate bucket. This is typically done by configuring the AWS CLI with `aws configure` or by setting the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. Only Roman Ops is publicly available in the AWS OpenData bucket (any valid AWS credentials are acceptable); HST buckets are accessible to STScI internal users only, and at this time STScI does not host any public S3 buckets for JWST CRDS access.
 
-Here are example commands to configure CRDS for S3 access:
+
+Configuration
+.............
+
+You can configure your environment for AWS/S3 manually or by using the `crds_s3_set` script. Examples for both approaches are below:
 
 .. tabs::
 
