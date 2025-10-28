@@ -4,6 +4,8 @@ Environment Variables
 Configuring CRDS for pipeline or offsite personal use is accomplished by setting
 shell environment variables.
 
+*Looking for AWS configuration? See the* :ref:`aws` *section of this guide.*
+
 Basic Environment
 -----------------
 

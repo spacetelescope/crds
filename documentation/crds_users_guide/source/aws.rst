@@ -1,3 +1,5 @@
+.. _aws:
+
 AWS
 ---
 
@@ -49,39 +51,57 @@ Here are example commands to configure CRDS for S3 access:
 
    .. group-tab:: ROMAN
 
-        The s3 buckets for Roman only contain mappings and references from the last 5 contexts. The CRDS cache for Roman Ops is publicly accessible in the Open Data bucket. If you do not want to use the latest context, you will need to manually set the `CRDS_CONTEXT` environment variable.
+        The s3 buckets for Roman only contain mappings and references from the last 5 contexts. The CRDS cache for Roman Ops is publicly accessible in the Open Data bucket. If you do not want to use the latest context, you will need to manually set the `CRDS_CONTEXT` environment variable as well.
+
+        Using the `crds_s3_set` script to automatically set environment variables:
     
         .. code-block:: bash
 
             # Set CRDS_PATH to your local cache directory (will be created if it doesn't exist)
+            # Defaults to /tmp/crds_cache if not set in advance
             $ export CRDS_PATH=/path/to/local/cache
             # source crds_s3_set <observatory> <environment>
             $ source crds_s3_set roman ops
-            CRDS_MAPPING_URI=s3://stpubdata/roman/crds/mappings/roman
-            CRDS_DOWNLOAD_MODE=plugin
-            CRDS_PATH=/tmp/crds_cache
-            CRDS_DOWNLOAD_PLUGIN=crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}
-            CRDS_S3_ENABLED=1
-            CRDS_S3_BUCKET=stpubdata
-            CRDS_REF_SUBDIR_MODE=flat
-            CRDS_SERVER_URL=https://roman-crds-serverless.stsci.edu
-            CRDS_CONFIG_URI=s3://stpubdata/roman/crds/config/roman
-            CRDS_S3_PREFIX=/roman/crds
-            CRDS_OBSERVATORY=roman
-            CRDS_REFERENCE_URI=s3://stpubdata/roman/crds/references/roman
-            CRDS_MODE=s3
-            CRDS_S3_RETURN_URI=0
+
+        
+        If setting manually, the equivalent environment variables would be:
+
+        .. code-block:: bash
+
+            $ export CRDS_PATH=/path/to/local/cache
+            $ export CRDS_MAPPING_URI=s3://stpubdata/roman/crds/mappings/roman
+            $ export CRDS_DOWNLOAD_MODE=plugin
+            $ export CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}'
+            $ export CRDS_S3_ENABLED=1
+            $ export CRDS_S3_BUCKET=stpubdata
+            $ export CRDS_REF_SUBDIR_MODE=flat
+            $ export CRDS_SERVER_URL=https://roman-crds-serverless.stsci.edu
+            $ export CRDS_CONFIG_URI=s3://stpubdata/roman/crds/config/roman
+            $ export CRDS_S3_PREFIX=/roman/crds
+            $ export CRDS_OBSERVATORY=roman
+            $ export CRDS_REFERENCE_URI=s3://stpubdata/roman/crds/references/roman
+            $ export CRDS_MODE=s3
+            $ export CRDS_S3_RETURN_URI=0
+
 
    .. group-tab:: HST
     
-        The S3 buckets for HST exclude mapping files, so the client must be configured to load the context's rules from a pickle file.  Here is an example configuration for the HST OPS bucket (auto set by `crds_s3_set`):
+        The S3 buckets for HST exclude mapping files, so the client must be configured to load the context's rules from a pickle file.  Here is an example configuration for the HST OPS bucket:
+
+        Using the `crds_s3_set` script to automatically set environment variables:
     
         .. code-block:: bash
         
             # Set CRDS_PATH to your local cache directory (will be created if it doesn't exist)
+            # Defaults to /tmp/crds_cache if not set in advance
             $ export CRDS_PATH=/path/to/local/cache
             # source crds_s3_set <observatory> <environment>
             $ source crds_s3_set hst ops
+
+
+        If setting manually, the equivalent environment variables would be:
+
+        .. code-block:: bash
 
             # If setting manually, the equivalent environment variables would be:
             $ export CRDS_PATH=/path/to/local/cache

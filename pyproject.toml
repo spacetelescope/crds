@@ -47,7 +47,9 @@ docs = [
   "docutils",
   "sphinx_automodapi",
   "sphinx-tabs",
+  "sphinx-copybutton",
 ]
+
 aws = ["boto3", "awscli"]
 synphot = ["stsynphot"]
 
