@@ -12,6 +12,7 @@ CRDS User Manual
    overview.rst
    web_site_use.rst
    installation.rst
+   aws.rst
    basic_use.rst
    environment.rst
    command_line_tools.rst
