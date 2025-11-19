@@ -57,7 +57,8 @@ extensions = [
     'sphinx_automodapi.autodoc_enhancements',
     'sphinx_automodapi.smart_resolver',
     'sphinx_rtd_theme',
-    'sphinx_tabs.tabs'
+    'sphinx_tabs.tabs',
+    'sphinx_copybutton',
     ]
 
 

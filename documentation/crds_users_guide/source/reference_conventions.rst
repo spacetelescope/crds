@@ -125,7 +125,7 @@ Each mission defines a small set of required keywords for reference file provena
         ===============  ====================   =====================
         TELESCOP         META.TELESCOPE         JWST
         INSTRUME         META.INSTRUMENT.NAME   MIRI
-        REFTYPE          META.REFERENCE.TYPE    DARK
+        REFTYPE          META.REFTYPE           DARK
         USEAFTER         META.USEAFTER          2017-10-01T00:00:00
         AUTHOR           META.AUTHOR            Homer Simpson
         PEDIGREE         META.PEDIGREE          DUMMY, GROUND, IN FLIGHT
@@ -143,7 +143,7 @@ Each mission defines a small set of required keywords for reference file provena
         ==========================   =====================
         ROMAN.META.TELESCOPE         ROMAN
         ROMAN.META.INSTRUMENT.NAME   WFI
-        ROMAN.META.REFERENCE.TYPE    DARK
+        ROMAN.META.REFTYPE           DARK
         ROMAN.META.USEAFTER          2017-10-01T00:00:00
         ROMAN.META.AUTHOR            Homer Simpson
         ROMAN.META.PEDIGREE          DUMMY, GROUND, IN FLIGHT
