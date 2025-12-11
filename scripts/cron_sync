@@ -82,12 +82,12 @@ export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
 #
 # NOTE: to ensure atomic mutually supporting updates, multiple cache sync
 # operations should preformed inside a single locking critical region
-# implemented here.  In general, if an operational context is synced into the
+# implemented here.  In general, if a latest context is synced into the
 # pipeline, supporting reference files should be synced first to ensure that
 # they're available as soon as the pipeline starts using the new context.
 #
 # A potential pitfall in this regard would be to call cron_sync after updating
-# the operational context on the server but without --fetch-references.  In
+# the latest context on the server but without --fetch-references.  In
 # that instance, CRDS will sync the required rules files but any new supporting
 # references will not be available in the pipeline CRDS cache.
 #

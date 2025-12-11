@@ -142,7 +142,7 @@ New Context
 
 crds.bestrefs always computes best references with respect to a context which
 can be explicitly specified with the --new-context parameter.  If --new-context
-is not specified, the default operational context is determined by consulting
+is not specified, the default latest context is determined by consulting
 the CRDS server or looking in the local cache.
 
 ...........
@@ -425,7 +425,7 @@ than errors as the default.
 
         self.add_argument("-n", "--new-context", dest="new_context",
                           help="Compute the updated best references using this context. "
-                          "Uses current operational context by default.",
+                          "Uses current latest context by default.",
                           default=None, type=cmdline.mapping_spec)
 
         self.add_argument("-o", "--old-context", dest="old_context",
@@ -1062,7 +1062,7 @@ def assign_bestrefs(filepaths, context=None, reftypes=(),
     filling in appropriate reference type keywords.
 
     Define best references using either .pmap `context` or the default
-    CRDS operational context if context=None.
+    CRDS latest context if context=None.
 
     If `reftypes` is defined, assign bestrefs to only the listed
     reftypes, otherwise assign all reftypes.

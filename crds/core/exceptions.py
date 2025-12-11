@@ -69,7 +69,7 @@ class CrdsRemoteContextError(CrdsError):
     recorded on the CRDS server, i.e. the pipeline's echo of the context
     they're using as reported by the sync tool.   A remote context is CRDS's
     attempt to track the default context actually sync'ed to a pipeline, i.e.
-    what that particular cache says.  In contrast the operational context
+    what that particular cache says.  In contrast the latest context
     is a global maintained on the CRDS server defining what the default *should
     be* as a result of successful and current cache sync'ing by any pipeline
     or CRDS user.

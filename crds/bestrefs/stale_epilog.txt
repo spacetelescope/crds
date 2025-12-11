@@ -2,9 +2,9 @@ Methodology
 -------------
 
 The basic algorithm makes use of the pre-computed affected dataset lists. These
-lists are created for every change in operational context. These lists contain
+lists are created for every change in latest context. These lists contain
 the datasets that would have their reference file selections change due to the
-changes in rmaps and references represented by the new operational context.
+changes in rmaps and references represented by the new latest context.
 Accuracy of these lists are discussed in the Verification section.
 
 The list of exposures and their associated keyword values are retrieved from
