@@ -198,25 +198,29 @@ def decompose_newstyle_name(filename):
     """
     path, parts, ext = _get_fields(filename)
     observatory = parts[0]
-    serial = list_get(parts, 3, "")
-
-    if ext == ".pmap":
-        assert len(parts) in [1,2], "Invalid .pmap filename " + repr(filename)
-        instrument, filekind = "", ""
-        serial = list_get(parts, 1, "")
-    elif ext == ".imap":
-        assert len(parts) in [2,3], "Invalid .imap filename " + repr(filename)
-        instrument = parts[1]
-        filekind = ""
-        serial = list_get(parts, 2, "")
-    else:
-        assert len(parts) in [3,4], "Invalid filename " + repr(filename)
-        instrument = parts[1]
-        filekind = parts[2]
+    if len(parts) < 5:
         serial = list_get(parts, 3, "")
-
+        if ext == ".pmap":
+            assert len(parts) in [1,2], "Invalid .pmap filename " + repr(filename)
+            instrument, filekind = "", ""
+            serial = list_get(parts, 1, "")
+        elif ext == ".imap":
+            assert len(parts) in [2,3], "Invalid .imap filename " + repr(filename)
+            instrument = parts[1]
+            filekind = ""
+            serial = list_get(parts, 2, "")
+        else:
+            assert len(parts) in [3,4], "Invalid filename " + repr(filename)
+            instrument = parts[1]
+            filekind = parts[2]
+            serial = list_get(parts, 3, "")
+    else:
+        # SSC Filekind
+        instrument = parts[1]
+        filekind = parts[3]
+        serial = parts[4]
+    
     # Don't include filename in these or it messes up crds.certify unique error tracking.
-
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
     assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
@@ -360,6 +364,25 @@ def ref_properties_from_header(filename):
 
 # =============================================================================
 
+def ssc_reference_translations(pfx):
+    return {
+        f'{pfx}.INSTRUMENT': f'{pfx}.INSTRUMENT.NAME',
+        f'{pfx}.OPTICAL_ELEMENT': f'{pfx}.INSTRUMENT.OPTICAL_ELEMENT',
+        f'{pfx}.DETECTOR': f'{pfx}.INSTRUMENT.DETECTOR',
+        f'{pfx}.ORIGIN': 'SSC',
+    }
+
+
+def modified_ssc_yaml_header(header):
+    """Modify header dictionary loaded from an SSC YAML reference file
+    to match CRDS expectations for Roman reference file headers."""
+    if header.get('META.ORIGIN', None) == 'IPAC/SSC':
+        if header.get('FILE_FORMAT', None) == 'YAML':
+            return {'ROMAN.'+k:v for k, v in header.items() if k.startswith('META.')}, True
+        return header, True
+    return header, False
+
+
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file, map the header back to keys
     relevant to datasets.  So for ACS biasfile the reference says BINAXIS1 but
@@ -481,14 +504,19 @@ def reference_keys_to_dataset_keys(rmapping, header):
     header = dict(header)
     # if parameter reference file (contains "-"), there is no "ROMAN" prefix
     paramfile = True if len(rmapping.name.split("-")) > 1 else False
-    prefix = "META" if paramfile is True else "ROMAN.META"
+    prefix = "META" if paramfile is True else "ROMAN.META"   
     # Basic common pattern translations
     translations = {
         f"{prefix}.EXPOSURE.P_EXPTYPE": f"{prefix}.EXPOSURE.TYPE",
         f"{prefix}.INSTRUMENT.P_DETECTOR"  : f"{prefix}.INSTRUMENT.DETECTOR",
         f"{prefix}.INSTRUMENT.P_OPTICAL_ELEMENT": f"{prefix}.INSTRUMENT.OPTICAL_ELEMENT",
     }
-    # Rmap header reference_to_dataset field tranlations,  can override basic!
+    # SSC translations if applicable
+    header, ssc = modified_ssc_yaml_header(header)
+    if ssc is True:
+        translations = ssc_reference_translations(prefix)
+       
+    # Rmap header reference_to_dataset field translations,  can override basic!
     try:
         translations.update(rmapping.reference_to_dataset)
     except AttributeError:
@@ -527,6 +555,11 @@ def reference_keys_to_dataset_keys(rmapping, header):
         header[f"{prefix}.SUBARRAY.NAME"] = "UNDEFINED"
     if f"{prefix}.EXPOSURE.TYPE" not in header:
         header[f"{prefix}.EXPOSURE.TYPE"] = "UNDEFINED"
+        if ssc is True:
+            instr = header.get(f"{prefix}.INSTRUMENT.NAME", None)
+            optelem = header.get(f"{prefix}.INSTRUMENT.OPTICAL_ELEMENT", None)
+            if instr and optelem:
+                header[f"{prefix}.EXPOSURE.TYPE"] = "_".join([instr, optelem]) 
 
     # If USEAFTER is defined,  or we're configured to fake it...
     #   don't invent one if its missing and we're not faking it.
