@@ -218,12 +218,12 @@ def decompose_newstyle_name(filename):
         # SSC Filekind
         instrument = parts[1]
         filekind = parts[3]
-        serial = parts[4]
+        serial = parts[4] if ext != ".yaml" else parts[4].replace("ctx", "")
     
     # Don't include filename in these or it messes up crds.certify unique error tracking.
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
-    assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
+    assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(serial)
     # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
