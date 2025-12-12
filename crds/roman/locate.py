@@ -17,7 +17,6 @@ log annotation, i.e.  AKA keyword cross-strapping.
 """
 import os.path
 import re
-from sys import prefix
 import warnings
 from collections import namedtuple
 
