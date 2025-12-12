@@ -1029,7 +1029,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
         self.add_argument("-p", "--dump-provenance", dest="dump_provenance", action="store_true",
                           help="Dump provenance keywords.")
         self.add_argument("-x", "--comparison-context", dest="comparison_context", type=str, default=None,
-                          help="Pipeline context defining comparison files.  Defaults to latest context,  use 'none' to suppress.")
+                          help="Pipeline context defining comparison files.  Defaults to operational context,  use 'none' to suppress.")
         self.add_argument("-y", "--comparison-reference", dest="comparison_reference", type=str, default=None,
                           help="Comparison reference for tables certification.")
         self.add_argument("-s", "--sync-files", dest="sync_files", action="store_true",

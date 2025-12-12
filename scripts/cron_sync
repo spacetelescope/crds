@@ -82,7 +82,7 @@ export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
 #
 # NOTE: to ensure atomic mutually supporting updates, multiple cache sync
 # operations should preformed inside a single locking critical region
-# implemented here.  In general, if a operational context is synced into the
+# implemented here.  In general, if an operational context is synced into the
 # pipeline, supporting reference files should be synced first to ensure that
 # they're available as soon as the pipeline starts using the new context.
 #

@@ -504,7 +504,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     header = dict(header)
     # if parameter reference file (contains "-"), there is no "ROMAN" prefix
     paramfile = True if len(rmapping.name.split("-")) > 1 else False
-    prefix = "META" if paramfile is True else "ROMAN.META"   
+    prefix = "META" if paramfile is True else "ROMAN.META"
     # Basic common pattern translations
     translations = {
         f"{prefix}.EXPOSURE.P_EXPTYPE": f"{prefix}.EXPOSURE.TYPE",
