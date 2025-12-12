@@ -17,6 +17,7 @@ log annotation, i.e.  AKA keyword cross-strapping.
 """
 import os.path
 import re
+from sys import prefix
 import warnings
 from collections import namedtuple
 
@@ -376,12 +377,24 @@ def ssc_reference_translations(pfx):
 def modified_ssc_yaml_header(header):
     """Modify header dictionary loaded from an SSC YAML reference file
     to match CRDS expectations for Roman reference file headers."""
-    if header.get('META.ORIGIN', None) == 'IPAC/SSC':
+    if header.get('ROMAN.META.ORIGIN', header.get('META.ORIGIN', None)) == 'IPAC/SSC':
         if header.get('FILE_FORMAT', None) == 'YAML':
             return {'ROMAN.'+k:v for k, v in header.items() if k.startswith('META.')}, True
         return header, True
     return header, False
 
+
+def apply_ssc_conversions(header):
+    """Converts missing or malformed parkey values received from SSC into valid CRDS formats."""
+    pfx = "ROMAN.META"
+    if header[f"{pfx}.EXPOSURE.TYPE"] == "UNDEFINED":
+        instr, optelem = header.get(f"{pfx}.INSTRUMENT.NAME"), header.get(f"{pfx}.INSTRUMENT.OPTICAL_ELEMENT")
+        if instr and optelem:
+            header[f"{pfx}.EXPOSURE.TYPE"] = "_".join([instr.upper(), optelem.upper()])
+    detector = header.get(f"{pfx}.INSTRUMENT.DETECTOR")
+    if len(detector.split(",")) == 18:
+        header[f"{pfx}.INSTRUMENT.DETECTOR"] = "N/A" # All detectors
+    return header
 
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file, map the header back to keys
@@ -549,17 +562,15 @@ def reference_keys_to_dataset_keys(rmapping, header):
             if rval not in [None, "UNDEFINED"] and rval != dval:
                 log.info("Setting", repr(dkey), "=", repr(dval),
                          "to value of", repr(rkey), "=", repr(rval))
-                header[dkey] = rval
+                header[dkey] = rval.upper()
 
     if f"{prefix}.SUBARRAY.NAME" not in header:
         header[f"{prefix}.SUBARRAY.NAME"] = "UNDEFINED"
     if f"{prefix}.EXPOSURE.TYPE" not in header:
         header[f"{prefix}.EXPOSURE.TYPE"] = "UNDEFINED"
-        if ssc is True:
-            instr = header.get(f"{prefix}.INSTRUMENT.NAME", None)
-            optelem = header.get(f"{prefix}.INSTRUMENT.OPTICAL_ELEMENT", None)
-            if instr and optelem:
-                header[f"{prefix}.EXPOSURE.TYPE"] = "_".join([instr, optelem]) 
+    if ssc is True:
+        header = apply_ssc_conversions(header)
+        
 
     # If USEAFTER is defined,  or we're configured to fake it...
     #   don't invent one if its missing and we're not faking it.

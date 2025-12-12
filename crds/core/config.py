@@ -1165,9 +1165,9 @@ def is_valid_reference_name(filename):
     True
     """
     name = os.path.basename(filename)
-    return is_reference(name) and (is_crds_name(name) or is_cdbs_name(name) or is_gdbs_name(name))
+    return is_reference(name) and (is_crds_name(name) or is_cdbs_name(name) or is_gdps_name(name))
 
-def is_gdbs_name(name):
+def is_gdps_name(name):
     name = os.path.basename(name).lower()
     return bool(CRDS_SSC_NAME_RE.match(name))
 
