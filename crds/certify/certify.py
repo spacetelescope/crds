@@ -1114,7 +1114,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
         Return any value for comparison_context (possibly defaulted to ops context) or None.
         """
         if self.args.comparison_context is None:  # no switch specified
-            log.info("Defaulting --comparison-context to latest context.")
+            log.info("Defaulting --comparison-context to operational context.")
             comparison_context = self.default_context
         else:  # an explicit filename
             comparison_context = self.args.comparison_context
