@@ -66,7 +66,7 @@ cron_sync --check-sha1sum --repair-files --purge-mappings $*
 # should be preceded by a dry run using --dry-run or --readonly-cache to get
 # some estimation of what CRDS is going to do before doing it.   Note that
 # if crds_repair_cache is run without an explicit context or file selection,
-# the context will default to the current latest context and when purging,
+# the context will default to the current operational context and when purging,
 # all archived references would be deleted.
 
 cron_sync --repair-files --fetch-references $*

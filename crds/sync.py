@@ -305,7 +305,7 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.save_pickles:
             self.pickle_contexts(self.contexts)
 
-        # update CRDS cache config area,  including stored version of latest context.
+        # update CRDS cache config area,  including stored version of operational context.
         # implement pipeline support functions of context update verify and echo
         # If --output-dir was specified,  do not update cache config.
         if self.args.output_dir:

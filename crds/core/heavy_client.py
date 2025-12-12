@@ -21,7 +21,7 @@ automatically syncing required rules and references when enabled.
 bestrefs interface, getreferences(), particularly as it pertains to integration
 with JWST CAL code.
 
-4. The ability to record the last latest context and use it when the
+4. The ability to record the last operational context and use it when the
 server cannot be contacted.
 
 5. The ability to define the context based on an env var.

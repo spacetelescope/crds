@@ -581,7 +581,7 @@ def get_context_history(observatory):
 def push_remote_context(observatory, kind, key, context):
     """Upload the specified `context` of type `kind` (e.g. "latest") to the
     server,  informing the server of the actual configuration of the local cache.   
-    This lets the server display actual versus commanded (Set Context) latest contexts.
+    This lets the server display actual versus commanded (Set Context) latest/operational contexts.
     """
     try:
         return S.push_remote_context(observatory, kind, key, context)
@@ -595,7 +595,7 @@ def push_remote_context(observatory, kind, key, context):
                     (observatory, 'latest', key, context)) from exc
         else:
             raise CrdsRemoteContextError(
-                "Server error setting latest context",
+                "Server error setting operational context",
                 (observatory, kind, key, context)) from exc
 
 

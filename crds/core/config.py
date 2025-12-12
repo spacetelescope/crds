@@ -1315,7 +1315,7 @@ def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
 
     Date-based specifications can be interpreted by the CRDS server with respect to the operational
-    context history to determine the default latest context which was in use at that date.
+    context history to determine the default operational context which was in use at that date.
     This function verifies syntax only,  not the existence of corresponding context.
 
     >>> is_mapping_spec("hst.pmap")
@@ -1375,8 +1375,8 @@ def is_context(mapping):
 def is_context_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
 
-    Date-based specifications can be interpreted by the CRDS server with respect to the latest
-    context history to determine the default latest context which was in use at that date.
+    Date-based specifications can be interpreted by the CRDS server with respect to the operational
+    context history to determine the default operational context which was in use at that date.
     This function verifies syntax only,  not the existence of corresponding context.
 
     >>> is_context_spec("hst_0042.pmap")

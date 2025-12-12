@@ -352,8 +352,8 @@ jwst_niriss_superbias_0005.rmap
             help="print the name of the latest context on the central CRDS server.")
         self.add_argument("--build-context", action="store_true", dest="build_context",
             help="print the name of the build context on the central CRDS server.")
-        self.add_argument("--operational-context", action="store_true", dest="latest_context",
-            help="DEPRECATED please use --latest-context instead. Print the name of the latest context on the central CRDS server.")
+        self.add_argument("--operational-context", action="store_true", dest="operational_context",
+            help="print the name of the latest context on the central CRDS server.")
         self.add_argument("--remote-context", type=str, metavar="PIPELINE",
             help="print the name of the context reported as in use by the specified pipeline.")
         self.add_argument("--resolve-contexts", action="store_true", dest="resolve_contexts",

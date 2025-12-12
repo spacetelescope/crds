@@ -181,7 +181,7 @@ class AffectedDatasets(dict):
     def context_history(self):
         """The context history from the CRDS server
 
-        This is not simply the whole history. When latest contexts
+        This is not simply the whole history. When operational contexts
         are rolled-back, the context order is interrupted. For affected
         dataset checking, the contexts that have been rolled back
         should not be included.
@@ -231,7 +231,7 @@ class AffectedDatasets(dict):
 
         end_context : str or None
             CRDS final context of the form "jwst_XXXX.pmap".
-            If None, the CRDS latest context is used.
+            If None, the CRDS operational context is used.
 
         Returns
         -------
@@ -268,7 +268,7 @@ class AffectedDatasets(dict):
 
         end_context : str or None
             CRDS final context of the form "jwst_XXXX.pmap".
-            If None, the CRDS latest context is used.
+            If None, the CRDS operational context is used.
 
         Examples
         --------
@@ -477,7 +477,7 @@ class StaleByContext:
 
     end_context : str or None
         CRDS final context of the form "jwst_XXXX.pmap".
-        If None, the CRDS latest context is used.
+        If None, the CRDS operational context is used.
 
     cache : file-like path or None
         Path to the folder where downloaded information from a CRDS server
@@ -840,7 +840,7 @@ class StaleByContext:
             '\n> This is the initial attempt at determining how current the calibration is for'
             '\n> products in the JWST archive. For this report, "staleness" is defined as those'
             '\n> dataset ids whose context is not current yet appear in affected dataset reports'
-            '\n> for all latest context changes between the exposure\'s context and the'
+            '\n> for all operational context changes between the exposure\'s context and the'
             '\n> current context. Issues will be discussed and other measures of staleness will'
             '\n> be presented, though not explored.'
             '\n'
@@ -857,7 +857,7 @@ class StaleByContext:
             f'\nA "stale" dataset is a dataset that has a context before {self.end_context} and appears in one'
             f'\nor more affected dataset lists between the dataset\'s context and {self.end_context}.'
             '\n'
-            f'\nThe oldest stale context found is {oldest_stale_context}. About {stale_context_percentage:.0f}% of all latest contexts'
+            f'\nThe oldest stale context found is {oldest_stale_context}. About {stale_context_percentage:.0f}% of all operational contexts'
             '\nhave stale datasets.'
             '\n'
             f'\n{len(stale_programs)}, or {stale_program_percentage:.0f}% of all programs, have stale datasets.'
