@@ -1130,13 +1130,15 @@ CRDS_NAME_RE = re.compile(CRDS_NAME_RE_STR)   # intentionally not complete. no ^
 CDBS_NAME_RE_STR = r"[a-z0-9_]{1,52}\.(fits|r\d[hd])"
 CDBS_NAME_RE = re.compile(complete_re(CDBS_NAME_RE_STR))
 
-# SSC Files have extra optelem "prism" or "grism" in name
+# SSC Files require more flexibility
+# to allow extra optelem like "prism" or "grism" in name
+# and either standard numeric serial or ctx0001 in the case of optmodel yaml files
 CRDS_OPTELEM_RE_STR = r"(?P<optelem>" + r"[a-z][a-z0-9\-]{1,32})" # SSC files only
 CRDS_SSC_NAME_RE_STR = (r"(" +
         CRDS_OBS_RE_STR + r"(_" +
             CRDS_INSTR_RE_STR + r"(_" +
-                CRDS_FILEKIND_RE_STR + r"(_" +
-                    CRDS_OPTELEM_RE_STR +
+                CRDS_OPTELEM_RE_STR + r"(_" +
+                    CRDS_FILEKIND_RE_STR +
                 r")?" +
             r")?" +
         r")?" +
