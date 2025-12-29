@@ -1188,9 +1188,9 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"dad8f7fe354c16f0d0bbc6f4220c07b0502cf4d6",
+            "sha1sum":"49e43552b4d84588cd44e718b92aa816ca68e057",
             "suffix":"sflat",
-            "text_descr":"Sflat GDPS SSC",
+            "text_descr":"Small scale flat GDPS SSC",
             "tpn":"wfi_sflat.tpn",
             "unique_rowkeys":null
         },
@@ -1246,9 +1246,9 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"cb5c94b0b6e0665e2e906609437b782241f5d0c1",
+            "sha1sum":"89a6ecdae840ba965b49126ab18cd1520485acab",
             "suffix":"specpsf",
-            "text_descr":"Spectroscopic Point Spread Function GDPS SSC",
+            "text_descr":"Spectral Point Spread Function GDPS SSC",
             "tpn":"wfi_specpsf.tpn",
             "unique_rowkeys":null
         }

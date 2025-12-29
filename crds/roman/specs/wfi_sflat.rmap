@@ -9,9 +9,9 @@ header = {
     'name' : 'wfi_sflat.rmap',
     'observatory' : 'roman',
     'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.NAME', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : 'dad8f7fe354c16f0d0bbc6f4220c07b0502cf4d6',
+    'sha1sum' : '49e43552b4d84588cd44e718b92aa816ca68e057',
     'suffix' : 'sflat',
-    'text_descr' : 'Sflat GDPS SSC',
+    'text_descr' : 'Small scale flat GDPS SSC',
 }
 
 selector = Match({
