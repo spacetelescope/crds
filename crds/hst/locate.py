@@ -14,6 +14,7 @@ be implemented for JWST.
 import os.path
 import datetime
 import time
+import warnings
 
 # =======================================================================
 
@@ -22,7 +23,7 @@ from crds import data_file
 from crds.core.exceptions import CrdsError, CrdsNamingError
 from crds.hst import siname
 from crds.io import abstract
-from datetime import datetime, timezone
+
 
 # =======================================================================
 
@@ -558,7 +559,7 @@ def generate_timestamp(now=None):
     """Generate an enhanced CDBS-style uniqname."""
 
     if now is None:
-        now = datetime.now(timezone.utc).replace(tzinfo=None)
+        now = datetime.datetime.utcnow()
 
     year_offset = now.year - 1990
     base36_year = "abcdefghijklmnopqrstuvwxyz0123456789"
