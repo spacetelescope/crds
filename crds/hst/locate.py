@@ -561,11 +561,12 @@ def generate_timestamp(now=None):
         now = datetime.now(timezone.utc).replace(tzinfo=None)
 
     year_offset = now.year - 1990
-    base36_codes = "abcdefghijklmnopqrstuvwxyz0123456789"
+    base36_year = "abcdefghijklmnopqrstuvwxyz0123456789"
+    base36_md = "0123456789abcdefghijklmnopqrstuvwxyz"
     # Loops back through after passing 2026
-    year = base36_codes[year_offset % 36]
-    month = base36_codes[now.month]
-    day = base36_codes[now.day]
+    year = base36_year[year_offset % 36]
+    month = base36_md[now.month]
+    day = base36_md[now.day]
     hour = "%02d" % now.hour
     minute = "%02d" % now.minute
 
