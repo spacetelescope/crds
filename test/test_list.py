@@ -395,13 +395,13 @@ def test_list_cat_mappings(capsys, hst_default_cache_state):
         '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
     }),
 })"""
-    out_to_check4 = """{'activation_date': '2014-05-15 15:31:54',
+    out_to_check4 = """{'activation_date': '2014-05-15 15:31:54+00:00',
  'aperture': 'none',
  'blacklisted': 'false',
  'change_level': 'severe',
  'comment': 'none',
  'creator_name': 'todd miller',
- 'delivery_date': '2014-05-11 08:14:02',
+ 'delivery_date': '2014-05-11 08:14:02+00:00',
  'derived_from': 'generated from cdbs database 2014-05-09 23:24:57.840119',
  'description': 'rebaselined hst rmaps as 250-series for opus 2014.2',
  'filekind': 'deadtab',
@@ -418,7 +418,7 @@ def test_list_cat_mappings(capsys, hst_default_cache_state):
  'state': 'latest',
  'type': 'mapping',
  'uploaded_as': 'hst_cos_deadtab_0250.rmap',
- 'useafter_date': '2050-01-01 00:00:00'}"""
+ 'useafter_date': '2050-01-01 00:00:00+00:00'}'}"""
     assert out_to_check1 in out
     assert out_to_check2 in out
     assert out_to_check3 in out
