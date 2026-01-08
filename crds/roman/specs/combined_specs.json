@@ -41,15 +41,13 @@
             "observatory":"roman",
             "parkey":[
                 [
-                    "ROMAN.META.INSTRUMENT.DETECTOR",
-                    "ROMAN.META.INSTRUMENT.NAME",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
                 [
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"786a067f53419fb8d3a392af6639b12980e4ad5b",
+            "sha1sum":"dc14d9679c76fbd849d0fff34e534e0a66372b8a",
             "suffix":"absflux",
             "text_descr":"Absolute Flux GDPS SSC",
             "tpn":"wfi_absflux.tpn",
@@ -465,8 +463,6 @@
             "observatory":"roman",
             "parkey":[
                 [
-                    "ROMAN.META.INSTRUMENT.DETECTOR",
-                    "ROMAN.META.INSTRUMENT.NAME",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT",
                     "ROMAN.META.SPEC_CONTEXT"
                 ],
@@ -474,7 +470,7 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"99976655fdaf22b16046dea968639331c601c9c7",
+            "sha1sum":"081acb54ed1104e256801df1b5882567646e331e",
             "suffix":"optmodel",
             "text_descr":"Optical Model GDPS SSC",
             "tpn":"wfi_optmodel.tpn",
@@ -1120,15 +1116,13 @@
             "observatory":"roman",
             "parkey":[
                 [
-                    "ROMAN.META.INSTRUMENT.DETECTOR",
-                    "ROMAN.META.INSTRUMENT.NAME",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
                 [
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"4e8d07b523b0d58819a5598ce7eb6a096c2b460a",
+            "sha1sum":"a8d91f5908e0a6bd5fe115a4e57aec0fdaf4a2ce",
             "suffix":"relflux",
             "text_descr":"Relative Flux GDPS SSC",
             "tpn":"wfi_relflux.tpn",
@@ -1180,15 +1174,13 @@
             "observatory":"roman",
             "parkey":[
                 [
-                    "ROMAN.META.INSTRUMENT.DETECTOR",
-                    "ROMAN.META.INSTRUMENT.NAME",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
                 [
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"49e43552b4d84588cd44e718b92aa816ca68e057",
+            "sha1sum":"a8fc533420e810e7a993449fadddae2f95393bea",
             "suffix":"sflat",
             "text_descr":"Small scale flat GDPS SSC",
             "tpn":"wfi_sflat.tpn",
@@ -1238,15 +1230,13 @@
             "observatory":"roman",
             "parkey":[
                 [
-                    "ROMAN.META.INSTRUMENT.DETECTOR",
-                    "ROMAN.META.INSTRUMENT.NAME",
                     "ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT"
                 ],
                 [
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"89a6ecdae840ba965b49126ab18cd1520485acab",
+            "sha1sum":"38314273e38ae98b36b70bfa0867132bb149878b",
             "suffix":"specpsf",
             "text_descr":"Spectral Point Spread Function GDPS SSC",
             "tpn":"wfi_specpsf.tpn",

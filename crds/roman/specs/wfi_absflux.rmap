@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'wfi_absflux.rmap',
     'observatory' : 'roman',
-    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.NAME', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '786a067f53419fb8d3a392af6639b12980e4ad5b',
+    'parkey' : (('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'dc14d9679c76fbd849d0fff34e534e0a66372b8a',
     'suffix' : 'absflux',
     'text_descr' : 'Absolute Flux GDPS SSC',
 }

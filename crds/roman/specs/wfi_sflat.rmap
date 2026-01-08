@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'wfi_sflat.rmap',
     'observatory' : 'roman',
-    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.NAME', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '49e43552b4d84588cd44e718b92aa816ca68e057',
+    'parkey' : (('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : 'a8fc533420e810e7a993449fadddae2f95393bea',
     'suffix' : 'sflat',
     'text_descr' : 'Small scale flat GDPS SSC',
 }

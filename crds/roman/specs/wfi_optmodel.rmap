@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'wfi_optmodel.rmap',
     'observatory' : 'roman',
-    'parkey' : (('ROMAN.META.INSTRUMENT.DETECTOR', 'ROMAN.META.INSTRUMENT.NAME', 'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT', 'ROMAN.META.SPEC_CONTEXT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '99976655fdaf22b16046dea968639331c601c9c7',
+    'parkey' : (('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT', 'ROMAN.META.SPEC_CONTEXT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'sha1sum' : '081acb54ed1104e256801df1b5882567646e331e',
     'suffix' : 'optmodel',
     'text_descr' : 'Optical Model GDPS SSC',
 }
