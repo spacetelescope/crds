@@ -1,3 +1,13 @@
+13.0.7 (2026-01-09)
+===================
+
+General
+-------
+
+- Fixed looping by year for name creation. (`#1170
+  <https://github.com/spacetelescope/crds/issues/1170>`_)
+
+
 13.0.6 (2025-09-25)
 ===================
 
