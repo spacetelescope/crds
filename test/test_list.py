@@ -418,7 +418,7 @@ def test_list_cat_mappings(capsys, hst_default_cache_state):
  'state': 'latest',
  'type': 'mapping',
  'uploaded_as': 'hst_cos_deadtab_0250.rmap',
- 'useafter_date': '2050-01-01 00:00:00+00:00'}'}"""
+ 'useafter_date': '2050-01-01 00:00:00+00:00'}"""
     assert out_to_check1 in out
     assert out_to_check2 in out
     assert out_to_check3 in out
