@@ -14,7 +14,7 @@ be implemented for JWST.
 import os.path
 import datetime
 import time
-import warnings
+
 
 # =======================================================================
 
@@ -23,6 +23,7 @@ from crds import data_file
 from crds.core.exceptions import CrdsError, CrdsNamingError
 from crds.hst import siname
 from crds.io import abstract
+from datetime import datetime, timezone
 
 # =======================================================================
 
@@ -40,11 +41,14 @@ get_all_tpninfos = TYPES.get_all_tpninfos
 # =======================================================================
 HERE = os.path.dirname(__file__) or "."
 
+
 def tpn_path(tpn_file):
     return os.path.join(HERE, "tpns", tpn_file)
 
+
 def get_extra_tpninfos(refpath):
     return []
+
 
 def project_check(refpath, rmap):
     pass
@@ -57,9 +61,11 @@ CROSS_STRAPPED_KEYWORDS = {
        # "META.INSTRUMENT.NAME" : ["INSTRUME", "INSTRUMENT", "META.INSTRUMENT.TYPE",],
     }
 
+
 @utils.cached
 def get_static_pairs():
     return abstract.equivalence_dict_to_pairs(CROSS_STRAPPED_KEYWORDS)
+
 
 def get_cross_strapped_pairs(header):
     """Return the list of keyword pairs where each pair describes synonyms for the same
@@ -69,13 +75,16 @@ def get_cross_strapped_pairs(header):
 
 # =======================================================================
 
+
 def header_to_reftypes(header, context="hst-operational"):
     """Based on `header` return the default list of appropriate reference type names."""
     return []  # translates to everything.
 
+
 def header_to_pipelines(header, context="hst-operational"):
     """Based on `header` return the default list of appropriate reference type names."""
     raise NotImplementedError("HST has not defined header_to_pipelines().")
+
 
 def get_exptypes(instrument=None):
     """Return the list of EXP_TYPE values for instrument,  or for all
@@ -99,6 +108,7 @@ def match_context_key(key):
         return None
 
 # =======================================================================
+
 
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file,  map the header back to
@@ -125,11 +135,13 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
 # =======================================================================
 
+
 def condition_matching_header(rmapping, header):
     """Condition the matching header values to the normalized form of the .rmap"""
     return utils.condition_header(header)
 
 # =======================================================================
+
 
 def get_file_properties(filename):
     """Figure out (instrument, filekind) based on `filename` which
@@ -165,6 +177,7 @@ def get_file_properties(filename):
     assert result[1] in FILEKINDS+[""], "Bad filekind " + \
         repr(result[1]) + " in filename " + repr(filename)
     return result
+
 
 def decompose_newstyle_name(filename):
     """
@@ -220,6 +233,7 @@ def decompose_newstyle_name(filename):
 
     return path, observatory, instrument, filekind, serial, ext
 
+
 def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and return (instrument, filekind).
 
@@ -246,6 +260,7 @@ def properties_inside_mapping(filename):
         result = loaded.instrument, loaded.filekind
     return result
 
+
 def _get_fields(filename):
     """Break CRDS-style filename down into: path, underscore-separated-parts, extension."""
     path = os.path.dirname(filename)
@@ -254,12 +269,14 @@ def _get_fields(filename):
     parts = name.split("_")
     return path, parts, ext
 
+
 def list_get(the_list, index, default):
     """Fetch the `index` item from `the_list`, or return `default` on IndexError.  Like dict.get()."""
     try:
         return the_list[index]
     except IndexError:
         return default
+
 
 CDBS_DIRS_TO_INSTR = {
    "/jref/":"acs",
@@ -275,6 +292,7 @@ CDBS_DIRS_TO_INSTR = {
    "/yref/" : "fos",
    "/zref/" : "hrs",
 }
+
 
 def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=False):
     """Dev function to compare the properties returned by name decomposition
@@ -343,6 +361,7 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
             else:
                 log.error("Orphan reference", repr(ref), "not found under any context.")
 
+
 def get_reference_properties(filename):
     """Figure out FITS (instrument, filekind, serial) based on `filename`."""
     # try:
@@ -370,6 +389,7 @@ GEIS_EXT_TO_SUFFIX = {
     "r6" : "flt",     # Flat field
     "r7" : "w4t",     # wf4tfile
 }
+
 
 def ref_properties_from_cdbs_path(filename):
     """Based on a HST CDBS `filename`,  return
@@ -407,6 +427,7 @@ def ref_properties_from_cdbs_path(filename):
         assert False, "Couldn't map extension/suffix " + repr(suffix) + " to filekind."
     return path, "hst", instrument, filekind, serial, extension
 
+
 def instrument_from_refname(filename):
     """Based on `filename` rather than it's contents,  determine the associated
     instrument or raise an exception.
@@ -432,6 +453,7 @@ def instrument_from_refname(filename):
             return instrument
         except Exception:
             assert False, "Cannot determine instrument for filename '{}'".format(filename)
+
 
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine:
@@ -484,6 +506,7 @@ def ref_properties_from_header(filename):
 
 # ============================================================================
 
+
 def generate_unique_name(filename, now=None):
 
     """Given an arbitrarily named filename (which must correctly define it's format, e.g. .fits)
@@ -504,6 +527,7 @@ u=WFPC2, n=NICMOS, m=SYNPHOT]
     name = generate_unique_name_core(instr, filekind, ext, now)
 
     return os.path.join(path, name)
+
 
 def generate_unique_name_core(instr, filekind, extension, now=None):
     """Given an arbitrarily named filename (which must correctly define it's format, e.g. .fits)
@@ -529,30 +553,21 @@ u=WFPC2, n=NICMOS, m=MULTI, m=SYNPHOT]
 
     return timeid + instr_char + suffix + extension
 
+
 def generate_timestamp(now=None):
 
     """Generate an enhanced CDBS-style uniqname."""
 
     if now is None:
-        now = datetime.datetime.utcnow()
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
 
-    if now.year < 2016:
-        year = chr(now.year - 2015 + ord('z'))
-    elif 2016 <= now.year <= 2025:
-        year = chr(now.year - 2016 + ord('0'))
-    else:
-        raise RuntimeError("Unique names are not defined for 2026 and beyond.")
-
-    if 1 <= now.month <= 9:
-        month = chr(now.month - 1 + ord('1'))
-    elif 10 <= now.month <= 12:
-        month = chr(now.month - 10 + ord('a'))
-
-    if 1 <= now.day <= 9:
-        day = chr(now.day - 1 + ord('1'))
-    elif 10 <= now.day <= 31:
-        day = chr(now.day - 10 + ord('a'))
-
+    year_offset = now.year - 1990
+    base36_year = "abcdefghijklmnopqrstuvwxyz0123456789"
+    base36_md = "0123456789abcdefghijklmnopqrstuvwxyz"
+    # Loops back through after passing 2026
+    year = base36_year[year_offset % 36]
+    month = base36_md[now.month]
+    day = base36_md[now.day]
     hour = "%02d" % now.hour
     minute = "%02d" % now.minute
 
@@ -569,13 +584,16 @@ def generate_timestamp(now=None):
 # HST FITS headers have filenames adorned with environment prefixes for each
 # instrument.
 
+
 def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return siname.add_IRAF_prefix(instrument.upper())
 
+
 def filekind_to_keyword(filekind):
     """Return the FITS keyword at which a reference should be recorded."""
     return filekind.upper()
+
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
@@ -588,6 +606,7 @@ def locate_file(refname, mode=None):
         instrument = get_reference_properties(refname)[1]
     rootdir = locate_dir(instrument, mode)
     return  os.path.join(rootdir, os.path.basename(refname))
+
 
 def locate_dir(instrument, mode=None):
     """Locate the instrument specific directory for a reference file."""
@@ -632,11 +651,13 @@ def dnr_check(header):
 
 # ============================================================================
 
+
 def fits_to_parkeys(header):
     """Map a FITS header onto rmap parkeys appropriate for this observatory."""
     return dict(header)
 
 # =======================================================================
+
 
 def test():
     """Run the module doctests."""
@@ -645,6 +666,7 @@ def test():
     return doctest.testmod(locate)
 
 # =======================================================================
+
 
 if __name__ == "__main__":
     print(test())
