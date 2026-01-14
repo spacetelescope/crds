@@ -1,3 +1,15 @@
+13.1.0 (2026-01-14)
+===================
+
+ROMAN
+-----
+
+- SSC rmaps and handling GDPS reftypes in certify (`#1167
+  <https://github.com/spacetelescope/crds/issues/1167>`_)
+- new reftypes for roman b21 (`#1171
+  <https://github.com/spacetelescope/crds/issues/1171>`_)
+
+
 13.0.7 (2026-01-09)
 ===================
 
