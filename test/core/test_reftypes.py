@@ -222,7 +222,7 @@ def test_reftypes_jwst_get_filekinds(default_shared_state):
 def test_reftypes_roman_get_filekinds(default_shared_state):
     types = reftypes.get_types_object("roman")
     wfi_filekinds = types.get_filekinds("wfi")
-    expected_types = ['absflux', 'abvegaoffset', 'all', 'apcorr', 'area', 'dark', 'distortion', 'epsf', 'flat', 'gain', 'inverselinearity', 'ipc', 'linearity', 'mask', 'matable', 'optmodel', 'pars-assignwcsstep', 'pars-darkcurrentstep', 'pars-dqinitstep', 'pars-exposurepipeline', 'pars-flatfieldstep', 'pars-fluxstep', 'pars-highlevelpipeline', 'pars-jumpstep', 'pars-linearitystep', 'pars-outlierdetectionstep', 'pars-photomstep', 'pars-rampfitstep', 'pars-refpixstep', 'pars-resamplestep', 'pars-saturationstep', 'pars-skymatchstep', 'pars-sourcedetectionstep', 'pars-tweakregstep', 'photom', 'readnoise', 'refpix', 'relflux', 'saturation', 'sflat', 'skycells', 'specpsf']
+    expected_types = ['absflux', 'abvegaoffset', 'all', 'apcorr', 'area', 'dark', 'darkdecaysignal', 'detectorstatus', 'distortion', 'epsf', 'flat', 'gain', 'integralnonlinearity', 'inverselinearity', 'ipc', 'linearity', 'mask', 'matable', 'optmodel', 'pars-assignwcsstep', 'pars-darkcurrentstep', 'pars-dqinitstep', 'pars-exposurepipeline', 'pars-flatfieldstep', 'pars-fluxstep', 'pars-highlevelpipeline', 'pars-jumpstep', 'pars-linearitystep', 'pars-outlierdetectionstep', 'pars-photomstep', 'pars-rampfitstep', 'pars-refpixstep', 'pars-resamplestep', 'pars-saturationstep', 'pars-skymatchstep', 'pars-sourcedetectionstep', 'pars-tweakregstep', 'photom', 'readnoise', 'refpix', 'relflux', 'saturation', 'sflat', 'skycells', 'specpsf']
     assert sorted(wfi_filekinds) == sorted(expected_types)
 
 
