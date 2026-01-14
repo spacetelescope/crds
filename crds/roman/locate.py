@@ -51,7 +51,7 @@ HERE = os.path.dirname(__file__) or "."
 
 # Stub like HST for now
 
-def header_to_reftypes(header, context="roman-operational"):
+def header_to_reftypes(header, context="latest"):
     """Based on `header` return the default list of appropriate reference type names.
 
     >>> ref_types = header_to_reftypes(None)
@@ -61,7 +61,7 @@ def header_to_reftypes(header, context="roman-operational"):
     """
     return []  # translates to "all types" for instrument defined by header.
 
-def header_to_pipelines(header, context="roman-operational"):
+def header_to_pipelines(header, context="latest"):
     """Based on `header` return the default list of appropriate reference type names.
 
     >>> header_to_pipelines(None)
@@ -198,28 +198,32 @@ def decompose_newstyle_name(filename):
     """
     path, parts, ext = _get_fields(filename)
     observatory = parts[0]
-    serial = list_get(parts, 3, "")
-
-    if ext == ".pmap":
-        assert len(parts) in [1,2], "Invalid .pmap filename " + repr(filename)
-        instrument, filekind = "", ""
-        serial = list_get(parts, 1, "")
-    elif ext == ".imap":
-        assert len(parts) in [2,3], "Invalid .imap filename " + repr(filename)
-        instrument = parts[1]
-        filekind = ""
-        serial = list_get(parts, 2, "")
-    else:
-        assert len(parts) in [3,4], "Invalid filename " + repr(filename)
-        instrument = parts[1]
-        filekind = parts[2]
+    if len(parts) < 5:
         serial = list_get(parts, 3, "")
-
+        if ext == ".pmap":
+            assert len(parts) in [1,2], "Invalid .pmap filename " + repr(filename)
+            instrument, filekind = "", ""
+            serial = list_get(parts, 1, "")
+        elif ext == ".imap":
+            assert len(parts) in [2,3], "Invalid .imap filename " + repr(filename)
+            instrument = parts[1]
+            filekind = ""
+            serial = list_get(parts, 2, "")
+        else:
+            assert len(parts) in [3,4], "Invalid filename " + repr(filename)
+            instrument = parts[1]
+            filekind = parts[2]
+            serial = list_get(parts, 3, "")
+    else:
+        # SSC Filekind
+        instrument = parts[1]
+        filekind = parts[3]
+        serial = parts[4] if ext != ".yaml" else parts[4].replace("ctx", "")
+    
     # Don't include filename in these or it messes up crds.certify unique error tracking.
-
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
-    assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(id)
+    assert re.fullmatch(r"\d*", serial), "Invalid id field " + repr(serial)
     # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
@@ -360,6 +364,37 @@ def ref_properties_from_header(filename):
 
 # =============================================================================
 
+def ssc_reference_translations(pfx):
+    return {
+        f'{pfx}.INSTRUMENT': f'{pfx}.INSTRUMENT.NAME',
+        f'{pfx}.OPTICAL_ELEMENT': f'{pfx}.INSTRUMENT.OPTICAL_ELEMENT',
+        f'{pfx}.DETECTOR': f'{pfx}.INSTRUMENT.DETECTOR',
+        f'{pfx}.ORIGIN': 'SSC',
+    }
+
+
+def modified_ssc_yaml_header(header):
+    """Modify header dictionary loaded from an SSC YAML reference file
+    to match CRDS expectations for Roman reference file headers."""
+    if header.get('ROMAN.META.ORIGIN', header.get('META.ORIGIN', None)) == 'IPAC/SSC':
+        if header.get('FILE_FORMAT', None) == 'YAML':
+            return {'ROMAN.'+k:v for k, v in header.items() if k.startswith('META.')}, True
+        return header, True
+    return header, False
+
+
+def apply_ssc_conversions(header):
+    """Converts missing or malformed parkey values received from SSC into valid CRDS formats."""
+    pfx = "ROMAN.META"
+    if header[f"{pfx}.EXPOSURE.TYPE"] == "UNDEFINED":
+        instr, optelem = header.get(f"{pfx}.INSTRUMENT.NAME"), header.get(f"{pfx}.INSTRUMENT.OPTICAL_ELEMENT")
+        if instr and optelem:
+            header[f"{pfx}.EXPOSURE.TYPE"] = "_".join([instr.upper(), optelem.upper()])
+    detector = header.get(f"{pfx}.INSTRUMENT.DETECTOR")
+    if len(detector.split(",")) == 18:
+        header[f"{pfx}.INSTRUMENT.DETECTOR"] = "N/A" # All detectors
+    return header
+
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file, map the header back to keys
     relevant to datasets.  So for ACS biasfile the reference says BINAXIS1 but
@@ -488,7 +523,12 @@ def reference_keys_to_dataset_keys(rmapping, header):
         f"{prefix}.INSTRUMENT.P_DETECTOR"  : f"{prefix}.INSTRUMENT.DETECTOR",
         f"{prefix}.INSTRUMENT.P_OPTICAL_ELEMENT": f"{prefix}.INSTRUMENT.OPTICAL_ELEMENT",
     }
-    # Rmap header reference_to_dataset field tranlations,  can override basic!
+    # SSC translations if applicable
+    header, ssc = modified_ssc_yaml_header(header)
+    if ssc is True:
+        translations = ssc_reference_translations(prefix)
+       
+    # Rmap header reference_to_dataset field translations,  can override basic!
     try:
         translations.update(rmapping.reference_to_dataset)
     except AttributeError:
@@ -521,12 +561,15 @@ def reference_keys_to_dataset_keys(rmapping, header):
             if rval not in [None, "UNDEFINED"] and rval != dval:
                 log.info("Setting", repr(dkey), "=", repr(dval),
                          "to value of", repr(rkey), "=", repr(rval))
-                header[dkey] = rval
+                header[dkey] = rval.upper()
 
     if f"{prefix}.SUBARRAY.NAME" not in header:
         header[f"{prefix}.SUBARRAY.NAME"] = "UNDEFINED"
     if f"{prefix}.EXPOSURE.TYPE" not in header:
         header[f"{prefix}.EXPOSURE.TYPE"] = "UNDEFINED"
+    if ssc is True:
+        header = apply_ssc_conversions(header)
+        
 
     # If USEAFTER is defined,  or we're configured to fake it...
     #   don't invent one if its missing and we're not faking it.

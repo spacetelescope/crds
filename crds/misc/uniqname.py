@@ -115,7 +115,7 @@ Renamed files can be output to a different directory using --output-path.
             basefile = os.path.basename(filename)
             baseuniq = os.path.basename(uniqname)
             if self.args.add_keywords:
-                now = datetime.datetime.utcnow()
+                now = datetime.datetime.now(datetime.timezone.utc)
                 hdus[0].header["FILENAME"] = baseuniq
                 hdus[0].header["ROOTNAME"] = os.path.splitext(baseuniq)[0].upper()
                 hdus[0].header["HISTORY"] = "{0} renamed to {1} on {2} {3} {4}".format(

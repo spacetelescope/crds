@@ -26,7 +26,7 @@ def test_new_context(default_shared_state, hst_data, caplog):
             f"newcontext.py {hst_data}/hst.pmap {hst_data}/hst_cos_deadtab_9999.rmap \
 {hst_data}/hst_acs_imphttab_9999.rmap")()
         out = caplog.text
-    pysh.sh("rm \./*\.[pir]map")
+    pysh.sh(r"rm \./*\.[pir]map")
     out_to_check = """
     Replaced 'hst_acs_imphttab.rmap' with
     hst_acs_imphttab_9999.rmap' for 'imphttab' in
