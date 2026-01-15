@@ -1,0 +1,1 @@
+remove gdps check and improve ssc regex
