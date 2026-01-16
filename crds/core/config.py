@@ -1133,18 +1133,11 @@ CDBS_NAME_RE = re.compile(complete_re(CDBS_NAME_RE_STR))
 # SSC Files require more flexibility
 # to allow extra optelem like "prism" or "grism" in name
 # and either standard numeric serial or ctx0001 in the case of optmodel yaml files
-CRDS_OPTELEM_RE_STR = r"(?P<optelem>" + r"[a-z][a-z0-9\-]{1,32})" # SSC files only
-CRDS_SSC_NAME_RE_STR = (r"(" +
-        CRDS_OBS_RE_STR + r"(_" +
-            CRDS_INSTR_RE_STR + r"(_" +
-                CRDS_OPTELEM_RE_STR + r"(_" +
-                    CRDS_FILEKIND_RE_STR +
-                r")?" +
-            r")?" +
-        r")?" +
-    r")") + r"[a-z0-9_]{1,9}"
+SSC_NAME_RE_STR = r"^(?P<observatory>[a-z]{1,8})\_" + r"(?P<instrument>[a-z]{1,16})\_" + \
+    r"(?P<optelem>[a-z]{1,32})\_" + r"(?P<filekind>[a-z]{1,32})\_" + \
+        r"(?P<serial>[0-9]{4}|ctx[0-9]{4})" + r"\.(?P<suffix>asdf|yaml|fits)$"
 
-CRDS_SSC_NAME_RE = re.compile(CRDS_SSC_NAME_RE_STR)
+GDPS_SSC_NAME_RE = re.compile(complete_re(SSC_NAME_RE_STR))
 
 
 # -------------------------------------------------------------------------------------
@@ -1165,11 +1158,11 @@ def is_valid_reference_name(filename):
     True
     """
     name = os.path.basename(filename)
-    return is_reference(name) and (is_crds_name(name) or is_cdbs_name(name) or is_gdps_name(name))
+    return is_reference(name) and (is_crds_name(name) or is_cdbs_name(name))
 
 def is_gdps_name(name):
     name = os.path.basename(name).lower()
-    return bool(CRDS_SSC_NAME_RE.match(name))
+    return bool(GDPS_SSC_NAME_RE.match(name))
 
 def is_crds_name(name):
     """Return True IFF `name` is a valid CRDS-style name.
