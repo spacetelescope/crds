@@ -1,3 +1,13 @@
+13.1.1 (2026-01-16)
+===================
+
+General
+-------
+
+- remove gdps check and improve ssc regex (`#1172
+  <https://github.com/spacetelescope/crds/issues/1172>`_)
+
+
 13.1.0 (2026-01-14)
 ===================
 
