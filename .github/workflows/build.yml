@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    uses: OpenAstronomy/github-actions-workflows/.github/workflows/publish_pure_python.yml@86823142467dd2afcd1bbac57d3a664cf468eb3b  # v2.1.0
+    uses: OpenAstronomy/github-actions-workflows/.github/workflows/publish_pure_python.yml@930ac90540ecc5f43ba6d3d176efd25cd5f3c6c2  # v2.2.2
     with:
       upload_to_pypi: ${{ (github.event_name == 'release') && (github.event.action == 'released') }}
     secrets:
