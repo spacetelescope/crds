@@ -6,6 +6,12 @@ updates:
     directory: "/"
     target-branch: "main"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+      groups:
+        actions:
+          patterns:
+            - "*"
+      cooldown:
+        default-days: 30
     reviewers:
       - "zacharyburnett"

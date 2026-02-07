@@ -1,17 +1,23 @@
 header = {
-    'derived_from' : 'Created by Hunter Brown 2024-12-06',
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'niriss pars-cleanflickernoisestep rmap',
     'file_ext' : '.asdf',
     'filekind' : 'pars-cleanflickernoisestep',
-    'filetype' : 'pars-cleanflickernoisestep',
-    'instrument' : 'NIRSPEC',
+    'filetype' : 'PARS-CLEANFLICKERNOISESTEP',
+    'instrument' : 'nirspec',
+    'ld_tpn' : 'nirspec_pars-cleanflickernoisestep.ld_tpn',
     'mapping' : 'REFERENCE',
-    'name' : 'jwst_nirspec_pars-cleanflickernoisestep.rmap',
-    'observatory' : 'JWST',
-    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'e92736107f6141b25b154484e47d72dad36290c3',
+    'name' : 'nirspec_pars-cleanflickernoisestep.rmap',
+    'observatory' : 'jwst',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'e79ab526a9c0bb46034daf5bfa5b9d027c2a9ecf',
     'suffix' : 'pars-cleanflickernoisestep',
-    'text_descr' : 'Base rmap for nirspec_pars-cleanflickernoisestep',
+    'text_descr' : 'CleanFlickerNoiseStep runtime parameters',
+    'tpn' : 'nirspec_pars-cleanflickernoisestep.tpn',
 }
 
 selector = Match({
+    ('N/A', 'N/A') : UseAfter({
+        '2000-01-01 00:00:00' : 'N/A',
+    }),
 })
