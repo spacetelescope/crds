@@ -376,10 +376,11 @@ def ssc_reference_translations(pfx):
 def modified_ssc_yaml_header(header):
     """Modify header dictionary loaded from an SSC YAML reference file
     to match CRDS expectations for Roman reference file headers."""
+    # Identify SSC YAML files by ORIGIN and FILE_FORMAT
     if header.get('ROMAN.META.ORIGIN', header.get('META.ORIGIN', None)) == 'IPAC/SSC':
-        if header.get('FILE_FORMAT', None) == 'YAML':
-            return {'ROMAN.'+k:v for k, v in header.items() if k.startswith('META.')}, True
-        return header, True
+        meta_header = {k:v for k, v in header.items() if k.startswith('ROMAN.META')}
+        meta_header.update({'ROMAN.'+k:v for k, v in header.items() if k.startswith('META.')})
+        return meta_header, True
     return header, False
 
 
@@ -391,7 +392,7 @@ def apply_ssc_conversions(header):
         if instr and optelem:
             header[f"{pfx}.EXPOSURE.TYPE"] = "_".join([instr.upper(), optelem.upper()])
     detector = header.get(f"{pfx}.INSTRUMENT.DETECTOR")
-    if len(detector.split(",")) == 18:
+    if instr.lower() == "wfi" and len(detector.split(",")) == 18:
         header[f"{pfx}.INSTRUMENT.DETECTOR"] = "N/A" # All detectors
     return header
 
