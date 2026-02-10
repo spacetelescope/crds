@@ -1,3 +1,19 @@
+13.1.2 (2026-02-10)
+===================
+
+JWST
+----
+
+- added new miri subarrays (`#1173
+  <https://github.com/spacetelescope/crds/issues/1173>`_)
+- removed incorrect miri subarrays (`#1175
+  <https://github.com/spacetelescope/crds/issues/1175>`_)
+- New cubebuildstep rmap for nirspec (`#1178
+  <https://github.com/spacetelescope/crds/issues/1178>`_)
+- Added rmap for nirspec_pars-extract1dstep (`#1183
+  <https://github.com/spacetelescope/crds/issues/1183>`_)
+
+
 13.1.1 (2026-01-16)
 ===================
 
