@@ -64,10 +64,10 @@ class SynphotLookupGenerator:
             new_filename = original_table["FILENAME"]
             new_comment = original_table["COMMENT"]
         else:
-            new_time = np.chararray((0,), unicode=True)
-            new_compname = np.chararray((0,), unicode=True)
-            new_filename = np.chararray((0,), unicode=True)
-            new_comment = np.chararray((0,), unicode=True)
+            new_time = np.array([], dtype=str)
+            new_compname = np.array([], dtype=str)
+            new_filename = np.array([], dtype=str)
+            new_comment = np.array([], dtype=str)
 
         updated_instruments = set()
         created_instruments = set()
