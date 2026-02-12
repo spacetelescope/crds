@@ -1,1 +1,0 @@
-Removed deprecated numpy chararray and replaced with array

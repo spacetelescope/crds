@@ -1,3 +1,13 @@
+13.1.3 (2026-02-12)
+===================
+
+JWST
+----
+
+- Removed deprecated numpy chararray and replaced with array (`#1184
+  <https://github.com/spacetelescope/crds/issues/1184>`_)
+
+
 13.1.2 (2026-02-10)
 ===================
 
