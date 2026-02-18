@@ -25,6 +25,7 @@ from crds.io import abstract
 # These two functions decouple the generic reference file certifier program
 # from observatory-unique ways of specifying and caching Validator parameters.
 
+
 from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
 
 from . import schema
@@ -38,7 +39,8 @@ suffix_to_filekind = TYPES.suffix_to_filekind
 filekind_to_suffix = TYPES.filekind_to_suffix
 get_all_tpninfos = TYPES.get_all_tpninfos
 
-from crds.jwst.pipeline import header_to_reftypes, header_to_pipelines
+# Unused, commenting out
+# from crds.jwst.pipeline import header_to_reftypes, header_to_pipelines
 
 # =======================================================================
 
@@ -46,7 +48,7 @@ MODEL = None
 
 def get_datamodels():
     try:
-        from jwst import datamodels  # this is fatal.
+        from stdatamodels.jwst import datamodels  # this is fatal.
     except ImportError:
         log.error(
             "CRDS requires installation of the 'jwst' package to operate on JWST files.")
