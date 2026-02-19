@@ -39,8 +39,8 @@ suffix_to_filekind = TYPES.suffix_to_filekind
 filekind_to_suffix = TYPES.filekind_to_suffix
 get_all_tpninfos = TYPES.get_all_tpninfos
 
-# Unused, commenting out
-# from crds.jwst.pipeline import header_to_reftypes, header_to_pipelines
+
+from crds.jwst.pipeline import header_to_reftypes, header_to_pipelines
 
 # =======================================================================
 
