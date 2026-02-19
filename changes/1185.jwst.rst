@@ -1,0 +1,1 @@
+Swapped jwst dependencies for stdatamodels

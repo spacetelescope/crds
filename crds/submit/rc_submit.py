@@ -58,7 +58,7 @@ NULL_FIELDTYPES = {
     'CharField'        : str,
     'TypedChoiceField' : str, }
 
-DESCRIPTION_RE = re.compile('[^A-Za-z0-9._\s/,=\-\+]')
+DESCRIPTION_RE = re.compile('[^A-Za-z0-9._\\s/,=\-\+]')
 
 def validate_description_text(text):
     err = DESCRIPTION_RE.search(text)
