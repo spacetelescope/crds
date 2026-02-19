@@ -1,3 +1,13 @@
+13.1.4 (2026-02-19)
+===================
+
+JWST
+----
+
+- Swapped jwst dependencies for stdatamodels (`#1185
+  <https://github.com/spacetelescope/crds/issues/1185>`_)
+
+
 13.1.3 (2026-02-12)
 ===================
 
