@@ -1,1 +1,0 @@
-Removed required arrays for miri_rscd

@@ -1,3 +1,13 @@
+13.1.6 (2026-02-25)
+===================
+
+JWST
+----
+
+- Removed required arrays for miri_rscd (`#1187
+  <https://github.com/spacetelescope/crds/issues/1187>`_)
+
+
 13.1.5 (2026-02-25)
 ===================
 
