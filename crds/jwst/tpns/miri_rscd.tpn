@@ -6,6 +6,7 @@ REFTYPE    H      C      R      RSCD
 
 RSCD_GROUP_SKIP  A     X      R   (is_table(RSCD_GROUP_SKIP_ARRAY))
 RSCD_GROUP_SKIP  A     X      R   (has_columns(RSCD_GROUP_SKIP_ARRAY,['SUBARRAY','READPATT','GROUP_SKIP']))
+RSCD_GROUP_SKIP  A     X      R   (has_columns(RSCD_GROUP_SKIP_ARRAY,['SUBARRAY','READPATT','GROUP_SKIP1']))
 RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'SUBARRAY','STRING'))
 RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'READPATT','STRING'))
 RSCD_GROUP_SKIP  A     X      R   (has_column_type(RSCD_GROUP_SKIP_ARRAY,'GROUP_SKIP','INT'))
