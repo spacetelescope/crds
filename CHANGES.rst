@@ -1,3 +1,13 @@
+13.1.5 (2026-02-25)
+===================
+
+JWST
+----
+
+- Updated miri_rscd.tpn (`#1186
+  <https://github.com/spacetelescope/crds/issues/1186>`_)
+
+
 13.1.4 (2026-02-19)
 ===================
 
