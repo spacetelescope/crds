@@ -1,3 +1,13 @@
+13.1.7 (2026-03-02)
+===================
+
+ROMAN
+-----
+
+- adds wfi_flat as valid exptype for roman pars tpn (`#1188
+  <https://github.com/spacetelescope/crds/issues/1188>`_)
+
+
 13.1.6 (2026-02-25)
 ===================
 

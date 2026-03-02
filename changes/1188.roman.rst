@@ -1,1 +1,0 @@
-adds wfi_flat as valid exptype for roman pars tpn
