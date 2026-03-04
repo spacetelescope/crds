@@ -10,7 +10,7 @@ header = {
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : '00413102bbf24e8540b68543ba060d4b17d0059a',
     'suffix' : 'pars-resamplestep',
-    'text_descr' : 'NIRISS default parameters for the resample step.',
+    'text_descr' : 'ResampleStep runtime parameters',
 }
 
 selector = Match({

@@ -10,7 +10,7 @@ header = {
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : '792695bea70d11b63721fb9a54bf9d46a06deaef',
     'suffix' : 'pars-nscleanstep',
-    'text_descr' : 'New reference type for pars-nscleanstep',
+    'text_descr' : 'NSCleanStep runtime parameters',
 }
 
 selector = Match({
