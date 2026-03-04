@@ -5968,9 +5968,9 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"00413102bbf24e8540b68543ba060d4b17d0059a",
+            "sha1sum":"3722b68566582e22e5879c5ccab569a76fa928d2",
             "suffix":"pars-resamplestep",
-            "text_descr":"NIRISS default parameters for the resample step.",
+            "text_descr":"ResampleStep runtime parameters",
             "tpn":"niriss_pars-resamplestep.tpn",
             "unique_rowkeys":null
         },
@@ -7744,9 +7744,9 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"792695bea70d11b63721fb9a54bf9d46a06deaef",
+            "sha1sum":"399c9930956359006c105f8d093c6eab80ed7913",
             "suffix":"pars-nscleanstep",
-            "text_descr":"New reference type for pars-nscleanstep",
+            "text_descr":"NSCleanStep runtime parameters",
             "tpn":"nirspec_pars-nscleanstep.tpn",
             "unique_rowkeys":null
         },
@@ -7916,9 +7916,9 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"7be1c2c08f86d134e3136840c00a9f3268c78417",
+            "sha1sum":"e69b81b8fdb00e61725b4be8405059d21af1fb2d",
             "suffix":"pars-resamplespecstep",
-            "text_descr":"NIRSpec Baseline parameters for resampling",
+            "text_descr":"ResampleSpecStep runtime parameters",
             "tpn":"nirspec_pars-resamplespecstep.tpn",
             "unique_rowkeys":null
         },

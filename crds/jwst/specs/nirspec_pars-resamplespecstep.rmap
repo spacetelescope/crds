@@ -8,7 +8,7 @@ header = {
     'name' : 'jwst_nirspec_pars-resamplespecstep.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '7be1c2c08f86d134e3136840c00a9f3268c78417',
+    'sha1sum' : 'e69b81b8fdb00e61725b4be8405059d21af1fb2d',
     'suffix' : 'pars-resamplespecstep',
     'text_descr' : 'ResampleSpecStep runtime parameters',
 }

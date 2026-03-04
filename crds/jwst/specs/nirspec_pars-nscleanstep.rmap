@@ -8,7 +8,7 @@ header = {
     'name' : 'jwst_niriss_pars-nscleanstep.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '792695bea70d11b63721fb9a54bf9d46a06deaef',
+    'sha1sum' : '399c9930956359006c105f8d093c6eab80ed7913',
     'suffix' : 'pars-nscleanstep',
     'text_descr' : 'NSCleanStep runtime parameters',
 }
