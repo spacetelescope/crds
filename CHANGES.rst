@@ -1,3 +1,13 @@
+13.1.8 (2026-03-05)
+===================
+
+JWST
+----
+
+- Updated descriptions and error log (`#1189
+  <https://github.com/spacetelescope/crds/issues/1189>`_)
+
+
 13.1.7 (2026-03-02)
 ===================
 
