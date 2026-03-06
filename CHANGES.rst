@@ -1,3 +1,13 @@
+13.1.9 (2026-03-06)
+===================
+
+JWST
+----
+
+- Adjusted error message (`#1190
+  <https://github.com/spacetelescope/crds/issues/1190>`_)
+
+
 13.1.8 (2026-03-05)
 ===================
 
