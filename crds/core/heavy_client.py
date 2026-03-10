@@ -558,10 +558,16 @@ def get_config_info(observatory):
         raise CrdsConfigError(
             "CRDS server at", repr(api.get_crds_server()),
             "is inconsistent with observatory", repr(observatory) + ".",
-            "You may be configured for the wrong project.  "
-            "Check CRDS_SERVER_URL and CRDS_OBSERVATORY "
-            "environment settings.  See https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/ (JWST) "
-            "or https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ (HST) for information on configuring CRDS.")
+            "You may be configured for the wrong project.\n"
+            "Check CRDS_SERVER_URL and CRDS_OBSERVATORY environment settings.\n"
+            "If your CRDS_SERVER_URL is correct, you may wish to set your CRDS_OBSERVATORY to\n"
+            f"{repr(info.observatory)}.\n"
+            "Otherwise if your CRDS_OBSERVATORY is correct, you may wish to set your CRDS_SERVER_URL to\n"
+            f"'https://{observatory}-crds.stsci.edu'\n"
+            "See https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/ (JWST), \n"
+            "https://roman-crds.stsci.edu/docs/cmdline_bestrefs/ (ROMAN), or \n"
+            "https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ (HST) \n"
+            "for information on configuring CRDS.")
     return info
 
 @utils.cached # effectively a "once" directive

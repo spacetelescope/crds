@@ -1,3 +1,33 @@
+13.1.9 (2026-03-06)
+===================
+
+JWST
+----
+
+- Adjusted error message (`#1190
+  <https://github.com/spacetelescope/crds/issues/1190>`_)
+
+
+13.1.8 (2026-03-05)
+===================
+
+JWST
+----
+
+- Updated descriptions and error log (`#1189
+  <https://github.com/spacetelescope/crds/issues/1189>`_)
+
+
+13.1.7 (2026-03-02)
+===================
+
+ROMAN
+-----
+
+- adds wfi_flat as valid exptype for roman pars tpn (`#1188
+  <https://github.com/spacetelescope/crds/issues/1188>`_)
+
+
 13.1.6 (2026-02-25)
 ===================
 
