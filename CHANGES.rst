@@ -1,3 +1,13 @@
+13.1.10 (2026-03-11)
+====================
+
+ROMAN
+-----
+
+- bugfix for ssc yaml header translations (`#1192
+  <https://github.com/spacetelescope/crds/issues/1192>`_)
+
+
 13.1.9 (2026-03-06)
 ===================
 
