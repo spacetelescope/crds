@@ -1,0 +1,1 @@
+Updated selection criteria for nircam_extract1d.rmap
