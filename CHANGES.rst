@@ -1,3 +1,13 @@
+13.1.11 (2026-03-19)
+====================
+
+JWST
+----
+
+- Updated selection criteria for nircam_extract1d.rmap (`#1193
+  <https://github.com/spacetelescope/crds/issues/1193>`_)
+
+
 13.1.10 (2026-03-11)
 ====================
 
