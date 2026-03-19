@@ -4259,7 +4259,8 @@
             "parkey":[
                 [
                     "META.EXPOSURE.TYPE",
-                    "META.INSTRUMENT.FILTER"
+                    "META.INSTRUMENT.FILTER",
+                    "META.SUBARRAY.NAME"
                 ],
                 [
                     "META.OBSERVATION.DATE",
@@ -4269,7 +4270,7 @@
             "reference_to_dataset":{
                 "EXP_TYPE":"META.EXPOSURE.TYPE"
             },
-            "sha1sum":"6cec6a615f19b475e0b89db342238811a3419f76",
+            "sha1sum":"434b74b376877510c33dedebb5dc849fb24f114c",
             "suffix":"extract1d",
             "text_descr":"1-D Spectral Extraction",
             "tpn":"nircam_extract1d.tpn",
