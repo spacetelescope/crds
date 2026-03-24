@@ -4889,7 +4889,8 @@
             "unique_rowkeys":[
                 "FILTER",
                 "PUPIL",
-                "ORDER"
+                "ORDER",
+                "SUBARRAY"
             ]
         },
         "psfmask":{
