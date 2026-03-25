@@ -1,3 +1,13 @@
+13.1.12 (2026-03-25)
+====================
+
+JWST
+----
+
+- Added SUBARRAY to nircam_photom.spec (`#1194
+  <https://github.com/spacetelescope/crds/issues/1194>`_)
+
+
 13.1.11 (2026-03-19)
 ====================
 

@@ -1,1 +1,0 @@
-Added SUBARRAY to nircam_photom.spec
