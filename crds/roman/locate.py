@@ -357,6 +357,8 @@ def ref_properties_from_header(filename):
         # Not all headers are roman datamodels.
         if filekind == 'undefined':
             filekind = header.get('META.REFTYPE', 'UNDEFINED').lower()
+        if filekind == 'undefined':
+            filekind = header.get('REFTYPE', 'UNDEFINED').lower()
         assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
     except Exception as exc:
         raise exceptions.CrdsNamingError("Can't identify ROMAN.META.REFTYPE of", repr(name))
