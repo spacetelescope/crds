@@ -269,8 +269,7 @@
         },
         "dustmap":{
             "classes":[
-                "Match",
-                "UseAfter"
+                "Match"
             ],
             "derived_from":"Hand-made J.Eisenhamer 202604",
             "extra_keys":null,
@@ -285,12 +284,9 @@
             "parkey":[
                 [
                     "ROMAN.FIELD"
-                ],
-                [
-                    "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"f6e834986f0ae0cf9806d87705bbb9befa8caf20",
+            "sha1sum":"b2b12019cea78753c1ca6d040cfe8ec350951a5e",
             "suffix":"dustmap",
             "text_descr":"Galactic Dust Map",
             "tpn":"wfi_apcorr.tpn",
