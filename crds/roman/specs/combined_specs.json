@@ -267,6 +267,35 @@
             "tpn":"wfi_distortion.tpn",
             "unique_rowkeys":null
         },
+        "dustmap":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand-made J.Eisenhamer 202604",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"dustmap",
+            "filetype":"DUSTMAP",
+            "instrument":"wfi",
+            "ld_tpn":"wfi_dustmap.ld_tpn",
+            "mapping":"REFERENCE",
+            "name":"wfi_dustmap.rmap",
+            "observatory":"roman",
+            "parkey":[
+                [
+                    "ROMAN.FIELD"
+                ],
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
+            ],
+            "sha1sum":"f6e834986f0ae0cf9806d87705bbb9befa8caf20",
+            "suffix":"dustmap",
+            "text_descr":"Galactic Dust Map",
+            "tpn":"wfi_apcorr.tpn",
+            "unique_rowkeys":null
+        },
         "epsf":{
             "classes":[
                 "Match",
