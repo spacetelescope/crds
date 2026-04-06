@@ -1,3 +1,13 @@
+13.1.13 (2026-04-06)
+====================
+
+ROMAN
+-----
+
+- add new roman reftype dustmap (`#1197
+  <https://github.com/spacetelescope/crds/issues/1197>`_)
+
+
 13.1.12 (2026-03-25)
 ====================
 
