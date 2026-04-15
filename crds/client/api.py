@@ -472,7 +472,7 @@ def get_server_info():
 
 @utils.cached
 def get_download_metadata():
-    "Defer and cache decoding of download_metadata field of server info."""
+    """Defer and cache decoding of download_metadata field of server info."""
     info = get_server_info()
     return proxy.crds_decode(info["download_metadata"])
 
@@ -491,7 +491,10 @@ def _get_server_info():
             content = utils.get_uri_content(config_uri)
             info = ast.literal_eval(content)
             info["status"] = "s3"
-            info["connected"] = True
+            if "serverless" in get_crds_server(get_default_observatory()):
+                info["connected"] = False
+            else:
+                info["connected"] = True
         elif config_uri != "none":
             log.verbose(f"Loading config from URI '{config_uri}'.")
             content = utils.get_uri_content(config_uri)
