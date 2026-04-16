@@ -1,1 +1,0 @@
-Added logic to check if serverless

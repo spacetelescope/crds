@@ -1,3 +1,13 @@
+13.1.14 (2026-04-16)
+====================
+
+HST
+---
+
+- Added logic to check if serverless (`#1198
+  <https://github.com/spacetelescope/crds/issues/1198>`_)
+
+
 13.1.13 (2026-04-06)
 ====================
 
