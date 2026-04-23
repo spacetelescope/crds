@@ -633,7 +633,7 @@ def filekind_to_keyword(filekind):
     """
     raise NotImplementedError("filekind_to_keyword not implemented for Roman")
 
-def locate_file(refname, mode=None):
+def locate_file(refname, mode=None, parameters=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
@@ -665,10 +665,14 @@ def locate_file(refname, mode=None):
     ValueError: Unhandled reference file location mode 'other'
 
     """
+    if parameters is None:
+        parameters = dict()
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="roman")
     if mode == "instrument":
-        instrument = utils.file_to_instrument(refname)
+        instrument = parameters.get('roman.meta.instrument.name', None)
+        if instrument is None:
+            instrument = utils.file_to_instrument(refname)
         rootdir = locate_dir(instrument, mode)
     elif mode == "flat":
         rootdir = config.get_crds_refpath("roman")
