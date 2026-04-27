@@ -954,7 +954,7 @@ def get_path(filename, observatory):
     fullpath = locate_file(filename, observatory)
     return os.path.dirname(fullpath)
 
-def locate_file(filepath, observatory):
+def locate_file(filepath, observatory, parameters=None):
     """Returns CRDS cache path if `filepath` has no directory, otherwise `filepath` as-is.
 
    Cannot always determine CRDS cache location for hypothetical files if not
@@ -966,7 +966,7 @@ def locate_file(filepath, observatory):
     """
     if os.path.dirname(filepath):
         return filepath
-    return relocate_file(filepath, observatory)
+    return relocate_file(filepath, observatory, parameters=parameters)
 
 def pop_crds_uri(filepath):
     """Pop off crds:// from a filepath,  yielding a pathless filename."""
@@ -975,7 +975,7 @@ def pop_crds_uri(filepath):
         assert not os.path.dirname(filepath), "crds:// must prefix a filename with no path."
     return filepath
 
-def relocate_file(filepath, observatory):
+def relocate_file(filepath, observatory, parameters=None):
     """Returns path in CRDS cache where `filepath` would be relocated if it were
     copied into the CRDS cache.
 
@@ -989,7 +989,7 @@ def relocate_file(filepath, observatory):
     if is_mapping(filepath):
         return relocate_mapping(filepath, observatory)
     else:
-        return relocate_reference(filepath, observatory)
+        return relocate_reference(filepath, observatory, parameters=parameters)
 
 # ===========================================================================
 
@@ -1001,7 +1001,7 @@ def locate_reference(ref, observatory):
         return ref
     return relocate_reference(ref, observatory)
 
-def relocate_reference(ref, observatory):
+def relocate_reference(ref, observatory, parameters=None):
     """Returns CRDS cache location where `ref` would be copied if it
     was copied into the CRDS cache.  When `ref` specifies a path to an
     existing file, the contents of `ref` can be exploited to determine
@@ -1016,7 +1016,7 @@ def relocate_reference(ref, observatory):
         return os.path.join(get_crds_refpath(observatory), os.path.basename(ref))
     else:
         from crds.core import utils
-        return utils.get_locator_module(observatory).locate_file(ref)
+        return utils.get_locator_module(observatory).locate_file(ref, parameters=parameters)
 
 # ===========================================================================
 if os.path.exists("/tmp"):

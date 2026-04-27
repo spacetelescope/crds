@@ -458,7 +458,7 @@ def filekind_to_keyword(filekind):
 def warn_filekind_once(filekind):
     log.warning("No apparent JWST cal code data models schema support for", log.srepr(filekind))
 
-def locate_file(refname, mode=None):
+def locate_file(refname, mode=None, parameters=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
@@ -466,7 +466,9 @@ def locate_file(refname, mode=None):
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="jwst")
     if mode == "instrument":
-        instrument = utils.file_to_instrument(refname)
+        instrument = parameters.get('meta.instrument.name', None)
+        if instrument is None:
+            instrument = utils.file_to_instrument(refname)
         rootdir = locate_dir(instrument, mode)
     elif mode == "flat":
         rootdir = config.get_crds_refpath("jwst")
