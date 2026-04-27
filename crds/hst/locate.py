@@ -595,15 +595,25 @@ def filekind_to_keyword(filekind):
     return filekind.upper()
 
 
-def locate_file(refname, mode=None):
+def locate_file(refname, mode=None, parameters=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
     """
+    if parameters is None:
+        parameters = dict()
+    instrument = None
     try:
         instrument = instrument_from_refname(refname)
     except Exception:
-        instrument = get_reference_properties(refname)[1]
+        pass
+    if instrument is None:
+        try:
+            instrument = get_reference_properties(refname)[1]
+        except Exception:
+            pass
+    if instrument is None:
+        instrument = parameters.get('instrume', None)
     rootdir = locate_dir(instrument, mode)
     return  os.path.join(rootdir, os.path.basename(refname))
 
