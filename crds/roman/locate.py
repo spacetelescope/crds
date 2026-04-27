@@ -670,7 +670,7 @@ def locate_file(refname, mode=None, parameters=None):
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="roman")
     if mode == "instrument":
-        instrument = parameters.get('roman.meta.instrument.name', None)
+        instrument = utils.header_to_instrument(parameters)
         if instrument is None:
             instrument = utils.file_to_instrument(refname)
         rootdir = locate_dir(instrument, mode)
