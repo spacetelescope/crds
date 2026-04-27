@@ -1,3 +1,13 @@
+13.1.15 (2026-04-27)
+====================
+
+General
+-------
+
+- Pass in header parameters to determine instrument. (`#1200
+  <https://github.com/spacetelescope/crds/issues/1200>`_)
+
+
 13.1.14 (2026-04-16)
 ====================
 
