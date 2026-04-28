@@ -125,7 +125,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
     # Attempt to cache the recommended references,  which unlike dump_mappings
     # should work without network access if files are already cached.
     best_refs_paths = api.cache_references(
-        final_context, bestrefs, ignore_cache=ignore_cache, parameters=parameters)
+        final_context, bestrefs, ignore_cache=ignore_cache, parameters=check_parameters(parameters))
 
     return best_refs_paths
 
