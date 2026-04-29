@@ -266,7 +266,7 @@ def locate_file(refname, mode=None, parameters=None):
     except Exception:
         instrument = None
         if parameters is not None:
-            instrument = parameters.get('instrume', None)
+            instrument = utils.header_to_instrument(parameters)
     rootdir = locate_dir(instrument, mode)
     return  os.path.join(rootdir, os.path.basename(refname))
 
