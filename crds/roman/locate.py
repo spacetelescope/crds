@@ -670,8 +670,10 @@ def locate_file(refname, mode=None, parameters=None):
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="roman")
     if mode == "instrument":
-        instrument = utils.header_to_instrument(parameters)
-        if instrument is None:
+        try:
+            instrument = utils.header_to_instrument(parameters)
+        except KeyError:
+            log.verbose('Cannot find instrument in header. Trying from file itself...', verbosity=80)
             instrument = utils.file_to_instrument(refname)
         rootdir = locate_dir(instrument, mode)
     elif mode == "flat":
