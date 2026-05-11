@@ -15,6 +15,7 @@ from stdatamodels.exceptions import ValidationWarning
 
 # =======================================================================
 
+from crds import api
 from crds.core import rmap, config, utils, timestamp, log, exceptions
 from crds.certify import generic_tpn
 from crds import data_file
@@ -467,12 +468,35 @@ def locate_file(refname, mode=None, parameters=None):
         parameters = dict()
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="jwst")
+
     if mode == "instrument":
-        try:
-            instrument = utils.header_to_instrument(parameters)
-        except KeyError:
-            instrument = utils.file_to_instrument(refname)
-        rootdir = locate_dir(instrument, mode)
+
+        # Check if the file is already in the local cache
+        for instrument in INSTRUMENTS:
+            if instrument != 'all':
+                rootdir = locate_dir(instrument, mode)
+                if os.path.exists(os.path.join(rootdir, os.path.basename(refname))):
+                    break
+        else:
+            rootdir = None
+
+        # Not in local cache. Try various other methods.
+        if rootdir is None:
+            try:
+                instrument = utils.header_to_instrument(parameters)
+            except KeyError:
+                log.verbose('Cannot find instrument in header. Trying from file itself...', verbosity=80)
+                try:
+                    instrument = utils.file_to_instrument(refname)
+                except FileNotFoundError:
+                    log.verbose('Cannot find instrument from non-existent file.', verbosity=80)
+                    log.verbose('Attempt to contact server for meta information', verbosity=80)
+
+                    # If there is a server, get the instrument from there.
+                    instrument = api.get_file_info(api.get_default_context(observatory='roman'), os.path.basename(refname))['instrument']
+
+            rootdir = locate_dir(instrument, mode)
+
     elif mode == "flat":
         rootdir = config.get_crds_refpath("jwst")
     else:
