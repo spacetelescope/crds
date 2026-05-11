@@ -493,7 +493,7 @@ def locate_file(refname, mode=None, parameters=None):
                     log.verbose('Attempt to contact server for meta information', verbosity=80)
 
                     # If there is a server, get the instrument from there.
-                    instrument = api.get_file_info(api.get_default_context(observatory='roman'), os.path.basename(refname))['instrument']
+                    instrument = api.get_file_info(api.get_default_context(observatory='jwst'), os.path.basename(refname))['instrument']
 
             rootdir = locate_dir(instrument, mode)
 
