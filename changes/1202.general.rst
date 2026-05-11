@@ -1,6 +1,0 @@
-Bug fix to the jwst and roman reference file locate facility
-
-Note: Originating PR#1200 is a feature addition and
-should have bumped the minor version. Since this PR will
-actually generate a new minor version, a release note
-is required though this is just a bug fix.

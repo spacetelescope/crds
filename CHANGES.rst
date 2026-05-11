@@ -1,3 +1,18 @@
+13.2.0 (2026-05-11)
+===================
+
+General
+-------
+
+- Bug fix to the jwst and roman reference file locate facility
+
+  Note: Originating PR#1200 is a feature addition and
+  should have bumped the minor version. Since this PR will
+  actually generate a new minor version, a release note
+  is required though this is just a bug fix. (`#1202
+  <https://github.com/spacetelescope/crds/issues/1202>`_)
+
+
 13.1.16 (2026-04-29)
 ====================
 
