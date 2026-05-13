@@ -1,3 +1,13 @@
+13.2.1 (2026-05-13)
+===================
+
+ROMAN
+-----
+
+- Add new Roman reftype WFT ETC (`#1203
+  <https://github.com/spacetelescope/crds/issues/1203>`_)
+
+
 13.2.0 (2026-05-11)
 ===================
 
