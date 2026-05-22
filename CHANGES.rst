@@ -1,3 +1,15 @@
+13.2.2 (2026-05-22)
+===================
+
+JWST
+----
+
+- Added nirspec_chromcorr.rmap (`#1204
+  <https://github.com/spacetelescope/crds/issues/1204>`_)
+- Added new subbarrays to nirspec_all (`#1205
+  <https://github.com/spacetelescope/crds/issues/1205>`_)
+
+
 13.2.1 (2026-05-13)
 ===================
 
