@@ -9,9 +9,9 @@ header = {
     'name' : 'wfi_absflux.rmap',
     'observatory' : 'roman',
     'parkey' : (('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : 'dc14d9679c76fbd849d0fff34e534e0a66372b8a',
+    'sha1sum' : '8bfc706cbbcb8454e8d5f3a9a037e0662093b3d2',
     'suffix' : 'absflux',
-    'text_descr' : 'Absolute Flux GDPS SSC',
+    'text_descr' : 'Absolute Flux Spectroscopy',
 }
 
 selector = Match({
