@@ -1,3 +1,13 @@
+13.2.3 (2026-05-26)
+===================
+
+ROMAN
+-----
+
+- Update description of the SSC reftypes (`#1206
+  <https://github.com/spacetelescope/crds/issues/1206>`_)
+
+
 13.2.2 (2026-05-22)
 ===================
 
