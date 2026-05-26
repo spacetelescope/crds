@@ -9,9 +9,9 @@ header = {
     'name' : 'wfi_optmodel.rmap',
     'observatory' : 'roman',
     'parkey' : (('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT', 'ROMAN.META.SPEC_CONTEXT'), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '081acb54ed1104e256801df1b5882567646e331e',
+    'sha1sum' : '01440909155ce815d7892c8b20fde98d859403eb',
     'suffix' : 'optmodel',
-    'text_descr' : 'Optical Model GDPS SSC',
+    'text_descr' : 'Optical Model',
 }
 
 selector = Match({

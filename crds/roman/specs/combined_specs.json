@@ -606,9 +606,9 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"081acb54ed1104e256801df1b5882567646e331e",
+            "sha1sum":"01440909155ce815d7892c8b20fde98d859403eb",
             "suffix":"optmodel",
-            "text_descr":"Optical Model GDPS SSC",
+            "text_descr":"Optical Model",
             "tpn":"wfi_optmodel.tpn",
             "unique_rowkeys":null
         },
@@ -1258,9 +1258,9 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"a8d91f5908e0a6bd5fe115a4e57aec0fdaf4a2ce",
+            "sha1sum":"1e0056ddf9dcace4262138a7b7503c259fcbdb70",
             "suffix":"relflux",
-            "text_descr":"Relative Flux GDPS SSC",
+            "text_descr":"Relative Flux",
             "tpn":"wfi_relflux.tpn",
             "unique_rowkeys":null
         },
@@ -1316,9 +1316,9 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"a8fc533420e810e7a993449fadddae2f95393bea",
+            "sha1sum":"b77fe90d5038f04bebb4bd74c98031b6a8ae595b",
             "suffix":"sflat",
-            "text_descr":"Small scale flat GDPS SSC",
+            "text_descr":"Small Scale Flat",
             "tpn":"wfi_sflat.tpn",
             "unique_rowkeys":null
         },
@@ -1372,9 +1372,9 @@
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
-            "sha1sum":"38314273e38ae98b36b70bfa0867132bb149878b",
+            "sha1sum":"d0a7d476e4ab0be07f7dbf7543a328d6e6f0573c",
             "suffix":"specpsf",
-            "text_descr":"Spectral Point Spread Function GDPS SSC",
+            "text_descr":"Spectral Point Spread Function",
             "tpn":"wfi_specpsf.tpn",
             "unique_rowkeys":null
         }

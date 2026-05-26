@@ -9,9 +9,9 @@ header = {
     'name' : 'wfi_specpsf.rmap',
     'observatory' : 'roman',
     'parkey' : (('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : '38314273e38ae98b36b70bfa0867132bb149878b',
+    'sha1sum' : 'd0a7d476e4ab0be07f7dbf7543a328d6e6f0573c',
     'suffix' : 'specpsf',
-    'text_descr' : 'Spectral Point Spread Function GDPS SSC',
+    'text_descr' : 'Spectral Point Spread Function',
 }
 
 selector = Match({
