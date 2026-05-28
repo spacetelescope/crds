@@ -1,3 +1,4 @@
+# TODO: deprecate this reusable workflow in favor of using the action
 name: contexts
 
 on:
@@ -20,44 +21,17 @@ jobs:
   contexts:
     name: retrieve latest CRDS contexts
     runs-on: ubuntu-latest
-    outputs:
-      hst: ${{ steps.hst_crds_context.outputs.pmap }}
-      jwst: ${{ steps.jwst_crds_context.outputs.pmap }}
-      roman: ${{ steps.roman_crds_context.outputs.pmap }}
     steps:
-      - id: hst_crds_context
-        if: ${{ contains(inputs.observatory, 'hst') }}
-        env:
-          OBSERVATORY: hst
-          CRDS_SERVER_URL: https://hst-crds.stsci.edu
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}", "latest"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ --retry 8 --connect-timeout 10 |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-      - if: ${{ contains(inputs.observatory, 'hst') }}
-        run: if [[ ! -z "${{ steps.hst_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.hst_crds_context.outputs.pmap }}; else exit 1; fi
-      - id: jwst_crds_context
-        if: ${{ contains(inputs.observatory, 'jwst') }}
-        env:
-          OBSERVATORY: jwst
-          CRDS_SERVER_URL: https://jwst-crds.stsci.edu
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}", "latest"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ --retry 8 --connect-timeout 10 |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-      - if: ${{ contains(inputs.observatory, 'jwst') }}
-        run: if [[ ! -z "${{ steps.jwst_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.jwst_crds_context.outputs.pmap }}; else exit 1; fi
-      - id: roman_crds_context
-        if: ${{ contains(inputs.observatory, 'roman') }}
-        env:
-          OBSERVATORY: roman
-          CRDS_SERVER_URL: https://roman-crds.stsci.edu
-        run: >
-          echo "pmap=$(
-          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}", "latest"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ --retry 8 |
-          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
-          )" >> $GITHUB_OUTPUT
-      - if: ${{ contains(inputs.observatory, 'roman') }}
-        run: if [[ ! -z "${{ steps.roman_crds_context.outputs.pmap }}" ]]; then echo ${{ steps.roman_crds_context.outputs.pmap }}; else exit 1; fi
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          repository: spacetelescope/crds
+      - id: contexts
+        uses: ./
+        with:
+          require_hst: ${{ contains(inputs.observatory, 'hst') }}
+          require_jwst: ${{ contains(inputs.observatory, 'jwst') }}
+          require_roman: ${{ contains(inputs.observatory, 'roman') }}
+    outputs:
+      hst: ${{ steps.contexts.outputs.hst }}
+      jwst: ${{ steps.contexts.outputs.jwst }}
+      roman: ${{ steps.contexts.outputs.roman }}
