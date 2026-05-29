@@ -27,7 +27,10 @@ defaults:
     shell: bash -leo pipefail {0} {0}
 
 jobs:
+  contexts:
+    uses: ./.github/workflows/contexts.yml
   cache:
+    needs: [ contexts ]
     name: download and cache CRDS test files
     runs-on: ubuntu-latest
     outputs:
@@ -38,10 +41,8 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: spacetelescope/crds
-      - id: contexts
-        uses: ./.github/actions/contexts
       - id: key
-        run: echo "key=test-cache-${{ steps.contexts.outputs.hst }}-${{ steps.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
+        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
       - id: lookup-cache
         name: check for existence of combined CRDS cache (`${{ steps.key.outputs.key }}`)
         uses: actions/cache/restore@v5  # v4.0.2
@@ -68,18 +69,18 @@ jobs:
           mv crds-cache-test ${{ env.CRDS_TEST_ROOT }}
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
         id: retrieve-hst-cache
-        name: retrieve HST CRDS cache (`test-cache-${{ steps.contexts.outputs.hst }}`)
+        name: retrieve HST CRDS cache (`test-cache-${{ needs.contexts.outputs.hst }}`)
         uses: actions/cache@v5  # v4.0.2
         with:
           path: ${{ env.CRDS_PATH }}/**/hst*
-          key: test-cache-${{ steps.contexts.outputs.hst }}
+          key: test-cache-${{ needs.contexts.outputs.hst }}
       - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
         id: retrieve-jwst-cache
-        name: retrieve JWST CRDS cache (`test-cache-${{ steps.contexts.outputs.jwst }}`)
+        name: retrieve JWST CRDS cache (`test-cache-${{ needs.contexts.outputs.jwst }}`)
         uses: actions/cache@v5  # v4.0.2
         with:
           path: ${{ env.CRDS_PATH }}/**/jwst*
-          key: test-cache-${{ steps.contexts.outputs.jwst }}
+          key: test-cache-${{ needs.contexts.outputs.jwst }}
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
         uses: mamba-org/setup-micromamba@add3a49764cedee8ee24e82dfde87f5bc2914462  # v2.0.7
         with:
