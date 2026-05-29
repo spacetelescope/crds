@@ -22,11 +22,8 @@ jobs:
     name: retrieve latest CRDS contexts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-        with:
-          repository: spacetelescope/crds
       - id: contexts
-        uses: ./
+        uses: spacetelescope/crds/.github/actions/contexts@main
         with:
           require_hst: ${{ contains(inputs.observatory, 'hst') }}
           require_jwst: ${{ contains(inputs.observatory, 'jwst') }}
