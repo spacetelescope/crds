@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-darkdecaystep',
+    'filetype' : 'pars-darkdecaystep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-darkdecaystep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : 'a6c54df7bc170239993a534ef7390dd059f7791d',
+    'suffix' : 'pars-darkdecaystep',
+    'text_descr' : 'DarkDecayStep runtime parameters',
+}
+
+selector = Match({
+})

@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'Handmade initial rmap',
+    'file_ext' : '.asdf',
+    'filekind' : 'pars-wfi18transientstep',
+    'filetype' : 'pars-wfi18transientstep',
+    'instrument' : 'WFI',
+    'mapping' : 'REFERENCE',
+    'name' : 'roman_wfi_pars-wfi18transientstep.rmap',
+    'observatory' : 'ROMAN',
+    'parkey' : (('ROMAN.META.EXPOSURE.TYPE',), ('ROMAN.META.EXPOSURE.START_TIME',)),
+    'reference_to_dataset' : {
+        'META.EXPOSURE.START_TIME' : 'ROMAN.META.EXPOSURE.START_TIME',
+        'META.EXPOSURE.TYPE' : 'ROMAN.META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '329e869c4973cde8c52611f3d472b316f27c2285',
+    'suffix' : 'pars-wfi18transientstep',
+    'text_descr' : 'WFI18TransientStep runtime parameters',
+}
+
+selector = Match({
+})

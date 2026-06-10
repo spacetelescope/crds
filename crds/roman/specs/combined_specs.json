@@ -670,6 +670,35 @@
             "tpn":"wfi_pars-darkcurrentstep.tpn",
             "unique_rowkeys":null
         },
+        "pars-darkdecaystep":{
+            "derived_from":"Handmade initial rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-darkdecaystep",
+            "filetype":"pars-darkdecaystep",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_pars-darkdecaystep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"roman_wfi_pars-darkdecaystep.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "ROMAN.META.EXPOSURE.TYPE"
+                ],
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"a6c54df7bc170239993a534ef7390dd059f7791d",
+            "suffix":"pars-darkdecaystep",
+            "text_descr":"DarkDecayStep runtime parameters",
+            "tpn":"wfi_pars-darkdecaystep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-dqinitstep":{
             "derived_from":"Handmade initial rmap",
             "extra_keys":null,
@@ -881,6 +910,35 @@
             "tpn":"wfi_pars-linearitystep.tpn",
             "unique_rowkeys":null
         },
+        "pars-multibandcatalogstep":{
+            "derived_from":"Handmade initial rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-multibandcatalogstep",
+            "filetype":"pars-multibandcatalogstep",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_pars-multibandcatalogstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"roman_wfi_pars-multibandcatalogstep.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "ROMAN.META.EXPOSURE.TYPE"
+                ],
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"32d7f365f37f48b1cfb36da9aeeb3f2b17d4778e",
+            "suffix":"pars-multibandcatalogstep",
+            "text_descr":"MultibandCatalogStep runtime parameters",
+            "tpn":"wfi_pars-multibandcatalogstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-outlierdetectionstep":{
             "derived_from":"Handmade initial rmap",
             "extra_keys":null,
@@ -1087,6 +1145,35 @@
             "tpn":"wfi_pars-skymatchstep.tpn",
             "unique_rowkeys":null
         },
+        "pars-sourcecatalogstep":{
+            "derived_from":"Handmade initial rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-sourcecatalogstep",
+            "filetype":"pars-sourcecatalogstep",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_pars-sourcecatalogstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"roman_wfi_pars-sourcecatalogstep.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "ROMAN.META.EXPOSURE.TYPE"
+                ],
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"38fc9d3de76bd36002b398199a698d3a310075a1",
+            "suffix":"pars-sourcecatalogstep",
+            "text_descr":"SourceCatalogStep runtime parameters",
+            "tpn":"wfi_pars-sourcecatalogstep.tpn",
+            "unique_rowkeys":null
+        },
         "pars-sourcedetectionstep":{
             "derived_from":"Handmade initial rmap",
             "extra_keys":null,
@@ -1145,6 +1232,35 @@
             "suffix":"pars-tweakregstep",
             "text_descr":"TweakRegStep runtime parameters",
             "tpn":"wfi_pars-tweakregstep.tpn",
+            "unique_rowkeys":null
+        },
+        "pars-wfi18transientstep":{
+            "derived_from":"Handmade initial rmap",
+            "extra_keys":null,
+            "file_ext":".asdf",
+            "filekind":"pars-wfi18transientstep",
+            "filetype":"pars-wfi18transientstep",
+            "instrument":"WFI",
+            "ld_tpn":"wfi_pars-wfi18transientstep_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"roman_wfi_pars-wfi18transientstep.rmap",
+            "observatory":"ROMAN",
+            "parkey":[
+                [
+                    "ROMAN.META.EXPOSURE.TYPE"
+                ],
+                [
+                    "ROMAN.META.EXPOSURE.START_TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME",
+                "META.EXPOSURE.TYPE":"ROMAN.META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"329e869c4973cde8c52611f3d472b316f27c2285",
+            "suffix":"pars-wfi18transientstep",
+            "text_descr":"WFI18TransientStep runtime parameters",
+            "tpn":"wfi_pars-wfi18transientstep.tpn",
             "unique_rowkeys":null
         },
         "photom":{
