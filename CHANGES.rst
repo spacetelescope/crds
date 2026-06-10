@@ -1,3 +1,14 @@
+13.2.4 (2026-06-10)
+===================
+
+ROMAN
+-----
+
+- Setup new pars reftypes for steps dark decay, multiband catalog, source
+  catalog, WFI18 transient (`#1213
+  <https://github.com/spacetelescope/crds/issues/1213>`_)
+
+
 13.2.3 (2026-05-26)
 ===================
 
