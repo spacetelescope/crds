@@ -1,0 +1,26 @@
+header = {
+    'classes' : ('Match',),
+    'derived_from' : 'Hand-made J.Eisenhamer 202604',
+    'file_ext' : '.fits',
+    'filekind' : 'dustmap',
+    'filetype' : 'DUSTMAP',
+    'instrument' : 'wfi',
+    'ld_tpn' : 'wfi_dustmap.ld_tpn',
+    'mapping' : 'REFERENCE',
+    'name' : 'wfi_dustmap.rmap',
+    'observatory' : 'roman',
+    'parkey' : (('ROMAN.FIELD',),),
+    'sha1sum' : 'b2b12019cea78753c1ca6d040cfe8ec350951a5e',
+    'suffix' : 'dustmap',
+    'text_descr' : 'Galactic Dust Map',
+    'tpn' : 'wfi_apcorr.tpn',
+}
+
+comment = """
+Finkbeiner, Douglas; Schlegel, David J.; Davis, Marc, 2016, "SFD_dust_4096_ngp.fits",
+SFD 1998 Map of Galactic Dust,
+https://doi.org/10.7910/DVN/EWCNL5/JOV0CM, Harvard Dataverse, V1
+"""
+
+selector = Match({
+})

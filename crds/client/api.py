@@ -472,7 +472,7 @@ def get_server_info():
 
 @utils.cached
 def get_download_metadata():
-    "Defer and cache decoding of download_metadata field of server info."""
+    """Defer and cache decoding of download_metadata field of server info."""
     info = get_server_info()
     return proxy.crds_decode(info["download_metadata"])
 
@@ -491,7 +491,10 @@ def _get_server_info():
             content = utils.get_uri_content(config_uri)
             info = ast.literal_eval(content)
             info["status"] = "s3"
-            info["connected"] = True
+            if "serverless" in get_crds_server(get_default_observatory()):
+                info["connected"] = False
+            else:
+                info["connected"] = True
         elif config_uri != "none":
             log.verbose(f"Loading config from URI '{config_uri}'.")
             content = utils.get_uri_content(config_uri)
@@ -703,11 +706,12 @@ def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_fi
 class FileCacher:
     """FileCacher gets remote files with simple names into a local cache."""
 
-    def __init__(self, pipeline_context, ignore_cache=False, raise_exceptions=True):
+    def __init__(self, pipeline_context, ignore_cache=False, raise_exceptions=True, parameters=None):
         self.pipeline_context = pipeline_context
         self.observatory = self.observatory_from_context()
         self.ignore_cache = ignore_cache
         self.raise_exceptions = raise_exceptions
+        self.parameters = parameters
         self.info_map = {}
 
     def get_local_files(self, names):
@@ -756,7 +760,7 @@ class FileCacher:
 
     def locate(self, name):
         """Return the standard CRDS cache location for file `name`."""
-        return config.locate_file(name, observatory=self.observatory)
+        return config.locate_file(name, observatory=self.observatory, parameters=self.parameters)
 
     def catalog_file_size(self, name):
         """Return the size of file `name` based on the server catalog."""
@@ -996,7 +1000,7 @@ def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes
     return local_paths
 
 
-def cache_references(pipeline_context, bestrefs, ignore_cache=False):
+def cache_references(pipeline_context, bestrefs, ignore_cache=False, parameters=None):
     """Given a CRDS context `pipeline_context` and `bestrefs` dictionary, download missing
     reference files and cache them on the local file system.
 
@@ -1009,7 +1013,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     if config.S3_RETURN_URI:
         localrefs = {name: get_flex_uri(name) for name in wanted}
     else:
-        localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False).get_local_files(wanted)[0]
+        localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False, parameters=parameters).get_local_files(wanted)[0]
 
     refs = _squash_unicode_in_bestrefs(bestrefs, localrefs)
 

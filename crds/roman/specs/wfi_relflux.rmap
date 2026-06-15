@@ -9,9 +9,9 @@ header = {
     'name' : 'wfi_relflux.rmap',
     'observatory' : 'roman',
     'parkey' : (('ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT',), ('ROMAN.META.EXPOSURE.START_TIME',)),
-    'sha1sum' : 'a8d91f5908e0a6bd5fe115a4e57aec0fdaf4a2ce',
+    'sha1sum' : '1e0056ddf9dcace4262138a7b7503c259fcbdb70',
     'suffix' : 'relflux',
-    'text_descr' : 'Relative Flux GDPS SSC',
+    'text_descr' : 'Relative Flux',
 }
 
 selector = Match({

@@ -1,3 +1,97 @@
+13.2.4 (2026-06-10)
+===================
+
+ROMAN
+-----
+
+- Setup new pars reftypes for steps dark decay, multiband catalog, source
+  catalog, WFI18 transient (`#1213
+  <https://github.com/spacetelescope/crds/issues/1213>`_)
+
+
+13.2.3 (2026-05-26)
+===================
+
+ROMAN
+-----
+
+- Update description of the SSC reftypes (`#1206
+  <https://github.com/spacetelescope/crds/issues/1206>`_)
+
+
+13.2.2 (2026-05-22)
+===================
+
+JWST
+----
+
+- Added nirspec_chromcorr.rmap (`#1204
+  <https://github.com/spacetelescope/crds/issues/1204>`_)
+- Added new subbarrays to nirspec_all (`#1205
+  <https://github.com/spacetelescope/crds/issues/1205>`_)
+
+
+13.2.1 (2026-05-13)
+===================
+
+ROMAN
+-----
+
+- Add new Roman reftype WFT ETC (`#1203
+  <https://github.com/spacetelescope/crds/issues/1203>`_)
+
+
+13.2.0 (2026-05-11)
+===================
+
+General
+-------
+
+- Bug fix to the jwst and roman reference file locate facility
+
+  Note: Originating PR#1200 is a feature addition and
+  should have bumped the minor version. Since this PR will
+  actually generate a new minor version, a release note
+  is required though this is just a bug fix. (`#1202
+  <https://github.com/spacetelescope/crds/issues/1202>`_)
+
+
+13.1.16 (2026-04-29)
+====================
+
+No significant changes.
+
+
+13.1.15 (2026-04-27)
+====================
+
+General
+-------
+
+- Pass in header parameters to determine instrument. (`#1200
+  <https://github.com/spacetelescope/crds/issues/1200>`_)
+
+
+13.1.14 (2026-04-16)
+====================
+
+HST
+---
+
+- Added logic to check if serverless (`#1198
+  <https://github.com/spacetelescope/crds/issues/1198>`_)
+
+
+13.1.13 (2026-04-06)
+====================
+
+ROMAN
+-----
+
+- add new roman reftype dustmap (`#1197
+  <https://github.com/spacetelescope/crds/issues/1197>`_)
+
+
 13.1.12 (2026-03-25)
 ====================
 

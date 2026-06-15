@@ -74,7 +74,7 @@ def parse_date(date):
 
     """
     if isinstance(date, datetime.datetime):
-        date = str(date)
+        date = date.strftime('%Y-%m-%d %H:%M:%S.%f')
 
     if isinstance(date, Time):
         date = date.utc.strftime(ASTROPY_TIME_FORMAT)
