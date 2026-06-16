@@ -41,9 +41,7 @@ def test_query_affected_datasets_list(jwst_no_cache_state, capsys):
     (3, '2013-07-31 00:00:00+00:00', 'jwst_0002.pmap', 'Dark and Mask files.')
     (4, '2013-09-04 00:00:00+00:00', 'jwst_0003.pmap', 'Absolute Calibration (photom) additions and replacements.')
     (5, '2013-11-25 09:00:03+00:00', 'jwst_0005.pmap', 'set by system')
-    (6, '2014-03-19 10:51:19+00:00', 'jwst_0012.pmap', 'Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME
-    New linearity files for all instruments
-    New saturation files and rmaps for all instruments')
+    (6, '2014-03-19 10:51:19+00:00', 'jwst_0012.pmap', 'Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME\\r\\nNew linearity files for all instruments\\r\\nNew saturation files and rmaps for all instruments')
     (7, '2014-03-26 08:49:12+00:00', 'jwst_0013.pmap', 'New context jwst_0013.pmap adds Interpixel Capacitance references for all instruments.')
     (8, '2014-07-08 16:09:39+00:00', 'jwst_0022.pmap', 'Multiple MIRI FLAT changes, new references, added SUBARRAY as matching parameter.  See diffs.')
     (9, '2014-07-18 11:34:48+00:00', 'jwst_0023.pmap', 'First MIRI PHOTOM reference for MIRIMAGE detector with real data.')
