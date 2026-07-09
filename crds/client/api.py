@@ -767,15 +767,12 @@ class FileCacher:
         """Return the size of file `name` based on the server catalog."""
         return int(self.info_map[os.path.basename(name)]["size"])
 
-    def populate_info_map(self, downloads):
-        """Populate self.info_map with file info for `downloads`."""
+    def download_files(self, downloads, localpaths):
+        """Serial file-by-file download."""
         download_metadata = get_download_metadata()
         self.info_map = {}
         for filename in downloads:
             self.info_map[filename] = download_metadata.get(filename, "NOT FOUND unknown to server")
-
-    def download_files(self, downloads, localpaths):
-        """Serial file-by-file download."""
         self.populate_info_map(downloads)
         if config.writable_cache_or_verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]),
                                             verbosity=70):
