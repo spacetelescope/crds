@@ -22,9 +22,9 @@ import ast
 from crds.core import utils, log, config, constants
 from crds.core.log import srepr
 
-from crds.core.exceptions import ServiceError, CrdsLookupError
-from crds.core.exceptions import CrdsNetworkError, CrdsDownloadError
-from crds.core.exceptions import CrdsRemoteContextError
+from crds.core.exceptions import (
+    ServiceError, CrdsLookupError, CrdsError, CrdsNetworkError, CrdsDownloadError, CrdsRemoteContextError
+)
 
 from . import proxy
 from .proxy import CheckingProxy
@@ -491,10 +491,12 @@ def _get_server_info():
             content = utils.get_uri_content(config_uri)
             info = ast.literal_eval(content)
             info["status"] = "s3"
-            if "serverless" in get_crds_server(get_default_observatory()):
-                info["connected"] = False
-            else:
-                info["connected"] = True
+            #obs = get_default_observatory()
+            if "serverless" in get_crds_server(obs:=get_default_observatory()):
+                info['connected'] = False
+                if obs == "roman" and config.S3_ENABLED.get():
+                    info['connected'] = True
+                    log.verbose(f"Configured for S3 serverless mode at {config_uri.split('config/')[0]}", verbosity=55)
         elif config_uri != "none":
             log.verbose(f"Loading config from URI '{config_uri}'.")
             content = utils.get_uri_content(config_uri)
@@ -716,7 +718,7 @@ class FileCacher:
 
     def get_local_files(self, names):
         """Given a list of basename `mapping_names` which are pertinent to the
-        given `pipeline_context`,   cache the mappings locally where they can
+        given `pipeline_context`, cache the mappings locally where they can
         be used by CRDS.
         """
         if isinstance(names, dict):
@@ -737,11 +739,11 @@ class FileCacher:
             if not os.path.exists(localpath):
                 downloads.append(name)
             elif self.ignore_cache:
-                utils.remove(localpath, observatory=self.observatory)
                 downloads.append(name)
                 utils.remove(localpath, observatory=self.observatory)
             localpaths[name] = localpath
         if downloads:
+            log.info(f"Syncing {len(downloads)} files")
             n_bytes = self.download_files(downloads, localpaths)
         else:
             log.verbose("Skipping download for cached files", sorted(names), verbosity=60)
@@ -839,23 +841,60 @@ class FileCacher:
                 outfile.write(data)
 
     def plugin_download(self, filename, localpath):
-        """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath."""
+        """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath. The actual command string can be customized by the user via the CRDS_DOWNLOAD_PLUGIN environment variable. Default plugin commands used by the client include wget (scripts/cron_sync), awscli (crds_s3_get).
+        """
         url = self.get_url(filename)
-        plugin_cmd = config.get_download_plugin()
-        source_arg = "${FILENAME}" if "${FILENAME}" in plugin_cmd else "${SOURCE_URL}"
-        plugin_cmd = plugin_cmd.replace(source_arg, url)
-        plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
-        plugin_cmd = plugin_cmd.replace("${FILE_SIZE}", self.info_map[filename]["size"])
-        plugin_cmd = plugin_cmd.replace("${FILE_SHA1SUM}", self.info_map[filename]["sha1sum"])
-        log.verbose("Running download plugin:", repr(plugin_cmd))
-        status = os.WEXITSTATUS(os.system(plugin_cmd))
-        if status != 0:
-            if status == 2:
-                raise KeyboardInterrupt("Interrupted plugin.")
-            else:
-                raise CrdsDownloadError(
-                    "Plugin download fail status =", repr(status),
-                    "with command:", srepr(plugin_cmd))
+        if (plugin_cmd:=config.get_download_plugin()).startswith("crds_s3_get"):
+            self.call_s3_get(
+                url, ignore_cache=self.ignore_cache, 
+                s3_get_cmd=["crds_s3_get", url, "-d", localpath, 
+                "-s", self.info_map[filename]['size'], 
+                "-c", self.info_map[filename]['sha1sum']
+                ])
+        else:
+            source_arg = "${FILENAME}" if "${FILENAME}" in plugin_cmd else "${SOURCE_URL}"
+            plugin_cmd = plugin_cmd.replace(source_arg, url)
+            plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
+            plugin_cmd = plugin_cmd.replace("${FILE_SIZE}", self.info_map[filename]["size"])
+            plugin_cmd = plugin_cmd.replace("${FILE_SHA1SUM}", self.info_map[filename]["sha1sum"])
+            log.verbose("Running download plugin:", repr(plugin_cmd))
+            status = os.WEXITSTATUS(os.system(plugin_cmd))
+            if status != 0:
+                if status == 2:
+                    raise KeyboardInterrupt("Interrupted plugin.")
+                else:
+                    raise CrdsDownloadError(
+                        "Plugin download fail status =", repr(status),
+                        "with command:", srepr(plugin_cmd))
+ 
+    def call_s3_get(self, s3_uri, **kwargs):
+        """Calls crds_s3_get script to download filename to localpath.
+        "crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}"
+                    url, 
+                    dest=localpath, 
+                    size=self.info_map[filename]['size'], 
+                    sha1sum=self.info_map[filename]['sha1sum'], 
+                    ignore_cache=self.ignore_cache
+        """
+        import subprocess
+        assert config.get_cache_readonly() is False, "call_s3_get() cannot be used with read-only cache."
+        s3_get_cmd = kwargs.get("s3_get_cmd", ["crds_s3_get", s3_uri])
+        if kwargs.get("ignore_cache"):
+            s3_get_cmd += ["--ignore-cache"]
+        log.verbose("Calling", repr(s3_get_cmd), verbosity=80)
+        p = subprocess.run(s3_get_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
+        # recapture logs from subprocess
+        captured_out = p.stdout.strip().splitlines()
+        errs = []
+        for d in [" - ".join(line.split(" - ")[2:]).strip()  for line in captured_out if "DEBUG" in line]:
+            log.verbose(d, verbosity=80)
+        for i in [" - ".join(line.split(" - ")[2:]).strip() for line in captured_out if "INFO" in line]:
+            log.info(i)
+        if p.returncode != 0:
+            if not (errs:=[" - ".join(line.split(" - ")[2:]).strip() for line in captured_out if "ERROR" in line]):
+                errs = [f"crds_s3_get failed with return code {p.returncode}"]
+            log.error(errs[0])
+            raise CrdsDownloadError(errs[-1])
 
     def get_data_http(self, filename):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
