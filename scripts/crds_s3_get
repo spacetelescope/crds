@@ -98,15 +98,13 @@ def main():
         else:
             log.debug(f"crds_s3_get - '{fname}' exists at '{dest}' but --ignore_cache flag was set - Re-syncing.", verbosity=60)
 
-    result = subprocess.run([
-        "aws", "s3", "cp",
-        src,
-        dest,
-    ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
+    result = subprocess.run([ "aws", "s3", "cp", src, dest], encoding="utf-8")
     
     output = result.stdout.strip().splitlines()
     if result.returncode != 0:
-        errs = [f"crds_s3_get - Failed to download '{fname}' with return code {result.returncode}"] + [line for line in output if "error" in line]
+        errs = [
+            f"crds_s3_get - Failed to download '{fname}' with return code {result.returncode}"
+            ] + [line for line in output if "error" in line]
         for err in errs:
             log.error(err, file=sys.stderr)
             if (err_code := re.findall(r"\d+", err)):

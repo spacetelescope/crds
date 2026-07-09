@@ -10,9 +10,8 @@ import zlib
 import html
 import importlib.metadata
 from urllib import request
-import warnings
-import json
 import ast
+import subprocess
 
 # ==============================================================================
 
@@ -841,15 +840,18 @@ class FileCacher:
                 outfile.write(data)
 
     def plugin_download(self, filename, localpath):
-        """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath. The actual command string can be customized by the user via the CRDS_DOWNLOAD_PLUGIN environment variable. Default plugin commands used by the client include wget (scripts/cron_sync), awscli (crds_s3_get).
+        """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath. 
+        The actual command string can be customized by the user via the CRDS_DOWNLOAD_PLUGIN environment variable. 
+        Default plugin commands used by the client include wget (scripts/cron_sync), awscli (crds_s3_get).
+
+        cron_sync: wget ${SOURCE_URL} -O ${OUTPUT_PATH}
+        crds_s3_get: crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}
         """
         url = self.get_url(filename)
         if (plugin_cmd:=config.get_download_plugin()).startswith("crds_s3_get"):
-            self.call_s3_get(
-                url, ignore_cache=self.ignore_cache, 
-                s3_get_cmd=["crds_s3_get", url, "-d", localpath, 
-                "-s", self.info_map[filename]['size'], 
-                "-c", self.info_map[filename]['sha1sum']
+            self.call_s3_get(url, ignore_cache=self.ignore_cache, s3_get_cmd=[
+                    "crds_s3_get", url, 
+                    "-d", localpath, "-s", self.info_map[filename]['size'], "-c", self.info_map[filename]['sha1sum']
                 ])
         else:
             source_arg = "${FILENAME}" if "${FILENAME}" in plugin_cmd else "${SOURCE_URL}"
@@ -868,33 +870,13 @@ class FileCacher:
                         "with command:", srepr(plugin_cmd))
  
     def call_s3_get(self, s3_uri, **kwargs):
-        """Calls crds_s3_get script to download filename to localpath.
-        "crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}"
-                    url, 
-                    dest=localpath, 
-                    size=self.info_map[filename]['size'], 
-                    sha1sum=self.info_map[filename]['sha1sum'], 
-                    ignore_cache=self.ignore_cache
-        """
-        import subprocess
+        """Wrapper for crds_s3_get script to download files from an s3 bucket."""
         assert config.get_cache_readonly() is False, "call_s3_get() cannot be used with read-only cache."
         s3_get_cmd = kwargs.get("s3_get_cmd", ["crds_s3_get", s3_uri])
         if kwargs.get("ignore_cache"):
             s3_get_cmd += ["--ignore-cache"]
         log.verbose("Calling", repr(s3_get_cmd), verbosity=80)
-        p = subprocess.run(s3_get_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
-        # recapture logs from subprocess
-        captured_out = p.stdout.strip().splitlines()
-        errs = []
-        for d in [" - ".join(line.split(" - ")[2:]).strip()  for line in captured_out if "DEBUG" in line]:
-            log.verbose(d, verbosity=80)
-        for i in [" - ".join(line.split(" - ")[2:]).strip() for line in captured_out if "INFO" in line]:
-            log.info(i)
-        if p.returncode != 0:
-            if not (errs:=[" - ".join(line.split(" - ")[2:]).strip() for line in captured_out if "ERROR" in line]):
-                errs = [f"crds_s3_get failed with return code {p.returncode}"]
-            log.error(errs[0])
-            raise CrdsDownloadError(errs[-1])
+        result = subprocess.run(s3_get_cmd, encoding="utf-8")
 
     def get_data_http(self, filename):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
