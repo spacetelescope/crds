@@ -1,4 +1,6 @@
 from pytest import mark, fixture
+from moto import mock_aws
+import boto3
 import os
 import crds
 from crds.core import config, rmap
@@ -164,3 +166,26 @@ def test_sync_latest(jwst_default_cache_state, caplog):
         out = caplog.text
     assert errors == 0
     assert "Symbolic context 'latest' resolves to" in out
+
+
+@mock_aws
+@mark.roman
+@mark.sync
+@mark.s3
+def test_sync_s3_roman_mappings(s3, mock_s3_bucket, roman_s3_empty_cache_state):
+    errors = SyncScript("crds.sync --contexts roman_0004.pmap")()
+    assert errors == 0
+
+# @mark.s3
+@mock_aws
+@mark.roman
+@mark.sync
+def test_sync_s3_roman_mappings_ignore_cache(s3, mock_s3_bucket, roman_s3_state):
+    errors = SyncScript("crds.sync --contexts roman_0004.pmap --ignore-cache")()
+    assert errors == 0
+
+
+# @mock_aws
+# def test_generic_aws_fixture(mocked_aws):
+#     s3_client = boto3.client("s3")
+#     s3_client.create_bucket(Bucket="stpubdata-mock")

@@ -5,9 +5,10 @@ import os, os.path
 from pytest import TempPathFactory
 import cProfile
 import pstats
-import mock
 import yaml
 import re
+from moto import mock_aws
+import boto3
 
 # ==============================================================================
 
@@ -20,6 +21,18 @@ HERE = os.path.abspath(os.path.dirname(__file__) or ".")
 CRDS_DIR = os.path.abspath(os.path.dirname(crds.__file__))
 RETENTION_COUNT=1
 RETENTION_POLICY='none'
+
+roman_aws_config_kwargs = dict( 
+        observatory="roman",
+        CRDS_S3_BUCKET="stpubdata-mock", 
+        CRDS_S3_PREFIX="roman/crds", 
+        CRDS_S3_REGION="us-east-1", 
+        CRDS_S3_ENABLED='1',
+        CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
+        CRDS_DOWNLOAD_MODE="plugin",
+        CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
+        CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
+        CRDS_CONFIG_URI=f"s3://stpubdata-mock/roman/crds/config/roman")
 
 
 def pytest_addoption(parser):
@@ -140,7 +153,6 @@ def mock_submit_form(tmp_rc, test_data):
     return mockup_form
 
 
-
 # ==============================================================================
 
 class ConfigState:
@@ -154,7 +166,7 @@ class ConfigState:
         self.old_state = None
         self.new_state = None
 
-    def config_setup(self):
+    def config_setup(self, **kwargs):
         """Reset the CRDS configuration state to support testing given the supplied parameters."""
         log.set_test_mode()
         self.old_state = crds_config.get_crds_state()
@@ -172,6 +184,8 @@ class ConfigState:
             self.new_state["CRDS_OBSERVATORY"] = self.observatory
         if self.mode is not None:
             self.new_state['CRDS_MODE'] = self.mode
+        for k, v in kwargs.items():
+            self.new_state[k] = v
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
 
@@ -194,6 +208,12 @@ class ConfigState:
             CRDS_MODE='auto',
             CRDS_CLIENT_RETRY_COUNT='3',
             CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
+            CRDS_S3_ENABLED='0',
+            CRDS_DOWNLOAD_PLUGIN="",
+            CRDS_DOWNLOAD_MODE="auto",
+            CRDS_MAPPING_URI="",
+            CRDS_REFERENCE_URI="",
+            CRDS_CONFIG_URI="",
         )
         crds_config.set_crds_state(self.default_config)
 
@@ -345,13 +365,84 @@ def roman_test_cache_state(test_cache):
 
 
 @fixture(scope='function')
-def tobs_test_cache_state(test_cache):
-    cfg = ConfigState(cache=test_cache, url="https://tobs-serverless-mode.stsci.edu", clear_existing=False)
-    cfg.config_setup()
+def roman_s3_test_cache_state(test_cache):
+    cfg = ConfigState(
+        cache=test_cache, 
+        mode='s3', 
+        url="https://roman-crds-serverless.stsci.edu", 
+        observatory="roman", 
+    )
+    cfg.config_setup(**roman_aws_config_kwargs)
     yield cfg
     cfg.cleanup()
 
- 
+@fixture(scope='function')
+def roman_s3_empty_cache_state(test_temp_dir):
+    cfg = ConfigState(cache=test_temp_dir, mode='s3', url="https://roman-crds-serverless.stsci.edu", observatory="roman")
+    cfg.config_setup(**roman_aws_config_kwargs)
+    yield cfg
+    cfg.cleanup()
+
+@fixture(scope="function")
+def aws_credentials():
+    """Mocked AWS Credentials for moto."""
+    os.environ["AWS_ACCESS_KEY_ID"] = "test"
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "test"
+    os.environ["AWS_SECURITY_TOKEN"] = "test"
+    os.environ["AWS_SESSION_TOKEN"] = "test"
+    os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
+
+
+@fixture(scope="function")
+def mocked_aws(aws_credentials):
+    """
+    Mock all AWS interactions
+    Requires you to create your own boto3 clients
+    """
+    with mock_aws():
+        yield
+
+
+@fixture(scope="function")
+def s3(aws_credentials):
+    """
+    Return a mocked S3 client
+    """
+    with mock_aws():
+        yield boto3.client("s3", region_name="us-east-1")
+
+
+@fixture(scope="function")
+def mock_s3_bucket(s3, test_cache):
+    s3.create_bucket(Bucket="stpubdata-mock")
+    # setup: upload S3 objects to the mocked S3 bucket
+    mappings = ['roman_0005.pmap', 'roman_wfi_0004.imap', 'roman_wfi_dark_0001.rmap', 'roman_wfi_distortion_0001.rmap', 'roman_wfi_flat_0004.rmap']
+    for mapping in mappings:
+        with open(os.path.join(test_cache, "mappings", "roman", mapping), 'rb') as f:
+            s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/mappings/roman/{mapping}", Body=f.read())
+
+    # sync config
+    for file in os.listdir(os.path.join(test_cache, "config", "roman")):
+        with open(os.path.join(test_cache, "config", "roman", file), 'rb') as f:
+            s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/{file}", Body=f.read())
+    # references
+    refs = [
+        'roman_wfi_dark_0001.asdf',
+        'roman_wfi_distortion_0001.asdf',
+        'roman_wfi_flat_0004.asdf'
+    ]
+    for ref in refs:
+        with open(os.path.join(test_cache, "references", "roman", ref), 'rb') as f:
+            s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/references/roman/{ref}", Body=f.read())
+    yield
+    # roman_0007.pmap
+    # roman_0006.imap
+    # 'roman_wfi_dark_0001.rmap',
+    # 'roman_wfi_distortion_0001.rmap',
+    # 'roman_wfi_epsf_0001.rmap',
+    # 'roman_wfi_flat_0004.rmap',
+    # 'roman_wfi_pars-exposurepipeline_0001.rmap',
+
 
 # ==============================================================================
 
@@ -385,3 +476,11 @@ def combined_spec(scope='session'):
 @fixture(scope='function')
 def jwst_pmap_pattern():
     return re.compile("jwst_[0-9]{4}.pmap")
+
+
+@fixture(scope='function')
+def tobs_test_cache_state(test_cache):
+    cfg = ConfigState(cache=test_cache, url="https://tobs-serverless-mode.stsci.edu", clear_existing=False)
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()

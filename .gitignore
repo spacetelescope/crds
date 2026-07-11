@@ -19,3 +19,4 @@ __pycache__/
 crds/_version.py
 .vscode/
 .DS_Store
+.python-version

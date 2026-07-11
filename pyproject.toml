@@ -34,6 +34,8 @@ roman = ["roman_datamodels"]
 submission = ["bs4"]
 dev = ["ipython", "jupyterlab", "ansible", "helm"]
 test = [
+  "awscli",
+  "boto3",
   "mock",
   "moto[s3]",
   "pytest>=9.0",
@@ -182,6 +184,7 @@ markers = [
   "rmap",
   "roman: all tests specific to the ROMAN Space Telescope mission",
   "rowdiff",
+  "s3",
   "selectors",
   "special",
   "submit",

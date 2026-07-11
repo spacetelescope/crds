@@ -54,7 +54,6 @@ To print your CRDS configuration settings, use the `list` command:
 
     $ crds list --status
 
-    CRDS Summary = 'The __rationale__ variable is no longer maintained and will be removed in a future release.'
     CRDS Version = '11.16.9, b11.4.0'
     CRDS_MODE = 'auto'
     CRDS_PATH = '/home/developer/crds_cache'
