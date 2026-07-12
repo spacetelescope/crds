@@ -42,7 +42,7 @@ jobs:
         with:
           repository: spacetelescope/crds
       - id: key
-        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}" >> $GITHUB_OUTPUT
+        run: echo "key=test-cache-${{ needs.contexts.outputs.hst }}-${{ needs.contexts.outputs.jwst }}-${{ needs.contexts.outputs.roman }}" >> $GITHUB_OUTPUT
       - id: lookup-cache
         name: check for existence of combined CRDS cache (`${{ steps.key.outputs.key }}`)
         uses: actions/cache/restore@v5  # v4.0.2
