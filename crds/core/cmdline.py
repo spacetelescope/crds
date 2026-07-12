@@ -807,7 +807,7 @@ class ContextsScript(Script):
             with log.warn_on_exception("Failed loading context", repr(mapping)):
                 try:
                     loadable = rmap.get_cached_mapping(mapping, ignore_cache=self.args.ignore_cache)
-                    loadable_names = loadable.mapping_names() # NOTE - this will download mappings ahead of dump_files below
+                    loadable_names = loadable.mapping_names()
                 except Exception as exc:
                     log.verbose("Failed loading", repr(mapping),
                                 "using API call to get mapping names", str(exc))

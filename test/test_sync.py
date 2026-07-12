@@ -184,7 +184,7 @@ def test_sync_s3_roman_mappings(s3, mock_s3_bucket, roman_s3_cache_state, test_t
     with caplog.at_level(logging.INFO, logger="CRDS"):
         errors = SyncScript("crds.sync --last 1")()
         out = caplog.text
-    assert "Syncing 1 mapping(s) for observatory roman" in out # TEMP FORCE ERROR TO SEE LOGS
+    assert "Syncing 1 files" in out
     assert errors == 0
     assert os.path.exists(single_map), shutil.move(moved, single_map) # restore the mapping if the test fails
 

@@ -41,7 +41,7 @@ class CrdsAbstractLock:
 
     def __init__(self, lockname):
         """Abstract lock initialization."""
-        self.log("Creating lock", repr(lockname), verbosity=60)
+        self.log("Creating lock", repr(lockname), verbosity=55)
         self.lockname = lockname
 
     def __repr__(self):

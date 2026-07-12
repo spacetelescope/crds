@@ -490,7 +490,6 @@ def _get_server_info():
             content = utils.get_uri_content(config_uri)
             info = ast.literal_eval(content)
             info["status"] = "s3"
-            #obs = get_default_observatory()
             if "serverless" in get_crds_server(obs:=get_default_observatory()):
                 info['connected'] = False
                 if obs == "roman" and config.S3_ENABLED.get():
