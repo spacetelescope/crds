@@ -365,10 +365,10 @@ def roman_test_cache_state(test_cache):
 
 
 @fixture(scope='function')
-def roman_s3_test_cache_state(test_cache):
+def roman_s3_cache_state(crds_shared_group_cache):
     cfg = ConfigState(
-        cache=test_cache, 
-        mode='s3', 
+        cache=crds_shared_group_cache,
+        mode='s3',
         url="https://roman-crds-serverless.stsci.edu", 
         observatory="roman", 
     )
@@ -376,12 +376,6 @@ def roman_s3_test_cache_state(test_cache):
     yield cfg
     cfg.cleanup()
 
-@fixture(scope='function')
-def roman_s3_empty_cache_state(test_temp_dir):
-    cfg = ConfigState(cache=test_temp_dir, mode='s3', url="https://roman-crds-serverless.stsci.edu", observatory="roman")
-    cfg.config_setup(**roman_aws_config_kwargs)
-    yield cfg
-    cfg.cleanup()
 
 @fixture(scope="function")
 def aws_credentials():
@@ -413,36 +407,46 @@ def s3(aws_credentials):
 
 
 @fixture(scope="function")
-def mock_s3_bucket(s3, test_cache):
+def mock_s3_bucket(s3, crds_shared_group_cache):
     s3.create_bucket(Bucket="stpubdata-mock")
     # setup: upload S3 objects to the mocked S3 bucket
-    mappings = ['roman_0005.pmap', 'roman_wfi_0004.imap', 'roman_wfi_dark_0001.rmap', 'roman_wfi_distortion_0001.rmap', 'roman_wfi_flat_0004.rmap']
+    mappings =['roman_0055.pmap',
+    'roman_wfi_0053.imap',
+    'roman_wfi_absflux_0001.rmap',
+    'roman_wfi_abvegaoffset_0002.rmap',
+    'roman_wfi_apcorr_0003.rmap',
+    'roman_wfi_area_0002.rmap',
+    'roman_wfi_dark_0007.rmap',
+    'roman_wfi_darkdecaysignal_0002.rmap',
+    'roman_wfi_detectorstatus_0002.rmap',
+    'roman_wfi_distortion_0002.rmap',
+    'roman_wfi_dustmap_0003.rmap',
+    'roman_wfi_epsf_0004.rmap',
+    'roman_wfi_etc_0002.rmap',
+    'roman_wfi_flat_0006.rmap',
+    'roman_wfi_gain_0003.rmap',
+    'roman_wfi_integralnonlinearity_0002.rmap',
+    'roman_wfi_inverselinearity_0005.rmap',
+    'roman_wfi_ipc_0003.rmap',
+    'roman_wfi_linearity_0005.rmap',
+    'roman_wfi_mask_0003.rmap',
+    'roman_wfi_matable_0004.rmap',
+    'roman_wfi_optmodel_0001.rmap',
+    'roman_wfi_photom_0004.rmap',
+    'roman_wfi_readnoise_0005.rmap',
+    'roman_wfi_refpix_0003.rmap',
+    'roman_wfi_relflux_0001.rmap',
+    'roman_wfi_saturation_0003.rmap',
+    'roman_wfi_sflat_0001.rmap',
+    'roman_wfi_skycells_0002.rmap',
+    'roman_wfi_specpsf_0001.rmap']
     for mapping in mappings:
-        with open(os.path.join(test_cache, "mappings", "roman", mapping), 'rb') as f:
+        with open(os.path.join(crds_shared_group_cache, "mappings", "roman", mapping), 'rb') as f:
             s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/mappings/roman/{mapping}", Body=f.read())
-
-    # sync config
-    for file in os.listdir(os.path.join(test_cache, "config", "roman")):
-        with open(os.path.join(test_cache, "config", "roman", file), 'rb') as f:
+        # sync config
+    for file in os.listdir(os.path.join(crds_shared_group_cache, "config", "roman")):
+        with open(os.path.join(crds_shared_group_cache, "config", "roman", file), 'rb') as f:
             s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/{file}", Body=f.read())
-    # references
-    refs = [
-        'roman_wfi_dark_0001.asdf',
-        'roman_wfi_distortion_0001.asdf',
-        'roman_wfi_flat_0004.asdf'
-    ]
-    for ref in refs:
-        with open(os.path.join(test_cache, "references", "roman", ref), 'rb') as f:
-            s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/references/roman/{ref}", Body=f.read())
-    yield
-    # roman_0007.pmap
-    # roman_0006.imap
-    # 'roman_wfi_dark_0001.rmap',
-    # 'roman_wfi_distortion_0001.rmap',
-    # 'roman_wfi_epsf_0001.rmap',
-    # 'roman_wfi_flat_0004.rmap',
-    # 'roman_wfi_pars-exposurepipeline_0001.rmap',
-
 
 # ==============================================================================
 

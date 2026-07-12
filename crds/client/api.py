@@ -773,7 +773,6 @@ class FileCacher:
         self.info_map = {}
         for filename in downloads:
             self.info_map[filename] = download_metadata.get(filename, "NOT FOUND unknown to server")
-        self.populate_info_map(downloads)
         if config.writable_cache_or_verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]),
                                             verbosity=70):
             bytes_so_far = 0

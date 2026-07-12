@@ -70,7 +70,7 @@ def parse_args():
     parser.add_argument("-c", "--file-sha1sum", help="Expected file SHA-1 checksum", default=None)
     parser.add_argument("-r", "--max-retries", help="Maximum number of retries on download failure", type=int, default=3)
     parser.add_argument("-I", "--ignore-cache", help="Ignore local cache and force download", action="store_true")
-    parser.add_argument("--loglevel", default="DEBUG", help="set loglevel", type=str)
+    parser.add_argument("--loglevel", default="INFO", help="set loglevel", type=str)
     return parser.parse_args()
 
 
@@ -99,21 +99,11 @@ def main():
             log.debug(f"crds_s3_get - '{fname}' exists at '{dest}' but --ignore_cache flag was set - Re-syncing.", verbosity=60)
 
     result = subprocess.run([ "aws", "s3", "cp", src, dest], encoding="utf-8")
-    
-    output = result.stdout.strip().splitlines()
+
     if result.returncode != 0:
-        errs = [
-            f"crds_s3_get - Failed to download '{fname}' with return code {result.returncode}"
-            ] + [line for line in output if "error" in line]
-        for err in errs:
-            log.error(err, file=sys.stderr)
-            if (err_code := re.findall(r"\d+", err)):
-                if (err_code := int(err_code[0])) > 400:
-                    log.error(f"awscli {err_code} error:  - Do you need to refresh your AWS credentials?")
-                    result.returncode = err_code
+        log.error(f"crds_s3_get - Failed to download '{fname}' with return code {result.returncode}")
         sys.exit(result.returncode)
     else:
-        print(output)
         log.info(f"crds_s3_get: Successfully downloaded '{fname}' to '{dest}'", file=sys.stdout)
 
     if args.file_size not in [None, ""]:

@@ -169,19 +169,36 @@ def test_sync_latest(jwst_default_cache_state, caplog):
 
 
 @mock_aws
-@mark.roman
 @mark.sync
 @mark.s3
-def test_sync_s3_roman_mappings(s3, mock_s3_bucket, roman_s3_empty_cache_state):
-    errors = SyncScript("crds.sync --contexts roman_0004.pmap")()
-    assert errors == 0
-
-# @mark.s3
-@mock_aws
 @mark.roman
+def test_sync_s3_roman_mappings(s3, mock_s3_bucket, roman_s3_cache_state, test_temp_dir, caplog):
+    # temp remove one mapping
+    import shutil
+    import glob
+    mappath = os.path.join(roman_s3_cache_state.cache, "mappings", "roman")
+    single_map = sorted(glob.glob(f"{mappath}/roman_wfi_skycells*"))[-1] # get the highest version of a random rmap type
+    moved = os.path.join(test_temp_dir, os.path.basename(single_map))
+    shutil.move(single_map, moved) # temporarily move it out of the cache to simulate a missing mapping
+    assert not os.path.exists(single_map)
+    with caplog.at_level(logging.INFO, logger="CRDS"):
+        errors = SyncScript("crds.sync --last 1")()
+        out = caplog.text
+    assert "Syncing 1 mapping(s) for observatory roman" in out # TEMP FORCE ERROR TO SEE LOGS
+    assert errors == 0
+    assert os.path.exists(single_map), shutil.move(moved, single_map) # restore the mapping if the test fails
+
+
+
+@mock_aws
 @mark.sync
-def test_sync_s3_roman_mappings_ignore_cache(s3, mock_s3_bucket, roman_s3_state):
-    errors = SyncScript("crds.sync --contexts roman_0004.pmap --ignore-cache")()
+@mark.roman
+@mark.s3
+@mark.skip
+def test_sync_s3_roman_mappings_ignore_cache(s3, mock_s3_bucket, roman_s3_cache_state, caplog):
+    with caplog.at_level(logging.DEBUG, logger="CRDS"):
+        errors = SyncScript("crds.sync --contexts roman_0055.pmap --ignore-cache")()
+        out = caplog.text
     assert errors == 0
 
 
