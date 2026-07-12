@@ -22,18 +22,6 @@ CRDS_DIR = os.path.abspath(os.path.dirname(crds.__file__))
 RETENTION_COUNT=1
 RETENTION_POLICY='none'
 
-roman_aws_config_kwargs = dict( 
-        observatory="roman",
-        CRDS_S3_BUCKET="stpubdata-mock", 
-        CRDS_S3_PREFIX="roman/crds", 
-        CRDS_S3_REGION="us-east-1", 
-        CRDS_S3_ENABLED='1',
-        CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
-        CRDS_DOWNLOAD_MODE="plugin",
-        CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
-        CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
-        CRDS_CONFIG_URI=f"s3://stpubdata-mock/roman/crds/config/roman")
-
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -364,10 +352,21 @@ def roman_test_cache_state(test_cache):
     cfg.cleanup()
 
 
+roman_aws_config_kwargs = dict(
+        CRDS_S3_BUCKET="stpubdata-mock", 
+        CRDS_S3_PREFIX="roman/crds", 
+        CRDS_S3_REGION="us-east-1", 
+        CRDS_S3_ENABLED='1',
+        CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
+        CRDS_DOWNLOAD_MODE="plugin",
+        CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
+        CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
+        CRDS_CONFIG_URI=f"s3://stpubdata-mock/roman/crds/config/roman")
+
 @fixture(scope='function')
-def roman_s3_cache_state(crds_shared_group_cache):
+def roman_s3_cache_state(default_cache):
     cfg = ConfigState(
-        cache=crds_shared_group_cache,
+        cache=default_cache,
         mode='s3',
         url="https://roman-crds-serverless.stsci.edu", 
         observatory="roman", 
@@ -407,7 +406,7 @@ def s3(aws_credentials):
 
 
 @fixture(scope="function")
-def mock_s3_bucket(s3, crds_shared_group_cache):
+def mock_s3_bucket(s3, default_cache):
     s3.create_bucket(Bucket="stpubdata-mock")
     # setup: upload S3 objects to the mocked S3 bucket
     mappings =['roman_0055.pmap',
@@ -441,11 +440,11 @@ def mock_s3_bucket(s3, crds_shared_group_cache):
     'roman_wfi_skycells_0002.rmap',
     'roman_wfi_specpsf_0001.rmap']
     for mapping in mappings:
-        with open(os.path.join(crds_shared_group_cache, "mappings", "roman", mapping), 'rb') as f:
+        with open(os.path.join(default_cache, "mappings", "roman", mapping), 'rb') as f:
             s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/mappings/roman/{mapping}", Body=f.read())
         # sync config
-    for file in os.listdir(os.path.join(crds_shared_group_cache, "config", "roman")):
-        with open(os.path.join(crds_shared_group_cache, "config", "roman", file), 'rb') as f:
+    for file in os.listdir(os.path.join(default_cache, "config", "roman")):
+        with open(os.path.join(default_cache, "config", "roman", file), 'rb') as f:
             s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/{file}", Body=f.read())
 
 # ==============================================================================

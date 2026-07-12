@@ -168,10 +168,10 @@ def test_sync_latest(jwst_default_cache_state, caplog):
     assert "Symbolic context 'latest' resolves to" in out
 
 
-@mock_aws
 @mark.sync
 @mark.s3
 @mark.roman
+@mock_aws
 def test_sync_s3_roman_mappings(s3, mock_s3_bucket, roman_s3_cache_state, test_temp_dir, caplog):
     # temp remove one mapping
     import shutil
@@ -189,12 +189,10 @@ def test_sync_s3_roman_mappings(s3, mock_s3_bucket, roman_s3_cache_state, test_t
     assert os.path.exists(single_map), shutil.move(moved, single_map) # restore the mapping if the test fails
 
 
-
-@mock_aws
 @mark.sync
 @mark.roman
 @mark.s3
-@mark.skip
+@mock_aws
 def test_sync_s3_roman_mappings_ignore_cache(s3, mock_s3_bucket, roman_s3_cache_state, caplog):
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         errors = SyncScript("crds.sync --contexts roman_0055.pmap --ignore-cache")()
