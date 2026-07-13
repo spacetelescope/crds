@@ -149,7 +149,7 @@ def test_sync_s3_roman_mappings(roman_s3_bucket, roman_temp_cache_state, caplog)
         assert "Syncing 30 files" in out
         assert errors == 0
 
-#@mark.skip(reason="Skipping until we can get the test to work with the new cache structure")
+
 @mark.sync
 @mark.s3
 @mark.roman
