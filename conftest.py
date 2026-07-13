@@ -476,7 +476,7 @@ def roman_s3_bucket(roman_s3_cache_state, roman_data, aws_credentials, moto_serv
 
 
 @fixture(scope="function")
-def roman_s3_test_bucket(roman_s3_test_cache_state, aws_credentials, moto_server):
+def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials, moto_server):
     """
     Return a mocked S3 bucket populated with mappings
     Uses contents of crds-cache-test to populate the mocked s3 bucket.
@@ -485,8 +485,10 @@ def roman_s3_test_bucket(roman_s3_test_cache_state, aws_credentials, moto_server
     bucket_name = "stpubdata-mock"
     pfx = "roman/crds"
     mappings = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "mappings/roman"))
-    refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
-    cfg = os.path.join(roman_s3_test_cache_state.cache, "config/roman/server_config")
+    #refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
+    # cfg = os.path.join(roman_s3_test_cache_state.cache, "config/roman/server_config")
+    # make sure we get the updated config - test cache isn't getting updated version
+    cfg = os.path.join(roman_data, "test_cache_config/server_config")
     with mock_aws():
         s3 = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
         s3.create_bucket(Bucket=bucket_name)
@@ -494,11 +496,12 @@ def roman_s3_test_bucket(roman_s3_test_cache_state, aws_credentials, moto_server
             fpath = crds_config.locate_file(mapping, "roman")
             with open(fpath, 'rb') as f:
                 s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
-        for ref in refs:
-            fpath = crds_config.locate_file(ref, "roman")
-            with open(fpath, 'rb') as f:
-                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
-        # sync config
+        # Temp commenting out until needed for getreferences tests
+        # for ref in refs:
+        #     fpath = crds_config.locate_file(ref, "roman")
+        #     with open(fpath, 'rb') as f:
+        #         s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
+        ## sync config
         with open(cfg, 'rb') as f:
             s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
         yield bucket_name
