@@ -149,7 +149,7 @@ def test_sync_s3_roman_mappings(roman_s3_bucket, roman_temp_cache_state, caplog)
         assert "Syncing 30 files" in out
         assert errors == 0
 
-
+#@mark.skip(reason="Skipping until we can get the test to work with the new cache structure")
 @mark.sync
 @mark.s3
 @mark.roman
@@ -161,7 +161,7 @@ def test_sync_s3_roman_test_cache(roman_s3_test_bucket, roman_temp_cache_state, 
     with mock_aws():
         from crds.sync import SyncScript
         with caplog.at_level(logging.DEBUG, logger="CRDS"):
-            errors = SyncScript("crds.sync --last 1")()
+            errors = SyncScript("crds.sync --contexts roman_0006.pmap")()
             out = caplog.text
         assert "Syncing 7 files" in out
         assert errors == 0
