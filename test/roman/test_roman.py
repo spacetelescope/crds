@@ -138,6 +138,8 @@ def test_list_references(roman_test_cache_state):
 @mark.roman
 @mock_aws
 def test_sync_s3_roman_mappings(roman_s3_bucket, roman_temp_cache_state, caplog):
+    s3_client = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
+    bucket_name = roman_s3_bucket
     assert config.S3_ENABLED.get() is True
     with mock_aws():
         from crds.sync import SyncScript
@@ -153,6 +155,8 @@ def test_sync_s3_roman_mappings(roman_s3_bucket, roman_temp_cache_state, caplog)
 @mark.roman
 @mock_aws
 def test_sync_s3_roman_test_cache(roman_s3_test_bucket, roman_temp_cache_state, caplog):
+    s3_client = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
+    bucket_name = roman_s3_test_bucket
     assert config.S3_ENABLED.get() is True
     with mock_aws():
         from crds.sync import SyncScript
