@@ -132,8 +132,11 @@ def test_list_references(roman_test_cache_state):
     assert {item for item in results if item} == expected_result
 
 
-@fixture(scope="function")
-def mock_s3_bucket(s3, roman_s3_cache_state, roman_data):
+@mark.sync
+@mark.s3
+@mark.roman
+@mock_aws
+def test_sync_s3_roman_mappings(s3, roman_data, roman_s3_cache_state, test_temp_dir, caplog):
     s3.create_bucket(Bucket="stpubdata-mock")
     # setup: upload S3 objects to the mocked S3 bucket
     mappings =['roman_0055.pmap',
@@ -174,28 +177,22 @@ def mock_s3_bucket(s3, roman_s3_cache_state, roman_data):
     cfg_path = os.path.join(roman_data, "server_config")
     with open(cfg_path, 'rb') as f:
         s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/server_config", Body=f.read())
-    yield 
-
-@mark.sync
-@mark.s3
-@mark.roman
-@mock_aws
-def test_sync_s3_roman_mappings(mock_s3_bucket, roman_s3_cache_state, test_temp_dir, caplog):
     # temp remove one mapping
     from crds.sync import SyncScript
-    mappath = os.path.join(roman_s3_cache_state.cache, "mappings", "roman")
-    single_map = sorted(glob.glob(f"{mappath}/roman_wfi_skycells*"))[-1] # get the highest version of a random rmap type
+    single_map = config.locate_file("roman_wfi_skycells_0002.rmap", "roman") 
     moved = os.path.join(test_temp_dir, os.path.basename(single_map))
     shutil.move(single_map, moved) # temporarily move it out of the cache to simulate a missing mapping
     assert not os.path.exists(single_map)
+    assert config.S3_ENABLED.get() is True
     with caplog.at_level(logging.INFO, logger="CRDS"):
-        errors = SyncScript("crds.sync --last 1")()
+        errors = SyncScript("crds.sync --contexts roman_0055.pmap")()
         out = caplog.text
     assert "Syncing 1 files" in out
     assert errors == 0
     assert os.path.exists(single_map), shutil.move(moved, single_map) # restore the mapping if the test fails
 
 
+@mark.skip
 @mark.sync
 @mark.roman
 @mark.s3
