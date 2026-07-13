@@ -133,7 +133,7 @@ def test_list_references(roman_test_cache_state):
 
 
 @fixture(scope="function")
-def mock_s3_bucket2(s3, roman_s3_cache_state, roman_data):
+def mock_s3_bucket(s3, roman_s3_cache_state, roman_data):
     s3.create_bucket(Bucket="stpubdata-mock")
     # setup: upload S3 objects to the mocked S3 bucket
     mappings =['roman_0055.pmap',
@@ -174,12 +174,13 @@ def mock_s3_bucket2(s3, roman_s3_cache_state, roman_data):
     cfg_path = os.path.join(roman_data, "server_config")
     with open(cfg_path, 'rb') as f:
         s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/server_config", Body=f.read())
+    yield 
 
 @mark.sync
 @mark.s3
 @mark.roman
 @mock_aws
-def test_sync_s3_roman_mappings(s3, mock_s3_bucket2, roman_s3_cache_state, test_temp_dir, caplog):
+def test_sync_s3_roman_mappings(mock_s3_bucket, roman_s3_cache_state, test_temp_dir, caplog):
     # temp remove one mapping
     from crds.sync import SyncScript
     mappath = os.path.join(roman_s3_cache_state.cache, "mappings", "roman")
@@ -199,8 +200,7 @@ def test_sync_s3_roman_mappings(s3, mock_s3_bucket2, roman_s3_cache_state, test_
 @mark.roman
 @mark.s3
 @mock_aws
-def test_sync_s3_roman_mappings_ignore_cache(s3, mock_s3_bucket, roman_s3_cache_state, caplog):
-    roman_s3_cache_state.config_setup(**dict(AWS_ACCESS_KEY_ID="test",AWS_SECRET_ACCESS_KEY="test", AWS_SESSION_TOKEN="test", AWS_DEFAULT_REGION="us-east-1"))
+def test_sync_s3_roman_mappings_ignore_cache(mock_s3_bucket, roman_s3_cache_state, caplog):
     from crds.sync import SyncScript
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         errors = SyncScript("crds.sync --contexts roman_0055.pmap --ignore-cache")()

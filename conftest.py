@@ -353,15 +353,20 @@ def roman_test_cache_state(test_cache):
 
 
 roman_aws_config_kwargs = dict(
-        CRDS_S3_BUCKET="stpubdata-mock", 
-        CRDS_S3_PREFIX="roman/crds", 
-        CRDS_S3_REGION="us-east-1", 
-        CRDS_S3_ENABLED='1',
-        CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
-        CRDS_DOWNLOAD_MODE="plugin",
-        CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
-        CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
-        CRDS_CONFIG_URI=f"s3://stpubdata-mock/roman/crds/config/roman")
+    CRDS_S3_BUCKET="stpubdata-mock", 
+    CRDS_S3_PREFIX="roman/crds", 
+    CRDS_S3_REGION="us-east-1", 
+    CRDS_S3_ENABLED='1',
+    CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
+    CRDS_DOWNLOAD_MODE="plugin",
+    CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
+    CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
+    CRDS_CONFIG_URI=f"s3://stpubdata-mock/roman/crds/config/roman",
+    AWS_ACCESS_KEY_ID="test",
+    AWS_SECRET_ACCESS_KEY="test", 
+    AWS_SESSION_TOKEN="test", 
+    AWS_DEFAULT_REGION="us-east-1",
+)
 
 @fixture(scope='function')
 def roman_s3_cache_state(default_cache):
@@ -404,50 +409,6 @@ def s3(aws_credentials):
     with mock_aws():
         yield boto3.client("s3", region_name="us-east-1")
 
-
-@fixture(scope="function")
-def mock_s3_bucket(s3, roman_s3_cache_state, roman_data):
-    cache_path = roman_s3_cache_state.cache
-    s3.create_bucket(Bucket="stpubdata-mock")
-    # setup: upload S3 objects to the mocked S3 bucket
-    mappings =['roman_0055.pmap',
-    'roman_wfi_0053.imap',
-    'roman_wfi_absflux_0001.rmap',
-    'roman_wfi_abvegaoffset_0002.rmap',
-    'roman_wfi_apcorr_0003.rmap',
-    'roman_wfi_area_0002.rmap',
-    'roman_wfi_dark_0007.rmap',
-    'roman_wfi_darkdecaysignal_0002.rmap',
-    'roman_wfi_detectorstatus_0002.rmap',
-    'roman_wfi_distortion_0002.rmap',
-    'roman_wfi_dustmap_0003.rmap',
-    'roman_wfi_epsf_0004.rmap',
-    'roman_wfi_etc_0002.rmap',
-    'roman_wfi_flat_0006.rmap',
-    'roman_wfi_gain_0003.rmap',
-    'roman_wfi_integralnonlinearity_0002.rmap',
-    'roman_wfi_inverselinearity_0005.rmap',
-    'roman_wfi_ipc_0003.rmap',
-    'roman_wfi_linearity_0005.rmap',
-    'roman_wfi_mask_0003.rmap',
-    'roman_wfi_matable_0004.rmap',
-    'roman_wfi_optmodel_0001.rmap',
-    'roman_wfi_photom_0004.rmap',
-    'roman_wfi_readnoise_0005.rmap',
-    'roman_wfi_refpix_0003.rmap',
-    'roman_wfi_relflux_0001.rmap',
-    'roman_wfi_saturation_0003.rmap',
-    'roman_wfi_sflat_0001.rmap',
-    'roman_wfi_skycells_0002.rmap',
-    'roman_wfi_specpsf_0001.rmap']
-    for mapping in mappings:
-        with open(os.path.join(cache_path, "mappings", "roman", mapping), 'rb') as f:
-            s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/mappings/roman/{mapping}", Body=f.read())
-    # sync config
-    cfg_path = os.path.join(roman_data, "server_config")
-    with open(cfg_path, 'rb') as f:
-        s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/server_config", Body=f.read())
-    
 
 # ==============================================================================
 
