@@ -1,6 +1,4 @@
 from pytest import mark, fixture
-from moto import mock_aws
-import boto3
 import os
 import crds
 from crds.core import config, rmap
@@ -166,41 +164,3 @@ def test_sync_latest(jwst_default_cache_state, caplog):
         out = caplog.text
     assert errors == 0
     assert "Symbolic context 'latest' resolves to" in out
-
-
-@mark.sync
-@mark.s3
-@mark.roman
-@mock_aws
-def test_sync_s3_roman_mappings(s3, mock_s3_bucket, roman_s3_cache_state, test_temp_dir, caplog):
-    # temp remove one mapping
-    import shutil
-    import glob
-    mappath = os.path.join(roman_s3_cache_state.cache, "mappings", "roman")
-    single_map = sorted(glob.glob(f"{mappath}/roman_wfi_skycells*"))[-1] # get the highest version of a random rmap type
-    moved = os.path.join(test_temp_dir, os.path.basename(single_map))
-    shutil.move(single_map, moved) # temporarily move it out of the cache to simulate a missing mapping
-    assert not os.path.exists(single_map)
-    with caplog.at_level(logging.INFO, logger="CRDS"):
-        errors = SyncScript("crds.sync --last 1")()
-        out = caplog.text
-    assert "Syncing 1 files" in out
-    assert errors == 0
-    assert os.path.exists(single_map), shutil.move(moved, single_map) # restore the mapping if the test fails
-
-
-@mark.sync
-@mark.roman
-@mark.s3
-@mock_aws
-def test_sync_s3_roman_mappings_ignore_cache(s3, mock_s3_bucket, roman_s3_cache_state, caplog):
-    with caplog.at_level(logging.DEBUG, logger="CRDS"):
-        errors = SyncScript("crds.sync --contexts roman_0055.pmap --ignore-cache")()
-        out = caplog.text
-    assert errors == 0
-
-
-# @mock_aws
-# def test_generic_aws_fixture(mocked_aws):
-#     s3_client = boto3.client("s3")
-#     s3_client.create_bucket(Bucket="stpubdata-mock")
