@@ -1,5 +1,6 @@
 from pytest import mark, fixture
 from moto import mock_aws
+import boto3
 import os
 import subprocess
 import pathlib
@@ -136,70 +137,43 @@ def test_list_references(roman_test_cache_state):
 @mark.s3
 @mark.roman
 @mock_aws
-def test_sync_s3_roman_mappings(s3, roman_data, roman_s3_cache_state, test_temp_dir, caplog):
-    s3.create_bucket(Bucket="stpubdata-mock")
-    # setup: upload S3 objects to the mocked S3 bucket
-    mappings =['roman_0055.pmap',
-    'roman_wfi_0053.imap',
-    'roman_wfi_absflux_0001.rmap',
-    'roman_wfi_abvegaoffset_0002.rmap',
-    'roman_wfi_apcorr_0003.rmap',
-    'roman_wfi_area_0002.rmap',
-    'roman_wfi_dark_0007.rmap',
-    'roman_wfi_darkdecaysignal_0002.rmap',
-    'roman_wfi_detectorstatus_0002.rmap',
-    'roman_wfi_distortion_0002.rmap',
-    'roman_wfi_dustmap_0003.rmap',
-    'roman_wfi_epsf_0004.rmap',
-    'roman_wfi_etc_0002.rmap',
-    'roman_wfi_flat_0006.rmap',
-    'roman_wfi_gain_0003.rmap',
-    'roman_wfi_integralnonlinearity_0002.rmap',
-    'roman_wfi_inverselinearity_0005.rmap',
-    'roman_wfi_ipc_0003.rmap',
-    'roman_wfi_linearity_0005.rmap',
-    'roman_wfi_mask_0003.rmap',
-    'roman_wfi_matable_0004.rmap',
-    'roman_wfi_optmodel_0001.rmap',
-    'roman_wfi_photom_0004.rmap',
-    'roman_wfi_readnoise_0005.rmap',
-    'roman_wfi_refpix_0003.rmap',
-    'roman_wfi_relflux_0001.rmap',
-    'roman_wfi_saturation_0003.rmap',
-    'roman_wfi_sflat_0001.rmap',
-    'roman_wfi_skycells_0002.rmap',
-    'roman_wfi_specpsf_0001.rmap']
-    for mapping in mappings:
-        fpath = config.locate_file(mapping, "roman")
-        with open(fpath, 'rb') as f:
-            s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/mappings/roman/{mapping}", Body=f.read())
-        # sync config
-    cfg_path = os.path.join(roman_data, "server_config")
-    with open(cfg_path, 'rb') as f:
-        s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/server_config", Body=f.read())
-    # temp remove one mapping
-    from crds.sync import SyncScript
-    single_map = config.locate_file("roman_wfi_skycells_0002.rmap", "roman") 
-    moved = os.path.join(test_temp_dir, os.path.basename(single_map))
-    shutil.move(single_map, moved) # temporarily move it out of the cache to simulate a missing mapping
-    assert not os.path.exists(single_map)
+def test_sync_s3_roman_readonly_cache(roman_s3_bucket, caplog):
     assert config.S3_ENABLED.get() is True
-    with caplog.at_level(logging.INFO, logger="CRDS"):
-        errors = SyncScript("crds.sync --contexts roman_0055.pmap")()
-        out = caplog.text
-    assert "Syncing 1 files" in out
-    assert errors == 0
-    assert os.path.exists(single_map), shutil.move(moved, single_map) # restore the mapping if the test fails
+    with mock_aws():
+        from crds.sync import SyncScript
+        with caplog.at_level(logging.DEBUG, logger="CRDS"):
+            errors = SyncScript("crds.sync --contexts roman_0055.pmap")()
+            out = caplog.text
+        assert "CACHE Skipped update of readonly" in out
+        assert "0 infos" in out
+        assert errors == 0
 
 
-@mark.skip
 @mark.sync
-@mark.roman
 @mark.s3
+@mark.roman
 @mock_aws
-def test_sync_s3_roman_mappings_ignore_cache(mock_s3_bucket, roman_s3_cache_state, caplog):
-    from crds.sync import SyncScript
-    with caplog.at_level(logging.DEBUG, logger="CRDS"):
-        errors = SyncScript("crds.sync --contexts roman_0055.pmap --ignore-cache")()
-        out = caplog.text
-    assert errors == 0
+def test_sync_s3_roman_mappings(roman_s3_bucket, roman_temp_cache_state, caplog):
+    assert config.S3_ENABLED.get() is True
+    with mock_aws():
+        from crds.sync import SyncScript
+        with caplog.at_level(logging.DEBUG, logger="CRDS"):
+            errors = SyncScript("crds.sync --last 1")()
+            out = caplog.text
+        assert "Syncing 30 files" in out
+        assert errors == 0
+
+
+@mark.sync
+@mark.s3
+@mark.roman
+@mock_aws
+def test_sync_s3_roman_test_cache(roman_s3_test_bucket, roman_temp_cache_state, caplog):
+    assert config.S3_ENABLED.get() is True
+    with mock_aws():
+        from crds.sync import SyncScript
+        with caplog.at_level(logging.DEBUG, logger="CRDS"):
+            errors = SyncScript("crds.sync --last 1")()
+            out = caplog.text
+        assert "Syncing 7 files" in out
+        assert errors == 0

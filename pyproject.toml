@@ -37,7 +37,7 @@ test = [
   "awscli",
   "boto3",
   "mock",
-  "moto[s3]",
+  "moto[s3,server]",
   "pytest>=9.0",
   "pytest-astropy",
   "pytest-doctestplus>=0.10.0",
