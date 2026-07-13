@@ -406,7 +406,7 @@ def s3(aws_credentials):
 
 
 @fixture(scope="function")
-def mock_s3_bucket(s3, roman_s3_cache_state):
+def mock_s3_bucket(s3, roman_s3_cache_state, roman_data):
     cache_path = roman_s3_cache_state.cache
     s3.create_bucket(Bucket="stpubdata-mock")
     # setup: upload S3 objects to the mocked S3 bucket
@@ -441,12 +441,12 @@ def mock_s3_bucket(s3, roman_s3_cache_state):
     'roman_wfi_skycells_0002.rmap',
     'roman_wfi_specpsf_0001.rmap']
     for mapping in mappings:
-        with open(os.path.join(default_cache, "mappings", "roman", mapping), 'rb') as f:
+        with open(os.path.join(cache_path, "mappings", "roman", mapping), 'rb') as f:
             s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/mappings/roman/{mapping}", Body=f.read())
-        # sync config
-    for file in os.listdir(os.path.join(default_cache, "config", "roman")):
-        with open(os.path.join(default_cache, "config", "roman", file), 'rb') as f:
-            s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/{file}", Body=f.read())
+    # sync config
+    cfg_path = os.path.join(roman_data, "server_config")
+    with open(cfg_path, 'rb') as f:
+        s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/server_config", Body=f.read())
     
 
 # ==============================================================================

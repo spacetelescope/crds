@@ -133,7 +133,7 @@ def test_list_references(roman_test_cache_state):
 
 
 @fixture(scope="function")
-def mock_s3_bucket2(s3, roman_s3_cache_state):
+def mock_s3_bucket2(s3, roman_s3_cache_state, roman_data):
     s3.create_bucket(Bucket="stpubdata-mock")
     # setup: upload S3 objects to the mocked S3 bucket
     mappings =['roman_0055.pmap',
@@ -171,9 +171,9 @@ def mock_s3_bucket2(s3, roman_s3_cache_state):
         with open(fpath, 'rb') as f:
             s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/mappings/roman/{mapping}", Body=f.read())
         # sync config
-    cfg_path = config.locate_file("server_config", "roman")
+    cfg_path = os.path.join(roman_data, "server_config")
     with open(cfg_path, 'rb') as f:
-        s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/{os.path.basename(cfg_path)}", Body=f.read())
+        s3.put_object(Bucket="stpubdata-mock", Key=f"roman/crds/config/roman/server_config", Body=f.read())
 
 @mark.sync
 @mark.s3
