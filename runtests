@@ -15,6 +15,14 @@ CRDS_TEST_ROOT = os.environ.get("CRDS_TEST_ROOT", os.environ["HOME"])
 # os.environ["CRDS_MAPPATH"] = os.path.join(os.getcwd(), "..", "crds_cache_archive", "mappings")
 os.environ["CRDS_TESTING_CACHE"] = os.path.join(CRDS_TEST_ROOT, "crds-cache-test")
 
+##### TEMP
+cwd = os.getcwd()
+os.chdir(CRDS_TEST_ROOT)
+os.system("rm -rf crds-cache-test")
+os.system("git clone https://github.com/spacetelescope/crds-cache-test.git")
+os.chdir(cwd)
+####
+
 # The *defined* CRDS cache for testing
 os.environ["CRDS_PATH"] = os.path.join(CRDS_TEST_ROOT, "crds-cache-default-test")
 

@@ -47,7 +47,6 @@ def format_uris(**kwargs):
     s3_uri = source if source.startswith("s3") else config.get_uri(fname)
     obs = s3_uri.split('/')[-2]
     crds_path = os.environ.get("CRDS_PATH", config.get_crds_path())
-    # log.debug(f"s3_uri={s3_uri}")
     if destination == crds_path:
         dest = config.locate_file(fname, obs)
         os.makedirs(os.path.dirname(dest), exist_ok=True)

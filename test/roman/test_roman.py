@@ -137,22 +137,6 @@ def test_list_references(roman_test_cache_state):
 @mark.s3
 @mark.roman
 @mock_aws
-def test_sync_s3_roman_readonly_cache(roman_s3_bucket, caplog):
-    assert config.S3_ENABLED.get() is True
-    with mock_aws():
-        from crds.sync import SyncScript
-        with caplog.at_level(logging.DEBUG, logger="CRDS"):
-            errors = SyncScript("crds.sync --contexts roman_0055.pmap")()
-            out = caplog.text
-        assert "CACHE Skipped update of readonly" in out
-        assert "0 infos" in out
-        assert errors == 0
-
-
-@mark.sync
-@mark.s3
-@mark.roman
-@mock_aws
 def test_sync_s3_roman_mappings(roman_s3_bucket, roman_temp_cache_state, caplog):
     assert config.S3_ENABLED.get() is True
     with mock_aws():

@@ -482,7 +482,7 @@ def roman_s3_test_bucket(roman_s3_test_cache_state, aws_credentials, moto_server
     Uses contents of crds-cache-test to populate the mocked s3 bucket.
     """
     # setup: upload S3 objects to the mocked S3 bucket
-    bucket_name = "stpubdata-mock"
+    bucket_name = "stpubdata-test-mock"
     pfx = "roman/crds"
     mappings = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "mappings/roman"))
     refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
