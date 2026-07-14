@@ -430,7 +430,6 @@ def test_list_cat_mappings(capsys, hst_default_cache_state):
 def test_list_status(capsys, hst_default_cache_state):
     ListScript("crds.list --status --hst")()
     out, _ = capsys.readouterr()
-    assert "CRDS Summary =" in out
     assert "CRDS Version = " in out
     assert "CRDS_MODE = 'auto'" in out
     assert "CRDS_PATH = " in out

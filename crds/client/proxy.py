@@ -52,7 +52,11 @@ def apply_with_retries(func, *pars, **keys):
 def message_id():
     """Return a nominal identifier for this program."""
     import crds
-    return _program_name() + "-" + crds.__version__ + "-" + _PROCESS_ID + "-" + _request_id()
+    try:
+        version = crds._version.version + "-"
+    except AttributeError:
+        version = ""
+    return _program_name() + "-" + version + _PROCESS_ID + "-" + _request_id()
 
 def _program_name():
     """Return the name of this program."""

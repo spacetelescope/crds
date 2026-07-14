@@ -390,7 +390,7 @@ def hv_best_references(context_file, header, include=None, condition=True):
 
 @utils.cached
 def get_processing_mode(observatory, context=None):
-    """Return the processing mode (local, remote) and the .pmap name to be used
+    """Return the processing mode (local, remote, s3) and the .pmap name to be used
     for best references selections.
     """
     info = get_config_info(observatory)
@@ -486,6 +486,8 @@ def translate_date_based_context(context, observatory=None):
 
     if not info.connected:
         raise CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
+    elif config.S3_ENABLED.get():
+        raise CrdsError("Cannot translate date based context when configured for serverless S3 mode.")
     try:
         translated = api.get_context_by_date(context, observatory=info.observatory)
     except Exception as exc:
@@ -522,7 +524,7 @@ class ConfigInfo(utils.Struct):
         if mode == "auto":
             eff_mode = "remote" if (self.connected and hasattr(self, "force_remote_mode") and self.force_remote_mode) else "local"
         else:
-            eff_mode = mode   # explicitly local or remote
+            eff_mode = mode   # explicitly local, remote or s3
             if eff_mode == "remote" and not self.connected:
                 raise CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
             if eff_mode == "local" and self.force_remote_mode:
@@ -577,7 +579,7 @@ def update_config_info(observatory):
     """
     if config.writable_cache_or_verbose("skipping config update."):
         info = get_config_info(observatory)
-        if info.connected and info.effective_mode == "local":
+        if info.connected and info.effective_mode in ["local", "s3"]:
             log.verbose("Connected to server and computing locally, updating CRDS cache config and latest context.")
             cache_server_info(info, observatory)  # save locally
         else:
@@ -623,8 +625,8 @@ def cache_atomic_write(replace_path, contents, fail_warning):
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
     with log.fatal_error_on_exception("CRDS server connection and cache load FAILED.  Cannot continue.\n"
-                         " See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/\n"
-                         " for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL."):
+                         f" See https://{observatory}-crds.stsci.edu/docs/cmdline_bestrefs/\n"
+                         " for more information on configuring CRDS, particularly CRDS_PATH and CRDS_SERVER_URL."):
         server_config = config.get_uri("server_config")
         if server_config == "none":
             server_config = config.locate_config("server_config", observatory)

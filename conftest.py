@@ -5,9 +5,10 @@ import os, os.path
 from pytest import TempPathFactory
 import cProfile
 import pstats
-import mock
 import yaml
 import re
+from moto import mock_aws
+import boto3
 
 # ==============================================================================
 
@@ -140,7 +141,6 @@ def mock_submit_form(tmp_rc, test_data):
     return mockup_form
 
 
-
 # ==============================================================================
 
 class ConfigState:
@@ -154,7 +154,7 @@ class ConfigState:
         self.old_state = None
         self.new_state = None
 
-    def config_setup(self):
+    def config_setup(self, **kwargs):
         """Reset the CRDS configuration state to support testing given the supplied parameters."""
         log.set_test_mode()
         self.old_state = crds_config.get_crds_state()
@@ -172,6 +172,8 @@ class ConfigState:
             self.new_state["CRDS_OBSERVATORY"] = self.observatory
         if self.mode is not None:
             self.new_state['CRDS_MODE'] = self.mode
+        for k, v in kwargs.items():
+            self.new_state[k] = v
         crds_config.set_crds_state(self.new_state)
         utils.clear_function_caches()
 
@@ -194,6 +196,12 @@ class ConfigState:
             CRDS_MODE='auto',
             CRDS_CLIENT_RETRY_COUNT='3',
             CRDS_CLIENT_RETRY_DELAY_SECONDS='20',
+            CRDS_S3_ENABLED='0',
+            CRDS_DOWNLOAD_PLUGIN="",
+            CRDS_DOWNLOAD_MODE="auto",
+            CRDS_MAPPING_URI="",
+            CRDS_REFERENCE_URI="",
+            CRDS_CONFIG_URI="",
         )
         crds_config.set_crds_state(self.default_config)
 
@@ -344,14 +352,158 @@ def roman_test_cache_state(test_cache):
     cfg.cleanup()
 
 
+
+roman_aws_config_kwargs = dict(
+    CRDS_S3_ENABLED='1',
+    CRDS_S3_RETURN_URI='0',
+    CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
+    CRDS_DOWNLOAD_MODE="plugin",
+    CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
+    CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
+    CRDS_CONFIG_URI=f"s3://stpubdata-mock/roman/crds/config/roman",
+)
+
 @fixture(scope='function')
-def tobs_test_cache_state(test_cache):
-    cfg = ConfigState(cache=test_cache, url="https://tobs-serverless-mode.stsci.edu", clear_existing=False)
-    cfg.config_setup()
+def roman_s3_cache_state(default_cache):
+    cfg = ConfigState(
+        cache=default_cache,
+        mode='s3',
+        url="https://roman-crds-serverless.stsci.edu", 
+        observatory="roman", 
+    )
+    cfg.config_setup(**roman_aws_config_kwargs)
     yield cfg
     cfg.cleanup()
 
- 
+
+@fixture(scope='function')
+def roman_s3_test_cache_state(test_cache):
+    cfg = ConfigState(
+        cache=test_cache,
+        mode='s3',
+        url="https://roman-crds-serverless.stsci.edu", 
+        observatory="roman", 
+    )
+    cfg.config_setup(**roman_aws_config_kwargs)
+    yield cfg
+    cfg.cleanup()
+
+
+@fixture()
+def roman_temp_cache_state(test_temp_dir):
+    cfg = ConfigState(
+        cache=str(test_temp_dir),
+        url="https://roman-crds-serverless.stsci.edu",
+        observatory="roman",
+    )
+    cfg.config_setup(**roman_aws_config_kwargs)
+    yield cfg
+    cfg.cleanup()
+
+
+@fixture(scope="function")
+def aws_credentials():
+    """Mocked AWS Credentials for moto."""
+    os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+    os.environ["AWS_SECURITY_TOKEN"] = "testing"
+    os.environ["AWS_SESSION_TOKEN"] = "testing"
+    os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
+
+
+@fixture
+def moto_server():
+    from moto.server import ThreadedMotoServer
+    server = ThreadedMotoServer(port=5000)
+    server.start()
+    yield server
+    server.stop()
+
+
+@fixture(scope="function")
+def roman_s3_bucket(roman_s3_cache_state, roman_data, aws_credentials, moto_server):
+    """
+    Return a mocked S3 bucket populated with mappings
+    The server_config file is from roman test data and is fixed at roman_0055.pmap as "latest".
+    """
+    # setup: upload S3 objects to the mocked S3 bucket
+    bucket_name = "stpubdata-mock"
+    pfx = "roman/crds"
+    mappings = [
+        'roman_0055.pmap',
+        'roman_wfi_0053.imap',
+        'roman_wfi_absflux_0001.rmap',
+        'roman_wfi_abvegaoffset_0002.rmap',
+        'roman_wfi_apcorr_0003.rmap',
+        'roman_wfi_area_0002.rmap',
+        'roman_wfi_dark_0007.rmap',
+        'roman_wfi_darkdecaysignal_0002.rmap',
+        'roman_wfi_detectorstatus_0002.rmap',
+        'roman_wfi_distortion_0002.rmap',
+        'roman_wfi_dustmap_0003.rmap',
+        'roman_wfi_epsf_0004.rmap',
+        'roman_wfi_etc_0002.rmap',
+        'roman_wfi_flat_0006.rmap',
+        'roman_wfi_gain_0003.rmap',
+        'roman_wfi_integralnonlinearity_0002.rmap',
+        'roman_wfi_inverselinearity_0005.rmap',
+        'roman_wfi_ipc_0003.rmap',
+        'roman_wfi_linearity_0005.rmap',
+        'roman_wfi_mask_0003.rmap',
+        'roman_wfi_matable_0004.rmap',
+        'roman_wfi_optmodel_0001.rmap',
+        'roman_wfi_photom_0004.rmap',
+        'roman_wfi_readnoise_0005.rmap',
+        'roman_wfi_refpix_0003.rmap',
+        'roman_wfi_relflux_0001.rmap',
+        'roman_wfi_saturation_0003.rmap',
+        'roman_wfi_sflat_0001.rmap',
+        'roman_wfi_skycells_0002.rmap',
+        'roman_wfi_specpsf_0001.rmap'
+    ]
+    with mock_aws():
+        s3 = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
+        s3.create_bucket(Bucket=bucket_name)
+        for mapping in mappings:
+            fpath = os.path.join(crds_config.get_crds_path(), "mappings/roman", mapping)
+            with open(fpath, 'rb') as f:
+                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
+        # sync config
+        cfg_path = os.path.join(roman_data, "server_config")
+        with open(cfg_path, 'rb') as f:
+            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
+        yield bucket_name
+
+
+@fixture(scope="function")
+def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials, moto_server):
+    """
+    Return a mocked S3 bucket populated with mappings
+    Uses contents of crds-cache-test to populate the mocked s3 bucket.
+    """
+    # setup: upload S3 objects to the mocked S3 bucket
+    bucket_name = "stpubdata-mock"
+    pfx = "roman/crds"
+    mappings = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "mappings/roman"))
+    refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
+    # cfg = os.path.join(roman_s3_test_cache_state.cache, "config/roman/server_config")
+    # make sure we get the updated config - test cache isn't getting updated version
+    cfg = os.path.join(roman_data, "test_cache_config/server_config")
+    with mock_aws():
+        s3 = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
+        s3.create_bucket(Bucket=bucket_name)
+        for mapping in mappings:
+            fpath = crds_config.locate_file(mapping, "roman")
+            with open(fpath, 'rb') as f:
+                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
+        for ref in refs:
+            fpath = crds_config.locate_file(ref, "roman")
+            with open(fpath, 'rb') as f:
+                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
+        ## sync config
+        with open(cfg, 'rb') as f:
+            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
+        yield bucket_name
 
 # ==============================================================================
 
@@ -385,3 +537,11 @@ def combined_spec(scope='session'):
 @fixture(scope='function')
 def jwst_pmap_pattern():
     return re.compile("jwst_[0-9]{4}.pmap")
+
+
+@fixture(scope='function')
+def tobs_test_cache_state(test_cache):
+    cfg = ConfigState(cache=test_cache, url="https://tobs-serverless-mode.stsci.edu", clear_existing=False)
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()

@@ -4,9 +4,12 @@ S3 download plugin for CRDS.
 
 Exit status:
 0 - success
-1 - Invalid arg or missing environment vars
+2 - Invalid arg or missing environment vars
 10 - failed file size verification
 11 - failed checksum verification
+400 - An error occurred (400) when calling the HeadObject operation: Bad Request
+404 - File does not exist on S3
+An error occurred (ExpiredToken) when calling the GetObject operation: The provided token has expired.
 other codes - aws-cli failure.  See https://docs.aws.amazon.com/cli/latest/topic/return-codes.html
 
 As of 2021-04-23, copies of this script are maintained in the crds
@@ -15,16 +18,15 @@ both!
 """
 import argparse
 import os
-import random
+import re
 import subprocess
-import time
 import sys
-
 from crds.core.utils import checksum
-from crds.client.api import get_default_observatory
-from crds.core import config 
+from crds.core import config
 from crds.core import log
 
+INVALID_ARGS_STATUS = 2 # aws: error: the following arguments are required:
+BAD_REQUEST_STATUS = 400 # An error occurred (400) when calling the HeadObject operation: Bad Request
 BAD_SIZE_STATUS = 10
 BAD_CHECKSUM_STATUS = 11
 
@@ -43,18 +45,10 @@ def format_uris(**kwargs):
     source, destination = kwargs.pop("source"), kwargs.pop("destination")
     fname = source.split("/")[-1]
     s3_uri = source if source.startswith("s3") else config.get_uri(fname)
-    obs, kind = s3_uri.split('/')[-2], s3_uri.split('/')[-3]
-    instr = "" if kind != "references" else str(os.path.basename(os.path.dirname(config.locate_reference(fname, obs))))
+    obs = s3_uri.split('/')[-2]
     crds_path = os.environ.get("CRDS_PATH", config.get_crds_path())
-    log.debug(f"s3_uri={s3_uri}")
     if destination == crds_path:
-        refmode = os.environ.get('CRDS_REF_SUBDIR_MODE', config.get_crds_ref_subdir_mode(obs))
-        if instr and refmode == "instrument":
-            instr += "/"
-        else:
-            config.set_crds_ref_subdir_mode(observatory=obs, mode="flat")
-            instr = ""
-        dest = f"{crds_path}/{kind}/{obs}/{instr}{fname}"
+        dest = config.locate_file(fname, obs)
         os.makedirs(os.path.dirname(dest), exist_ok=True)
     # destination is a directory that may or may not already exist
     elif not destination.endswith(fname):
@@ -74,6 +68,7 @@ def parse_args():
     parser.add_argument("-s", "--file-size", help="Expected file size in bytes", type=int, default=None)
     parser.add_argument("-c", "--file-sha1sum", help="Expected file SHA-1 checksum", default=None)
     parser.add_argument("-r", "--max-retries", help="Maximum number of retries on download failure", type=int, default=3)
+    parser.add_argument("-I", "--ignore-cache", help="Ignore local cache and force download", action="store_true")
     parser.add_argument("--loglevel", default="INFO", help="set loglevel", type=str)
     return parser.parse_args()
 
@@ -94,30 +89,33 @@ def main():
         sys.exit(1)
     kwargs = {**vars(args)}
     src, dest = format_uris(**kwargs)
-    
+    fname = src.split("/")[-1]
+    if os.path.exists(dest):
+        if not args.ignore_cache:
+            log.debug(f"crds_s3_get - '{fname}' exists in cache: '{dest}' - Skipping", verbosity=60)
+            sys.exit(0)
+        else:
+            log.debug(f"crds_s3_get - '{fname}' exists at '{dest}' but --ignore_cache flag was set - Re-syncing.", verbosity=60)
 
-    result = subprocess.run([
-        "aws", "s3", "cp", "--no-progress",
-        src,
-        dest,
-    ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
+    result = subprocess.run([ "aws", "s3", "cp", src, dest], encoding="utf-8")
 
     if result.returncode != 0:
-        output = "\\n".join(result.stdout.strip().splitlines())
-        print(f"crds_s3_get: Failed to download '{src}' with return code {result.returncode}: {output}", file=sys.stderr)
+        log.error(f"crds_s3_get - Failed to download '{fname}' with return code {result.returncode}")
         sys.exit(result.returncode)
+    else:
+        log.info(f"crds_s3_get: Successfully downloaded '{fname}' to '{dest}'", file=sys.stdout)
 
     if args.file_size not in [None, ""]:
         downloaded_size = os.path.getsize(dest)
         if downloaded_size != args.file_size:
-            print(f"crds_s3_get: '{src}' failed file size check.  Expected: {args.file_size} Received: {downloaded_size}")
+            log.error(f"crds_s3_get: '{src}' failed file size check.  Expected: {args.file_size} Received: {downloaded_size}")
             os.unlink(dest)
             sys.exit(BAD_SIZE_STATUS)
 
     if args.file_sha1sum not in [None, ""]:
         downloaded_sha1sum = checksum(dest)
         if downloaded_sha1sum != args.file_sha1sum:
-            print(f"crds_s3_get: '{src}' failed checksum.  Expected: {args.file_sha1sum} Received: {downloaded_sha1sum}")
+            log.error(f"crds_s3_get: '{src}' failed checksum.  Expected: {args.file_sha1sum} Received: {downloaded_sha1sum}")
             os.unlink(dest)
             sys.exit(BAD_CHECKSUM_STATUS)
 

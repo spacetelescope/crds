@@ -1,5 +1,4 @@
 import pytest
-import os, os.path
 import re
 import json
 import datetime
@@ -172,8 +171,8 @@ def test_bestrefs_broken_cache_and_server(broken_state, caplog, hst_data):
             assert pytest_wrapped_e.type == SystemExit
         out = caplog.text
     out_to_check = """ (FATAL) CRDS server connection and cache load FAILED.  Cannot continue.
- See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/
- for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL. : [Errno 2] No such file or directory: '/nowhere/config/hst/server_config'"""
+ See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/
+ for more information on configuring CRDS, particularly CRDS_PATH and CRDS_SERVER_URL. : [Errno 2] No such file or directory: '/nowhere/config/hst/server_config'"""
     for msg in out_to_check.splitlines():
         assert msg.strip() in out
 

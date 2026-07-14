@@ -19,6 +19,7 @@ import json
 import warnings
 import platform
 
+
 # ===================================================================
 
 # import yaml
@@ -682,30 +683,34 @@ def copytree(src, dst, symlinks=False, fnc_directory=_no_message,
 
 # ===================================================================
 
-def get_s3_uri_content(s3_uri, mode="text"):
+
+def get_s3_uri_content(s3_uri, **kwargs):
     """Perform a direct read of an AWS S3 URI using the AWS SDK.
 
     Returns  contents of `s3_uri`.
     """
     from ..client import proxy
-
-    log.verbose(f"Fetching content from URI: '{s3_uri}'")
-    return proxy.apply_with_retries(_get_s3_uri_content, s3_uri, mode)
+    return proxy.apply_with_retries(_get_s3_uri_content, s3_uri, **kwargs)
 
 
-def _get_s3_uri_content(s3_uri, mode):
+def _get_s3_uri_content(s3_uri, **kwargs):
+    """Perform a direct read of an AWS S3 URI using the AWS SDK.
+    Files are not downloaded unless environment has been configured to use the crds_s3_get plugin.
+    Primarily used to identify mapping closures of a Pipeline context during sync operations when
+    such mappings do not exist in the local cache.
+
+    Returns contents of `s3_uri` as a string or bytes depending on the value of the `mode` keyword argument. 
+    """
+    try:
+        import boto3
+    except ImportError:
+        raise exceptions.CRDSRemoteError("boto3 is required to read S3 URIs\n",
+                                         "Try `pip install crds[aws]` to install AWS S3 dependencies.")
     bucket_name, key = s3_uri.replace("s3://", "").split("/", 1)
-    import boto3
     s3 = boto3.resource("s3")
     obj = s3.Object(bucket_name, key)
     binary = obj.get()["Body"].read()
-    if config.get_cache_readonly() is False:
-        try:
-            import subprocess
-            p = subprocess.run(["crds_s3_get", s3_uri], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
-        except Exception as e:
-            print(p.stderr)
-    if mode == "text":
+    if kwargs.get("mode", "text") == "text":
         text = binary.decode("utf-8")
         return text
     return binary
@@ -728,16 +733,15 @@ def _get_url_content(url, mode):
     return r.content
 
 
-def get_uri_content(uri, mode="text"):
+def get_uri_content(uri, **kwargs):
     """Reads and returns the contents of the given s3://, https://
     or filename uri.   Reads to memory, intended for small files.
     """
-    from ..client import proxy
-
+    mode = kwargs.get("mode", "text")
     if uri.startswith("s3://"):
-        return get_s3_uri_content(uri, mode)
+        return get_s3_uri_content(uri, **kwargs)
     elif uri.startswith(("http://", "https://")):
-        return get_url_content(uri, mode)
+        return get_url_content(uri, mode=mode)
     else:
         mode = "r" if (mode=="text") else "rb"
         with open(uri, mode) as file:

@@ -23,6 +23,7 @@ env:
   CRDS_CLIENT_RETRY_COUNT: 3
   CRDS_CLIENT_RETRY_DELAY_SECONDS: 20
   LD_LIBRARY_PATH: /usr/local/lib
+  AWS_ENDPOINT_URL: http://localhost:5000
 
 defaults:
   run:
@@ -70,6 +71,8 @@ jobs:
           cache-downloads: true
       - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
       - run: pip uninstall --yes crds && ./install && pip install .[submission,test,docs,synphot]
+      # dummy AWS credentials S3 testing (moto)
+      - run: mkdir /tmp/.aws && touch /tmp/.aws/credentials && echo -e "[default]\naws_access_key_id = testing\naws_secret_access_key = testing" > /tmp/.aws/credentials
       - id: cache
         uses: actions/cache@v5  # v4.0.2
         with:

@@ -806,7 +806,7 @@ class ContextsScript(Script):
         for mapping in mappings:
             with log.warn_on_exception("Failed loading context", repr(mapping)):
                 try:
-                    loadable = rmap.get_cached_mapping(mapping)
+                    loadable = rmap.get_cached_mapping(mapping, ignore_cache=self.args.ignore_cache)
                     loadable_names = loadable.mapping_names()
                 except Exception as exc:
                     log.verbose("Failed loading", repr(mapping),
@@ -816,7 +816,7 @@ class ContextsScript(Script):
 
         # Dump all missing files in one call
         with log.verbose_warning_on_exception("Mapping closure download failed"):
-            self.dump_files(self.default_context, mapping_closure)
+            self.dump_files(self.default_context, mapping_closure, ignore_cache=self.args.ignore_cache)
 
         # After attempting to sync,  identify which mappings are actually loadable now.
         useable_contexts = []

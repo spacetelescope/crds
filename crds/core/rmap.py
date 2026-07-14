@@ -247,7 +247,8 @@ class Mapping:
     def from_s3(cls, basename, *args, **keys):
         log.verbose("Loading mapping from S3", repr(basename), verbosity=55)
         s3_uri = config.get_uri(basename)
-        text = utils.get_uri_content(s3_uri)
+        keys['mode'] = "text"
+        text = utils.get_uri_content(s3_uri, **keys)
         return cls.from_string(text, basename, *args, **keys)
 
     @classmethod
@@ -1596,7 +1597,7 @@ def _load(mapping, **keys):
     return keys["loader"](mapping, **keys)
 
 def get_cached_mapping(mapping, **keys):
-    """Load `mapping` from the file system or cache,  adding it and all it's
+    """Load `mapping` from the file system or cache,  adding it and all its
     descendents to the cache.
 
     NOTE:   mutations to the mapping are reflected in the cache.   This call is
@@ -1642,7 +1643,7 @@ def _load_mapping(mapping, **keys):
     elif mapping.endswith(".rmap"):
         cls = ReferenceMapping
     else:
-        if config.S3_ENABLED:
+        if config.S3_ENABLED.get():
             m = Mapping.from_s3(mapping, **keys)
         else:
             m = Mapping.from_file(mapping, **keys)
@@ -1656,10 +1657,11 @@ def _load_mapping(mapping, **keys):
         else:
             raise ValueError("Unknown mapping type for " + repr(mapping))
 
-    if config.S3_ENABLED:
-        return cls.from_s3(mapping, **keys)
-    else:
-        return cls.from_file(mapping, **keys)
+    if config.S3_ENABLED.get() is True:
+        # Don't re-sync existing files from s3 unless ignore_cache explicitly set
+        if keys.get("ignore_cache") or not config.file_in_cache(mapping, config.OBSERVATORY.get()):
+            return cls.from_s3(mapping, **keys)
+    return cls.from_file(mapping, **keys)
 
 def asmapping(filename_or_mapping, cached=False, **keys):
     """Return the Mapping object corresponding to `filename_or_mapping`.
