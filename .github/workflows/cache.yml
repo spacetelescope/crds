@@ -81,6 +81,13 @@ jobs:
         with:
           path: ${{ env.CRDS_PATH }}/**/jwst*
           key: test-cache-${{ needs.contexts.outputs.jwst }}
+      - if: steps.lookup-combined-cache.outputs.cache-hit != 'true'
+        id: retrieve-roman-cache
+        name: retrieve ROMAN CRDS cache (`test-cache-${{ needs.contexts.outputs.roman }}`)
+        uses: actions/cache@v5  # v4.0.2
+        with:
+          path: ${{ env.CRDS_PATH }}/**/roman*
+          key: test-cache-${{ needs.contexts.outputs.roman }}
       - if: steps.lookup-cache.outputs.cache-hit != 'true'
         uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476  # v3.0.0
         with:

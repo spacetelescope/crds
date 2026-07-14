@@ -485,7 +485,7 @@ def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials,
     bucket_name = "stpubdata-mock"
     pfx = "roman/crds"
     mappings = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "mappings/roman"))
-    #refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
+    refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
     # cfg = os.path.join(roman_s3_test_cache_state.cache, "config/roman/server_config")
     # make sure we get the updated config - test cache isn't getting updated version
     cfg = os.path.join(roman_data, "test_cache_config/server_config")
@@ -496,11 +496,10 @@ def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials,
             fpath = crds_config.locate_file(mapping, "roman")
             with open(fpath, 'rb') as f:
                 s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
-        # Temp commenting out until needed for getreferences tests
-        # for ref in refs:
-        #     fpath = crds_config.locate_file(ref, "roman")
-        #     with open(fpath, 'rb') as f:
-        #         s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
+        for ref in refs:
+            fpath = crds_config.locate_file(ref, "roman")
+            with open(fpath, 'rb') as f:
+                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
         ## sync config
         with open(cfg, 'rb') as f:
             s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
