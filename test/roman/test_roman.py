@@ -174,7 +174,7 @@ def test_getreferences_s3_test_cache(roman_s3_test_bucket, roman_temp_cache_stat
             result = heavy_client.getreferences(
                 header,
                 observatory="roman",
-                context="roman_0007.pmap",
+                context="roman_0006.pmap",
                 reftypes=[reftype]
             )
             refpath = pathlib.Path(result[reftype])
