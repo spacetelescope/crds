@@ -295,73 +295,31 @@ Advanced Environment
 A number of things in CRDS are configurable with environment variables,  most important of which is the
 location and structure of the file cache.
 
-CRDS Cache Locking
-++++++++++++++++++
 
-CRDS cache locking has been added to support JWST association calibration multi-processing
-for users who set up personal demand-based CRDS Caches.  Cache locking prevents simultaneous
-transparent CRDS Cache updates from multiple JWST calibration processes.
+Cache Locking
+.............
 
-Single Shell Locking
-....................
-By default,  CRDS uses Python's built-in multiprocessing locks which are robust and suitable for
-running multiprocesses within a single shell or terminal window:
+CRDS cache locking supports both file-based locks and in-memory multiprocessing locks. The `crds_lock()` function is a smart context manager that automatically detects if multiprocessing architecture is active (parent script initialized the multiprocessing manager), or if using a networked path (which defaults to file-based locking). This ensures proper locking behavior across different environments.
 
-  .. code-block:: bash
-    
-      $ crds list --status
-      CRDS Version = '7.2.0, 7.2.0, 139bbcb'
-      ...
-      Cache Locking = 'enabled, multiprocessing'
-      ...
-      Readonly Cache = False
+There are two distinct locking mechanisms: multiprocessing and file-based locks.
 
-However,  this default CRDS cache locking is not suitable for running calibrations in multiple
-terminal windows or for pipeline use.
-
-File Based Locking
+File-based Locking
 ..................
 
-Since Python's default multiprocessing locks cannot support multiple process trees or terminal windows,
-CRDS also supports file based locking by setting appropriate configuration variables:
+Synchronizes disks/files for multi-application scaling across multiple processing/terminals/machines, including shared networks. This is the default locking mechanism when multiprocessing is not enabled or when the target path is on a networked filesystem. File locks are implemented using the `filelock` library, which creates a `.lock` file alongside the target file to indicate that it is currently locked. The lock file is automatically cleaned up when the lock is released, but orphaned lock files may remain if a process crashes or is terminated unexpectedly. The `clear_cache_locks()` function can be used to scan for and remove any stale lock files in the cache directory. The CRDS Sync script accepts an optional `--clear-locks` argument to automatically clear any stale locks before proceeding with synchronization.
 
-  .. code-block:: bash
-    
-      $ export CRDS_LOCKING_MODE=filelock
-      $ crds list --status
-      CRDS Version = '7.2.0, 7.2.0, 139bbcb'
-      ...
-      Cache Locking = 'enabled, filelock'
-      ...
-      Readonly Cache = False
+NOTE: Cache locking is enabled automatically within calls to the CRDS Sync script and heavy_client.getreferences(). Therefore it is not necessary to explicitly enable locking or use the lock context manager when calling these functions.
 
-File based locking is not used by default for several reasons::
+To ensure locking occurs, you can set verbose logging to see each file lock acquisition and release.
 
-    1. They introduce a dependency on a 3rd party package.
-    2. File locks created on network or other virtualized file systems may be unreliable.
-    3. File lock behavior is OS dependent.
+  .. code-block:: python
 
-Restrictions on Locking
-.......................
+    from crds.core import log
+    from crds.sync import SyncScript
 
-There are multiple conditions in CRDS that determine when locking is really used:
+    log.set_verbose(55)
+    SyncScript("crds.sync --contexts hst_0006.pmap")()
 
-    1. `CRDS_READONLY_CACHE` must be undefined or 0
-    2. The CRDS cache must be writable as determined by file system permissions
-    3. The `CRDS_LOCK_PATH` directory (nominally `/tmp`) should already exist
-    4. For file based locking,  a lock must be successfully created
-    5. `CRDS_USE_LOCKING` must be undefined or 1
-    6. For file based locking, the lockfile or filelock Python package must be installed
-
-The read-only nature of::
-
-  */grp/crds/cache*
-
-prevents the use of locking for typical onsite users.  None should be required.
-
-It should be noted that the existence of any lock file directory is itself a
-concurrency issue, so it must be created or otherwise available before cache
-synchronization takes place.
 
 The CRDS command:
 
@@ -371,7 +329,203 @@ The CRDS command:
 
 can be used to remove orphan locks (due to some unexpected failure) that are blocking processing.
 
-Locking requires installation of the *lockfile* package and `CRDS-7.1.4` or later.
+
+Multiprocessing Locking
+.......................
+
+For multi-core scaling on a single machine/terminal. Synchronizes cores/CPUs. Multiprocessing locks do not work across multiple terminals or machines, and are not safe for networked paths (NFS, SMB, etc.). The multiprocessing locks are managed by a background Manager process that is lazily initialized when needed. This allows for safe sharing of locks across different processes spawned by the same parent script. NOTE: The parent script must call `initialize_multiprocessing_mode()` to set up the Manager and shared locks before any child processes are spawned. The locks are stored in a shared dictionary that is accessible to all child processes.
+
+
+Examples:
+
+**Locking with multiprocessing.Pool:**
+
+  .. code-block:: python
+
+    import multiprocessing
+    from crds.core.cache_locker import crds_lock
+    from crds.core.heavy_client import getreferences
+
+    def getrefs_pool_worker(task_args):
+        """
+        Wrapper function run by Pool workers.
+        Acquires the lock dynamically before executing getreferences() 
+        to handle the look-lock-download pattern safely.
+        """
+        worker_id, header, reftypes, observatory, target_file_key = task_args
+        try:
+            with crds_lock(target_file_key, timeout=30.0):
+                start_time = time.time()
+                refs = getreferences(
+                    parameters=header, 
+                    reftypes=reftypes, 
+                    observatory=observatory
+                )
+                end_time = time.time()
+                
+                return {
+                    "worker_id": worker_id,
+                    "start": start_time,
+                    "end": end_time,
+                    "refs_returned": refs,
+                    "success": True
+                }
+        except Exception as e:
+            return {"worker_id": worker_id, "success": False, "error": str(e)}
+
+
+    def test_parallel_getreferences_pool():
+        """
+        Integration test validating that getreferences acts sequentially
+        when mapped concurrently across multiple workers.
+        """
+        # ACTIVATE MP MULTIPLEXER IN PARENT
+        from crds.core.cache_locker import initialize_multiprocessing_mode
+        initialize_multiprocessing_mode()
+        header = {
+            'roman.meta.instrument.name': 'wfi',
+            'ROMAN.META.EXPOSURE.START_TIME': '2026-05-29',
+            'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT': 'f184',
+        }
+        reftypes = ['epsf']
+        observatory = "roman"
+        target_lock_key = "roman_wfi_epsf" 
+        num_workers = 3
+        task_arguments = [
+            (i, header, reftypes, observatory, target_lock_key) 
+            for i in range(num_workers)
+        ]
+
+        import crds.core.cache_locker as cache_locker
+        shared_dict = cache_locker._MULTIPROCESSING_LOCKS
+        manager_instance = cache_locker._MANAGER
+
+        ctx = multiprocessing.get_context()
+        
+        # Initialize the worker pool, pushing synchronized proxy state down
+        print(f"\nLaunching Pool to test parallel getreferences for {target_lock_key}...")
+        with ctx.Pool(
+            processes=num_workers,
+            initializer=initialize_multiprocessing_mode,
+            initargs=(shared_dict, manager_instance)
+        ) as pool:
+            results = pool.map(getrefs_pool_worker, task_arguments)
+
+        # Optionally verify:
+        assert len(results) == num_workers
+        results.sort(key=lambda x: x["start"])
+        print("\n--- Parallel getreferences Timeline ---")
+        for r in results:
+            assert r["success"], f"Worker {r['worker_id']} collapsed with error: {r.get('error')}"
+            print(f"Worker {r['worker_id']}: Entered at {r['start']:.2f}, Left at {r['end']:.2f}")
+            print(f"  -> Returned Paths: {r['refs_returned']}")
+        for i in range(1, len(results)):
+            previous_worker_end = results[i-1]["end"]
+            current_worker_start = results[i]["start"]
+            assert current_worker_start >= previous_worker_end, (
+                f"Lock Failure! Worker {results[i]['worker_id']} overlap detected. "
+                f"Entered at {current_worker_start:.2f} before previous left at {previous_worker_end:.2f}."
+            )
+
+
+**Locking with Multiprocessing.Process:**
+
+    .. code-block:: python
+
+        import multiprocessing
+        from crds.core.cache_locker import crds_lock
+        from crds.core.heavy_client import getreferences
+
+        def getrefs_worker_task(worker_id: int, target_file: str, output_queue: multiprocessing.Queue):
+            """Target function executed by independent worker processes under pytest."""
+            header = {
+                'roman.meta.instrument.name': 'wfi',
+                'ROMAN.META.EXPOSURE.START_TIME': '2026-05-29',
+                'ROMAN.META.INSTRUMENT.OPTICAL_ELEMENT': 'f184',
+            }
+            try:
+                with crds_lock(target_file, timeout=30.0):
+                    start_time = time.time()
+                    refs = getreferences(header, reftypes=['epsf'], observatory="roman")
+                    end_time = time.time()
+                    output_queue.put({
+                        "worker_id": worker_id,
+                        "start": start_time,
+                        "end": end_time,
+                        "refs": refs,
+                        "success": True
+                    })
+            except Exception as e:
+                output_queue.put({"worker_id": worker_id, "success": False, "error": str(e)})
+
+        def test_getrefs_mp_locking():
+            from crds.core.cache_locker import initialize_multiprocessing_mode
+            initialize_multiprocessing_mode()
+            local_target = str(Path("./test_local_cache_file.tmp").resolve())
+            result_queue = multiprocessing.Queue()
+            workers = []
+            num_workers = 3
+
+            print("Spawning child processes to test multiprocessing locks...")
+
+            # Kick off multiple workers simultaneously
+            for i in range(num_workers):
+                p = multiprocessing.Process(
+                    target=worker_task,
+                    args=(i, local_target, result_queue)
+                )
+                workers.append(p)
+                p.start()
+            # Wait for all child processes to finish
+            for p in workers:
+                p.join()
+
+            # OPTIONAL: Gather and analyze results
+            results = []
+            while not result_queue.empty():
+                results.append(result_queue.get())
+
+            # Ensure cleanups
+            if Path(local_target).exists():
+                Path(local_target).unlink()
+
+            # Assertions and Verifications
+            assert len(results) == num_workers, f"Expected {num_workers} results, got {len(results)}"
+
+            # Sort results by their start times to analyze sequence
+            results.sort(key=lambda x: x["start"])
+
+            print("\n--- Execution Timeline ---")
+            for r in results:
+                assert r["success"], f"Worker {r['worker_id']} failed with error: {r.get('error')}"
+                print(f"Worker {r['worker_id']}: Entered at {r['start']:.2f}, Left at {r['end']:.2f}")
+            # Ensure worker N did not enter the lock until worker N-1 completely left.
+            for i in range(1, len(results)):
+                previous_worker_end = results[i-1]["end"]
+                current_worker_start = results[i]["start"]
+
+                assert current_worker_start >= previous_worker_end, (
+                    f"Lock Failure! Worker {results[i]['worker_id']} entered at {current_worker_start:.2f} "
+                    f"before the previous worker left at {previous_worker_end:.2f}."
+                )
+
+
+Restrictions on Locking
+.......................
+
+Cache locking is only enabled for writable caches:
+
+    1. `CRDS_READONLY_CACHE` must be undefined or 0
+    2. The CRDS cache must be writable as determined by file system permissions
+
+
+The read-only nature of::
+
+  */grp/crds/cache*
+
+prevents the use of locking for typical onsite users.  None should be required.
+
+
 
 Multi-Project Caches
 ++++++++++++++++++++
@@ -499,14 +653,3 @@ proceed immediately after fail.
 
 **CRDS_CLIENT_TIMEOUT_SECONDS** number of seconds CRDS will wait for a network
 transaction to complete.
-
-**CRDS_USE_LOCKING** boolean enabling/disabling CRDS cache locking,  currently
-only used for JWST and defaulting to enabled.   File locking is currently limited
-to JWST calibrations so HST sync and bestrefs tools must be run in single
-processes or with `CRDS_READONLY_CACHE=1`.
-
-**CRDS_LOCKING_MODE**  chooses between multiprocessing, filelock, or lockfile
-based locks.  multiprocessing is the default.  To support multiple
-terminal windows or pipeline processing,  file based locking must be used
-with filelock recommended and known problems having been observed with the
-lockfile package.

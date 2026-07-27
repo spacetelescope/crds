@@ -15,7 +15,6 @@ import json
 
 import crds
 from crds.core import config, log, rmap, heavy_client, cmdline, utils
-from crds.core import crds_cache_locking
 from crds.core import reftypes
 
 from crds import data_file
@@ -699,7 +698,7 @@ jwst_niriss_superbias_0005.rmap
              ("CRDS_SERVER_URL", info.get("CRDS_SERVER_URL", "undefined")),
              ("CRDS_MODE", info["CRDS_MODE"]),
              ("Readonly Cache", self.readonly_cache),
-             ("Cache Locking", crds_cache_locking.status()),
+             ("Cache Locking", config.lock_status()),
              ("Effective Context", heavy_client.get_context_name(self.observatory)),
              ("Last Synced", server.last_synced),
              ("CRDS Version", heavy_client.version_info()),

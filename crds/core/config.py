@@ -1019,26 +1019,12 @@ def relocate_reference(ref, observatory, parameters=None):
         return utils.get_locator_module(observatory).locate_file(ref, parameters=parameters)
 
 # ===========================================================================
-if os.path.exists("/tmp"):
-    DEFAULT_LOCK_PATH = "/tmp"
-else:
-    DEFAULT_LOCK_PATH = os.path.join(get_crds_root_cfgpath(), "locks")
 
-CACHE_LOCK_PATH = StrConfigItem(
-    "CRDS_LOCK_PATH", DEFAULT_LOCK_PATH,
-    "Lock directory used to store lock files,  nominally for CRDS cache.")
 
-USE_LOCKING = BooleanConfigItem("CRDS_USE_LOCKING", True,
-    "Set to False to turn off CRDS cache locking.")
+def lock_status():
+    """Return configured/actual ability of CRDS to lock the cache."""
+    return "disabled" if get_cache_readonly() else "enabled"
 
-LOCKING_MODE = StrConfigItem("CRDS_LOCKING_MODE",  "multiprocessing",
-    "Form of locking used by CRDS cache.",
-    valid_values=["lockfile", "filelock", "multiprocessing"],
-    lower=True)
-
-def get_crds_lockpath(lock_filename):
-    """Return the full path of `lock_filename` filename based on CRDS lock path configuration."""
-    return os.path.join(CACHE_LOCK_PATH.get(), lock_filename)
 
 # ===========================================================================
 

@@ -4,6 +4,7 @@ cache them locally.
 """
 import os
 import os.path
+from pathlib import Path
 import base64
 import re
 import zlib
@@ -24,9 +25,9 @@ from crds.core.log import srepr
 from crds.core.exceptions import (
     ServiceError, CrdsLookupError, CrdsError, CrdsNetworkError, CrdsDownloadError, CrdsRemoteContextError
 )
-
-from . import proxy
-from .proxy import CheckingProxy
+from crds.core.cache_locker import crds_lock
+from crds.client import proxy
+from crds.client.proxy import CheckingProxy
 
 # ==============================================================================
 
@@ -783,7 +784,10 @@ class FileCacher:
                         raise CrdsDownloadError("file is not known to CRDS server.")
                     bytes, path = self.catalog_file_size(name), localpaths[name]
                     log.info(
-                        file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
+                        file_progress(
+                            "Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files
+                        )
+                    )
                     self.download(name, path)
                     bytes_so_far += os.stat(path).st_size
                 except Exception as exc:
@@ -795,25 +799,22 @@ class FileCacher:
         return 0
 
     def download(self, name, localpath):
-        """Download a single file."""
-        # This code is complicated by the desire to blow away failed downloads.  For the specific
-        # case of KeyboardInterrupt,  the file needs to be blown away,  but the interrupt should not
-        # be re-characterized so it is still un-trapped elsewhere under normal idioms which try *not*
-        # to trap KeyboardInterrupt.
+        """Download a single file. Atomic file replacement ensures that partially downloaded files 
+        are blown away in the case of interrupt or aborted attempts."""
         assert not config.get_cache_readonly(), "Readonly cache,  cannot download files " + repr(name)
         try:
             utils.ensure_dir_exists(localpath)
             return proxy.apply_with_retries(self.download_core, name, localpath)
         except Exception as exc:
-            self.remove_file(localpath)
+            # self.remove_file(localpath)
             raise CrdsDownloadError(
                 "Error fetching data for", srepr(name),
                 "at CRDS server", srepr(get_crds_server()),
                 "with mode", srepr(config.get_download_mode()),
                 ":", str(exc)) from exc
-        except:  # mainly for control-c,  catch it and throw it.
-            self.remove_file(localpath)
-            raise
+        # except:  # mainly for control-c,  catch it and throw it.
+        #     self.remove_file(localpath)
+        #     raise
 
     def remove_file(self, localpath):
         """Removes file at `localpath`."""
@@ -834,9 +835,24 @@ class FileCacher:
 
     def generator_download(self, generator, localpath):
         """Read all bytes from `generator` until file is downloaded to `localpath.`"""
-        with open(localpath, "wb+") as outfile:
-            for data in generator:
-                outfile.write(data)
+        dest_path = Path(localpath)
+        tmp_path = dest_path.with_name(f".tmp_{dest_path.name}_{os.getpid()}")
+        try:
+            with crds_lock(str(localpath), timeout=5.0): # fast fail if another process is downloading the same file
+                if dest_path.exists(): # another process finished downloading the file while we were waiting for the lock
+                    return
+                with open(tmp_path, "wb+") as outfile:
+                    for data in generator:
+                        outfile.write(data)
+                os.replace(tmp_path, dest_path) # atomic move to final destination
+        except TimeoutError: # Exit quietly because another process is downloading the same file
+            log.verbose(f"File {dest_path.name} is being downloaded by another process. Skipping.", verbosity=70)
+        finally:
+            # Cleanup tempfile if download was interrupted or failed
+            try:
+                tmp_path.unlink(missing_ok=True)
+            except OSError:
+                pass
 
     def plugin_download(self, filename, localpath):
         """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath. 
@@ -859,7 +875,7 @@ class FileCacher:
             plugin_cmd = plugin_cmd.replace("${FILE_SIZE}", self.info_map[filename]["size"])
             plugin_cmd = plugin_cmd.replace("${FILE_SHA1SUM}", self.info_map[filename]["sha1sum"])
             log.verbose("Running download plugin:", repr(plugin_cmd))
-            status = os.WEXITSTATUS(os.system(plugin_cmd))
+            status = os.WEXITSTATUS(subprocess.run(plugin_cmd))
             if status != 0:
                 if status == 2:
                     raise KeyboardInterrupt("Interrupted plugin.")

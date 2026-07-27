@@ -237,6 +237,14 @@ def jwst_default_cache_state(default_cache):
     cfg.cleanup()
 
 
+@fixture(scope='function')
+def roman_default_cache_state(default_cache):
+    cfg = ConfigState(cache=default_cache, mode='auto', url="https://roman-crds.stsci.edu", observatory="roman")
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
+
+
 @fixture()
 def hst_temp_cache_state(test_temp_dir):
     cfg = ConfigState(
@@ -245,6 +253,19 @@ def hst_temp_cache_state(test_temp_dir):
         observatory="hst",
     )
     cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
+
+
+@fixture()
+def roman_temp_cache_state(test_temp_dir):
+    cfg = ConfigState(
+        cache=str(test_temp_dir),
+        url="https://roman-crds.stsci.edu",
+        observatory="roman",
+
+    )
+    cfg.config_setup(CRDS_REF_SUBDIR_MODE="flat")
     yield cfg
     cfg.cleanup()
 
@@ -352,11 +373,10 @@ def roman_test_cache_state(test_cache):
     cfg.cleanup()
 
 
-
 roman_aws_config_kwargs = dict(
     CRDS_S3_ENABLED='1',
     CRDS_S3_RETURN_URI='0',
-    CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
+    CRDS_DOWNLOAD_PLUGIN="crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}",
     CRDS_DOWNLOAD_MODE="plugin",
     CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
     CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
@@ -390,7 +410,7 @@ def roman_s3_test_cache_state(test_cache):
 
 
 @fixture()
-def roman_temp_cache_state(test_temp_dir):
+def roman_aws_temp_cache_state(test_temp_dir):
     cfg = ConfigState(
         cache=str(test_temp_dir),
         url="https://roman-crds-serverless.stsci.edu",

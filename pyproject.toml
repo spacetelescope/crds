@@ -14,7 +14,7 @@ dependencies = [
   "astropy",
   "numpy",
   "filelock",
-  "asdf != 3.0.0",
+  "asdf > 3.0.0",
   "requests",
   "parsley",
 ]

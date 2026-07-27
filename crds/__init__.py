@@ -77,7 +77,7 @@ _CORE_MODULES = [
     "config",
     "constants",
     "utils",
-    "crds_cache_locking",
+    "cache_locker",
     "timestamp",
     "custom_dict",
     "selectors",
