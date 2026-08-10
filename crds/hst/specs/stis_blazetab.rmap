@@ -2,7 +2,7 @@ header = {
     'derived_from' : 'Initial hand made version 08-26. Jira CRDS-1151.',
     'extra_keys' : (),
     'file_ext' : '.fits',
-    'filekind' : 'BLAZETAB'
+    'filekind' : 'BLAZETAB',
     'filetype' : 'ECHELLE BLAZE SHIFT TABLE',
     'instrument' : 'STIS',
     'ld_tpn' : 'stis_blz_ld.tpn',
