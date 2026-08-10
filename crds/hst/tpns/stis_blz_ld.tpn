@@ -12,7 +12,7 @@ OPUS_FLAG           H        C         R    Y,N
 COMPARISON_FILE     H        C         R    
 COMMENT             H        C         R
 INSTRUMENT	    H	     C	       R    STIS
-REFERENCE_FILE_TYPE H        C         R    BLZ
+REFERENCE_FILE_TYPE H        C         R    BLAZE
 DETECTOR            C        C         R    NUV-MAMA,FUV-MAMA
 OBSTYPE             C        C         R    SPECTROSCOPIC
 OPT_ELEM            C        C         R    E140M,E140H,E230M

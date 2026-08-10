@@ -2,6 +2,7 @@ header = {
     'derived_from' : 'Initial hand made version 08-26. Jira CRDS-1151.',
     'extra_keys' : (),
     'file_ext' : '.fits',
+    'filekind' : 'BLAZETAB'
     'filetype' : 'ECHELLE BLAZE SHIFT TABLE',
     'instrument' : 'STIS',
     'ld_tpn' : 'stis_blz_ld.tpn',
@@ -13,7 +14,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'PHOTCORR',
     'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '92aedb31537879e85f201205e074f37acf5534cc',
+    'sha1sum' : '526a2f01efca6a4f56290fb796a73a31e0766a0b',
     'suffix' : 'blz',
     'text_descr' : 'Reference file that contains the STIS blaze correction coefficients',
     'tpn' : 'stis_blz.tpn',
