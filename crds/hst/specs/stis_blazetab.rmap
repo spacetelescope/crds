@@ -5,7 +5,7 @@ header = {
     'filekind' : 'BLAZETAB',
     'filetype' : 'Time dependent blaze correction file',
     'instrument' : 'STIS',
-    'ld_tpn' : 'stis_blaze_ld.tpn',
+    'ld_tpn' : 'stis_blz_ld.tpn',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_blazetab.rmap',
     'observatory' : 'HST',
@@ -17,7 +17,7 @@ header = {
     'sha1sum' : '54500d0770ff6d05b967208ad6fddcfbba4f30cd',
     'suffix' : 'blz',
     'text_descr' : 'Reference file that contains the STIS blaze correction coefficients',
-    'tpn' : 'stis_blaze.tpn',
+    'tpn' : 'stis_blz.tpn',
     'unique_rowkeys' : None,
 }
 
