@@ -3,7 +3,7 @@ header = {
     'extra_keys' : (),
     'file_ext' : '.fits',
     'filekind' : 'BLAZETAB',
-    'filetype' : 'Echelle blaze shift table',
+    'filetype' : 'ECHELLE BLAZE SHIFT TABLE',
     'instrument' : 'STIS',
     'ld_tpn' : 'stis_blz_ld.tpn',
     'mapping' : 'REFERENCE',
