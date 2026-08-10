@@ -14,7 +14,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'PHOTCORR',
     'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '339a18b2e6d9f268e374237edd8df6e9b892ab42',
+    'sha1sum' : 'c285a721eee025ed084729d85393561ba992417d',
     'suffix' : 'blz',
     'text_descr' : 'Reference file that contains the STIS blaze correction coefficients',
     'tpn' : 'stis_blz.tpn',
