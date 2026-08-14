@@ -11,8 +11,7 @@ INSTRUME            H        C         R    STIS
 FILETYPE            H        C         R    "ECHELLE BLAZE SHIFT TABLE"
 DETECTOR            H        C         R    CCD,NUV-MAMA,FUV-MAMA
 OBSTYPE             H        C         R    SPECTROSCOPIC
-OPT_ELEM            C        C         R    E140M,E140H,E230M,E230H,\
-          X140H,X140M,X230H,X230M,N/A
+OPT_ELEM            C        C         R    E140M,E140H,E230M,E230H
 CENWAVE             H        I         R    1978,2707,2124,2269,2415,2561,\
           1763,2013,2263,2513,2762,3012,\
           1813,1863,1913,1963,2063,2113,2163,2213,2313,2363,2413,2463,\
