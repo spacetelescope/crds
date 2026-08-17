@@ -42,8 +42,8 @@ jobs:
           - ubuntu-latest
           - macos-latest
         python-version:
-          - '3.11'
           - '3.12'
+          - '3.13'
           # if this breaks, add an upper pin to `requires-python` and revert this to the latest working version
           - '3.*'
     steps:
