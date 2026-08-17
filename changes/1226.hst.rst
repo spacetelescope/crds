@@ -1,0 +1,2 @@
+Add initial rmap and tpns for new reference file type: STIS BLAZETAB (CCD-1765)
+
