@@ -17,8 +17,7 @@ log.set_verbose(40)
 
 @fixture(autouse=False, name="mp_lock_manager")
 def mp_lock_manager():
-    """Clean isolation of multiprocessing manager lifetime per test. Forces shutdown of any stale managers from previous tests,
-    initializes a fresh manager for each specifc test execution, and cleans up immediately after the test completes to avoid leaking state into subsequent tests."""
+    """Clean isolation of multiprocessing manager lifetime per test. Forces shutdown of any stale managers from previous tests, initializes a fresh manager for each specifc test execution, and cleans up immediately after the test completes to avoid leaking state into subsequent tests."""
     shutdown_mp_manager()
     initialize_multiprocessing_mode() # ACTIVATE MP MUX
     yield
