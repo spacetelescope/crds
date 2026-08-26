@@ -812,9 +812,6 @@ class FileCacher:
                 "at CRDS server", srepr(get_crds_server()),
                 "with mode", srepr(config.get_download_mode()),
                 ":", str(exc)) from exc
-        # except:  # mainly for control-c,  catch it and throw it.
-        #     self.remove_file(localpath)
-        #     raise
 
     def remove_file(self, localpath):
         """Removes file at `localpath`."""

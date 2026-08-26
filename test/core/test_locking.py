@@ -2,33 +2,31 @@ import time
 import os
 import importlib
 import multiprocessing
+import queue
 import logging
 import logging.handlers
 from pytest import mark, fixture
 from crds.core import config, log
 from crds.sync import SyncScript
 from crds.core.heavy_client import getreferences
-from crds.core.cache_locker import crds_lock, initialize_multiprocessing_mode, shutdown_mp_manager
+from crds.core.cache_locker import crds_lock#, initialize_multiprocessing_mode, shutdown_mp_manager
 log.THE_LOGGER.logger.propagate = True
 log.set_verbose(40)
 
 
 ### Dynamic Fixtures for multiprocessing lock tests ###
-
-@fixture(autouse=False, name="mp_lock_manager")
-def mp_lock_manager():
-    """Clean isolation of multiprocessing manager lifetime per test. Forces shutdown of any stale managers from previous tests, initializes a fresh manager for each specifc test execution, and cleans up immediately after the test completes to avoid leaking state into subsequent tests."""
-    shutdown_mp_manager()
-    initialize_multiprocessing_mode() # ACTIVATE MP MUX
-    yield
-    shutdown_mp_manager()
-
-
 @fixture(autouse=False, scope="function", name="_cache_locker")
 def _cache_locker():
     # Dynamically import the module
     return importlib.import_module("crds.core.cache_locker")
 
+@fixture(autouse=False, name="mp_lock_manager")
+def mp_lock_manager(_cache_locker):
+    """Clean isolation of multiprocessing manager lifetime per test. Forces shutdown of any stale managers from previous tests, initializes a fresh manager for each specifc test execution, and cleans up immediately after the test completes to avoid leaking state into subsequent tests."""
+    _cache_locker.shutdown_mp_manager()
+    _cache_locker.initialize_multiprocessing_mode() # ACTIVATE MP MUX
+    yield
+    _cache_locker.shutdown_mp_manager()
 
 ### multiprocessing.Process lock tests ###
 
@@ -40,6 +38,7 @@ def parallel_worker_task(payload):
     """
     worker_id, target_path, output_queue, shared_dict = payload
     if shared_dict is not None:
+        from crds.core.cache_locker import initialize_multiprocessing_mode
         initialize_multiprocessing_mode(shared_dict=shared_dict)
     try:
         with crds_lock(target_path, timeout=10.0):
@@ -93,8 +92,9 @@ def test_multiprocessing_locking(mp_lock_manager, _cache_locker, tmp_path):
 
 def parallel_getrefs_worker(payload):
     """Worker function for testing getreferences with multiprocessing locks."""
-    worker_id, header, reftypes, context, observatory, shared_dict, log_queue = payload
+    (worker_id, header, reftypes, context, observatory, shared_dict, log_queue, completion_event) = payload
     if shared_dict is not None:
+        from crds.core.cache_locker import initialize_multiprocessing_mode
         initialize_multiprocessing_mode(shared_dict=shared_dict)
     log.set_verbose(40)
     queue_handler = logging.handlers.QueueHandler(log_queue)
@@ -108,9 +108,9 @@ def parallel_getrefs_worker(payload):
     finally:
         log.THE_LOGGER.logger.removeHandler(queue_handler) # clean up to avoid memory pollution
         log_queue.put(f"WORKER_{worker_id}_DONE")
+        completion_event.set()  # Signal that this worker has completed its task
 
 
-@mark.roman
 @mark.locking
 def test_mp_locking_getrefs_roman(mp_lock_manager, _cache_locker, roman_temp_cache_state):
     shared_dict = _cache_locker._MULTIPROCESSING_LOCKS
@@ -123,20 +123,21 @@ def test_mp_locking_getrefs_roman(mp_lock_manager, _cache_locker, roman_temp_cac
     ctx = multiprocessing.get_context()
     log_queue = ctx.Queue()
     workers = []
-    for i in range(num_workers:=3): 
-        payload = (i, header, ['apcorr'], 'roman_0061.pmap', 'roman', shared_dict, log_queue)
+    completion_events = []
+    for i in range(3): # num_workers
+        event = ctx.Event()
+        completion_events.append(event)
+        payload = (i, header, ['apcorr'], 'roman_0061.pmap', 'roman', shared_dict, log_queue, event)
         p = ctx.Process(target=parallel_getrefs_worker, args=(payload,))
         workers.append(p)
         p.start()
     # Continually drain log queue from background bugger until all 3 worker sentinel tokens arrive
     log_records = []
-    finished_workers = 0
-    while finished_workers < num_workers:
-        item = log_queue.get()
-        if isinstance(item, str) and item.startswith("WORKER_") and item.endswith("_DONE"):
-            finished_workers += 1
-        else:
-            log_records.append(item)
+    while not all(ev.is_set() for ev in completion_events):
+        try:
+            while True: log_records.append(log_queue.get_nowait())
+        except queue.Empty:
+            time.sleep(0.01)
     for p in workers:
         p.join()
 
@@ -167,6 +168,7 @@ def pool_worker_task(payload):
     """
     worker_id, target_path, shared_dict = payload
     if shared_dict is not None:
+        from crds.core.cache_locker import initialize_multiprocessing_mode
         initialize_multiprocessing_mode(shared_dict=shared_dict)
     try:
         with crds_lock(target_path, timeout=10.0):
@@ -183,7 +185,6 @@ def pool_worker_task(payload):
         return {"worker_id": worker_id, "success": False, "error": str(e)}
 
 @mark.skip(reason="Skipping due to intermittent failures in CI/CD. Needs investigation.")
-@mark.multimission
 @mark.locking
 def test_pool_locking_generic(mp_lock_manager, _cache_locker, tmp_path):
     local_target = str(tmp_path / "test_pool_cache_file.tmp")
@@ -221,7 +222,7 @@ def pool_getrefs_worker(payload):
     capture_handler = LogCaptureHandler()
     log.THE_LOGGER.logger.addHandler(capture_handler)
     try:
-        getreferences(parameters=header, reftypes=reftypes, context=context, observatory=observatory, fast=True)
+        getreferences(parameters=header, reftypes=reftypes, context=context, observatory=observatory)
         worker_logs = [
             {"created": rec.created, "message": rec.getMessage()}
             for rec in capture_handler.buffer
@@ -234,7 +235,7 @@ def pool_getrefs_worker(payload):
         log.THE_LOGGER.logger.removeHandler(capture_handler) # clean up to avoid memory pollution
 
 
-@mark.roman
+
 @mark.locking
 def test_pool_locking_getreferences(mp_lock_manager, _cache_locker, roman_temp_cache_state):
     """
@@ -311,7 +312,7 @@ def test_getrefs_filelock(jwst_shared_cache_state, caplog):
     assert refs == {'flat': f'{cache_path}/references/jwst/jwst_miri_flat_0001.fits'}
 
 
-@mark.multimission
+
 @mark.locking
 def test_default_readonly(default_shared_state, caplog):
     config.set_cache_readonly()
