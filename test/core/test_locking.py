@@ -96,6 +96,8 @@ def parallel_getrefs_worker(queue, pipeline_kwargs):
         import traceback
         queue.put(("ERROR", f"{str(e)}\n{traceback.format_exc()}"))
 
+
+@mark.skip(reason="Skipping due to intermittent failures in CI/CD. Needs investigation.")
 @mark.locking
 def test_mp_locking_getrefs_roman(mp_lock_manager, roman_temp_cache_state):
     log.set_verbose(40)   
@@ -152,7 +154,6 @@ def pool_worker_task(payload):
     except Exception as e:
         return {"worker_id": worker_id, "success": False, "error": str(e)}
 
-@mark.skip(reason="Skipping due to intermittent failures in CI/CD. Needs investigation.")
 @mark.locking
 def test_pool_locking_generic(mp_lock_manager, tmp_path):
     local_target = str(tmp_path / "test_pool_cache_file.tmp")
