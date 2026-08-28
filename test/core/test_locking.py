@@ -17,7 +17,7 @@ log.set_verbose(40)
 ### Dynamic Fixtures for multiprocessing lock tests ###
 
 @fixture(autouse=False, name="mp_lock_manager")
-def mp_lock_manager(_cache_locker):
+def mp_lock_manager():
     """Clean isolation of multiprocessing manager lifetime per test. Forces shutdown of any stale managers from previous tests, initializes a fresh manager for each specifc test execution, and cleans up immediately after the test completes to avoid leaking state into subsequent tests."""
     from crds.core.cache_locker import shutdown_mp_manager, initialize_multiprocessing_mode
     shutdown_mp_manager()
