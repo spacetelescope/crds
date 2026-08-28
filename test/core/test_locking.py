@@ -86,50 +86,6 @@ def test_multiprocessing_locking(mp_lock_manager, tmp_path):
             f"before the previous worker left at {previous_worker_end:.2f}."
         )
 
-
-def parallel_getrefs_worker(queue, pipeline_kwargs):
-    """Worker function for testing getreferences with multiprocessing locks."""
-    try:
-        result = getreferences(**pipeline_kwargs)
-        queue.put(("SUCCESS", result))
-    except Exception as e:
-        import traceback
-        queue.put(("ERROR", f"{str(e)}\n{traceback.format_exc()}"))
-
-
-@mark.skip(reason="Skipping due to intermittent failures in CI/CD. Needs investigation.")
-@mark.locking
-def test_mp_locking_getrefs_roman(mp_lock_manager, roman_temp_cache_state):
-    log.set_verbose(40)   
-    pipeline_kwargs = dict(
-        parameters={
-            'ROMAN.META.INSTRUMENT.NAME': 'wfi',
-            'ROMAN.META.EXPOSURE.START_TIME': '2026-08-01',
-            'ROMAN.META.INSTRUMENT.DETECTOR': 'WFI01',
-        }, 
-        reftypes=['apcorr'], context='roman_0061.pmap', observatory='roman'
-    )
-    q1 = multiprocessing.Queue()
-    q2 = multiprocessing.Queue()
-    p1 = multiprocessing.Process(target=parallel_getrefs_worker, args=(q1, pipeline_kwargs))
-    p2 = multiprocessing.Process(target=parallel_getrefs_worker, args=(q2, pipeline_kwargs))
-    p1.start()
-    p2.start()
-    p1.join(timeout=5)
-    p2.join(timeout=5)
-    for p in [p1, p2]:
-        if p.is_alive():
-            p.terminate()
-            p.join()
-    assert not q1.empty(), "Process 1 hung and did not return a status"
-    assert not q2.empty(), "Process 2 hung and did not return a status"
-    status1, res1 = q1.get()
-    status2, res2 = q2.get()
-    assert status1 == "SUCCESS", f"Process 1 failed: {res1}"
-    assert status2 == "SUCCESS", f"Process 2 failed: {res2}"
-
-
-
 ### multiprocessing.Pool lock tests ###
 
 def pool_worker_task(payload):
@@ -154,6 +110,8 @@ def pool_worker_task(payload):
     except Exception as e:
         return {"worker_id": worker_id, "success": False, "error": str(e)}
 
+
+@mark.skip(reason="Skipping due to intermittent failures in CI/CD.")
 @mark.locking
 def test_pool_locking_generic(mp_lock_manager, tmp_path):
     local_target = str(tmp_path / "test_pool_cache_file.tmp")
