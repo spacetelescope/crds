@@ -1,3 +1,13 @@
+14.0.0 (2026-09-04)
+===================
+
+General
+-------
+
+- Overhaul cache locking module CCD-1580 (`#1228
+  <https://github.com/spacetelescope/crds/issues/1228>`_)
+
+
 13.2.9 (2026-08-28)
 ===================
 
