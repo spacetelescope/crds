@@ -7,23 +7,35 @@ ignore = ["README.md"]
 wrap = true
 issue_format = "`#{issue} <https://github.com/spacetelescope/crds/issues/{issue}>`_"
 
-[tool.towncrier.fragment.hst]
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "Breaking Changes"
+
+[[tool.towncrier.type]]
+directory = "hst"
 name = "HST"
 
-[tool.towncrier.fragment.jwst]
+[[tool.towncrier.type]]
+directory = "jwst"
 name = "JWST"
 
-[tool.towncrier.fragment.roman]
+[[tool.towncrier.type]]
+directory = "roman"
 name = "ROMAN"
 
-[tool.towncrier.fragment.synphot]
+[[tool.towncrier.type]]
+directory = "synphot"
 name = "synphot"
 
-[tool.towncrier.fragment.doc]
+[[tool.towncrier.type]]
+directory = "doc"
 name = "Documentation"
 
-[tool.towncrier.fragment.testing]
+[[tool.towncrier.type]]
+directory = "testing"
 name = "Testing / Automation"
 
-[tool.towncrier.fragment.general]
+[[tool.towncrier.type]]
+directory = "general"
+name = "Other Changes"
 
