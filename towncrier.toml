@@ -1,0 +1,41 @@
+[tool.towncrier]
+filename = "CHANGES.rst"
+directory = "changes"
+package = "crds"
+title_format = "{version} ({project_date})"
+ignore = ["README.md"]
+wrap = true
+issue_format = "`#{issue} <https://github.com/spacetelescope/crds/issues/{issue}>`_"
+
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "Breaking Changes"
+
+[[tool.towncrier.type]]
+directory = "hst"
+name = "HST"
+
+[[tool.towncrier.type]]
+directory = "jwst"
+name = "JWST"
+
+[[tool.towncrier.type]]
+directory = "roman"
+name = "ROMAN"
+
+[[tool.towncrier.type]]
+directory = "synphot"
+name = "synphot"
+
+[[tool.towncrier.type]]
+directory = "doc"
+name = "Documentation"
+
+[[tool.towncrier.type]]
+directory = "testing"
+name = "Testing / Automation"
+
+[[tool.towncrier.type]]
+directory = "general"
+name = "Other Changes"
+
