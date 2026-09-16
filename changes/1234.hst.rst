@@ -1,0 +1,2 @@
+Change default type of LIFE_ADJ in cos wcp and flat tpns from I to C
+
