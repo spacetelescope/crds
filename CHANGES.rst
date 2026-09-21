@@ -1,3 +1,13 @@
+14.0.1 (2026-09-21)
+===================
+
+HST
+---
+
+- Change default type of LIFE_ADJ in cos wcp and flat tpns from I to C (`#1234
+  <https://github.com/spacetelescope/crds/issues/1234>`_)
+
+
 14.0.0 (2026-09-04)
 ===================
 
