@@ -728,6 +728,9 @@ def _get_s3_uri_content(s3_uri, **kwargs):
                                          "Try `pip install crds[aws]` to install AWS S3 dependencies.")
     bucket_name, key = s3_uri.replace("s3://", "").split("/", 1)
     s3 = boto3.resource("s3")
+    if bucket_name == "stpubdata":
+        from botocore.handlers import disable_signing
+        s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
     obj = s3.Object(bucket_name, key)
     binary = obj.get()["Body"].read()
     if kwargs.get("mode", "text") == "text":
