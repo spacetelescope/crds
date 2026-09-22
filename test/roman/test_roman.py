@@ -186,7 +186,7 @@ def test_getreferences_s3_test_cache(roman_s3_test_bucket, roman_aws_temp_cache_
 @mark.s3
 @mark.roman
 @mock_aws
-def test_getreferences_s3_public(roman_s3_public_bucket, roman_aws_temp_cache_state):
+def test_getreferences_s3_public(roman_s3_public_bucket, roman_aws_temp_public_cache_state):
     s3_client = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
     bucket_name = roman_s3_public_bucket
     assert config.S3_ENABLED.get() is True
