@@ -428,12 +428,11 @@ def roman_aws_temp_public_cache_state(test_temp_dir):
         url="https://roman-crds-serverless.stsci.edu",
         observatory="roman",
     )
-    roman_aws_config_kwargs.update(
+    cfg.config_setup(**roman_aws_config_kwargs.update(
         CRDS_MAPPING_URI="s3://stpubdata/roman/crds/mappings/roman",
         CRDS_REFERENCE_URI="s3://stpubdata/roman/crds/references/roman",
         CRDS_CONFIG_URI="s3://stpubdata/roman/crds/config/roman"
-    )
-    cfg.config_setup(**roman_aws_config_kwargs)
+    ))
     yield cfg
     cfg.cleanup()
 
@@ -544,12 +543,12 @@ def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials,
 
 
 @fixture(scope="function")
-def roman_s3_public_bucket(roman_aws_temp_public_cache_state, roman_data, moto_server):
+def roman_s3_public_bucket(roman_s3_test_cache_state, roman_data, moto_server):
     """Returns a mocked public S3 bucket populated with mappings. No AWS credentials are required to access this bucket."""
     bucket_name = "stpubdata"
     pfx = "roman/crds"
-    mappings = os.listdir(os.path.join(roman_aws_temp_public_cache_state.cache, "mappings/roman"))
-    refs = os.listdir(os.path.join(roman_aws_temp_public_cache_state.cache, "references/roman"))
+    mappings = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "mappings/roman"))
+    refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
     cfg = os.path.join(roman_data, "test_cache_config/server_config")
     policy = {
         "Version": "2012-10-17",
