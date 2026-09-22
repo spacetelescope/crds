@@ -428,11 +428,12 @@ def roman_aws_temp_public_cache_state(test_temp_dir):
         url="https://roman-crds-serverless.stsci.edu",
         observatory="roman",
     )
-    cfg.config_setup(**roman_aws_config_kwargs.update(
+    roman_aws_config_kwargs.update(
         CRDS_MAPPING_URI="s3://stpubdata/roman/crds/mappings/roman",
         CRDS_REFERENCE_URI="s3://stpubdata/roman/crds/references/roman",
         CRDS_CONFIG_URI="s3://stpubdata/roman/crds/config/roman"
-    ))
+    )
+    cfg.config_setup(**roman_aws_config_kwargs)
     yield cfg
     cfg.cleanup()
 
