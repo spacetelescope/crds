@@ -409,7 +409,7 @@ def roman_s3_test_cache_state(test_cache):
     cfg.cleanup()
 
 
-@fixture()
+@fixture(scope='function')
 def roman_aws_temp_cache_state(test_temp_dir):
     cfg = ConfigState(
         cache=str(test_temp_dir),
@@ -421,7 +421,7 @@ def roman_aws_temp_cache_state(test_temp_dir):
     cfg.cleanup()
 
 
-@fixture()
+@fixture(scope='function')
 def roman_aws_temp_public_cache_state(test_temp_dir):
     cfg = ConfigState(
         cache=str(test_temp_dir),
