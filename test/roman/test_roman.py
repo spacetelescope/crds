@@ -201,21 +201,3 @@ def test_getreferences_s3_public(roman_s3_public_bucket, roman_aws_temp_public_c
             refpath = pathlib.Path(result[reftype])
             assert os.path.exists(refpath)
             assert refpath.name.startswith(f"roman_wfi_{reftype}_")
-
-@mark.bestrefs
-@mark.s3
-@mark.roman
-def test_getrefs_opendata_bucket(roman_aws_temp_public_cache_state):
-    """Tests unsigned (anon) calls to getreferences against the publicly available Roman Ops s3 opendata bucket.
-    """
-    assert config.S3_ENABLED.get() is True
-    reftype = 'flat'
-    header = REFHEADERS[reftype]
-    result = heavy_client.getreferences(
-        header,
-        observatory="roman",
-        reftypes=[reftype]
-    )
-    refpath = pathlib.Path(result[reftype])
-    assert os.path.exists(refpath)
-    assert refpath.name.startswith(f"roman_wfi_{reftype}_")
