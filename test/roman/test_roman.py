@@ -208,8 +208,6 @@ def test_getreferences_s3_public(roman_s3_public_bucket, roman_aws_temp_public_c
 def test_getrefs_opendata_bucket(roman_aws_temp_public_cache_state):
     """Tests unsigned (anon) calls to getreferences against the publicly available Roman Ops s3 opendata bucket.
     """
-    session = boto3.session.Session(aws_access_key_id=None, aws_secret_access_key=None, aws_session_token=None, region_name="us-east-1", botocore_session=None, profile_name=None, aws_account_id=None)
-    s3_client = session.client("s3", endpoint_url="s3://stpubdata/roman/crds")
     assert config.S3_ENABLED.get() is True
     reftype = 'flat'
     header = REFHEADERS[reftype]
