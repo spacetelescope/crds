@@ -180,3 +180,24 @@ def test_getreferences_s3_test_cache(roman_s3_test_bucket, roman_aws_temp_cache_
             refpath = pathlib.Path(result[reftype])
             assert os.path.exists(refpath)
             assert refpath.name.startswith(f"roman_wfi_{reftype}_")
+
+
+@mark.bestrefs
+@mark.s3
+@mark.roman
+@mock_aws
+def test_getreferences_s3_public(roman_s3_public_bucket, roman_aws_temp_public_cache_state):
+    s3_client = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
+    bucket_name = roman_s3_public_bucket
+    assert config.S3_ENABLED.get() is True
+    with mock_aws():
+        for reftype, header in REFHEADERS.items():
+            result = heavy_client.getreferences(
+                header,
+                observatory="roman",
+                context="roman_0006.pmap",
+                reftypes=[reftype]
+            )
+            refpath = pathlib.Path(result[reftype])
+            assert os.path.exists(refpath)
+            assert refpath.name.startswith(f"roman_wfi_{reftype}_")

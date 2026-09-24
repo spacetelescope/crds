@@ -43,7 +43,10 @@ Prerequisites
         $ pip install crds[aws]
 
 
-    2. The compute environment must be configured with AWS credentials that have been granted access to the appropriate bucket. This is typically done by configuring the AWS CLI with `aws configure` or by setting the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. Only Roman Ops is publicly available in the AWS OpenData bucket (any valid AWS credentials are acceptable); HST buckets are accessible to STScI internal users only, and at this time STScI does not host any public S3 buckets for JWST CRDS access.
+    2. Roman Ops is publicly available as an AWS OpenData bucket - no AWS credentials are required to access it. 
+    
+    3. Other buckets require valid AWS credentials with access to the appropriate bucket: the compute environment must be configured with AWS credentials that have been granted access to the appropriate bucket. This is typically done by configuring the AWS CLI with `aws configure` or by setting the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. HST buckets are accessible to STScI internal users only, and at this time STScI does not host any public S3 buckets for JWST CRDS access.
+
 
 
 Configuration

@@ -18,7 +18,6 @@ both!
 """
 import argparse
 import os
-import re
 import subprocess
 import sys
 from crds.core.utils import checksum
@@ -97,7 +96,12 @@ def main():
         else:
             log.debug(f"crds_s3_get - '{fname}' exists at '{dest}' but --ignore_cache flag was set - Re-syncing.", verbosity=60)
 
-    result = subprocess.run([ "aws", "s3", "cp", src, dest], encoding="utf-8")
+    if src.replace("s3://", "").split("/")[0] == "stpubdata":
+        extra_args = ["--no-sign-request"]
+    else:
+        extra_args = []
+
+    result = subprocess.run([ "aws", "s3", "cp", src, dest, *extra_args], encoding="utf-8")
 
     if result.returncode != 0:
         log.error(f"crds_s3_get - Failed to download '{fname}' with return code {result.returncode}")
