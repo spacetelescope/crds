@@ -1,3 +1,15 @@
+14.0.2 (2026-09-28)
+===================
+
+ROMAN
+-----
+
+- Configure public s3 bucket access to use unsigned requests (`#1237
+  <https://github.com/spacetelescope/crds/issues/1237>`_)
+- updated area rmap text descr (`#1238
+  <https://github.com/spacetelescope/crds/issues/1238>`_)
+
+
 14.0.1 (2026-09-21)
 ===================
 
