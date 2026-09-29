@@ -21,17 +21,15 @@ The CRDS client can be configured to read files from Amazon's S3 service. The ST
 
 .. tip::
     
-    Your compute environment must be configured with AWS credentials that have been granted access to the bucket. The Roman Ops CRDS cache is hosted in the publicly-accessible AWS Open Data bucket so any valid AWS credentials can be used.
+    Running `$ source crds_s3_set {observatory} {environment}` sets all the necessary environment variables necessary to configure CRDS to read files from S3. See "Configuration" section below for more details.
 
 
 Configuring CRDS to use S3
 +++++++++++++++++++++++++++
 
-The CRDS client must be configured with environment variables to read files from S3 buckets. The exact configuration depends on the observatory. CRDS provides a convenience wrapper script `crds_s3_set` to automatically set the requisite environment vars depending on the observatory and use case inputs.
+The CRDS client must be configured with environment variables to read files from S3 buckets. The exact configuration depends on the observatory. CRDS provides a convenience wrapper script `crds_s3_set` to automatically set the requisite environment vars depending on the observatory and use case inputs. The exact variables required can be found by running the script, viewing the source code, or looking at the examples below.
 
-- `crds_s3_set` sets the necessary environment variables to read files from S3. This can be done manually in lieu of using the setter script. The exact variables required can be found by running the script, viewing the source code, or looking at the examples below.
-
-When CRDS detects that S3 access is enabled via the `CRDS_MODE=s3` environment variable, it will automatically use the S3 buckets for downloading mapping and reference files instead of the HTTP-based CRDS server.
+When CRDS detects that S3 access is enabled via the `CRDS_MODE=s3` environment variable (alongside a few other environment variables), it will automatically use the S3 buckets for downloading mapping and reference files instead of the HTTP-based CRDS server.
 
 Prerequisites
 .............
@@ -58,7 +56,7 @@ You can configure your environment for AWS/S3 manually or by using the `crds_s3_
 
    .. group-tab:: ROMAN
 
-        The s3 buckets for Roman only contain mappings and references from the last 5 contexts. The CRDS cache for Roman Ops is publicly accessible in the Open Data bucket. If you do not want to use the latest context, you will need to manually set the `CRDS_CONTEXT` environment variable as well.
+        The s3 buckets for Roman only contain mappings and references from the last 5 contexts. The CRDS cache for Roman Ops is publicly accessible in the Open Data bucket and does not require an AWS account or credentials. If you do not want to use the latest context, you will need to manually set the `CRDS_CONTEXT` environment variable as well.
 
         Using the `crds_s3_set` script to automatically set environment variables:
     
