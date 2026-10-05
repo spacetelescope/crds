@@ -1309,12 +1309,12 @@ def test_certify_check_rmap_updates(hst_serverless_state, hst_data, caplog):
     are always visible.   Using warnings avoids the automatic cancellation of large file submissions,
     holding open a choice between choosing to cancel or choosing to submit manual rmap fixes instead.
     """
-    argv = f"crds.certify {hst_data}/s7g1700gl_dead_overlap.fits {hst_data}/s7g1700gl_dead_dup1.fits {hst_data}/s7g1700gl_dead_dup2.fits --check-rmap-updates --comparison-context hst_0508.pmap --verbose"
+    argv = f"crds.certify {hst_data}/s7g1700gl_dead_overlap.fits {hst_data}/s7g1700gl_dead_dup1.fits {hst_data}/s7g1700gl_dead_dup2.fits --comparison-context hst_0508.pmap --verbose"
     with caplog.at_level(logging.DEBUG, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
 
-    expected1 = f"Command: ['crds.certify', '{hst_data}/s7g1700gl_dead_overlap.fits', '{hst_data}/s7g1700gl_dead_dup1.fits', '{hst_data}/s7g1700gl_dead_dup2.fits', '--check-rmap-updates', '--comparison-context', 'hst_0508.pmap', '--verbose']"
+    expected1 = f"Command: ['crds.certify', '{hst_data}/s7g1700gl_dead_overlap.fits', '{hst_data}/s7g1700gl_dead_dup1.fits', '{hst_data}/s7g1700gl_dead_dup2.fits', '--comparison-context', 'hst_0508.pmap', '--verbose']"
     assert expected1 in out
     expected2 = f"Certifying '{hst_data}/s7g1700gl_dead_dup1.fits' (1/3) as 'FITS' relative to context 'hst_0508.pmap'"
     assert expected2 in out

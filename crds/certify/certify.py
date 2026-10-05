@@ -1039,7 +1039,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
         self.add_argument("-f", "--run-fitsverify", action="store_true",
                           help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
         self.add_argument("-u", "--check-rmap-updates", action="store_true",
-                          help="Do a dry-run of adding reference files to the appropriate rmaps to detect errors.")
+                          help="Do a dry-run of adding reference files to the appropriate rmaps to detect errors. DEPRECATED: this is now enabled by default and will be removed in a future release. To turn off, use the -z or --dont-check-rmap-updates flag.")
+        self.add_argument("-z", "--dont-check-rmap-updates", action="store_true", 
+                          help="Do NOT do a dry-run of inserting reference files to the appropriate rmaps to detect errors.")
         self.add_argument("-k", "--check-sha1sums", action="store_true",
                           help="Check certified files to see if any are identical to files already in CRDS.")
 
@@ -1085,6 +1087,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
         if self.args.sync_files:
             self._sync_comparison_files(comparison_context, comparison_reference)
 
+        check_rmaps = True if not self.args.dont_check_rmap_updates else False
+
         certify_files(sorted(all_files),
                       self.resolve_context(comparison_context),
                       comparison_reference=comparison_reference,
@@ -1094,7 +1098,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
                       dont_parse=self.args.dont_parse,
                       script=self, observatory=self.observatory,
                       run_fitsverify=self.args.run_fitsverify,
-                      check_rmap=self.args.check_rmap_updates,
+                      check_rmap=check_rmaps,
                       check_sha1sums=self.args.check_sha1sums)
 
         self.dump_unique_errors()
