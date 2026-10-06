@@ -362,7 +362,7 @@ TIME-OBS = '00:00:00'
 @mark.jwst
 @mark.certify
 def test_certify_dump_provenance_generic(jwst_serverless_state, jwst_data, caplog):
-    argv = f"crds.certify {jwst_data}/valid.json --dump-provenance --comparison-context jwst_0034.pmap"
+    argv = f"crds.certify {jwst_data}/valid.json --dump-provenance --comparison-context jwst_0034.pmap -z"
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
@@ -413,6 +413,7 @@ def test_certify_missing_keyword(default_shared_state, hst_data, caplog):
 FITS file 'missing_keyword.fits' conforms to FITS standards.
 instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
 ########################################
+Skipping rmap update check due to certify errors.
 1 errors
 0 warnings"""
     for msg in expected_out.splitlines():
@@ -595,7 +596,7 @@ FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
 @mark.jwst
 @mark.certify
 def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
-    argv = f"crds.certify {jwst_data}/niriss_ref_photom.fits --comparison-context jwst_0125.pmap"
+    argv = f"crds.certify {jwst_data}/niriss_ref_photom.fits --comparison-context jwst_0125.pmap -z"
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
@@ -627,7 +628,7 @@ def test_certify_jwst_valid(jwst_shared_cache_state, jwst_data, caplog):
 @mark.jwst
 @mark.certify
 def test_certify_jwst_missing_optional_parkey(jwst_serverless_state, jwst_data, caplog):
-    argv = f"crds.certify {jwst_data}/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap"
+    argv = f"crds.certify {jwst_data}/jwst_miri_ipc_0003.add.fits --comparison-context jwst_0125.pmap -z"
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
@@ -651,15 +652,9 @@ def test_certify_jwst_invalid_asdf(jwst_serverless_state, jwst_data, caplog):
         CertifyScript(argv)()
         out = caplog.text
 
-    if asdf.__version__ < "3.0.0":
-        expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
-instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validation error : Input object does not appear to be an ASDF file or a FITS with ASDF extension
-########################################
-1 errors
-0 warnings"""
-    else:
-        expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
+    expected_out = f"""Certifying '{jwst_data}/invalid.asdf' (1/1) as 'ASDF' relative to context 'jwst.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.asdf' ::  Validation error : Does not appear to be a ASDF file.
+Skipping rmap update check due to certify errors above.
 ########################################
 1 errors
 0 warnings"""
@@ -677,6 +672,7 @@ def test_certify_jwst_invalid_json(jwst_serverless_state, jwst_data, caplog):
 
     expected_out = f"""Certifying '{jwst_data}/invalid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
 instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.json' ::  Validation error : JSON wouldn't load from '{jwst_data}/invalid.json' : Expecting ',' delimiter: line 5 column 1 (char 77)
+Skipping rmap update check due to certify errors above.
 ########################################
 1 errors
 0 warnings"""
@@ -697,6 +693,7 @@ instrument='UNKNOWN' type='UNKNOWN' data='{jwst_data}/invalid.yaml' ::  Validati
   in "{jwst_data}/invalid.yaml", line 1, column 5
 expected ' ', but found '^'
   in "{jwst_data}/invalid.yaml", line 1, column 21
+Skipping rmap update check due to certify errors above.
 ########################################
 1 errors
 0 warnings"""
@@ -1529,9 +1526,13 @@ def test_asdf_standard_requirement_succeed(jwst_serverless_state, jwst_data, cap
 
     expected_out = f"""Certifying '{jwst_data}/jwst_nircam_specwcs_1_4_0.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 Checking JWST datamodels.
+Checking rmap update for ('nircam', 'specwcs') inserting files
+Inserting jwst_nircam_specwcs_1_4_0.asdf into 'jwst_nircam_specwcs_0008.rmap'
+Certifying '/tmp/jwst_nircam_specwcs_0008.rmap' as 'MAPPING' relative to context 'jwst_0591.pmap'
+Match Parameter  'META.INSTRUMENT.MODULE [MODULE]'  is unchecked.
 ########################################
 0 errors
-0 warnings"""
+9 warnings"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -1539,27 +1540,17 @@ Checking JWST datamodels.
 @mark.jwst
 @mark.certify
 def test_asdf_library_version_fail(jwst_serverless_state, jwst_data, caplog):
-    argv = f"crds.certify {jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf --comparison-context jwst_0591.pmap"
+    argv = f"crds.certify {jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf --comparison-context jwst_0591.pmap -z"
     with caplog.at_level(logging.INFO, logger="CRDS"):
         CertifyScript(argv)()
         out = caplog.text
-
-    if asdf.__version__ < "3.0.0":
-        expected_out = f"""Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
-Setting 'META.EXPOSURE.TYPE [EXP_TYPE]' = None to value of 'META.EXPOSURE.P_EXPTYPE [P_EXPTYP]' = 'FGS_IMAGE|FGS_FOCUS|FGS_INTFLAT|FGS_SKYFLAT|'
-File written with dev version of asdf library: 2.0.0.dev1213
-Checking JWST datamodels.
-########################################
-0 errors
-1 warnings"""
-    else:
-        expected_out = f""" Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
+    expected_out = f""" Certifying '{jwst_data}/jwst_fgs_distortion_bad_asdf_version.asdf' (1/1) as 'ASDF' relative to context 'jwst_0591.pmap'
 tag:stsci.edu:asdf/core/asdf-1.0.0 is not recognized, converting to raw Python data structure
 File written with dev version of asdf library: 2.0.0.dev1213
 ########################################
 0 errors
 7 warnings
-5 infos"""
+11 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
@@ -2962,6 +2953,7 @@ Setting 'META.INSTRUMENT.BAND [BAND]' = None to value of 'P_BAND' = 'LONG'
 Setting 'META.INSTRUMENT.DETECTOR [DETECTOR]' = 'MIRIMAGE' to value of 'P_DETECT' = 'MIRIFUSHORT|FOO|'
 instrument='MIRI' type='IPC' data='{jwst_data}/jwst_miri_ipc.bad-value.fits' ::  Checking 'META.INSTRUMENT.DETECTOR [DETECTOR]' : Value 'FOO' is not one of ['ANY', 'MIRIFULONG', 'MIRIFUSHORT', 'MIRIMAGE', 'N/A']
 Checking JWST datamodels.
+Skipping rmap update check due to certify errors above.
 1 errors""".splitlines()
     for line in expected:
         assert line in out

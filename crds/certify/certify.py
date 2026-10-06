@@ -910,9 +910,13 @@ def certify_files(files, context, dump_provenance=False, check_references=False,
             compare_old_reference=compare_old_reference, dont_parse=dont_parse, script=script, observatory=observatory,
             comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify, check_sha1sum=check_sha1sums)
 
+
     if check_rmap: # Requires checking all files in parallel, hence not in certify_file()
         if not skip_banner:
             banner()
+        if log.errors() > 0:
+            log.info("Skipping rmap update check due to certify errors above.")
+            return
         with trap("Failed updating rmap"):
             check_rmap_updates(observatory, context, files)
 
@@ -1087,6 +1091,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
         if self.args.sync_files:
             self._sync_comparison_files(comparison_context, comparison_reference)
 
+        # Deprecation warning: remove in next major release v15.0
+        if self.args.check_rmap_updates:
+            log.warning("The --check-rmap-updates option is now enabled by default and will be removed in a future release.  Use the --dont-check-rmap-updates option (or -z) to disable this check.")
         check_rmaps = True if not self.args.dont_check_rmap_updates else False
 
         certify_files(sorted(all_files),
