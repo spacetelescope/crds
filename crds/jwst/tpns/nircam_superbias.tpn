@@ -1,3 +1,6 @@
+SUBARRAY_INBOUNDS_Y        X    X       (all_subarray())                          (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2307)
+SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2307)
+
 include includes/nir_subarray.tpn
 
 include includes/nir_sci_array_refpix.tpn
@@ -7,6 +10,3 @@ include includes/nir_dq_def_array.tpn
 
 # Commented out until INS is ready for strict model type validation:
 # META.MODEL_TYPE  H  S  R  SuperBiasModel
-
-SUBARRAY_INBOUNDS_Y        X    X       (all_subarray())                          (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2307)
-SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2307)
