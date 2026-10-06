@@ -413,7 +413,7 @@ def test_certify_missing_keyword(default_shared_state, hst_data, caplog):
 FITS file 'missing_keyword.fits' conforms to FITS standards.
 instrument='COS' type='DEADTAB' data='{hst_data}/missing_keyword.fits' ::  Checking 'DETECTOR' : Missing required keyword 'DETECTOR'
 ########################################
-Skipping rmap update check due to certify errors.
+Skipping rmap update check due to certify errors above.
 1 errors
 0 warnings"""
     for msg in expected_out.splitlines():
@@ -1550,7 +1550,7 @@ File written with dev version of asdf library: 2.0.0.dev1213
 ########################################
 0 errors
 7 warnings
-11 infos"""
+5 infos"""
     for msg in expected_out.splitlines():
         assert msg.strip() in out
 
