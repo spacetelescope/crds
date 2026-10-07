@@ -1,0 +1,1 @@
+Added change in boundary for SCI and SUBSIZE2 for NIRCAM
