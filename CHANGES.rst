@@ -1,3 +1,20 @@
+14.0.3 (2026-10-07)
+===================
+
+JWST
+----
+
+- Added change in boundary for SCI and SUBSIZE2 for NIRCAM (`#1243
+  <https://github.com/spacetelescope/crds/issues/1243>`_)
+
+
+Other Changes
+-------------
+
+- add dont-check-rmap-updates flag and set check-rmap-updates true by default
+  (`#1242 <https://github.com/spacetelescope/crds/issues/1242>`_)
+
+
 14.0.2 (2026-09-28)
 ===================
 
