@@ -23,7 +23,7 @@ SCI       A           X         (full_frame(EXP_TYPE=='FGS_ID-STACK'))      (SCI
 SCI       A           X         (subarray(EXP_TYPE=='FGS_ID-STACK'))        (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-2]-1<=XDIM_MAX)
 SCI       A           X         (subarray(EXP_TYPE!='FGS_ID-STACK'))        (1<=META_SUBARRAY_XSTART+SCI_ARRAY.SHAPE[-1]-1<=2048)
 
-SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2049)
+SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
 
 
 
