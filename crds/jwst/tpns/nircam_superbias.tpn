@@ -1,5 +1,5 @@
 SUBARRAY_INBOUNDS_Y        X    X       (all_subarray())                          (1<=META_SUBARRAY_YSTART+META_SUBARRAY_YSIZE-1<=2307)
-SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2307)
+SCI       A           X         (subarray())                                (1<=META_SUBARRAY_YSTART+SCI_ARRAY.SHAPE[-2]-1<=2048)
 
 include includes/nir_subarray.tpn
 
