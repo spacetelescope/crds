@@ -1,0 +1,1 @@
+add dont-check-rmap-updates flag and set check-rmap-updates true by default
