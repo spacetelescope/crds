@@ -872,7 +872,8 @@ class FileCacher:
             plugin_cmd = plugin_cmd.replace("${FILE_SIZE}", self.info_map[filename]["size"])
             plugin_cmd = plugin_cmd.replace("${FILE_SHA1SUM}", self.info_map[filename]["sha1sum"])
             log.verbose("Running download plugin:", repr(plugin_cmd))
-            status = os.WEXITSTATUS(subprocess.run(plugin_cmd))
+            result = subprocess.run(plugin_cmd, shell=True)
+            status = result.returncode
             if status != 0:
                 if status == 2:
                     raise KeyboardInterrupt("Interrupted plugin.")
