@@ -459,13 +459,13 @@ def moto_server():
 
 
 @fixture(scope="function")
-def s3_client(moto_server):
-    s3 = boto3.client(
+def s3(moto_server):
+    s3_client = boto3.client(
         "s3", 
         endpoint_url="http://localhost:5000", 
         config=Config(s3={'addressing_style': 'path'}, connect_timeout=5, read_timeout=5)
     )
-    yield s3
+    yield s3_client
 
 
 @fixture(scope="function")
