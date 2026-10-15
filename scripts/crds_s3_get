@@ -11,10 +11,6 @@ Exit status:
 404 - File does not exist on S3
 An error occurred (ExpiredToken) when calling the GetObject operation: The provided token has expired.
 other codes - aws-cli failure.  See https://docs.aws.amazon.com/cli/latest/topic/return-codes.html
-
-As of 2021-04-23, copies of this script are maintained in the crds
-and caldp repositories.  Please ensure that any bug fixes make it into
-both!
 """
 import argparse
 import os
