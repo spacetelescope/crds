@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           ref: main
           fetch-depth: 0
@@ -27,7 +27,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "<>"
 
-      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: 3
 
@@ -47,7 +47,7 @@ jobs:
           git push origin ${{ github.event.inputs.version }}
 
       - name: Create GitHub release (triggers publish-to-pypi workflow)
-        uses: zendesk/action-create-release@v3  # main
+        uses: zendesk/action-create-release@d533b73f28ddc0218cc4952c86af1c2d1ca2dde0  # v3
         env:
           GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
         with:
