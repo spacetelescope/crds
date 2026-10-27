@@ -9,6 +9,7 @@ import yaml
 import re
 from moto import mock_aws
 import boto3
+from botocore.client import Config
 
 # ==============================================================================
 
@@ -237,6 +238,14 @@ def jwst_default_cache_state(default_cache):
     cfg.cleanup()
 
 
+@fixture(scope='function')
+def roman_default_cache_state(default_cache):
+    cfg = ConfigState(cache=default_cache, mode='auto', url="https://roman-crds.stsci.edu", observatory="roman")
+    cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
+
+
 @fixture()
 def hst_temp_cache_state(test_temp_dir):
     cfg = ConfigState(
@@ -245,6 +254,19 @@ def hst_temp_cache_state(test_temp_dir):
         observatory="hst",
     )
     cfg.config_setup()
+    yield cfg
+    cfg.cleanup()
+
+
+@fixture()
+def roman_temp_cache_state(test_temp_dir):
+    cfg = ConfigState(
+        cache=str(test_temp_dir),
+        url="https://roman-crds.stsci.edu",
+        observatory="roman",
+
+    )
+    cfg.config_setup(CRDS_REF_SUBDIR_MODE="flat")
     yield cfg
     cfg.cleanup()
 
@@ -352,15 +374,14 @@ def roman_test_cache_state(test_cache):
     cfg.cleanup()
 
 
-
 roman_aws_config_kwargs = dict(
     CRDS_S3_ENABLED='1',
     CRDS_S3_RETURN_URI='0',
-    CRDS_DOWNLOAD_PLUGIN="crds_s3_get \${FILENAME} -d \${OUTPUT_PATH} -s \${FILE_SIZE} -c \${FILE_SHA1SUM}",
+    CRDS_DOWNLOAD_PLUGIN="crds_s3_get ${FILENAME} -d ${OUTPUT_PATH} -s ${FILE_SIZE} -c ${FILE_SHA1SUM}",
     CRDS_DOWNLOAD_MODE="plugin",
-    CRDS_MAPPING_URI=f"s3://stpubdata-mock/roman/crds/mappings/roman",
-    CRDS_REFERENCE_URI=f"s3://stpubdata-mock/roman/crds/references/roman",
-    CRDS_CONFIG_URI=f"s3://stpubdata-mock/roman/crds/config/roman",
+    CRDS_MAPPING_URI="s3://stpubdata-mock/roman/crds/mappings/roman",
+    CRDS_REFERENCE_URI="s3://stpubdata-mock/roman/crds/references/roman",
+    CRDS_CONFIG_URI="s3://stpubdata-mock/roman/crds/config/roman",
 )
 
 @fixture(scope='function')
@@ -389,12 +410,29 @@ def roman_s3_test_cache_state(test_cache):
     cfg.cleanup()
 
 
-@fixture()
-def roman_temp_cache_state(test_temp_dir):
+@fixture(scope='function')
+def roman_aws_temp_cache_state(test_temp_dir):
     cfg = ConfigState(
         cache=str(test_temp_dir),
         url="https://roman-crds-serverless.stsci.edu",
         observatory="roman",
+    )
+    cfg.config_setup(**roman_aws_config_kwargs)
+    yield cfg
+    cfg.cleanup()
+
+
+@fixture(scope='function')
+def roman_aws_temp_public_cache_state(test_temp_dir):
+    cfg = ConfigState(
+        cache=str(test_temp_dir),
+        url="https://roman-crds-serverless.stsci.edu",
+        observatory="roman",
+    )
+    roman_aws_config_kwargs.update(
+        CRDS_MAPPING_URI="s3://stpubdata/roman/crds/mappings/roman",
+        CRDS_REFERENCE_URI="s3://stpubdata/roman/crds/references/roman",
+        CRDS_CONFIG_URI="s3://stpubdata/roman/crds/config/roman"
     )
     cfg.config_setup(**roman_aws_config_kwargs)
     yield cfg
@@ -414,14 +452,24 @@ def aws_credentials():
 @fixture
 def moto_server():
     from moto.server import ThreadedMotoServer
-    server = ThreadedMotoServer(port=5000)
+    server = ThreadedMotoServer(ip_address="0.0.0.0", port=5000)
     server.start()
     yield server
     server.stop()
 
 
 @fixture(scope="function")
-def roman_s3_bucket(roman_s3_cache_state, roman_data, aws_credentials, moto_server):
+def s3(moto_server):
+    s3_client = boto3.client(
+        "s3", 
+        endpoint_url="http://localhost:5000", 
+        config=Config(s3={'addressing_style': 'path'}, connect_timeout=5, read_timeout=5)
+    )
+    yield s3_client
+
+
+@fixture(scope="function")
+def roman_s3_bucket(roman_s3_cache_state, roman_data, aws_credentials, s3):
     """
     Return a mocked S3 bucket populated with mappings
     The server_config file is from roman test data and is fixed at roman_0055.pmap as "latest".
@@ -461,22 +509,20 @@ def roman_s3_bucket(roman_s3_cache_state, roman_data, aws_credentials, moto_serv
         'roman_wfi_skycells_0002.rmap',
         'roman_wfi_specpsf_0001.rmap'
     ]
-    with mock_aws():
-        s3 = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
-        s3.create_bucket(Bucket=bucket_name)
-        for mapping in mappings:
-            fpath = os.path.join(crds_config.get_crds_path(), "mappings/roman", mapping)
-            with open(fpath, 'rb') as f:
-                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
-        # sync config
-        cfg_path = os.path.join(roman_data, "server_config")
-        with open(cfg_path, 'rb') as f:
-            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
-        yield bucket_name
+    s3.create_bucket(Bucket=bucket_name)
+    for mapping in mappings:
+        fpath = os.path.join(crds_config.get_crds_path(), "mappings/roman", mapping)
+        with open(fpath, 'rb') as f:
+            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
+    # sync config
+    cfg_path = os.path.join(roman_data, "server_config")
+    with open(cfg_path, 'rb') as f:
+        s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
+    yield bucket_name
 
 
 @fixture(scope="function")
-def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials, moto_server):
+def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials, s3):
     """
     Return a mocked S3 bucket populated with mappings
     Uses contents of crds-cache-test to populate the mocked s3 bucket.
@@ -489,21 +535,56 @@ def roman_s3_test_bucket(roman_s3_test_cache_state, roman_data, aws_credentials,
     # cfg = os.path.join(roman_s3_test_cache_state.cache, "config/roman/server_config")
     # make sure we get the updated config - test cache isn't getting updated version
     cfg = os.path.join(roman_data, "test_cache_config/server_config")
-    with mock_aws():
-        s3 = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
-        s3.create_bucket(Bucket=bucket_name)
-        for mapping in mappings:
-            fpath = crds_config.locate_file(mapping, "roman")
-            with open(fpath, 'rb') as f:
-                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
-        for ref in refs:
-            fpath = crds_config.locate_file(ref, "roman")
-            with open(fpath, 'rb') as f:
-                s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
-        ## sync config
-        with open(cfg, 'rb') as f:
-            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
-        yield bucket_name
+    s3.create_bucket(Bucket=bucket_name)
+    for mapping in mappings:
+        fpath = crds_config.locate_file(mapping, "roman")
+        with open(fpath, 'rb') as f:
+            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
+    for ref in refs:
+        fpath = crds_config.locate_file(ref, "roman")
+        with open(fpath, 'rb') as f:
+            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
+    ## sync config
+    with open(cfg, 'rb') as f:
+        s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
+    yield bucket_name
+
+
+@fixture(scope="function")
+def roman_s3_public_bucket(roman_s3_test_cache_state, roman_data, s3):
+    """Returns a mocked public S3 bucket populated with mappings. No AWS credentials are required to access this bucket."""
+    bucket_name = "stpubdata"
+    pfx = "roman/crds"
+    mappings = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "mappings/roman"))
+    refs = os.listdir(os.path.join(roman_s3_test_cache_state.cache, "references/roman"))
+    cfg = os.path.join(roman_data, "test_cache_config/server_config")
+    policy = {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "PublicRead",
+                "Effect": "Allow",
+                "Principal": "*",  # Allows anonymous users
+                "Action": ["s3:GetObject"],
+                "Resource": [f"arn:aws:s3:::{bucket_name}/*"]
+            }
+        ]
+    }
+    s3 = boto3.client("s3", endpoint_url="http://127.0.0.1:5000")
+    s3.create_bucket(Bucket=bucket_name)
+    s3.put_bucket_policy(Bucket=bucket_name, Policy=json.dumps(policy))
+    for mapping in mappings:
+        fpath = crds_config.locate_file(mapping, "roman")
+        with open(fpath, 'rb') as f:
+            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/mappings/roman/{mapping}", Body=f.read())
+    for ref in refs:
+        fpath = crds_config.locate_file(ref, "roman")
+        with open(fpath, 'rb') as f:
+            s3.put_object(Bucket=bucket_name, Key=f"{pfx}/references/roman/{ref}", Body=f.read())
+    with open(cfg, 'rb') as f:
+        s3.put_object(Bucket=bucket_name, Key=f"{pfx}/config/roman/server_config", Body=f.read())
+    yield bucket_name
+
 
 # ==============================================================================
 

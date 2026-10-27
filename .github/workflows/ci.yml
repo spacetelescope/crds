@@ -43,8 +43,8 @@ jobs:
           - ubuntu-latest
           - macos-latest
         python-version:
-          - '3.11'
           - '3.12'
+          - '3.13'
           # if this breaks, add an upper pin to `requires-python` and revert this to the latest working version
           - '3.*'
     steps:
@@ -74,7 +74,7 @@ jobs:
       # dummy AWS credentials S3 testing (moto)
       - run: mkdir /tmp/.aws && touch /tmp/.aws/credentials && echo -e "[default]\naws_access_key_id = testing\naws_secret_access_key = testing" > /tmp/.aws/credentials
       - id: cache
-        uses: actions/cache@v5  # v4.0.2
+        uses: actions/cache@v6  # v4.0.2
         with:
           path: |
             ${{ needs.cache.outputs.path }}

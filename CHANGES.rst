@@ -1,3 +1,71 @@
+14.0.3 (2026-10-07)
+===================
+
+JWST
+----
+
+- Added change in boundary for SCI and SUBSIZE2 for NIRCAM (`#1243
+  <https://github.com/spacetelescope/crds/issues/1243>`_)
+
+
+Other Changes
+-------------
+
+- add dont-check-rmap-updates flag and set check-rmap-updates true by default
+  (`#1242 <https://github.com/spacetelescope/crds/issues/1242>`_)
+
+
+14.0.2 (2026-09-28)
+===================
+
+ROMAN
+-----
+
+- Configure public s3 bucket access to use unsigned requests (`#1237
+  <https://github.com/spacetelescope/crds/issues/1237>`_)
+- updated area rmap text descr (`#1238
+  <https://github.com/spacetelescope/crds/issues/1238>`_)
+
+
+14.0.1 (2026-09-21)
+===================
+
+HST
+---
+
+- Change default type of LIFE_ADJ in cos wcp and flat tpns from I to C (`#1234
+  <https://github.com/spacetelescope/crds/issues/1234>`_)
+
+
+14.0.0 (2026-09-04)
+===================
+
+General
+-------
+
+- Overhaul cache locking module CCD-1580 (`#1228
+  <https://github.com/spacetelescope/crds/issues/1228>`_)
+
+
+13.2.9 (2026-08-28)
+===================
+
+HST
+---
+
+- Add initial rmap and tpns for new reference file type: STIS BLAZETAB
+  (CCD-1765) (`#1226 <https://github.com/spacetelescope/crds/issues/1226>`_)
+
+
+ROMAN
+-----
+
+- Adds WFI_IM_DARK, WFI_SP_DARK to list of valid roman exp_types (`#1229
+  <https://github.com/spacetelescope/crds/issues/1229>`_)
+- add new reftype wfi BAM (`#1230
+  <https://github.com/spacetelescope/crds/issues/1230>`_)
+
+
 13.2.7 (2026-07-15)
 ===================
 

@@ -180,7 +180,7 @@ def test_reftypes_roman_reference_name_to_tpn_infos(default_shared_state, roman_
     infos = types.reference_name_to_tpninfos(f"{roman_data}/roman_wfi_flat.asdf")
     expected = """('ROMAN.META.AUTHOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=())
      ('ROMAN.META.DESCRIPTION', 'HEADER', 'CHARACTER', 'REQUIRED', values=())
-     ('ROMAN.META.EXPOSURE.TYPE', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('WFI_IMAGE', 'WFI_GRISM', 'WFI_PRISM', 'WFI_DARK', 'WFI_WSM_ACQ1', 'WFI_WSM_ACQ2', 'WFI_WSM_TRACK', 'WFI_WFSC', 'DEFOCUS_MODERATE', 'DEFOCUS_LARGE', 'WFI_WIM_ACQ', 'WFI_WIM_TRACK', 'WFI_PARALLEL', 'WFI_FLAT_EXTERNAL', 'WFI_FLAT_INTERNAL', 'WFI_RCS', 'WFI_SPECTRAL', 'WFI_LOLO'))
+     ('ROMAN.META.EXPOSURE.TYPE', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('WFI_IMAGE', 'WFI_GRISM', 'WFI_PRISM', 'WFI_DARK', 'WFI_WSM_ACQ1', 'WFI_WSM_ACQ2', 'WFI_WSM_TRACK', 'WFI_WFSC', 'DEFOCUS_MODERATE', 'DEFOCUS_LARGE', 'WFI_WIM_ACQ', 'WFI_WIM_TRACK', 'WFI_PARALLEL', 'WFI_FLAT_EXTERNAL', 'WFI_FLAT_INTERNAL', 'WFI_RCS', 'WFI_SPECTRAL', 'WFI_LOLO', 'WFI_IM_DARK', 'WFI_SP_DARK'))
      ('ROMAN.META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'OPTIONAL', values=('WFI01', 'WFI02', 'WFI03', 'WFI04', 'WFI05', 'WFI06', 'WFI07', 'WFI08', 'WFI09', 'WFI10', 'WFI11', 'WFI12', 'WFI13', 'WFI14', 'WFI15', 'WFI16', 'WFI17', 'WFI18', 'ANY', 'N/A'))
      ('ROMAN.META.INSTRUMENT.DETECTOR', 'HEADER', 'CHARACTER', 'REQUIRED', values=())
      ('ROMAN.META.INSTRUMENT.NAME', 'HEADER', 'CHARACTER', 'REQUIRED', values=())
@@ -222,7 +222,7 @@ def test_reftypes_jwst_get_filekinds(default_shared_state):
 def test_reftypes_roman_get_filekinds(default_shared_state):
     types = reftypes.get_types_object("roman")
     wfi_filekinds = types.get_filekinds("wfi")
-    expected_types = ['absflux', 'abvegaoffset', 'all', 'apcorr', 'area', 'dark', 'darkdecaysignal', 'detectorstatus', 'distortion', 'dustmap', 'epsf', 'etc', 'flat', 'gain', 'integralnonlinearity', 'inverselinearity', 'ipc', 'linearity', 'mask', 'matable', 'optmodel', 'pars-assignwcsstep', 'pars-darkcurrentstep', 'pars-darkdecaystep', 'pars-dqinitstep', 'pars-exposurepipeline', 'pars-flatfieldstep', 'pars-fluxstep', 'pars-highlevelpipeline', 'pars-jumpstep', 'pars-linearitystep', 'pars-multibandcatalogstep', 'pars-outlierdetectionstep', 'pars-photomstep', 'pars-rampfitstep', 'pars-refpixstep', 'pars-resamplestep', 'pars-saturationstep', 'pars-skymatchstep', 'pars-sourcecatalogstep', 'pars-sourcedetectionstep', 'pars-tweakregstep', 'pars-wfi18transientstep', 'photom', 'readnoise', 'refpix', 'relflux', 'saturation', 'sflat', 'skycells', 'specpsf']
+    expected_types = ['absflux', 'abvegaoffset', 'all', 'apcorr', 'area', 'bam', 'dark', 'darkdecaysignal', 'detectorstatus', 'distortion', 'dustmap', 'epsf', 'etc', 'flat', 'gain', 'integralnonlinearity', 'inverselinearity', 'ipc', 'linearity', 'mask', 'matable', 'optmodel', 'pars-assignwcsstep', 'pars-darkcurrentstep', 'pars-darkdecaystep', 'pars-dqinitstep', 'pars-exposurepipeline', 'pars-flatfieldstep', 'pars-fluxstep', 'pars-highlevelpipeline', 'pars-jumpstep', 'pars-linearitystep', 'pars-multibandcatalogstep', 'pars-outlierdetectionstep', 'pars-photomstep', 'pars-rampfitstep', 'pars-refpixstep', 'pars-resamplestep', 'pars-saturationstep', 'pars-skymatchstep', 'pars-sourcecatalogstep', 'pars-sourcedetectionstep', 'pars-tweakregstep', 'pars-wfi18transientstep', 'photom', 'readnoise', 'refpix', 'relflux', 'saturation', 'sflat', 'skycells', 'specpsf']
     assert sorted(wfi_filekinds) == sorted(expected_types)
 
 

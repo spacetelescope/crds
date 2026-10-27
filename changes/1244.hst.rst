@@ -1,0 +1,1 @@
+remove legacy os.WEXITSTATUS from plugin call

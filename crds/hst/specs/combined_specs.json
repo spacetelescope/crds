@@ -1589,6 +1589,37 @@
             "tpn":"stis_bia.tpn",
             "unique_rowkeys":null
         },
+        "blazetab":{
+            "derived_from":"Initial hand made version 08-26. Jira CRDS-1151.",
+            "extra_keys":[],
+            "file_ext":".fits",
+            "filekind":"BLAZETAB",
+            "filetype":"ECHELLE BLAZE SHIFT TABLE",
+            "instrument":"STIS",
+            "ld_tpn":"stis_blz_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"hst_stis_blazetab.rmap",
+            "observatory":"HST",
+            "parkey":[
+                [
+                    "DETECTOR",
+                    "OBSTYPE"
+                ],
+                [
+                    "DATE-OBS",
+                    "TIME-OBS"
+                ]
+            ],
+            "reffile_format":"TABLE",
+            "reffile_required":"NO",
+            "reffile_switch":"PHOTCORR",
+            "rmap_relevance":"(DETECTOR != \"CCD\" and OBSTYPE == \"SPECTROSCOPIC\")",
+            "sha1sum":"92aedb31537879e85f201205e074f37acf5534cc",
+            "suffix":"blz",
+            "text_descr":"Reference file that contains the STIS blaze correction coefficients",
+            "tpn":"stis_blz.tpn",
+            "unique_rowkeys":null
+        },
         "bpixtab":{
             "extra_keys":[],
             "file_ext":".fits",

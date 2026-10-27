@@ -22,4 +22,4 @@ ROMAN.META.EXPOSURE.TYPE  H   C   O   WFI_IMAGE,WFI_GRISM,WFI_PRISM,WFI_DARK,WFI
                                       WFI_WSM_TRACK,WFI_WFSC,DEFOCUS_MODERATE,DEFOCUS_LARGE,\
                                       WFI_WIM_ACQ,WFI_WIM_TRACK,WFI_PARALLEL,\
                                       WFI_FLAT,WFI_FLAT_EXTERNAL,WFI_FLAT_INTERNAL,\
-                                      WFI_RCS,WFI_SPECTRAL,WFI_LOLO
+                                      WFI_RCS,WFI_SPECTRAL,WFI_LOLO,WFI_IM_DARK,WFI_SP_DARK

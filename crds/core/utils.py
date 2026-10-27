@@ -37,6 +37,26 @@ from .constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
 # ===================================================================
 
+def deprecated(removed_in: str, alternative: str):
+    """
+    A decorator to mark functions as deprecated.
+    
+    It emits a warning when the decorated function is called.
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            warnings.warn(
+                f"'{func.__name__}' is deprecated and will be removed in {removed_in}. "
+                f"Please use the alternative function {alternative} instead.",
+                category=DeprecationWarning,
+                stacklevel=2
+            )
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
 def deprecate(deprecated, after_date, alternative):
     """Issue a standard deprecation warning for `deprecated` feature
     (e.g. function name) to be removed `after_date` with suggested
@@ -708,6 +728,9 @@ def _get_s3_uri_content(s3_uri, **kwargs):
                                          "Try `pip install crds[aws]` to install AWS S3 dependencies.")
     bucket_name, key = s3_uri.replace("s3://", "").split("/", 1)
     s3 = boto3.resource("s3")
+    if bucket_name == "stpubdata":
+        from botocore.handlers import disable_signing
+        s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
     obj = s3.Object(bucket_name, key)
     binary = obj.get()["Body"].read()
     if kwargs.get("mode", "text") == "text":

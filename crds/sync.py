@@ -32,7 +32,7 @@ import glob
 # ============================================================================
 
 import crds
-from crds.core import log, config, utils, rmap, heavy_client, cmdline, crds_cache_locking
+from crds.core import cache_locker, log, config, utils, rmap, heavy_client, cmdline
 from crds import data_file
 from crds.core.log import srepr
 from crds.client import api
@@ -270,10 +270,9 @@ class SyncScript(cmdline.ContextsScript):
 
     def main(self):
         """Synchronize files."""
-
-        # clear any mutliprocessing locks associated with the CRDS cache.
+        # purge any orphaned .lock files left behind by aborted/crashed processes. (no-op if the cache is readonly.)
         if self.args.clear_locks:
-            crds_cache_locking.clear_cache_locks()
+            cache_locker.clear_cache_locks(config.get_crds_root_cfgpath())
             return log.errors()
 
         self.handle_misc_switches()   # simple side effects only
