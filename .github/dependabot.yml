@@ -3,7 +3,7 @@ updates:
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directory: ".github/workflows"
     target-branch: "main"
     schedule:
       interval: "monthly"
@@ -12,6 +12,6 @@ updates:
           patterns:
             - "*"
       cooldown:
-        default-days: 30
+        default-days: 7
     reviewers:
       - "zacharyburnett"
