@@ -7,11 +7,11 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_extract1d.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',),),
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : '4320150debe9115dcacd91d6bd3fb8392f46828d',
+    'sha1sum' : 'a6f47b5a7239a9d84099efab0e61beff2bb6a4ca',
     'suffix' : 'extract1d',
     'text_descr' : '1-D Spectral Extraction',
 }
