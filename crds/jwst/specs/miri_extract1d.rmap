@@ -7,14 +7,28 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_extract1d.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',),),
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.SUBARRAY.NAME', 'META.VISIT.TSOVISIT'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : '4320150debe9115dcacd91d6bd3fb8392f46828d',
+    'sha1sum' : '01b332cbb9f5f3c9a2d6d7d42669e9d2d96e6432',
     'suffix' : 'extract1d',
     'text_descr' : '1-D Spectral Extraction',
 }
 
 selector = Match({
+    ('MIR_LRS-FIXEDSLIT', 'FULL', 'False') : UseAfter({
+        '2001-01-01 00:00:00' : 'jwst_miri_extract1d_0004.json',
+        '2022-01-01 00:00:00' : 'jwst_miri_extract1d_0007.json',
+    }),
+    ('MIR_LRS-SLITLESS', 'SLITLESSPRISM', 'True') : UseAfter({
+        '2001-01-01 00:00:00' : 'jwst_miri_extract1d_0004.json',
+        '2022-01-01 00:00:00' : 'jwst_miri_extract1d_0007.json',
+    }),
+    ('MIR_MRS', 'FULL', 'N/A') : UseAfter({
+        '2000-01-01 00:00:00' : 'jwst_miri_extract1d_0004.asdf',
+    }),
+    ('N/A', 'N/A', 'N/A') : UseAfter({
+        '2000-01-01 00:00:00' : 'N/A',
+    }),
 })

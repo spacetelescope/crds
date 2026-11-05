@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'miri_pfpc.rmap',
+    'file_ext' : '.fits',
+    'filekind' : 'pars-pfpcstep',
+    'filetype' : 'pars-pfpcstep',
+    'instrument' : 'miri',
+    'mapping' : 'REFERENCE',
+    'name' : 'miri_pars-pfpcstep.rmap',
+    'observatory' : 'jwst',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : '56840034bee7c7391849e0af18e6ff9acdb2a69a',
+    'suffix' : 'pars-pfpcstep',
+    'text_descr' : 'Point Fixed Pattern Correction',
+}
+
+selector = Match({
+    'N/A' : UseAfter({
+        '2000-01-01 00:00:00' : 'N/A',
+    }),
+})
