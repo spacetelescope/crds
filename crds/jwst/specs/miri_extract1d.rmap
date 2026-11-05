@@ -11,10 +11,24 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : 'a6f47b5a7239a9d84099efab0e61beff2bb6a4ca',
+    'sha1sum' : '01b332cbb9f5f3c9a2d6d7d42669e9d2d96e6432',
     'suffix' : 'extract1d',
     'text_descr' : '1-D Spectral Extraction',
 }
 
 selector = Match({
+    ('MIR_LRS-FIXEDSLIT', 'FULL', 'False') : UseAfter({
+        '2001-01-01 00:00:00' : 'jwst_miri_extract1d_0004.json',
+        '2022-01-01 00:00:00' : 'jwst_miri_extract1d_0007.json',
+    }),
+    ('MIR_LRS-SLITLESS', 'SLITLESSPRISM', 'True') : UseAfter({
+        '2001-01-01 00:00:00' : 'jwst_miri_extract1d_0004.json',
+        '2022-01-01 00:00:00' : 'jwst_miri_extract1d_0007.json',
+    }),
+    ('MIR_MRS', 'FULL', 'N/A') : UseAfter({
+        '2000-01-01 00:00:00' : 'jwst_miri_extract1d_0004.asdf',
+    }),
+    ('N/A', 'N/A', 'N/A') : UseAfter({
+        '2000-01-01 00:00:00' : 'N/A',
+    }),
 })

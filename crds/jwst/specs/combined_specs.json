@@ -1142,7 +1142,7 @@
             "reference_to_dataset":{
                 "EXP_TYPE":"META.EXPOSURE.TYPE"
             },
-            "sha1sum":"a6f47b5a7239a9d84099efab0e61beff2bb6a4ca",
+            "sha1sum":"01b332cbb9f5f3c9a2d6d7d42669e9d2d96e6432",
             "suffix":"extract1d",
             "text_descr":"1-D Spectral Extraction",
             "tpn":"miri_extract1d.tpn",
@@ -2272,17 +2272,15 @@
             "name":"jwst_miri_pars-image3pipeline.rmap",
             "observatory":"JWST",
             "parkey":[
-                [
-                    "META.EXPOSURE.TYPE"
-                ],
+                [],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"ddca6749a71b598b1274d06f97cd94369ce3ad25",
+            "sha1sum":"740a479742afd3a4707ab0511d03e05832007872",
             "suffix":"pars-image3pipeline",
-            "text_descr":"Image3Pipeline runtime parameters",
+            "text_descr":"Pars-image3pipeline",
             "tpn":"miri_pars-image3pipeline.tpn",
             "unique_rowkeys":null
         },
