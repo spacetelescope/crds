@@ -4349,19 +4349,14 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.INSTRUMENT.CHANNEL",
-                    "META.INSTRUMENT.MODULE"
+                    "META.INSTRUMENT.DETECTOR"
                 ],
                 [
                     "META.OBSERVATION.DATE",
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "reference_to_dataset":{
-                "CHANNEL":"META.INSTRUMENT.CHANNEL",
-                "MODULE":"META.INSTRUMENT.MODULE"
-            },
-            "sha1sum":"2829aefe66add1820f02913e8f32a17d2e0dcd60",
+            "sha1sum":"29686406317e2f757b59e0bad24f10df9752a9f3",
             "suffix":"filteroffset",
             "text_descr":"Filter Offset",
             "tpn":"nircam_filteroffset.tpn",
