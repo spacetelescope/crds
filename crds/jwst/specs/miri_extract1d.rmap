@@ -17,18 +17,4 @@ header = {
 }
 
 selector = Match({
-    ('MIR_LRS-FIXEDSLIT', 'FULL', 'False') : UseAfter({
-        '2001-01-01 00:00:00' : 'jwst_miri_extract1d_0004.json',
-        '2022-01-01 00:00:00' : 'jwst_miri_extract1d_0007.json',
-    }),
-    ('MIR_LRS-SLITLESS', 'SLITLESSPRISM', 'True') : UseAfter({
-        '2001-01-01 00:00:00' : 'jwst_miri_extract1d_0004.json',
-        '2022-01-01 00:00:00' : 'jwst_miri_extract1d_0007.json',
-    }),
-    ('MIR_MRS', 'FULL', 'N/A') : UseAfter({
-        '2000-01-01 00:00:00' : 'jwst_miri_extract1d_0004.asdf',
-    }),
-    ('N/A', 'N/A', 'N/A') : UseAfter({
-        '2000-01-01 00:00:00' : 'N/A',
-    }),
 })
