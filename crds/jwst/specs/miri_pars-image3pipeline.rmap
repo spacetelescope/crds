@@ -8,7 +8,7 @@ header = {
     'name' : 'jwst_miri_pars-image3pipeline.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '740a479742afd3a4707ab0511d03e05832007872',
+    'sha1sum' : 'abc803bcab042d77df7fcf1166c45e58cca5db27',
     'suffix' : 'pars-image3pipeline',
     'text_descr' : 'Pars-image3Pipeline runtime parameters',
 }

@@ -11,7 +11,7 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : '01b332cbb9f5f3c9a2d6d7d42669e9d2d96e6432',
+    'sha1sum' : 'a6f47b5a7239a9d84099efab0e61beff2bb6a4ca',
     'suffix' : 'extract1d',
     'text_descr' : '1-D Spectral Extraction',
 }

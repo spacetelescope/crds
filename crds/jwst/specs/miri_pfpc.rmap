@@ -10,7 +10,7 @@ header = {
     'name' : 'miri_pfpc.rmap',
     'observatory' : 'jwst',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '0e3e1eeea1b9a2677b1da7ac8fe6f7ded5672385',
+    'sha1sum' : '9eba393db4358f9ecbc84be831c94b8c473373f5',
     'suffix' : 'pfpc',
     'text_descr' : 'Point Fixed Pattern Correction',
     'tpn' : 'miri_pfpc.tpn',
