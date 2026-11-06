@@ -14,37 +14,4 @@ header = {
 }
 
 selector = Match({
-    'N/A' : UseAfter({
-        '2000-01-01 00:00:00' : 'N/A',
-    }),
-    'NRCA1' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0009.asdf',
-    }),
-    'NRCA2' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0009.asdf',
-    }),
-    'NRCA3' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0009.asdf',
-    }),
-    'NRCA4' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0009.asdf',
-    }),
-    'NRCALONG' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0007.asdf',
-    }),
-    'NRCB1' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0010.asdf',
-    }),
-    'NRCB2' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0010.asdf',
-    }),
-    'NRCB3' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0010.asdf',
-    }),
-    'NRCB4' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0010.asdf',
-    }),
-    'NRCBLONG' : UseAfter({
-        '2021-12-25 00:00:00' : 'jwst_nircam_filteroffset_0008.asdf',
-    }),
 })

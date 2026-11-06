@@ -14,7 +14,4 @@ header = {
 }
 
 selector = Match({
-    'N/A' : UseAfter({
-        '2000-01-01 00:00:00' : 'N/A',
-    }),
 })

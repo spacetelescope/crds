@@ -59,6 +59,10 @@ META.SUBARRAY.NAME          H   C   O   SUB128,\
                                         \
                                         MASKA210R,MASKA430R,MASKBLWB,MASKBSWB,\
                                         \
+                                        FULL_SUPSTP008,FULL_SUPSTP008P,FULL_SUPSTP024,FULL_SUPSTP024P,\
+                                        FULL_SUPSTP120,FULL_SUPSTP120P,FULL_SUPSTP510,FULL_SUPSTP510P,\
+                                        SUB64P_SUPSTP002,SUB64P_SUPSTP008,SUB64P_SUPSTP032,\
+                                        \
                                         FULL,FULLP,ANY,GENERIC,N/A
 
 

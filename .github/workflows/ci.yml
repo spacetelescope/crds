@@ -71,6 +71,7 @@ jobs:
           cache-downloads: true
       - run: pip install roman-datamodels git+https://github.com/spacetelescope/jwst
       - run: pip uninstall --yes crds && ./install && pip install .[submission,test,docs,synphot]
+      - run: pip freeze --all
       # dummy AWS credentials S3 testing (moto)
       - run: mkdir /tmp/.aws && touch /tmp/.aws/credentials && echo -e "[default]\naws_access_key_id = testing\naws_secret_access_key = testing" > /tmp/.aws/credentials
       - id: cache

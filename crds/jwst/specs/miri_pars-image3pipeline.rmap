@@ -10,11 +10,8 @@ header = {
     'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : '740a479742afd3a4707ab0511d03e05832007872',
     'suffix' : 'pars-image3pipeline',
-    'text_descr' : 'Pars-image3pipeline',
+    'text_descr' : 'Pars-image3Pipeline runtime parameters',
 }
 
 selector = Match({
-    () : UseAfter({
-        '2000-01-01 00:00:00' : 'N/A',
-    }),
 })
