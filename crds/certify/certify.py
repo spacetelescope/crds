@@ -693,9 +693,11 @@ class AsdfCertifier(ReferenceCertifier):
         """Certify an unknown format file."""
         super(AsdfCertifier, self).certify()
 
-        with asdf.open(self.filename) as af:
-            if not self._VERSION_RE.match(af["asdf_library"]["version"]):
-                log.warning("File written with dev version of asdf library:", af["asdf_library"]["version"])
+        with asdf.config_context() as cfg:
+            cfg.validate_on_read = True
+            with asdf.open(self.filename) as af:
+                if not self._VERSION_RE.match(af["asdf_library"]["version"]):
+                    log.warning("File written with dev version of asdf library:", af["asdf_library"]["version"])
 
         self.check_schema()
 
@@ -711,8 +713,10 @@ class AsdfCertifier(ReferenceCertifier):
         if rmap.schema_uri is not None:
             # The file will be validated against the schema when it
             # is opened:
-            with asdf.open(self.filename, custom_schema=rmap.schema_uri):
-                pass
+            with asdf.config_context() as cfg:
+                cfg.validate_on_read = True
+                with asdf.open(self.filename, custom_schema=rmap.schema_uri):
+                    pass
 
 # ============================================================================
 
