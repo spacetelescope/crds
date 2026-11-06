@@ -1,3 +1,28 @@
+14.0.4 (2026-11-06)
+===================
+
+HST
+---
+
+- remove legacy os.WEXITSTATUS from plugin call (`#1244
+  <https://github.com/spacetelescope/crds/issues/1244>`_)
+
+
+JWST
+----
+
+- Adding one new reftype and selection updates for others (`#1255
+  <https://github.com/spacetelescope/crds/issues/1255>`_)
+
+
+Other Changes
+-------------
+
+- Enable ``validate_on_read`` for ``certify`` to keep validation on read
+  (disabled by default in asdf 6). (`#1257
+  <https://github.com/spacetelescope/crds/issues/1257>`_)
+
+
 14.0.3 (2026-10-07)
 ===================
 
