@@ -1,0 +1,1 @@
+Enable ``validate_on_read`` for ``certify`` to keep validation on read (disabled by default in asdf 6).
