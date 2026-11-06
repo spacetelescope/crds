@@ -8,7 +8,7 @@ header = {
     'name' : 'jwst_nircam_filteroffset_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '29686406317e2f757b59e0bad24f10df9752a9f3',
+    'sha1sum' : '21c82e586f954a5a02f8d11d07fd664bbc0bf62a',
     'suffix' : 'filteroffset',
     'text_descr' : 'Filter Offset',
 }

@@ -8,7 +8,7 @@ header = {
     'name' : 'miri_pars-pfpcstep.rmap',
     'observatory' : 'jwst',
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : '56840034bee7c7391849e0af18e6ff9acdb2a69a',
+    'sha1sum' : '0662e9d99a75f18ee8a0b49a34a2ae365c7482af',
     'suffix' : 'pars-pfpcstep',
     'text_descr' : 'Point Fixed Pattern Correction',
 }
