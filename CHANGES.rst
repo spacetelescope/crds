@@ -1,3 +1,13 @@
+14.0.5 (2026-11-06)
+===================
+
+JWST
+----
+
+- Added several NIRCAM subarrays (`#1256
+  <https://github.com/spacetelescope/crds/issues/1256>`_)
+
+
 14.0.4 (2026-11-06)
 ===================
 
