@@ -135,6 +135,7 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+html_logo = "https://github.com/spacetelescope/branding/blob/81b7021231e885bda9c022e6c082b3cf26009b3b/stsci_pri_combo_mark_dark_bkgd.svg?raw=true"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -329,7 +330,7 @@ latex_elements = {
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-latex_logo = '_static/JWSTlogocrop.png'
+latex_logo = "https://github.com/spacetelescope/branding/blob/81b7021231e885bda9c022e6c082b3cf26009b3b/stsci_pri_combo_mark_white_bkgd.svg?raw=true"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
