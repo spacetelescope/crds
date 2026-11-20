@@ -8,6 +8,7 @@ item.  This is principally intended to detect rmap cut-and-paste
 errors in hand edited rmaps.
 """
 from collections import namedtuple
+import warnings
 
 from crds.core import rmap, selectors, log, exceptions, config
 
@@ -106,7 +107,16 @@ def parse_mapping(filename):
         raise NotImplementedError("Parsley parsing package must be installed.")
 
     if MAPPING_PARSER is None:
-        MAPPING_PARSER = parsley.makeGrammar(MAPPING_GRAMMAR, selectors.SELECTORS)
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                message=r"^Module globals is missing a __spec__\.loader$",
+                category=DeprecationWarning,
+                module=r"^linecache$",
+            )
+            MAPPING_PARSER = parsley.makeGrammar(
+                MAPPING_GRAMMAR, selectors.SELECTORS
+            )
 
     log.verbose("Parsing", repr(filename))
     filename = config.locate_mapping(filename)
