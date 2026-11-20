@@ -1,3 +1,13 @@
+14.0.7 (2026-11-20)
+===================
+
+ROMAN
+-----
+
+- adds nresultants parkey to tpn and pars-rampfitstep spec (`#1262
+  <https://github.com/spacetelescope/crds/issues/1262>`_)
+
+
 14.0.6 (2026-11-06)
 ===================
 

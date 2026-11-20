@@ -1,1 +1,0 @@
-adds nresultants parkey to tpn and pars-rampfitstep spec
