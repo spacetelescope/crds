@@ -1042,15 +1042,18 @@
             "name":"roman_wfi_pars-rampfitstep.rmap",
             "observatory":"ROMAN",
             "parkey":[
-                [],
+                [
+                    "ROMAN.META.EXPOSURE.NRESULTANTS"
+                ],
                 [
                     "ROMAN.META.EXPOSURE.START_TIME"
                 ]
             ],
             "reference_to_dataset":{
+                "META.EXPOSURE.NRESULTANTS":"ROMAN.META.EXPOSURE.NRESULTANTS",
                 "META.EXPOSURE.START_TIME":"ROMAN.META.EXPOSURE.START_TIME"
             },
-            "sha1sum":"517e9e9a09d86f38710398684afd0105924e15d0",
+            "sha1sum":"333589a1b4a09e47769742a45ece99d5d0731320",
             "suffix":"pars-rampfitstep",
             "text_descr":"RampFitStep runtime parameters",
             "tpn":"wfi_pars-rampfitstep.tpn",
